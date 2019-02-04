@@ -215,16 +215,23 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
-    selectOrderMode: (isEnable: boolean) =>
+    changeSelectMode: (entity: '' | 'ORDER' | 'SHIPMENT') =>
       dispatch({
-        type: 'ENABLE_SELECT_ORDER',
+        type: 'CHANGE_SELECT_MODE',
         payload: {
-          isEnable,
+          entity,
         },
       }),
     toggleSelectedOrder: (id: string) =>
       dispatch({
         type: 'TOGGLE_SELECTED_ORDER',
+        payload: {
+          id,
+        },
+      }),
+    toggleSelectedShipment: (id: string) =>
+      dispatch({
+        type: 'TOGGLE_SELECTED_SHIPMENT',
         payload: {
           id,
         },

@@ -284,7 +284,7 @@ export default defineMessages({
   },
   confirmDisconnect: {
     id: 'modules.RelationMaps.action.confirmDisconnect',
-    defaultMessage: 'to the shipment',
+    defaultMessage: 'the shipment?',
   },
   confirmSubMessage: {
     id: 'modules.RelationMaps.action.confirmSubMessage',

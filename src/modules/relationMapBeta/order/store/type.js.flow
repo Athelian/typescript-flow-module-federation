@@ -49,4 +49,9 @@ export type UIState = {
     exporterIds: Array<string>,
     sourceOrder: Object,
   },
+  connectShipment: {
+    enableSelectMode: boolean,
+    status: boolean,
+    shipmentId: string,
+  },
 };

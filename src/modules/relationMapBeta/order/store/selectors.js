@@ -123,9 +123,13 @@ const findAllCurrencies = ({
 function selectors(state: UIState) {
   return {
     isAllowToConnectOrder: () => isAllowToConnectOrder(state),
+    isAllowToConnectShipment: () =>
+      state.targets.filter(item => item.includes(`${BATCH}-`)).length > 0 &&
+      state.targets.filter(item => item.includes(`${SHIPMENT}-`)).length === 0,
     isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
+    isSelectedShipment: () =>
+      state.connectShipment.enableSelectMode && state.connectShipment.shipmentId !== '',
     isAllowToSelectOrder: (exporterId: string) => isAllowToSelectOrder({ exporterId, state }),
-    isAllowToConnectShipment: () => false,
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
       state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
@@ -154,6 +158,7 @@ function selectors(state: UIState) {
     targetedBatchIds: () => targetedBatchIds(state),
     currentExporterId: () => currentExporterId(state),
     selectedConnectOrder: (id: string) => state.connectOrder.orderId === id,
+    selectedConnectShipment: (id: string) => state.connectShipment.shipmentId === id,
     hasSelectedAllBatches: (orderItems: Object) => hasSelectedAllBatches({ state, orderItems }),
     findAllCurrencies: (orders: Object, orderItems: Object) =>
       findAllCurrencies({ state, orders, orderItems }),
