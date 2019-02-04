@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Label } from 'components/Form';
 import messages from 'modules/relationMap/messages';
-import * as style from './style';
+import { ConfirmMessageContainer, ConfirmActionStyle } from './style';
 
 const DisconnectConfirmMessage = () => (
   <div className={style.ConfirmMessageContainer}>
