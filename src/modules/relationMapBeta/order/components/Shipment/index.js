@@ -2,12 +2,13 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import ActionDispatch from 'modules/relationMapBeta/order/provider';
-import { actionCreators } from 'modules/relationMapBeta/order/store';
+import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import BaseCard, { ShipmentCard } from 'components/Cards';
 import { WrapperCard } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import type { ShipmentProps } from 'modules/relationMapBeta/order/type.js.flow';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
+import SelectedShipment from './SelectedShipment';
 
 type OptionalProps = {
   wrapperClassName: string,
@@ -21,10 +22,9 @@ const defaultProps = {
 
 export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
-  const {
-    state: { showTag },
-    dispatch,
-  } = context;
+  const { state, dispatch } = context;
+  const { showTag } = state;
+  const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
   return (
     <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
@@ -33,31 +33,51 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
             {/* Send empty array for tags for hidden tags on shipment card when hidden tags */}
             <ShipmentCard shipment={showTag ? shipment : { ...shipment, tags: [] }} actions={[]} />
-            <ActionCard show={hovered}>
-              {({ targetted, toggle }) => (
-                <>
-                  {/* NOTE: why need to send targetted and toggle to ACTION */}
-                  <Action
-                    icon="MAGIC"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => actions.toggleHighLight('SHIPMENT', id)}
-                  />
-                  <Action
-                    icon="DOCUMENT"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => actions.showEditForm('SHIPMENT', id)}
-                  />
-                  <Action
-                    icon="CHECKED"
-                    targetted={targetted}
-                    toggle={toggle}
-                    onClick={() => actions.targetEntity('SHIPMENT', id)}
-                  />
-                </>
-              )}
-            </ActionCard>
+            {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
+              (() => {
+                if (uiSelectors.selectedConnectShipment(id)) {
+                  return (
+                    <ActionCard show>
+                      {() => (
+                        <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />
+                      )}
+                    </ActionCard>
+                  );
+                }
+                return (
+                  <ActionCard show={hovered}>
+                    {() => (
+                      <Action icon="CHECKED" onClick={() => actions.toggleSelectedShipment(id)} />
+                    )}
+                  </ActionCard>
+                );
+              })()
+            ) : (
+              <ActionCard show={hovered}>
+                {({ targeted, toggle }) => (
+                  <>
+                    <Action
+                      icon="MAGIC"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.toggleHighLight('SHIPMENT', id)}
+                    />
+                    <Action
+                      icon="DOCUMENT"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.showEditForm('SHIPMENT', id)}
+                    />
+                    <Action
+                      icon="CHECKED"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.targetShipmentEntity(id)}
+                    />
+                  </>
+                )}
+              </ActionCard>
+            )}
           </WrapperCard>
         )}
       </BooleanValue>

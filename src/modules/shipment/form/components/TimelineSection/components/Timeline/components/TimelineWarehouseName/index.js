@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   TimelineWarehouseNameWrapperStyle,
   TimelineWarehouseNameStyle,
@@ -21,8 +20,8 @@ const defaultProps = {
   containers: [],
 };
 
-const TimelineWarehouseName = ({ name, vertical, containers }: Props) => {
-  const filteredWarehouses = (containers || [])
+const TimelineWarehouseName = ({ name, vertical, containers = [] }: Props) => {
+  const filteredWarehouses = containers
     .filter(group => group.warehouse)
     .map(group => group.warehouse.id);
   const warehouses = [...new Set(filteredWarehouses)].slice(1);
@@ -30,7 +29,7 @@ const TimelineWarehouseName = ({ name, vertical, containers }: Props) => {
   return (
     <div className={TimelineWarehouseNameWrapperStyle(vertical, haveContainer)}>
       <div className={TimelineWarehouseNameStyle(vertical)}>{name}</div>
-      {isEnableBetaFeature && warehouses.length > 0 && (
+      {warehouses.length > 0 && (
         <div className={TimelineWarehouseNameBadgeStyle(vertical)}>+{warehouses.length}</div>
       )}
     </div>

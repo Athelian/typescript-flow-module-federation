@@ -1,0 +1,57 @@
+// @flow
+
+export type UIState = {
+  loading: boolean,
+  error: boolean,
+  showTag: boolean,
+  refetchOrderId: string,
+  refetchShipmentId: string,
+  expandCards: {
+    orders: Array<string>,
+    shipments: Array<string>,
+  },
+  toggleShipmentList: boolean,
+  select: {
+    mode: 'SINGLE' | 'ALL',
+    entities: Array<string>,
+  },
+  highlight: {
+    type: string,
+    selectedId: string,
+  },
+  edit: {
+    type: string,
+    selectedId: string,
+  },
+  new: {
+    orders: Array<string>,
+    updateOrdersInput: Array<{
+      id: string,
+      orderItems: Array<Object>,
+    }>,
+  },
+  targets: Array<string>,
+  totalShipment: number,
+  split: {
+    parentOrderIds: Array<string>,
+    batches: Object,
+  },
+  balanceSplit: {
+    batches: Array<Object>,
+  },
+  clone: {
+    batches: Object,
+  },
+  connectOrder: {
+    enableSelectMode: boolean,
+    status: boolean,
+    orderId: string,
+    exporterIds: Array<string>,
+    sourceOrder: Object,
+  },
+  connectShipment: {
+    enableSelectMode: boolean,
+    status: boolean,
+    shipmentId: string,
+  },
+};

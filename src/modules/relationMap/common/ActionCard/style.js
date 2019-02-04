@@ -27,7 +27,7 @@ export const DisabledWrapper = css`
   background-color: ${colors.WHITE};
   opacity: 0.3;
 `;
-export const ActionWrapperStyle = targetted => css`
+export const ActionWrapperStyle = targeted => css`
   flex: 1;
   z-index: 2;
 
@@ -35,16 +35,16 @@ export const ActionWrapperStyle = targetted => css`
   justify-content: center;
   align-items: center;
   height: 100%;
-  color: ${targetted ? colors.GRAY_DARK_1 : colors.GRAY_DARK};
+  color: ${targeted ? colors.GRAY_DARK_1 : colors.GRAY_DARK};
 
   transition: background-color 0.2s linear;
   background-color: ${colors.TRANSPARENT};
   &:hover {
-    color: ${targetted ? colors.GRAY_DARK_1 : colors.WHITE};
+    color: ${targeted ? colors.GRAY_DARK_1 : colors.WHITE};
     background-color: ${colors.TEAL};
     opacity: 1;
   }
-  ${targetted && `background-color: ${colors.TEAL}`};
+  ${targeted && `background-color: ${colors.TEAL}`};
 `;
 
 export const RotateIcon = css`

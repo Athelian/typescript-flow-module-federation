@@ -23,8 +23,8 @@ Cypress.Commands.add('login', () => {
       body: {
         query: `mutation ($input: CredentialsInput!) {
           login(input: $input) {
-            token {
-              token
+            ... on Token {
+                token
             }
           }
         }`,

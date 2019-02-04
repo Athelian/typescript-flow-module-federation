@@ -1,8 +1,8 @@
 // @flow
 import { Container } from 'unstated';
-import update from 'immutability-helper';
+import { set, cloneDeep } from 'lodash';
+import { cleanFalsy, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
-import { removeTypename } from 'utils/data';
 
 type ContainersState = {
   containers: Array<Object>,
@@ -17,34 +17,28 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(this.state, this.originalValues);
-
-  onSuccess = () => {
-    this.originalValues = { ...this.state };
-    this.setState(this.originalValues);
-  };
-
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
     });
   };
 
-  setFieldArrayValue = (index: number, value: any) => {
-    this.setState(prevState =>
-      update(prevState, {
-        containers: {
-          [index]: {
-            $merge: value,
-          },
-        },
-      })
-    );
+  setDeepFieldValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
+    });
   };
 
-  initDetailValues = (containers: Array<Object>) => {
-    const parsedValues: Array<any> = removeTypename(containers);
-    this.setState({ containers: parsedValues });
-    this.originalValues = { containers: parsedValues };
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+
+  onSuccess = () => {
+    this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
+  };
+
+  initDetailValues = (values: Object) => {
+    this.setState(cleanUpData(values));
+    this.originalValues = cleanUpData(values);
   };
 }

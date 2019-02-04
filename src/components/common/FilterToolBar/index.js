@@ -25,9 +25,9 @@ const defaultProps = {
   renderIcon: icon => <EntityIcon icon={icon} color={icon} />,
 };
 
-function currentSort(
-  fields,
-  sort
+export function currentSort(
+  fields: Array<Object>,
+  sort: Object
 ): {
   title: string | React.Node,
   value: string,

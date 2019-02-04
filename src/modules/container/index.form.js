@@ -11,12 +11,10 @@ import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
-
 import NavBar, { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
-
 import { containerFormQuery } from './form/query';
 import { updateContainerMutation, prepareUpdateContainerInput } from './form/mutation';
 import ContainerFormContainer from './form/container';
@@ -33,6 +31,13 @@ const defaultProps = {
   containerId: '',
 };
 
+type UpdateContainerResponse = {|
+  containerUpdate: {
+    violations?: Array<Object>,
+    id?: string,
+  },
+|};
+
 export default class ContainerFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
@@ -44,7 +49,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
 
   onSave = async (
     formData: Object,
-    saveBatch: Function,
+    saveContainer: Function,
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
@@ -52,16 +57,38 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
 
     const input = prepareUpdateContainerInput(formData);
 
-    const { data } = await saveBatch({
+    const result = await saveContainer({
       variables: { input, id: decodeId(containerId) },
     });
-    const {
-      containerUpdate: { violations },
-    } = data;
-    if (violations && violations.length) {
-      onErrors(violations);
-    } else {
-      onSuccess();
+
+    if (result && result.data) {
+      const { data } = result;
+      if (data.containerUpdate) {
+        const {
+          containerUpdate: { violations },
+        } = data;
+        if (violations && violations.length) {
+          onErrors(violations);
+        } else {
+          onSuccess();
+        }
+      }
+    }
+  };
+
+  onFormReady = ({ containerState }: { containerState: Object }) => (container: Object) => {
+    containerState.initDetailValues(container);
+  };
+
+  onMutationCompleted = ({ containerState }: { containerState: Object }) => (
+    result: UpdateContainerResponse
+  ) => {
+    if (result && result.containerUpdate) {
+      const { containerUpdate } = result;
+      const { violations } = containerUpdate;
+      if (isNullOrUndefined(violations)) {
+        this.onFormReady({ containerState })(containerUpdate);
+      }
     }
   };
 
@@ -76,69 +103,73 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
       <Provider>
         <UIConsumer>
           {uiState => (
-            <Mutation mutation={updateContainerMutation} {...mutationKey}>
-              {(saveContainer, { loading, error }) => (
-                <Layout
-                  {...uiState}
-                  navBar={
-                    <NavBar>
-                      <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="container_containerSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.container"
-                              defaultMessage="CONTAINER"
+            <Subscribe to={[ContainerFormContainer, FormContainer]}>
+              {(containerState, form) => (
+                <Mutation
+                  mutation={updateContainerMutation}
+                  onCompleted={this.onMutationCompleted({ containerState })}
+                  {...mutationKey}
+                >
+                  {(saveContainer, { loading, error }) => (
+                    <Layout
+                      {...uiState}
+                      navBar={
+                        <NavBar>
+                          <EntityIcon icon="CONTAINER" color="CONTAINER" />
+                          <JumpToSection>
+                            <SectionTabs
+                              link="container_containerSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.container.container"
+                                  defaultMessage="CONTAINER"
+                                />
+                              }
+                              icon="CONTAINER"
                             />
-                          }
-                          icon="CONTAINER"
-                        />
-                        <SectionTabs
-                          link="container_shipmentSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.shipment"
-                              defaultMessage="SHIPMENT"
+                            <SectionTabs
+                              link="container_shipmentSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.container.shipment"
+                                  defaultMessage="SHIPMENT"
+                                />
+                              }
+                              icon="SHIPMENT"
                             />
-                          }
-                          icon="SHIPMENT"
-                        />
-                        <SectionTabs
-                          link="container_batchesSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.batches"
-                              defaultMessage="BATCHES"
+                            <SectionTabs
+                              link="container_batchesSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.container.batches"
+                                  defaultMessage="BATCHES"
+                                />
+                              }
+                              icon="BATCH"
                             />
-                          }
-                          icon="BATCH"
-                        />
-                        <SectionTabs
-                          link="container_ordersSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.orders"
-                              defaultMessage="ORDERS"
+                            <SectionTabs
+                              link="container_ordersSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.container.orders"
+                                  defaultMessage="ORDERS"
+                                />
+                              }
+                              icon="ORDER"
                             />
-                          }
-                          icon="ORDER"
-                        />
-                      </JumpToSection>
-                      <Subscribe to={[ContainerFormContainer, FormContainer]}>
-                        {(formState, form) =>
-                          formState.isDirty() && (
+                          </JumpToSection>
+                          {containerState.isDirty() && (
                             <>
-                              <ResetButton onClick={() => this.onReset(formState)} />
+                              <ResetButton onClick={() => this.onReset(containerState)} />
                               <SaveButton
-                                disabled={!form.isReady(formState.state, validator)}
+                                disabled={!form.isReady(containerState.state, validator)}
                                 isLoading={loading}
                                 onClick={() =>
                                   this.onSave(
-                                    formState.state,
+                                    containerState.state,
                                     saveContainer,
                                     () => {
-                                      formState.onSuccess();
+                                      containerState.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -146,56 +177,54 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                                 }
                               />
                             </>
-                          )
-                        }
-                      </Subscribe>
-                    </NavBar>
-                  }
-                >
-                  {error && <p>Error: Please try again.</p>}
-                  <QueryForm
-                    query={containerFormQuery}
-                    entityId={containerId}
-                    entityType="container"
-                    render={container => {
-                      const {
-                        warehouseArrivalAgreedDate,
-                        warehouseArrivalActualDate,
-                        ...rest
-                      } = container;
-                      const usefulContainer = {
-                        ...(isNullOrUndefined(warehouseArrivalAgreedDate)
-                          ? {}
-                          : {
-                              warehouseArrivalAgreedDate: formatToDateTimeInput(
-                                warehouseArrivalAgreedDate
-                              ),
-                            }),
-                        ...(isNullOrUndefined(warehouseArrivalActualDate)
-                          ? {}
-                          : {
-                              warehouseArrivalActualDate: formatToDateTimeInput(
-                                warehouseArrivalActualDate
-                              ),
-                            }),
-                        ...rest,
-                      };
+                          )}
+                        </NavBar>
+                      }
+                    >
+                      {error && <p>Error: Please try again.</p>}
+                      <QueryForm
+                        query={containerFormQuery}
+                        entityId={containerId}
+                        entityType="container"
+                        render={container => {
+                          const {
+                            warehouseArrivalAgreedDate,
+                            warehouseArrivalActualDate,
+                            ...rest
+                          } = container;
+                          const usefulContainer = {
+                            ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+                              ? {}
+                              : {
+                                  warehouseArrivalAgreedDate: formatToDateTimeInput(
+                                    warehouseArrivalAgreedDate
+                                  ),
+                                }),
+                            ...(isNullOrUndefined(warehouseArrivalActualDate)
+                              ? {}
+                              : {
+                                  warehouseArrivalActualDate: formatToDateTimeInput(
+                                    warehouseArrivalActualDate
+                                  ),
+                                }),
+                            ...rest,
+                          };
 
-                      return (
-                        <Subscribe to={[ContainerFormContainer]}>
-                          {({ initDetailValues }) => (
+                          return (
                             <ContainerForm
                               container={usefulContainer}
-                              onFormReady={() => initDetailValues(usefulContainer)}
+                              onFormReady={() => {
+                                this.onFormReady({ containerState })(container);
+                              }}
                             />
-                          )}
-                        </Subscribe>
-                      );
-                    }}
-                  />
-                </Layout>
+                          );
+                        }}
+                      />
+                    </Layout>
+                  )}
+                </Mutation>
               )}
-            </Mutation>
+            </Subscribe>
           )}
         </UIConsumer>
       </Provider>

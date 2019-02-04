@@ -1,9 +1,8 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
@@ -275,11 +274,8 @@ const TimelineSection = ({ isNew }: Props) => (
               setFieldDeepValue={setFieldDeepValue}
               removeArrayItem={removeArrayItem}
             />
-            {isEnableBetaFeature && containers && containers.length > 0 ? (
-              <ContainerWarehouseArrivalSection
-                id="containersWarehouseArrival"
-                containers={containers}
-              />
+            {containers && containers.length > 0 ? (
+              <ContainerWarehouseArrivalSection />
             ) : (
               <TimelineInfoSection
                 id="warehouseArrival"

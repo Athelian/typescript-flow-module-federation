@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { encodeId } from 'utils/id';
-import { isEnableBetaFeature } from 'utils/env';
 import {
   TimelineIcon,
   TimelineTransitIcon,
@@ -105,7 +104,7 @@ const HorizontalTimeline = ({ shipment }: Props) => {
         linkPath={`/shipment/${encodeId(shipment.id)}/customClearance`}
       />
 
-      {isEnableBetaFeature && containers && containers.length > 0 ? (
+      {containers && containers.length > 0 ? (
         <>
           <TimelineLine color={warehouseArrivalColoring} flex="1.59" />
 

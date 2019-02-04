@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { isEnableBetaFeature } from 'utils/env';
 import { getContainerDatesRange } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { TimelineDate, TimelinePortName, TimelineWarehouseName } from '../../components';
 import { TimelineDateRange } from './components';
@@ -36,7 +35,7 @@ const VerticalDates = ({ shipment }: Props) => {
         <TimelineDate timelineDate={cargoReady} vertical />
       </div>
 
-      <div className={BlankGapStyle} />
+      <div className={BlankGapStyle()} />
 
       <TimelinePortName port={loadPort} transportType={transportType} vertical />
 
@@ -59,14 +58,14 @@ const VerticalDates = ({ shipment }: Props) => {
 
       <TimelinePortName port={dischargePort} transportType={transportType} vertical />
 
-      <div className={BlankGapStyle} />
+      <div className={BlankGapStyle()} />
 
       <div className={SingularDateWrapperStyle}>
         <TimelineDate timelineDate={customClearance} vertical />
       </div>
 
-      <div className={BlankGapStyle}>
-        {isEnableBetaFeature && containers && containers.length > 0 ? (
+      <div className={BlankGapStyle()}>
+        {containers && containers.length > 0 ? (
           <TimelineDateRange
             minDate={minAgreedDate}
             maxDate={maxAgreedDate}
@@ -80,8 +79,8 @@ const VerticalDates = ({ shipment }: Props) => {
 
       <TimelineWarehouseName name={warehouse && warehouse.name} vertical containers={containers} />
 
-      {isEnableBetaFeature && containers && containers.length > 0 ? (
-        <div className={BlankGapStyle}>
+      {containers && containers.length > 0 ? (
+        <div className={BlankGapStyle('flex-start')}>
           <TimelineDateRange
             minDate={minActualDate}
             maxDate={maxActualDate}
@@ -90,7 +89,7 @@ const VerticalDates = ({ shipment }: Props) => {
           />
         </div>
       ) : (
-        <div className={BlankGapStyle} />
+        <div className={BlankGapStyle()} />
       )}
 
       <div className={SingularDateWrapperStyle}>

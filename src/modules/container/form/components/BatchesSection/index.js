@@ -1,15 +1,14 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
+import { isNullOrUndefined } from 'utils/fp';
 import { SectionNavBar } from 'components/NavBar';
 import { ContainerBatchCard } from 'components/Cards';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
-import messages from 'modules/shipment/messages';
 import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
@@ -23,11 +22,7 @@ import {
   EmptyMessageStyle,
 } from './style';
 
-type Props = {
-  intl: IntlShape,
-};
-
-function BatchesSection({ intl }: Props) {
+function BatchesSection() {
   return (
     <div className={BatchesSectionWrapperStyle}>
       <SectionNavBar>
@@ -36,7 +31,12 @@ function BatchesSection({ intl }: Props) {
             <>
               <NewButton
                 data-testid="selectBatchesButton"
-                label={intl.formatMessage(messages.selectBatches)}
+                label={
+                  <FormattedMessage
+                    id="modules.Shipments.selectBatches"
+                    defaultMessage="SELECT BATCHES"
+                  />
+                }
                 onClick={() => selectBatchesSlideToggle(true)}
               />
               <SlideView
@@ -70,7 +70,9 @@ function BatchesSection({ intl }: Props) {
           {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
             <>
               <NewButton
-                label={intl.formatMessage(messages.newBatch)}
+                label={
+                  <FormattedMessage id="modules.Shipments.newBatch" defaultMessage="NEW BATCH" />
+                }
                 onClick={() => createBatchesSlideToggle(true)}
               />
               <SlideView
@@ -123,18 +125,26 @@ function BatchesSection({ intl }: Props) {
       </SectionNavBar>
       <div className={BatchesSectionBodyStyle}>
         <Subscribe to={[ContainerFormContainer]}>
-          {({ state: { batches = [] }, setFieldValue, setDeepFieldValue }) =>
-            batches.length === 0 ? (
-              <div className={EmptyMessageStyle}>
-                <FormattedMessage
-                  id="modules.container.noBatches"
-                  defaultMessage="No batches found"
-                />
-              </div>
-            ) : (
+          {({ state: { batches = [], representativeBatch }, setFieldValue, setDeepFieldValue }) => {
+            if (batches.length === 0) {
+              return (
+                <div className={EmptyMessageStyle}>
+                  <FormattedMessage
+                    id="modules.container.noBatches"
+                    defaultMessage="No batches found"
+                  />
+                </div>
+              );
+            }
+
+            if (isNullOrUndefined(representativeBatch)) {
+              setDeepFieldValue('representativeBatch', batches[0]);
+            }
+
+            return (
               <div className={BatchesGridStyle}>
-                {batches.map((item, position) => (
-                  <BooleanValue key={item.id}>
+                {batches.map((batch, position) => (
+                  <BooleanValue key={batch.id}>
                     {({ value: opened, set: batchSlideToggle }) => (
                       <>
                         <SlideView
@@ -147,9 +157,9 @@ function BatchesSection({ intl }: Props) {
                               {({ initDetailValues }) => (
                                 <BatchFormWrapper
                                   initDetailValues={initDetailValues}
-                                  batch={item}
-                                  isNew={!!item.isNew}
-                                  orderItem={item.orderItem}
+                                  batch={batch}
+                                  isNew={!!batch.isNew}
+                                  orderItem={batch.orderItem}
                                   onCancel={() => batchSlideToggle(false)}
                                   onSave={updatedBatch => {
                                     batchSlideToggle(false);
@@ -163,16 +173,26 @@ function BatchesSection({ intl }: Props) {
                         <div className={ItemStyle}>
                           <ContainerBatchCard
                             position={position}
-                            batch={item}
+                            batch={batch}
                             saveOnBlur={updatedBatch => {
                               setDeepFieldValue(`batches.${position}`, updatedBatch);
                             }}
+                            isRepresented={
+                              !isNullOrUndefined(representativeBatch) &&
+                              representativeBatch.id === batch.id
+                            }
+                            onClickRepresentative={() =>
+                              setDeepFieldValue(`representativeBatch`, batch)
+                            }
                             onClick={() => batchSlideToggle(true)}
                             onClear={({ id }) => {
                               setFieldValue(
                                 'batches',
-                                batches.filter(({ id: itemId }) => id !== itemId)
+                                batches.filter(({ id: batchId }) => id !== batchId)
                               );
+                              if (id === representativeBatch.id) {
+                                setDeepFieldValue('representativeBatch', null);
+                              }
                             }}
                             onClone={({
                               id,
@@ -200,12 +220,12 @@ function BatchesSection({ intl }: Props) {
                   </BooleanValue>
                 ))}
               </div>
-            )
-          }
+            );
+          }}
         </Subscribe>
       </div>
     </div>
   );
 }
 
-export default injectIntl(BatchesSection);
+export default BatchesSection;

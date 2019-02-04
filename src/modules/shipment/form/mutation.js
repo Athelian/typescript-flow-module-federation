@@ -24,10 +24,12 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
 } from 'graphql';
+import { isNullOrUndefined } from 'utils/fp';
+import { formatToDateTimeGraphql } from 'utils/date';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
+import { getBatchesInPool } from 'modules/shipment/helpers';
 import { cleanUpData } from 'utils/data';
-import { isEnableBetaFeature } from 'utils/env';
 import type {
   CargoReady,
   ShipmentVoyage,
@@ -86,6 +88,54 @@ export const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGro
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
     deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
   }));
+
+const prepareContainer = ({
+  isNew,
+  id,
+  representativeBatch,
+  batches = [],
+  warehouse,
+  warehouseArrivalAgreedDate,
+  warehouseArrivalActualDate,
+  warehouseArrivalAgreedDateApprovedAt,
+  warehouseArrivalActualDateApprovedAt,
+  warehouseArrivalAgreedDateApprovedBy,
+  warehouseArrivalActualDateApprovedBy,
+  warehouseArrivalAgreedDateAssignedTo = [],
+  warehouseArrivalActualDateAssignedTo = [],
+  tags = [],
+  totalWeight,
+  totalVolume,
+  totalBatchPackages,
+  totalBatchQuantity,
+  totalNumberOfUniqueOrderItems,
+  ...rest
+}: Object) => ({
+  ...rest,
+  ...(!isNew ? { id } : {}),
+  warehouseId: isNullOrUndefined(warehouse) ? null : warehouse.id,
+  ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+    ? {}
+    : { warehouseArrivalAgreedDate: formatToDateTimeGraphql(warehouseArrivalAgreedDate) }),
+  ...(isNullOrUndefined(warehouseArrivalActualDate)
+    ? {}
+    : { warehouseArrivalAgreedDate: formatToDateTimeGraphql(warehouseArrivalActualDate) }),
+  warehouseArrivalAgreedDateApprovedById: isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
+    ? null
+    : warehouseArrivalAgreedDateApprovedBy.id,
+  warehouseArrivalActualDateApprovedById: isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
+    ? null
+    : warehouseArrivalActualDateApprovedBy.id,
+  representativeBatchId: isNullOrUndefined(representativeBatch) ? null : representativeBatch.id,
+  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
+    ({ id: userId }) => userId
+  ),
+  warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
+    ({ id: userId }) => userId
+  ),
+  tagIds: tags.map(({ id: tagId }) => tagId),
+});
 
 export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
@@ -150,6 +200,7 @@ export const prepareCreateShipmentInput = ({
   forwarders = [],
   inCharges = [],
   files = [],
+  containers = [],
 }: Object): ShipmentCreate => ({
   no,
   blNo,
@@ -168,7 +219,10 @@ export const prepareCreateShipmentInput = ({
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
   voyages: formatVoyages(voyages),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  batches: getBatchesInPool(batches).map(batch =>
+    prepareUpdateBatchInput(cleanUpData(batch), true, false)
+  ),
+  containers: containers.map(container => prepareContainer(cleanUpData(container))),
   containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({
     id,
@@ -178,68 +232,37 @@ export const prepareCreateShipmentInput = ({
   })),
 });
 
-export const updateShipmentMutation: Object = isEnableBetaFeature
-  ? gql`
-      mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
-        shipmentUpdate(id: $id, input: $input) {
-          ...shipmentFormFragment
-          ...badRequestFragment
-        }
-      }
+export const updateShipmentMutation: Object = gql`
+  mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
+    shipmentUpdate(id: $id, input: $input) {
+      ...shipmentFormFragment
+      ...badRequestFragment
+    }
+  }
 
-      ${shipmentFormFragment}
-      ${shipmentContainerCardFragment}
-      ${timelineDateFullFragment}
-      ${batchFormFragment}
-      ${userAvatarFragment}
-      ${metricFragment}
-      ${sizeFragment}
-      ${tagFragment}
-      ${priceFragment}
-      ${orderCardFragment}
-      ${imageFragment}
-      ${partnerNameFragment}
-      ${shipmentCardFragment}
-      ${timelineDateMinimalFragment}
-      ${portFragment}
-      ${documentFragment}
-      ${partnerCardFragment}
-      ${badRequestFragment}
-      ${customFieldsFragment}
-      ${maskFragment}
-      ${fieldValuesFragment}
-      ${fieldDefinitionFragment}
-    `
-  : gql`
-      mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
-        shipmentUpdate(id: $id, input: $input) {
-          ...shipmentFormFragment
-          ...badRequestFragment
-        }
-      }
-
-      ${shipmentFormFragment}
-      ${timelineDateFullFragment}
-      ${batchFormFragment}
-      ${userAvatarFragment}
-      ${metricFragment}
-      ${sizeFragment}
-      ${tagFragment}
-      ${priceFragment}
-      ${orderCardFragment}
-      ${imageFragment}
-      ${partnerNameFragment}
-      ${shipmentCardFragment}
-      ${timelineDateMinimalFragment}
-      ${portFragment}
-      ${documentFragment}
-      ${partnerCardFragment}
-      ${badRequestFragment}
-      ${customFieldsFragment}
-      ${maskFragment}
-      ${fieldValuesFragment}
-      ${fieldDefinitionFragment}
-    `;
+  ${shipmentFormFragment}
+  ${shipmentContainerCardFragment}
+  ${timelineDateFullFragment}
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${documentFragment}
+  ${partnerCardFragment}
+  ${badRequestFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
+`;
 
 export const prepareUpdateShipmentInput = ({
   no,
@@ -262,6 +285,7 @@ export const prepareUpdateShipmentInput = ({
   forwarders = [],
   inCharges = [],
   files = [],
+  containers = [],
 }: Object): ShipmentUpdate => ({
   no,
   blNo,
@@ -279,7 +303,10 @@ export const prepareUpdateShipmentInput = ({
   tagIds: tags.map(({ id }) => id),
   forwarderIds: forwarders.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  batches: getBatchesInPool(batches).map(batch =>
+    prepareUpdateBatchInput(cleanUpData(batch), true, false)
+  ),
+  containers: containers.map(container => prepareContainer(cleanUpData(container))),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({

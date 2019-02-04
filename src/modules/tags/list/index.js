@@ -8,9 +8,6 @@ import { tagsQuery } from './query';
 
 type Props = {
   viewType: string,
-  filter: {
-    entityTypes: Array<string>,
-  },
   perPage: number,
   page: number,
 };

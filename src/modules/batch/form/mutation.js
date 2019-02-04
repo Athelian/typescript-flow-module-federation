@@ -1,6 +1,25 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment } from 'graphql';
+import {
+  badRequestFragment,
+  batchFormFragment,
+  userAvatarFragment,
+  metricFragment,
+  sizeFragment,
+  tagFragment,
+  priceFragment,
+  orderCardFragment,
+  imageFragment,
+  partnerNameFragment,
+  shipmentCardFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  partnerCardFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
+} from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from './container';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
@@ -32,6 +51,7 @@ export const prepareCreateBatchInput = (
   {
     id,
     isNew,
+    container,
     shipment = {},
     tags = [],
     batchAdjustments = [],
@@ -47,6 +67,7 @@ export const prepareCreateBatchInput = (
 ): BatchCreate => ({
   ...rest,
   ...(shipment ? { shipmentId: shipment.id } : {}),
+  ...(container ? { containerId: container.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
   desiredAt: desiredAt ? new Date(desiredAt) : null,
@@ -70,13 +91,28 @@ export const prepareCreateBatchInput = (
 export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
-      ... on Batch {
-        id
-      }
+      ...batchFormFragment
       ...badRequestFragment
     }
   }
 
+  ${batchFormFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${sizeFragment}
+  ${tagFragment}
+  ${priceFragment}
+  ${orderCardFragment}
+  ${imageFragment}
+  ${partnerNameFragment}
+  ${shipmentCardFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${partnerCardFragment}
+  ${customFieldsFragment}
+  ${maskFragment}
+  ${fieldValuesFragment}
+  ${fieldDefinitionFragment}
   ${badRequestFragment}
 `;
 
@@ -89,6 +125,7 @@ export const prepareUpdateBatchInput = (
     updatedBy,
     orderItem,
     shipment,
+    container,
     deliveredAt,
     desiredAt,
     expiredAt,
@@ -104,6 +141,7 @@ export const prepareUpdateBatchInput = (
 ): BatchUpdate => ({
   ...rest,
   ...(shipment && !inShipmentOrBatchForm ? { shipmentId: shipment.id } : {}),
+  ...(container && !inShipmentOrBatchForm ? { containerId: container.id } : {}),
   ...(inShipmentOrBatchForm ? { orderItemId: orderItem.id } : {}),
   ...(!inBatchForm && !isNew ? { id } : {}),
   deliveredAt: deliveredAt ? new Date(deliveredAt) : null,

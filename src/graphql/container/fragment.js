@@ -1,5 +1,51 @@
 import gql from 'graphql-tag';
 
+export const containerFormFragment = gql`
+  fragment containerFormFragment on Container {
+    id
+    archived
+    updatedAt
+    no
+    memo
+    updatedBy {
+      ...userAvatarFragment
+    }
+    warehouse {
+      ...warehouseCardFragment
+    }
+    warehouseArrivalAgreedDate
+    warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedAt
+    warehouseArrivalActualDateApprovedAt
+    warehouseArrivalAgreedDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    shipment {
+      ...shipmentCardFragment
+    }
+    batches {
+      ...batchFormFragment
+    }
+    representativeBatch {
+      ... on Batch {
+        id
+      }
+    }
+  }
+`;
+
 export const containerCardFragment = gql`
   fragment containerCardFragment on Container {
     id
@@ -72,37 +118,13 @@ export const shipmentContainerCardFragment = gql`
     id
     no
     representativeBatch {
-      ... on Batch {
-        id
-        orderItem {
-          ... on OrderItem {
-            id
-            productProvider {
-              ... on ProductProvider {
-                id
-                product {
-                  ... on Product {
-                    id
-                    files {
-                      ...imageFragment
-                    }
-                    name
-                    serial
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      ...batchFormFragment
     }
     totalVolume {
       ...metricFragment
     }
     batches {
-      ... on Batch {
-        id
-      }
+      ...batchFormFragment
     }
     warehouse {
       ... on Warehouse {
@@ -112,11 +134,13 @@ export const shipmentContainerCardFragment = gql`
     }
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedAt
     warehouseArrivalAgreedDateApprovedBy {
       ... on User {
         id
       }
     }
+    warehouseArrivalActualDateApprovedAt
     warehouseArrivalActualDateApprovedBy {
       ... on User {
         id
@@ -127,5 +151,3 @@ export const shipmentContainerCardFragment = gql`
     }
   }
 `;
-
-export default containerCardFragment;

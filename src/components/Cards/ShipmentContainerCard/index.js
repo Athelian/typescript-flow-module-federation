@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
+
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
@@ -11,8 +11,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, DefaultStyle } from 'components/Form';
-import SlideView from 'components/SlideView';
-import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
+
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import validator from './validator';
@@ -39,6 +38,7 @@ import {
 } from './style';
 
 type OptionalProps = {
+  onSelectWarehouse: Function,
   onClick: (container: Object) => void,
   onRemove: (container: Object) => void,
   selectable: boolean,
@@ -46,11 +46,13 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  field: string,
   container: Object,
   update: Function,
 };
 
 const defaultProps = {
+  onSelectWarehouse: () => {},
   onClick: () => {},
   onRemove: () => {},
   selectable: false,
@@ -58,9 +60,10 @@ const defaultProps = {
 };
 
 const ShipmentContainerCard = ({
+  field,
   container,
-  onClick,
   onRemove,
+  onSelectWarehouse,
   update,
   selectable,
   ...rest
@@ -96,14 +99,6 @@ const ShipmentContainerCard = ({
     [`container.${id}.no`]: no,
   };
 
-  const newContainer = {
-    ...container,
-    no,
-    totalVolume,
-    warehouseArrivalAgreedDate,
-    warehouseArrivalActualDate,
-  };
-
   return (
     <UserConsumer>
       {({ user }) => (
@@ -114,16 +109,8 @@ const ShipmentContainerCard = ({
           selectable={selectable}
           {...rest}
         >
-          <div
-            className={CardWrapperStyle}
-            onClick={() => onClick(newContainer)}
-            role="presentation"
-          >
-            <div
-              className={ImagePartWrapperStyle}
-              onClick={() => onClick(newContainer)}
-              role="presentation"
-            >
+          <div className={CardWrapperStyle} role="presentation">
+            <div className={ImagePartWrapperStyle} role="presentation">
               <div className={ImageWrapperStyle}>
                 <img className={ImageStyle} src={productImage} alt="product_image" />
               </div>
@@ -164,7 +151,6 @@ const ShipmentContainerCard = ({
                   }
                 </FormField>
               </div>
-
               <div className={LabelInputStyle}>
                 <Label>
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
@@ -201,39 +187,20 @@ const ShipmentContainerCard = ({
                     <Icon icon="WAREHOUSE" />
                   </Link>
                 )}
-                <BooleanValue>
-                  {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
-                    <>
-                      <button type="button" onClick={() => toggleSelectWarehouse(true)}>
-                        <DefaultStyle type="button" height="20px">
-                          <Display align="left">
-                            {isNullOrUndefined(warehouse) ? '' : warehouse.name}
-                          </Display>
-                        </DefaultStyle>
-                      </button>
 
-                      <SlideView
-                        isOpen={isOpenSelectWarehouse}
-                        onRequestClose={() => toggleSelectWarehouse(false)}
-                        options={{ width: '1030px' }}
-                      >
-                        {isOpenSelectWarehouse && (
-                          <SelectWareHouse
-                            selected={warehouse}
-                            onCancel={() => toggleSelectWarehouse(false)}
-                            onSelect={newValue => {
-                              toggleSelectWarehouse(false);
-                              update({
-                                ...container,
-                                warehouse: newValue,
-                              });
-                            }}
-                          />
-                        )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
+                <button
+                  type="button"
+                  onClick={evt => {
+                    evt.stopPropagation();
+                    onSelectWarehouse();
+                  }}
+                >
+                  <DefaultStyle type="button" height="20px">
+                    <Display align="left">
+                      {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                    </Display>
+                  </DefaultStyle>
+                </button>
               </div>
 
               <div className={LabelStyle}>
@@ -280,12 +247,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(true)}
-                    onClick={() =>
+                    onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalAgreedDateApprovedBy: null,
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Icon icon="CHECKED" />
                   </button>
@@ -293,12 +261,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(false)}
-                    onClick={() =>
+                    onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalAgreedDateApprovedBy: user,
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Icon icon="UNCHECKED" />
                   </button>
@@ -349,12 +318,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(true)}
-                    onClick={() =>
+                    onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalActualDateApprovedBy: null,
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Icon icon="CHECKED" />
                   </button>
@@ -362,12 +332,13 @@ const ShipmentContainerCard = ({
                   <button
                     type="button"
                     className={ApprovalIconStyle(false)}
-                    onClick={() =>
+                    onClick={evt => {
+                      evt.stopPropagation();
                       update({
                         ...container,
                         warehouseArrivalActualDateApprovedBy: user,
-                      })
-                    }
+                      });
+                    }}
                   >
                     <Icon icon="UNCHECKED" />
                   </button>

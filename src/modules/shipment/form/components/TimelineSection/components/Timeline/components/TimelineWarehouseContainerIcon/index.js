@@ -2,15 +2,18 @@
 import React from 'react';
 import { Link } from '@reach/router';
 import scrollIntoView from 'utils/scrollIntoView';
+import { isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import { TimelineIconStyle, IconWrapperStyle } from './style';
 import Ring from './Ring';
 
 type Container = {
   warehouseArrivalAgreedDate: string,
-  warehouseArrivalAgreedDateApprovedBy: string,
+  warehouseArrivalAgreedDateApprovedAt: string,
+  warehouseArrivalAgreedDateApprovedBy: Object,
   warehouseArrivalActualDate: string,
-  warehouseArrivalActualDateApprovedBy: string,
+  warehouseArrivalActualDateApprovedAt: string,
+  warehouseArrivalActualDateApprovedBy: Object,
 };
 type Props = {
   containers: Array<Container>,
@@ -26,14 +29,28 @@ const defaultProps = {
   boundaryId: '',
 };
 
+const getApproved = (container: Object) => {
+  const {
+    warehouseArrivalAgreedDateApprovedAt: agreedDateApprovedAt,
+    warehouseArrivalActualDateApprovedAt: actualDateApprovedAt,
+    warehouseArrivalAgreedDateApprovedBy: agreedDateApprovedBy,
+    warehouseArrivalActualDateApprovedBy: actualDateApprovedBy,
+  } = container;
+  const agreedDateApproved =
+    !isNullOrUndefined(agreedDateApprovedAt) || !isNullOrUndefined(agreedDateApprovedBy);
+  const actualDateApproved =
+    !isNullOrUndefined(actualDateApprovedAt) || !isNullOrUndefined(actualDateApprovedBy);
+  return { agreedDateApproved, actualDateApproved };
+};
 const getIconColor = (containers: Array<Container>) => {
   let color = 'TEAL';
-  const allAgreed = containers.every(container => container.warehouseArrivalAgreedDateApprovedBy);
+  const allAgreed = containers.every(
+    container =>
+      !isNullOrUndefined(container.warehouseArrivalAgreedDateApprovedAt) ||
+      !isNullOrUndefined(container.warehouseArrivalAgreedDateApprovedBy)
+  );
   containers.forEach(container => {
-    const {
-      warehouseArrivalAgreedDateApprovedBy: agreedDateApproved,
-      warehouseArrivalActualDateApprovedBy: actualDateApproved,
-    } = container;
+    const { agreedDateApproved, actualDateApproved } = getApproved(container);
     if (!agreedDateApproved && !actualDateApproved) {
       color = 'GRAY_LIGHT';
     } else if (allAgreed && !actualDateApproved) {
@@ -51,10 +68,7 @@ const getRingPercent = (containers: Array<Container>) => {
   let agreedDates = 0;
   let actualDates = 0;
   containers.forEach(container => {
-    const {
-      warehouseArrivalAgreedDateApprovedBy: agreedDateApproved,
-      warehouseArrivalActualDateApprovedBy: actualDateApproved,
-    } = container;
+    const { agreedDateApproved, actualDateApproved } = getApproved(container);
     if (agreedDateApproved) {
       agreedDates += 1;
     }
