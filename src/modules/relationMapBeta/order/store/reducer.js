@@ -149,7 +149,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     }
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
+    case 'MOVE_TO_SHIPMENT':
     case 'CLONE_ENTITIES':
+      return {
+        ...state,
+        loading: true,
+      };
     case 'MOVE_TO_ORDER':
       return {
         ...state,
@@ -164,6 +169,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'AUTO_FILL_BATCHES_ERROR':
     case 'CLONE_ENTITIES_ERROR':
     case 'MOVE_TO_ORDER_ERROR':
+    case 'MOVE_TO_SHIPMENT_ERROR':
     case 'REMOTE_ENTITIES_ERROR':
       return {
         ...state,
@@ -238,6 +244,18 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         targets,
       };
     }
+    case 'MOVE_TO_SHIPMENT_SUCCESS': {
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectShipment: {
+          ...state.connectShipment,
+          status: true,
+          shipmentId: '',
+        },
+      };
+    }
     case 'CLEAR_CONNECT_MESSAGE': {
       return {
         ...state,
@@ -245,6 +263,10 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         error: false,
         connectOrder: {
           ...state.connectOrder,
+          status: false,
+        },
+        connectShipment: {
+          ...state.connectShipment,
           status: false,
         },
       };

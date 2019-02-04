@@ -215,6 +215,27 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
+    moveToShipment: (batchIds: Array<string>) =>
+      dispatch({
+        type: 'MOVE_TO_SHIPMENT',
+        payload: {
+          batchIds,
+        },
+      }),
+    moveToShipmentSuccess: (data: Object) =>
+      dispatch({
+        type: 'MOVE_TO_SHIPMENT_SUCCESS',
+        payload: {
+          data,
+        },
+      }),
+    moveToShipmentFailed: (error: string) =>
+      dispatch({
+        type: 'MOVE_TO_SHIPMENT_ERROR',
+        payload: {
+          error,
+        },
+      }),
     changeSelectMode: (entity: '' | 'ORDER' | 'SHIPMENT') =>
       dispatch({
         type: 'CHANGE_SELECT_MODE',
