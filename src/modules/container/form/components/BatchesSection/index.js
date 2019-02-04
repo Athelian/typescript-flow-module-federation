@@ -125,15 +125,23 @@ function BatchesSection() {
       </SectionNavBar>
       <div className={BatchesSectionBodyStyle}>
         <Subscribe to={[ContainerFormContainer]}>
-          {({ state: { batches = [], representativeBatch }, setFieldValue, setDeepFieldValue }) =>
-            batches.length === 0 ? (
-              <div className={EmptyMessageStyle}>
-                <FormattedMessage
-                  id="modules.container.noBatches"
-                  defaultMessage="No batches found"
-                />
-              </div>
-            ) : (
+          {({ state: { batches = [], representativeBatch }, setFieldValue, setDeepFieldValue }) => {
+            if (batches.length === 0) {
+              return (
+                <div className={EmptyMessageStyle}>
+                  <FormattedMessage
+                    id="modules.container.noBatches"
+                    defaultMessage="No batches found"
+                  />
+                </div>
+              );
+            }
+
+            if (isNullOrUndefined(representativeBatch)) {
+              setDeepFieldValue('representativeBatch', batches[0]);
+            }
+
+            return (
               <div className={BatchesGridStyle}>
                 {batches.map((batch, position) => (
                   <BooleanValue key={batch.id}>
@@ -182,6 +190,9 @@ function BatchesSection() {
                                 'batches',
                                 batches.filter(({ id: batchId }) => id !== batchId)
                               );
+                              if (id === representativeBatch.id) {
+                                setDeepFieldValue('representativeBatch', null);
+                              }
                             }}
                             onClone={({
                               id,
@@ -209,8 +220,8 @@ function BatchesSection() {
                   </BooleanValue>
                 ))}
               </div>
-            )
-          }
+            );
+          }}
         </Subscribe>
       </div>
     </div>

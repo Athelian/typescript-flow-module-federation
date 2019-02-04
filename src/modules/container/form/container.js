@@ -44,6 +44,7 @@ const initValues = {
   totalPrice: null,
   batches: [],
   tags: [],
+  representativeBatch: null,
 };
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {

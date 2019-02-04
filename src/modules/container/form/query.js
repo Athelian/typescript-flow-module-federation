@@ -1,6 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
+  containerFormFragment,
   userAvatarFragment,
   warehouseCardFragment,
   shipmentCardFragment,
@@ -24,46 +25,11 @@ import {
 export const containerFormQuery = gql`
   query($id: ID!) {
     container(id: $id) {
-      ... on Container {
-        archived
-        updatedAt
-        no
-        memo
-        updatedBy {
-          ...userAvatarFragment
-        }
-        warehouse {
-          ...warehouseCardFragment
-        }
-        warehouseArrivalAgreedDate
-        warehouseArrivalActualDate
-        warehouseArrivalAgreedDateApprovedAt
-        warehouseArrivalActualDateApprovedAt
-        warehouseArrivalAgreedDateApprovedBy {
-          ...userAvatarFragment
-        }
-        warehouseArrivalActualDateApprovedBy {
-          ...userAvatarFragment
-        }
-        warehouseArrivalAgreedDateAssignedTo {
-          ...userAvatarFragment
-        }
-        warehouseArrivalActualDateAssignedTo {
-          ...userAvatarFragment
-        }
-        tags {
-          ...tagFragment
-        }
-        shipment {
-          ...shipmentCardFragment
-        }
-        batches {
-          ...batchFormFragment
-        }
-      }
+      ...containerFormFragment
     }
   }
 
+  ${containerFormFragment}
   ${userAvatarFragment}
   ${warehouseCardFragment}
   ${shipmentCardFragment}

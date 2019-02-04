@@ -1,5 +1,51 @@
 import gql from 'graphql-tag';
 
+export const containerFormFragment = gql`
+  fragment containerFormFragment on Container {
+    id
+    archived
+    updatedAt
+    no
+    memo
+    updatedBy {
+      ...userAvatarFragment
+    }
+    warehouse {
+      ...warehouseCardFragment
+    }
+    warehouseArrivalAgreedDate
+    warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedAt
+    warehouseArrivalActualDateApprovedAt
+    warehouseArrivalAgreedDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    shipment {
+      ...shipmentCardFragment
+    }
+    batches {
+      ...batchFormFragment
+    }
+    representativeBatch {
+      ... on Batch {
+        id
+      }
+    }
+  }
+`;
+
 export const containerCardFragment = gql`
   fragment containerCardFragment on Container {
     id
@@ -105,5 +151,3 @@ export const shipmentContainerCardFragment = gql`
     }
   }
 `;
-
-export default containerCardFragment;
