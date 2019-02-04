@@ -1,28 +1,26 @@
 // @flow
 import * as React from 'react';
-import { cx } from 'react-emotion';
+import { ActionOverlayWrapperStyle, ActionStyle } from './style';
 
-import { OverlayStyle, CardWrapperStyle, DisabledWrapper, ActionWrapperStyle } from './style';
-
-type Props = {
-  onClick?: Function,
+type OptionalProps = {
+  onClick: Function,
   message: React.Node,
-  disabled?: boolean,
+  disabled: boolean,
 };
 
+type Props = OptionalProps;
+
 const defaultProps = {
+  onClick: () => {},
+  message: '',
   disabled: false,
 };
 
 const Action = ({ onClick, message, disabled }: Props) => (
-  <div className={cx(OverlayStyle, CardWrapperStyle)}>
-    {disabled ? (
-      <div className={DisabledWrapper}>{message}</div>
-    ) : (
-      <div className={ActionWrapperStyle} role="presentation" onClick={onClick}>
-        {message}
-      </div>
-    )}
+  <div className={ActionOverlayWrapperStyle}>
+    <div className={ActionStyle(disabled)} role="presentation" onClick={onClick}>
+      {message}
+    </div>
   </div>
 );
 

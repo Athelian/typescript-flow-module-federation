@@ -2,14 +2,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { findIndex } from 'lodash';
-
 import { Subscribe } from 'unstated';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
-
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-
 import {
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
@@ -121,7 +118,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                       message={
                         <FormattedMessage
                           id="modules.shipment.cantMove"
-                          defaultMessage="CAN NOT MOVE TO HERE"
+                          defaultMessage="CAN NOT MOVE TO ORIGIN"
                         />
                       }
                     />
@@ -139,7 +136,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                             message={
                               <FormattedMessage
                                 id="modules.shipment.cantMove"
-                                defaultMessage="CAN NOT MOVE TO HERE"
+                                defaultMessage="CAN NOT MOVE TO ORIGIN"
                               />
                             }
                           />
@@ -215,7 +212,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                             message={
                               <FormattedMessage
                                 id="modules.shipment.moveToContainer"
-                                defaultMessage="MOVE TO CONTAINER"
+                                defaultMessage="MOVE TO THIS CONTAINER"
                               />
                             }
                           />

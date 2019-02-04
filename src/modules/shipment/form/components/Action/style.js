@@ -1,53 +1,34 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, presets } from 'styles/common';
+import { colors, presets, borderRadiuses, fontSizes, shadows } from 'styles/common';
 
-export const OverlayStyle: string = css`
+export const ActionOverlayWrapperStyle: string = css`
+  ${presets.BUTTON};
   position: absolute;
   top: 0;
   left: 0;
-
   width: 100%;
   height: 100%;
+  padding: 0 0 0 10px;
+  z-index: 1;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    & > div {
+      opacity: 1;
+    }
+  }
 `;
 
-export const CardWrapperStyle: string = css`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  // background-color: rgba(255, 255, 255, 0.8);
-`;
-
-export const DisabledWrapper = css`
-  flex: 1;
-  z-index: 2;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-
-  background-color: ${colors.WHITE};
-  opacity: 0.3;
-`;
-export const ActionWrapperStyle: string = css`
+export const ActionStyle = (disabled: boolean): string => css`
   ${presets.BUTTON};
   opacity: 0;
-  flex: 1;
-  z-index: 2;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: ${colors.GRAY_DARK};
-
-  transition: background-color 0.2s linear;
-  background-color: ${colors.TRANSPARENT};
-  &:hover {
-    color: ${colors.WHITE};
-    background-color: ${colors.TEAL};
-    opacity: 1;
-  }
+  color: ${colors.WHITE};
+  background-color: ${disabled ? colors.GRAY_DARK : colors.TEAL};
+  ${borderRadiuses.MAIN};
+  width: 185px;
+  padding: 20px;
+  ${fontSizes.SMALL};
+  letter-spacing: 2px;
+  text-align: center;
+  ${shadows.INPUT};
 `;

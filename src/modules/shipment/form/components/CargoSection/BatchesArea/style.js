@@ -60,8 +60,18 @@ export const TitleWrapperStyle: string = css`
 export const SubTitleWrapperStyle: string = css`
   display: flex;
   align-items: center;
+  justify-content: center;
+  white-space: nowrap;
   ${fontSizes.SMALL};
   color: ${colors.GRAY_DARK};
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  padding: 5px;
+  ${borderRadiuses.BUTTON};
+  letter-spacing: 2px;
+`;
+
+export const SubTitleIconStyle: string = css`
+  margin-left: 5px;
 `;
 
 export const IconStyle: string = css`

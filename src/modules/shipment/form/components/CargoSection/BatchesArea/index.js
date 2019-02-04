@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
@@ -26,6 +25,7 @@ import {
   BatchesHeaderWrapperStyle,
   TitleWrapperStyle,
   SubTitleWrapperStyle,
+  SubTitleIconStyle,
   IconStyle,
   TitleStyle,
   BatchesGridStyle,
@@ -93,10 +93,14 @@ function BatchesArea({
                             <div className={SubTitleWrapperStyle}>
                               <FormattedMessage
                                 id="modules.shipment.selected"
-                                defaultMessage="SELECTED"
+                                defaultMessage="SELECTED {numOfBatches}"
+                                values={{
+                                  numOfBatches: <FormattedNumber value={selectedBatches.length} />,
+                                }}
                               />
-                              <FormattedNumber value={selectedBatches.length} />{' '}
-                              <Icon icon="BATCH" />
+                              <div className={SubTitleIconStyle}>
+                                <Icon icon="BATCH" />
+                              </div>
                             </div>
                             <CancelButton onClick={() => setIsSelectBatchesMode(false)} />
                           </>

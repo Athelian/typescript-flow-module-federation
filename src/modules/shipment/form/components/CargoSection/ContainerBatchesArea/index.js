@@ -26,6 +26,7 @@ import {
   BatchesHeaderWrapperStyle,
   TitleWrapperStyle,
   SubTitleWrapperStyle,
+  SubTitleIconStyle,
   IconStyle,
   TitleStyle,
   BatchesGridStyle,
@@ -102,10 +103,14 @@ export default function ContainerBatchesArea({
                             <div className={SubTitleWrapperStyle}>
                               <FormattedMessage
                                 id="modules.shipment.selected"
-                                defaultMessage="SELECTED"
+                                defaultMessage="SELECTED {numOfBatches}"
+                                values={{
+                                  numOfBatches: <FormattedNumber value={selectedBatches.length} />,
+                                }}
                               />
-                              <FormattedNumber value={selectedBatches.length} />{' '}
-                              <Icon icon="BATCH" />
+                              <div className={SubTitleIconStyle}>
+                                <Icon icon="BATCH" />
+                              </div>
                             </div>
                             <CancelButton onClick={() => setIsSelectBatchesMode(false)} />
                           </>
