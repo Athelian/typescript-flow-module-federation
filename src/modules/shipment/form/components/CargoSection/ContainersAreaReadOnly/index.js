@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { findIndex } from 'lodash';
 
 import { Subscribe } from 'unstated';
-import { getByPath } from 'utils/fp';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
 
 import { NewButton } from 'components/Buttons';
@@ -42,6 +42,9 @@ type Props = {
   setIsSelectBatchesMode: Function,
 };
 
+const includesById = (id: string, batches: Array<Object>): boolean =>
+  batches.map(({ id: batchId }) => batchId).includes(id);
+
 function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
@@ -51,6 +54,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
       ) => {
         const batchesInPool = getBatchesInPool(batches);
         const isSelectedContainerCard = isSelectedContainer(selectCardId);
+        const isSelectedBatchesPoolCard = isSelectedBatchesPool(selectCardId);
         return (
           <div className={ContainersWrapperStyle}>
             <div className={ContainersNavbarWrapperStyle} />
@@ -61,12 +65,11 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                 </div>
                 <div className={TitleStyle}>
                   <FormattedMessage id="modules.Shipments.containers" defaultMessage="CONTAINERS" />{' '}
-                  (
-                  <FormattedNumber value={containers.length} />)
+                  (<FormattedNumber value={containers.length} />)
                 </div>
               </div>
               <div className={ContainersGridStyle}>
-                <div className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPool(batches))}>
+                <div className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPoolCard)}>
                   <BatchesPoolCard
                     totalBatches={batchesInPool.length}
                     product={
@@ -143,23 +146,40 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                         ) : (
                           <Action
                             onClick={() => {
-                              if (isSelectedContainerCard) {
-                                const newBatches = batches.map(
-                                  ({ id, container: currentContainer, ...rest }) =>
-                                    selectedBatches.map(({ id: batchId }) => batchId).includes(id)
-                                      ? {
-                                          id,
-                                          container,
-                                          ...rest,
-                                        }
-                                      : {
-                                          id,
-                                          container: currentContainer,
-                                          ...rest,
-                                        }
+                              if (isNullOrUndefined(selectCardId)) {
+                                const newContainers = containers.map(
+                                  ({ id, batches: containerBatches = [], ...rest }) => {
+                                    if (id === container.id) {
+                                      return {
+                                        id,
+                                        ...rest,
+                                        batches: [
+                                          ...containerBatches,
+                                          ...selectedBatches.filter(
+                                            ({ container: batchContainer }) =>
+                                              isNullOrUndefined(batchContainer) ||
+                                              batchContainer.id !== id
+                                          ),
+                                        ],
+                                      };
+                                    }
+                                    return {
+                                      id,
+                                      ...rest,
+                                      batches: containerBatches.filter(
+                                        ({ id: batchId }) => !includesById(batchId, selectedBatches)
+                                      ),
+                                    };
+                                  }
                                 );
-                                setBatches('batches', newBatches);
 
+                                setContainers('containers', newContainers);
+                              } else if (isSelectedBatchesPoolCard) {
+                                setDeepFieldValue(`containers.${index}.batches`, [
+                                  ...container.batches,
+                                  ...selectedBatches,
+                                ]);
+                              } else if (isSelectedContainerCard) {
                                 const sourceContainerIndex = findIndex(
                                   containers,
                                   ({ id }) => id === selectCardId
@@ -175,50 +195,21 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                   `containers.${sourceContainerIndex}.batches`,
                                   sourceContainerBatches
                                 );
-                                setDeepFieldValue(`containers.${index}.batches`, selectedBatches);
-                              } else if (isSelectedBatchesPool(selectCardId)) {
-                                const newBatches = batches.map(
-                                  ({ id, container: currentContainer, ...rest }) =>
-                                    selectedBatches.map(({ id: batchId }) => batchId).includes(id)
-                                      ? {
-                                          id,
-                                          container,
-                                          ...rest,
-                                        }
-                                      : {
-                                          id,
-                                          container: currentContainer,
-                                          ...rest,
-                                        }
-                                );
-                                setBatches('batches', newBatches);
-                                setDeepFieldValue(`containers.${index}.batches`, selectedBatches);
-                              } else {
-                                // const containerMap = new Map<string, Object>();
-                                // containers.forEach(item => containerMap.set(item.id, item));
-                                // const newBatches = [];
-                                // selectedBatches.forEach((item: Object) => {
-                                //   const selectedBatch = { ...item };
-                                //   if (!selectedBatch.container) {
-                                //     selectedBatch.container = containerMap.get(selectCardId);
-                                //   } else if (selectedBatch.container.id !== selectCardId) {
-                                //     const containerId = selectedBatch.container.id;
-                                //     const selectedBatchContainer =
-                                //       containerMap.get(containerId) || {};
-                                //     const containerBatches = [
-                                //       ...selectedBatchContainer.batches,
-                                //     ].filter(({ id }) => selectedBatch.id !== id);
-                                //     containerMap.set(selectedBatch.container.id, {
-                                //       ...containerMap.get(selectedBatch.container.id),
-                                //       batches: containerBatches,
-                                //     });
-                                //     selectedBatch.container = containerMap.get(selectCardId);
-                                //     newBatches.push(selectedBatch);
-                                //   }
-                                // });
-                                // setBatches('batches', newBatches);
-                                // setContainers('containers', containerMap.entries());
+                                setDeepFieldValue(`containers.${index}.batches`, [
+                                  ...container.batches,
+                                  ...selectedBatches,
+                                ]);
                               }
+                              const newBatches = batches.map(
+                                ({ id, container: currentContainer, ...rest }) => ({
+                                  id,
+                                  ...(includesById(id, selectedBatches)
+                                    ? { container }
+                                    : { container: currentContainer }),
+                                  ...rest,
+                                })
+                              );
+                              setBatches('batches', newBatches);
                               setIsSelectBatchesMode(false);
                             }}
                             message={
