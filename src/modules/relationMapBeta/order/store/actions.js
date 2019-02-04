@@ -257,11 +257,12 @@ function actionCreators(dispatch: Function) {
           id,
         },
       }),
-    adddNewOrder: (id: string) =>
+    addNew: (entity: 'ORDER' | 'SHIPMENT', id: string) =>
       dispatch({
-        type: 'NEW_ORDER',
+        type: 'NEW_ENTITY',
         payload: {
           id,
+          entity,
         },
       }),
     refetchQueryBy: (entity: string, id: string) =>

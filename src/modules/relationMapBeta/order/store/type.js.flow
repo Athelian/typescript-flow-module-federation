@@ -25,6 +25,7 @@ export type UIState = {
   },
   new: {
     orders: Array<string>,
+    shipments: Array<string>,
     updateOrdersInput: Array<{
       id: string,
       orderItems: Array<Object>,

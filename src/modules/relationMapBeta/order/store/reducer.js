@@ -29,6 +29,7 @@ export const uiInitState: UIState = {
   toggleShipmentList: getInitToggleShipmentList(),
   new: {
     orders: [],
+    shipments: [],
     updateOrdersInput: [],
   },
   select: {
@@ -93,13 +94,24 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         },
       };
     }
-    case 'NEW_ORDER': {
-      const orderId = getByPathWithDefault('', 'payload.id', action);
+    case 'NEW_ENTITY': {
+      const entity = getByPathWithDefault('', 'payload.entity', action);
+      const id = getByPathWithDefault('', 'payload.id', action);
+      if (entity === 'ORDER') {
+        return {
+          ...state,
+          new: {
+            ...state.new,
+            orders: [...state.new.orders, id],
+          },
+        };
+      }
+
       return {
         ...state,
         new: {
           ...state.new,
-          orders: [...state.new.orders, orderId],
+          shipments: [...state.new.shipments, id],
         },
       };
     }
