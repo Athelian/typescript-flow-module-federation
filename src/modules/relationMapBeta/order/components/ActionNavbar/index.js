@@ -35,6 +35,7 @@ import SplitPanel from './SplitPanel';
 import SplitBalancePanel from './SplitBalancePanel';
 import ConstraintPanel from './ConstraintPanel';
 import MoveToOrderPanel from './MoveToOrderPanel';
+import MoveToShipmentPanel from './MoveToShipmentPanel';
 import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
@@ -110,6 +111,26 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   className={TabItemStyled}
                   allowClickOnDisable
                   label={
+                    <>
+                      <FormattedMessage
+                        id="modules.RelationMaps.label.autoFillBatch"
+                        defaultMessage="AUTOFILL BATCH"
+                      />
+                      <Icon icon="BATCH" />
+                    </>
+                  }
+                  icon="ORDER_ITEM"
+                  disabled={!uiSelectors.isAllowToAutoFillBatch()}
+                  active={activeAction === 'autoFillBatch'}
+                  onClick={() => {
+                    actions.selectOrderMode(false);
+                    setActiveAction('autoFillBatch');
+                  }}
+                />
+                <TabItem
+                  className={TabItemStyled}
+                  allowClickOnDisable
+                  label={
                     <div className={MoveToWrapper}>
                       <FormattedMessage {...messages.moveTo} />
                       <Icon icon="ORDER" />
@@ -140,26 +161,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     setActiveAction('connectShipment');
                   }}
                 />
-                <TabItem
-                  className={TabItemStyled}
-                  allowClickOnDisable
-                  label={
-                    <>
-                      <FormattedMessage
-                        id="modules.RelationMaps.label.autoFillBatch"
-                        defaultMessage="AUTOFILL BATCH"
-                      />
-                      <Icon icon="BATCH" />
-                    </>
-                  }
-                  icon="ORDER_ITEM"
-                  disabled={!uiSelectors.isAllowToAutoFillBatch()}
-                  active={activeAction === 'autoFillBatch'}
-                  onClick={() => {
-                    actions.selectOrderMode(false);
-                    setActiveAction('autoFillBatch');
-                  }}
-                />
+
                 <BooleanValue>
                   {({ value: opened, set: openTableView }) => (
                     <>
@@ -188,7 +190,9 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   )}
                 </BooleanValue>
               </TargetToolBar>
-              {['split', 'autoFillBatch', 'connectOrder'].includes(activeAction) && (
+              {['split', 'autoFillBatch', 'connectOrder', 'connectShipment'].includes(
+                activeAction
+              ) && (
                 <ConstraintPanel
                   disable={{
                     disabledSplit: activeAction === 'split' && !uiSelectors.isAllowToSplitBatch(),
@@ -311,6 +315,17 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       actions.autoFillBatchesFailed(error);
                     }
                   }}
+                />
+              )}
+              {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectOrder() && (
+                <MoveToShipmentPanel
+                  status={false}
+                  hasSelectedShipment={false}
+                  onClear={console.warn}
+                  onClearSelectShipment={console.warn}
+                  onDisconnect={console.warn}
+                  onMoveToExistShipment={console.warn}
+                  onMoveToNewShipment={console.warn}
                 />
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
