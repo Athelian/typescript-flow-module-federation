@@ -41,6 +41,7 @@ import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import { cloneBatchMutation } from './ClonePanel/mutation';
 import { updateOrderMutation, prepareUpdateOrderInput } from './MoveToOrderPanel/mutation';
+import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
 import TableView from '../TableInlineEdit';
 
 type Props = {
@@ -324,8 +325,57 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   hasSelectedShipment={uiSelectors.isSelectedShipment()}
                   onClear={actions.clearConnectMessage}
                   onClearSelectShipment={() => actions.toggleSelectedShipment('')}
-                  onDisconnect={console.warn}
-                  onMoveToExistShipment={console.warn}
+                  onDisconnect={async () => {
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const shipmentId = null;
+                    actions.moveToShipment(batchIds);
+                    try {
+                      const updateBatches = await Promise.all(
+                        batchIds.map(id =>
+                          client.mutate({
+                            mutation: updateBatchMutation,
+                            variables: {
+                              id,
+                              input: {
+                                shipmentId,
+                              },
+                            },
+                          })
+                        )
+                      );
+                      actions.moveToShipmentSuccess(
+                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
+                      );
+                    } catch (error) {
+                      actions.moveToShipmentFailed(error);
+                    }
+                  }}
+                  onMoveToExistShipment={async () => {
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const { shipmentId } = state.connectShipment;
+                    actions.moveToShipment(batchIds);
+                    try {
+                      const updateBatches = await Promise.all(
+                        batchIds.map(id =>
+                          client.mutate({
+                            mutation: updateBatchMutation,
+                            variables: {
+                              id,
+                              input: {
+                                shipmentId,
+                                containerId: null,
+                              },
+                            },
+                          })
+                        )
+                      );
+                      actions.moveToShipmentSuccess(
+                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
+                      );
+                    } catch (error) {
+                      actions.moveToShipmentFailed(error);
+                    }
+                  }}
                   onMoveToNewShipment={console.warn}
                 />
               )}

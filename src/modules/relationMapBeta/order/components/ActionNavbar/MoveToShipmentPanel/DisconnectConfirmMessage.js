@@ -6,11 +6,11 @@ import messages from 'modules/relationMap/messages';
 import { ConfirmMessageContainer, ConfirmActionStyle } from './style';
 
 const DisconnectConfirmMessage = () => (
-  <div className={style.ConfirmMessageContainer}>
+  <div className={ConfirmMessageContainer}>
     <div>
       <FormattedMessage {...messages.confirmMessage} />
     </div>
-    <span className={style.ConfirmActionStyle}>
+    <span className={ConfirmActionStyle}>
       <FormattedMessage {...messages.disconnect} />
     </span>
     <FormattedMessage {...messages.confirmDisconnect} />
