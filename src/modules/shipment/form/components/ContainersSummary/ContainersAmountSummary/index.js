@@ -19,7 +19,10 @@ const ContainersAmountSummary = ({
   <div className={ContainersAmountSummaryStyle}>
     <div className={RowStyle}>
       <Label>
-        <FormattedMessage id="modules.shipment.noOfContainers" defaultMessage="NO. OF CONTAINERS" />
+        <FormattedMessage
+          id="modules.Shipments.noOfContainers"
+          defaultMessage="NO. OF CONTAINERS"
+        />
       </Label>
       <Display>
         <FormattedNumber value={numOfContainers} />
@@ -29,7 +32,7 @@ const ContainersAmountSummary = ({
     <div className={RowStyle}>
       <Label>
         <FormattedMessage
-          id="modules.shipment.noOfApprovedAgreedDates"
+          id="modules.Shipments.noOfApprovedAgreedDates"
           defaultMessage="NO. OF APPROVED AGREED DATES"
         />
       </Label>
@@ -41,7 +44,7 @@ const ContainersAmountSummary = ({
     <div className={RowStyle}>
       <Label>
         <FormattedMessage
-          id="modules.shipment.noOfApprovedActualDates"
+          id="modules.Shipments.noOfApprovedActualDates"
           defaultMessage="NO. OF APPROVED ACTUAL DATES"
         />
       </Label>

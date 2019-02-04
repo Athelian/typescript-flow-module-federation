@@ -2,46 +2,7 @@
 import logger from 'utils/logger';
 import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
 import { getByPathWithDefault } from 'utils/fp';
-
-export type UIState = {
-  loading: boolean,
-  error: boolean,
-  showTag: boolean,
-  expandCards: {
-    orders: Array<string>,
-    shipments: Array<string>,
-  },
-  toggleShipmentList: boolean,
-  select: {
-    mode: 'SINGLE' | 'ALL',
-    entities: Array<string>,
-  },
-  highlight: {
-    type: string,
-    selectedId: string,
-  },
-  edit: {
-    type: string,
-    selectedId: string,
-  },
-  targets: Array<string>,
-  totalShipment: number,
-  split: {
-    parentOrderIds: Array<string>,
-    batches: Object,
-  },
-  balanceSplit: {
-    batches: Array<Object>,
-  },
-  clone: {
-    batches: Object,
-  },
-  connectOrder: {
-    enableSelectMode: boolean,
-    orderId: string,
-    exporterIds: Array<string>,
-  },
-};
+import type { UIState } from './type.js.flow';
 
 export const getInitShowTag = () => {
   const localFilterRMTags = window.localStorage && window.localStorage.getItem('filterRMTags');
@@ -59,11 +20,17 @@ export const uiInitState: UIState = {
   loading: false,
   error: false,
   showTag: getInitShowTag(),
+  refetchOrderId: '',
+  refetchShipmentId: '',
   expandCards: {
     orders: [],
     shipments: [],
   },
   toggleShipmentList: getInitToggleShipmentList(),
+  new: {
+    orders: [],
+    updateOrdersInput: [],
+  },
   select: {
     mode: 'SINGLE',
     entities: [],
@@ -91,7 +58,9 @@ export const uiInitState: UIState = {
   connectOrder: {
     enableSelectMode: false,
     orderId: '',
+    status: false,
     exporterIds: [],
+    sourceOrder: {},
   },
 };
 
@@ -114,6 +83,26 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           enableSelectMode: !!getByPathWithDefault(false, 'payload.isEnable', action),
         },
       };
+    case 'NEW_ORDER': {
+      const orderId = getByPathWithDefault('', 'payload.id', action);
+      return {
+        ...state,
+        new: {
+          ...state.new,
+          orders: [...state.new.orders, orderId],
+        },
+      };
+    }
+    case 'PREPARE_REMOVE_DATA': {
+      const updateOrdersInput = getByPathWithDefault([], 'payload.updateOrdersInput', action);
+      return {
+        ...state,
+        new: {
+          ...state.new,
+          updateOrdersInput,
+        },
+      };
+    }
     case 'TOGGLE_SELECTED_ORDER': {
       const orderId = getByPathWithDefault('', 'payload.id', action);
       return {
@@ -124,21 +113,122 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         },
       };
     }
+    case 'REFETCH_BY': {
+      const id = getByPathWithDefault('', 'payload.id', action);
+      const entity = getByPathWithDefault('', 'payload.entity', action);
+      const updateData = {};
+      if (entity === 'ORDER') {
+        updateData.refetchOrderId = id;
+      } else {
+        updateData.refetchShipmentId = id;
+      }
+      return {
+        ...state,
+        ...updateData,
+      };
+    }
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
     case 'CLONE_ENTITIES':
+    case 'MOVE_TO_ORDER':
       return {
         ...state,
         loading: true,
+        connectOrder: {
+          ...state.connectOrder,
+          status: false,
+          sourceOrder: getByPathWithDefault({}, 'payload.targetOrder', action),
+        },
       };
     case 'SPLIT_BATCH_ERROR':
     case 'AUTO_FILL_BATCHES_ERROR':
     case 'CLONE_ENTITIES_ERROR':
+    case 'MOVE_TO_ORDER_ERROR':
+    case 'REMOTE_ENTITIES_ERROR':
       return {
         ...state,
         loading: false,
         error: true,
       };
+    case 'REMOTE_ENTITIES_SUCCESS': {
+      const targets = [];
+      const exporterIds = [];
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectOrder: {
+          ...state.connectOrder,
+          orderId: '',
+          exporterIds,
+        },
+        targets,
+      };
+    }
+    case 'MOVE_TO_ORDER_SUCCESS': {
+      const orders = getByPathWithDefault([], 'payload.data', action);
+      const targets = [];
+      const exporterIds = [];
+      const { sourceOrder } = state.connectOrder;
+      const updateOrder = orders.find(item => item.id === sourceOrder.id);
+      if (updateOrder) {
+        const { exporter, orderItems } = updateOrder;
+        orderItems.forEach(orderItem => {
+          if (!sourceOrder.orderItems.includes(orderItem.id)) {
+            targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+            exporterIds.push(`${ORDER_ITEM}-${exporter.id}`);
+            orderItem.batches.forEach(batch => {
+              targets.push(`${BATCH}-${batch.id}`);
+              if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
+                exporterIds.push(`${BATCH}-${exporter.id}`);
+              }
+            });
+          } else {
+            const findOrderItem = sourceOrder.orderItems.find(item => item.id === orderItem.id);
+            if (findOrderItem) {
+              orderItem.batches.forEach(batch => {
+                if (!findOrderItem.batches.includes(batch)) {
+                  targets.push(`${BATCH}-${batch.id}`);
+                  if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
+                    exporterIds.push(`${BATCH}-${exporter.id}`);
+                  }
+                }
+              });
+            } else {
+              orderItem.batches.forEach(batch => {
+                targets.push(`${BATCH}-${batch.id}`);
+                if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
+                  exporterIds.push(`${BATCH}-${exporter.id}`);
+                }
+              });
+            }
+          }
+        });
+      }
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectOrder: {
+          ...state.connectOrder,
+          status: true,
+          orderId: '',
+          exporterIds,
+        },
+        targets,
+      };
+    }
+    case 'CLEAR_CONNECT_MESSAGE': {
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        connectOrder: {
+          ...state.connectOrder,
+          status: false,
+        },
+      };
+    }
     case 'SPLIT_BATCH_SUCCESS': {
       const batchId = getByPathWithDefault('', 'payload.batchId', action);
       const [, orderId] = (
@@ -211,6 +301,13 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         return {
           ...state,
           targets: [],
+          connectOrder: {
+            ...state.connectOrder,
+            status: false,
+            orderId: '',
+            exporterIds: [],
+            sourceOrder: {},
+          },
           select: {
             mode: 'SINGLE',
             entities: [],
@@ -268,6 +365,30 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         };
       }
       return state;
+    }
+    case 'TARGET_NEW_ENTITY': {
+      const { payload } = action;
+      const targets = [];
+      const exporterIds = [];
+      if (payload) {
+        const { selectItems = [] } = payload;
+        selectItems.forEach(selectItem => {
+          targets.push(`${selectItem.entity}-${selectItem.id}`);
+          exporterIds.push(selectItem.exporterId);
+        });
+      }
+      return {
+        ...state,
+        new: {
+          ...state.new,
+          updateOrdersInput: [],
+        },
+        connectOrder: {
+          ...state.connectOrder,
+          exporterIds,
+        },
+        targets,
+      };
     }
     case 'SELECT_BRANCH': {
       // TODO: Need to check target all action for split and move to order
@@ -362,23 +483,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         if (targets.includes(`${ORDER}-${payload.id}`)) {
           return {
             ...state,
-            connectOrder: {
-              ...state.connectOrder,
-              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-                ? state.connectOrder.exporterIds
-                : [...state.connectOrder.exporterIds, payload.exporterId],
-            },
             targets: (targets.filter(item => item !== `${ORDER}-${payload.id}`): Array<string>),
           };
         }
         return {
           ...state,
-          connectOrder: {
-            ...state.connectOrder,
-            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-              ? state.connectOrder.exporterIds
-              : [...state.connectOrder.exporterIds, payload.exporterId],
-          },
           targets: [...targets, `${ORDER}-${payload.id}`],
         };
       }
@@ -486,304 +595,4 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     default:
       return state;
   }
-}
-
-export function actionCreators(dispatch: Function) {
-  return {
-    clearAllBy: (mode: 'TARGET' | 'HIGHLIGHT') =>
-      dispatch({
-        type: 'CLEAR_ALL',
-        payload: {
-          mode,
-        },
-      }),
-    clearErrorMessage: () =>
-      dispatch({
-        type: 'CLEAR_ERROR_MESSAGE',
-        payload: {},
-      }),
-    toggleTag: () =>
-      dispatch({
-        type: 'TOGGLE_TAG',
-      }),
-    toggleExpand: (entity: string, id: string) =>
-      dispatch({
-        type: 'TOGGLE_EXPAND',
-        payload: {
-          entity,
-          id,
-        },
-      }),
-    toggleHighLight: (entity: string, id: string) =>
-      dispatch({
-        type: 'TOGGLE_HIGH_LIGHT',
-        payload: {
-          entity,
-          id,
-        },
-      }),
-    toggleShipmentList: () =>
-      dispatch({
-        type: 'TOGGLE_SHIPMENT_LIST',
-      }),
-    toggleSelectAll: (entity: string, selectedIds: Array<string>) =>
-      dispatch({
-        type: 'TOGGLE_SELECT_ALL',
-        payload: {
-          entity,
-          selectedIds,
-        },
-      }),
-    countShipment: (total: number) =>
-      dispatch({
-        type: 'TOTAL_SHIPMENT',
-        payload: {
-          total,
-        },
-      }),
-    showEditForm: (type: string, selectedId: string) =>
-      dispatch({
-        type: 'TOGGLE_EDIT_FORM',
-        payload: {
-          type,
-          selectedId,
-        },
-      }),
-    selectBranch: (selectItems: Array<{ entity: string, id: string, exporterId: string }>) =>
-      dispatch({
-        type: 'SELECT_BRANCH',
-        payload: {
-          selectItems,
-        },
-      }),
-    targetShipmentEntity: (id: string) =>
-      dispatch({
-        type: 'TARGET_SHIPMENT_ENTITY',
-        payload: {
-          id,
-        },
-      }),
-    targetOrderEntity: (id: string, exporterId: string) =>
-      dispatch({
-        type: 'TARGET_ORDER_ENTITY',
-        payload: {
-          exporterId,
-          id,
-        },
-      }),
-    targetOrderItemEntity: (id: string, exporterId: string) =>
-      dispatch({
-        type: 'TARGET_ORDER_ITEM_ENTITY',
-        payload: {
-          exporterId,
-          id,
-        },
-      }),
-    targetBatchEntity: ({
-      id,
-      parentOrderId,
-      exporterId,
-    }: {
-      id: string,
-      parentOrderId: string,
-      exporterId: string,
-    }) =>
-      dispatch({
-        type: 'TARGET_BATCH_ENTITY',
-        payload: {
-          parentOrderId,
-          exporterId,
-          id,
-        },
-      }),
-    splitBatch: ({
-      type,
-      batchId,
-      quantity,
-    }: {
-      type: string,
-      batchId: string,
-      quantity: number,
-    }) =>
-      dispatch({
-        type: 'SPLIT_BATCH',
-        payload: {
-          type,
-          batchId,
-          quantity,
-        },
-      }),
-    splitBatchSuccess: (batchId: string, data: Object) =>
-      dispatch({
-        type: 'SPLIT_BATCH_SUCCESS',
-        payload: {
-          batchId,
-          data,
-        },
-      }),
-    splitBatchFailed: (error: string) =>
-      dispatch({
-        type: 'SPLIT_BATCH_ERROR',
-        payload: {
-          error,
-        },
-      }),
-    autoFillBatches: (orderItemIds: Array<string>) =>
-      dispatch({
-        type: 'AUTO_FILL_BATCHES',
-        payload: {
-          orderItemIds,
-        },
-      }),
-    autoFillBatchesSuccess: (data: Object) =>
-      dispatch({
-        type: 'AUTO_FILL_BATCHES_SUCCESS',
-        payload: {
-          data,
-        },
-      }),
-    autoFillBatchesFailed: (error: string) =>
-      dispatch({
-        type: 'AUTO_FILL_BATCHES_ERROR',
-        payload: {
-          error,
-        },
-      }),
-    cloneEntities: (entities: Object) =>
-      dispatch({
-        type: 'CLONE_ENTITIES',
-        payload: {
-          entities,
-        },
-      }),
-    cloneEntitiesSuccess: (data: Object) =>
-      dispatch({
-        type: 'CLONE_ENTITIES_SUCCESS',
-        payload: {
-          data,
-        },
-      }),
-    cloneEntitiesFailed: (error: string) =>
-      dispatch({
-        type: 'CLONE_ENTITIES_ERROR',
-        payload: {
-          error,
-        },
-      }),
-    selectOrderMode: (isEnable: boolean) =>
-      dispatch({
-        type: 'ENABLE_SELECT_ORDER',
-        payload: {
-          isEnable,
-        },
-      }),
-    toggleSelectedOrder: (id: string) =>
-      dispatch({
-        type: 'TOGGLE_SELECTED_ORDER',
-        payload: {
-          id,
-        },
-      }),
-  };
-}
-
-const entitySelector = ({
-  state,
-  entity,
-  total,
-}: {
-  state: UIState,
-  entity: string,
-  total: number,
-}) =>
-  state.select.mode === 'ALL' &&
-  state.select.entities.includes(entity) &&
-  total === state.targets.filter(item => item.includes(`${entity}-`)).length;
-
-const targetedOrderItemIds = (state: UIState) => {
-  const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
-  return (orderItems.map(orderItem => {
-    const [, orderItemId] = orderItem.split('-');
-    return orderItemId;
-  }): Array<string>);
-};
-
-function targetedBatchIds(state: UIState) {
-  const batches = state.targets.filter(item => item.includes(`${BATCH}-`));
-  return (batches.map(orderItem => {
-    const [, batchId] = orderItem.split('-');
-    return batchId;
-  }): Array<string>);
-}
-
-const currentExporterId = (state: UIState) => {
-  const result = [];
-
-  state.connectOrder.exporterIds.forEach(item => {
-    const [, exporterId] = item.split('-');
-    if (!result.includes(exporterId)) {
-      result.push(exporterId);
-    }
-  });
-
-  if (result.length === 1) return result[0];
-
-  return '';
-};
-
-const isAllowToConnectOrder = (state: UIState) => {
-  if (
-    state.targets.filter(item => item.includes(`${ORDER}-`)).length > 0 ||
-    state.targets.filter(item => item.includes(`${SHIPMENT}-`)).length > 0
-  )
-    return false;
-
-  const batchIds = targetedBatchIds(state);
-
-  const orderItemIds = targetedOrderItemIds(state);
-
-  const exporterId = currentExporterId(state);
-
-  return exporterId !== '' && (batchIds.length || orderItemIds.length);
-};
-
-const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) =>
-  currentExporterId(state) === exporterId;
-
-export function selectors(state: UIState) {
-  return {
-    isAllowToConnectOrder: () => isAllowToConnectOrder(state),
-    isShowConnectOrder: () => state.connectOrder.enableSelectMode && state.targets.length > 0,
-    isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
-    isAllowToSelectOrder: (exporterId: string) => isAllowToSelectOrder({ exporterId, state }),
-    isAllowToConnectShipment: () => false,
-    isAllowToSplitBatch: () =>
-      state.targets.length === 1 &&
-      state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,
-    isAllowToAutoFillBatch: () =>
-      state.targets.length > 0 &&
-      state.targets.filter(item => item.includes(`${ORDER_ITEM}-`)).length > 0,
-    isSelectEntity: (highLightEntities: Array<string>, entity: string, id: string) =>
-      highLightEntities.includes(`${entity}-${id}`),
-    isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
-    isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
-    isTargetAnyItem: () => state.targets.length > 0,
-    isHighLightAnyItem: () => state.highlight.selectedId !== '',
-    countTargetBy: (entity: string) =>
-      state.targets.filter(item => item.includes(`${entity}-`)).length,
-    countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
-      highLightEntities.filter(item => item.includes(`${entity}-`)).length,
-    targetedBatchId: () => {
-      const batch = state.targets.find(item => item.includes(`${BATCH}-`));
-      if (batch) {
-        const [, batchId] = batch.split('-');
-        return batchId;
-      }
-      return '';
-    },
-    targetedOrderItemIds: () => targetedOrderItemIds(state),
-    targetedBatchIds: () => targetedBatchIds(state),
-    currentExporterId: () => currentExporterId(state),
-    selectedConnectOrder: (id: string) => state.connectOrder.orderId === id,
-  };
 }

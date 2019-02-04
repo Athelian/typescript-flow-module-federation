@@ -16,6 +16,8 @@ import {
 } from 'modules/relationMap/style';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
+import scrollIntoView from 'utils/scrollIntoView';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -28,7 +30,7 @@ import {
 } from 'modules/relationMap/orderFocused/style';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
-import { orderListQuery } from './query';
+import { orderListQuery, orderDetailQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems, findHighLightEntities } from './helpers';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
@@ -38,6 +40,10 @@ import Shipment from './components/Shipment';
 import ShipmentList from './components/ShipmentList';
 import EditForm from './components/EditForm';
 import ActionNavbar from './components/ActionNavbar';
+import {
+  updateOrderMutation,
+  prepareUpdateOrderInput,
+} from './components/ActionNavbar/MoveToOrderPanel/mutation';
 
 type Props = {
   intl: IntlShape,
@@ -66,15 +72,88 @@ const Order = ({ intl }: Props) => {
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
-        {({ loading, data, fetchMore, error }) => {
+        {({ loading, data, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;
           }
-    
+
           if (loading) {
             return <LoadingIcon />;
           }
-   
+
+          if (state.refetchOrderId) {
+            const newOrderId = state.refetchOrderId;
+            const { updateOrdersInput = [] } = state.new;
+            actions.refetchQueryBy('ORDER', '');
+            Promise.all(
+              updateOrdersInput.map(item =>
+                client.mutate({
+                  mutation: updateOrderMutation,
+                  variables: {
+                    id: item.id,
+                    input: prepareUpdateOrderInput({
+                      orderItems: cleanUpData(item.orderItems),
+                    }),
+                  },
+                })
+              )
+            ).then(result => {
+              console.warn({ result });
+            });
+            const queryOption: any = {
+              query: orderDetailQuery,
+              variables: {
+                id: newOrderId,
+              },
+            };
+            client.query(queryOption).then(responseData => {
+              console.warn({ responseData });
+              updateQuery(prevResult => {
+                // insert on the top
+                if (
+                  prevResult.orders &&
+                  responseData.data.order &&
+                  !prevResult.orders.nodes.includes(responseData.data.order)
+                ) {
+                  prevResult.orders.nodes.splice(0, 0, responseData.data.order);
+                }
+                scrollIntoView({
+                  targetId: `order-${newOrderId}`,
+                });
+
+                actions.targetNewEntities([
+                  ...getByPathWithDefault([], 'order.orderItems', responseData.data).map(
+                    orderItem => ({
+                      entity: ORDER_ITEM,
+                      id: orderItem.id,
+                      exporterId: `${ORDER_ITEM}-${getByPathWithDefault(
+                        '',
+                        'order.exporter.id',
+                        responseData.data
+                      )}`,
+                    })
+                  ),
+                  ...getByPathWithDefault([], 'order.orderItems', responseData.data).reduce(
+                    (result, orderItem) =>
+                      result.concat(
+                        orderItem.batches.map(batch => ({
+                          entity: BATCH,
+                          id: batch.id,
+                          exporterId: `${BATCH}-${getByPathWithDefault(
+                            '',
+                            'order.exporter.id',
+                            responseData.data
+                          )}`,
+                        }))
+                      ),
+                    []
+                  ),
+                ]);
+                return prevResult;
+              });
+            });
+          }
+
           const { entities } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
           const { orders, orderItems, batches, shipments } = entities;
           const highLightEntities = findHighLightEntities(state.highlight, {
@@ -132,15 +211,7 @@ const Order = ({ intl }: Props) => {
                   <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
                 )}
               />
-              <ActionNavbar
-                highLightEntities={highLightEntities}
-                entities={{
-                  orders,
-                  orderItems,
-                  batches,
-                  shipments,
-                }}
-              />
+              <ActionNavbar highLightEntities={highLightEntities} entities={entities} />
               {loading ? (
                 <LoadingIcon />
               ) : (

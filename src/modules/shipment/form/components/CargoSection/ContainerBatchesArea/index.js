@@ -88,7 +88,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                     <MoveButton
                       label={
                         <FormattedMessage
-                          id="modules.shipment.moveBatches"
+                          id="modules.Shipments.moveBatches"
                           defaultMessage="MOVE BATCHES"
                         />
                       }
@@ -202,7 +202,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                       data-testid="selectBatchesButton"
                       label={
                         <FormattedMessage
-                          id="modules.shipment.selectBatches"
+                          id="modules.Shipments.selectBatches"
                           defaultMessage="SELECT BATCHES"
                         />
                       }
@@ -242,7 +242,7 @@ export default function ContainerBatchesArea({ containerId, containerIndex }: Pr
                     <NewButton
                       label={
                         <FormattedMessage
-                          id="modules.shipment.newBatch"
+                          id="modules.Shipments.newBatch"
                           defaultMessage="NEW BATCH"
                         />
                       }

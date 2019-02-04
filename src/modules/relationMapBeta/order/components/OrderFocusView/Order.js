@@ -10,6 +10,7 @@ import { selectors, actionCreators } from 'modules/relationMapBeta/order/store';
 import type { OrderProps } from 'modules/relationMapBeta/order/type.js.flow';
 import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import SelectedOrder from './SelectedOrder';
+import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName?: string,
@@ -32,8 +33,10 @@ export default function Order({
   const { dispatch, state } = context;
   const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
+  const isNewOrder = uiSelectors.isNewOrder(id);
   return (
     <BaseCard id={`order-${id}`} icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
+      {isNewOrder && <Badge label="new" />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
@@ -45,7 +48,7 @@ export default function Order({
                 shippedQuantity: totalShipped,
               }}
             />
-            {uiSelectors.isShowConnectOrder() ? (
+            {uiSelectors.isAllowToConnectOrder() && state.connectOrder.enableSelectMode ? (
               (() => {
                 if (!uiSelectors.isAllowToSelectOrder(exporter.id)) {
                   return <ActionCard show>{() => <DisabledAction />}</ActionCard>;

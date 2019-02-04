@@ -33,7 +33,7 @@ function BatchesSection() {
                 data-testid="selectBatchesButton"
                 label={
                   <FormattedMessage
-                    id="modules.container.selectBatches"
+                    id="modules.Shipments.selectBatches"
                     defaultMessage="SELECT BATCHES"
                   />
                 }
@@ -71,7 +71,7 @@ function BatchesSection() {
             <>
               <NewButton
                 label={
-                  <FormattedMessage id="modules.container.newBatch" defaultMessage="NEW BATCH" />
+                  <FormattedMessage id="modules.Shipments.newBatch" defaultMessage="NEW BATCH" />
                 }
                 onClick={() => createBatchesSlideToggle(true)}
               />
