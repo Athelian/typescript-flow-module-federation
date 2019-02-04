@@ -190,7 +190,7 @@ function BatchesSection() {
                                 'batches',
                                 batches.filter(({ id: batchId }) => id !== batchId)
                               );
-                              if (batch.id === representativeBatch.id) {
+                              if (id === representativeBatch.id) {
                                 setDeepFieldValue('representativeBatch', null);
                               }
                             }}
