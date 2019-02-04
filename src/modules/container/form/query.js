@@ -60,6 +60,11 @@ export const containerFormQuery = gql`
         batches {
           ...batchFormFragment
         }
+        representativeBatch {
+          ... on Batch {
+            id
+          }
+        }
       }
     }
   }
