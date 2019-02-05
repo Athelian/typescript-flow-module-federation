@@ -236,6 +236,27 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
+    disconnectShipment: (batchIds: Array<string>) =>
+      dispatch({
+        type: 'DISCONNECT_SHIPMENT',
+        payload: {
+          batchIds,
+        },
+      }),
+    disconnectShipmentSuccess: (data: Object) =>
+      dispatch({
+        type: 'DISCONNECT_SHIPMENT_SUCCESS',
+        payload: {
+          data,
+        },
+      }),
+    disconnectShipmentFailed: (error: string) =>
+      dispatch({
+        type: 'DISCONNECT_SHIPMENT_ERROR',
+        payload: {
+          error,
+        },
+      }),
     changeSelectMode: (entity: '' | 'ORDER' | 'SHIPMENT') =>
       dispatch({
         type: 'CHANGE_SELECT_MODE',
@@ -257,11 +278,12 @@ function actionCreators(dispatch: Function) {
           id,
         },
       }),
-    adddNewOrder: (id: string) =>
+    addNew: (entity: 'ORDER' | 'SHIPMENT', id: string) =>
       dispatch({
-        type: 'NEW_ORDER',
+        type: 'NEW_ENTITY',
         payload: {
           id,
+          entity,
         },
       }),
     refetchQueryBy: (entity: string, id: string) =>

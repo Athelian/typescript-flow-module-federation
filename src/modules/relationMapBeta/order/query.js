@@ -166,6 +166,29 @@ export const orderDetailQuery = gql`
   ${priceFragment}
 `;
 
+export const shipmentDetailQuery = gql`
+  query($id: ID!) {
+    shipment(id: $id) {
+      ... on Shipment {
+        id
+        batches {
+          ... on Batch {
+            id
+          }
+        }
+      }
+      ...shipmentCardRMFragment
+    }
+  }
+
+  ${shipmentCardRMFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${tagFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+`;
+
 export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {

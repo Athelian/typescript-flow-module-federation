@@ -6,11 +6,12 @@ import { Query } from 'react-apollo';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
+import scrollIntoView from 'utils/scrollIntoView';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import { ShipmentListBodyStyle } from 'modules/relationMap/orderFocused/style';
-import { shipmentListQuery } from 'modules/relationMapBeta/order/query';
+import { shipmentListQuery, shipmentDetailQuery } from 'modules/relationMapBeta/order/query';
 import { hasMoreItems } from 'modules/relationMapBeta/order/helpers';
 import { useFilter } from 'modules/relationMapBeta/hooks';
 import { SHIPMENT } from 'modules/relationMap/constants';
@@ -45,10 +46,32 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
       onCompleted={result => onCountShipment(result.shipments.nodes.length)}
       fetchPolicy="network-only"
     >
-      {({ loading, data, fetchMore, error }) => {
+      {({ loading, data, fetchMore, error, refetch, client }) => {
         if (error) {
           return error.message;
         }
+
+        if (loading) {
+          return <LoadingIcon />;
+        }
+
+        if (state.toggleShipmentList && state.refetchShipmentId) {
+          const newShipmentId = state.refetchShipmentId;
+          const queryOption: any = {
+            query: shipmentDetailQuery,
+            variables: {
+              id: newShipmentId,
+            },
+          };
+          client.query(queryOption).then(() => {
+            refetch(queryVariables).then(() => {
+              scrollIntoView({
+                targetId: `shipment-${newShipmentId}`,
+              });
+            });
+          });
+        }
+
         return (
           <>
             {loading ? (

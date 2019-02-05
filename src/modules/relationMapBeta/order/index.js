@@ -30,7 +30,7 @@ import {
 } from 'modules/relationMap/orderFocused/style';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
-import { orderListQuery, orderDetailQuery } from './query';
+import { orderListQuery, orderDetailQuery, shipmentDetailQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems, findHighLightEntities } from './helpers';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
@@ -61,6 +61,23 @@ const initFilter = {
   },
 };
 
+function manualSortByAction(shipments: Object, state: Object) {
+  const sortShipments = [];
+  state.new.shipments.reverse().forEach(shipmentId => {
+    if (shipments[shipmentId]) {
+      sortShipments.push(shipments[shipmentId]);
+    }
+  });
+
+  (Object.entries(shipments): Array<any>).forEach(([shipmentId, shipment]) => {
+    if (!state.new.shipments.includes(shipmentId)) {
+      sortShipments.push(shipment);
+    }
+  });
+
+  return sortShipments;
+}
+
 const Order = ({ intl }: Props) => {
   const { queryVariables, filterAndSort, onChangeFilter: onChange } = useListConfig(
     initFilter,
@@ -81,6 +98,36 @@ const Order = ({ intl }: Props) => {
             return <LoadingIcon />;
           }
 
+          if (state.refetchShipmentId) {
+            const newShipmentId = state.refetchShipmentId;
+            actions.refetchQueryBy('SHIPMENT', '');
+            const queryOption: any = {
+              query: shipmentDetailQuery,
+              variables: {
+                id: newShipmentId,
+              },
+            };
+            client.query(queryOption).then(responseData => {
+              updateQuery(prevResult => {
+                const orderIds = state.connectShipment.parentOrderIds.map(item => {
+                  const [, orderId] = item.split('-');
+                  return orderId;
+                });
+                prevResult.orders.nodes
+                  .filter(order => orderIds.includes(order.id))
+                  .forEach(order => {
+                    // insert on the top
+                    order.shipments.push(responseData.data.shipment);
+                  });
+                scrollIntoView({
+                  targetId: `shipment-${newShipmentId}`,
+                });
+
+                return prevResult;
+              });
+            });
+          }
+
           if (state.refetchOrderId) {
             const newOrderId = state.refetchOrderId;
             const { updateOrdersInput = [] } = state.new;
@@ -97,9 +144,7 @@ const Order = ({ intl }: Props) => {
                   },
                 })
               )
-            ).then(result => {
-              console.warn({ result });
-            });
+            ).then(() => {});
             const queryOption: any = {
               query: orderDetailQuery,
               variables: {
@@ -107,7 +152,6 @@ const Order = ({ intl }: Props) => {
               },
             };
             client.query(queryOption).then(responseData => {
-              console.warn({ responseData });
               updateQuery(prevResult => {
                 // insert on the top
                 if (
@@ -334,20 +378,18 @@ const Order = ({ intl }: Props) => {
                       />
                     ) : (
                       <div className={ShipmentListBodyStyle}>
-                        {(Object.entries(shipments || []): Array<any>).map(
-                          ([shipmentId, shipment]) => (
-                            <Shipment
-                              wrapperClassName={ItemWrapperStyle(
-                                highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
-                                uiSelectors.isTarget(SHIPMENT, shipment.id),
-                                state.highlight.type === SHIPMENT &&
-                                  state.highlight.selectedId === shipment.id
-                              )}
-                              key={shipmentId}
-                              {...shipment}
-                            />
-                          )
-                        )}
+                        {manualSortByAction(shipments, state).map(shipment => (
+                          <Shipment
+                            wrapperClassName={ItemWrapperStyle(
+                              highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
+                              uiSelectors.isTarget(SHIPMENT, shipment.id),
+                              state.highlight.type === SHIPMENT &&
+                                state.highlight.selectedId === shipment.id
+                            )}
+                            key={shipment.id}
+                            {...shipment}
+                          />
+                        ))}
                       </div>
                     )}
                   </div>

@@ -1,37 +1,51 @@
 // @flow
 
 export type UIState = {
+  /**
+   * Those flags for UI
+   */
   loading: boolean,
   error: boolean,
   showTag: boolean,
-  refetchOrderId: string,
-  refetchShipmentId: string,
+  toggleShipmentList: boolean,
+  totalShipment: number,
   expandCards: {
     orders: Array<string>,
     shipments: Array<string>,
   },
-  toggleShipmentList: boolean,
-  select: {
-    mode: 'SINGLE' | 'ALL',
-    entities: Array<string>,
-  },
+  /**
+   * The refetch*** is for reload the new order or shipment when
+   * move to order item/batch to new order/shipment
+   */
+  refetchOrderId: string,
+  refetchShipmentId: string,
+  /**
+   * Those for target and highlight
+   */
+  targets: Array<string>,
   highlight: {
     type: string,
     selectedId: string,
   },
+  select: {
+    mode: 'SINGLE' | 'ALL',
+    entities: Array<string>,
+  },
+  /**
+   * Each action on RM navbar will belong to its domain field
+   */
   edit: {
     type: string,
     selectedId: string,
   },
   new: {
     orders: Array<string>,
+    shipments: Array<string>,
     updateOrdersInput: Array<{
       id: string,
       orderItems: Array<Object>,
     }>,
   },
-  targets: Array<string>,
-  totalShipment: number,
   split: {
     parentOrderIds: Array<string>,
     batches: Object,
@@ -46,11 +60,21 @@ export type UIState = {
     enableSelectMode: boolean,
     status: boolean,
     orderId: string,
+    /**
+     * This is using for checking those order item, batches has the same exporter
+     * This is use below format
+     * [entityId-exporterId]
+     */
     exporterIds: Array<string>,
+    /**
+     * This is a workaround for checking the target order before and after mutation
+     * Then we would know which is the new order item, batch was moved
+     */
     sourceOrder: Object,
   },
   connectShipment: {
     enableSelectMode: boolean,
+    parentOrderIds: Array<string>,
     status: boolean,
     shipmentId: string,
   },
