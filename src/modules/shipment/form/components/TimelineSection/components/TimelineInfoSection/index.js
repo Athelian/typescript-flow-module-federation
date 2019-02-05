@@ -13,7 +13,7 @@ import FormattedDate from 'components/FormattedDate';
 import { ApproveButton, NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { dateInputFactory } from 'modules/form/helpers';
-import { SectionHeader, Label, DefaultAdjustmentStyle, FieldItem } from 'components/Form';
+import { SectionHeader, Label, DefaultAdjustmentStyle } from 'components/Form';
 import AssignUsers from '../AssignUsers';
 import {
   TimelineInfoSectionWrapperStyle,
@@ -266,32 +266,26 @@ class TimelineInfoSection extends React.Component<Props> {
                   />
                 )
             )}
-            <FieldItem
-              label={
-                <Label>
-                  <FormattedMessage
-                    id="modules.Shipments.initialDate"
-                    defaultMessage="INITIAL DATE"
-                  />
-                </Label>
+            <FormField
+              name={`${sourceName}.date`}
+              initValue={timelineDate && timelineDate.date}
+              setFieldValue={setFieldDeepValue}
+            >
+              {({ name, ...inputHandlers }) =>
+                dateInputFactory({
+                  name,
+                  inputHandlers,
+                  isNew,
+                  originalValue: timelineDate && timelineDate.date,
+                  label: (
+                    <FormattedMessage
+                      id="modules.Shipments.initialDate"
+                      defaultMessage="INITIAL DATE"
+                    />
+                  ),
+                })
               }
-              input={
-                <FormField
-                  name={`${sourceName}.date`}
-                  initValue={timelineDate && timelineDate.date}
-                  setFieldValue={setFieldDeepValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    dateInputFactory({
-                      name,
-                      inputHandlers,
-                      isNew,
-                      originalValue: timelineDate && timelineDate.date,
-                    })
-                  }
-                </FormField>
-              }
-            />
+            </FormField>
           </GridColumn>
         </GridColumn>
       </div>

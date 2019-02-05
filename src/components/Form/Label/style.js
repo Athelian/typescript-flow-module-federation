@@ -18,6 +18,7 @@ export const LabelWrapperStyle = ({ align, width, color }: LabelWrapperType): st
   user-select: none;
   padding: 0 5px;
   text-align: ${align};
+  flex: 1;
 `;
 
 export default LabelWrapperStyle;

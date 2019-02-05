@@ -23,6 +23,7 @@ export const DisplayWrapperStyle = ({
   text-align: ${align};
   min-width: 0;
   width: ${width};
+  flex: 1;
   padding: 0 5px;
 `;
 
