@@ -81,7 +81,7 @@ const Order = ({ intl }: Props) => {
             return <LoadingIcon />;
           }
 
-          if (!state.toggleShipmentList && state.refetchShipmentId) {
+          if (state.refetchShipmentId) {
             const newShipmentId = state.refetchShipmentId;
             actions.refetchQueryBy('SHIPMENT', '');
             const queryOption: any = {
@@ -91,7 +91,6 @@ const Order = ({ intl }: Props) => {
               },
             };
             client.query(queryOption).then(responseData => {
-              console.warn({ responseData });
               updateQuery(prevResult => {
                 const orderIds = state.connectShipment.parentOrderIds.map(item => {
                   const [, orderId] = item.split('-');
@@ -128,9 +127,7 @@ const Order = ({ intl }: Props) => {
                   },
                 })
               )
-            ).then(result => {
-              console.warn({ result });
-            });
+            ).then(() => {});
             const queryOption: any = {
               query: orderDetailQuery,
               variables: {
@@ -138,7 +135,6 @@ const Order = ({ intl }: Props) => {
               },
             };
             client.query(queryOption).then(responseData => {
-              console.warn({ responseData });
               updateQuery(prevResult => {
                 // insert on the top
                 if (

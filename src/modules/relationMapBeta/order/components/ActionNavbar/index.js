@@ -331,7 +331,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       onDisconnect={async () => {
                         const batchIds = uiSelectors.targetedBatchIds();
                         const shipmentId = null;
-                        actions.moveToShipment(batchIds);
+                        actions.disconnectShipment(batchIds);
                         try {
                           const updateBatches = await Promise.all(
                             batchIds.map(id =>
@@ -346,13 +346,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               })
                             )
                           );
-                          actions.moveToShipmentSuccess(
+                          actions.disconnectShipmentSuccess(
                             updateBatches.map(result =>
                               result.data ? result.data.BatchUpdate : {}
                             )
                           );
                         } catch (error) {
-                          actions.moveToShipmentFailed(error);
+                          actions.disconnectShipmentFailed(error);
                         }
                       }}
                       onMoveToExistShipment={async () => {

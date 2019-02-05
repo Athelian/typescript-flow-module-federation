@@ -163,6 +163,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'SPLIT_BATCH':
     case 'AUTO_FILL_BATCHES':
     case 'MOVE_TO_SHIPMENT':
+    case 'DISCONNECT_SHIPMENT':
     case 'CLONE_ENTITIES':
       return {
         ...state,
@@ -184,10 +185,17 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'MOVE_TO_ORDER_ERROR':
     case 'MOVE_TO_SHIPMENT_ERROR':
     case 'REMOTE_ENTITIES_ERROR':
+    case 'DISCONNECT_SHIPMENT_ERROR':
       return {
         ...state,
         loading: false,
         error: true,
+      };
+    case 'DISCONNECT_SHIPMENT_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        error: false,
       };
     case 'REMOTE_ENTITIES_SUCCESS': {
       const targets = [];
