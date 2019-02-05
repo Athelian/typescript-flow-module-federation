@@ -61,6 +61,37 @@ const initFilter = {
   },
 };
 
+const findRelateShipment = ({
+  shipmentId,
+  sortShipments,
+  state,
+  shipment,
+}: {
+  shipmentId: string,
+  sortShipments: Array<Object>,
+  state: Object,
+  shipment: Object,
+}) => {
+  if (!state.new.shipments.includes(shipmentId)) {
+    if (!sortShipments.includes(shipment)) {
+      sortShipments.push(shipment);
+    }
+    if (state.clone.shipments[shipmentId]) {
+      (state.clone.shipments[shipmentId] || []).forEach(item => {
+        sortShipments.push(item);
+        if (state.clone.shipments[item.id]) {
+          findRelateShipment({
+            shipmentId: item.id,
+            shipment: item,
+            sortShipments,
+            state,
+          });
+        }
+      });
+    }
+  }
+};
+
 function manualSortByAction(shipments: Object, state: Object) {
   const sortShipments = [];
   state.new.shipments.reverse().forEach(shipmentId => {
@@ -70,9 +101,12 @@ function manualSortByAction(shipments: Object, state: Object) {
   });
 
   (Object.entries(shipments || {}): Array<any>).forEach(([shipmentId, shipment]) => {
-    if (!state.new.shipments.includes(shipmentId)) {
-      sortShipments.push(shipment);
-    }
+    findRelateShipment({
+      shipmentId,
+      shipment,
+      state,
+      sortShipments,
+    });
   });
 
   return sortShipments;

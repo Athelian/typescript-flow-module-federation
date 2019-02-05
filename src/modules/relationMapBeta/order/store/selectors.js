@@ -160,6 +160,7 @@ function selectors(state: UIState) {
       state.new.orders.length > 0 ? state.new.orders[state.new.orders.length - 1] : '',
     isNewOrder: (id: string) => state.new.orders.includes(id),
     isNewShipment: (id: string) => state.new.shipments.includes(id),
+    shipmentNo: (id: string) => state.clone.shipmentNo[id],
   };
 }
 

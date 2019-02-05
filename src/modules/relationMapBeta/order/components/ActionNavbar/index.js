@@ -40,7 +40,7 @@ import MoveToShipmentPanel from './MoveToShipmentPanel';
 import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
-import { cloneBatchMutation } from './ClonePanel/mutation';
+import { cloneBatchMutation, cloneShipmentMutation } from './ClonePanel/mutation';
 import { updateOrderMutation, prepareUpdateOrderInput } from './MoveToOrderPanel/mutation';
 import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
 import TableView from '../TableInlineEdit';
@@ -232,6 +232,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 <ClonePanel
                   onClick={async () => {
                     const batchIds = uiSelectors.targetedBatchIds();
+                    const shipmentIds = uiSelectors.targetedShipmentIds();
                     const orderItemIds = [];
                     (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
                       if (
@@ -255,26 +256,82 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         type: BATCH,
                         ids: batchIds,
                       },
+                      {
+                        type: SHIPMENT,
+                        ids: shipmentIds,
+                      },
                     ]);
                     try {
-                      const cloneBatches = await Promise.all(
-                        batchIds.map(batchId =>
-                          client.mutate({
-                            mutation: cloneBatchMutation,
-                            variables: { id: batchId, input: {} },
-                            refetchQueries: orderIds.map(orderId => ({
-                              query: orderDetailQuery,
+                      const result = [];
+                      if (batchIds.length > 0) {
+                        const cloneBatches = await Promise.all(
+                          batchIds.map(batchId =>
+                            client.mutate({
+                              mutation: cloneBatchMutation,
+                              variables: { id: batchId, input: {} },
+                              refetchQueries: orderIds.map(orderId => ({
+                                query: orderDetailQuery,
+                                variables: {
+                                  id: orderId,
+                                },
+                              })),
+                            })
+                          )
+                        );
+                        // TODO: show error message from violations
+                        result.push({
+                          type: BATCH,
+                          items: cloneBatches
+                            .map((item, index) => ({
+                              id: batchIds[index],
+                              batch: getByPathWithDefault([], 'data.batchClone', item),
+                            }))
+                            .filter(item => !item.batch.violations),
+                        });
+                      }
+                      if (shipmentIds.length > 0) {
+                        const cloneShipments: any = await Promise.all(
+                          shipmentIds.map(shipmentId =>
+                            client.mutate({
+                              mutation: cloneShipmentMutation,
                               variables: {
-                                id: orderId,
+                                id: shipmentId,
+                                input: {
+                                  batches: [],
+                                  containers: [],
+                                  no: `[cloned] ${uiSelectors.shipmentNo(shipmentId)}`,
+                                },
                               },
-                            })),
-                          })
-                        )
-                      );
-                      const result = cloneBatches.map((item, index) => ({
-                        id: batchIds[index],
-                        batch: getByPathWithDefault([], 'data.batchClone', item),
-                      }));
+                            })
+                          )
+                        );
+                        const shipmentItems = cloneShipments
+                          .map((item, index) => ({
+                            id: shipmentIds[index],
+                            shipment: getByPathWithDefault([], 'data.shipmentClone', item),
+                          }))
+                          .filter(item => !item.shipment.violations);
+
+                        const refetchShipment = shipmentItems[shipmentItems.length - 1];
+                        if (refetchShipment) {
+                          actions.refetchQueryBy('SHIPMENT', refetchShipment.shipment.id);
+                        }
+
+                        cloneShipments.forEach((item, index) => {
+                          if (item.data.shipmentClone && item.data.shipmentClone.violations) {
+                            toast.error(
+                              `[Clone] for ["${uiSelectors.shipmentNo(
+                                shipmentIds[index]
+                              )}"] error: ${item.data.shipmentClone.violations[0].message}`
+                            );
+                          }
+                        });
+
+                        result.push({
+                          type: SHIPMENT,
+                          items: shipmentItems,
+                        });
+                      }
                       actions.cloneEntitiesSuccess(result);
                     } catch (error) {
                       actions.cloneEntitiesFailed(error);

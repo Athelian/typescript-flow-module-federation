@@ -80,11 +80,12 @@ function actionCreators(dispatch: Function) {
           selectItems,
         },
       }),
-    targetShipmentEntity: (id: string) =>
+    targetShipmentEntity: (id: string, no: string) =>
       dispatch({
         type: 'TARGET_SHIPMENT_ENTITY',
         payload: {
           id,
+          no,
         },
       }),
     targetOrderEntity: (id: string, exporterId: string) =>
@@ -180,7 +181,7 @@ function actionCreators(dispatch: Function) {
           entities,
         },
       }),
-    cloneEntitiesSuccess: (data: Object) =>
+    cloneEntitiesSuccess: (data: Array<{ type: string, items: Object }>) =>
       dispatch({
         type: 'CLONE_ENTITIES_SUCCESS',
         payload: {

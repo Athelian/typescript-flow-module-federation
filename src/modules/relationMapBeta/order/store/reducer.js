@@ -56,6 +56,7 @@ export const uiInitState: UIState = {
   clone: {
     batches: {},
     shipments: {},
+    shipmentNo: {},
   },
   connectOrder: {
     enableSelectMode: false,
@@ -342,20 +343,39 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'CLONE_ENTITIES_SUCCESS': {
-      const { batches } = state.clone;
-      getByPathWithDefault([], 'payload.data', action).forEach(({ id, batch }) => {
-        batches[id] = batches[id] ? [...batches[id], batch] : [batch];
+      const { batches, shipments, shipmentNo } = state.clone;
+      const targets = [];
+      getByPathWithDefault([], 'payload.data', action).forEach(({ type, items }) => {
+        switch (type) {
+          case BATCH:
+            items.forEach(({ id, batch }) => {
+              batches[id] = batches[id] ? [...batches[id], batch] : [batch];
+              targets.push(`${BATCH}-${batch.id}`);
+            });
+
+            break;
+          case SHIPMENT:
+            items.forEach(({ id, shipment }) => {
+              shipments[id] = shipments[id] ? [...shipments[id], shipment] : [shipment];
+              shipmentNo[shipment.id] = shipment.no;
+              targets.push(`${SHIPMENT}-${shipment.id}`);
+            });
+
+            break;
+
+          default:
+            break;
+        }
       });
 
       return {
         ...state,
         clone: {
-          ...state.clone,
+          shipmentNo,
           batches,
+          shipments,
         },
-        targets: getByPathWithDefault([], 'payload.data', action).map(
-          ({ batch }) => `${BATCH}-${batch.id}`
-        ),
+        targets,
         loading: false,
         error: false,
       };
@@ -500,11 +520,25 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         if (targets.includes(`${SHIPMENT}-${payload.id}`)) {
           return {
             ...state,
+            clone: {
+              ...state.clone,
+              shipmentNo: {
+                ...state.clone.shipmentNo,
+                [payload.id]: payload.no,
+              },
+            },
             targets: (targets.filter(item => item !== `${SHIPMENT}-${payload.id}`): Array<string>),
           };
         }
         return {
           ...state,
+          clone: {
+            ...state.clone,
+            shipmentNo: {
+              ...state.clone.shipmentNo,
+              [payload.id]: payload.no,
+            },
+          },
           targets: [...targets, `${SHIPMENT}-${payload.id}`],
         };
       }

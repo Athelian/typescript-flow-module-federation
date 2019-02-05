@@ -21,7 +21,7 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Props) {
+export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const { showTag } = state;
@@ -35,7 +35,10 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
             {/* Send empty array for tags for hidden tags on shipment card when hidden tags */}
-            <ShipmentCard shipment={showTag ? shipment : { ...shipment, tags: [] }} actions={[]} />
+            <ShipmentCard
+              shipment={showTag ? { ...shipment, no } : { ...shipment, no, tags: [] }}
+              actions={[]}
+            />
             {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
               (() => {
                 if (uiSelectors.selectedConnectShipment(id)) {
@@ -75,7 +78,7 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
                       icon="CHECKED"
                       targeted={targeted}
                       toggle={toggle}
-                      onClick={() => actions.targetShipmentEntity(id)}
+                      onClick={() => actions.targetShipmentEntity(id, no)}
                     />
                   </>
                 )}
