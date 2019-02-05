@@ -54,7 +54,11 @@ function BatchesSection() {
                             ...selectedBatch,
                             packageQuantity: calculatePackageQuantity(selectedBatch),
                           }));
+                          if (batches.length === 0 && selectedBatches.length > 0) {
+                            setFieldValue('representativeBatch', selectedBatches[0]);
+                          }
                           setFieldValue('batches', [...batches, ...selectedBatches]);
+
                           selectBatchesSlideToggle(false);
                         }}
                         onCancel={() => selectBatchesSlideToggle(false)}
@@ -85,7 +89,7 @@ function BatchesSection() {
                     {({ state: { batches }, setFieldValue }) => (
                       <SelectOrderItems
                         onSelect={selectedOrderItems => {
-                          const result = selectedOrderItems.map((orderItem, counter) => {
+                          const newBatches = selectedOrderItems.map((orderItem, counter) => {
                             const {
                               productProvider: {
                                 packageName,
@@ -110,7 +114,10 @@ function BatchesSection() {
                               autoCalculatePackageQuantity: true,
                             });
                           });
-                          setFieldValue('batches', [...batches, ...result]);
+                          if (batches.length === 0 && newBatches.length > 0) {
+                            setFieldValue('representativeBatch', newBatches[0]);
+                          }
+                          setFieldValue('batches', [...batches, ...newBatches]);
                           createBatchesSlideToggle(false);
                         }}
                         onCancel={() => createBatchesSlideToggle(false)}
@@ -186,12 +193,16 @@ function BatchesSection() {
                             }
                             onClick={() => batchSlideToggle(true)}
                             onClear={({ id }) => {
-                              setFieldValue(
-                                'batches',
-                                batches.filter(({ id: batchId }) => id !== batchId)
+                              const newBatches = batches.filter(
+                                ({ id: batchId }) => id !== batchId
                               );
+                              setFieldValue('batches', newBatches);
                               if (id === representativeBatch.id) {
-                                setDeepFieldValue('representativeBatch', null);
+                                if (newBatches.length > 0) {
+                                  setDeepFieldValue('representativeBatch', newBatches[0]);
+                                } else {
+                                  setDeepFieldValue('representativeBatch', null);
+                                }
                               }
                             }}
                             onClone={({

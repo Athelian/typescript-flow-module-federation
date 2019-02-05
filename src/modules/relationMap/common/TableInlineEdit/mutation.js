@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import {
   orderFormFragment,
   shipmentFormFragment,
+  shipmentContainerCardFragment,
   userAvatarFragment,
   tagFragment,
   partnerCardFragment,
@@ -76,6 +77,7 @@ export const entitiesUpdateManyMutation = gql`
   ${sizeFragment}
   ${orderCardFragment}
   ${shipmentFormFragment}
+  ${shipmentContainerCardFragment}
   ${timelineDateFullFragment}
   ${customFieldsFragment}
   ${maskFragment}

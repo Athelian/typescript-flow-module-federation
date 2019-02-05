@@ -8,6 +8,7 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -320,64 +321,102 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 />
               )}
               {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectOrder() && (
-                <MoveToShipmentPanel
-                  status={state.connectShipment.status}
-                  hasSelectedShipment={uiSelectors.isSelectedShipment()}
-                  onClear={actions.clearConnectMessage}
-                  onClearSelectShipment={() => actions.toggleSelectedShipment('')}
-                  onDisconnect={async () => {
-                    const batchIds = uiSelectors.targetedBatchIds();
-                    const shipmentId = null;
-                    actions.moveToShipment(batchIds);
-                    try {
-                      const updateBatches = await Promise.all(
-                        batchIds.map(id =>
-                          client.mutate({
-                            mutation: updateBatchMutation,
-                            variables: {
-                              id,
-                              input: {
-                                shipmentId,
+                <Subscribe to={[ShipmentBatchesContainer]}>
+                  {shipmentBatchesContainer => (
+                    <MoveToShipmentPanel
+                      status={state.connectShipment.status}
+                      hasSelectedShipment={uiSelectors.isSelectedShipment()}
+                      onClear={actions.clearConnectMessage}
+                      onClearSelectShipment={() => actions.toggleSelectedShipment('')}
+                      onDisconnect={async () => {
+                        const batchIds = uiSelectors.targetedBatchIds();
+                        const shipmentId = null;
+                        actions.disconnectShipment(batchIds);
+                        try {
+                          const updateBatches = await Promise.all(
+                            batchIds.map(id =>
+                              client.mutate({
+                                mutation: updateBatchMutation,
+                                variables: {
+                                  id,
+                                  input: {
+                                    shipmentId,
+                                  },
+                                },
+                              })
+                            )
+                          );
+                          actions.disconnectShipmentSuccess(
+                            updateBatches.map(result =>
+                              result.data ? result.data.BatchUpdate : {}
+                            )
+                          );
+                        } catch (error) {
+                          actions.disconnectShipmentFailed(error);
+                        }
+                      }}
+                      onMoveToExistShipment={async () => {
+                        const batchIds = uiSelectors.targetedBatchIds();
+                        const { shipmentId } = state.connectShipment;
+                        actions.moveToShipment(batchIds);
+                        try {
+                          const updateBatches = await Promise.all(
+                            batchIds.map(id =>
+                              client.mutate({
+                                mutation: updateBatchMutation,
+                                variables: {
+                                  id,
+                                  input: {
+                                    shipmentId,
+                                    containerId: null,
+                                  },
+                                },
+                              })
+                            )
+                          );
+                          actions.moveToShipmentSuccess(
+                            updateBatches.map(result =>
+                              result.data ? result.data.BatchUpdate : {}
+                            )
+                          );
+                        } catch (error) {
+                          actions.moveToShipmentFailed(error);
+                        }
+                      }}
+                      onMoveToNewShipment={() => {
+                        const batchIds = uiSelectors.targetedBatchIds();
+
+                        const initBatches = batchIds.map(batchId => {
+                          const [orderItemId, orderItem] =
+                            (Object.entries(orderItems): Array<any>).find(([, item]) =>
+                              item.batches.includes(batchId)
+                            ) || [];
+                          const [, order] =
+                            (Object.entries(orders): Array<any>).find(([, item]) =>
+                              item.orderItems.includes(orderItemId)
+                            ) || [];
+                          const { totalAdjusted, ...batch } = batches[batchId];
+                          return {
+                            orderItem: {
+                              ...orderItem,
+                              productProvider: {
+                                ...orderItem.productProvider,
+                                exporter: exporters[orderItem.productProvider.exporter],
+                              },
+                              order: {
+                                ...order,
+                                exporter: exporters[order.exporter],
                               },
                             },
-                          })
-                        )
-                      );
-                      actions.moveToShipmentSuccess(
-                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
-                      );
-                    } catch (error) {
-                      actions.moveToShipmentFailed(error);
-                    }
-                  }}
-                  onMoveToExistShipment={async () => {
-                    const batchIds = uiSelectors.targetedBatchIds();
-                    const { shipmentId } = state.connectShipment;
-                    actions.moveToShipment(batchIds);
-                    try {
-                      const updateBatches = await Promise.all(
-                        batchIds.map(id =>
-                          client.mutate({
-                            mutation: updateBatchMutation,
-                            variables: {
-                              id,
-                              input: {
-                                shipmentId,
-                                containerId: null,
-                              },
-                            },
-                          })
-                        )
-                      );
-                      actions.moveToShipmentSuccess(
-                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
-                      );
-                    } catch (error) {
-                      actions.moveToShipmentFailed(error);
-                    }
-                  }}
-                  onMoveToNewShipment={console.warn}
-                />
+                            ...batch,
+                          };
+                        });
+                        shipmentBatchesContainer.initDetailValues(initBatches);
+                        actions.showEditForm('NEW_SHIPMENT', 'new');
+                      }}
+                    />
+                  )}
+                </Subscribe>
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
                 <Subscribe to={[OrderItemsContainer, OrderInfoContainer]}>
@@ -670,7 +709,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             });
                           });
 
-                          actions.moveToOrder(targetOrder);
+                          actions.moveToOrder({
+                            ...targetOrder,
+                            orderItems: targetOrder.orderItems.map(
+                              orderItemId => orderItems[orderItemId]
+                            ),
+                          });
                           try {
                             const updateOrders = await Promise.all(
                               updateOrdersInput.map(item =>

@@ -12,6 +12,7 @@ import NewButton from './NewButton';
 import NoButton from './NoButton';
 import SaveButton from './SaveButton';
 import ExportButton from './ExportButton';
+import ExportGenericButton from './ExportGenericButton';
 import SyncButton from './SyncButton';
 import YesButton from './YesButton';
 import SelectTemplateButton from './SelectTemplateButton';
@@ -30,6 +31,7 @@ export {
   NoButton,
   SaveButton,
   ExportButton,
+  ExportGenericButton,
   SyncButton,
   YesButton,
   SelectTemplateButton,

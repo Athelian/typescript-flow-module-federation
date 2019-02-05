@@ -11,6 +11,7 @@ import { ContainerSection, ShipmentSection, BatchesSection, OrdersSection } from
 import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
 type OptionalProps = {
+  inShipmentForm: boolean,
   onFormReady: () => void,
 };
 
@@ -19,6 +20,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  inShipmentForm: false,
   onFormReady: () => {},
 };
 
@@ -32,7 +34,7 @@ export default class containerForm extends React.Component<Props> {
   }
 
   render() {
-    const { container } = this.props;
+    const { container, inShipmentForm } = this.props;
     return (
       <div className={FormWrapperStyle}>
         <SectionWrapper id="container_containerSection">
@@ -66,13 +68,15 @@ export default class containerForm extends React.Component<Props> {
           </SectionHeader>
           <ContainerSection />
         </SectionWrapper>
-        <SectionWrapper id="container_shipmentSection">
-          <SectionHeader
-            icon="SHIPMENT"
-            title={<FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />}
-          />
-          <ShipmentSection shipment={container.shipment} />
-        </SectionWrapper>
+        {!inShipmentForm && (
+          <SectionWrapper id="container_shipmentSection">
+            <SectionHeader
+              icon="SHIPMENT"
+              title={<FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />}
+            />
+            <ShipmentSection shipment={container.shipment} />
+          </SectionWrapper>
+        )}
         <Subscribe to={[containerFormContainer]}>
           {({ state: values }) => {
             const { batches = [] } = values;

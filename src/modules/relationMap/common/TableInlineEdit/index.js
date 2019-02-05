@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { ApolloConsumer } from 'react-apollo';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { useIdb } from 'react-use-idb';
 import { HotKeys } from 'react-hotkeys';
@@ -13,7 +14,12 @@ import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, SelectTemplateButton, ExportButton } from 'components/Buttons';
+import {
+  SaveButton,
+  CancelButton,
+  SelectTemplateButton,
+  ExportGenericButton,
+} from 'components/Buttons';
 import { ToggleInput, Label, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import logger from 'utils/logger';
@@ -49,9 +55,10 @@ import {
   totalLinePerOrder,
   parseChangedData,
   getOrderItemIdsByOrderId,
+  getExportColumns,
+  getExportRows,
 } from './helpers';
 import normalize from './normalize';
-import { ordersByIDsExportQuery } from './query';
 import {
   EditTableViewWrapperStyle,
   NavbarWrapperStyle,
@@ -67,6 +74,7 @@ type Props = {
   onCancel: () => void,
   type: string,
   selected: Object,
+  intl: IntlShape,
 };
 
 const keyMap = {
@@ -179,71 +187,6 @@ function findColumnsForCustomFields({ showAll, fields: customFields, templateCol
   return customFields;
 }
 
-function findAllFieldsFilter({
-  orderColumnFieldsFilter,
-  orderItemColumnFieldsFilter,
-  batchColumnFieldsFilter,
-  shipmentColumnFieldsFilter,
-  orderCustomFieldsFilter,
-  orderItemCustomFieldsFilter,
-  batchCustomFieldsFilter,
-  shipmentCustomFieldsFilter,
-}: {
-  orderColumnFieldsFilter: Array<Object>,
-  orderItemColumnFieldsFilter: Array<Object>,
-  batchColumnFieldsFilter: Array<Object>,
-  shipmentColumnFieldsFilter: Array<Object>,
-  orderCustomFieldsFilter: Array<Object>,
-  orderItemCustomFieldsFilter: Array<Object>,
-  batchCustomFieldsFilter: Array<Object>,
-  shipmentCustomFieldsFilter: Array<Object>,
-}): Array<string> {
-  return [
-    ...orderColumnFieldsFilter.map(item => `${item.name}`),
-    ...orderItemColumnFieldsFilter.map(item => {
-      switch (item.name) {
-        case 'productProvider':
-          return `orderItems.productProvider.product.name`;
-        default:
-          return `orderItems.${item.name}`;
-      }
-    }),
-    ...batchColumnFieldsFilter.map(item => `orderItems.batches.${item.name}`),
-    ...shipmentColumnFieldsFilter.map(item => {
-      switch (item.name) {
-        case 'cargoReady':
-          return `orderItems.batches.shipment.cargoReady.date`;
-        case 'voyages.0.departure':
-          return `orderItems.batches.shipment.voyage_1.departure.date`;
-        case 'voyages.0.arrival':
-          return `orderItems.batches.shipment.voyage_1.arrival.date`;
-        case 'voyages.1.departure':
-          return `orderItems.batches.shipment.voyage_2.departure.date`;
-        case 'voyages.1.arrival':
-          return `orderItems.batches.shipment.voyage_2.arrival.date`;
-        case 'voyages.2.departure':
-          return `orderItems.batches.shipment.voyage_3.departure.date`;
-        case 'voyages.2.arrival':
-          return `orderItems.batches.shipment.voyage_3.arrival.date`;
-        case 'containerGroups.0.customClearance':
-          return `orderItems.batches.shipment.containerGroup.customClearance.date`;
-        case 'containerGroups.0.warehouseArrival':
-          return `orderItems.batches.shipment.containerGroup.warehouseArrival.date`;
-        case 'containerGroups.0.deliveryReady':
-          return `orderItems.batches.shipment.containerGroup.deliveryReady.date`;
-        default:
-          return `orderItems.batches.shipment.${item.name}`;
-      }
-    }),
-    ...orderCustomFieldsFilter.map(item => `customFields.${item.id}`),
-    ...orderItemCustomFieldsFilter.map(item => `orderItems.customFields.${item.id}`),
-    ...batchCustomFieldsFilter.map(item => `orderItems.batches.customFields.${item.id}`),
-    ...shipmentCustomFieldsFilter.map(
-      item => `orderItems.batches.shipment.customFields.${item.id}`
-    ),
-  ];
-}
-
 const getRowCounter = (counter, type) => {
   if (!counter[type]) {
     // eslint-disable-next-line no-param-reassign
@@ -256,7 +199,7 @@ const getRowCounter = (counter, type) => {
 
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
 
-export default function TableInlineEdit({ type, selected, onCancel }: Props) {
+function TableInlineEdit({ type, selected, onCancel, intl }: Props) {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [data] = useIdb(type, []);
@@ -297,21 +240,18 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     };
   });
 
-  const onToggle = useCallback(
-    selectedColumn => {
-      if (templateColumns && selectedColumn) {
-        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
-          ? templateColumns.filter(item => item !== selectedColumn)
-          : [...templateColumns, selectedColumn];
-        setTemplateColumns(filteredTemplateColumns);
-        window.localStorage.setItem(
-          'filterRMTemplateColumns',
-          JSON.stringify(filteredTemplateColumns)
-        );
-      }
-    },
-    [templateColumns]
-  );
+  const onToggle = useCallback(selectedColumn => {
+    if (templateColumns && selectedColumn) {
+      const filteredTemplateColumns = templateColumns.includes(selectedColumn)
+        ? templateColumns.filter(item => item !== selectedColumn)
+        : [...templateColumns, selectedColumn];
+      setTemplateColumns(filteredTemplateColumns);
+      window.localStorage.setItem(
+        'filterRMTemplateColumns',
+        JSON.stringify(filteredTemplateColumns)
+      );
+    }
+  }, [templateColumns]);
 
   const {
     sumShipments,
@@ -473,6 +413,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
         const columnBatchCustomNo = columnBatchNo + batchColumnFieldsFilter.length;
         const columnShipmentNo = columnBatchCustomNo + batchCustomFieldsFilter.length;
         const columnShipmentCustomNo = columnShipmentNo + shipmentColumnFieldsFilter.length;
+        const allColumns = {
+          orderColumnFieldsFilter,
+          orderItemColumnFieldsFilter,
+          batchColumnFieldsFilter,
+          shipmentColumnFieldsFilter,
+          orderCustomFieldsFilter,
+          orderItemCustomFieldsFilter,
+          batchCustomFieldsFilter,
+          shipmentCustomFieldsFilter,
+        };
         return (
           <ApolloConsumer>
             {client => (
@@ -555,22 +505,16 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
                         )
                       }
                     />
-                    <ExportButton
-                      type="Orders"
-                      exportQuery={ordersByIDsExportQuery}
-                      variables={{
-                        fields: findAllFieldsFilter({
-                          orderColumnFieldsFilter,
-                          orderItemColumnFieldsFilter,
-                          batchColumnFieldsFilter,
-                          shipmentColumnFieldsFilter,
-                          orderCustomFieldsFilter,
-                          orderItemCustomFieldsFilter,
-                          batchCustomFieldsFilter,
-                          shipmentCustomFieldsFilter,
-                        }),
-                        ids: orderIds,
-                      }}
+                    {/* @TODO set current columns and rows data to this button */}
+                    <ExportGenericButton
+                      columns={() => getExportColumns(intl, allColumns)}
+                      rows={() =>
+                        getExportRows({
+                          data: { editData, mappingObjects },
+                          ids: { orderIds, orderItemsIds, batchIds },
+                          columns: allColumns,
+                        })
+                      }
                     />
                     {errorMessage && errorMessage.length > 0 && (
                       <div style={{ width: 400 }}> Error: {errorMessage} </div>
@@ -1122,3 +1066,5 @@ export default function TableInlineEdit({ type, selected, onCancel }: Props) {
     />
   );
 }
+
+export default injectIntl(TableInlineEdit);

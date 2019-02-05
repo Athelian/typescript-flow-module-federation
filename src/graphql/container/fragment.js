@@ -136,15 +136,11 @@ export const shipmentContainerCardFragment = gql`
     warehouseArrivalActualDate
     warehouseArrivalAgreedDateApprovedAt
     warehouseArrivalAgreedDateApprovedBy {
-      ... on User {
-        id
-      }
+      ...userAvatarFragment
     }
     warehouseArrivalActualDateApprovedAt
     warehouseArrivalActualDateApprovedBy {
-      ... on User {
-        id
-      }
+      ...userAvatarFragment
     }
     tags {
       ...tagFragment

@@ -4,7 +4,7 @@ import { presets, colors, fontSizesWithHeights, fontSizes } from 'styles/common'
 
 export const ShowAllButtonStyle: string = css`
   ${presets.BUTTON};
-  width: 100%;
+  flex: 1;
   height: 30px;
   ${fontSizesWithHeights.MAIN};
   ${presets.ELLIPSIS};

@@ -35,7 +35,8 @@ export const DefaultStyleWrapperStyle = ({
   background-color: ${disabled && 'rgba(0, 0, 0, 0.1)'};
   height: ${height};
   width: ${width};
-  min-width: ${width};
+  flex: 1;
+  max-width: ${width};
   cursor: text;
   &:focus {
     border-color: ${hasError ? colors.RED : colors.TEAL};

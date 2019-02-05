@@ -104,7 +104,7 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
                     icon="CHECKED"
                     targeted={targeted}
                     toggle={toggle}
-                    onClick={() => actions.targetOrderItemEntity(id, `${ORDER_ITEM}-${exporterId}`)}
+                    onClick={() => actions.targetOrderItemEntity(id, `${id}-${exporterId}`)}
                   />
                 </>
               )}

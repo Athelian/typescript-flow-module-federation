@@ -57,13 +57,6 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
                   icon="CONTAINER"
                 />
                 <SectionTabs
-                  link="container_shipmentSection"
-                  label={
-                    <FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />
-                  }
-                  icon="SHIPMENT"
-                />
-                <SectionTabs
                   link="container_batchesSection"
                   label={
                     <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />
@@ -95,6 +88,7 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
           <Subscribe to={[ContainerFormContainer]}>
             {({ initDetailValues }) => (
               <ContainerForm
+                inShipmentForm
                 container={container}
                 onFormReady={() => initDetailValues(container)}
               />

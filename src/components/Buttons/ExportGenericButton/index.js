@@ -3,38 +3,32 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ApolloConsumer, Query, ApolloClient } from 'react-apollo';
 import { BooleanValue } from 'react-values';
-import { DocumentNode } from 'graphql';
 import { BaseButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
-import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
-import { ButtonStyle, DropDownStyle, WrapperStyle, ItemStyle, ItemIconStyle } from './style';
-import { exportTemplatesQuery } from './query';
+import { ButtonStyle, DropDownStyle, WrapperStyle, ItemStyle } from './style';
+import { exportExtensionsQuery, genericExportQuery } from './query';
 
 type OptionalProps = {
   label: React.Node,
   disabled: boolean,
-  dynamic: boolean | null,
-  variables: Object,
 };
 
 type Props = OptionalProps & {
-  type: string,
-  exportQuery: DocumentNode,
+  columns: Array<string> | (() => Array<string>),
+  rows: Array<Array<?string>> | (() => Array<Array<?string>>),
 };
 
 type State = {
   isLoading: boolean,
 };
 
-class ExportButton extends React.Component<Props, State> {
+class ExportGenericButton extends React.Component<Props, State> {
   static defaultProps = {
     label: <FormattedMessage id="components.button.export" defaultMessage="EXPORT" />,
     disabled: false,
-    dynamic: null,
-    variables: {},
   };
 
   static extensionIcons = {
@@ -51,26 +45,30 @@ class ExportButton extends React.Component<Props, State> {
     this.buttonRef = React.createRef();
   }
 
-  doExport = (client: ApolloClient<any>, exportTemplateId: string) => {
-    const { exportQuery, variables } = this.props;
+  doExport = (client: ApolloClient<any>, extension: string) => {
+    const { columns, rows } = this.props;
 
     this.setState({ isLoading: true }, () => {
       client
         .query({
-          query: exportQuery,
+          query: genericExportQuery,
+          // $FlowFixMe: it's bullshit
           variables: {
-            templateId: exportTemplateId,
-            ...variables,
+            extension,
+            columns: typeof columns === 'function' ? columns() : columns,
+            rows: typeof rows === 'function' ? rows() : rows,
           },
         })
         .then(({ data }) => {
           const link = document.createElement('a');
-          link.href = data[exportQuery.definitions[0].selectionSet.selections[0].name.value].path;
+          link.href = data.genericExport.path;
           if (document.body) {
             document.body.appendChild(link);
             link.click();
           }
-          if (document.body) document.body.removeChild(link);
+          if (document.body) {
+            document.body.removeChild(link);
+          }
         })
         .catch(reason => {
           logger.error(reason);
@@ -84,9 +82,8 @@ class ExportButton extends React.Component<Props, State> {
   buttonRef: any;
 
   render() {
-    const { label, disabled, type, dynamic } = this.props;
+    const { label, disabled } = this.props;
     const { isLoading } = this.state;
-
     return (
       <ApolloConsumer>
         {client => (
@@ -106,18 +103,9 @@ class ExportButton extends React.Component<Props, State> {
                   buttonRef={this.buttonRef}
                 />
                 {isOpen && (
-                  <Query
-                    query={exportTemplatesQuery}
-                    variables={{
-                      filterBy: {
-                        type,
-                        dynamic,
-                      },
-                    }}
-                    fetchPolicy="network-only"
-                  >
+                  <Query query={exportExtensionsQuery} fetchPolicy="network-only">
                     {({ data, loading }) => {
-                      const templates = getByPathWithDefault([], 'exportTemplates', data);
+                      const extensions = getByPathWithDefault([], 'exportExtensions', data);
 
                       return (
                         <OutsideClickHandler
@@ -133,27 +121,19 @@ class ExportButton extends React.Component<Props, State> {
                                 <LoadingIcon size={10} />
                               </div>
                             )}
-
                             {!loading &&
-                              (templates.length > 0 ? (
-                                templates.map(template => (
+                              (extensions.length > 0 ? (
+                                extensions.map(extension => (
                                   <button
                                     type="button"
                                     className={ItemStyle}
-                                    key={template.id}
+                                    key={extension.extension}
                                     onClick={() => {
                                       setOpen(false);
-                                      this.doExport(client, template.id);
+                                      this.doExport(client, extension.extension);
                                     }}
                                   >
-                                    <div className={ItemIconStyle}>
-                                      <Icon
-                                        icon={
-                                          ExportButton.extensionIcons[template.extension] || 'FILE'
-                                        }
-                                      />
-                                    </div>
-                                    {template.name}
+                                    .{extension.extension}
                                   </button>
                                 ))
                               ) : (
@@ -179,4 +159,4 @@ class ExportButton extends React.Component<Props, State> {
   }
 }
 
-export default ExportButton;
+export default ExportGenericButton;

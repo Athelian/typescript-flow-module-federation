@@ -10,3 +10,5 @@ export const formatToDateTimeInput = (time: string): string =>
 
 export const formatToDateTimeGraphql = (date: string): string =>
   format(new Date(date), "yyyy-MM-dd'T'HH:mm:ssZ");
+
+export const formatToDateLabel = (date: string): string => format(new Date(date), 'dd/MM/yyyy');

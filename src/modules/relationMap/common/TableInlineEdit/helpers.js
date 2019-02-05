@@ -2,12 +2,15 @@
 import { intersection } from 'lodash';
 import { removeTypename } from 'utils/data';
 import logger from 'utils/logger';
-import { prepareCustomFieldsData } from 'utils/customFields';
+import { getByPathWithDefault, compose } from 'utils/fp';
+import { formatToDateLabel } from 'utils/date';
+import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
 import {
   formatTimeline,
   formatContainerGroups,
   formatVoyages,
 } from 'modules/shipment/form/mutation';
+import type { IntlShape } from 'react-intl';
 
 type MappingObject = {
   data: {
@@ -365,3 +368,164 @@ export const parseChangedData = (
     products: [],
   };
 };
+
+export function getExportColumns(
+  intl: IntlShape,
+  {
+    orderColumnFieldsFilter,
+    orderItemColumnFieldsFilter,
+    batchColumnFieldsFilter,
+    shipmentColumnFieldsFilter,
+    orderCustomFieldsFilter,
+    orderItemCustomFieldsFilter,
+    batchCustomFieldsFilter,
+    shipmentCustomFieldsFilter,
+  }: Object
+): Array<string> {
+  const allColumns = [
+    ...orderColumnFieldsFilter,
+    ...orderCustomFieldsFilter,
+    ...orderItemColumnFieldsFilter,
+    ...orderItemCustomFieldsFilter,
+    ...batchColumnFieldsFilter,
+    ...batchCustomFieldsFilter,
+    ...shipmentColumnFieldsFilter,
+    ...shipmentCustomFieldsFilter,
+  ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
+  return allColumns;
+}
+
+export const getFieldValueByType = (type: string) => (value: any) => {
+  switch (type) {
+    case 'date':
+    case 'timeline':
+      return value ? formatToDateLabel(value) : '';
+    case 'number':
+    default:
+      return `${value}` || '';
+  }
+};
+export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
+  const fieldValues: Array<string> = (fields: Array<Object>).map(
+    ({ name, type, getExportValue }): any => {
+      const getValueFunction = getExportValue || getByPathWithDefault('', name);
+      const value = compose(
+        getFieldValueByType(type),
+        getValueFunction
+      )(values);
+      return value;
+    }
+  );
+  return fieldValues;
+}
+
+export function getEmptyValues(fields: Array<Object>) {
+  return (fields.map(() => ''): Array<string>);
+}
+
+export function getCustomFieldValues(fields: Array<Object>, values: Array<Object>) {
+  const customFields = getByPathWithDefault(
+    {
+      mask: null,
+      fieldDefinitions: [],
+      fieldValues: [],
+    },
+    'customFields',
+    values
+  );
+  const { fieldValues } = customFields;
+  const fieldValueMap = list2Map(fieldValues);
+  const customFieldValues: Array<string> = fields.map(({ id }) => {
+    const fieldValue = fieldValueMap.get(id);
+    return fieldValue ? fieldValue.value.string : '';
+  });
+  return customFieldValues;
+}
+
+export function getExportRows(info: Object): Array<Array<?string>> {
+  const {
+    data: { editData, mappingObjects },
+    ids: { orderIds, orderItemsIds, batchIds },
+    columns: {
+      orderColumnFieldsFilter,
+      orderItemColumnFieldsFilter,
+      batchColumnFieldsFilter,
+      shipmentColumnFieldsFilter,
+      orderCustomFieldsFilter,
+      orderItemCustomFieldsFilter,
+      batchCustomFieldsFilter,
+      shipmentCustomFieldsFilter,
+    },
+  } = info;
+  const rows = [];
+  orderIds.forEach(orderId => {
+    const order = mappingObjects.order[orderId];
+    if (!order) return null;
+    const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+      item => order.relation.orderItem[item.data.id] && orderItemsIds.includes(item.data.id)
+    );
+    const orderData = editData.orders[orderId];
+    const orderValues = getFieldValues(orderColumnFieldsFilter, orderData);
+    const orderCustomValues = getCustomFieldValues(orderCustomFieldsFilter, orderData);
+    const orderRow = [...orderValues, ...orderCustomValues];
+    if (orderItems.length === 0) {
+      const emptyRow = getEmptyValues([
+        ...orderItemColumnFieldsFilter,
+        ...orderItemCustomFieldsFilter,
+        ...batchColumnFieldsFilter,
+        ...batchCustomFieldsFilter,
+        ...shipmentColumnFieldsFilter,
+        ...shipmentCustomFieldsFilter,
+      ]);
+      const currentRow = [...orderRow, ...emptyRow];
+      return rows.push(currentRow);
+    }
+    return orderItems.forEach(orderItem => {
+      const notHaveBatches = Object.keys(orderItem.relation.batch).length === 0;
+      const orderItemData = editData.orderItems[orderItem.data.id];
+      console.log(orderItemData, orderItem.data.id);
+      const orderItemValues = getFieldValues(orderItemColumnFieldsFilter, orderItemData);
+      const orderItemCustomValues = getCustomFieldValues(
+        orderItemCustomFieldsFilter,
+        orderItemData
+      );
+      const orderItemRow = [...orderItemValues, ...orderItemCustomValues];
+      if (notHaveBatches) {
+        const emptyRow = getEmptyValues([
+          ...batchColumnFieldsFilter,
+          ...batchCustomFieldsFilter,
+          ...shipmentColumnFieldsFilter,
+          ...shipmentCustomFieldsFilter,
+        ]);
+        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow];
+        return rows.push(currentRow);
+      }
+      return orderItem.data.batches
+        .filter(batch => batchIds.includes(batch.id))
+        .forEach(batch => {
+          const batchData = editData.batches[batch.id];
+          const batchValues = getFieldValues(batchColumnFieldsFilter, batchData);
+          const batchCustomValues = getCustomFieldValues(batchCustomFieldsFilter, batchData);
+          const batchRow = [...batchValues, ...batchCustomValues];
+          let shipmentRow = [];
+          if (!batch.shipment) {
+            shipmentRow = getEmptyValues([
+              ...shipmentColumnFieldsFilter,
+              ...shipmentCustomFieldsFilter,
+            ]);
+          } else {
+            const shipmentData = editData.shipments[batch.shipment.id];
+            const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
+            const shipmentCustomValues = getCustomFieldValues(
+              shipmentCustomFieldsFilter,
+              shipmentData
+            );
+            shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+          }
+          const currentRow = [...orderRow, ...orderItemRow, ...batchRow, ...shipmentRow];
+          rows.push(currentRow);
+        });
+    });
+  });
+  return rows;
+}

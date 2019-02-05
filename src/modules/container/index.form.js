@@ -16,7 +16,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
 import { containerFormQuery } from './form/query';
-import { updateContainerMutation, prepareUpdateContainerInput } from './form/mutation';
+import { updateContainerMutation, prepareContainer } from './form/mutation';
 import ContainerFormContainer from './form/container';
 import validator from './form/validator';
 import ContainerForm from './form/index';
@@ -55,7 +55,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
   ) => {
     const { containerId } = this.props;
 
-    const input = prepareUpdateContainerInput(formData);
+    const input = prepareContainer(formData);
 
     const result = await saveContainer({
       variables: { input, id: decodeId(containerId) },
