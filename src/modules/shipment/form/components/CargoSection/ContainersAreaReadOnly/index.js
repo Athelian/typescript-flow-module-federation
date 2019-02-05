@@ -82,7 +82,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                           disabled
                           message={
                             <FormattedMessage
-                              id="modules.shipment.cantMove"
+                              id="modules.Shipments.cantMove"
                               defaultMessage="CAN NOT MOVE TO ORIGIN"
                             />
                           }
@@ -95,7 +95,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                           disabled
                           message={
                             <FormattedMessage
-                              id="modules.shipment.selectBatchesFirst"
+                              id="modules.Shipments.selectBatchesFirst"
                               defaultMessage="PLEASE SELECT SOME BATCHES FIRST"
                             />
                           }
@@ -138,7 +138,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                         }}
                         message={
                           <FormattedMessage
-                            id="modules.shipment.moveToBatchesPool"
+                            id="modules.Shipments.moveToBatchesPool"
                             defaultMessage="MOVE TO BATCHES POOL"
                           />
                         }
@@ -159,7 +159,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                 disabled
                                 message={
                                   <FormattedMessage
-                                    id="modules.shipment.cantMove"
+                                    id="modules.Shipments.cantMove"
                                     defaultMessage="CAN NOT MOVE TO ORIGIN"
                                   />
                                 }
@@ -172,7 +172,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                 disabled
                                 message={
                                   <FormattedMessage
-                                    id="modules.shipment.selectBatchesFirst"
+                                    id="modules.Shipments.selectBatchesFirst"
                                     defaultMessage="PLEASE SELECT SOME BATCHES FIRST"
                                   />
                                 }
@@ -243,7 +243,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                               }}
                               message={
                                 <FormattedMessage
-                                  id="modules.shipment.moveToContainer"
+                                  id="modules.Shipments.moveToContainer"
                                   defaultMessage="MOVE TO THIS CONTAINER"
                                 />
                               }
@@ -260,7 +260,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
               <NewButton
                 label={
                   <FormattedMessage
-                    id="modules.shipment.newContainer"
+                    id="modules.Shipments.newContainer"
                     defaultMessage="NEW CONTAINER"
                   />
                 }
