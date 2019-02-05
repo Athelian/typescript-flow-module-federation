@@ -250,10 +250,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         orderIds.push(orderId);
                       }
                     });
-                    actions.cloneEntities({
-                      type: BATCH,
-                      ids: batchIds,
-                    });
+                    actions.cloneEntities([
+                      {
+                        type: BATCH,
+                        ids: batchIds,
+                      },
+                    ]);
                     try {
                       const cloneBatches = await Promise.all(
                         batchIds.map(batchId =>

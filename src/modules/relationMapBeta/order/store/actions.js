@@ -173,7 +173,7 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
-    cloneEntities: (entities: Object) =>
+    cloneEntities: (entities: Array<Object>) =>
       dispatch({
         type: 'CLONE_ENTITIES',
         payload: {

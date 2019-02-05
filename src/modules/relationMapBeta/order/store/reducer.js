@@ -55,6 +55,7 @@ export const uiInitState: UIState = {
   },
   clone: {
     batches: {},
+    shipments: {},
   },
   connectOrder: {
     enableSelectMode: false,
@@ -349,6 +350,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       return {
         ...state,
         clone: {
+          ...state.clone,
           batches,
         },
         targets: getByPathWithDefault([], 'payload.data', action).map(

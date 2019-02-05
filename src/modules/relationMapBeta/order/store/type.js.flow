@@ -55,6 +55,7 @@ export type UIState = {
   },
   clone: {
     batches: Object,
+    shipments: Object,
   },
   connectOrder: {
     enableSelectMode: boolean,

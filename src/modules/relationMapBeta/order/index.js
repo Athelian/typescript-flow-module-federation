@@ -69,7 +69,7 @@ function manualSortByAction(shipments: Object, state: Object) {
     }
   });
 
-  (Object.entries(shipments): Array<any>).forEach(([shipmentId, shipment]) => {
+  (Object.entries(shipments || {}): Array<any>).forEach(([shipmentId, shipment]) => {
     if (!state.new.shipments.includes(shipmentId)) {
       sortShipments.push(shipment);
     }
