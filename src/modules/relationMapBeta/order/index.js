@@ -61,6 +61,23 @@ const initFilter = {
   },
 };
 
+function manualSortByAction(shipments: Object, state: Object) {
+  const sortShipments = [];
+  state.new.shipments.reverse().forEach(shipmentId => {
+    if (shipments[shipmentId]) {
+      sortShipments.push(shipments[shipmentId]);
+    }
+  });
+
+  (Object.entries(shipments): Array<any>).forEach(([shipmentId, shipment]) => {
+    if (!state.new.shipments.includes(shipmentId)) {
+      sortShipments.push(shipment);
+    }
+  });
+
+  return sortShipments;
+}
+
 const Order = ({ intl }: Props) => {
   const { queryVariables, filterAndSort, onChangeFilter: onChange } = useListConfig(
     initFilter,
@@ -361,20 +378,18 @@ const Order = ({ intl }: Props) => {
                       />
                     ) : (
                       <div className={ShipmentListBodyStyle}>
-                        {(Object.entries(shipments || []): Array<any>).map(
-                          ([shipmentId, shipment]) => (
-                            <Shipment
-                              wrapperClassName={ItemWrapperStyle(
-                                highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
-                                uiSelectors.isTarget(SHIPMENT, shipment.id),
-                                state.highlight.type === SHIPMENT &&
-                                  state.highlight.selectedId === shipment.id
-                              )}
-                              key={shipmentId}
-                              {...shipment}
-                            />
-                          )
-                        )}
+                        {manualSortByAction(shipments, state).map(shipment => (
+                          <Shipment
+                            wrapperClassName={ItemWrapperStyle(
+                              highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
+                              uiSelectors.isTarget(SHIPMENT, shipment.id),
+                              state.highlight.type === SHIPMENT &&
+                                state.highlight.selectedId === shipment.id
+                            )}
+                            key={shipment.id}
+                            {...shipment}
+                          />
+                        ))}
                       </div>
                     )}
                   </div>
