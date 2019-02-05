@@ -30,7 +30,7 @@ import {
 } from 'modules/relationMap/orderFocused/style';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
-import { orderListQuery, orderDetailQuery } from './query';
+import { orderListQuery, orderDetailQuery, shipmentDetailQuery } from './query';
 import normalize from './normalize';
 import { hasMoreItems, findHighLightEntities } from './helpers';
 import { uiInitState, uiReducer, actionCreators, selectors } from './store';
@@ -79,6 +79,20 @@ const Order = ({ intl }: Props) => {
 
           if (loading) {
             return <LoadingIcon />;
+          }
+
+          if (!state.toggleShipmentList && state.refetchShipmentId) {
+            const newShipmentId = state.refetchShipmentId;
+            actions.refetchQueryBy('SHIPMENT', '');
+            const queryOption: any = {
+              query: shipmentDetailQuery,
+              variables: {
+                id: newShipmentId,
+              },
+            };
+            client.query(queryOption).then(responseData => {
+              console.warn({ responseData });
+            });
           }
 
           if (state.refetchOrderId) {

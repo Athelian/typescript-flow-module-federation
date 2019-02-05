@@ -102,7 +102,7 @@ export default function Batch({
                       actions.targetBatchEntity({
                         id,
                         parentOrderId,
-                        exporterId: `${BATCH}-${exporterId}`,
+                        exporterId: `${id}-${exporterId}`,
                       })
                     }
                   />

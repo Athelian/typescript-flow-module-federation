@@ -395,12 +395,20 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             (Object.entries(orders): Array<any>).find(([, item]) =>
                               item.orderItems.includes(orderItemId)
                             ) || [];
+                          const { totalAdjusted, ...batch } = batches[batchId];
                           return {
                             orderItem: {
                               ...orderItem,
-                              order,
+                              productProvider: {
+                                ...orderItem.productProvider,
+                                exporter: exporters[orderItem.productProvider.exporter],
+                              },
+                              order: {
+                                ...order,
+                                exporter: exporters[order.exporter],
+                              },
                             },
-                            ...batches[batchId],
+                            ...batch,
                           };
                         });
                         shipmentBatchesContainer.initDetailValues(initBatches);

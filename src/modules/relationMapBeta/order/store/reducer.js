@@ -64,6 +64,7 @@ export const uiInitState: UIState = {
     sourceOrder: {},
   },
   connectShipment: {
+    parentOrderIds: [],
     enableSelectMode: false,
     status: false,
     shipmentId: '',
@@ -214,11 +215,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         orderItems.forEach(orderItem => {
           if (!sourceOrder.orderItems.includes(orderItem.id)) {
             targets.push(`${ORDER_ITEM}-${orderItem.id}`);
-            exporterIds.push(`${ORDER_ITEM}-${exporter.id}`);
+            exporterIds.push(`${orderItem.id}-${exporter.id}`);
             orderItem.batches.forEach(batch => {
               targets.push(`${BATCH}-${batch.id}`);
-              if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
-                exporterIds.push(`${BATCH}-${exporter.id}`);
+              if (!exporterIds.includes(`${batch.id}-${exporter.id}`)) {
+                exporterIds.push(`${batch.id}-${exporter.id}`);
               }
             });
           } else {
@@ -227,16 +228,16 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
               orderItem.batches.forEach(batch => {
                 if (!findOrderItem.batches.includes(batch)) {
                   targets.push(`${BATCH}-${batch.id}`);
-                  if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
-                    exporterIds.push(`${BATCH}-${exporter.id}`);
+                  if (!exporterIds.includes(`${batch.id}-${exporter.id}`)) {
+                    exporterIds.push(`${batch.id}-${exporter.id}`);
                   }
                 }
               });
             } else {
               orderItem.batches.forEach(batch => {
                 targets.push(`${BATCH}-${batch.id}`);
-                if (!exporterIds.includes(`${BATCH}-${exporter.id}`)) {
-                  exporterIds.push(`${BATCH}-${exporter.id}`);
+                if (!exporterIds.includes(`${batch.id}-${exporter.id}`)) {
+                  exporterIds.push(`${batch.id}-${exporter.id}`);
                 }
               });
             }
@@ -508,9 +509,9 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             ...state,
             connectOrder: {
               ...state.connectOrder,
-              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-                ? state.connectOrder.exporterIds
-                : [...state.connectOrder.exporterIds, payload.exporterId],
+              exporterIds: (state.connectOrder.exporterIds.filter(
+                item => item !== payload.exporterId
+              ): Array<string>),
             },
             targets: (targets.filter(
               item => item !== `${ORDER_ITEM}-${payload.id}`
@@ -552,8 +553,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { targets } = state;
       if (payload) {
         if (targets.includes(`${BATCH}-${payload.id}`)) {
+          const newTargets = (targets.filter(
+            item => item !== `${BATCH}-${payload.id}`
+          ): Array<string>);
           return {
             ...state,
+            targets: newTargets,
             split: {
               ...state.split,
               parentOrderIds: state.split.parentOrderIds.includes(
@@ -562,15 +567,26 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
                 ? state.split.parentOrderIds
                 : [...state.split.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
             },
+            connectShipment: {
+              ...state.connectShipment,
+              parentOrderIds: state.connectShipment.parentOrderIds.includes(
+                `${payload.id}-${payload.parentOrderId}`
+              )
+                ? state.connectShipment.parentOrderIds
+                : [
+                    ...state.connectShipment.parentOrderIds,
+                    `${payload.id}-${payload.parentOrderId}`,
+                  ],
+            },
             connectOrder: {
               ...state.connectOrder,
-              exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-                ? state.connectOrder.exporterIds
-                : [...state.connectOrder.exporterIds, payload.exporterId],
+              exporterIds: (state.connectOrder.exporterIds.filter(
+                item => item !== payload.exporterId
+              ): Array<string>),
             },
-            targets: (targets.filter(item => item !== `${BATCH}-${payload.id}`): Array<string>),
           };
         }
+        const newTargets = [...targets, `${BATCH}-${payload.id}`];
         return {
           ...state,
           split: {
@@ -581,13 +597,21 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
               ? state.split.parentOrderIds
               : [...state.split.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
           },
+          connectShipment: {
+            ...state.connectShipment,
+            parentOrderIds: state.connectShipment.parentOrderIds.includes(
+              `${payload.id}-${payload.parentOrderId}`
+            )
+              ? state.connectShipment.parentOrderIds
+              : [...state.connectShipment.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
+          },
           connectOrder: {
             ...state.connectOrder,
             exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
               ? state.connectOrder.exporterIds
               : [...state.connectOrder.exporterIds, payload.exporterId],
           },
-          targets: [...targets, `${BATCH}-${payload.id}`],
+          targets: newTargets,
         };
       }
       return state;

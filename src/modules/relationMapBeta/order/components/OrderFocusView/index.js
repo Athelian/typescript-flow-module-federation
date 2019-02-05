@@ -71,7 +71,6 @@ function findRelateBatches({
 
 function manualSortByAction(orderItems: Array<Object>, state: Object) {
   logger.warn({
-    orderItems,
     state,
   });
   return orderItems.map(orderItem => {
