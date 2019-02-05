@@ -40,7 +40,11 @@ import MoveToShipmentPanel from './MoveToShipmentPanel';
 import ErrorPanel from './ErrorPanel';
 import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
-import { cloneBatchMutation, cloneShipmentMutation } from './ClonePanel/mutation';
+import {
+  cloneBatchMutation,
+  cloneShipmentMutation,
+  cloneOrderItemMutation,
+} from './ClonePanel/mutation';
 import { updateOrderMutation, prepareUpdateOrderInput } from './MoveToOrderPanel/mutation';
 import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
 import TableView from '../TableInlineEdit';
@@ -233,20 +237,21 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   onClick={async () => {
                     const batchIds = uiSelectors.targetedBatchIds();
                     const shipmentIds = uiSelectors.targetedShipmentIds();
-                    const orderItemIds = [];
+                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const allOrderItemIds = [...orderItemIds];
                     (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
                       if (
-                        !orderItemIds.includes(orderItemId) &&
+                        !allOrderItemIds.includes(orderItemId) &&
                         intersection(orderItem.batches, batchIds).length > 0
                       ) {
-                        orderItemIds.push(orderItemId);
+                        allOrderItemIds.push(orderItemId);
                       }
                     });
                     const orderIds = [];
                     (Object.entries(orders): Array<any>).forEach(([orderId, order]) => {
                       if (
                         !orderIds.includes(orderId) &&
-                        intersection(order.orderItems, orderItemIds).length > 0
+                        intersection(order.orderItems, allOrderItemIds).length > 0
                       ) {
                         orderIds.push(orderId);
                       }
@@ -257,26 +262,74 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         ids: batchIds,
                       },
                       {
+                        type: ORDER_ITEM,
+                        ids: orderItemIds,
+                      },
+                      {
                         type: SHIPMENT,
                         ids: shipmentIds,
                       },
                     ]);
+
+                    const processBatchIds = [];
                     try {
                       const result = [];
-                      if (batchIds.length > 0) {
-                        const cloneBatches = await Promise.all(
-                          batchIds.map(batchId =>
-                            client.mutate({
-                              mutation: cloneBatchMutation,
-                              variables: { id: batchId, input: {} },
+
+                      if (orderItemIds.length > 0) {
+                        const cloneOrderItems = await Promise.all(
+                          orderItemIds.map(orderItemId => {
+                            const selectedBatchIds = intersection(
+                              orderItems[orderItemId].batches,
+                              batchIds
+                            );
+                            if (selectedBatchIds.length > 0) {
+                              processBatchIds.push(...selectedBatchIds);
+                            }
+                            return client.mutate({
+                              mutation: cloneOrderItemMutation,
+                              variables: {
+                                id: orderItemId,
+                                input: {
+                                  batches: selectedBatchIds.map(id => ({ id })),
+                                },
+                              },
                               refetchQueries: orderIds.map(orderId => ({
                                 query: orderDetailQuery,
                                 variables: {
                                   id: orderId,
                                 },
                               })),
-                            })
-                          )
+                            });
+                          })
+                        );
+                        // TODO: show error message from violations
+                        result.push({
+                          type: ORDER_ITEM,
+                          items: cloneOrderItems
+                            .map((item, index) => ({
+                              id: orderItemIds[index],
+                              orderItem: getByPathWithDefault([], 'data.orderItemClone', item),
+                            }))
+                            .filter(item => !item.orderItem.violations),
+                        });
+                      }
+
+                      if (batchIds.length > 0) {
+                        const cloneBatches = await Promise.all(
+                          batchIds
+                            .filter(batchId => !processBatchIds.includes(batchId))
+                            .map(batchId =>
+                              client.mutate({
+                                mutation: cloneBatchMutation,
+                                variables: { id: batchId, input: {} },
+                                refetchQueries: orderIds.map(orderId => ({
+                                  query: orderDetailQuery,
+                                  variables: {
+                                    id: orderId,
+                                  },
+                                })),
+                              })
+                            )
                         );
                         // TODO: show error message from violations
                         result.push({
@@ -289,6 +342,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             .filter(item => !item.batch.violations),
                         });
                       }
+
                       if (shipmentIds.length > 0) {
                         const cloneShipments: any = await Promise.all(
                           shipmentIds.map(shipmentId =>

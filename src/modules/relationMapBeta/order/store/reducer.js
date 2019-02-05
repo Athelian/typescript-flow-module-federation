@@ -56,6 +56,7 @@ export const uiInitState: UIState = {
   clone: {
     batches: {},
     shipments: {},
+    orderItems: {},
     shipmentNo: {},
   },
   connectOrder: {
@@ -343,10 +344,17 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'CLONE_ENTITIES_SUCCESS': {
-      const { batches, shipments, shipmentNo } = state.clone;
+      const { batches, shipments, orderItems, shipmentNo } = state.clone;
       const targets = [];
       getByPathWithDefault([], 'payload.data', action).forEach(({ type, items }) => {
         switch (type) {
+          case ORDER_ITEM:
+            items.forEach(({ id, orderItem }) => {
+              orderItems[id] = orderItems[id] ? [...orderItems[id], orderItem] : [orderItem];
+              targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+            });
+
+            break;
           case BATCH:
             items.forEach(({ id, batch }) => {
               batches[id] = batches[id] ? [...batches[id], batch] : [batch];
@@ -372,6 +380,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         ...state,
         clone: {
           shipmentNo,
+          orderItems,
           batches,
           shipments,
         },
