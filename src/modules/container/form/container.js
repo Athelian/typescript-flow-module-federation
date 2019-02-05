@@ -29,7 +29,7 @@ export type ContainerFormState = {
   totalVolume: Metric,
   totalWeight: Metric,
   totalPrice: ?Metric,
-  shipment: Object,
+  shipment?: Object,
   batches: Array<Object>,
   tags?: Array<Object>,
   representativeBatch: Object,
