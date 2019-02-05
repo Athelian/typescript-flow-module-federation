@@ -709,7 +709,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             });
                           });
 
-                          actions.moveToOrder(targetOrder);
+                          actions.moveToOrder({
+                            ...targetOrder,
+                            orderItems: targetOrder.orderItems.map(
+                              orderItemId => orderItems[orderItemId]
+                            ),
+                          });
                           try {
                             const updateOrders = await Promise.all(
                               updateOrdersInput.map(item =>

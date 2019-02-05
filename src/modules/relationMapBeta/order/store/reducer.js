@@ -213,7 +213,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       if (updateOrder) {
         const { exporter, orderItems } = updateOrder;
         orderItems.forEach(orderItem => {
-          if (!sourceOrder.orderItems.includes(orderItem.id)) {
+          if (!sourceOrder.orderItems.map(item => item.id).includes(orderItem.id)) {
             targets.push(`${ORDER_ITEM}-${orderItem.id}`);
             exporterIds.push(`${orderItem.id}-${exporter.id}`);
             orderItem.batches.forEach(batch => {
@@ -226,7 +226,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             const findOrderItem = sourceOrder.orderItems.find(item => item.id === orderItem.id);
             if (findOrderItem) {
               orderItem.batches.forEach(batch => {
-                if (!findOrderItem.batches.includes(batch)) {
+                if (!findOrderItem.batches.includes(batch.id)) {
                   targets.push(`${BATCH}-${batch.id}`);
                   if (!exporterIds.includes(`${batch.id}-${exporter.id}`)) {
                     exporterIds.push(`${batch.id}-${exporter.id}`);
