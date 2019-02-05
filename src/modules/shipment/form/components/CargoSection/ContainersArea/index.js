@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import { getByPath } from 'utils/fp';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
@@ -118,6 +118,15 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             'containers',
                                             containers.filter(
                                               ({ id: containerId }) => container.id !== containerId
+                                            )
+                                          );
+                                          updateBatchesState(
+                                            'batches',
+                                            batches.filter(
+                                              ({ container: batchContainer }) =>
+                                                isNullOrUndefined(batchContainer) ||
+                                                (!isNullOrUndefined(batchContainer) &&
+                                                  batchContainer.id !== container.id)
                                             )
                                           );
                                         }}
