@@ -69,28 +69,70 @@ function findRelateBatches({
   }
 }
 
+function findRelateOrderItem({
+  processOrderItemIds,
+  orderItem,
+  orderItems,
+  state,
+  result,
+}: {
+  processOrderItemIds: Array<string>,
+  orderItem: Object,
+  orderItems: Array<Object>,
+  state: Object,
+  result: Array<Object>,
+}) {
+  const orderItemId = orderItem.id;
+  processOrderItemIds.push(orderItemId);
+  const { batches } = orderItem;
+  const orderingBatches = [];
+  const processBatchIds = [];
+  batches.forEach(batch => {
+    if (!processBatchIds.includes(batch.id)) {
+      orderingBatches.push(batch);
+      processBatchIds.push(batch.id);
+      const batchId = batch.id;
+      findRelateBatches({ state, batchId, processBatchIds, batches, orderingBatches });
+    }
+  });
+  result.push({
+    ...orderItem,
+    batches: orderingBatches,
+  });
+  if (state.clone.orderItems[orderItemId]) {
+    (Object.entries(state.clone.orderItems[orderItemId]): Array<any>)
+      .reverse()
+      .forEach(([, currentOrderItem]) => {
+        processOrderItemIds.push(currentOrderItem.id);
+        const selectedOrderItem = orderItems.find(
+          item => Number(item.id) === Number(currentOrderItem.id)
+        );
+        if (selectedOrderItem) {
+          findRelateOrderItem({
+            orderItem: selectedOrderItem,
+            state,
+            processOrderItemIds,
+            orderItems,
+            result,
+          });
+        }
+      });
+  }
+}
+
 function manualSortByAction(orderItems: Array<Object>, state: Object) {
   logger.warn({
     state,
   });
-  return orderItems.map(orderItem => {
-    const { batches } = orderItem;
-    const orderingBatches = [];
-    const processBatchIds = [];
-    batches.forEach(batch => {
-      if (!processBatchIds.includes(batch.id)) {
-        orderingBatches.push(batch);
-        processBatchIds.push(batch.id);
-        const batchId = batch.id;
-        findRelateBatches({ state, batchId, processBatchIds, batches, orderingBatches });
-      }
-    });
-
-    return {
-      ...orderItem,
-      batches: orderingBatches,
-    };
+  const result = [];
+  const processOrderItemIds = [];
+  orderItems.forEach(orderItem => {
+    if (!processOrderItemIds.includes(orderItem.id)) {
+      findRelateOrderItem({ processOrderItemIds, orderItem, orderItems, state, result });
+    }
   });
+
+  return result;
 }
 
 export default function OrderFocusView({ item, highLightEntities }: Props) {
