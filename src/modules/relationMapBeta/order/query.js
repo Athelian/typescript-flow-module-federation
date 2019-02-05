@@ -169,6 +169,14 @@ export const orderDetailQuery = gql`
 export const shipmentDetailQuery = gql`
   query($id: ID!) {
     shipment(id: $id) {
+      ... on Shipment {
+        id
+        batches {
+          ... on Batch {
+            id
+          }
+        }
+      }
       ...shipmentCardRMFragment
     }
   }

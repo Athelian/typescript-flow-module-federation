@@ -92,6 +92,23 @@ const Order = ({ intl }: Props) => {
             };
             client.query(queryOption).then(responseData => {
               console.warn({ responseData });
+              updateQuery(prevResult => {
+                const orderIds = state.connectShipment.parentOrderIds.map(item => {
+                  const [, orderId] = item.split('-');
+                  return orderId;
+                });
+                prevResult.orders.nodes
+                  .filter(order => orderIds.includes(order.id))
+                  .forEach(order => {
+                    // insert on the top
+                    order.shipments.push(responseData.data.shipment);
+                  });
+                scrollIntoView({
+                  targetId: `shipment-${newShipmentId}`,
+                });
+
+                return prevResult;
+              });
             });
           }
 

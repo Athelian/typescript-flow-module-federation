@@ -561,22 +561,15 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             targets: newTargets,
             split: {
               ...state.split,
-              parentOrderIds: state.split.parentOrderIds.includes(
-                `${payload.id}-${payload.parentOrderId}`
-              )
-                ? state.split.parentOrderIds
-                : [...state.split.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
+              parentOrderIds: (state.split.parentOrderIds.filter(
+                item => item !== `${payload.id}-${payload.parentOrderId}`
+              ): Array<string>),
             },
             connectShipment: {
               ...state.connectShipment,
-              parentOrderIds: state.connectShipment.parentOrderIds.includes(
-                `${payload.id}-${payload.parentOrderId}`
-              )
-                ? state.connectShipment.parentOrderIds
-                : [
-                    ...state.connectShipment.parentOrderIds,
-                    `${payload.id}-${payload.parentOrderId}`,
-                  ],
+              parentOrderIds: (state.connectShipment.parentOrderIds.filter(
+                item => item !== `${payload.id}-${payload.parentOrderId}`
+              ): Array<string>),
             },
             connectOrder: {
               ...state.connectOrder,
@@ -599,17 +592,14 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           },
           connectShipment: {
             ...state.connectShipment,
-            parentOrderIds: state.connectShipment.parentOrderIds.includes(
-              `${payload.id}-${payload.parentOrderId}`
-            )
-              ? state.connectShipment.parentOrderIds
-              : [...state.connectShipment.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
+            parentOrderIds: [
+              ...state.connectShipment.parentOrderIds,
+              `${payload.id}-${payload.parentOrderId}`,
+            ],
           },
           connectOrder: {
             ...state.connectOrder,
-            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-              ? state.connectOrder.exporterIds
-              : [...state.connectOrder.exporterIds, payload.exporterId],
+            exporterIds: [...state.connectOrder.exporterIds, payload.exporterId],
           },
           targets: newTargets,
         };
