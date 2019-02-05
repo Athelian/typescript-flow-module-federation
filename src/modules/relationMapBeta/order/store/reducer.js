@@ -352,6 +352,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             items.forEach(({ id, orderItem }) => {
               orderItems[id] = orderItems[id] ? [...orderItems[id], orderItem] : [orderItem];
               targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+              if (orderItem.batches.length) {
+                orderItem.batches.forEach(batch => {
+                  targets.push(`${BATCH}-${batch.id}`);
+                });
+              }
             });
 
             break;
