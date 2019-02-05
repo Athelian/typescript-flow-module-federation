@@ -72,23 +72,21 @@ const findRelateShipment = ({
   state: Object,
   shipment: Object,
 }) => {
-  if (!state.new.shipments.includes(shipmentId)) {
-    if (!sortShipments.includes(shipment)) {
-      sortShipments.push(shipment);
-    }
-    if (state.clone.shipments[shipmentId]) {
-      (state.clone.shipments[shipmentId] || []).forEach(item => {
-        sortShipments.push(item);
-        if (state.clone.shipments[item.id]) {
-          findRelateShipment({
-            shipmentId: item.id,
-            shipment: item,
-            sortShipments,
-            state,
-          });
-        }
-      });
-    }
+  if (!sortShipments.includes(shipment)) {
+    sortShipments.push(shipment);
+  }
+  if (state.clone.shipments[shipmentId]) {
+    (state.clone.shipments[shipmentId] || []).forEach(item => {
+      sortShipments.push(item);
+      if (state.clone.shipments[item.id]) {
+        findRelateShipment({
+          shipmentId: item.id,
+          shipment: item,
+          sortShipments,
+          state,
+        });
+      }
+    });
   }
 };
 
