@@ -22,6 +22,7 @@ export const uiInitState: UIState = {
   showTag: getInitShowTag(),
   refetchOrderId: '',
   refetchShipmentId: '',
+  refetchAll: false,
   expandCards: {
     orders: [],
     shipments: [],
@@ -54,9 +55,10 @@ export const uiInitState: UIState = {
     batches: [],
   },
   clone: {
+    orders: {},
+    orderItems: {},
     batches: {},
     shipments: {},
-    orderItems: {},
     shipmentNo: {},
   },
   connectOrder: {
@@ -84,6 +86,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         ...state,
         loading: false,
         error: false,
+      };
+    case 'REFETCH_ALL':
+      return {
+        ...state,
+        refetchAll: getByPathWithDefault(false, 'payload.isEnable', action),
       };
     case 'CHANGE_SELECT_MODE': {
       return {
@@ -344,15 +351,32 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'CLONE_ENTITIES_SUCCESS': {
-      const { batches, shipments, orderItems, shipmentNo } = state.clone;
+      const { orders, batches, shipments, orderItems, shipmentNo } = state.clone;
       const targets = [];
       getByPathWithDefault([], 'payload.data', action).forEach(({ type, items }) => {
         switch (type) {
+          case ORDER:
+            items.forEach(({ id, order }) => {
+              orders[id] = orders[id] ? [...orders[id], order] : [order];
+              targets.push(`${ORDER}-${order.id}`);
+              if (order.orderItems && order.orderItems.length) {
+                order.orderItems.forEach(orderItem => {
+                  targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+                  if (orderItem.batches && orderItem.batches.length) {
+                    orderItem.batches.forEach(batch => {
+                      targets.push(`${BATCH}-${batch.id}`);
+                    });
+                  }
+                });
+              }
+            });
+
+            break;
           case ORDER_ITEM:
             items.forEach(({ id, orderItem }) => {
               orderItems[id] = orderItems[id] ? [...orderItems[id], orderItem] : [orderItem];
               targets.push(`${ORDER_ITEM}-${orderItem.id}`);
-              if (orderItem.batches.length) {
+              if (orderItem.batches && orderItem.batches.length) {
                 orderItem.batches.forEach(batch => {
                   targets.push(`${BATCH}-${batch.id}`);
                 });
@@ -385,6 +409,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         ...state,
         clone: {
           shipmentNo,
+          orders,
           orderItems,
           batches,
           shipments,

@@ -321,6 +321,13 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
+    setRefetchAll: (isEnable: boolean) =>
+      dispatch({
+        type: 'REFETCH_ALL',
+        payload: {
+          isEnable,
+        },
+      }),
   };
 }
 

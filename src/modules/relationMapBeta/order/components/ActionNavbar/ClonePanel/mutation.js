@@ -9,7 +9,11 @@ import {
   portFragment,
   priceFragment,
 } from 'graphql';
-import { batchCardRMFragment, shipmentCardRMFragment } from 'modules/relationMapBeta/order/query';
+import {
+  orderCardRMFragment,
+  batchCardRMFragment,
+  shipmentCardRMFragment,
+} from 'modules/relationMapBeta/order/query';
 
 export const cloneBatchMutation = gql`
   mutation batchClone($id: ID!, $input: BatchUpdateInput!) {
@@ -90,4 +94,22 @@ export const cloneOrderItemMutation = gql`
   ${priceFragment}
   ${tagFragment}
   ${metricFragment}
+`;
+
+export const cloneOrderMutation = gql`
+  mutation orderClone($id: ID!, $input: OrderUpdateInput!) {
+    orderClone(id: $id, input: $input) {
+      ...orderCardRMFragment
+    }
+  }
+
+  ${shipmentCardRMFragment}
+  ${batchCardRMFragment}
+  ${orderCardRMFragment}
+  ${timelineDateMinimalFragment}
+  ${tagFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${priceFragment}
 `;

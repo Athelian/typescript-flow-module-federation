@@ -121,13 +121,17 @@ const Order = ({ intl }: Props) => {
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
-        {({ loading, data, fetchMore, error, client, updateQuery }) => {
+        {({ loading, data, refetch, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;
           }
 
           if (loading) {
             return <LoadingIcon />;
+          }
+
+          if (state.refetchAll) {
+            refetch(queryVariables).then(() => actions.setRefetchAll(false));
           }
 
           if (state.refetchShipmentId) {
