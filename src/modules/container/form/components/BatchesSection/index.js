@@ -54,7 +54,7 @@ function BatchesSection() {
                             ...selectedBatch,
                             packageQuantity: calculatePackageQuantity(selectedBatch),
                           }));
-                          if (batches.length === 0 && selectedBatches.length !== 0) {
+                          if (batches.length === 0 && selectedBatches.length > 0) {
                             setFieldValue('representativeBatch', selectedBatches[0]);
                           }
                           setFieldValue('batches', [...batches, ...selectedBatches]);
@@ -114,7 +114,7 @@ function BatchesSection() {
                               autoCalculatePackageQuantity: true,
                             });
                           });
-                          if (batches.length === 0 && newBatches.length !== 0) {
+                          if (batches.length === 0 && newBatches.length > 0) {
                             setFieldValue('representativeBatch', newBatches[0]);
                           }
                           setFieldValue('batches', [...batches, ...newBatches]);
