@@ -1,4 +1,5 @@
 // @flow
+import { findIndex } from 'lodash';
 import gql from 'graphql-tag';
 import {
   containerFormFragment,
@@ -61,7 +62,7 @@ const getIdOrReturnNull = (obj: { id: string }): string | null =>
 
 const getDateOrReturnNull = (date: string): Date | null => (date ? new Date(date) : null);
 
-export const prepareUpdateContainerInput = ({
+export const prepareContainer = ({
   id,
   updatedAt,
   updatedBy,
@@ -86,23 +87,29 @@ export const prepareUpdateContainerInput = ({
   totalAdjusted,
   batches,
   representativeBatch,
+  isNew,
   ...rest
 }: Object) => ({
   ...rest,
-  tagIds: tags.map(({ id: tagId }) => tagId),
+  ...(isNullOrUndefined(id) ? { id } : {}),
+  warehouseId: getIdOrReturnNull(warehouse),
   warehouseArrivalAgreedDate: getDateOrReturnNull(warehouseArrivalAgreedDate),
   warehouseArrivalActualDate: getDateOrReturnNull(warehouseArrivalActualDate),
   warehouseArrivalAgreedDateApprovedById: getIdOrReturnNull(warehouseArrivalAgreedDateApprovedBy),
   warehouseArrivalActualDateApprovedById: getIdOrReturnNull(warehouseArrivalActualDateApprovedBy),
-  warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(item =>
-    getIdOrReturnNull(item)
-  ),
-  warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(item =>
-    getIdOrReturnNull(item)
-  ),
-  warehouseId: getIdOrReturnNull(warehouse),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
-  representativeBatchId: getIdOrReturnNull(representativeBatch),
+  warehouseArrivalAgreedDateAssignedToIds: isNullOrUndefined(warehouseArrivalAgreedDateAssignedTo)
+    ? null
+    : warehouseArrivalAgreedDateAssignedTo.map(getIdOrReturnNull),
+  warehouseArrivalActualDateAssignedToIds: isNullOrUndefined(warehouseArrivalActualDateAssignedTo)
+    ? null
+    : warehouseArrivalActualDateAssignedTo.map(getIdOrReturnNull),
+  batches: isNullOrUndefined(batches)
+    ? null
+    : batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  tagIds: isNullOrUndefined(tags) ? null : tags.map(getIdOrReturnNull),
+  representativeBatchIndex: representativeBatch
+    ? findIndex(batches, batch => batch.id === representativeBatch.id)
+    : null,
 });
 
 export default updateContainerMutation;
