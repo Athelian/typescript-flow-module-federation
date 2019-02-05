@@ -9,6 +9,7 @@ import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import type { ShipmentProps } from 'modules/relationMapBeta/order/type.js.flow';
 import { ItemWrapperStyle } from 'modules/relationMap/common/RelationItem/style';
 import SelectedShipment from './SelectedShipment';
+import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName: string,
@@ -26,8 +27,10 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
   const { showTag } = state;
   const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
+  const isNew = uiSelectors.isNewShipment(id);
   return (
     <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
+      {isNew && <Badge label="new" />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
