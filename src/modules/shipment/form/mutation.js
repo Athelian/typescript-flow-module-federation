@@ -24,10 +24,10 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
 } from 'graphql';
-import { isNullOrUndefined } from 'utils/fp';
-import { formatToDateTimeGraphql } from 'utils/date';
+
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
+import { prepareContainer } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import { cleanUpData } from 'utils/data';
 import type {
@@ -88,54 +88,6 @@ export const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGro
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
     deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
   }));
-
-const prepareContainer = ({
-  isNew,
-  id,
-  representativeBatch,
-  batches = [],
-  warehouse,
-  warehouseArrivalAgreedDate,
-  warehouseArrivalActualDate,
-  warehouseArrivalAgreedDateApprovedAt,
-  warehouseArrivalActualDateApprovedAt,
-  warehouseArrivalAgreedDateApprovedBy,
-  warehouseArrivalActualDateApprovedBy,
-  warehouseArrivalAgreedDateAssignedTo = [],
-  warehouseArrivalActualDateAssignedTo = [],
-  tags = [],
-  totalWeight,
-  totalVolume,
-  totalBatchPackages,
-  totalBatchQuantity,
-  totalNumberOfUniqueOrderItems,
-  ...rest
-}: Object) => ({
-  ...rest,
-  ...(!isNew ? { id } : {}),
-  warehouseId: isNullOrUndefined(warehouse) ? null : warehouse.id,
-  ...(isNullOrUndefined(warehouseArrivalAgreedDate)
-    ? {}
-    : { warehouseArrivalAgreedDate: formatToDateTimeGraphql(warehouseArrivalAgreedDate) }),
-  ...(isNullOrUndefined(warehouseArrivalActualDate)
-    ? {}
-    : { warehouseArrivalAgreedDate: formatToDateTimeGraphql(warehouseArrivalActualDate) }),
-  warehouseArrivalAgreedDateApprovedById: isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
-    ? null
-    : warehouseArrivalAgreedDateApprovedBy.id,
-  warehouseArrivalActualDateApprovedById: isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
-    ? null
-    : warehouseArrivalActualDateApprovedBy.id,
-  representativeBatchId: isNullOrUndefined(representativeBatch) ? null : representativeBatch.id,
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
-  warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
-    ({ id: userId }) => userId
-  ),
-  warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
-    ({ id: userId }) => userId
-  ),
-  tagIds: tags.map(({ id: tagId }) => tagId),
-});
 
 export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
@@ -222,7 +174,7 @@ export const prepareCreateShipmentInput = ({
   batches: getBatchesInPool(batches).map(batch =>
     prepareUpdateBatchInput(cleanUpData(batch), true, false)
   ),
-  containers: containers.map(container => prepareContainer(cleanUpData(container))),
+  containers: containers.map(prepareContainer),
   containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({
     id,
@@ -306,7 +258,7 @@ export const prepareUpdateShipmentInput = ({
   batches: getBatchesInPool(batches).map(batch =>
     prepareUpdateBatchInput(cleanUpData(batch), true, false)
   ),
-  containers: containers.map(container => prepareContainer(cleanUpData(container))),
+  containers: containers.map(prepareContainer),
   voyages: formatVoyages(voyages),
   containerGroups: formatContainerGroups(containerGroups),
   files: files.map(({ id, name, type, memo: fileMemo }) => ({

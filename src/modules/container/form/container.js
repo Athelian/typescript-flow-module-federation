@@ -45,6 +45,8 @@ const initValues = {
   batches: [],
   tags: [],
   representativeBatch: null,
+  warehouseArrivalAgreedDateAssignedTo: [],
+  warehouseArrivalActualDateAssignedTo: [],
 };
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {

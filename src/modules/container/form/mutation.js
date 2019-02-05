@@ -62,7 +62,7 @@ const getIdOrReturnNull = (obj: { id: string }): string | null =>
 
 const getDateOrReturnNull = (date: string): Date | null => (date ? new Date(date) : null);
 
-export const prepareUpdateContainerInput = ({
+export const prepareContainer = ({
   id,
   updatedAt,
   updatedBy,
@@ -92,19 +92,21 @@ export const prepareUpdateContainerInput = ({
 }: Object) => ({
   ...rest,
   ...(isNullOrUndefined(id) ? { id } : {}),
-  tagIds: tags.map(getIdOrReturnNull),
   warehouseId: getIdOrReturnNull(warehouse),
   warehouseArrivalAgreedDate: getDateOrReturnNull(warehouseArrivalAgreedDate),
   warehouseArrivalActualDate: getDateOrReturnNull(warehouseArrivalActualDate),
   warehouseArrivalAgreedDateApprovedById: getIdOrReturnNull(warehouseArrivalAgreedDateApprovedBy),
   warehouseArrivalActualDateApprovedById: getIdOrReturnNull(warehouseArrivalActualDateApprovedBy),
-  warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
-    getIdOrReturnNull
-  ),
-  warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
-    getIdOrReturnNull
-  ),
-  batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  warehouseArrivalAgreedDateAssignedToIds: isNullOrUndefined(warehouseArrivalAgreedDateAssignedTo)
+    ? null
+    : warehouseArrivalAgreedDateAssignedTo.map(getIdOrReturnNull),
+  warehouseArrivalActualDateAssignedToIds: isNullOrUndefined(warehouseArrivalActualDateAssignedTo)
+    ? null
+    : warehouseArrivalActualDateAssignedTo.map(getIdOrReturnNull),
+  batches: isNullOrUndefined(batches)
+    ? null
+    : batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
+  tagIds: isNullOrUndefined(tags) ? null : tags.map(getIdOrReturnNull),
   representativeBatchIndex: representativeBatch
     ? findIndex(batches, batch => batch.id === representativeBatch.id)
     : null,
