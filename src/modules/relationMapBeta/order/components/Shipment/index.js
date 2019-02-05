@@ -24,13 +24,16 @@ const defaultProps = {
 export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
-  const { showTag } = state;
+  const { showTag, clone } = state;
   const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
+  const showCloneBadge = (Object.entries(clone.shipments): Array<any>).some(([, item]) =>
+    item.map(({ id: shipmentId }) => shipmentId).includes(id)
+  );
   const isNew = uiSelectors.isNewShipment(id);
   return (
     <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
-      {isNew && <Badge label="new" />}
+      {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
