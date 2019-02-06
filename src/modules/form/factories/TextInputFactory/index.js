@@ -1,40 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FieldItem, Label, FormTooltip, DefaultStyle, TextInput } from 'components/Form';
+import type {
+  LabelProps,
+  TooltipProps,
+  InputWrapperProps as StandardInputWrapperProps,
+  InputProps,
+} from 'modules/form/factories/type';
 
-type LabelProps = {
-  required?: boolean,
-  labelAlign?: 'left' | 'right' | 'center',
-  labelWidth?: string,
-};
-
-type TooltipProps = {
-  hideTooltip?: boolean,
-  isNew?: boolean,
-  errorMessage?: string,
-  warningMessage?: React.Node,
-  infoMessage?: React.Node,
-  originalValue?: any,
-};
-
-type InputWrapperProps = {
+type InputWrapperProps = StandardInputWrapperProps & {
   type?: 'standard' | 'label',
-  isFocused?: boolean,
-  disabled?: boolean,
-  forceHoverStyle?: boolean,
-  inputWidth?: string,
-  inputHeight?: string,
-};
-
-type InputProps = {
-  value?: any,
-  name?: string,
-  placeholder?: React.Node,
-  onChange?: ?Function,
-  onBlur?: ?Function,
-  onFocus?: ?Function,
-  inputAlign?: 'left' | 'right' | 'center',
-  readOnly?: boolean,
 };
 
 type Props = LabelProps &
