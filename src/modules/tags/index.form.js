@@ -143,12 +143,13 @@ export default class TagFormModule extends React.PureComponent<Props> {
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
                                 <ResetButton
-                                  onClick={() =>
+                                  onClick={() => {
                                     this.onReset({
                                       tagState,
                                       entityTypesState,
-                                    })
-                                  }
+                                    });
+                                    form.onReset();
+                                  }}
                                 />
                               )}
                               <SaveButton

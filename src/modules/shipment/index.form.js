@@ -418,7 +418,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           )}
                           {isDirty && !isNewOrClone && (
                             <ResetButton
-                              onClick={() =>
+                              onClick={() => {
                                 this.onReset({
                                   shipmentInfoContainer,
                                   shipmentTagsContainer,
@@ -427,8 +427,9 @@ class ShipmentFormModule extends React.Component<Props> {
                                   shipmentBatchesContainer,
                                   shipmentContainersContainer,
                                   shipmentFilesContainer,
-                                })
-                              }
+                                });
+                                form.onReset();
+                              }}
                             />
                           )}
                           {isDirty && (

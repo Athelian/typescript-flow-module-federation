@@ -145,7 +145,12 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                               {this.isNewOrClone() ? (
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
-                                <ResetButton onClick={() => this.onReset(formState)} />
+                                <ResetButton
+                                  onClick={() => {
+                                    this.onReset(formState);
+                                    form.onReset();
+                                  }}
+                                />
                               )}
                               <SaveButton
                                 data-testid="saveButton"

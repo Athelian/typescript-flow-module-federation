@@ -308,14 +308,15 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   />
                                 ) : (
                                   <ResetButton
-                                    onClick={() =>
+                                    onClick={() => {
                                       this.onReset({
                                         orderItemState,
                                         orderInfoState,
                                         orderTagsState,
                                         orderFilesState,
-                                      })
-                                    }
+                                      });
+                                      form.onReset();
+                                    }}
                                   />
                                 )}
 

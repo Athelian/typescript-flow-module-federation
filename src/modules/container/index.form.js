@@ -160,7 +160,12 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                           </JumpToSection>
                           {containerState.isDirty() && (
                             <>
-                              <ResetButton onClick={() => this.onReset(containerState)} />
+                              <ResetButton
+                                onClick={() => {
+                                  this.onReset(containerState);
+                                  form.onReset();
+                                }}
+                              />
                               <SaveButton
                                 disabled={!form.isReady(containerState.state, validator)}
                                 isLoading={loading}

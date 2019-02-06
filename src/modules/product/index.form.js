@@ -235,18 +235,20 @@ class ProductFormModule extends React.Component<Props> {
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
                                 <ResetButton
-                                  onClick={() =>
+                                  onClick={() => {
                                     this.onReset({
                                       productInfoState,
                                       productProvidersState,
                                       productTagsState,
                                       productFilesState,
-                                    })
-                                  }
+                                    });
+                                    form.onReset();
+                                  }}
                                 />
                               )}
 
                               <SaveButton
+                                data-testid="saveButton"
                                 disabled={
                                   !form.isReady(
                                     {
@@ -278,7 +280,6 @@ class ProductFormModule extends React.Component<Props> {
                                     form.onErrors
                                   )
                                 }
-                                data-testid="saveButton"
                               />
                             </>
                           )

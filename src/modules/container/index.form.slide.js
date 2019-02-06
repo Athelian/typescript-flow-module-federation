@@ -73,7 +73,12 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
                 {(formState, form) =>
                   formState.isDirty() && (
                     <>
-                      <ResetButton onClick={() => this.onReset(formState)} />
+                      <ResetButton
+                        onClick={() => {
+                          this.onReset(formState);
+                          form.onReset();
+                        }}
+                      />
                       <SaveButton
                         disabled={!form.isReady(formState.state, validator)}
                         onClick={() => onSave(formState.state)}
