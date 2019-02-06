@@ -1,16 +1,12 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, FormTooltip, DefaultStyle, NumberInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, DateInput } from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
   InputWrapperProps,
-  InputProps as StandardInputProps,
+  InputProps,
 } from 'modules/form/factories/type';
-
-type InputProps = StandardInputProps & {
-  nullable?: boolean,
-};
 
 type Props = LabelProps &
   TooltipProps &
@@ -29,10 +25,10 @@ const defaultProps = {
   hideTooltip: false,
   isTouched: false,
   InputWrapper: DefaultStyle,
-  Input: NumberInput,
+  Input: DateInput,
 };
 
-const NumberInputFactory = ({
+const DateInputFactory = ({
   isTouched,
   label,
   InputWrapper,
@@ -59,7 +55,6 @@ const NumberInputFactory = ({
   onFocus,
   inputAlign,
   readOnly,
-  nullable,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
 
@@ -75,7 +70,7 @@ const NumberInputFactory = ({
   };
 
   const inputWrapperConfig = {
-    type: 'number',
+    type: 'date',
     isFocused,
     hasError: !!(isTouched && errorMessage),
     disabled,
@@ -93,7 +88,6 @@ const NumberInputFactory = ({
     onFocus,
     align: inputAlign,
     readOnly,
-    nullable,
   };
 
   return (
@@ -113,6 +107,6 @@ const NumberInputFactory = ({
   );
 };
 
-NumberInputFactory.defaultProps = defaultProps;
+DateInputFactory.defaultProps = defaultProps;
 
-export default NumberInputFactory;
+export default DateInputFactory;
