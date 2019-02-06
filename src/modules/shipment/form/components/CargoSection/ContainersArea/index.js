@@ -18,6 +18,7 @@ import Icon from 'components/Icon';
 import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormInSlide from 'modules/container/index.form.slide';
+import RemoveContainerConfirmDialog from './components/RemoveContainerConfirmDialog';
 
 import {
   ContainersWrapperStyle,
@@ -102,37 +103,90 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                             <BooleanValue>
                               {({ value: isOpenSelectWarehouse, set: toggleSelectWarehouse }) => (
                                 <>
-                                  <ShipmentContainerCard
-                                    container={container}
-                                    update={newContainer => {
-                                      setDeepFieldValue(`containers.${position}`, newContainer);
-                                    }}
-                                    onClick={() => toggleContainerForm(true)}
-                                    onSelectWarehouse={() => toggleSelectWarehouse(true)}
-                                    actions={[
-                                      <CardAction
-                                        icon="REMOVE"
-                                        hoverColor="RED"
-                                        onClick={() => {
-                                          setFieldValue(
-                                            'containers',
-                                            containers.filter(
-                                              ({ id: containerId }) => container.id !== containerId
-                                            )
-                                          );
-                                          updateBatchesState(
-                                            'batches',
-                                            batches.filter(
-                                              ({ container: batchContainer }) =>
-                                                isNullOrUndefined(batchContainer) ||
-                                                (!isNullOrUndefined(batchContainer) &&
-                                                  batchContainer.id !== container.id)
-                                            )
-                                          );
-                                        }}
-                                      />,
-                                    ]}
-                                  />
+                                  <BooleanValue>
+                                    {({ value: isOpenDialog, set: toggleDialog }) => (
+                                      <>
+                                        <ShipmentContainerCard
+                                          container={container}
+                                          update={newContainer => {
+                                            setDeepFieldValue(
+                                              `containers.${position}`,
+                                              newContainer
+                                            );
+                                          }}
+                                          onClick={() => toggleContainerForm(true)}
+                                          onSelectWarehouse={() => toggleSelectWarehouse(true)}
+                                          actions={[
+                                            <CardAction
+                                              icon="REMOVE"
+                                              hoverColor="RED"
+                                              onClick={evt => {
+                                                evt.stopPropagation();
+                                                if (
+                                                  container.batches &&
+                                                  container.batches.length > 0
+                                                ) {
+                                                  toggleDialog(true);
+                                                } else {
+                                                  setFieldValue(
+                                                    'containers',
+                                                    containers.filter(
+                                                      ({ id: containerId }) =>
+                                                        container.id !== containerId
+                                                    )
+                                                  );
+                                                }
+                                              }}
+                                            />,
+                                          ]}
+                                        />
+                                        <RemoveContainerConfirmDialog
+                                          isOpen={isOpenDialog}
+                                          onRequestClose={() => toggleDialog(false)}
+                                          onCancel={() => toggleDialog(false)}
+                                          onToBatchesPool={() => {
+                                            setFieldValue(
+                                              'containers',
+                                              containers.filter(
+                                                ({ id: containerId }) =>
+                                                  container.id !== containerId
+                                              )
+                                            );
+                                            updateBatchesState(
+                                              'batches',
+                                              batches.map(batch =>
+                                                batch.container &&
+                                                batch.container.id === container.id
+                                                  ? {
+                                                      ...batch,
+                                                      container: null,
+                                                    }
+                                                  : { ...batch }
+                                              )
+                                            );
+                                          }}
+                                          onRemove={() => {
+                                            setFieldValue(
+                                              'containers',
+                                              containers.filter(
+                                                ({ id: containerId }) =>
+                                                  container.id !== containerId
+                                              )
+                                            );
+                                            updateBatchesState(
+                                              'batches',
+                                              batches.filter(
+                                                ({ container: batchContainer }) =>
+                                                  isNullOrUndefined(batchContainer) ||
+                                                  (!isNullOrUndefined(batchContainer) &&
+                                                    batchContainer.id !== container.id)
+                                              )
+                                            );
+                                          }}
+                                        />
+                                      </>
+                                    )}
+                                  </BooleanValue>
                                   <SlideView
                                     isOpen={isOpenSelectWarehouse}
                                     onRequestClose={() => toggleSelectWarehouse(false)}

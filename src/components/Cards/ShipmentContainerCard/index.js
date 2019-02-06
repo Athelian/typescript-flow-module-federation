@@ -167,7 +167,7 @@ const ShipmentContainerCard = ({
                   <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
                 </Label>
                 <Display align="right">
-                  <FormattedNumber value={batches.length} />
+                  {batches && <FormattedNumber value={batches.length} />}
                 </Display>
               </div>
 
