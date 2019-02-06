@@ -85,11 +85,13 @@ class ProductFormModule extends React.Component<Props> {
     productTagsState,
     productFilesState,
     productProvidersState,
-  }: ProductFormState) => {
+    form,
+  }: ProductFormState & { form: Object }) => {
     resetFormState(productInfoState);
     resetFormState(productTagsState, 'tags');
     resetFormState(productFilesState, 'files');
     resetFormState(productProvidersState, 'productProviders');
+    form.onReset();
   };
 
   onSave = async (
@@ -241,8 +243,8 @@ class ProductFormModule extends React.Component<Props> {
                                       productProvidersState,
                                       productTagsState,
                                       productFilesState,
+                                      form,
                                     });
-                                    form.onReset();
                                   }}
                                 />
                               )}

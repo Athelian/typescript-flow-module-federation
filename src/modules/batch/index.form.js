@@ -57,8 +57,9 @@ class BatchFormModule extends React.PureComponent<Props> {
 
   onCancel = () => navigate(`/batch`);
 
-  onReset = (formState: Object) => {
-    resetFormState(formState);
+  onReset = (batchContainer: Object, form: Object) => {
+    resetFormState(batchContainer);
+    form.onReset();
   };
 
   onSave = async (
@@ -186,28 +187,25 @@ class BatchFormModule extends React.PureComponent<Props> {
                       </JumpToSection>
 
                       <Subscribe to={[BatchFormContainer, FormContainer]}>
-                        {(formState, form) =>
-                          (isNewOrClone || formState.isDirty()) && (
+                        {(batchContainer, form) =>
+                          (isNewOrClone || batchContainer.isDirty()) && (
                             <>
                               {this.isNewOrClone() ? (
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
                                 <ResetButton
-                                  onClick={() => {
-                                    this.onReset(formState);
-                                    form.onReset();
-                                  }}
+                                  onClick={() => this.onReset({ batchContainer, form })}
                                 />
                               )}
                               <SaveButton
-                                disabled={!form.isReady(formState.state, validator)}
+                                disabled={!form.isReady(batchContainer.state, validator)}
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    formatBatchInput(formState.state),
+                                    formatBatchInput(batchContainer.state),
                                     saveBatch,
                                     () => {
-                                      formState.onSuccess();
+                                      batchContainer.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors

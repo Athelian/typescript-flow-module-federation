@@ -83,11 +83,13 @@ class OrderFormModule extends React.PureComponent<Props> {
     orderItemState,
     orderTagsState,
     orderFilesState,
-  }: OrderFormState) => {
+    form,
+  }: OrderFormState & { form: Object }) => {
     resetFormState(orderInfoState);
     resetFormState(orderItemState, 'orderItems');
     resetFormState(orderTagsState, 'tags');
     resetFormState(orderFilesState, 'files');
+    form.onReset();
   };
 
   onSave = async (
@@ -308,15 +310,15 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   />
                                 ) : (
                                   <ResetButton
-                                    onClick={() => {
+                                    onClick={() =>
                                       this.onReset({
                                         orderItemState,
                                         orderInfoState,
                                         orderTagsState,
                                         orderFilesState,
-                                      });
-                                      form.onReset();
-                                    }}
+                                        form,
+                                      })
+                                    }
                                   />
                                 )}
 
