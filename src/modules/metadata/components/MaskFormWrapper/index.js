@@ -84,8 +84,9 @@ class MaskFormWrapper extends React.Component<Props> {
     }
   };
 
-  onReset = (formState: Object) => {
-    resetFormState(formState);
+  onReset = (maskContainer: Object, form: Object) => {
+    resetFormState(maskContainer);
+    form.onReset();
   };
 
   render() {
@@ -140,24 +141,25 @@ class MaskFormWrapper extends React.Component<Props> {
                         </JumpToSection>
 
                         <Subscribe to={[MaskContainer, FormContainer]}>
-                          {(formState, form) => (
+                          {(maskContainer, form) => (
                             <>
                               {isNew ? (
                                 <CancelButton onClick={() => onCancel()} />
                               ) : (
-                                <ResetButton onClick={() => this.onReset(formState)} />
+                                <ResetButton onClick={() => this.onReset(maskContainer, form)} />
                               )}
 
                               <SaveButton
                                 disabled={
-                                  !formState.isDirty() || !form.isReady(formState.state, validator)
+                                  !maskContainer.isDirty() ||
+                                  !form.isReady(maskContainer.state, validator)
                                 }
                                 onClick={() => {
                                   this.onSave(
-                                    formState.state,
+                                    maskContainer.state,
                                     saveMask,
                                     () => {
-                                      formState.onSuccess();
+                                      maskContainer.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors

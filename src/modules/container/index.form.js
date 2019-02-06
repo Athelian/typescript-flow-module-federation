@@ -41,8 +41,9 @@ type UpdateContainerResponse = {|
 export default class ContainerFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  onReset = (formState: Object) => {
-    resetFormState(formState);
+  onReset = (containerContainer: Object, form: Object) => {
+    resetFormState(containerContainer);
+    form.onReset();
   };
 
   onCancel = () => navigate(`/batch`);
@@ -76,18 +77,18 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
     }
   };
 
-  onFormReady = ({ containerState }: { containerState: Object }) => (container: Object) => {
-    containerState.initDetailValues(container);
+  onFormReady = ({ containerContainer }: { containerContainer: Object }) => (container: Object) => {
+    containerContainer.initDetailValues(container);
   };
 
-  onMutationCompleted = ({ containerState }: { containerState: Object }) => (
+  onMutationCompleted = ({ containerContainer }: { containerContainer: Object }) => (
     result: UpdateContainerResponse
   ) => {
     if (result && result.containerUpdate) {
       const { containerUpdate } = result;
       const { violations } = containerUpdate;
       if (isNullOrUndefined(violations)) {
-        this.onFormReady({ containerState })(containerUpdate);
+        this.onFormReady({ containerContainer })(containerUpdate);
       }
     }
   };
@@ -104,10 +105,10 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
         <UIConsumer>
           {uiState => (
             <Subscribe to={[ContainerFormContainer, FormContainer]}>
-              {(containerState, form) => (
+              {(containerContainer, form) => (
                 <Mutation
                   mutation={updateContainerMutation}
-                  onCompleted={this.onMutationCompleted({ containerState })}
+                  onCompleted={this.onMutationCompleted({ containerContainer })}
                   {...mutationKey}
                 >
                   {(saveContainer, { loading, error }) => (
@@ -158,18 +159,18 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                               icon="ORDER"
                             />
                           </JumpToSection>
-                          {containerState.isDirty() && (
+                          {containerContainer.isDirty() && (
                             <>
-                              <ResetButton onClick={() => this.onReset(containerState)} />
+                              <ResetButton onClick={() => this.onReset(containerContainer, form)} />
                               <SaveButton
-                                disabled={!form.isReady(containerState.state, validator)}
+                                disabled={!form.isReady(containerContainer.state, validator)}
                                 isLoading={loading}
                                 onClick={() =>
                                   this.onSave(
-                                    containerState.state,
+                                    containerContainer.state,
                                     saveContainer,
                                     () => {
-                                      containerState.onSuccess();
+                                      containerContainer.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -214,7 +215,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                             <ContainerForm
                               container={usefulContainer}
                               onFormReady={() => {
-                                this.onFormReady({ containerState })(container);
+                                this.onFormReady({ containerContainer })(container);
                               }}
                             />
                           );

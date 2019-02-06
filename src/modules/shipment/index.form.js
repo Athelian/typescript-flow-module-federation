@@ -124,7 +124,8 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentBatchesContainer,
     shipmentContainersContainer,
     shipmentFilesContainer,
-  }: ShipmentFormState) => {
+    form,
+  }: ShipmentFormState & { form: Object }) => {
     resetFormState(shipmentInfoContainer);
     resetFormState(shipmentTagsContainer, 'tags');
     resetFormState(shipmentTransportTypeContainer, 'transportType');
@@ -132,6 +133,7 @@ class ShipmentFormModule extends React.Component<Props> {
     resetFormState(shipmentBatchesContainer, 'batches');
     resetFormState(shipmentContainersContainer);
     resetFormState(shipmentFilesContainer, 'files');
+    form.onReset();
   };
 
   onSave = async (
@@ -418,7 +420,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           )}
                           {isDirty && !isNewOrClone && (
                             <ResetButton
-                              onClick={() =>
+                              onClick={() => {
                                 this.onReset({
                                   shipmentInfoContainer,
                                   shipmentTagsContainer,
@@ -427,8 +429,9 @@ class ShipmentFormModule extends React.Component<Props> {
                                   shipmentBatchesContainer,
                                   shipmentContainersContainer,
                                   shipmentFilesContainer,
-                                })
-                              }
+                                  form,
+                                });
+                              }}
                             />
                           )}
                           {isDirty && (

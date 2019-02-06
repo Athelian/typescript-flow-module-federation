@@ -85,11 +85,13 @@ class ProductFormModule extends React.Component<Props> {
     productTagsState,
     productFilesState,
     productProvidersState,
-  }: ProductFormState) => {
+    form,
+  }: ProductFormState & { form: Object }) => {
     resetFormState(productInfoState);
     resetFormState(productTagsState, 'tags');
     resetFormState(productFilesState, 'files');
     resetFormState(productProvidersState, 'productProviders');
+    form.onReset();
   };
 
   onSave = async (
@@ -235,18 +237,20 @@ class ProductFormModule extends React.Component<Props> {
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
                                 <ResetButton
-                                  onClick={() =>
+                                  onClick={() => {
                                     this.onReset({
                                       productInfoState,
                                       productProvidersState,
                                       productTagsState,
                                       productFilesState,
-                                    })
-                                  }
+                                      form,
+                                    });
+                                  }}
                                 />
                               )}
 
                               <SaveButton
+                                data-testid="saveButton"
                                 disabled={
                                   !form.isReady(
                                     {
@@ -278,7 +282,6 @@ class ProductFormModule extends React.Component<Props> {
                                     form.onErrors
                                   )
                                 }
-                                data-testid="saveButton"
                               />
                             </>
                           )

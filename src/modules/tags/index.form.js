@@ -32,8 +32,8 @@ const defaultProps = {
   tagId: '',
 };
 type TagFormState = {
-  tagState: Object,
-  entityTypesState: Object,
+  tagContainer: Object,
+  entityTypeContainer: Object,
 };
 
 export default class TagFormModule extends React.PureComponent<Props> {
@@ -41,9 +41,10 @@ export default class TagFormModule extends React.PureComponent<Props> {
 
   onCancel = () => navigate('/tags');
 
-  onReset = ({ tagState, entityTypesState }: TagFormState) => {
-    resetFormState(tagState);
-    resetFormState(entityTypesState, 'entityTypes');
+  onReset = ({ tagContainer, entityTypeContainer, form }: TagFormState & { form: Object }) => {
+    resetFormState(tagContainer);
+    resetFormState(entityTypeContainer, 'entityTypes');
+    form.onReset();
   };
 
   onSave = async (
@@ -136,37 +137,40 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         />
                       </JumpToSection>
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
-                        {(tagState, entityTypesState, form) =>
-                          (isNewOrClone || tagState.isDirty() || entityTypesState.isDirty()) && (
+                        {(tagContainer, entityTypeContainer, form) =>
+                          (isNewOrClone ||
+                            tagContainer.isDirty() ||
+                            entityTypeContainer.isDirty()) && (
                             <>
                               {this.isNewOrClone() ? (
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
                                 <ResetButton
-                                  onClick={() =>
+                                  onClick={() => {
                                     this.onReset({
-                                      tagState,
-                                      entityTypesState,
-                                    })
-                                  }
+                                      tagContainer,
+                                      entityTypeContainer,
+                                      form,
+                                    });
+                                  }}
                                 />
                               )}
                               <SaveButton
                                 data-testid="saveButton"
                                 disabled={
                                   !form.isReady(
-                                    { ...tagState.state, ...entityTypesState.state },
+                                    { ...tagContainer.state, ...entityTypeContainer.state },
                                     validator
                                   )
                                 }
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    { ...tagState.state, ...entityTypesState.state },
+                                    { ...tagContainer.state, ...entityTypeContainer.state },
                                     saveTag,
                                     () => {
-                                      tagState.onSuccess();
-                                      entityTypesState.onSuccess();
+                                      tagContainer.onSuccess();
+                                      entityTypeContainer.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -190,14 +194,14 @@ export default class TagFormModule extends React.PureComponent<Props> {
                       entityType="tag"
                       render={tag => (
                         <Subscribe to={[TagContainer, EntityTypeContainer]}>
-                          {(tagState, entityTypesState) => (
+                          {(tagContainer, entityTypeContainer) => (
                             <TagForm
                               isNew={isNewOrClone}
                               tag={tag}
                               onFormReady={() => {
                                 const { name, description, color, entityTypes } = tag;
-                                tagState.initDetailValues({ name, description, color });
-                                entityTypesState.initDetailValues(entityTypes);
+                                tagContainer.initDetailValues({ name, description, color });
+                                entityTypeContainer.initDetailValues(entityTypes);
                               }}
                             />
                           )}
