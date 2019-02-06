@@ -4,17 +4,32 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { ToggleButtonStyle, StatusStyle } from './style';
 
-type Props = {
-  archived: boolean,
+type OptionalProps = {
+  readOnly: boolean,
   openStatusDialog: Function,
-  activateDialog: React.Node,
-  archiveDialog: React.Node,
+  activateDialog?: React.Node,
+  archiveDialog?: React.Node,
 };
 
-const StatusToggle = ({ archived, openStatusDialog, activateDialog, archiveDialog }: Props) => (
+type Props = OptionalProps & {
+  archived: boolean,
+};
+
+const defaultProps = {
+  readOnly: false,
+  openStatusDialog: () => {},
+};
+
+const StatusToggle = ({
+  readOnly,
+  archived,
+  openStatusDialog,
+  activateDialog,
+  archiveDialog,
+}: Props) => (
   <>
-    {activateDialog}
-    {archiveDialog}
+    {!readOnly && activateDialog}
+    {!readOnly && archiveDialog}
     <div className={StatusStyle(archived)}>
       <Icon icon={archived ? 'ARCHIVE' : 'ACTIVE'} />
       {archived ? (
@@ -22,17 +37,21 @@ const StatusToggle = ({ archived, openStatusDialog, activateDialog, archiveDialo
       ) : (
         <FormattedMessage id="components.form.active" defaultMessage="Active" />
       )}
-      <button
-        type="button"
-        className={ToggleButtonStyle(archived)}
-        tabIndex={-1}
-        onClick={openStatusDialog}
-        data-testid="archivedStatusToggle"
-      >
-        {archived ? <Icon icon="TOGGLE_OFF" /> : <Icon icon="TOGGLE_ON" />}
-      </button>
+      {!readOnly && (
+        <button
+          type="button"
+          className={ToggleButtonStyle(archived)}
+          tabIndex={-1}
+          onClick={openStatusDialog}
+          data-testid="archivedStatusToggle"
+        >
+          {archived ? <Icon icon="TOGGLE_OFF" /> : <Icon icon="TOGGLE_ON" />}
+        </button>
+      )}
     </div>
   </>
 );
+
+StatusToggle.defaultProps = defaultProps;
 
 export default StatusToggle;
