@@ -19,6 +19,7 @@ export const LabelWrapperStyle = ({ align, width, color }: LabelWrapperType): st
   padding: 0 5px;
   text-align: ${align};
   flex: 1;
+  max-width: ${width};
 `;
 
 export default LabelWrapperStyle;
