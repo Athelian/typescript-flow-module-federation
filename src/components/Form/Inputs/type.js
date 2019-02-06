@@ -10,7 +10,8 @@ type OptionalProps = {
   onFocus: ?Function,
   align: 'left' | 'right' | 'center',
   readOnly: boolean,
-  width?: string, // only applies when readOnly is true, if you want to set width normally do it to the styled wrapper component
+  readOnlyWidth?: string,
+  readOnlyHeight?: string,
 };
 
 export type InputProps = OptionalProps;

@@ -37,10 +37,13 @@ storiesOf('Inputs', module).add('Text Input', () => (
 
             <FieldItem
               label={<Label>{INPUT_2}</Label>}
-              input={<TextInput value="Hello" readOnly />}
+              input={<TextInput value="Hello" readOnly readOnlyHeight="30px" />}
             />
 
-            <FieldItem label={<Label>{INPUT_3}</Label>} input={<TextInput readOnly />} />
+            <FieldItem
+              label={<Label>{INPUT_3}</Label>}
+              input={<TextInput readOnly readOnlyHeight="30px" />}
+            />
           </>
         );
       }}

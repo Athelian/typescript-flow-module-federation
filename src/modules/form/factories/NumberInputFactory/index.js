@@ -50,6 +50,7 @@ type Props = LabelProps &
 const defaultProps = {
   labelWidth: '200px',
   inputWidth: '200px',
+  inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
   InputWrapper: DefaultStyle,
@@ -126,7 +127,7 @@ const NumberInputFactory = ({
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
         readOnly ? (
-          <Input {...inputConfig} width={inputWidth} />
+          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         ) : (
           <InputWrapper {...inputWrapperConfig}>
             <Input {...inputConfig} />
