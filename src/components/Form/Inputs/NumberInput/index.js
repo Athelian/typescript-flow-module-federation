@@ -32,10 +32,10 @@ class NumberInput extends React.Component<Props> {
   };
 
   render() {
-    const { value, align, readOnly, nullable, onChange, ...rest } = this.props;
+    const { value, align, readOnly, width, nullable, onChange, ...rest } = this.props;
 
     return readOnly ? (
-      <Display style={{ textAlign: align }}>
+      <Display style={{ textAlign: align }} width={width}>
         <FormattedNumber value={value} />
       </Display>
     ) : (
