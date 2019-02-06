@@ -125,9 +125,13 @@ const NumberInputFactory = ({
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
-        <InputWrapper {...inputWrapperConfig}>
-          <Input {...inputConfig} />
-        </InputWrapper>
+        readOnly ? (
+          <Input {...inputConfig} width={inputWidth} />
+        ) : (
+          <InputWrapper {...inputWrapperConfig}>
+            <Input {...inputConfig} />
+          </InputWrapper>
+        )
       }
     />
   );

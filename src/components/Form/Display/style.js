@@ -24,6 +24,7 @@ export const DisplayWrapperStyle = ({
   min-width: 0;
   width: ${width};
   flex: 1;
+  max-width: ${width};
   padding: 0 5px;
 `;
 
