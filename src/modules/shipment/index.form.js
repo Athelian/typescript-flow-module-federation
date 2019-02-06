@@ -110,7 +110,7 @@ class ShipmentFormModule extends React.Component<Props> {
   }: ShipmentFormState) => {
     resetFormState(shipmentInfoState);
     resetFormState(shipmentBatchesState, 'batches');
-    resetFormState(shipmentContainersContainer, 'containers');
+    resetFormState(shipmentContainersContainer);
     resetFormState(shipmentFilesState, 'files');
     resetFormState(shipmentTagsState, 'tags');
     resetFormState(shipmentTimelineState);
