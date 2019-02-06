@@ -5,9 +5,9 @@ import { formatToDateInput } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { type InputProps as Props, defaultInputProps } from 'components/Form/Inputs/type';
 
-const DateInput = ({ value, align, readOnly, width, ...rest }: Props) => {
+const DateInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...rest }: Props) => {
   return readOnly ? (
-    <Display style={{ textAlign: align }} width={width}>
+    <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
       <FormattedDate value={value} />
     </Display>
   ) : (

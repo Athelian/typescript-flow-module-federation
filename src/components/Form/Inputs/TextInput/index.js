@@ -3,9 +3,9 @@ import * as React from 'react';
 import { Display } from 'components/Form';
 import { type InputProps as Props, defaultInputProps } from 'components/Form/Inputs/type';
 
-const TextInput = ({ value, align, readOnly, width, ...rest }: Props) => {
+const TextInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...rest }: Props) => {
   return readOnly ? (
-    <Display style={{ textAlign: align }} width={width}>
+    <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
       {value}
     </Display>
   ) : (
