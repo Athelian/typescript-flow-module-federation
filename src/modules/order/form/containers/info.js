@@ -5,23 +5,29 @@ import { isEquals } from 'utils/fp';
 
 type FormState = {
   archived?: boolean,
+  piNo?: string,
+  poNo?: string,
   currency?: string,
   deliveryPlace?: string,
   exporter?: { id: string, name: string },
   incoterm?: string,
   issuedAt?: Date,
   memo?: string,
-  piNo?: string,
-  poNo?: string,
   shipments: Array<Object>,
   inCharges: Array<Object>,
   customFields: Object,
 };
 
 const initValues = {
+  poNo: '',
+  piNo: '',
+  currency: 'USD',
+  deliveryPlace: '',
+  incoterm: '',
+  issuedAt: '',
+  memo: '',
   shipments: [],
   inCharges: [],
-  currency: 'USD',
   customFields: {
     mask: null,
     fieldValues: [],
@@ -48,7 +54,7 @@ export default class OrderInfoContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = cleanUpData(values);
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
