@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
+import FormattedNumber from 'components/FormattedNumber';
+import { Display } from 'components/Form';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
 import { toFloat, toFloatNullable } from 'utils/number';
 
 type OptionalProps = {
-  nullable: ?boolean,
+  nullable: boolean,
 };
 
 type Props = OptionalProps & InputProps;
@@ -30,9 +32,15 @@ class NumberInput extends React.Component<Props> {
   };
 
   render() {
-    const { align, onChange, nullable, ...rest } = this.props;
-    return (
+    const { value, align, readOnly, nullable, onChange, ...rest } = this.props;
+
+    return readOnly ? (
+      <Display style={{ textAlign: align }}>
+        <FormattedNumber value={value} />
+      </Display>
+    ) : (
       <input
+        value={value}
         style={{ textAlign: align }}
         {...rest}
         onChange={this.handleChange}
