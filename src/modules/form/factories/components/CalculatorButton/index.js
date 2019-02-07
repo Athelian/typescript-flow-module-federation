@@ -7,8 +7,8 @@ type Props = {
   onClick?: Function,
 };
 
-const CalculatorButton = ({ ...rest }: Props): React.Node => (
-  <button {...rest} className={CalculatorButtonStyle} type="button">
+const CalculatorButton = ({ onClick, ...rest }: Props): React.Node => (
+  <button {...rest} onClick={onClick} className={CalculatorButtonStyle} type="button">
     <Icon icon="CALCULATOR" />
   </button>
 );
