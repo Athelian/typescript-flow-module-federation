@@ -7,6 +7,8 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'modules/form/factories/type';
+import Icon from 'components/Icon';
+import { CalculatorButtonStyle } from './style';
 
 type InputProps = StandardInputProps & {
   nullable?: boolean,
@@ -20,6 +22,8 @@ type Props = LabelProps &
     label?: React.Node,
     InputWrapper: () => React.Node,
     Input: () => React.Node,
+    showCalculator: boolean,
+    onCalculate?: Function,
   };
 
 const defaultProps = {
@@ -30,6 +34,7 @@ const defaultProps = {
   isTouched: false,
   InputWrapper: DefaultStyle,
   Input: NumberInput,
+  showCalculator: false,
 };
 
 const NumberInputFactory = ({
@@ -60,6 +65,8 @@ const NumberInputFactory = ({
   inputAlign,
   readOnly,
   nullable,
+  showCalculator,
+  onCalculate,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
 
@@ -104,9 +111,21 @@ const NumberInputFactory = ({
         readOnly ? (
           <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         ) : (
-          <InputWrapper {...inputWrapperConfig}>
-            <Input {...inputConfig} />
-          </InputWrapper>
+          <>
+            <InputWrapper {...inputWrapperConfig}>
+              <Input {...inputConfig} />
+            </InputWrapper>
+            {showCalculator && (
+              <button
+                data-testid="calculatorButton"
+                className={CalculatorButtonStyle}
+                type="button"
+                onClick={onCalculate}
+              >
+                <Icon icon="CALCULATOR" />
+              </button>
+            )}
+          </>
         )
       }
     />
