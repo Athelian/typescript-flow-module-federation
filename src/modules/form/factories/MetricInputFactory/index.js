@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, FormTooltip, DefaultStyle, NumberInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, MetricInput } from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
@@ -8,9 +8,13 @@ import type {
   InputProps as StandardInputProps,
 } from 'modules/form/factories/type';
 import { CalculatorButton } from 'modules/form/factories/components';
+import { getMetrics, getConvert } from './helpers';
 
 type InputProps = StandardInputProps & {
-  nullable?: boolean,
+  customMetrics?: Array<string>,
+  customConvert?: (number, string, string) => any,
+  metricSelectWidth: string,
+  metricOptionWidth: string,
 };
 
 type Props = LabelProps &
@@ -21,6 +25,7 @@ type Props = LabelProps &
     label?: React.Node,
     InputWrapper: () => React.Node,
     Input: () => React.Node,
+    metricType?: 'distance' | 'area' | 'volume' | 'weight',
     showCalculator: boolean,
     onCalculate?: Function,
   };
@@ -32,15 +37,18 @@ const defaultProps = {
   hideTooltip: false,
   isTouched: false,
   InputWrapper: DefaultStyle,
-  Input: NumberInput,
+  Input: MetricInput,
   showCalculator: false,
+  metricSelectWidth: '30px',
+  metricOptionWidth: '35px',
 };
 
-const NumberInputFactory = ({
+const MetricInputFactory = ({
   isTouched,
   label,
   InputWrapper,
   Input,
+  metricType,
   showCalculator,
   onCalculate,
   required,
@@ -65,7 +73,10 @@ const NumberInputFactory = ({
   onFocus,
   inputAlign,
   readOnly,
-  nullable,
+  customMetrics,
+  customConvert,
+  metricSelectWidth,
+  metricOptionWidth,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
 
@@ -75,8 +86,8 @@ const NumberInputFactory = ({
     errorMessage: isTouched && errorMessage,
     warningMessage: isTouched && warningMessage,
     changedValues: {
-      oldValue: originalValue,
-      newValue: value,
+      oldValue: originalValue ? `${originalValue.value} ${originalValue.metric}` : '',
+      newValue: value ? `${value.value} ${value.metric}` : '',
     },
   };
 
@@ -99,7 +110,11 @@ const NumberInputFactory = ({
     onFocus,
     align: inputAlign,
     readOnly,
-    nullable,
+    metrics: customMetrics || getMetrics(metricType),
+    convert: customConvert || getConvert(metricType),
+    metricSelectWidth,
+    metricSelectHeight: inputHeight,
+    metricOptionWidth,
   };
 
   return (
@@ -124,6 +139,6 @@ const NumberInputFactory = ({
   );
 };
 
-NumberInputFactory.defaultProps = defaultProps;
+MetricInputFactory.defaultProps = defaultProps;
 
-export default NumberInputFactory;
+export default MetricInputFactory;

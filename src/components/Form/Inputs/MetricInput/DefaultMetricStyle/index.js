@@ -1,4 +1,5 @@
 // @flow
+// Don't need this file actually. We can use regular DefaultStyle component. Delete this when it is no longer being used in codebase
 import * as React from 'react';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
 
