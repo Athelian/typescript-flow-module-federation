@@ -60,6 +60,7 @@ storiesOf('Input Factories', module).add('Metric Input Factory', () => (
         <ObjectValue
           defaultValue={{
             isNew: false,
+            showCalculator: false,
             metricType: 'distance',
             initialValues: {
               inputTwo: {
@@ -83,7 +84,16 @@ storiesOf('Input Factories', module).add('Metric Input Factory', () => (
           }}
         >
           {({
-            value: { isNew, metricType, initialValues, values, touchedFields, focusedField, user },
+            value: {
+              isNew,
+              showCalculator,
+              metricType,
+              initialValues,
+              values,
+              touchedFields,
+              focusedField,
+              user,
+            },
             set,
           }) => (
             <ObjectValue
@@ -117,6 +127,10 @@ storiesOf('Input Factories', module).add('Metric Input Factory', () => (
                       readOnly={readOnly}
                       placeholder="Please input a value"
                       metricType={metricType}
+                      showCalculator={showCalculator}
+                      onCalculate={() =>
+                        set('values', { ...values, inputTwo: { ...values.inputTwo, value: 999 } })
+                      }
                     />
                     <ToggleInput
                       toggled={readOnly}
@@ -131,6 +145,12 @@ storiesOf('Input Factories', module).add('Metric Input Factory', () => (
                     </ToggleInput>
                     <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
                       <Label>IS NEW</Label>
+                    </ToggleInput>
+                    <ToggleInput
+                      toggled={showCalculator}
+                      onToggle={() => set('showCalculator', !showCalculator)}
+                    >
+                      <Label>CALCULATOR</Label>
                     </ToggleInput>
                     <ToggleInput
                       toggled={metricType === 'distance'}

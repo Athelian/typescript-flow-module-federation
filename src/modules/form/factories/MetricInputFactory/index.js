@@ -7,6 +7,7 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'modules/form/factories/type';
+import { CalculatorButton } from 'modules/form/factories/components';
 import { getMetrics, getConvert } from './helpers';
 
 type InputProps = StandardInputProps & {
@@ -25,6 +26,8 @@ type Props = LabelProps &
     InputWrapper: () => React.Node,
     Input: () => React.Node,
     metricType?: 'distance' | 'area' | 'volume' | 'weight',
+    showCalculator: boolean,
+    onCalculate?: Function,
   };
 
 const defaultProps = {
@@ -35,6 +38,7 @@ const defaultProps = {
   isTouched: false,
   InputWrapper: DefaultStyle,
   Input: MetricInput,
+  showCalculator: false,
   metricSelectWidth: '30px',
   metricOptionWidth: '35px',
 };
@@ -45,6 +49,8 @@ const MetricInputFactory = ({
   InputWrapper,
   Input,
   metricType,
+  showCalculator,
+  onCalculate,
   required,
   labelAlign,
   labelWidth,
@@ -119,9 +125,14 @@ const MetricInputFactory = ({
         readOnly ? (
           <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         ) : (
-          <InputWrapper {...inputWrapperConfig}>
-            <Input {...inputConfig} />
-          </InputWrapper>
+          <>
+            <InputWrapper {...inputWrapperConfig}>
+              <Input {...inputConfig} />
+            </InputWrapper>
+            {showCalculator && (
+              <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
+            )}
+          </>
         )
       }
     />

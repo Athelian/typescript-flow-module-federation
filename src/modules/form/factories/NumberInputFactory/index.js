@@ -7,8 +7,7 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'modules/form/factories/type';
-import Icon from 'components/Icon';
-import { CalculatorButtonStyle } from './style';
+import { CalculatorButton } from 'modules/form/factories/components';
 
 type InputProps = StandardInputProps & {
   nullable?: boolean,
@@ -116,14 +115,7 @@ const NumberInputFactory = ({
               <Input {...inputConfig} />
             </InputWrapper>
             {showCalculator && (
-              <button
-                data-testid="calculatorButton"
-                className={CalculatorButtonStyle}
-                type="button"
-                onClick={onCalculate}
-              >
-                <Icon icon="CALCULATOR" />
-              </button>
+              <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
             )}
           </>
         )
