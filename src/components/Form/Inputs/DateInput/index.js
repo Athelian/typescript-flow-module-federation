@@ -7,7 +7,7 @@ import { type InputProps as Props, defaultInputProps } from 'components/Form/Inp
 
 const DateInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...rest }: Props) => {
   return readOnly ? (
-    <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
+    <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
       <FormattedDate value={value} />
     </Display>
   ) : (

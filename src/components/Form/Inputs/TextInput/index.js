@@ -5,7 +5,7 @@ import { type InputProps as Props, defaultInputProps } from 'components/Form/Inp
 
 const TextInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...rest }: Props) => {
   return readOnly ? (
-    <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
+    <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
       {value}
     </Display>
   ) : (

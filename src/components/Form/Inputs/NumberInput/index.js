@@ -44,7 +44,7 @@ class NumberInput extends React.Component<Props> {
     } = this.props;
 
     return readOnly ? (
-      <Display style={{ textAlign: align }} width={readOnlyWidth} height={readOnlyHeight}>
+      <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
         <FormattedNumber value={value} />
       </Display>
     ) : (

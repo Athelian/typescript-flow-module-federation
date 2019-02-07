@@ -76,12 +76,12 @@ class SelectInput extends React.Component<Props, State> {
       readOnly,
       readOnlyWidth,
       readOnlyHeight,
-      readOnlyAlign,
+      align,
     } = this.props;
     const { selectedItem } = this.state;
 
     return readOnly ? (
-      <Display style={{ textAlign: readOnlyAlign }} width={readOnlyWidth} height={readOnlyHeight}>
+      <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
         {itemToString(value)}
       </Display>
     ) : (
@@ -109,6 +109,7 @@ class SelectInput extends React.Component<Props, State> {
               clearSelection: () => this.handleClear(clearSelection),
               getInputProps,
               itemToString,
+              align,
             })}
             {isOpen &&
               renderOptions({
@@ -118,6 +119,7 @@ class SelectInput extends React.Component<Props, State> {
                 getItemProps,
                 itemToString,
                 itemToValue,
+                align,
               })}
           </div>
         )}
