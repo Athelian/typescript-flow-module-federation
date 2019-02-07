@@ -1,29 +1,58 @@
-import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
+import * as React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
+import { IntlProvider } from 'react-intl';
+import { StringValue, ObjectValue } from 'react-values';
+import StoryBookWrapper from 'components/StoryBookWrapper';
+import { FieldItem, Label, DefaultStyle, MetricInput } from 'components/Form';
 
-import MetricInput from './index';
-import DefaultMetricStyle from './DefaultMetricStyle';
+storiesOf('Inputs', module).add('Metric Input', () => (
+  <StoryBookWrapper>
+    <IntlProvider>
+      <StringValue>
+        {({ value: currentFocused, set: onFocus, clear: onBlur }) => {
+          const INPUT_1 = 'EDITABLE';
+          const INPUT_2 = 'READONLY';
+          const INPUT_3 = 'READONLY (EMPTY)';
 
-storiesOf('Metric Input', module)
-  .add('without style wrapper', () => (
-    <MetricInput
-      name="metric"
-      value={{ value: 100, metric: 'cm' }}
-      metrics={['m', 'cm']}
-      onChange={action('onChange')}
-      onBlur={action('onBlur')}
-    />
-  ))
-  .add('with style wrapper', () => (
-    <DefaultMetricStyle width="400px">
-      <MetricInput
-        name="metric"
-        value={{ value: 100, metric: 'cm' }}
-        metrics={['m', 'cm']}
-        onChange={action('onChange')}
-        onBlur={action('onBlur')}
-      />
-    </DefaultMetricStyle>
-  ));
+          return (
+            <>
+              <ObjectValue
+                defaultValue={{
+                  value: 100,
+                  metric: 'cm',
+                }}
+              >
+                {({ value, set }) => (
+                  <FieldItem
+                    label={<Label>{INPUT_1}</Label>}
+                    input={
+                      <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
+                        <MetricInput
+                          name={INPUT_1}
+                          placeholder="Editable"
+                          onChange={e => set(e.target.value)}
+                          onFocus={() => onFocus(INPUT_1)}
+                          onBlur={() => onBlur()}
+                          value={value}
+                          metrics={['cm', 'm']}
+                        />
+                      </DefaultStyle>
+                    }
+                  />
+                )}
+              </ObjectValue>
+
+              <FieldItem
+                label={<Label>{INPUT_2}</Label>}
+                input={<MetricInput value={{ value: 124, metric: 'm' }} readOnly />}
+              />
+
+              <FieldItem label={<Label>{INPUT_3}</Label>} input={<MetricInput readOnly />} />
+            </>
+          );
+        }}
+      </StringValue>
+    </IntlProvider>
+  </StoryBookWrapper>
+));

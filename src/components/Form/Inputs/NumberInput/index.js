@@ -23,11 +23,11 @@ class NumberInput extends React.Component<Props> {
     const { onChange, nullable } = this.props;
 
     if (onChange) {
-      const intEvent = {
+      const newValue = {
         ...evt,
         target: { value: nullable ? toFloatNullable(evt.target.value) : toFloat(evt.target.value) },
       };
-      onChange(intEvent);
+      onChange(newValue);
     }
   };
 
