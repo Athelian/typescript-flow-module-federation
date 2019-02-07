@@ -348,7 +348,7 @@ const ShipmentContainerCard = ({
               </div>
 
               <div className={TagsWrapperStyle}>
-                {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
             </div>
           </div>

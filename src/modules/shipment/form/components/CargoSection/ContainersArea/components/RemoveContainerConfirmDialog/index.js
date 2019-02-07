@@ -54,17 +54,21 @@ function RemoveContainerConfirmDialog({
           <div>
             <FormattedMessage
               id="modules.shipment.moveToBatchesPoolOrRemove"
-              defaultMessage="Would you like these Batches to be placed in the {BatchesPool} or to be {removed}?"
+              defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool} or to be {REMOVED}?"
               values={{
+                Batches: spanWithColor(
+                  <FormattedMessage id="modules.shipment.Batches" defaultMessage="Batches" />,
+                  'BATCH'
+                ),
                 BatchesPool: spanWithColor(
                   <FormattedMessage
-                    id="modules.shipment.batchesPool"
+                    id="modules.shipment.BatchesPool"
                     defaultMessage="Batches Pool"
                   />,
                   'BATCH'
                 ),
-                removed: spanWithColor(
-                  <FormattedMessage id="modules.shipment.removed" defaultMessage="REMOVED" />,
+                REMOVED: spanWithColor(
+                  <FormattedMessage id="modules.shipment.REMOVED" defaultMessage="REMOVED" />,
                   'RED'
                 ),
               }}
