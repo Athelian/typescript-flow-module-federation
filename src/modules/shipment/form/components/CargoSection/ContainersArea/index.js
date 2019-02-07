@@ -40,6 +40,29 @@ type Props = {
   setSelected: ({ cardId: string, containerIndex: number }) => void,
 };
 
+const removeContainerById = (containers: Array<Object>, id: string): Array<Object> =>
+  containers.filter(container => container.id !== id);
+
+const removeBatchesByContainerId = (batches: Array<Object>, containerId: string): Array<Object> =>
+  batches.filter(
+    ({ container }) =>
+      isNullOrUndefined(container) ||
+      (!isNullOrUndefined(container) && container.id !== containerId)
+  );
+
+const cleanBatchesContainerByContainerId = (
+  batches: Array<Object>,
+  containerId: string
+): Array<Object> =>
+  batches.map(batch =>
+    batch.container && batch.container.id === containerId
+      ? {
+          ...batch,
+          container: null,
+        }
+      : { ...batch }
+  );
+
 function ContainersArea({ selectCardId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
@@ -130,10 +153,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                                 } else {
                                                   setFieldValue(
                                                     'containers',
-                                                    containers.filter(
-                                                      ({ id: containerId }) =>
-                                                        container.id !== containerId
-                                                    )
+                                                    removeContainerById(containers, container.id)
                                                   );
                                                 }
                                               }}
@@ -145,42 +165,26 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                           onRequestClose={() => toggleDialog(false)}
                                           onCancel={() => toggleDialog(false)}
                                           onToBatchesPool={() => {
-                                            setFieldValue(
-                                              'containers',
-                                              containers.filter(
-                                                ({ id: containerId }) =>
-                                                  container.id !== containerId
-                                              )
-                                            );
                                             updateBatchesState(
                                               'batches',
-                                              batches.map(batch =>
-                                                batch.container &&
-                                                batch.container.id === container.id
-                                                  ? {
-                                                      ...batch,
-                                                      container: null,
-                                                    }
-                                                  : { ...batch }
+                                              cleanBatchesContainerByContainerId(
+                                                batches,
+                                                container.id
                                               )
+                                            );
+                                            setFieldValue(
+                                              'containers',
+                                              removeContainerById(containers, container.id)
                                             );
                                           }}
                                           onRemove={() => {
-                                            setFieldValue(
-                                              'containers',
-                                              containers.filter(
-                                                ({ id: containerId }) =>
-                                                  container.id !== containerId
-                                              )
-                                            );
                                             updateBatchesState(
                                               'batches',
-                                              batches.filter(
-                                                ({ container: batchContainer }) =>
-                                                  isNullOrUndefined(batchContainer) ||
-                                                  (!isNullOrUndefined(batchContainer) &&
-                                                    batchContainer.id !== container.id)
-                                              )
+                                              removeBatchesByContainerId(batches, container.id)
+                                            );
+                                            setFieldValue(
+                                              'containers',
+                                              removeContainerById(containers, container.id)
                                             );
                                           }}
                                         />
