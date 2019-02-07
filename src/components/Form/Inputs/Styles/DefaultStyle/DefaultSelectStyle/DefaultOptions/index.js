@@ -57,7 +57,7 @@ function DefaultOptions({
             if (!item) return null;
             return (
               <div
-                key={`option-${itemToValue(item)}-${itemToString(item)}`}
+                key={itemToValue(item)}
                 className={OptionStyle({
                   onHover: highlightedIndex === index,
                   selected: selectedItem === item,

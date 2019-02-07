@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
+import { Display } from 'components/Form';
 import { isEquals } from 'utils/fp';
 import { type SelectInputProps as Props, defaultSelectInputProps } from './type';
 
@@ -42,6 +43,7 @@ class SelectInput extends React.Component<Props, State> {
 
   handleChange = (selectedItem: any) => {
     const { onChange } = this.props;
+
     this.setState({ selectedItem }, () => {
       if (onChange) onChange(selectedItem);
     });
@@ -63,10 +65,26 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { itemToString, itemToValue, renderSelect, renderOptions, items, name } = this.props;
+    const {
+      value,
+      itemToString,
+      itemToValue,
+      renderSelect,
+      renderOptions,
+      items,
+      name,
+      readOnly,
+      readOnlyWidth,
+      readOnlyHeight,
+      readOnlyAlign,
+    } = this.props;
     const { selectedItem } = this.state;
 
-    return (
+    return readOnly ? (
+      <Display style={{ textAlign: readOnlyAlign }} width={readOnlyWidth} height={readOnlyHeight}>
+        {itemToString(value)}
+      </Display>
+    ) : (
       <Downshift
         labelId={`${name}SelectInput`}
         onChange={this.handleChange}
