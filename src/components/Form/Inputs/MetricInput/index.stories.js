@@ -19,28 +19,32 @@ storiesOf('Inputs', module).add('Metric Input', () => (
             <>
               <ObjectValue
                 defaultValue={{
-                  value: 100,
-                  metric: 'cm',
+                  inputOne: {
+                    value: 100,
+                    metric: 'cm',
+                  },
                 }}
               >
-                {({ value, set }) => (
-                  <FieldItem
-                    label={<Label>{INPUT_1}</Label>}
-                    input={
-                      <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
-                        <MetricInput
-                          name={INPUT_1}
-                          placeholder="Editable"
-                          onChange={e => set(e.target.value)}
-                          onFocus={() => onFocus(INPUT_1)}
-                          onBlur={() => onBlur()}
-                          value={value}
-                          metrics={['cm', 'm']}
-                        />
-                      </DefaultStyle>
-                    }
-                  />
-                )}
+                {({ value: { inputOne }, set }) => {
+                  return (
+                    <FieldItem
+                      label={<Label>{INPUT_1}</Label>}
+                      input={
+                        <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
+                          <MetricInput
+                            name={INPUT_1}
+                            placeholder="Editable"
+                            onChange={e => set('inputOne', e.target.value)}
+                            onFocus={() => onFocus(INPUT_1)}
+                            onBlur={() => onBlur()}
+                            value={inputOne}
+                            metrics={['cm', 'm']}
+                          />
+                        </DefaultStyle>
+                      }
+                    />
+                  );
+                }}
               </ObjectValue>
 
               <FieldItem

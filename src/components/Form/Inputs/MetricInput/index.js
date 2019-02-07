@@ -10,6 +10,7 @@ type OptionalProps = {
   metrics: Array<string>,
   convert: (number, string, string) => any,
   metricSelectWidth: string,
+  metricSelectHeight: string,
   metricOptionWidth: string,
 };
 
@@ -17,9 +18,10 @@ type Props = OptionalProps & InputProps;
 
 const defaultProps = {
   ...defaultInputProps,
-  metric: [],
+  metrics: [],
   convert: (value: number): number => value,
   metricSelectWidth: '30px',
+  metricSelectHeight: '30px',
   metricOptionWidth: '35px',
 };
 
@@ -67,6 +69,7 @@ export default class MetricInput extends React.Component<Props> {
       convert,
       onChange,
       metricSelectWidth,
+      metricSelectHeight,
       metricOptionWidth,
       ...rest
     } = this.props;
@@ -86,10 +89,15 @@ export default class MetricInput extends React.Component<Props> {
           itemToValue={v => v || null}
           itemToString={v => v || ''}
           renderSelect={({ ...selectProps }) => (
-            <MetricSelect width={metricSelectWidth} {...selectProps} align={align} />
+            <MetricSelect
+              {...selectProps}
+              width={metricSelectWidth}
+              height={metricSelectHeight}
+              align={align}
+            />
           )}
           renderOptions={({ ...optionsProps }) => (
-            <DefaultOptions width={metricOptionWidth} {...optionsProps} align={align} />
+            <DefaultOptions {...optionsProps} width={metricOptionWidth} align={align} />
           )}
         />
       </>
