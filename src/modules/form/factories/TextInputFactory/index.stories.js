@@ -6,7 +6,7 @@ import StoryBookWrapper from 'components/StoryBookWrapper';
 import { ToggleInput, Label } from 'components/Form';
 import { TextInputFactory } from 'modules/form/factories';
 
-storiesOf('InputFactories', module).add('Text Input Factory', () => (
+storiesOf('Input Factories', module).add('Text Input Factory', () => (
   <StoryBookWrapper>
     <ObjectValue
       defaultValue={{
@@ -33,7 +33,7 @@ storiesOf('InputFactories', module).add('Text Input Factory', () => (
             readOnly={readOnly}
             value={value}
             originalValue={originalValue}
-            label="INPUT ONE"
+            label="BASIC"
             infoMessage="This is an info tooltip :)"
           />
           <ToggleInput toggled={readOnly} onToggle={() => setFieldValue('readOnly', !readOnly)}>
@@ -92,8 +92,9 @@ storiesOf('InputFactories', module).add('Text Input Factory', () => (
                   {...inputHandlers}
                   isNew={isNew}
                   originalValue={initialValues[name]}
-                  label="INPUT TWO"
+                  label="FORM MIMIC"
                   readOnly={readOnly}
+                  placeholder="Please input a value"
                 />
                 <ToggleInput
                   toggled={readOnly}
