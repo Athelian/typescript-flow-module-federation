@@ -21,21 +21,27 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Props) {
+export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
-  const { showTag } = state;
+  const { showTag, clone } = state;
   const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
+  const showCloneBadge = (Object.entries(clone.shipments): Array<any>).some(([, item]) =>
+    item.map(({ id: shipmentId }) => shipmentId).includes(id)
+  );
   const isNew = uiSelectors.isNewShipment(id);
   return (
     <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
-      {isNew && <Badge label="new" />}
+      {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
             {/* Send empty array for tags for hidden tags on shipment card when hidden tags */}
-            <ShipmentCard shipment={showTag ? shipment : { ...shipment, tags: [] }} actions={[]} />
+            <ShipmentCard
+              shipment={showTag ? { ...shipment, no } : { ...shipment, no, tags: [] }}
+              actions={[]}
+            />
             {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
               (() => {
                 if (uiSelectors.selectedConnectShipment(id)) {
@@ -75,7 +81,7 @@ export default function Shipment({ wrapperClassName, id, tags, ...shipment }: Pr
                       icon="CHECKED"
                       targeted={targeted}
                       toggle={toggle}
-                      onClick={() => actions.targetShipmentEntity(id)}
+                      onClick={() => actions.targetShipmentEntity(id, no)}
                     />
                   </>
                 )}

@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Feb 01 2019 16:29:56 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Feb 05 2019 18:14:12 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27256,6 +27256,7 @@ input ContainerUpdateInput {
   warehouseArrivalActualDate: DateTime
   warehouseId: ID
   representativeBatchId: ID
+  representativeBatchIndex: Int
   batches: [ContainerBatchInput!]
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDateAssignedToIds: [ID!]
@@ -29735,6 +29736,7 @@ type Mutation {
   orderCreate(input: OrderCreateInput!): OrderPayload!
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderPayload!
   orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload!]!
+  orderClone(id: ID!, input: OrderUpdateInput!): OrderPayload!
   batchCreate(input: BatchCreateInput!): BatchPayload!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchPayload!
   batchUpdateMany(batches: [BatchUpdateWrapperInput!]!): [BatchPayload!]!
@@ -29745,6 +29747,7 @@ type Mutation {
   shipmentCreate(input: ShipmentCreateInput!): ShipmentPayload!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
   shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload!]!
+  shipmentClone(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
   warehouseCreate(input: WarehouseCreateInput!): WarehousePayload!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehousePayload!
   warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): [WarehousePayload!]!
@@ -29766,6 +29769,7 @@ type Mutation {
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
   containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
+  orderItemClone(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
 }
 
 type NotFound {
@@ -35572,6 +35576,7 @@ input ShipmentContainerCreateInput {
   warehouseArrivalActualDate: DateTime
   warehouseId: ID
   representativeBatchId: ID
+  representativeBatchIndex: Int
   batches: [ShipmentBatchInput!]
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDateAssignedToIds: [ID!]
@@ -35588,6 +35593,7 @@ input ShipmentContainerUpdateInput {
   warehouseArrivalActualDate: DateTime
   warehouseId: ID
   representativeBatchId: ID
+  representativeBatchIndex: Int
   batches: [ShipmentBatchInput!]
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDateAssignedToIds: [ID!]

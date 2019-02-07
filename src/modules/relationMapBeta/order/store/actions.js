@@ -80,11 +80,12 @@ function actionCreators(dispatch: Function) {
           selectItems,
         },
       }),
-    targetShipmentEntity: (id: string) =>
+    targetShipmentEntity: (id: string, no: string) =>
       dispatch({
         type: 'TARGET_SHIPMENT_ENTITY',
         payload: {
           id,
+          no,
         },
       }),
     targetOrderEntity: (id: string, exporterId: string) =>
@@ -173,14 +174,14 @@ function actionCreators(dispatch: Function) {
           error,
         },
       }),
-    cloneEntities: (entities: Object) =>
+    cloneEntities: (entities: Array<Object>) =>
       dispatch({
         type: 'CLONE_ENTITIES',
         payload: {
           entities,
         },
       }),
-    cloneEntitiesSuccess: (data: Object) =>
+    cloneEntitiesSuccess: (data: Array<{ type: string, items: Object }>) =>
       dispatch({
         type: 'CLONE_ENTITIES_SUCCESS',
         payload: {
@@ -318,6 +319,13 @@ function actionCreators(dispatch: Function) {
         type: 'REMOTE_ENTITIES_ERROR',
         payload: {
           error,
+        },
+      }),
+    setRefetchAll: (isEnable: boolean) =>
+      dispatch({
+        type: 'REFETCH_ALL',
+        payload: {
+          isEnable,
         },
       }),
   };

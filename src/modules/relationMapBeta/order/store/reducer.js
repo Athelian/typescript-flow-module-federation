@@ -22,6 +22,7 @@ export const uiInitState: UIState = {
   showTag: getInitShowTag(),
   refetchOrderId: '',
   refetchShipmentId: '',
+  refetchAll: false,
   expandCards: {
     orders: [],
     shipments: [],
@@ -54,7 +55,11 @@ export const uiInitState: UIState = {
     batches: [],
   },
   clone: {
+    orders: {},
+    orderItems: {},
     batches: {},
+    shipments: {},
+    shipmentNo: {},
   },
   connectOrder: {
     enableSelectMode: false,
@@ -81,6 +86,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         ...state,
         loading: false,
         error: false,
+      };
+    case 'REFETCH_ALL':
+      return {
+        ...state,
+        refetchAll: getByPathWithDefault(false, 'payload.isEnable', action),
       };
     case 'CHANGE_SELECT_MODE': {
       return {
@@ -341,19 +351,70 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'CLONE_ENTITIES_SUCCESS': {
-      const { batches } = state.clone;
-      getByPathWithDefault([], 'payload.data', action).forEach(({ id, batch }) => {
-        batches[id] = batches[id] ? [...batches[id], batch] : [batch];
+      const { orders, batches, shipments, orderItems, shipmentNo } = state.clone;
+      const targets = [];
+      getByPathWithDefault([], 'payload.data', action).forEach(({ type, items }) => {
+        switch (type) {
+          case ORDER:
+            items.forEach(({ id, order }) => {
+              orders[id] = orders[id] ? [...orders[id], order] : [order];
+              targets.push(`${ORDER}-${order.id}`);
+              if (order.orderItems && order.orderItems.length) {
+                order.orderItems.forEach(orderItem => {
+                  targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+                  if (orderItem.batches && orderItem.batches.length) {
+                    orderItem.batches.forEach(batch => {
+                      targets.push(`${BATCH}-${batch.id}`);
+                    });
+                  }
+                });
+              }
+            });
+
+            break;
+          case ORDER_ITEM:
+            items.forEach(({ id, orderItem }) => {
+              orderItems[id] = orderItems[id] ? [...orderItems[id], orderItem] : [orderItem];
+              targets.push(`${ORDER_ITEM}-${orderItem.id}`);
+              if (orderItem.batches && orderItem.batches.length) {
+                orderItem.batches.forEach(batch => {
+                  targets.push(`${BATCH}-${batch.id}`);
+                });
+              }
+            });
+
+            break;
+          case BATCH:
+            items.forEach(({ id, batch }) => {
+              batches[id] = batches[id] ? [...batches[id], batch] : [batch];
+              targets.push(`${BATCH}-${batch.id}`);
+            });
+
+            break;
+          case SHIPMENT:
+            items.forEach(({ id, shipment }) => {
+              shipments[id] = shipments[id] ? [...shipments[id], shipment] : [shipment];
+              shipmentNo[shipment.id] = shipment.no;
+              targets.push(`${SHIPMENT}-${shipment.id}`);
+            });
+
+            break;
+
+          default:
+            break;
+        }
       });
 
       return {
         ...state,
         clone: {
+          shipmentNo,
+          orders,
+          orderItems,
           batches,
+          shipments,
         },
-        targets: getByPathWithDefault([], 'payload.data', action).map(
-          ({ batch }) => `${BATCH}-${batch.id}`
-        ),
+        targets,
         loading: false,
         error: false,
       };
@@ -498,11 +559,25 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         if (targets.includes(`${SHIPMENT}-${payload.id}`)) {
           return {
             ...state,
+            clone: {
+              ...state.clone,
+              shipmentNo: {
+                ...state.clone.shipmentNo,
+                [payload.id]: payload.no,
+              },
+            },
             targets: (targets.filter(item => item !== `${SHIPMENT}-${payload.id}`): Array<string>),
           };
         }
         return {
           ...state,
+          clone: {
+            ...state.clone,
+            shipmentNo: {
+              ...state.clone.shipmentNo,
+              [payload.id]: payload.no,
+            },
+          },
           targets: [...targets, `${SHIPMENT}-${payload.id}`],
         };
       }

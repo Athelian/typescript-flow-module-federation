@@ -196,7 +196,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
               <NewButton
                 label={
                   <FormattedMessage
-                    id="modules.shipment.newContainer"
+                    id="modules.Shipments.newContainer"
                     defaultMessage="NEW CONTAINER"
                   />
                 }
