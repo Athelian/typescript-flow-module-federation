@@ -1,9 +1,11 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
 import { SelectInput, DefaultSelect, DefaultOptions, Display } from 'components/Form';
 import { textAreaFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
+import Tooltip from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
 import { computeIcon, getFileExtension, getFileName } from './helpers';
 import {
@@ -19,13 +21,17 @@ import {
   OpenMemoButtonStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  onChange: (string, any) => void,
+  onBlur: (string, boolean) => void,
+  onRemove: Function,
+  readOnly: boolean,
+  downloadDisabled: boolean,
+};
+
+type Props = OptionalProps & {
   name: string,
   value: Document,
-  readOnly?: boolean,
-  onChange: (string, any) => void,
-  onBlur?: (string, boolean) => void,
-  onRemove?: Function,
   types: Array<FileType>,
 };
 
@@ -33,21 +39,20 @@ type State = {
   isExpanded: boolean,
 };
 
+const defaultProps = {
+  onChange: () => {},
+  onBlur: () => {},
+  onRemove: () => {},
+  readOnly: false,
+  downloadDisabled: false,
+};
+
 class DocumentItem extends React.Component<Props, State> {
-  static defaultProps = {
-    readOnly: false,
-    onChange: () => {},
-    onBlur: () => {},
-    onRemove: () => {},
+  static defaultProps = defaultProps;
+
+  state = {
+    isExpanded: false,
   };
-
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      isExpanded: false,
-    };
-  }
 
   toggleMemo = () => {
     const { isExpanded } = this.state;
@@ -55,7 +60,16 @@ class DocumentItem extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, value, readOnly, onChange, onBlur, onRemove, types } = this.props;
+    const {
+      name,
+      value,
+      onChange,
+      onBlur,
+      onRemove,
+      types,
+      readOnly,
+      downloadDisabled,
+    } = this.props;
     const { isExpanded } = this.state;
 
     const fileExtension = getFileExtension(value.name);
@@ -73,7 +87,9 @@ class DocumentItem extends React.Component<Props, State> {
         )}
         <div className={DocumentCardStyle}>
           {readOnly ? (
-            <Display>{type ? type.label : ''}</Display>
+            <Display height="30px" align="left">
+              {type ? type.label : ''}
+            </Display>
           ) : (
             <SelectInput
               name={`${name}.type`}
@@ -100,15 +116,30 @@ class DocumentItem extends React.Component<Props, State> {
               <div className={FileNameStyle}>{fileName}</div>
               {`.${fileExtension}`}
             </div>
-            <button
-              type="button"
-              className={DownloadButtonStyle}
-              onClick={() => {
-                window.open(value.path, '_blank');
-              }}
-            >
-              <Icon icon="DOWNLOAD" />
-            </button>
+            {downloadDisabled ? (
+              <Tooltip
+                message={
+                  <FormattedMessage
+                    id="components.documentInput.cantDownload"
+                    defaultMessage="You do not have the rights to download this document"
+                  />
+                }
+              >
+                <div className={DownloadButtonStyle(true)}>
+                  <Icon icon="DOWNLOAD" />
+                </div>
+              </Tooltip>
+            ) : (
+              <button
+                type="button"
+                className={DownloadButtonStyle(false)}
+                onClick={() => {
+                  window.open(value.path, '_blank');
+                }}
+              >
+                <Icon icon="DOWNLOAD" />
+              </button>
+            )}
           </div>
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>

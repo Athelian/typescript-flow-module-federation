@@ -9,29 +9,37 @@ import type { Document, FileType } from './type.js.flow';
 import { DocumentListStyle, AddDocumentStyle, ProgressStyle, NoDocumentsStyle } from './style';
 import messages from './messages';
 
-type Props = {
-  name: string,
+type OptionalProps = {
   values: Array<Document>,
-  readOnly: boolean,
+  name: string,
   onChange: (string, any) => void,
   onBlur: (string, boolean) => void,
   onUpload?: ({ uploading: boolean, progress: number }) => void,
   types: Array<FileType>,
+  readOnly: boolean,
+  downloadDisabled: boolean,
 };
+
+type Props = OptionalProps;
 
 type State = {
   uploading: boolean,
   progress: number,
 };
 
+const defaultProps = {
+  values: [],
+  name: '',
+  onChange: () => {},
+  onBlur: () => {},
+  onUpload: () => {},
+  types: [],
+  readOnly: false,
+  downloadDisabled: false,
+};
+
 class DocumentsInput extends React.Component<Props, State> {
-  static defaultProps = {
-    values: [],
-    readOnly: false,
-    onChange: () => {},
-    onBlur: () => {},
-    onUpload: () => {},
-  };
+  static defaultProps = defaultProps;
 
   state = {
     uploading: false,
@@ -107,7 +115,7 @@ class DocumentsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, values, readOnly, onChange, onBlur, types } = this.props;
+    const { name, values, onChange, onBlur, types, readOnly, downloadDisabled } = this.props;
     const { uploading, progress } = this.state;
 
     if (readOnly) {
@@ -120,6 +128,7 @@ class DocumentsInput extends React.Component<Props, State> {
               value={document}
               types={types}
               readOnly
+              downloadDisabled={downloadDisabled}
             />
           ))}
         </div>
@@ -147,6 +156,7 @@ class DocumentsInput extends React.Component<Props, State> {
                 onRemove={() => {
                   onChange(name, values.filter(d => d.id !== document.id));
                 }}
+                downloadDisabled={downloadDisabled}
               />
             );
           })}

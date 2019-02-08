@@ -47,24 +47,31 @@ export const FileNameStyle: string = css`
   ${presets.ELLIPSIS};
 `;
 
-export const DownloadButtonStyle: string = css`
+export const DownloadButtonStyle = (downloadDisabled: boolean): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
-  background-color: #fff;
-  color: ${colors.GRAY_DARK};
+  background-color: ${colors.WHITE};
   border: 2px solid transparent;
   height: 30px;
   width: 30px;
   ${fontSizes.MEDIUM};
   flex-shrink: 0;
   margin: 0 0 0 5px;
-  &:hover {
-    background-color: ${colors.GRAY_VERY_LIGHT};
-    color: ${colors.TEAL};
-  }
-  &:focus {
-    border-color: ${colors.TEAL};
-  }
+  ${downloadDisabled
+    ? `
+    color: ${colors.GRAY_SUPER_LIGHT};
+    cursor: default;
+  `
+    : `
+    color: ${colors.GRAY_LIGHT};
+    &:hover {
+      background-color: ${colors.GRAY_VERY_LIGHT};
+      color: ${colors.TEAL};
+    }
+    &:focus {
+      border-color: ${colors.TEAL};
+    }
+  `};
 `;
 
 export const DeleteButtonStyle: string = css`
