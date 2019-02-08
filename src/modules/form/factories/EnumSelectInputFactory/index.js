@@ -76,7 +76,7 @@ const EnumSelectInputFactory = ({
     {({ loading, error, data }) => {
       const selectedItem = data.find(item => item.name === value);
 
-      const itemToString = item => (item ? item.description || item.name : '');
+      const itemToString = parseEnumDescriptionOrValue;
       const itemToValue = item => (item ? item.name : '');
 
       const labelConfig = { required, align: labelAlign, width: labelWidth };
@@ -115,7 +115,7 @@ const EnumSelectInputFactory = ({
         onFocus,
         align: inputAlign,
         readOnly,
-        itemToString: readOnly ? parseEnumDescriptionOrValue : itemToString,
+        itemToString,
         itemToValue,
         renderSelect: ({ ...rest }) => <Select {...rest} {...inputConfig} />,
         renderOptions: ({ ...rest }) => <Options {...rest} {...optionsConfig} />,

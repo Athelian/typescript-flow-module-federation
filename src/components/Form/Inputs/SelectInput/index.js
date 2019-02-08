@@ -66,7 +66,6 @@ class SelectInput extends React.Component<Props, State> {
 
   render() {
     const {
-      value,
       itemToString,
       itemToValue,
       renderSelect,
@@ -82,7 +81,7 @@ class SelectInput extends React.Component<Props, State> {
 
     return readOnly ? (
       <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
-        {itemToString(value)}
+        {itemToString(selectedItem)}
       </Display>
     ) : (
       <Downshift
