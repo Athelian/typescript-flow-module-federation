@@ -1,17 +1,20 @@
 // @flow
 import * as React from 'react';
-import { type RenderOptionsProps } from 'components/Form/Inputs/SelectInput/type';
 
 type OptionalProps = {
   value: any,
   inputValue: string,
-  name: string,
   onChange: ?Function,
   onBlur: ?Function,
   onFocus: ?Function,
   onSearch: string => void,
   afterClearSelection: ?() => void,
   id?: string,
+  readOnly: boolean,
+  readOnlyWidth?: string,
+  readOnlyHeight?: string,
+  align: 'left' | 'right' | 'center',
+  hideClearButton: boolean,
 };
 
 export type RenderSearchSelectProps = {
@@ -24,7 +27,14 @@ export type RenderSearchSelectProps = {
   handleQueryChange: Function,
 };
 
+export type RenderOptionsProps = {
+  highlightedIndex: number,
+  selectedItem: any,
+  getItemProps: Function,
+};
+
 export type SearchSelectInputProps = OptionalProps & {
+  name: string,
   items: Array<any>,
   itemToString: any => string,
   itemToValue: any => any,
@@ -35,10 +45,12 @@ export type SearchSelectInputProps = OptionalProps & {
 export const defaultSearchSelectInputProps = {
   value: '',
   inputValue: '',
-  name: '',
+  readOnly: false,
+  align: 'right',
   onChange: null,
   onSearch: () => {},
   afterClearSelection: () => {},
+  hideClearButton: false,
 };
 
 export default defaultSearchSelectInputProps;

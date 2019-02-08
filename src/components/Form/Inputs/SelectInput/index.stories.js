@@ -15,7 +15,7 @@ storiesOf('Inputs', module).add('Select Input', () => (
 
         return (
           <>
-            <StringValue>
+            <StringValue defaultValue="optionA">
               {({ value, set }) => (
                 <FieldItem
                   label={<Label>{INPUT_1}</Label>}

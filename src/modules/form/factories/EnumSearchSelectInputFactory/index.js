@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react';
+import { StringValue } from 'react-values';
+import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
-import { parseEnumDescriptionOrValue } from 'modules/form/factories/helpers';
+import { parseEnumValue, parseEnumDescriptionOrValue } from 'modules/form/factories/helpers';
 import {
   FieldItem,
   Label,
   FormTooltip,
-  SelectInput,
-  DefaultSelect,
+  SearchSelectInput,
+  DefaultSearchSelect,
   DefaultOptions,
 } from 'components/Form';
 import type {
@@ -17,8 +19,16 @@ import type {
   InputProps,
 } from 'modules/form/factories/type';
 
+const filterItems = (query: string, items: Array<any>) => {
+  if (!query) return items;
+  return matchSorter(items, query, {
+    keys: ['name', 'description'],
+  });
+};
+
 type InputWrapperProps = StandardInputWrapperProps & {
   type?: 'standard' | 'label',
+  hideClearButton?: boolean,
 };
 
 type Props = LabelProps &
@@ -27,7 +37,7 @@ type Props = LabelProps &
   InputProps & {
     isTouched: boolean,
     label?: React.Node,
-    Select: () => React.Node,
+    SearchSelect: () => React.Node,
     Options: () => React.Node,
     enumType: string,
   };
@@ -38,14 +48,14 @@ const defaultProps = {
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  Select: DefaultSelect,
+  SearchSelect: DefaultSearchSelect,
   Options: DefaultOptions,
 };
 
 const EnumSelectInputFactory = ({
   isTouched,
   label,
-  Select,
+  SearchSelect,
   Options,
   enumType,
   required,
@@ -58,6 +68,7 @@ const EnumSelectInputFactory = ({
   infoMessage,
   originalValue,
   type,
+  hideClearButton,
   isFocused,
   disabled,
   forceHoverStyle,
@@ -77,7 +88,7 @@ const EnumSelectInputFactory = ({
       const selectedItem = data.find(item => item.name === value);
 
       const itemToString = parseEnumDescriptionOrValue;
-      const itemToValue = item => (item ? item.name : '');
+      const itemToValue = parseEnumValue;
 
       const labelConfig = { required, align: labelAlign, width: labelWidth };
 
@@ -87,8 +98,8 @@ const EnumSelectInputFactory = ({
         errorMessage: isTouched && errorMessage,
         warningMessage: isTouched && warningMessage,
         changedValues: {
-          oldValue: parseEnumDescriptionOrValue(data.find(item => item.name === originalValue)),
-          newValue: parseEnumDescriptionOrValue(selectedItem),
+          oldValue: itemToString(data.find(item => item.name === originalValue)),
+          newValue: itemToString(selectedItem),
         },
       };
 
@@ -97,6 +108,7 @@ const EnumSelectInputFactory = ({
         height: inputHeight,
         forceHoverStyle,
         placeholder,
+        hideClearButton,
       };
 
       const optionsConfig = {
@@ -110,14 +122,42 @@ const EnumSelectInputFactory = ({
         disabled,
         value,
         name,
-        onChange,
-        onBlur,
+        onChange: newValue => {
+          if (onChange) {
+            if (!newValue) onChange('');
+            else onChange(itemToValue(newValue));
+          }
+        },
+        onBlur: () => {
+          if (onBlur) {
+            if (data.find(item => itemToValue(item) === value)) onBlur();
+            else if (onChange) {
+              if (!originalValue) onChange('');
+              else onChange(itemToValue(originalValue));
+              setTimeout(() => {
+                onBlur();
+              }, 0);
+            }
+          }
+        },
         onFocus,
+        onSearch: onChange,
+        afterClearSelection: () => {
+          if (onChange) {
+            onChange('');
+          }
+          if (onBlur && onFocus) {
+            setTimeout(() => {
+              onBlur();
+              onFocus();
+            }, 0);
+          }
+        },
         align: inputAlign,
         readOnly,
         itemToString,
         itemToValue,
-        renderSelect: ({ ...rest }) => <Select {...rest} {...inputConfig} />,
+        renderSelect: ({ ...rest }) => <SearchSelect {...rest} {...inputConfig} />,
         renderOptions: ({ ...rest }) => <Options {...rest} {...optionsConfig} />,
         readOnlyWidth: inputWidth,
         readOnlyHeight: inputHeight,
@@ -131,7 +171,15 @@ const EnumSelectInputFactory = ({
             error ? (
               `Error!: ${error}`
             ) : (
-              <SelectInput items={loading ? [] : data} {...selectConfig} />
+              <StringValue value={itemToString(selectedItem) || value}>
+                {({ value: query }) => (
+                  <SearchSelectInput
+                    inputValue={query}
+                    items={loading ? [] : filterItems(query, data)}
+                    {...selectConfig}
+                  />
+                )}
+              </StringValue>
             )
           }
         />

@@ -12,21 +12,15 @@ type State = {
 class SelectInput extends React.Component<Props, State> {
   static defaultProps = defaultSelectInputProps;
 
-  constructor(props: Props) {
-    super(props);
-    const { value, items, itemToValue } = props;
-    const selectedItem = value
-      ? (items || []).find(item => isEquals(itemToValue(item), value))
-      : null;
-
-    this.state = {
-      selectedItem,
-    };
-  }
+  state = {
+    selectedItem: null,
+  };
 
   static getDerivedStateFromProps(props: Props, state: State) {
     const { value, items, itemToValue } = props;
-    if (value !== state.selectedItem) {
+    const { selectedItem } = state;
+
+    if (value !== selectedItem) {
       return {
         selectedItem: value ? (items || []).find(item => isEquals(itemToValue(item), value)) : null,
       };
@@ -91,12 +85,12 @@ class SelectInput extends React.Component<Props, State> {
         itemToValue={itemToValue}
       >
         {({
+          getInputProps,
           getItemProps,
           isOpen,
           toggleMenu: toggle,
           highlightedIndex,
           clearSelection,
-          getInputProps,
         }) => (
           <div>
             {renderSelect({
