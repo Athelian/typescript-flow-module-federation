@@ -15,6 +15,7 @@ type OptionalProps = {
   height: string,
   align: 'left' | 'right' | 'center',
   hideDropdownArrow: boolean,
+  placeholder: React.Node,
 };
 
 type Props = OptionalProps &
@@ -32,6 +33,7 @@ const defaultProps = {
   height: '30px',
   align: 'right',
   hideDropdownArrow: false,
+  placeholder: '',
 };
 
 function DefaultSelect({
