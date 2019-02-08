@@ -16,21 +16,13 @@ const entitySelector = ({
   state.select.entities.includes(entity) &&
   total === state.targets.filter(item => item.includes(`${entity}-`)).length;
 
-const targetedOrderItemIds = (state: UIState) => {
-  const orderItems = state.targets.filter(item => item.includes(`${ORDER_ITEM}-`));
-  return (orderItems.map(orderItem => {
-    const [, orderItemId] = orderItem.split('-');
-    return orderItemId;
+const targetedIds = (state: UIState, type: BATCH | SHIPMENT | ORDER | ORDER_ITEM) => {
+  const ids = state.targets.filter(item => item.includes(`${type}-`));
+  return (ids.map(orderItem => {
+    const [, id] = orderItem.split('-');
+    return id;
   }): Array<string>);
 };
-
-function targetedBatchIds(state: UIState) {
-  const batches = state.targets.filter(item => item.includes(`${BATCH}-`));
-  return (batches.map(orderItem => {
-    const [, batchId] = orderItem.split('-');
-    return batchId;
-  }): Array<string>);
-}
 
 const currentExporterId = (state: UIState) => {
   const result = [];
@@ -54,9 +46,9 @@ const isAllowToConnectOrder = (state: UIState) => {
   )
     return false;
 
-  const batchIds = targetedBatchIds(state);
+  const batchIds = targetedIds(state, BATCH);
 
-  const orderItemIds = targetedOrderItemIds(state);
+  const orderItemIds = targetedIds(state, ORDER_ITEM);
 
   const exporterId = currentExporterId(state);
 
@@ -73,8 +65,8 @@ const hasSelectedAllBatches = ({
   state: UIState,
   orderItems: Object,
 }) => {
-  const batchIds = targetedBatchIds(state);
-  const orderItemIds = targetedOrderItemIds(state);
+  const batchIds = targetedIds(state, BATCH);
+  const orderItemIds = targetedIds(state, ORDER_ITEM);
   const allBatchIds = [];
   orderItemIds.forEach(orderItemId => {
     const { batches = [] } = orderItems[orderItemId] || {};
@@ -99,8 +91,8 @@ const findAllCurrencies = ({
   const selectedOrder = orders[state.connectOrder.orderId];
   if (selectedOrder) {
     result.push(selectedOrder.currency);
-    const orderItemIds = targetedOrderItemIds(state);
-    const batchIds = targetedBatchIds(state);
+    const orderItemIds = targetedIds(state, ORDER_ITEM);
+    const batchIds = targetedIds(state, BATCH);
     const allOrderItemIds = [...orderItemIds];
     (Object.entries(orderItems): Array<any>).forEach(([orderItemId, orderItem]) => {
       if (
@@ -154,8 +146,10 @@ function selectors(state: UIState) {
       }
       return '';
     },
-    targetedOrderItemIds: () => targetedOrderItemIds(state),
-    targetedBatchIds: () => targetedBatchIds(state),
+    targetedOrderIds: () => targetedIds(state, ORDER),
+    targetedOrderItemIds: () => targetedIds(state, ORDER_ITEM),
+    targetedBatchIds: () => targetedIds(state, BATCH),
+    targetedShipmentIds: () => targetedIds(state, SHIPMENT),
     currentExporterId: () => currentExporterId(state),
     selectedConnectOrder: (id: string) => state.connectOrder.orderId === id,
     selectedConnectShipment: (id: string) => state.connectShipment.shipmentId === id,
@@ -166,6 +160,7 @@ function selectors(state: UIState) {
       state.new.orders.length > 0 ? state.new.orders[state.new.orders.length - 1] : '',
     isNewOrder: (id: string) => state.new.orders.includes(id),
     isNewShipment: (id: string) => state.new.shipments.includes(id),
+    shipmentNo: (id: string) => state.clone.shipmentNo[id],
   };
 }
 

@@ -1,22 +1,25 @@
 // @flow
 import * as React from 'react';
+import { Display } from 'components/Form';
 import { formatToDateInput } from 'utils/date';
+import FormattedDate from 'components/FormattedDate';
 import { type InputProps as Props, defaultInputProps } from 'components/Form/Inputs/type';
 
-class DateInput extends React.PureComponent<Props> {
-  static defaultProps = defaultInputProps;
+const DateInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...rest }: Props) => {
+  return readOnly ? (
+    <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
+      <FormattedDate value={value} />
+    </Display>
+  ) : (
+    <input
+      value={value ? formatToDateInput(value) : ''}
+      style={{ textAlign: align }}
+      {...rest}
+      type="date"
+    />
+  );
+};
 
-  render() {
-    const { align, value, ...rest } = this.props;
-    return (
-      <input
-        style={{ textAlign: align }}
-        value={value ? formatToDateInput(value) : ''}
-        type="date"
-        {...rest}
-      />
-    );
-  }
-}
+DateInput.defaultProps = defaultInputProps;
 
 export default DateInput;

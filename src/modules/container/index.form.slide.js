@@ -35,8 +35,9 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
     if (onFormReady) onFormReady();
   }
 
-  onReset = (formState: Object) => {
-    resetFormState(formState);
+  onReset = (containerContainer: Object, form: Object) => {
+    resetFormState(containerContainer);
+    form.onReset();
   };
 
   render() {
@@ -70,13 +71,13 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
                 />
               </JumpToSection>
               <Subscribe to={[ContainerFormContainer, FormContainer]}>
-                {(formState, form) =>
-                  formState.isDirty() && (
+                {(containerContainer, form) =>
+                  containerContainer.isDirty() && (
                     <>
-                      <ResetButton onClick={() => this.onReset(formState)} />
+                      <ResetButton onClick={() => this.onReset(containerContainer, form)} />
                       <SaveButton
-                        disabled={!form.isReady(formState.state, validator)}
-                        onClick={() => onSave(formState.state)}
+                        disabled={!form.isReady(containerContainer.state, validator)}
+                        onClick={() => onSave(containerContainer.state)}
                       />
                     </>
                   )

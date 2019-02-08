@@ -66,7 +66,7 @@ export const DefaultStyleWrapperStyle = ({
     width: 100%;
     height: 100%;
     line-height: 20px;
-    padding: 0 5px;
+    padding: 0 4px;
     background: none;
     ${borderRadiuses.MAIN};
     ${type === 'label'

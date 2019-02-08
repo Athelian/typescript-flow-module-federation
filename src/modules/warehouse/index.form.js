@@ -38,8 +38,9 @@ class WarehouseFormModule extends React.PureComponent<Props> {
 
   onCancel = () => navigate(`/warehouse`);
 
-  onReset = (formState: Object) => {
-    resetFormState(formState);
+  onReset = (warehouseContainer: Object, form: Object) => {
+    resetFormState(warehouseContainer);
+    form.onReset();
   };
 
   onSave = async (
@@ -139,24 +140,28 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                         />
                       </JumpToSection>
                       <Subscribe to={[WarehouseContainer, FormContainer]}>
-                        {(formState, form) =>
-                          (isNewOrClone || formState.isDirty()) && (
+                        {(warehouseContainer, form) =>
+                          (isNewOrClone || warehouseContainer.isDirty()) && (
                             <>
                               {this.isNewOrClone() ? (
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
-                                <ResetButton onClick={() => this.onReset(formState)} />
+                                <ResetButton
+                                  onClick={() => {
+                                    this.onReset(warehouseContainer, form);
+                                  }}
+                                />
                               )}
                               <SaveButton
                                 data-testid="saveButton"
-                                disabled={!form.isReady(formState.state, validator)}
+                                disabled={!form.isReady(warehouseContainer.state, validator)}
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    formState.state,
+                                    warehouseContainer.state,
                                     saveWarehouse,
                                     () => {
-                                      formState.onSuccess();
+                                      warehouseContainer.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors

@@ -61,6 +61,35 @@ const initFilter = {
   },
 };
 
+const findRelateShipment = ({
+  shipmentId,
+  sortShipments,
+  state,
+  shipment,
+}: {
+  shipmentId: string,
+  sortShipments: Array<Object>,
+  state: Object,
+  shipment: Object,
+}) => {
+  if (!sortShipments.includes(shipment)) {
+    sortShipments.push(shipment);
+  }
+  if (state.clone.shipments[shipmentId]) {
+    (state.clone.shipments[shipmentId] || []).forEach(item => {
+      sortShipments.push(item);
+      if (state.clone.shipments[item.id]) {
+        findRelateShipment({
+          shipmentId: item.id,
+          shipment: item,
+          sortShipments,
+          state,
+        });
+      }
+    });
+  }
+};
+
 function manualSortByAction(shipments: Object, state: Object) {
   const sortShipments = [];
   state.new.shipments.reverse().forEach(shipmentId => {
@@ -69,10 +98,13 @@ function manualSortByAction(shipments: Object, state: Object) {
     }
   });
 
-  (Object.entries(shipments): Array<any>).forEach(([shipmentId, shipment]) => {
-    if (!state.new.shipments.includes(shipmentId)) {
-      sortShipments.push(shipment);
-    }
+  (Object.entries(shipments || {}): Array<any>).forEach(([shipmentId, shipment]) => {
+    findRelateShipment({
+      shipmentId,
+      shipment,
+      state,
+      sortShipments,
+    });
   });
 
   return sortShipments;
@@ -89,13 +121,17 @@ const Order = ({ intl }: Props) => {
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
-        {({ loading, data, fetchMore, error, client, updateQuery }) => {
+        {({ loading, data, refetch, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;
           }
 
           if (loading) {
             return <LoadingIcon />;
+          }
+
+          if (state.refetchAll) {
+            refetch(queryVariables).then(() => actions.setRefetchAll(false));
           }
 
           if (state.refetchShipmentId) {

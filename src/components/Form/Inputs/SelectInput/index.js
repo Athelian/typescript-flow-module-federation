@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
+import { Display } from 'components/Form';
 import { isEquals } from 'utils/fp';
 import { type SelectInputProps as Props, defaultSelectInputProps } from './type';
 
@@ -11,21 +12,15 @@ type State = {
 class SelectInput extends React.Component<Props, State> {
   static defaultProps = defaultSelectInputProps;
 
-  constructor(props: Props) {
-    super(props);
-    const { value, items, itemToValue } = props;
-    const selectedItem = value
-      ? (items || []).find(item => isEquals(itemToValue(item), value))
-      : null;
-
-    this.state = {
-      selectedItem,
-    };
-  }
+  state = {
+    selectedItem: null,
+  };
 
   static getDerivedStateFromProps(props: Props, state: State) {
     const { value, items, itemToValue } = props;
-    if (value !== state.selectedItem) {
+    const { selectedItem } = state;
+
+    if (value !== selectedItem) {
       return {
         selectedItem: value ? (items || []).find(item => isEquals(itemToValue(item), value)) : null,
       };
@@ -42,6 +37,7 @@ class SelectInput extends React.Component<Props, State> {
 
   handleChange = (selectedItem: any) => {
     const { onChange } = this.props;
+
     this.setState({ selectedItem }, () => {
       if (onChange) onChange(selectedItem);
     });
@@ -63,10 +59,25 @@ class SelectInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { itemToString, itemToValue, renderSelect, renderOptions, items, name } = this.props;
+    const {
+      itemToString,
+      itemToValue,
+      renderSelect,
+      renderOptions,
+      items,
+      name,
+      readOnly,
+      readOnlyWidth,
+      readOnlyHeight,
+      align,
+    } = this.props;
     const { selectedItem } = this.state;
 
-    return (
+    return readOnly ? (
+      <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
+        {itemToString(selectedItem)}
+      </Display>
+    ) : (
       <Downshift
         labelId={`${name}SelectInput`}
         onChange={this.handleChange}
@@ -74,12 +85,12 @@ class SelectInput extends React.Component<Props, State> {
         itemToValue={itemToValue}
       >
         {({
+          getInputProps,
           getItemProps,
           isOpen,
           toggleMenu: toggle,
           highlightedIndex,
           clearSelection,
-          getInputProps,
         }) => (
           <div>
             {renderSelect({
@@ -91,6 +102,7 @@ class SelectInput extends React.Component<Props, State> {
               clearSelection: () => this.handleClear(clearSelection),
               getInputProps,
               itemToString,
+              align,
             })}
             {isOpen &&
               renderOptions({
@@ -100,6 +112,7 @@ class SelectInput extends React.Component<Props, State> {
                 getItemProps,
                 itemToString,
                 itemToValue,
+                align,
               })}
           </div>
         )}

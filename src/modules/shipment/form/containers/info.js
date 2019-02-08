@@ -13,12 +13,21 @@ type FormState = {
   loadType?: string,
   incoterm?: string,
   carrier?: string,
-  customFields: Object,
   forwarders: Array<{ id: string, name: string }>,
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
+  customFields: Object,
 };
 
 const initValues = {
+  no: '',
+  blNo: '',
+  blDate: '',
+  bookingNo: '',
+  bookingDate: '',
+  invoiceNo: '',
+  loadType: '',
+  incoterm: '',
+  carrier: '',
   forwarders: [],
   inCharges: [],
   customFields: {
@@ -47,7 +56,7 @@ export default class ShipmentInfoContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = cleanUpData(values);
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };

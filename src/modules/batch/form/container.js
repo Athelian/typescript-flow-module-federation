@@ -113,6 +113,19 @@ export default class BatchFormContainer extends Container<BatchFormState> {
 
   originalValues = initValues;
 
+  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+
+  onSuccess = () => {
+    this.originalValues = { ...this.state };
+    this.setState(this.originalValues);
+  };
+
+  initDetailValues = (values: Object) => {
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    this.setState(parsedValues);
+    this.originalValues = Object.assign({}, parsedValues);
+  };
+
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
@@ -132,19 +145,6 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       unset(cloneState, path);
       return removeNulls(cloneState);
     });
-  };
-
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
-
-  onSuccess = () => {
-    this.originalValues = { ...this.state };
-    this.setState(this.originalValues);
-  };
-
-  initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
-    this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
   };
 
   syncProductProvider = (productProvider: ProductProvider) => {

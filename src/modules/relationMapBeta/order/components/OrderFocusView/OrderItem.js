@@ -9,6 +9,7 @@ import { OrderItemCard, WrapperCard } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import type { OrderItemProps } from 'modules/relationMapBeta/order/type.js.flow';
+import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName?: string,
@@ -61,10 +62,17 @@ function getQuantitySummary(item: Object) {
 
 export default function OrderItem({ wrapperClassName, id, exporterId, batches, ...rest }: Props) {
   const context = React.useContext(ActionDispatch);
-  const { dispatch } = context;
+  const {
+    state: { clone },
+    dispatch,
+  } = context;
   const actions = actionCreators(dispatch);
+  const showCloneBadge = (Object.entries(clone.orderItems): Array<any>).some(([, item]) =>
+    item.map(({ id: orderItemId }) => orderItemId).includes(id)
+  );
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" wrapperClassName={wrapperClassName}>
+      {showCloneBadge && <Badge label="clone" />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>

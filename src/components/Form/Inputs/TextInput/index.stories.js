@@ -1,5 +1,5 @@
-import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
+import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { StringValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
@@ -37,10 +37,13 @@ storiesOf('Inputs', module).add('Text Input', () => (
 
             <FieldItem
               label={<Label>{INPUT_2}</Label>}
-              input={<TextInput value="Hello" readOnly />}
+              input={<TextInput value="Hello" readOnly readOnlyHeight="30px" />}
             />
 
-            <FieldItem label={<Label>{INPUT_3}</Label>} input={<TextInput readOnly />} />
+            <FieldItem
+              label={<Label>{INPUT_3}</Label>}
+              input={<TextInput readOnly readOnlyHeight="30px" />}
+            />
           </>
         );
       }}

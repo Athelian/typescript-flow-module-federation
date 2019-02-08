@@ -92,7 +92,7 @@ function BatchesArea({
                           <>
                             <div className={SubTitleWrapperStyle}>
                               <FormattedMessage
-                                id="modules.shipment.selected"
+                                id="modules.Shipments.selected"
                                 defaultMessage="SELECTED {numOfBatches}"
                                 values={{
                                   numOfBatches: <FormattedNumber value={selectedBatches.length} />,

@@ -156,7 +156,9 @@ const ShipmentContainerCard = ({
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
                 </Label>
                 <Display align="right">
-                  <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                  {totalVolume && (
+                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                  )}
                 </Display>
               </div>
 
@@ -165,7 +167,7 @@ const ShipmentContainerCard = ({
                   <FormattedMessage id="components.cards.batches" defaultMessage="BATCHES" />
                 </Label>
                 <Display align="right">
-                  <FormattedNumber value={batches.length} />
+                  {batches && <FormattedNumber value={batches.length} />}
                 </Display>
               </div>
 
@@ -346,7 +348,7 @@ const ShipmentContainerCard = ({
               </div>
 
               <div className={TagsWrapperStyle}>
-                {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
             </div>
           </div>

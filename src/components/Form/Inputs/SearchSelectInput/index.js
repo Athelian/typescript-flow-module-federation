@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Downshift from 'downshift';
+import { Display } from 'components/Form';
 import { isEquals } from 'utils/fp';
 import { type SearchSelectInputProps as Props, defaultSearchSelectInputProps } from './type';
 
@@ -56,19 +57,27 @@ class SearchSelectInput extends React.Component<Props, State> {
 
   render() {
     const {
-      name,
+      itemToString,
       itemToValue,
       inputValue,
-      itemToString,
       renderSelect,
       renderOptions,
+      items,
+      name,
       afterClearSelection,
       id,
+      readOnly,
+      readOnlyWidth,
+      readOnlyHeight,
+      align,
     } = this.props;
-
     const { selectedItem } = this.state;
 
-    return (
+    return readOnly ? (
+      <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
+        {itemToString(selectedItem)}
+      </Display>
+    ) : (
       <Downshift
         initialInputValue={inputValue}
         initialSelectedItem={selectedItem}
@@ -97,12 +106,18 @@ class SearchSelectInput extends React.Component<Props, State> {
               selectedItem,
               clearSelection: () => clearSelection(afterClearSelection),
               getInputProps,
+              itemToString,
+              align,
             })}
             {isOpen &&
               renderOptions({
+                items,
                 highlightedIndex,
                 selectedItem,
                 getItemProps,
+                itemToString,
+                itemToValue,
+                align,
               })}
           </div>
         )}

@@ -6,7 +6,6 @@ import { OptionWrapperStyle, OptionStyle } from './style';
 
 type OptionalProps = {
   type: 'standard' | 'label',
-  align: 'left' | 'right' | 'center',
   width: string,
   height: string,
 };
@@ -16,11 +15,11 @@ type Props = OptionalProps &
     items: Array<any>,
     itemToValue: any => any,
     itemToString: any => string,
+    align: 'left' | 'right' | 'center',
   };
 
 const defaultProps = {
   type: 'standard',
-  align: 'right',
   width: '100%',
   height: '200px',
 };
@@ -57,7 +56,7 @@ function DefaultOptions({
             if (!item) return null;
             return (
               <div
-                key={`option-${itemToValue(item)}-${itemToString(item)}`}
+                key={itemToValue(item)}
                 className={OptionStyle({
                   onHover: highlightedIndex === index,
                   selected: selectedItem === item,

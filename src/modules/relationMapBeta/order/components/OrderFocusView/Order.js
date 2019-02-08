@@ -32,11 +32,15 @@ export default function Order({
   const context = React.useContext(ActionDispatch);
   const { dispatch, state } = context;
   const uiSelectors = selectors(state);
+  const { clone } = state;
   const actions = actionCreators(dispatch);
   const isNewOrder = uiSelectors.isNewOrder(id);
+  const showCloneBadge = (Object.entries(clone.orders): Array<any>).some(([, item]) =>
+    item.map(({ id: orderId }) => orderId).includes(id)
+  );
   return (
     <BaseCard id={`order-${id}`} icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
-      {isNewOrder && <Badge label="new" />}
+      {(showCloneBadge || isNewOrder) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
       <BooleanValue>
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>

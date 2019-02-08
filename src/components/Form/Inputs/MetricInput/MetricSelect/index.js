@@ -2,20 +2,24 @@
 import * as React from 'react';
 import { SelectInputStyle, MetricSelectWrapperStyle } from './style';
 
+type UselessProps = {
+  isOpen?: ?boolean,
+};
+
 type OptionalProps = {
   width: string,
   height: string,
   align: 'left' | 'right' | 'center',
   toggle: () => void,
   selectedItem: any,
-  isOpen: boolean,
   getInputProps: Function,
   clearSelection: Function,
 };
 
-type Props = OptionalProps & {
-  itemToString: any => string,
-};
+type Props = OptionalProps &
+  UselessProps & {
+    itemToString: any => string,
+  };
 
 const defaultProps = {
   width: '30px',
@@ -30,8 +34,8 @@ function MetricSelect({
   selectedItem,
   getInputProps,
   itemToString,
-  isOpen,
   clearSelection,
+  isOpen,
   ...rest
 }: Props) {
   return (

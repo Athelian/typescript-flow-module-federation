@@ -5,6 +5,7 @@ import { colors, fontSizesWithHeights, presets, borderRadiuses } from 'styles/co
 type DisplayWrapperType = {
   align: 'left' | 'right' | 'center',
   width: string,
+  height: string,
   color: string,
   fontSize: string,
 };
@@ -12,6 +13,7 @@ type DisplayWrapperType = {
 export const DisplayWrapperStyle = ({
   align,
   width,
+  height,
   color,
   fontSize,
 }: DisplayWrapperType): string => css`
@@ -24,7 +26,10 @@ export const DisplayWrapperStyle = ({
   min-width: 0;
   width: ${width};
   flex: 1;
+  max-width: ${width};
   padding: 0 5px;
+  height: ${height};
+  line-height: ${height};
 `;
 
 export default DisplayWrapperStyle;
