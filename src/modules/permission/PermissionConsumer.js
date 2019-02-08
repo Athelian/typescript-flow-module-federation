@@ -2,7 +2,8 @@
 import React from 'react';
 import PermissionContext from './PermissionContext';
 
-const hasPermission = permissions => path => permissions.includes(path);
+const hasPermission = (permissions: Array<string>): Function => (path: string): boolean =>
+  permissions.includes(path);
 
 const PermissionConsumer = ({ children }: { children: Function }) => (
   <PermissionContext.Consumer>
