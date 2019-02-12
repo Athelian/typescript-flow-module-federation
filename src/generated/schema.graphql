@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Feb 05 2019 18:14:12 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Feb 11 2019 12:39:45 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27144,6 +27144,14 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
   warehouseArrivalActualDateAssignedTo: [UserPayload!]!
   archived: Boolean!
+  freeTimeStartDate: DateTime
+  freeTimeDuration: Int
+  autoCalculatedFreeTimeStartDate: Boolean!
+  yardName: String
+  departureDate: DateTime
+  departureDateAssignedTo: [UserPayload!]!
+  departureDateApprovedBy: UserPayload
+  departureDateApprovedAt: DateTime
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -27192,6 +27200,30 @@ input ContainerBatchInput {
   orderItemId: ID
   batchAssignments: [ContainerBatchAssignmentInput!]
   batchAdjustments: [ContainerBatchAdjustmentInput!]
+}
+
+input ContainerCreateInput {
+  no: String!
+  shipmentId: ID!
+  warehouseId: ID
+  departureDate: DateTime
+  departureDateApprovedById: ID
+  departureDateAssignedToIds: [ID!]
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDateAssignedToIds: [ID!]
+  freeTimeStartDate: DateTime
+  freeTimeDuration: Int
+  autoCalculatedFreeTimeStartDate: Boolean
+  yardName: String
+  representativeBatchId: ID
+  representativeBatchIndex: Int
+  batches: [ContainerBatchInput!]
+  memo: String
+  tagIds: [ID!]
 }
 
 input ContainerFilterInput {
@@ -27250,16 +27282,23 @@ input ContainerSortInput {
 
 input ContainerUpdateInput {
   no: String
-  warehouseArrivalAgreedDateApprovedById: ID
-  warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalActualDateApprovedById: ID
-  warehouseArrivalActualDate: DateTime
   warehouseId: ID
+  departureDate: DateTime
+  departureDateApprovedById: ID
+  departureDateAssignedToIds: [ID!]
+  warehouseArrivalAgreedDate: DateTime
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
+  warehouseArrivalActualDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDateAssignedToIds: [ID!]
+  freeTimeStartDate: DateTime
+  freeTimeDuration: Int
+  autoCalculatedFreeTimeStartDate: Boolean
+  yardName: String
   representativeBatchId: ID
   representativeBatchIndex: Int
   batches: [ContainerBatchInput!]
-  warehouseArrivalAgreedDateAssignedToIds: [ID!]
-  warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
 }
@@ -29737,6 +29776,7 @@ type Mutation {
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderPayload!
   orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload!]!
   orderClone(id: ID!, input: OrderUpdateInput!): OrderPayload!
+  orderItemClone(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
   batchCreate(input: BatchCreateInput!): BatchPayload!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchPayload!
   batchUpdateMany(batches: [BatchUpdateWrapperInput!]!): [BatchPayload!]!
@@ -29748,6 +29788,8 @@ type Mutation {
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
   shipmentUpdateMany(shipments: [ShipmentUpdateWrapperInput!]!): [ShipmentPayload!]!
   shipmentClone(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
+  containerCreate(input: ContainerCreateInput!): ContainerPayload!
+  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
   warehouseCreate(input: WarehouseCreateInput!): WarehousePayload!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehousePayload!
   warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): [WarehousePayload!]!
@@ -29768,8 +29810,6 @@ type Mutation {
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
-  containerUpdate(id: ID!, input: ContainerUpdateInput!): ContainerPayload!
-  orderItemClone(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
 }
 
 type NotFound {
@@ -35516,6 +35556,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   batchesWithoutContainer: [BatchPayload!]!
   integrationLinks: [IntegrationLinkPayload!]!
   containers: [ContainerPayload!]!
+  importer: GroupPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -35582,21 +35623,37 @@ input ShipmentContainerCreateInput {
   warehouseArrivalActualDateAssignedToIds: [ID!]
   memo: String
   tagIds: [ID!]
+  freeTimeStartDate: DateTime
+  freeTimeDuration: Int
+  autoCalculatedFreeTimeStartDate: Boolean
+  yardName: String
+  departureDate: DateTime
+  departureDateAssignedToIds: [ID!]
+  departureDateApprovedById: ID
+  departureDateApprovedAt: DateTime
 }
 
 input ShipmentContainerUpdateInput {
   id: ID
   no: String
-  warehouseArrivalAgreedDateApprovedById: ID
+  departureDate: DateTime
+  departureDateAssignedToIds: [ID!]
+  departureDateApprovedById: ID
+  departureDateApprovedAt: DateTime
   warehouseArrivalAgreedDate: DateTime
-  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalAgreedDateApprovedById: ID
+  warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDate: DateTime
+  warehouseArrivalActualDateApprovedById: ID
+  warehouseArrivalActualDateAssignedToIds: [ID!]
   warehouseId: ID
   representativeBatchId: ID
   representativeBatchIndex: Int
   batches: [ShipmentBatchInput!]
-  warehouseArrivalAgreedDateAssignedToIds: [ID!]
-  warehouseArrivalActualDateAssignedToIds: [ID!]
+  freeTimeStartDate: DateTime
+  freeTimeDuration: Int
+  autoCalculatedFreeTimeStartDate: Boolean
+  yardName: String
   memo: String
   tagIds: [ID!]
 }
@@ -35624,6 +35681,7 @@ input ShipmentCreateInput {
   memo: String
   customFields: CustomFieldsInput
   containers: [ShipmentContainerCreateInput!]
+  importerId: ID
 }
 
 input ShipmentFilterInput {
@@ -35691,6 +35749,7 @@ input ShipmentUpdateInput {
   memo: String
   customFields: CustomFieldsInput
   containers: [ShipmentContainerUpdateInput!]
+  importerId: ID
 }
 
 input ShipmentUpdateWrapperInput {
@@ -35741,10 +35800,9 @@ interface Supervised {
   inCharges: [UserPayload!]!
 }
 
-type Tag implements Model & Owned & Memorizable {
+type Tag implements Model & Owned {
   name: String!
-  memo: String
-  description: String @deprecated(reason: "use memo instead")
+  description: String
   color: String!
   entityTypes: [TagEntityType!]!
   id: ID!
@@ -36036,7 +36094,7 @@ input VoyageNestedInput {
 
 union VoyagePayload = Voyage | BadRequest | Forbidden | NotFound
 
-type Warehouse implements Model & Owned & Customizable {
+type Warehouse implements Model & Owned & Supervised & Customizable {
   archived: Boolean!
   name: String!
   no: String
@@ -36054,6 +36112,7 @@ type Warehouse implements Model & Owned & Customizable {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: GroupPayload!
+  inCharges: [UserPayload!]!
   customFields: CustomFields!
 }
 
@@ -36067,6 +36126,7 @@ input WarehouseCreateInput {
   postalCode: String
   country: Country
   customFields: CustomFieldsInput
+  inChargeIds: [ID!]
 }
 
 input WarehouseFilterInput {
@@ -36103,6 +36163,7 @@ input WarehouseUpdateInput {
   postalCode: String
   country: Country
   customFields: CustomFieldsInput
+  inChargeIds: [ID!]
 }
 
 input WarehouseUpdateWrapperInput {
