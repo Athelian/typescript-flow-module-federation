@@ -31,8 +31,6 @@ const AsyncBatch = lazy(() => import('./modules/batch'));
 
 const AsyncRelationMap = lazy(() => import('./modules/relationMap'));
 
-const AsyncRelationMapBeta = lazy(() => import('./modules/relationMapBeta'));
-
 const AsyncNotifications = lazy(() => import('./modules/notifications'));
 
 const AsyncMetadata = lazy(() => import('./modules/metadata'));
@@ -56,7 +54,6 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncStaff path="staff/*" />
           <AsyncTags path="tags/*" />
           <AsyncRelationMap path="relation-map/*" />
-          <AsyncRelationMapBeta path="relation-map-beta/*" />
           <AsyncNotifications path="notifications/*" />
           <AsyncMetadata path="metadata/*" />
           <AsyncTableTemplate path="template/*" />
