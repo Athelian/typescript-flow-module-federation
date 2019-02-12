@@ -113,9 +113,7 @@ export default class TagsInput extends React.Component<Props, State> {
     }
   };
 
-  computeFilteredTags = (input: string): Array<TagType> => {
-    const { tags } = this.props;
-
+  computeFilteredTags = (tags: Array<TagType>, input: string): Array<TagType> => {
     return matchSorter(tags, input, {
       keys: ['name'],
     });
@@ -218,7 +216,7 @@ export default class TagsInput extends React.Component<Props, State> {
                             </button>
                             {isOpen && (
                               <div className={ListWrapperStyle}>
-                                {this.computeFilteredTags(inputValue).map((tag, index) => {
+                                {this.computeFilteredTags(tags, inputValue).map((tag, index) => {
                                   const isActive = highlightedIndex === index;
                                   const isSelected =
                                     values && values.map(t => t.id).includes(tag.id);
