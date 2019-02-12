@@ -6,7 +6,7 @@ import StoryBookWrapper from 'components/StoryBookWrapper';
 import { ToggleInput, Label } from 'components/Form';
 import { TextInputFactory } from 'modules/form/factories';
 
-storiesOf('Input Factories', module).add('Text Input Factory', () => (
+storiesOf('Form/Inputs/Text Input', module).add('Text Input Factory', () => (
   <StoryBookWrapper>
     <ObjectValue
       defaultValue={{

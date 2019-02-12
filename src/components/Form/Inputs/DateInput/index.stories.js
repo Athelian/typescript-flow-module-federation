@@ -6,7 +6,7 @@ import { StringValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { FieldItem, Label, DefaultStyle, DateInput } from 'components/Form';
 
-storiesOf('Inputs', module).add('Date Input', () => (
+storiesOf('Form/Inputs/Date Input', module).add('Date Input', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <StringValue>

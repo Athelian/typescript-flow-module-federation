@@ -7,7 +7,7 @@ import StoryBookWrapper from 'components/StoryBookWrapper';
 import { ToggleInput, Label } from 'components/Form';
 import { NumberInputFactory } from 'modules/form/factories';
 
-storiesOf('Input Factories', module).add('Number Input Factory', () => (
+storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <>

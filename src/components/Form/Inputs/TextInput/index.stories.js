@@ -5,7 +5,7 @@ import { StringValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { FieldItem, Label, DefaultStyle, TextInput } from 'components/Form';
 
-storiesOf('Inputs', module).add('Text Input', () => (
+storiesOf('Form/Inputs/Text Input', module).add('Text Input', () => (
   <StoryBookWrapper>
     <StringValue>
       {({ value: currentFocused, set: onFocus, clear: onBlur }) => {
