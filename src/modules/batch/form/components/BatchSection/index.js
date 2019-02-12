@@ -237,7 +237,6 @@ const BatchSection = ({ isNew, selectable }: Props) => (
               }
               input={
                 <TagsInput
-                  editable={isNew}
                   id="tags"
                   name="tags"
                   tagType="Batch"

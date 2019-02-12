@@ -1,23 +1,254 @@
 // @flow
 import * as React from 'react';
-import Permission from 'components/common/Permission';
-import type { PermissionProps } from 'components/common/Permission/type.js.flow';
+import Downshift from 'downshift';
+import matchSorter from 'match-sorter';
 import TagListProvider from 'providers/TagListProvider';
 import type { TagsQueryType } from 'providers/TagListProvider/type.js.flow';
-import type { Props as TagsInputProps } from './type.js.flow';
-import BaseTagsInput from './BaseTagsInput';
+import Icon from 'components/Icon';
+import HoverWrapper from 'components/common/HoverWrapper';
+import Tag from 'components/Tag';
+import type { Tag as TagType } from 'components/Tag/type.js.flow';
+import { HoverStyle } from 'components/common/HoverWrapper/style';
+import {
+  WrapperStyle,
+  SelectionWrapperStyle,
+  ListWrapperStyle,
+  InputStyle,
+  RemoveStyle,
+  ExpandButtonStyle,
+  ArrowDownStyle,
+  ItemStyle,
+  SelectedWrapperStyle,
+} from './style';
 
-type Props = PermissionProps & TagsInputProps & { tagType: TagsQueryType, onChange: Function };
+type Props = {
+  tagType: TagsQueryType,
+  name: string,
+  id?: string,
+  editable: boolean,
+  values: ?Array<TagType>,
+  tags: Array<TagType>,
+  disabled?: boolean,
+  type?: string,
+  value?: string,
+  placeholder?: string,
+  onChange?: Function,
+  onBlur?: Function,
+  onFocus?: Function,
+};
+type State = {
+  focused: boolean,
+};
 
-export default function TagsInput(props: Props) {
-  const { permissions, tagType, ...rest } = props;
-  return (
-    <TagListProvider tagType={tagType}>
-      {({ data }) => (
-        <Permission permissions={permissions}>
-          {allowActions => <BaseTagsInput tags={data} {...rest} {...allowActions} />}
-        </Permission>
-      )}
-    </TagListProvider>
-  );
+const defaultProps = {
+  disabled: false,
+  editable: true,
+};
+
+export default class TagsInput extends React.Component<Props, State> {
+  static defaultProps = defaultProps;
+
+  state = {
+    focused: false,
+  };
+
+  handleChange = (tags: Array<TagType>) => {
+    const { name, onChange } = this.props;
+
+    if (onChange) {
+      onChange(name, tags);
+    }
+  };
+
+  handleBlur = () => {
+    const { name, onBlur } = this.props;
+    if (onBlur) {
+      onBlur(name, true);
+    }
+  };
+
+  handleAdd = (tag: TagType) => {
+    const { values } = this.props;
+
+    if (values) {
+      this.handleChange([...values, tag]);
+    } else {
+      this.handleChange([tag]);
+    }
+  };
+
+  handleRemove = (tag: TagType) => {
+    const { values } = this.props;
+
+    if (values) this.handleChange(values.filter(t => t.id !== tag.id));
+  };
+
+  handleDownshiftChange = (selectedItem: TagType) => {
+    const { values } = this.props;
+
+    if (values && values.map(t => t.id).includes(selectedItem.id)) {
+      this.handleRemove(selectedItem);
+    } else {
+      this.handleAdd(selectedItem);
+    }
+  };
+
+  handleStateChange = ({ isOpen }: Object) => {
+    if (isOpen === false) {
+      this.handleBlur();
+    }
+  };
+
+  stateReducer = (state: Object, changes: Object) => {
+    switch (changes.type) {
+      case Downshift.stateChangeTypes.keyDownEnter:
+      case Downshift.stateChangeTypes.clickItem:
+        return {
+          ...changes,
+          isOpen: true,
+          inputValue: '',
+        };
+      default:
+        return changes;
+    }
+  };
+
+  computeFilteredTags = (input: string): Array<TagType> => {
+    const { tags } = this.props;
+
+    return matchSorter(tags, input, {
+      keys: ['name'],
+    });
+  };
+
+  handleInputFocus = () => {
+    this.setState({ focused: true });
+  };
+
+  handleInputBlur = () => {
+    this.setState({ focused: false });
+    this.handleBlur();
+  };
+
+  render() {
+    const { editable, tagType, disabled, values, name, id } = this.props;
+    const { focused } = this.state;
+
+    return (
+      <TagListProvider tagType={tagType}>
+        {({ data: tags }) => (
+          <HoverWrapper>
+            {isHover => (
+              <div className={HoverStyle}>
+                <Downshift
+                  itemCount={tags.length}
+                  itemToString={i => (i ? i.id : '')}
+                  selectedItem={null}
+                  onChange={this.handleDownshiftChange}
+                  onStateChange={this.handleStateChange}
+                  stateReducer={this.stateReducer}
+                  labelId={`${name}TagInputs`}
+                >
+                  {({
+                    getInputProps,
+                    getToggleButtonProps,
+                    getItemProps,
+                    isOpen,
+                    inputValue,
+                    highlightedIndex,
+                    clearSelection,
+                    reset,
+                  }) => (
+                    <div className={WrapperStyle(focused, !!disabled, !!editable)}>
+                      <div className={SelectionWrapperStyle}>
+                        {values &&
+                          values.map(tag => (
+                            <Tag
+                              key={tag.id}
+                              tag={tag}
+                              suffix={
+                                editable && (
+                                  <button
+                                    type="button"
+                                    className={RemoveStyle}
+                                    onClick={() => {
+                                      this.handleRemove(tag);
+                                    }}
+                                  >
+                                    <Icon icon="CLEAR" />
+                                  </button>
+                                )
+                              }
+                            />
+                          ))}
+                        {editable && (
+                          <div className={InputStyle(isHover)}>
+                            <input
+                              type="text"
+                              {...getInputProps({
+                                spellCheck: false,
+                                disabled,
+                                onKeyDown: e => {
+                                  switch (e.key) {
+                                    case 'Backspace':
+                                      if (!inputValue && values && values.length > 0 && !e.repeat) {
+                                        this.handleRemove(values[values.length - 1]);
+                                      }
+                                      break;
+                                    default:
+                                  }
+                                },
+                                onFocus: this.handleInputFocus,
+                                onBlur: () => {
+                                  this.handleInputBlur();
+                                  reset();
+                                  clearSelection();
+                                },
+                                ...(id ? { id } : {}),
+                              })}
+                            />
+
+                            <button
+                              {...getToggleButtonProps()}
+                              type="button"
+                              className={ExpandButtonStyle}
+                              disabled={disabled}
+                            >
+                              <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
+                            </button>
+                            {isOpen && (
+                              <div className={ListWrapperStyle}>
+                                {this.computeFilteredTags(inputValue).map((tag, index) => {
+                                  const isActive = highlightedIndex === index;
+                                  const isSelected =
+                                    values && values.map(t => t.id).includes(tag.id);
+
+                                  return (
+                                    <div
+                                      key={tag.id}
+                                      className={ItemStyle(isActive)}
+                                      {...getItemProps({ item: tag })}
+                                    >
+                                      <div className={SelectedWrapperStyle(isActive)}>
+                                        {isSelected && <Icon icon="CONFIRM" />}
+                                      </div>
+                                      <Tag tag={tag} />
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </Downshift>
+              </div>
+            )}
+          </HoverWrapper>
+        )}
+      </TagListProvider>
+    );
+  }
 }

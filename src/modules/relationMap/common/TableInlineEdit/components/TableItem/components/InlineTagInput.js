@@ -16,7 +16,6 @@ export default function InlineTagInput({ name, tagType, values, id }: Props) {
   return (
     <TagsInput
       id={`input-${id}`}
-      editable={false}
       name={name}
       tagType={tagType}
       values={values}

@@ -127,7 +127,7 @@ const ProductSection = ({ isNew }: Props) => (
               </div>
             )}
           </Subscribe>
-          <GridColumn>
+          <GridColumn maxWidth="400px">
             <FormField
               name="name"
               initValue={values.name}
@@ -236,7 +236,6 @@ const ProductSection = ({ isNew }: Props) => (
                     }
                     input={
                       <TagsInput
-                        editable={isNew}
                         id="tags"
                         name="tags"
                         tagType="Product"
