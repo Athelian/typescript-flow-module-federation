@@ -8,7 +8,7 @@ import StoryBookWrapper from 'components/StoryBookWrapper';
 import { ToggleInput, Label } from 'components/Form';
 import { EnumSelectInputFactory } from 'modules/form/factories';
 
-storiesOf('Input Factories', module).add('Enum Select Input Factory', () => (
+storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factory', () => (
   <StoryBookWrapper>
     <ApolloProvider client={apolloClient}>
       <>

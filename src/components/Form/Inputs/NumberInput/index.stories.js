@@ -6,7 +6,7 @@ import { StringValue, NumberValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { FieldItem, Label, DefaultStyle, NumberInput } from 'components/Form';
 
-storiesOf('Inputs', module).add('Number Input', () => (
+storiesOf('Form/Inputs/Number Input', module).add('Number Input', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <StringValue>

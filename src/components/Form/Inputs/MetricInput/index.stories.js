@@ -6,7 +6,7 @@ import { StringValue, ObjectValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { FieldItem, Label, DefaultStyle, MetricInput } from 'components/Form';
 
-storiesOf('Inputs', module).add('Metric Input', () => (
+storiesOf('Form/Inputs/Metric Input', module).add('Metric Input', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <StringValue>

@@ -7,7 +7,7 @@ import StoryBookWrapper from 'components/StoryBookWrapper';
 import { ToggleInput, Label } from 'components/Form';
 import { MetricInputFactory } from 'modules/form/factories';
 
-storiesOf('Input Factories', module).add('Metric Input Factory', () => (
+storiesOf('Form/Inputs/Metric Input', module).add('Metric Input Factory', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <>
