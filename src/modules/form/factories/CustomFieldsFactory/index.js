@@ -15,12 +15,12 @@ import SlideView from 'components/SlideView';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import CustomFieldsForm from './CustomFieldsForm';
 import CustomFieldsContainer from './container';
-import { ShowAllButtonStyle, MetadataIconStyle } from './style';
+import { ShowAllButtonStyle, CustomFieldsIconStyle } from './style';
 
 type Props = {
   entityType: string,
   customFields: {
-    mask: Object,
+    mask: ?Object,
     fieldValues: Array<Object>,
     fieldDefinitions: Array<Object>,
   },
@@ -34,14 +34,12 @@ const CustomFieldsFactory = ({ entityType, customFields, setFieldValue }: Props)
         <Label>
           <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
           {' ('}
-          <FormattedNumber
-            value={(customFields.fieldValues && customFields.fieldValues.length) || 0}
-          />
+          <FormattedNumber value={customFields.fieldValues ? customFields.fieldValues.length : 0} />
           {')'}
         </Label>
       }
       tooltip={
-        <div className={MetadataIconStyle}>
+        <div className={CustomFieldsIconStyle}>
           <Icon icon="METADATA" />
         </div>
       }
@@ -91,40 +89,36 @@ const CustomFieldsFactory = ({ entityType, customFields, setFieldValue }: Props)
 
                       return (
                         <Subscribe to={[CustomFieldsContainer]}>
-                          {({ initDetailValues, originalValues, state }) => {
-                            const values = { ...originalValues, ...state };
-                            return (
-                              <CustomFieldsForm
-                                entityType={entityType}
-                                fieldDefinitions={fieldDefinitions}
-                                onCancel={() => slideToggle(false)}
-                                onSave={() => {
-                                  if (values.mask) {
-                                    setFieldValue('customFields', {
-                                      mask: values.mask,
-                                      fieldDefinitions: values.fieldDefinitions,
-                                      fieldValues: values.fieldValues.filter(fieldValue =>
-                                        contains(
-                                          fieldValue.fieldDefinition,
-                                          values.mask.fieldDefinitions
-                                        )
-                                      ),
-                                    });
-                                  } else {
-                                    setFieldValue('customFields', values);
-                                  }
-                                  slideToggle(false);
-                                }}
-                                onFormReady={() => {
-                                  initDetailValues({
-                                    mask: customFields.mask,
-                                    fieldDefinitions,
-                                    fieldValues,
+                          {({ initDetailValues }) => (
+                            <CustomFieldsForm
+                              entityType={entityType}
+                              onCancel={() => slideToggle(false)}
+                              onSave={(value: Object) => {
+                                if (value.mask) {
+                                  setFieldValue('customFields', {
+                                    mask: value.mask,
+                                    fieldDefinitions: value.fieldDefinitions,
+                                    fieldValues: value.fieldValues.filter(fieldValue =>
+                                      contains(
+                                        fieldValue.fieldDefinition,
+                                        value.mask.fieldDefinitions
+                                      )
+                                    ),
                                   });
-                                }}
-                              />
-                            );
-                          }}
+                                } else {
+                                  setFieldValue('customFields', value);
+                                }
+                                slideToggle(false);
+                              }}
+                              onFormReady={() => {
+                                initDetailValues({
+                                  mask: customFields.mask,
+                                  fieldDefinitions,
+                                  fieldValues,
+                                });
+                              }}
+                            />
+                          )}
                         </Subscribe>
                       );
                     }}

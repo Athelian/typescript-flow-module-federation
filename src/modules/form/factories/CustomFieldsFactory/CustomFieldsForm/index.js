@@ -13,7 +13,7 @@ import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
-import { SectionHeader, SectionWrapper, Label, DashedPlusButton } from 'components/Form';
+import { SectionHeader, SectionWrapper, Label, DashedPlusButton, FieldItem } from 'components/Form';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import CustomFieldsContainer from 'modules/form/factories/CustomFieldsFactory/container';
@@ -48,7 +48,7 @@ class CustomFieldsForm extends React.Component<Props> {
 
     return (
       <Subscribe to={[CustomFieldsContainer]}>
-        {({ originalValues, state, setFieldArrayValue, isDirty }) => {
+        {({ originalValues, state, setFieldValue, isDirty }) => {
           const values = { ...originalValues, ...state };
           const { mask, fieldValues } = values;
           return (
@@ -60,21 +60,16 @@ class CustomFieldsForm extends React.Component<Props> {
                     <SectionTabs
                       link="metadataSection"
                       label={
-                        <>
-                          <FormattedMessage
-                            id="modules.metadata.sectionHeader"
-                            defaultMessage="CUSTOM FIELDS"
-                          />
-                          {' ('}
-                          <FormattedNumber value={fieldValues.length} />
-                          {')'}
-                        </>
+                        <FormattedMessage
+                          id="modules.metadata.sectionHeader"
+                          defaultMessage="CUSTOM FIELDS"
+                        />
                       }
                       icon="METADATA"
                     />
                   </JumpToSection>
                   <CancelButton onClick={onCancel} />
-                  <SaveButton disabled={!isDirty()} onClick={onSave} />
+                  <SaveButton disabled={!isDirty()} onClick={() => onSave(values)} />
                 </SlideViewNavBar>
               }
             >
@@ -94,69 +89,69 @@ class CustomFieldsForm extends React.Component<Props> {
                       </>
                     }
                   />
-                </SectionWrapper>
-                <div className={CustomFieldsSectionWrapperStyle}>
-                  <div>
-                    <Label>
-                      <FormattedMessage id="modules.form.template" defaultMessage="TEMPLATE" />
-                    </Label>
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          {!mask ? (
-                            <DashedPlusButton
-                              width="195px"
-                              height="217px"
-                              onClick={() => slideToggle(true)}
-                            />
-                          ) : (
-                            <MaskCard
-                              selectable
-                              mask={mask}
-                              onSelect={() => slideToggle(true)}
-                              readOnly
-                            />
+                  <div className={CustomFieldsSectionWrapperStyle}>
+                    <FieldItem
+                      vertical
+                      label={
+                        <Label>
+                          <FormattedMessage id="modules.form.template" defaultMessage="TEMPLATE" />
+                        </Label>
+                      }
+                      input={
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) => (
+                            <>
+                              {!mask ? (
+                                <DashedPlusButton
+                                  width="195px"
+                                  height="140px"
+                                  onClick={() => slideToggle(true)}
+                                />
+                              ) : (
+                                <MaskCard mask={mask} onClick={() => slideToggle(true)} />
+                              )}
+
+                              <SlideView
+                                isOpen={opened}
+                                onRequestClose={() => slideToggle(false)}
+                                options={{ width: '980px' }}
+                              >
+                                {opened && (
+                                  <CustomFieldsTemplateSelector
+                                    entityType={entityType}
+                                    selected={mask}
+                                    onCancel={() => slideToggle(false)}
+                                    onSave={item => {
+                                      setFieldValue('mask', item);
+                                      slideToggle(false);
+                                    }}
+                                  />
+                                )}
+                              </SlideView>
+                            </>
                           )}
+                        </BooleanValue>
+                      }
+                    />
 
-                          <SlideView
-                            isOpen={opened}
-                            onRequestClose={() => slideToggle(false)}
-                            options={{ width: '980px' }}
-                          >
-                            {opened && (
-                              <CustomFieldsTemplateSelector
-                                entityType={entityType}
-                                selected={mask}
-                                onCancel={() => slideToggle(false)}
-                                onSave={item => {
-                                  setFieldArrayValue('mask', item);
-                                  slideToggle(false);
-                                }}
-                              />
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
+                    <Divider />
+                    <GridColumn gap="10px">
+                      {fieldValues &&
+                        fieldValues.map(({ value, fieldDefinition }, index) =>
+                          mask == null || contains(fieldDefinition, mask.fieldDefinitions) ? (
+                            <DefaultCustomFieldStyle
+                              key={fieldDefinition.id}
+                              isKeyReadOnly
+                              targetName={`fieldValues.${index}`}
+                              fieldName={fieldDefinition.name}
+                              value={value}
+                              setFieldArrayValue={setFieldValue}
+                            />
+                          ) : null
+                        )}
+                    </GridColumn>
                   </div>
-
-                  <Divider />
-                  <GridColumn gap="10px">
-                    {fieldValues &&
-                      fieldValues.map(({ value, fieldDefinition }, index) =>
-                        mask == null || contains(fieldDefinition, mask.fieldDefinitions) ? (
-                          <DefaultCustomFieldStyle
-                            key={fieldDefinition.id}
-                            isKeyReadOnly
-                            targetName={`fieldValues.${index}`}
-                            fieldName={fieldDefinition.name}
-                            value={value}
-                            setFieldArrayValue={setFieldArrayValue}
-                          />
-                        ) : null
-                      )}
-                  </GridColumn>
-                </div>
+                </SectionWrapper>
               </div>
             </Layout>
           );

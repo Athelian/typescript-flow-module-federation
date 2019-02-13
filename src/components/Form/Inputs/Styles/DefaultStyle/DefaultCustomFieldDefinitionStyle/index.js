@@ -35,7 +35,7 @@ const defaultProps = {
   value: {},
 };
 
-const DefaultCustomFieldStyle = ({
+const DefaultCustomFieldDefinitionStyle = ({
   rearrange,
   isKeyReadOnly,
   isValueReadOnly,
@@ -113,6 +113,6 @@ const DefaultCustomFieldStyle = ({
   </div>
 );
 
-DefaultCustomFieldStyle.defaultProps = defaultProps;
+DefaultCustomFieldDefinitionStyle.defaultProps = defaultProps;
 
-export default DefaultCustomFieldStyle;
+export default DefaultCustomFieldDefinitionStyle;

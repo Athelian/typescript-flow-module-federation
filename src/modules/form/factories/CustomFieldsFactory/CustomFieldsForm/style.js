@@ -11,7 +11,7 @@ export const CustomFieldsFormWrapperStyle: string = css`
 export const CustomFieldsSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 40px 100px;
+  padding: 40px 235px;
   ${layout.GRID_VERTICAL};
   grid-gap: 20px;
   align-items: center;

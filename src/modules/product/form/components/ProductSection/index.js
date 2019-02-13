@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { FormField } from 'modules/form';
 import { textInputFactory, customFieldsInputFactory } from 'modules/form/helpers';
+import { CustomFieldsFactory } from 'modules/form/factories';
 import Icon from 'components/Icon';
 import {
   ProductInfoContainer,
@@ -224,6 +225,11 @@ const ProductSection = ({ isNew }: Props) => (
               customFields: values.customFields,
               setFieldValue,
             })}
+            <CustomFieldsFactory
+              entityType="Product"
+              customFields={values.customFields}
+              setFieldValue={setFieldValue}
+            />
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>
                 {({ state: { tags }, setFieldValue: changeTags }) => (
