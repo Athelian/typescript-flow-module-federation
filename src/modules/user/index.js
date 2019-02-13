@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Raven from 'raven-js';
+import * as Sentry from '@sentry/browser';
 import { Query } from 'react-apollo';
 import { LanguageConsumer } from 'modules/language';
 import { FullStoryAPI } from 'react-fullstory';
@@ -64,7 +64,10 @@ const UserProvider = ({ children }: Props) => (
             email,
             name: `${lastName} ${firstName}`,
           };
-          Raven.setUserContext({ email, id });
+          Sentry.configureScope(scope => {
+            scope.setUser({ email, id });
+          });
+
           if (isAppInProduction) {
             FullStoryAPI('identify', id, {
               name: `${lastName} ${firstName}`,
