@@ -1,6 +1,7 @@
 // @flow
 import CustomFieldsFactory from './CustomFieldsFactory';
 import DateInputFactory from './DateInputFactory';
+import DayInputFactory from './DayInputFactory';
 import EnumSearchSelectInputFactory from './EnumSearchSelectInputFactory';
 import EnumSelectInputFactory from './EnumSelectInputFactory';
 import MetricInputFactory from './MetricInputFactory';
@@ -10,6 +11,7 @@ import TextInputFactory from './TextInputFactory';
 export {
   CustomFieldsFactory,
   DateInputFactory,
+  DayInputFactory,
   EnumSearchSelectInputFactory,
   EnumSelectInputFactory,
   MetricInputFactory,

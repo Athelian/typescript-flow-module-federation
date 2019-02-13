@@ -10,8 +10,8 @@ type OptionalProps = {
   onFocus: ?Function,
   align: 'left' | 'right' | 'center',
   readOnly: boolean,
-  readOnlyWidth?: string,
-  readOnlyHeight?: string,
+  readOnlyWidth: string,
+  readOnlyHeight: string,
 };
 
 export type InputProps = OptionalProps;
@@ -25,6 +25,8 @@ export const defaultInputProps = {
   onFocus: null,
   align: 'right',
   readOnly: false,
+  readOnlyWidth: '200px',
+  readOnlyHeight: '30px',
 };
 
 export default defaultInputProps;
