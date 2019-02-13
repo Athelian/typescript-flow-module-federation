@@ -1,8 +1,11 @@
 // @flow
 import { intersection } from 'lodash';
+import type { IntlShape } from 'react-intl';
 import { removeTypename } from 'utils/data';
+import { getByPathWithDefault, compose } from 'utils/fp';
+import { formatToDateLabel } from 'utils/date';
 import logger from 'utils/logger';
-import { prepareCustomFieldsData } from 'utils/customFields';
+import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
 import {
   formatTimeline,
   formatContainerGroups,
@@ -88,51 +91,6 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
       }
     });
   });
-  // orderIds.forEach(orderId => {
-  //   const order = entities.orders[orderId];
-  //   if (order && order.orderItems) {
-  //     selected.ORDER_ITEM.push(...order.orderItems);
-  //     order.orderItems.forEach(orderItemId => {
-  //       const orderItem = entities.orderItems[orderItemId];
-  //       if (orderItem && orderItem.batches) {
-  //         selected.BATCH.push(...orderItem.batches);
-  //       }
-  //     });
-  //   }
-  // });
-  // orderItemIds.forEach(orderItemId => {
-  //   const orderItem = entities.orderItems[orderItemId];
-  //   if (orderItem && orderItem.order) {
-  //     selected.ORDER.push(orderItem.order);
-  //   }
-  //   if (orderItem && orderItem.batches) {
-  //     selected.BATCH.push(...orderItem.batches);
-  //   }
-  // });
-  // batchIds.forEach(batchId => {
-  //   const batch = entities.batches[batchId];
-  //   const orderItem = entities.orderItems[batch.orderItem];
-  //   if (batch.orderItem) {
-  //     selected.ORDER_ITEM.push(batch.orderItem);
-  //   }
-  //   if (orderItem && orderItem.order) {
-  //     selected.ORDER.push(orderItem.order);
-  //   }
-  // });
-  // shipmentIds.forEach(shipmentId => {
-  //   const shipment = entities.shipments[shipmentId];
-  //   selected.BATCH.push(...shipment.batches);
-  //   shipment.batches.forEach(batchId => {
-  //     const batch = entities.batches[batchId];
-  //     const orderItem = entities.orderItems[batch.orderItem];
-  //     if (batch.orderItem) {
-  //       selected.ORDER_ITEM.push(batch.orderItem);
-  //     }
-  //     if (orderItem && orderItem.order) {
-  //       selected.ORDER.push(orderItem.order);
-  //     }
-  //   });
-  // });
 
   return {
     orderIds: [...new Set(selected.ORDER)],
@@ -157,12 +115,12 @@ export const findAllPossibleOrders = (
   }
 ): {
   orderIds: Array<string>,
-  orderItemsIds: Array<string>,
+  orderItemIds: Array<string>,
   batchIds: Array<string>,
   shipmentIds: Array<string>,
 } => {
   const orderIds = selected.order ? Object.keys(selected.order) : [];
-  const orderItemsIds = selected.orderItem ? Object.keys(selected.orderItem) : [];
+  const orderItemIds = selected.orderItem ? Object.keys(selected.orderItem) : [];
   const batchIds = selected.batch ? Object.keys(selected.batch) : [];
   const shipmentIds = selected.shipment ? Object.keys(selected.shipment) : [];
 
@@ -172,14 +130,14 @@ export const findAllPossibleOrders = (
     (Object.entries(mappingObjects.order): any).forEach((item: [string, MappingObject]) => {
       const [orderId, order] = item;
       if (selected.order && selected.order[orderId]) {
-        orderItemsIds.push(...Object.keys(order.relation.orderItem));
+        orderItemIds.push(...Object.keys(order.relation.orderItem));
         batchIds.push(...Object.keys(order.relation.batch));
         shipmentIds.push(...Object.keys(order.relation.shipment));
       }
     });
   }
 
-  if (orderItemsIds.length) {
+  if (orderItemIds.length) {
     // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
     (Object.entries(mappingObjects.orderItem): any).forEach((item: [string, MappingObject]) => {
       const [orderItemId, orderItem] = item;
@@ -197,7 +155,7 @@ export const findAllPossibleOrders = (
       const [shipmentId, shipment] = item;
       if (selected.shipment && selected.shipment[shipmentId]) {
         orderIds.push(...Object.keys(shipment.relation.order));
-        orderItemsIds.push(...Object.keys(shipment.relation.orderItem));
+        orderItemIds.push(...Object.keys(shipment.relation.orderItem));
         batchIds.push(...Object.keys(shipment.relation.batch));
       }
     });
@@ -209,7 +167,7 @@ export const findAllPossibleOrders = (
       const [batchId, batch] = item;
       if (selected.batch && selected.batch[batchId]) {
         orderIds.push(...Object.keys(batch.relation.order));
-        orderItemsIds.push(...Object.keys(batch.relation.orderItem));
+        orderItemIds.push(...Object.keys(batch.relation.orderItem));
         shipmentIds.push(...Object.keys(batch.relation.shipment));
       }
     });
@@ -217,7 +175,7 @@ export const findAllPossibleOrders = (
 
   return {
     orderIds: [...new Set(orderIds)],
-    orderItemsIds: [...new Set(orderItemsIds)],
+    orderItemIds: [...new Set(orderItemIds)],
     batchIds: [...new Set(batchIds)],
     shipmentIds: [...new Set(shipmentIds)],
   };
@@ -486,3 +444,163 @@ export const parseChangedData = (
     products: [],
   };
 };
+
+export const getFieldValueByType = (type: string) => (value: any) => {
+  switch (type) {
+    case 'date':
+    case 'timeline':
+      return value ? formatToDateLabel(value) : '';
+    case 'number':
+    default:
+      return `${value}` || '';
+  }
+};
+export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
+  const fieldValues: Array<string> = (fields: Array<Object>).map(
+    ({ name, type, getExportValue }): any => {
+      const getValueFunction = getExportValue || getByPathWithDefault('', name);
+      const value = compose(
+        getFieldValueByType(type),
+        getValueFunction
+      )(values);
+      return value;
+    }
+  );
+  return fieldValues;
+}
+
+export function getEmptyValues(fields: Array<Object>) {
+  return (fields.map(() => ''): Array<string>);
+}
+
+export function getCustomFieldValues(fields: Array<Object>, values: Array<Object>) {
+  const customFields = getByPathWithDefault(
+    {
+      mask: null,
+      fieldDefinitions: [],
+      fieldValues: [],
+    },
+    'customFields',
+    values
+  );
+  const { fieldValues } = customFields;
+  const fieldValueMap = list2Map(fieldValues);
+  const customFieldValues: Array<string> = fields.map(({ id }) => {
+    const fieldValue = fieldValueMap.get(id);
+    return fieldValue ? fieldValue.value.string : '';
+  });
+  return customFieldValues;
+}
+
+export function getExportColumns(
+  intl: IntlShape,
+  {
+    orderColumnFieldsFilter,
+    orderItemColumnFieldsFilter,
+    batchColumnFieldsFilter,
+    shipmentColumnFieldsFilter,
+    orderCustomFieldsFilter,
+    orderItemCustomFieldsFilter,
+    batchCustomFieldsFilter,
+    shipmentCustomFieldsFilter,
+  }: Object
+): Array<string> {
+  const allColumns = [
+    ...orderColumnFieldsFilter,
+    ...orderCustomFieldsFilter,
+    ...orderItemColumnFieldsFilter,
+    ...orderItemCustomFieldsFilter,
+    ...batchColumnFieldsFilter,
+    ...batchCustomFieldsFilter,
+    ...shipmentColumnFieldsFilter,
+    ...shipmentCustomFieldsFilter,
+  ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
+  return allColumns;
+}
+
+export function getExportRows(info: Object): Array<Array<?string>> {
+  const {
+    data: { editData, mappingObjects },
+    ids: { orderIds, orderItemIds, batchIds },
+    columns: {
+      orderColumnFieldsFilter,
+      orderItemColumnFieldsFilter,
+      batchColumnFieldsFilter,
+      shipmentColumnFieldsFilter,
+      orderCustomFieldsFilter,
+      orderItemCustomFieldsFilter,
+      batchCustomFieldsFilter,
+      shipmentCustomFieldsFilter,
+    },
+  } = info;
+  const rows = [];
+  orderIds.forEach(orderId => {
+    const order = mappingObjects.order[orderId];
+    if (!order) return null;
+    const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+      item => order.relation.orderItem[item.data.id] && orderItemIds.includes(item.data.id)
+    );
+    const orderData = editData.orders[orderId];
+    const orderValues = getFieldValues(orderColumnFieldsFilter, orderData);
+    const orderCustomValues = getCustomFieldValues(orderCustomFieldsFilter, orderData);
+    const orderRow = [...orderValues, ...orderCustomValues];
+    if (orderItems.length === 0) {
+      const emptyRow = getEmptyValues([
+        ...orderItemColumnFieldsFilter,
+        ...orderItemCustomFieldsFilter,
+        ...batchColumnFieldsFilter,
+        ...batchCustomFieldsFilter,
+        ...shipmentColumnFieldsFilter,
+        ...shipmentCustomFieldsFilter,
+      ]);
+      const currentRow = [...orderRow, ...emptyRow];
+      return rows.push(currentRow);
+    }
+    return orderItems.forEach(orderItem => {
+      const notHaveBatches = Object.keys(orderItem.relation.batch).length === 0;
+      const orderItemData = editData.orderItems[orderItem.data.id];
+      const orderItemValues = getFieldValues(orderItemColumnFieldsFilter, orderItemData);
+      const orderItemCustomValues = getCustomFieldValues(
+        orderItemCustomFieldsFilter,
+        orderItemData
+      );
+      const orderItemRow = [...orderItemValues, ...orderItemCustomValues];
+      if (notHaveBatches) {
+        const emptyRow = getEmptyValues([
+          ...batchColumnFieldsFilter,
+          ...batchCustomFieldsFilter,
+          ...shipmentColumnFieldsFilter,
+          ...shipmentCustomFieldsFilter,
+        ]);
+        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow];
+        return rows.push(currentRow);
+      }
+      return orderItem.data.batches
+        .filter(batch => batchIds.includes(batch.id))
+        .forEach(batch => {
+          const batchData = editData.batches[batch.id];
+          const batchValues = getFieldValues(batchColumnFieldsFilter, batchData);
+          const batchCustomValues = getCustomFieldValues(batchCustomFieldsFilter, batchData);
+          const batchRow = [...batchValues, ...batchCustomValues];
+          let shipmentRow = [];
+          if (!batch.shipment) {
+            shipmentRow = getEmptyValues([
+              ...shipmentColumnFieldsFilter,
+              ...shipmentCustomFieldsFilter,
+            ]);
+          } else {
+            const shipmentData = editData.shipments[batch.shipment.id];
+            const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
+            const shipmentCustomValues = getCustomFieldValues(
+              shipmentCustomFieldsFilter,
+              shipmentData
+            );
+            shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+          }
+          const currentRow = [...orderRow, ...orderItemRow, ...batchRow, ...shipmentRow];
+          rows.push(currentRow);
+        });
+    });
+  });
+  return rows;
+}
