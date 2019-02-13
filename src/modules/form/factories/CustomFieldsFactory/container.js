@@ -40,7 +40,7 @@ export default class CustomFieldsContainer extends Container<FormState> {
     this.originalValues = Object.assign({}, parsedValues);
   };
 
-  setFieldArrayValue = (path: string, value: any) => {
+  setFieldValue = (path: string, value: any) => {
     this.setState(prevState => {
       const newState = set(cloneDeep(prevState), path, value);
       return newState;

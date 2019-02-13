@@ -14,12 +14,12 @@ import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, DashedPlusButton, TagsInput, FormTooltip } from 'components/Form';
+import { CustomFieldsFactory } from 'modules/form/factories';
 import {
   textInputFactory,
   textAreaFactory,
   dateInputFactory,
   selectSearchEnumInputFactory,
-  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
@@ -253,11 +253,12 @@ const OrderSection = ({ isNew }: Props) => (
                     })
                   }
                 </FormField>
-                {customFieldsInputFactory({
-                  entityType: 'Order',
-                  customFields: values.customFields,
-                  setFieldValue,
-                })}
+                <CustomFieldsFactory
+                  entityType="Order"
+                  customFields={values.customFields}
+                  setFieldValue={setFieldValue}
+                  editable
+                />
               </GridColumn>
 
               <GridColumn gap="10px">

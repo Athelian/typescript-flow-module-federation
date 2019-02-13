@@ -31,7 +31,7 @@ const defaultProps = {
   },
 };
 
-const SelectMask = ({ entityType, selected, onCancel, onSave }: Props) => (
+const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }: Props) => (
   <Query
     query={masksQuery}
     variables={{
@@ -98,6 +98,6 @@ const SelectMask = ({ entityType, selected, onCancel, onSave }: Props) => (
   </Query>
 );
 
-SelectMask.defaultProps = defaultProps;
+CustomFieldsTemplateSelector.defaultProps = defaultProps;
 
-export default SelectMask;
+export default CustomFieldsTemplateSelector;

@@ -4,13 +4,13 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
+import { CustomFieldsFactory } from 'modules/form/factories';
 import {
   textInputFactory,
   dateInputFactory,
   selectEnumInputFactory,
   selectSearchEnumInputFactory,
   textAreaFactory,
-  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import {
   ShipmentInfoContainer,
@@ -269,11 +269,13 @@ const ShipmentSection = ({ isNew }: Props) => (
                   })
                 }
               </FormField>
-              {customFieldsInputFactory({
-                entityType: 'Shipment',
-                customFields: values.customFields,
-                setFieldValue,
-              })}
+
+              <CustomFieldsFactory
+                entityType="Shipment"
+                customFields={values.customFields}
+                setFieldValue={setFieldValue}
+                editable
+              />
             </GridColumn>
 
             <GridColumn>

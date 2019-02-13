@@ -19,7 +19,7 @@ export const ShowAllButtonStyle: string = css`
   }
 `;
 
-export const MetadataIconStyle: string = css`
+export const CustomFieldsIconStyle: string = css`
   color: ${colors.GRAY_LIGHT};
   ${fontSizes.SMALL};
 `;

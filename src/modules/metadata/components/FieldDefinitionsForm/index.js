@@ -6,7 +6,7 @@ import { Subscribe } from 'unstated';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { NewButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
-import DefaultCustomFieldStyle from 'components/Form/Inputs/Styles/DefaultStyle/DefaultCustomFieldStyle';
+import { DefaultCustomFieldDefinitionStyle } from 'components/Form';
 import { uuid } from 'utils/id';
 import { isEquals } from 'utils/fp';
 import FieldDefinitionsContainer from 'modules/metadata/components/FieldDefinitionsFormWrapper/container';
@@ -82,7 +82,7 @@ class FieldDefinitionsForm extends React.Component<Props> {
                               >
                                 {provided => (
                                   <div ref={provided.innerRef} {...provided.draggableProps}>
-                                    <DefaultCustomFieldStyle
+                                    <DefaultCustomFieldDefinitionStyle
                                       rearrange
                                       dragHandleProps={provided.dragHandleProps}
                                       isKeyReadOnly={false}

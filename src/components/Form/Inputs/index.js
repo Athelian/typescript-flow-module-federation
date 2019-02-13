@@ -11,6 +11,8 @@ import TextAreaInput from './TextAreaInput';
 import TextInput from './TextInput';
 import {
   DefaultAdjustmentStyle,
+  DefaultCustomFieldDefinitionStyle,
+  DefaultCustomFieldStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultDayStyle,
@@ -35,6 +37,8 @@ export {
   TextAreaInput,
   TextInput,
   DefaultAdjustmentStyle,
+  DefaultCustomFieldDefinitionStyle,
+  DefaultCustomFieldStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultDayStyle,

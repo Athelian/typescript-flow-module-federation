@@ -5,11 +5,11 @@ import { Subscribe } from 'unstated';
 import WarehouseContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
 import { FormField } from 'modules/form';
+import { CustomFieldsFactory } from 'modules/form/factories';
 import {
   textInputFactory,
   numberInputFactory,
   selectSearchEnumInputFactory,
-  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
 import { DefaultSurfaceStyle } from 'components/Form';
@@ -150,12 +150,12 @@ const WarehouseSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-
-            {customFieldsInputFactory({
-              entityType: 'Warehouse',
-              customFields: values.customFields,
-              setFieldValue,
-            })}
+            <CustomFieldsFactory
+              entityType="Warehouse"
+              customFields={values.customFields}
+              setFieldValue={setFieldValue}
+              editable
+            />
           </GridColumn>
         );
       }}
