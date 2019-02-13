@@ -53,21 +53,6 @@ export default function BatchFilterMenu({
           label: <FormattedMessage {...messages.deliveredAt} />,
           data: getSelectData(selectedItems, 'deliveredAt'),
         },
-        // {
-        //   name: 'expiredAt',
-        //   label: <FormattedMessage {...messages.expiredAt} />,
-        //   data: getSelectData(selectedItems, 'expiredAt'),
-        // },
-        // {
-        //   name: 'producedAt',
-        //   label: <FormattedMessage {...messages.producedAt} />,
-        //   data: getSelectData(selectedItems, 'producedAt'),
-        // },
-        // {
-        //   name: 'packaging',
-        //   label: <FormattedMessage {...messages.packaging} />,
-        //   data: getSelectData(selectedItems, 'packaging'),
-        // },
         {
           name: 'totalVolume',
           label: <FormattedMessage {...messages.totalVolume} />,
@@ -79,16 +64,6 @@ export default function BatchFilterMenu({
           label: <FormattedMessage {...messages.tags} />,
           data: getSelectData(selectedItems, 'tags'),
         },
-        // {
-        //   name: 'createdAt',
-        //   label: <FormattedMessage {...messages.createdAt} />,
-        //   data: getSelectData(selectedItems, 'createdAt'),
-        // },
-        // {
-        //   name: 'updatedAt',
-        //   label: <FormattedMessage {...messages.updatedAt} />,
-        //   data: getSelectData(selectedItems, 'updatedAt'),
-        // },
       ],
     },
   ];

@@ -387,6 +387,7 @@ const OrderSection = ({ isNew }: Props) => (
                   }
                   input={
                     <TagsInput
+                      editable={isNew}
                       id="tags"
                       name="tags"
                       tagType="Order"

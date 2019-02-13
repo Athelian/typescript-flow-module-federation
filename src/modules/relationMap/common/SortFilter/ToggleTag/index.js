@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { createBooleanValue } from 'react-values';
 import { Label, ToggleInput } from 'components/Form';
 import Icon from 'components/Icon';
-import { getInitShowTag } from 'modules/relationMapBeta/order/store';
+import { getInitShowTag } from 'modules/relationMap/order/store';
 import { ToggleTagWrapperStyle, ToggleTagIconStyle } from './style';
 
 const TagValue = createBooleanValue(getInitShowTag());

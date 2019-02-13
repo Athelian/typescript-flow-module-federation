@@ -18,14 +18,15 @@ const colorMap = {
   error: 'RED',
 };
 
-const TooltipIcon = ({ type, hasInfo }: Props) => {
+// $FlowFixMe it is an open issue on flow https://github.com/facebook/flow/issues/6103
+const TooltipIcon = React.forwardRef<Props, HTMLDivElement>(({ type, hasInfo }: Props, ref) => {
   const icon = iconMap[hasInfo ? 'info' : type];
   const color = colorMap[type];
   return (
-    <div className={IconStyle(color)}>
+    <div ref={ref} className={IconStyle(color)}>
       <Icon icon={icon} />
     </div>
   );
-};
+});
 
 export default TooltipIcon;
