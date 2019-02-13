@@ -17,7 +17,11 @@ import CustomFieldsForm from './CustomFieldsForm';
 import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, CustomFieldsIconStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  editable: boolean,
+};
+
+type Props = OptionalProps & {
   entityType: string,
   customFields: {
     mask: ?Object,
@@ -27,7 +31,16 @@ type Props = {
   setFieldValue: Function,
 };
 
-const CustomFieldsFactory = ({ entityType, customFields, setFieldValue }: Props): React.Node => {
+const defaultProps = {
+  editable: true,
+};
+
+const CustomFieldsFactory = ({
+  entityType,
+  customFields,
+  setFieldValue,
+  editable,
+}: Props): React.Node => {
   return (
     <FieldItem
       label={
@@ -117,6 +130,7 @@ const CustomFieldsFactory = ({ entityType, customFields, setFieldValue }: Props)
                                   fieldValues,
                                 });
                               }}
+                              editable={editable}
                             />
                           )}
                         </Subscribe>
@@ -132,5 +146,7 @@ const CustomFieldsFactory = ({ entityType, customFields, setFieldValue }: Props)
     />
   );
 };
+
+CustomFieldsFactory.defaultProps = defaultProps;
 
 export default CustomFieldsFactory;

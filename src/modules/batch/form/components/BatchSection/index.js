@@ -7,12 +7,12 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
 import { FormField, FormContainer } from 'modules/form';
+import { CustomFieldsFactory } from 'modules/form/factories';
 import {
   textInputFactory,
   numberInputFactory,
   dateInputFactory,
   textAreaFactory,
-  customFieldsInputFactory,
 } from 'modules/form/helpers';
 import { OrderItemCard } from 'components/Cards';
 import { totalAdjustQuantity } from 'components/Cards/utils';
@@ -164,11 +164,12 @@ const BatchSection = ({ isNew, selectable }: Props) => (
                     })
                   }
                 </FormField>
-                {customFieldsInputFactory({
-                  entityType: 'Batch',
-                  customFields: values.customFields,
-                  setFieldValue,
-                })}
+                <CustomFieldsFactory
+                  entityType="Batch"
+                  customFields={values.customFields}
+                  setFieldValue={setFieldValue}
+                  editable
+                />
               </GridColumn>
               <div className={ItemSectionStyle}>
                 <Label required>

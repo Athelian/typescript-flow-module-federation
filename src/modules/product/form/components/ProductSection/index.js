@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { FormField } from 'modules/form';
-import { textInputFactory, customFieldsInputFactory } from 'modules/form/helpers';
+import { textInputFactory } from 'modules/form/helpers';
 import { CustomFieldsFactory } from 'modules/form/factories';
 import Icon from 'components/Icon';
 import {
@@ -220,15 +220,11 @@ const ProductSection = ({ isNew }: Props) => (
                 })
               }
             </FormField>
-            {customFieldsInputFactory({
-              entityType: 'Product',
-              customFields: values.customFields,
-              setFieldValue,
-            })}
             <CustomFieldsFactory
               entityType="Product"
               customFields={values.customFields}
               setFieldValue={setFieldValue}
+              editable
             />
             <div className={TagsInputStyle}>
               <Subscribe to={[ProductTagsContainer]}>

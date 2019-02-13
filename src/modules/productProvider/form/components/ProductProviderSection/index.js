@@ -8,8 +8,8 @@ import {
   selectSearchEnumInputFactory,
   dayInputFactory,
   numberInputFactory,
-  customFieldsInputFactory,
 } from 'modules/form/helpers';
+import { CustomFieldsFactory } from 'modules/form/factories';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
@@ -265,11 +265,12 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                 })
               }
             </FormField>
-            {customFieldsInputFactory({
-              entityType: 'ProductProvider',
-              customFields: values.customFields,
-              setFieldValue,
-            })}
+            <CustomFieldsFactory
+              entityType="ProductProvider"
+              customFields={values.customFields}
+              setFieldValue={setFieldValue}
+              editable
+            />
             <div className={DividerStyle} />
           </GridColumn>
         </div>

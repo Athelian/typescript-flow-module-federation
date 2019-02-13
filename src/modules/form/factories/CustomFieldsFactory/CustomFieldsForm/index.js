@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { contains } from 'utils/fp';
 import { BooleanValue } from 'react-values';
-import { MaskCard } from 'components/Cards';
+import { MaskCard, GrayCard } from 'components/Cards';
 import Divider from 'components/Divider';
 import FormattedNumber from 'components/FormattedNumber';
 import Layout from 'components/Layout';
@@ -22,16 +22,19 @@ import { CustomFieldsFormWrapperStyle, CustomFieldsSectionWrapperStyle } from '.
 
 type OptionalProps = {
   onFormReady: () => void,
-};
-
-type Props = OptionalProps & {
-  entityType: string,
   onCancel: Function,
   onSave: Function,
 };
 
+type Props = OptionalProps & {
+  entityType: string,
+  editable: boolean,
+};
+
 const defaultProps = {
   onFormReady: () => {},
+  onCancel: () => {},
+  onSave: () => {},
 };
 
 class CustomFieldsForm extends React.Component<Props> {
@@ -44,7 +47,7 @@ class CustomFieldsForm extends React.Component<Props> {
   }
 
   render() {
-    const { entityType, onCancel, onSave } = this.props;
+    const { entityType, onCancel, onSave, editable } = this.props;
 
     return (
       <Subscribe to={[CustomFieldsContainer]}>
@@ -68,8 +71,12 @@ class CustomFieldsForm extends React.Component<Props> {
                       icon="METADATA"
                     />
                   </JumpToSection>
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton disabled={!isDirty()} onClick={() => onSave(values)} />
+                  {isDirty() && (
+                    <>
+                      <CancelButton onClick={onCancel} />
+                      <SaveButton onClick={() => onSave(values)} />
+                    </>
+                  )}
                 </SlideViewNavBar>
               }
             >
@@ -101,14 +108,19 @@ class CustomFieldsForm extends React.Component<Props> {
                         <BooleanValue>
                           {({ value: opened, set: slideToggle }) => (
                             <>
-                              {!mask ? (
+                              {!mask && editable && (
                                 <DashedPlusButton
                                   width="195px"
                                   height="140px"
                                   onClick={() => slideToggle(true)}
                                 />
-                              ) : (
-                                <MaskCard mask={mask} onClick={() => slideToggle(true)} />
+                              )}
+                              {!mask && !editable && <GrayCard width="195px" height="140px" />}
+                              {mask && (
+                                <MaskCard
+                                  mask={mask}
+                                  onClick={editable ? () => slideToggle(true) : () => {}}
+                                />
                               )}
 
                               <SlideView
@@ -141,11 +153,11 @@ class CustomFieldsForm extends React.Component<Props> {
                           mask == null || contains(fieldDefinition, mask.fieldDefinitions) ? (
                             <DefaultCustomFieldStyle
                               key={fieldDefinition.id}
-                              isKeyReadOnly
                               targetName={`fieldValues.${index}`}
                               fieldName={fieldDefinition.name}
                               value={value}
-                              setFieldArrayValue={setFieldValue}
+                              setFieldValue={setFieldValue}
+                              editable={editable}
                             />
                           ) : null
                         )}
