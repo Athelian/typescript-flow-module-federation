@@ -1,6 +1,7 @@
 import {
   DateInput,
   DateTimeInput,
+  DayInput,
   EmailInput,
   MetricInput,
   NumberInput,
@@ -45,6 +46,7 @@ import NumberRangeInput from './NumberRangeInput';
 export {
   DateInput,
   DateTimeInput,
+  DayInput,
   EmailInput,
   MetricInput,
   NumberInput,
