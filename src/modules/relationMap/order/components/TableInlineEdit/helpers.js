@@ -41,7 +41,7 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
     BATCH: batchIds,
     SHIPMENT: shipmentIds,
   } = selected;
-  (Object.values(entities.orders): any).forEach(order => {
+  (Object.values(entities.orders || {}): any).forEach(order => {
     if (orderIds.includes(order.id)) {
       orderItemIds.push(...order.orderItems);
       order.orderItems.forEach(orderItemId => {
@@ -79,7 +79,6 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
       } else {
         orderItem.batches.forEach(batchId => {
           if (batchIds.includes(batchId)) {
-            // console.log(!orderIds.includes(order.id), batchId)
             if (!orderItemIds.includes(orderItemId)) {
               orderItemIds.push(orderItemId);
             }
@@ -119,15 +118,14 @@ export const findAllPossibleOrders = (
   batchIds: Array<string>,
   shipmentIds: Array<string>,
 } => {
-  const orderIds = selected.order ? Object.keys(selected.order) : [];
+  const orderIds = selected.order ? Object.keys(selected.order || {}) : [];
   const orderItemIds = selected.orderItem ? Object.keys(selected.orderItem) : [];
-  const batchIds = selected.batch ? Object.keys(selected.batch) : [];
-  const shipmentIds = selected.shipment ? Object.keys(selected.shipment) : [];
+  const batchIds = selected.batch ? Object.keys(selected.batch || {}) : [];
+  const shipmentIds = selected.shipment ? Object.keys(selected.shipment || {}) : [];
 
   // find all orders from selected order
   if (orderIds.length) {
-    // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-    (Object.entries(mappingObjects.order): any).forEach((item: [string, MappingObject]) => {
+    (Object.entries(mappingObjects.order || {}): any).forEach((item: [string, MappingObject]) => {
       const [orderId, order] = item;
       if (selected.order && selected.order[orderId]) {
         orderItemIds.push(...Object.keys(order.relation.orderItem));
@@ -138,32 +136,33 @@ export const findAllPossibleOrders = (
   }
 
   if (orderItemIds.length) {
-    // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-    (Object.entries(mappingObjects.orderItem): any).forEach((item: [string, MappingObject]) => {
-      const [orderItemId, orderItem] = item;
-      if (selected.orderItem && selected.orderItem[orderItemId]) {
-        orderIds.push(...Object.keys(orderItem.relation.order));
-        batchIds.push(...Object.keys(orderItem.relation.batch));
-        shipmentIds.push(...Object.keys(orderItem.relation.shipment));
+    (Object.entries(mappingObjects.orderItem || {}): any).forEach(
+      (item: [string, MappingObject]) => {
+        const [orderItemId, orderItem] = item;
+        if (selected.orderItem && selected.orderItem[orderItemId]) {
+          orderIds.push(...Object.keys(orderItem.relation.order));
+          batchIds.push(...Object.keys(orderItem.relation.batch));
+          shipmentIds.push(...Object.keys(orderItem.relation.shipment));
+        }
       }
-    });
+    );
   }
 
   if (shipmentIds.length) {
-    // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-    (Object.entries(mappingObjects.shipment): any).forEach((item: [string, MappingObject]) => {
-      const [shipmentId, shipment] = item;
-      if (selected.shipment && selected.shipment[shipmentId]) {
-        orderIds.push(...Object.keys(shipment.relation.order));
-        orderItemIds.push(...Object.keys(shipment.relation.orderItem));
-        batchIds.push(...Object.keys(shipment.relation.batch));
+    (Object.entries(mappingObjects.shipment || {}): any).forEach(
+      (item: [string, MappingObject]) => {
+        const [shipmentId, shipment] = item;
+        if (selected.shipment && selected.shipment[shipmentId]) {
+          orderIds.push(...Object.keys(shipment.relation.order));
+          orderItemIds.push(...Object.keys(shipment.relation.orderItem));
+          batchIds.push(...Object.keys(shipment.relation.batch));
+        }
       }
-    });
+    );
   }
 
   if (batchIds.length) {
-    // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-    (Object.entries(mappingObjects.batch): any).forEach((item: [string, MappingObject]) => {
+    (Object.entries(mappingObjects.batch || {}): any).forEach((item: [string, MappingObject]) => {
       const [batchId, batch] = item;
       if (selected.batch && selected.batch[batchId]) {
         orderIds.push(...Object.keys(batch.relation.order));
@@ -194,7 +193,8 @@ export const totalLinePerOrder = (orderItems: Array<Object>, batchIds: Array<str
     totalLines = 1;
   } else {
     totalLines = orderItems.reduce((result, orderItem) => {
-      const totalBatches = intersection(Object.keys(orderItem.relation.batch), batchIds).length;
+      const totalBatches = intersection(Object.keys(orderItem.relation.batch || {}), batchIds)
+        .length;
       if (totalBatches === 0) {
         return result + 1;
       }
@@ -213,7 +213,7 @@ export const parseChangedData = (
   const batches = [];
   const shipments = [];
   if (changedData.orders) {
-    (Object.entries(changedData.orders): any).forEach(item => {
+    (Object.entries(changedData.orders || {}): any).forEach(item => {
       const [id, order] = item;
       const keys = Object.keys(order);
       const changedOrder = {};
@@ -250,7 +250,7 @@ export const parseChangedData = (
   }
 
   if (changedData.shipments) {
-    (Object.entries(changedData.shipments): any).forEach(item => {
+    (Object.entries(changedData.shipments || {}): any).forEach(item => {
       const [id, shipment] = item;
       const keys = Object.keys(shipment);
       const changedShipment = {};
@@ -308,9 +308,9 @@ export const parseChangedData = (
   }
 
   if (changedData.orderItems) {
-    (Object.entries(changedData.orderItems): any).forEach(item => {
+    (Object.entries(changedData.orderItems || {}): any).forEach(item => {
       const [id, orderItem] = item;
-      const keys = Object.keys(orderItem);
+      const keys = Object.keys(orderItem || {});
       const changedOrderItem = {};
       keys.forEach(key => {
         const updateValue = editData.orderItems[id][key];
@@ -381,7 +381,7 @@ export const parseChangedData = (
   }
 
   if (changedData.batches) {
-    (Object.entries(changedData.batches): any).forEach(item => {
+    (Object.entries(changedData.batches || {}): any).forEach(item => {
       const [id, batch] = item;
       const keys = Object.keys(batch);
       const changedBatch = {};
@@ -537,7 +537,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   orderIds.forEach(orderId => {
     const order = mappingObjects.order[orderId];
     if (!order) return null;
-    const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+    const orderItems = (Object.values(mappingObjects.orderItem || {}): any).filter(
       item => order.relation.orderItem[item.data.id] && orderItemIds.includes(item.data.id)
     );
     const orderData = editData.orders[orderId];

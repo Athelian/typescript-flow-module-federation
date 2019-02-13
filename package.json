@@ -20,6 +20,7 @@
     "apollo-link-error": "^1.1.7",
     "apollo-link-http": "^1.5.11",
     "date-fns": "^2.0.0-alpha.27",
+    "date-fns-tz": "^1.0.7",
     "deep-object-diff": "^1.1.0",
     "downshift": "^3.2.2",
     "emotion": "^9.2.12",
