@@ -4,11 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
-import { dayInputFactory } from 'modules/form/helpers';
+
 import {
   EnumSearchSelectInputFactory,
   NumberInputFactory,
   CustomFieldsFactory,
+  DayInputFactory,
 } from 'modules/form/factories';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import SelectExporters from 'modules/order/common/SelectExporters';
@@ -217,20 +218,22 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                     initValue={values.productionLeadTime}
                     setFieldValue={setFieldValue}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      dayInputFactory({
-                        name,
-                        isNew,
-                        inputHandlers,
-                        originalValue: initialValues[name],
-                        label: (
+                    {({ name, ...inputHandlers }) => (
+                      <DayInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
                           <FormattedMessage
                             id="modules.ProductProviders.productionLeadTime"
                             defaultMessage="PRODUCTION LEAD TIME"
                           />
-                        ),
-                      })
-                    }
+                        }
+                        editable={canCreateOrUpdate}
+                        placeholder="Please input a value"
+                      />
+                    )}
                   </FormField>
 
                   <FormField
