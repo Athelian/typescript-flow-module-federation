@@ -8,6 +8,7 @@ import Intercom from 'react-intercom';
 import LoadingIcon from 'components/LoadingIcon';
 import { isAppInProduction } from 'utils/env';
 import { getByPathWithDefault } from 'utils/fp';
+import { PermissionProvider } from 'modules/permission';
 import query from './query';
 
 type ContextProps = {
@@ -54,7 +55,14 @@ const UserProvider = ({ children }: Props) => (
 
           if (loading) return <LoadingIcon />;
           const {
-            user = { email: '', id: '-1', firstName: '', lastName: '', language: 'en' },
+            user = {
+              email: '',
+              id: '-1',
+              firstName: '',
+              lastName: '',
+              language: 'en',
+              role: 'manager',
+            },
             permissions = [],
           } = getByPathWithDefault({}, 'viewer', data);
 
@@ -77,10 +85,12 @@ const UserProvider = ({ children }: Props) => (
 
           return (
             <UserContext.Provider value={{ user, permissions }}>
-              {children}
-              {isAppInProduction && (
-                <Intercom appID={process.env.ZENPORT_INTERCOM_ID} {...userProfile} />
-              )}
+              <PermissionProvider user={user}>
+                {children}
+                {isAppInProduction && (
+                  <Intercom appID={process.env.ZENPORT_INTERCOM_ID} {...userProfile} />
+                )}
+              </PermissionProvider>
             </UserContext.Provider>
           );
         }}

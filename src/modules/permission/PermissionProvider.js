@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isEnableBetaFeature } from 'utils/env';
 import PermissionContext from './PermissionContext';
 
 const product = {
@@ -29,13 +30,16 @@ console.warn(defaultPermissions);
 console.warn(managerPermissions);
 
 type ContextProviderProps = {
+  user: Object,
   children: React.Node,
 };
 
-const PermissionProvider = ({ children }: ContextProviderProps) => (
-  <PermissionContext.Provider value={{ permissions: defaultPermissions }}>
-    {children}
-  </PermissionContext.Provider>
-);
+const PermissionProvider = ({ user, children }: ContextProviderProps) => {
+  const permissions =
+    !isEnableBetaFeature || user.role === 'manager' ? managerPermissions : defaultPermissions;
+  return (
+    <PermissionContext.Provider value={{ permissions }}>{children}</PermissionContext.Provider>
+  );
+};
 
 export default PermissionProvider;
