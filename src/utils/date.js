@@ -10,9 +10,9 @@ export const formatToDateTimeInput = (time: string): string =>
   format(new Date(time), "yyyy-MM-dd'T'HH:mm");
 
 export const formatToDateLabel = (date: string): string => format(new Date(date), 'dd/MM/yyyy');
-const timeZone = 'Europe/London';
-
+// We need to convert to UTC timezone for backend
+const utcTimeZone = 'UTC';
 export const formatFromDate = (date: string): Date =>
-  zonedTimeToUtc(startOfDay(new Date(date)), timeZone);
+  zonedTimeToUtc(startOfDay(new Date(date)), utcTimeZone);
 export const formatEndDate = (date: string): Date =>
-  zonedTimeToUtc(endOfDay(new Date(date)), timeZone);
+  zonedTimeToUtc(endOfDay(new Date(date)), utcTimeZone);
