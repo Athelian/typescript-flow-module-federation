@@ -4,8 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { FormField } from 'modules/form';
-import { textInputFactory } from 'modules/form/helpers';
-import { CustomFieldsFactory } from 'modules/form/factories';
 import Icon from 'components/Icon';
 import {
   ProductInfoContainer,
@@ -16,6 +14,8 @@ import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, TagsInput, ImagesUploadInput } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
+import { PermissionConsumer } from 'modules/permission';
+import { TextInputFactory, CustomFieldsFactory } from 'modules/form/factories';
 import {
   ProductSectionWrapperStyle,
   ProductImagesWrapperStyle,
@@ -43,220 +43,266 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 };
 
 const ProductSection = ({ isNew }: Props) => (
-  <Subscribe to={[ProductInfoContainer]}>
-    {({ originalValues: initialValues, state, setFieldValue }) => {
-      const values = { ...initialValues, ...state };
+  <PermissionConsumer>
+    {hasPermission => {
+      const canCreateOrUpdate =
+        hasPermission('product.products.create') || hasPermission('product.products.update');
       return (
-        <div className={ProductSectionWrapperStyle}>
-          <Subscribe to={[ProductFilesContainer]}>
-            {({ state: { files }, setFieldValue: changeFiles }) => (
-              <div className={ProductImagesWrapperStyle(files.length)}>
-                <ObjectValue>
-                  {({ value: selectedImage, set: changeSelectedImage }) => (
-                    <BooleanValue>
-                      {({ value: isOpen, set: dialogToggle }) => (
-                        <>
-                          {files.map(({ path, pathMedium, name, id }, index) => (
-                            <div className={ProductImageWrapperStyle} key={id}>
-                              <img
-                                className={ProductImageStyle}
-                                src={pathMedium || path}
-                                alt={name}
-                              />
-                              <button
-                                className={ViewImageButtonStyle}
-                                type="button"
-                                onClick={() => {
-                                  changeSelectedImage(files[index]);
-                                  dialogToggle(true);
-                                }}
-                              >
-                                <Icon icon="EXPAND" />
-                              </button>
-                              <button
-                                className={DeleteImageButtonStyle}
-                                type="button"
-                                onClick={() =>
-                                  changeFiles('files', files.filter(item => item.id !== id))
-                                }
-                              >
-                                <Icon icon="REMOVE" />
-                              </button>
-                              {index !== 0 && (
-                                <button
-                                  className={SwapImageButtonStyle('left')}
-                                  type="button"
-                                  onClick={() =>
-                                    changeFiles('files', swapItems(files, index, index - 1))
-                                  }
-                                >
-                                  <Icon icon="CHEVRON_DOUBLE_LEFT" />
-                                </button>
-                              )}
-                              {index !== files.length - 1 && (
-                                <button
-                                  className={SwapImageButtonStyle('right')}
-                                  type="button"
-                                  onClick={() =>
-                                    changeFiles('files', swapItems(files, index, index + 1))
-                                  }
-                                >
-                                  <Icon icon="CHEVRON_DOUBLE_RIGHT" />
-                                </button>
-                              )}
-                            </div>
-                          ))}
-                          <ImagePreviewDialog
-                            isOpen={isOpen}
-                            onRequestClose={() => dialogToggle(false)}
-                            image={selectedImage}
-                          />
-                          <ImagesUploadInput
-                            id="files"
-                            name="files"
-                            values={files}
-                            onChange={changeFiles}
-                            height="180px"
-                            width={files.length > 0 ? '120px' : '180px'}
-                          />
-                          {files.length > 3 && <div className={ScrollFixStyle} />}
-                        </>
-                      )}
-                    </BooleanValue>
+        <Subscribe to={[ProductInfoContainer]}>
+          {({ originalValues: initialValues, state, setFieldValue }) => {
+            const values = { ...initialValues, ...state };
+            return (
+              <div className={ProductSectionWrapperStyle}>
+                <Subscribe to={[ProductFilesContainer]}>
+                  {({ state: { files }, setFieldValue: changeFiles }) => (
+                    <div className={ProductImagesWrapperStyle(files.length)}>
+                      <ObjectValue>
+                        {({ value: selectedImage, set: changeSelectedImage }) => (
+                          <BooleanValue>
+                            {({ value: isOpen, set: dialogToggle }) => (
+                              <>
+                                {files.map(({ path, pathMedium, name, id }, index) => (
+                                  <div className={ProductImageWrapperStyle} key={id}>
+                                    <img
+                                      className={ProductImageStyle}
+                                      src={pathMedium || path}
+                                      alt={name}
+                                    />
+                                    <button
+                                      className={ViewImageButtonStyle}
+                                      type="button"
+                                      onClick={() => {
+                                        changeSelectedImage(files[index]);
+                                        dialogToggle(true);
+                                      }}
+                                    >
+                                      <Icon icon="EXPAND" />
+                                    </button>
+                                    <ImagePreviewDialog
+                                      isOpen={isOpen}
+                                      onRequestClose={() => dialogToggle(false)}
+                                      image={selectedImage}
+                                    />
+                                    {canCreateOrUpdate && (
+                                      <>
+                                        <button
+                                          className={DeleteImageButtonStyle}
+                                          type="button"
+                                          onClick={() =>
+                                            changeFiles(
+                                              'files',
+                                              files.filter(item => item.id !== id)
+                                            )
+                                          }
+                                        >
+                                          <Icon icon="REMOVE" />
+                                        </button>
+                                        {index !== 0 && (
+                                          <button
+                                            className={SwapImageButtonStyle('left')}
+                                            type="button"
+                                            onClick={() =>
+                                              changeFiles(
+                                                'files',
+                                                swapItems(files, index, index - 1)
+                                              )
+                                            }
+                                          >
+                                            <Icon icon="CHEVRON_DOUBLE_LEFT" />
+                                          </button>
+                                        )}
+                                        {index !== files.length - 1 && (
+                                          <button
+                                            className={SwapImageButtonStyle('right')}
+                                            type="button"
+                                            onClick={() =>
+                                              changeFiles(
+                                                'files',
+                                                swapItems(files, index, index + 1)
+                                              )
+                                            }
+                                          >
+                                            <Icon icon="CHEVRON_DOUBLE_RIGHT" />
+                                          </button>
+                                        )}
+                                      </>
+                                    )}
+                                  </div>
+                                ))}
+                                {canCreateOrUpdate && (
+                                  <ImagesUploadInput
+                                    id="files"
+                                    name="files"
+                                    values={files}
+                                    onChange={changeFiles}
+                                    height="180px"
+                                    width={files.length > 0 ? '120px' : '180px'}
+                                  />
+                                )}
+                                {files.length > 3 && <div className={ScrollFixStyle} />}
+                              </>
+                            )}
+                          </BooleanValue>
+                        )}
+                      </ObjectValue>
+                    </div>
                   )}
-                </ObjectValue>
-              </div>
-            )}
-          </Subscribe>
-          <GridColumn maxWidth="400px">
-            <FormField
-              name="name"
-              initValue={values.name}
-              setFieldValue={setFieldValue}
-              values={values}
-              validator={validator}
-            >
-              {({ name, ...inputHandlers }) =>
-                textInputFactory({
-                  inputHandlers,
-                  name,
-                  isNew,
-                  required: true,
-                  originalValue: initialValues[name],
-                  label: <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
-                })
-              }
-            </FormField>
-            <FormField
-              name="serial"
-              initValue={values.serial}
-              setFieldValue={setFieldValue}
-              values={values}
-              validator={validator}
-            >
-              {({ name, ...inputHandlers }) =>
-                textInputFactory({
-                  inputHandlers,
-                  name,
-                  isNew,
-                  required: true,
-                  originalValue: initialValues[name],
-                  label: <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
-                })
-              }
-            </FormField>
-            <FormField
-              name="janCode"
-              initValue={values.janCode}
-              setFieldValue={setFieldValue}
-              values={values}
-              validator={validator}
-            >
-              {({ name, ...inputHandlers }) =>
-                textInputFactory({
-                  inputHandlers,
-                  name,
-                  isNew,
-                  originalValue: initialValues[name],
-                  label: (
-                    <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />
-                  ),
-                })
-              }
-            </FormField>
-            <FormField
-              name="hsCode"
-              initValue={values.hsCode}
-              setFieldValue={setFieldValue}
-              values={values}
-              validator={validator}
-            >
-              {({ name, ...inputHandlers }) =>
-                textInputFactory({
-                  inputHandlers,
-                  name,
-                  isNew,
-                  originalValue: initialValues[name],
-                  label: <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />,
-                })
-              }
-            </FormField>
-            <FormField
-              name="material"
-              initValue={values.material}
-              setFieldValue={setFieldValue}
-              values={values}
-              validator={validator}
-            >
-              {({ name, ...inputHandlers }) =>
-                textInputFactory({
-                  inputHandlers,
-                  name,
-                  isNew,
-                  originalValue: initialValues[name],
-                  label: (
-                    <FormattedMessage id="modules.Products.material" defaultMessage="MATERIAL" />
-                  ),
-                })
-              }
-            </FormField>
-            <CustomFieldsFactory
-              entityType="Product"
-              customFields={values.customFields}
-              setFieldValue={setFieldValue}
-              editable
-            />
-            <div className={TagsInputStyle}>
-              <Subscribe to={[ProductTagsContainer]}>
-                {({ state: { tags }, setFieldValue: changeTags }) => (
-                  <FieldItem
-                    vertical
-                    label={
-                      <Label>
-                        <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
-                      </Label>
-                    }
-                    input={
-                      <TagsInput
-                        id="tags"
-                        name="tags"
-                        tagType="Product"
-                        values={tags}
-                        onChange={(field, value) => {
-                          changeTags(field, value);
-                        }}
+                </Subscribe>
+                <GridColumn maxWidth="400px">
+                  <FormField
+                    name="name"
+                    initValue={values.name}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />
+                        }
+                        editable={canCreateOrUpdate}
+                        placeholder="Please input a value"
                       />
-                    }
+                    )}
+                  </FormField>
+                  <FormField
+                    name="serial"
+                    initValue={values.serial}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />
+                        }
+                        editable={canCreateOrUpdate}
+                        placeholder="Please input a value"
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="janCode"
+                    initValue={values.janCode}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.Products.janCode"
+                            defaultMessage="JAN CODE"
+                          />
+                        }
+                        editable={canCreateOrUpdate}
+                        placeholder="Please input a value"
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="hsCode"
+                    initValue={values.hsCode}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />
+                        }
+                        editable={canCreateOrUpdate}
+                        placeholder="Please input a value"
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="material"
+                    initValue={values.material}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.Products.material"
+                            defaultMessage="MATERIAL"
+                          />
+                        }
+                        editable={canCreateOrUpdate}
+                        placeholder="Please input a value"
+                      />
+                    )}
+                  </FormField>
+                  <CustomFieldsFactory
+                    entityType="Product"
+                    customFields={values.customFields}
+                    setFieldValue={setFieldValue}
+                    editable={canCreateOrUpdate}
                   />
-                )}
-              </Subscribe>
-            </div>
-            <div className={DividerStyle} />
-          </GridColumn>
-        </div>
+                  <div className={TagsInputStyle}>
+                    <Subscribe to={[ProductTagsContainer]}>
+                      {({ state: { tags }, setFieldValue: changeTags }) => (
+                        <FieldItem
+                          vertical
+                          label={
+                            <Label>
+                              <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
+                            </Label>
+                          }
+                          input={
+                            <TagsInput
+                              editable={canCreateOrUpdate}
+                              id="tags"
+                              name="tags"
+                              tagType="Product"
+                              values={tags}
+                              onChange={(field, value) => {
+                                changeTags(field, value);
+                              }}
+                            />
+                          }
+                        />
+                      )}
+                    </Subscribe>
+                  </div>
+                  <div className={DividerStyle} />
+                </GridColumn>
+              </div>
+            );
+          }}
+        </Subscribe>
       );
     }}
-  </Subscribe>
+  </PermissionConsumer>
 );
 
 export default ProductSection;

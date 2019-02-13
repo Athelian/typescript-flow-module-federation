@@ -13,12 +13,12 @@ storiesOf('Form/Inputs/Text Input', module).add('Text Input Factory', () => (
         currentFocused: null,
         value: 'Hello',
         originalValue: 'Hello',
-        readOnly: false,
+        editable: false,
         isNew: false,
       }}
     >
       {({
-        value: { currentFocused, value, originalValue, readOnly, isNew },
+        value: { currentFocused, value, originalValue, editable, isNew },
         set: setFieldValue,
       }) => (
         <>
@@ -30,14 +30,14 @@ storiesOf('Form/Inputs/Text Input', module).add('Text Input Factory', () => (
             onBlur={() => setFieldValue('currentFocused', null)}
             isNew={isNew}
             isFocused={currentFocused === 'inputOne'}
-            readOnly={readOnly}
+            editable={editable}
             value={value}
             originalValue={originalValue}
             label="BASIC"
             infoMessage="This is an info tooltip :)"
           />
-          <ToggleInput toggled={readOnly} onToggle={() => setFieldValue('readOnly', !readOnly)}>
-            <Label>READ ONLY</Label>
+          <ToggleInput toggled={editable} onToggle={() => setFieldValue('editable', !editable)}>
+            <Label>editable</Label>
           </ToggleInput>
           <ToggleInput toggled={isNew} onToggle={() => setFieldValue('isNew', !isNew)}>
             <Label>IS NEW</Label>
@@ -83,7 +83,7 @@ storiesOf('Form/Inputs/Text Input', module).add('Text Input Factory', () => (
           }}
         >
           {({ value: { name, ...inputHandlers } }) => {
-            const readOnly = !!(user.role === 'default');
+            const editable = !!(user.role === 'default');
 
             return (
               <>
@@ -93,16 +93,16 @@ storiesOf('Form/Inputs/Text Input', module).add('Text Input Factory', () => (
                   isNew={isNew}
                   originalValue={initialValues[name]}
                   label="FORM MIMIC"
-                  readOnly={readOnly}
+                  editable={editable}
                   placeholder="Please input a value"
                 />
                 <ToggleInput
-                  toggled={readOnly}
+                  toggled={editable}
                   onToggle={() =>
                     set('user', { ...user, role: user.role === 'manager' ? 'default' : 'manager' })
                   }
                 >
-                  <Label>READ ONLY</Label>
+                  <Label>editable</Label>
                 </ToggleInput>
                 <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
                   <Label>IS NEW</Label>

@@ -16,6 +16,7 @@ type Props = LabelProps &
     label?: React.Node,
     InputWrapper: () => React.Node,
     Input: () => React.Node,
+    editable?: boolean,
   };
 
 const defaultProps = {
@@ -54,7 +55,7 @@ const DateInputFactory = ({
   onBlur,
   onFocus,
   inputAlign,
-  readOnly,
+  editable,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
 
@@ -87,7 +88,7 @@ const DateInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-    readOnly,
+    readOnly: !editable,
   };
 
   return (
@@ -95,12 +96,12 @@ const DateInputFactory = ({
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
-        readOnly ? (
-          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        ) : (
+        editable ? (
           <InputWrapper {...inputWrapperConfig}>
             <Input {...inputConfig} />
           </InputWrapper>
+        ) : (
+          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         )
       }
     />

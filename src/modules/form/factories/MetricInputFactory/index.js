@@ -28,6 +28,7 @@ type Props = LabelProps &
     metricType?: 'distance' | 'area' | 'volume' | 'weight',
     showCalculator: boolean,
     onCalculate?: Function,
+    editable?: boolean,
   };
 
 const defaultProps = {
@@ -72,7 +73,7 @@ const MetricInputFactory = ({
   onBlur,
   onFocus,
   inputAlign,
-  readOnly,
+  editable,
   customMetrics,
   customConvert,
   metricSelectWidth,
@@ -109,7 +110,7 @@ const MetricInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-    readOnly,
+    readOnly: !editable,
     metrics: customMetrics || getMetrics(metricType),
     convert: customConvert || getConvert(metricType),
     metricSelectWidth,
@@ -122,9 +123,7 @@ const MetricInputFactory = ({
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
-        readOnly ? (
-          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        ) : (
+        editable ? (
           <>
             <InputWrapper {...inputWrapperConfig}>
               <Input {...inputConfig} />
@@ -133,6 +132,8 @@ const MetricInputFactory = ({
               <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
             )}
           </>
+        ) : (
+          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         )
       }
     />

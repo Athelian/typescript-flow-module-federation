@@ -167,3 +167,19 @@ export const prepareUpdateProductInput = ({
     })
   ),
 });
+
+export const prepareProductOnlyProviderFiles = ({
+  productProviders = [],
+}: Object): {
+  productProviders: Array<Object>,
+} => ({
+  productProviders: productProviders.map(({ id, files: productProviderFiles }) => ({
+    id,
+    files: productProviderFiles.map(({ id: fileId, name: fileName, type, memo }) => ({
+      id: fileId,
+      name: fileName,
+      type,
+      memo,
+    })),
+  })),
+});

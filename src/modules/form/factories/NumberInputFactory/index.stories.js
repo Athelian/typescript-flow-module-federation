@@ -16,12 +16,12 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
             currentFocused: null,
             value: 100,
             originalValue: 100,
-            readOnly: false,
+            editable: false,
             isNew: false,
           }}
         >
           {({
-            value: { currentFocused, value, originalValue, readOnly, isNew },
+            value: { currentFocused, value, originalValue, editable, isNew },
             set: setFieldValue,
           }) => (
             <>
@@ -33,14 +33,14 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
                 onBlur={() => setFieldValue('currentFocused', null)}
                 isNew={isNew}
                 isFocused={currentFocused === 'inputOne'}
-                readOnly={readOnly}
+                editable={editable}
                 value={value}
                 originalValue={originalValue}
                 label="BASIC"
                 infoMessage="This is an info tooltip :)"
               />
-              <ToggleInput toggled={readOnly} onToggle={() => setFieldValue('readOnly', !readOnly)}>
-                <Label>READ ONLY</Label>
+              <ToggleInput toggled={editable} onToggle={() => setFieldValue('editable', !editable)}>
+                <Label>editable</Label>
               </ToggleInput>
               <ToggleInput toggled={isNew} onToggle={() => setFieldValue('isNew', !isNew)}>
                 <Label>IS NEW</Label>
@@ -100,7 +100,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
               }}
             >
               {({ value: { name, ...inputHandlers } }) => {
-                const readOnly = !!(user.role === 'default');
+                const editable = !!(user.role === 'default');
 
                 return (
                   <>
@@ -110,14 +110,14 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
                       isNew={isNew}
                       originalValue={initialValues[name]}
                       label="FORM MIMIC"
-                      readOnly={readOnly}
+                      editable={editable}
                       placeholder="Please input a value"
                       nullable={nullable}
                       showCalculator={showCalculator}
                       onCalculate={() => set('values', { ...values, inputTwo: 999 })}
                     />
                     <ToggleInput
-                      toggled={readOnly}
+                      toggled={editable}
                       onToggle={() =>
                         set('user', {
                           ...user,
@@ -125,7 +125,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
                         })
                       }
                     >
-                      <Label>READ ONLY</Label>
+                      <Label>editable</Label>
                     </ToggleInput>
                     <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
                       <Label>IS NEW</Label>
