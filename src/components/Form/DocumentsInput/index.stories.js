@@ -8,7 +8,7 @@ import { set, cloneDeep } from 'lodash';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { ToggleInput, Label, DocumentsInput } from 'components/Form';
 
-storiesOf('Inputs', module).add('Documents Input', () => (
+storiesOf('Form/Inputs/Documents Input', module).add('Documents Input', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <Provider>
