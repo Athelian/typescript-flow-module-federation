@@ -10,7 +10,7 @@ import {
   isNullOrUndefined,
   isEquals,
 } from 'utils/fp';
-import { formatToDateTimeGraphql } from 'utils/date';
+import { formatEndDate, formatFromDate } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
@@ -121,11 +121,7 @@ const FILTER = {
   },
   batch: {
     deliveredAt: 'batchDeliveredAt',
-    // expiredAt: 'batchExpiredAt',
-    // producedAt: 'batchProducedAt',
     tags: 'batchTagIds',
-    // createdAt: 'batchCreatedAt',
-    // updatedAt: 'batchUpdatedAt',
   },
   shipment: {
     cargoReady: 'shipmentCargoReady',
@@ -176,8 +172,8 @@ const getFilterValue = (name: string, data: any) => {
     case 'warehouseArrival':
     case 'deliveryReady':
       return {
-        ...(data.before && { before: formatToDateTimeGraphql(data.before) }),
-        ...(data.after && { after: formatToDateTimeGraphql(data.after) }),
+        ...(data.before && { before: formatEndDate(data.before) }),
+        ...(data.after && { after: formatFromDate(data.after) }),
       };
     case 'price': {
       const currency = getByPath('currency.name', data);
