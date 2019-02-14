@@ -245,6 +245,7 @@ const Order = ({ intl }: Props) => {
             batches,
             shipments,
           });
+          const allowToUpdate = hasPermission(RM_UPDATE);
           return (
             <>
               <SortFilter
@@ -310,7 +311,7 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
                       onClick={() =>
-                        hasPermission(RM_UPDATE)
+                        allowToUpdate
                           ? actions.toggleSelectAll(ORDER, Object.keys(orders || []))
                           : () => {}
                       }
@@ -328,7 +329,7 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
                       onClick={() =>
-                        hasPermission(RM_UPDATE)
+                        allowToUpdate
                           ? actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
                           : () => {}
                       }
@@ -343,7 +344,7 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
                       onClick={() =>
-                        hasPermission(RM_UPDATE)
+                        allowToUpdate
                           ? actions.toggleSelectAll(BATCH, Object.keys(batches || []))
                           : () => {}
                       }
@@ -362,7 +363,7 @@ const Order = ({ intl }: Props) => {
                           : Object.keys(shipments || []).length
                       }
                       onClick={() =>
-                        hasPermission(RM_UPDATE)
+                        allowToUpdate
                           ? actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
                           : () => {}
                       }
