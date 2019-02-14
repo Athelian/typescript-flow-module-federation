@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
+import client from 'apollo';
 import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ShipmentForm from 'modules/shipment/index.form';
 import ActionDispatch from 'modules/relationMap/order/provider';
+import { orderDetailQuery } from 'modules/relationMap/order/query';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { encodeId } from 'utils/id';
 
@@ -61,7 +63,21 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
       break;
     }
     case 'ORDER': {
-      form = <OrderForm orderId={encodeId(id)} isSlideView />;
+      form = (
+        <OrderForm
+          orderId={encodeId(id)}
+          isSlideView
+          onSuccessCallback={() => {
+            const queryOption = {
+              query: orderDetailQuery,
+              variables: {
+                id,
+              },
+            };
+            client.query(queryOption).then(() => {});
+          }}
+        />
+      );
       break;
     }
     case 'BATCH': {

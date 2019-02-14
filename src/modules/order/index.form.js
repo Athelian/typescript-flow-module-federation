@@ -126,6 +126,9 @@ class OrderFormModule extends React.PureComponent<Props> {
         onErrors(violations);
       } else {
         onSuccess();
+        if (onSuccessCallback) {
+          onSuccessCallback(data);
+        }
       }
     }
   };

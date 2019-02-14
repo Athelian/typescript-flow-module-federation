@@ -8,7 +8,15 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import {
+  ShipmentBatchesContainer,
+  ShipmentContainersContainer,
+  ShipmentInfoContainer,
+  ShipmentTagsContainer,
+  ShipmentTimelineContainer,
+  ShipmentTransportTypeContainer,
+  ShipmentFilesContainer,
+} from 'modules/shipment/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -491,8 +499,26 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 />
               )}
               {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectOrder() && (
-                <Subscribe to={[ShipmentBatchesContainer]}>
-                  {shipmentBatchesContainer => (
+                <Subscribe
+                  to={[
+                    ShipmentBatchesContainer,
+                    ShipmentContainersContainer,
+                    ShipmentInfoContainer,
+                    ShipmentTagsContainer,
+                    ShipmentTimelineContainer,
+                    ShipmentTransportTypeContainer,
+                    ShipmentFilesContainer,
+                  ]}
+                >
+                  {(
+                    shipmentBatchesContainer,
+                    shipmentContainersContainer,
+                    shipmentInfoContainer,
+                    shipmentTagsContainer,
+                    shipmentTimelineContainer,
+                    shipmentTransportTypeContainer,
+                    shipmentFilesContainer
+                  ) => (
                     <MoveToShipmentPanel
                       status={state.connectShipment.status}
                       hasSelectedShipment={uiSelectors.isSelectedShipment()}
@@ -582,6 +608,34 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           };
                         });
                         shipmentBatchesContainer.initDetailValues(initBatches);
+                        shipmentContainersContainer.initDetailValues({
+                          containers: [],
+                        });
+                        shipmentInfoContainer.initDetailValues({
+                          no: '',
+                          blNo: '',
+                          blDate: '',
+                          bookingNo: '',
+                          bookingDate: '',
+                          invoiceNo: '',
+                          loadType: '',
+                          incoterm: '',
+                          carrier: '',
+                          forwarders: [],
+                          inCharges: [],
+                          customFields: {
+                            mask: null,
+                            fieldValues: [],
+                            fieldDefinitions: [],
+                          },
+                        });
+                        shipmentTagsContainer.initDetailValues([]);
+                        shipmentTimelineContainer.initDetailValues({
+                          containerGroups: [{}],
+                          voyages: [{}],
+                        });
+                        shipmentTransportTypeContainer.initDetailValues({});
+                        shipmentFilesContainer.initDetailValues([]);
                         actions.showEditForm('NEW_SHIPMENT', 'new');
                       }}
                     />
