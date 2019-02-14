@@ -7,6 +7,7 @@ import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
 import { OrderCard, CardAction } from 'components/Cards';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
+import { PermissionConsumer } from 'modules/permission';
 
 type Props = {
   items: Array<Object>,
@@ -16,7 +17,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => (
+const defaultRenderItem = ({ canCreate, canUpdate, ...item }: Object): React.Node => (
   <BooleanValue key={item.id}>
     {({ value: statusDialogIsOpen, set: dialogToggle }) => (
       <>
@@ -36,14 +37,22 @@ const defaultRenderItem = (item: Object) => (
         <OrderCard
           order={item}
           actions={[
-            <CardAction
-              icon="CLONE"
-              onClick={() => navigate(`/order/clone/${encodeId(item.id)}`)}
-            />,
-            <CardAction
-              icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
-              onClick={() => dialogToggle(true)}
-            />,
+            ...(canCreate
+              ? [
+                  <CardAction
+                    icon="CLONE"
+                    onClick={() => navigate(`/order/clone/${encodeId(item.id)}`)}
+                  />,
+                ]
+              : []),
+            ...(canUpdate
+              ? [
+                  <CardAction
+                    icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+                    onClick={() => dialogToggle(true)}
+                  />,
+                ]
+              : []),
           ]}
           showActionsOnHover
         />
@@ -63,18 +72,29 @@ class OrderGridView extends React.PureComponent<Props> {
     const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = this.props;
 
     return (
-      <GridView
-        onLoadMore={onLoadMore}
-        hasMore={hasMore}
-        isLoading={isLoading}
-        itemWidth="195px"
-        isEmpty={items.length === 0}
-        emptyMessage={
-          <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
-        }
-      >
-        {items.map(item => renderItem(item))}
-      </GridView>
+      <PermissionConsumer>
+        {hasPermission => {
+          const canCreate = hasPermission('order.orders.create');
+          const canUpdate = hasPermission('order.orders.update');
+          return (
+            <GridView
+              onLoadMore={onLoadMore}
+              hasMore={hasMore}
+              isLoading={isLoading}
+              itemWidth="195px"
+              isEmpty={items.length === 0}
+              emptyMessage={
+                <FormattedMessage
+                  id="modules.Orders.noOrderFound"
+                  defaultMessage="No orders found"
+                />
+              }
+            >
+              {items.map(item => renderItem({ ...item, canCreate, canUpdate }))}
+            </GridView>
+          );
+        }}
+      </PermissionConsumer>
     );
   }
 }

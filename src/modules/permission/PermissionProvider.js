@@ -22,10 +22,15 @@ const product = {
   ],
 };
 
-// just for hard code develop, I will remove these after api is ready.
-const defaultPermissions = [...product.default];
+const order = {
+  default: ['order.orders.list', 'order.orders.get'],
+  manager: ['order.orders.list', 'order.orders.get', 'order.orders.create', 'order.orders.update'],
+};
 
-const managerPermissions = [...product.manager];
+// just for hard code develop, I will remove these after api is ready.
+const defaultPermissions = [...product.default, ...order.default];
+
+const managerPermissions = [...product.manager, ...order.manager];
 
 type ContextProviderProps = {
   user: Object,
