@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
+import usePermission from 'hooks/usePermission';
+import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { ShipmentContainerBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
@@ -51,6 +53,8 @@ export default function ContainerBatchesArea({
   selectedBatches,
   setSelectedBatches,
 }: Props) {
+  const { hasPermission } = usePermission();
+  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -96,7 +100,7 @@ export default function ContainerBatchesArea({
                       </div>
                     </div>
 
-                    {batchesInContainer.length > 0 && (
+                    {batchesInContainer.length > 0 && allowToUpdate && (
                       <>
                         {isSelectBatchesMode ? (
                           <>
@@ -240,7 +244,7 @@ export default function ContainerBatchesArea({
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>
-              {!isSelectBatchesMode && (
+              {!isSelectBatchesMode && allowToUpdate && (
                 <>
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
