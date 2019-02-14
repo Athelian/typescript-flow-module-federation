@@ -4,6 +4,7 @@ import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
+import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader } from 'components/Form';
@@ -35,7 +36,7 @@ const defaultProps = {
   anchor: '',
 };
 
-class ShipmentForm extends React.PureComponent<Props> {
+class ShipmentForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
@@ -46,6 +47,12 @@ class ShipmentForm extends React.PureComponent<Props> {
     if (anchor) {
       scrollIntoView({ targetId: anchor });
     }
+  }
+
+  shouldComponentUpdate(nextProps: Props) {
+    const { shipment } = this.props;
+
+    return !isEquals(shipment, nextProps.shipment);
   }
 
   onClone = () => {
