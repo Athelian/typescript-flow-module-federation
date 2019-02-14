@@ -41,6 +41,7 @@ export default function InlineMetricInput({
   const { hasError, isFocused, ...inputHandlers } = useMetricInput(value, { isRequired });
   return (
     <DefaultMetricStyle isFocused={isFocused} hasError={hasError} tabIndex="-1">
+      {/* $FlowFixMe says it needs intl but really it doesnt */}
       <MetricInput
         {...inputHandlers}
         id={`input-${id}`}

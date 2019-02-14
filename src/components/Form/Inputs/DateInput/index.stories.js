@@ -25,7 +25,6 @@ storiesOf('Form/Inputs/Date Input', module).add('Date Input', () => (
                       <DefaultStyle isFocused={currentFocused === INPUT_1} type="date">
                         <DateInput
                           name={INPUT_1}
-                          placeholder="Editable"
                           onChange={e => set(e.target.value)}
                           onFocus={() => onFocus(INPUT_1)}
                           onBlur={() => onBlur()}

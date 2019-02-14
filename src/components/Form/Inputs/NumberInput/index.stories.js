@@ -26,7 +26,6 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input', () => (
                       <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
                         <NumberInput
                           name={INPUT_1}
-                          placeholder="Editable"
                           onChange={e => set(e.target.value)}
                           onFocus={() => onFocus(INPUT_1)}
                           onBlur={() => onBlur()}
@@ -46,7 +45,6 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input', () => (
                       <DefaultStyle isFocused={currentFocused === INPUT_2} type="number">
                         <NumberInput
                           name={INPUT_2}
-                          placeholder="Editable"
                           onChange={e => set(e.target.value)}
                           onFocus={() => onFocus(INPUT_2)}
                           onBlur={() => onBlur()}

@@ -33,7 +33,6 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input', () => (
                         <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
                           <MetricInput
                             name={INPUT_1}
-                            placeholder="Editable"
                             onChange={e => set('inputOne', e.target.value)}
                             onFocus={() => onFocus(INPUT_1)}
                             onBlur={() => onBlur()}

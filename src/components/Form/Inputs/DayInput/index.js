@@ -1,17 +1,22 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, type IntlShape, FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display } from 'components/Form';
 import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
 import { toFloat, toFloatNullable } from 'utils/number';
+import { isNullOrUndefined } from 'utils/fp';
+import messages from 'components/Form/Inputs/messages';
 import { DaysWrapperStyle } from './style';
 
 type OptionalProps = {
   nullable: boolean,
 };
 
-type Props = OptionalProps & InputProps;
+type Props = OptionalProps &
+  InputProps & {
+    intl: IntlShape,
+  };
 
 const defaultProps = {
   ...defaultInputProps,
@@ -35,11 +40,13 @@ class NumberInput extends React.Component<Props> {
 
   render() {
     const {
+      intl,
       value,
       align,
       readOnly,
       readOnlyWidth,
       readOnlyHeight,
+      placeholder,
       nullable,
       onChange,
       ...rest
@@ -55,6 +62,11 @@ class NumberInput extends React.Component<Props> {
         <input
           value={value}
           style={{ textAlign: align }}
+          placeholder={
+            isNullOrUndefined(placeholder)
+              ? intl.formatMessage(messages.defaultPlaceholder)
+              : placeholder
+          }
           {...rest}
           onChange={this.handleChange}
           type="number"
@@ -68,4 +80,4 @@ class NumberInput extends React.Component<Props> {
   }
 }
 
-export default NumberInput;
+export default injectIntl(NumberInput);
