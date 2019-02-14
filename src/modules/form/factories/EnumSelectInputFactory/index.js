@@ -25,6 +25,7 @@ type Props = LabelProps &
   TooltipProps &
   InputWrapperProps &
   InputProps & {
+    vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
     Select: () => React.Node,
@@ -42,9 +43,11 @@ const defaultProps = {
   Select: DefaultSelect,
   Options: DefaultOptions,
   editable: true,
+  vertical: false,
 };
 
 const EnumSelectInputFactory = ({
+  vertical,
   isTouched,
   label,
   Select,
@@ -127,6 +130,7 @@ const EnumSelectInputFactory = ({
 
       return (
         <FieldItem
+          vertical={vertical}
           label={label && <Label {...labelConfig}>{label}</Label>}
           tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
           input={

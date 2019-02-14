@@ -16,6 +16,7 @@ type Props = LabelProps &
   TooltipProps &
   InputWrapperProps &
   InputProps & {
+    vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
     InputWrapper: () => React.Node,
@@ -31,9 +32,12 @@ const defaultProps = {
   isTouched: false,
   InputWrapper: DefaultStyle,
   Input: DayInput,
+  editable: true,
+  vertical: false,
 };
 
 const DayInputFactory = ({
+  vertical,
   isTouched,
   label,
   InputWrapper,
@@ -99,6 +103,7 @@ const DayInputFactory = ({
 
   return (
     <FieldItem
+      vertical={vertical}
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
