@@ -16,8 +16,4 @@ const product = {
   ],
 };
 
-const relationMap = ['relationMap.update'];
-
-// just for hard code develop, I will remove these after api is ready.
-export const defaultPermissions = [...product.default];
-export const managerPermissions = [...product.manager, ...relationMap];
+export default product;
