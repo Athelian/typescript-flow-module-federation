@@ -42,6 +42,7 @@ type OptionalProps = {
   onClick: (container: Object) => void,
   onRemove: (container: Object) => void,
   selectable: boolean,
+  readOnly: boolean,
   actions: Array<React.Node>,
 };
 
@@ -56,6 +57,7 @@ const defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   selectable: false,
+  readOnly: false,
   actions: [],
 };
 
@@ -66,6 +68,7 @@ const ShipmentContainerCard = ({
   onSelectWarehouse,
   update,
   selectable,
+  readOnly,
   ...rest
 }: Props) => {
   if (!container) return '';

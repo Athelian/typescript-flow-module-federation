@@ -134,6 +134,7 @@ function BatchesArea({
                         {isSelectBatchesMode ? (
                           <ShipmentBatchCard
                             batch={batch}
+                            readOnly={!allowToUpdate}
                             selectable
                             selected={selectedBatches.includes(batch)}
                             onSelect={() => setSelectedBatches(batch)}
@@ -167,6 +168,7 @@ function BatchesArea({
                                 </SlideView>
 
                                 <ShipmentBatchCard
+                                  readOnly={!allowToUpdate}
                                   batch={batch}
                                   saveOnBlur={updateBatch => {
                                     const indexOfAllBatches = batches.indexOf(batch);

@@ -144,25 +144,27 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                           onClick={() => toggleContainerForm(true)}
                                           onSelectWarehouse={() => toggleSelectWarehouse(true)}
                                           actions={[
-                                            <CardAction
-                                              icon="REMOVE"
-                                              hoverColor="RED"
-                                              onClick={evt => {
-                                                evt.stopPropagation();
-                                                if (
-                                                  container.batches &&
-                                                  container.batches.length > 0
-                                                ) {
-                                                  toggleDialog(true);
-                                                } else {
-                                                  setFieldValue(
-                                                    'containers',
-                                                    removeContainerById(containers, container.id)
-                                                  );
-                                                }
-                                              }}
-                                            />,
-                                          ]}
+                                            allowToUpdate && (
+                                              <CardAction
+                                                icon="REMOVE"
+                                                hoverColor="RED"
+                                                onClick={evt => {
+                                                  evt.stopPropagation();
+                                                  if (
+                                                    container.batches &&
+                                                    container.batches.length > 0
+                                                  ) {
+                                                    toggleDialog(true);
+                                                  } else {
+                                                    setFieldValue(
+                                                      'containers',
+                                                      removeContainerById(containers, container.id)
+                                                    );
+                                                  }
+                                                }}
+                                              />
+                                            ),
+                                          ].filter(Boolean)}
                                         />
                                         <RemoveContainerConfirmDialog
                                           isOpen={isOpenDialog}
