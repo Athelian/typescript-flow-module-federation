@@ -91,6 +91,7 @@ const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
                 </SlideViewNavBar>
               }
             >
+              {/* TODO: Add pagination */}
               <StaffGridView
                 hasMore={false}
                 isLoading={loading}
