@@ -15,6 +15,7 @@ type OptionalProps = {
   readOnlyHeight?: string,
   align: 'left' | 'right' | 'center',
   hideClearButton: boolean,
+  placeholder: ?string,
 };
 
 export type RenderSearchSelectProps = {
@@ -51,6 +52,7 @@ export const defaultSearchSelectInputProps = {
   onSearch: () => {},
   afterClearSelection: () => {},
   hideClearButton: false,
+  placeholder: null,
 };
 
 export default defaultSearchSelectInputProps;

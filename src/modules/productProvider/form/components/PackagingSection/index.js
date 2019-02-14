@@ -54,7 +54,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -77,7 +76,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -103,7 +101,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -127,7 +124,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                         showCalculator
                         onCalculate={calculatePackageVolume}
                       />
@@ -155,7 +151,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -179,7 +174,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -205,7 +199,6 @@ const PackagingSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>

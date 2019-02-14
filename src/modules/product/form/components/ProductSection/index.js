@@ -167,7 +167,6 @@ const ProductSection = ({ isNew }: Props) => (
                           <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -189,7 +188,6 @@ const ProductSection = ({ isNew }: Props) => (
                           <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -213,7 +211,6 @@ const ProductSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -234,7 +231,6 @@ const ProductSection = ({ isNew }: Props) => (
                           <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -258,7 +254,6 @@ const ProductSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>

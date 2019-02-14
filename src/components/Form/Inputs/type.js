@@ -19,7 +19,7 @@ export type InputProps = OptionalProps;
 export const defaultInputProps = {
   value: '',
   name: '',
-  placeholder: '',
+  placeholder: null,
   onChange: null,
   onBlur: null,
   onFocus: null,
