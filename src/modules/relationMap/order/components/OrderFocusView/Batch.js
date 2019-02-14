@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import usePermission from 'hooks/usePermission';
+import { RM_UPDATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import BaseCard from 'components/Cards';
@@ -63,6 +65,7 @@ export default function Batch({
     item.map(({ id: batchId }) => batchId).includes(id)
   );
   const showAutoFillBadge = !!balanceSplit.batches.find(item => item.id === id);
+  const { hasPermission } = usePermission();
   return (
     <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
       {(showSplitBadge || showAutoFillBadge || showCloneBadge) && (
@@ -94,18 +97,20 @@ export default function Batch({
                     toggle={toggle}
                     onClick={() => actions.showEditForm(BATCH, id)}
                   />
-                  <Action
-                    icon="CHECKED"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() =>
-                      actions.targetBatchEntity({
-                        id,
-                        parentOrderId,
-                        exporterId: `${id}-${exporterId}`,
-                      })
-                    }
-                  />
+                  {hasPermission(RM_UPDATE) && (
+                    <Action
+                      icon="CHECKED"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() =>
+                        actions.targetBatchEntity({
+                          id,
+                          parentOrderId,
+                          exporterId: `${id}-${exporterId}`,
+                        })
+                      }
+                    />
+                  )}
                 </>
               )}
             </ActionCard>
