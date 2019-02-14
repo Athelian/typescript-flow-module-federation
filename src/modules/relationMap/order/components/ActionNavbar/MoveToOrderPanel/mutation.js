@@ -14,7 +14,52 @@ import {
   batchCardRMFragment,
   shipmentCardRMFragment,
 } from 'modules/relationMap/order/query';
-import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
+import { prepareCustomFieldsData } from 'utils/customFields';
+
+export const prepareUpdateBatchInput = ({
+  id,
+  isNew,
+  createdAt,
+  updatedAt,
+  updatedBy,
+  orderItem,
+  shipment,
+  container,
+  deliveredAt,
+  desiredAt,
+  expiredAt,
+  customFields,
+  producedAt,
+  tags = [],
+  batchAdjustments = [],
+  archived,
+  ...rest
+}: Object): Object =>
+  !isNew
+    ? { id }
+    : {
+        ...rest,
+        deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
+        desiredAt: desiredAt ? new Date(desiredAt) : null,
+        expiredAt: expiredAt ? new Date(expiredAt) : null,
+        customFields: prepareCustomFieldsData(customFields),
+        producedAt: producedAt ? new Date(producedAt) : null,
+        tagIds: tags.map(({ id: tagId }) => tagId),
+        batchAdjustments: batchAdjustments.map(
+          ({
+            isNew: isNewAdjustment,
+            id: adjustmentId,
+            createdAt: adjustmentCreatedAt,
+            updatedAt: adjustmentUpdateAt,
+            updatedBy: adjustmentUpdatedBy,
+            sort,
+            ...adjustment
+          }) => ({
+            ...adjustment,
+            ...(isNewAdjustment ? {} : { id: adjustmentId }),
+          })
+        ),
+      };
 
 export const updateOrderMutation = gql`
   mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
@@ -42,7 +87,7 @@ export const prepareUpdateOrderInput = ({ orderItems = [] }: Object): Object => 
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
-      batches: batches.map(batch => prepareUpdateBatchInput(batch, false, false)),
+      batches: batches.map(batch => prepareUpdateBatchInput(batch)),
     })
   ),
 });
