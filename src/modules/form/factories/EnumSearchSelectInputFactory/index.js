@@ -62,7 +62,7 @@ const parseOnChangeValue = (value: ?string): { target: { value: string } } => ({
   },
 });
 
-const EnumSelectInputFactory = ({
+const EnumSearchSelectInputFactory = ({
   vertical,
   isTouched,
   label,
@@ -204,6 +204,6 @@ const EnumSelectInputFactory = ({
   </EnumProvider>
 );
 
-EnumSelectInputFactory.defaultProps = defaultProps;
+EnumSearchSelectInputFactory.defaultProps = defaultProps;
 
-export default EnumSelectInputFactory;
+export default EnumSearchSelectInputFactory;
