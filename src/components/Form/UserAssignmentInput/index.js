@@ -12,6 +12,8 @@ import {
   AddAssignmentButtonStyle,
 } from './style';
 
+const MAX_USERS_ALLOWED = 5;
+
 export type User = {
   id: string,
   firstName: string,
@@ -52,7 +54,7 @@ const UserAssignmentInput = ({ values, name, onChange, editable }: Props) => {
             <UserAvatar firstName={firstName} lastName={lastName} />
           </div>
         ))}
-      {editable && values && values.length < 5 && (
+      {editable && values && values.length < MAX_USERS_ALLOWED && (
         <BooleanValue>
           {({ value: isOpen, set: slideToggle }) => (
             <>
