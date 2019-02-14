@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
 import { SelectInput, DefaultSelect, DefaultOptions, Display } from 'components/Form';
-import { textAreaFactory } from 'modules/form/helpers';
+import { TextAreaInputFactory } from 'modules/form/factories';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -144,17 +144,17 @@ class DocumentItem extends React.Component<Props, State> {
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>
           <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
-            {({ name: fieldName, ...inputHandlers }) =>
-              textAreaFactory({
-                name: fieldName,
-                isNew: false,
-                originalValue: value.memo,
-                inputHandlers,
-                align: 'left',
-                width: '600px',
-                height: '150px',
-              })
-            }
+            {({ name: fieldName, ...inputHandlers }) => (
+              <TextAreaInputFactory
+                name={fieldName}
+                {...inputHandlers}
+                isNew={false}
+                originalValue={value.memo}
+                editable={!readOnly}
+                inputWidth="590px"
+                inputHeight="120px"
+              />
+            )}
           </FormField>
         </div>
         <button

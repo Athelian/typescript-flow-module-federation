@@ -6,6 +6,7 @@ import EnumSearchSelectInputFactory from './EnumSearchSelectInputFactory';
 import EnumSelectInputFactory from './EnumSelectInputFactory';
 import MetricInputFactory from './MetricInputFactory';
 import NumberInputFactory from './NumberInputFactory';
+import TextAreaInputFactory from './TextAreaInputFactory';
 import TextInputFactory from './TextInputFactory';
 
 export {
@@ -16,5 +17,6 @@ export {
   EnumSelectInputFactory,
   MetricInputFactory,
   NumberInputFactory,
+  TextAreaInputFactory,
   TextInputFactory,
 };
