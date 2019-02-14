@@ -131,30 +131,16 @@ const EnumSelectInputFactory = ({
         name,
         onChange: newValue => {
           if (onChange) {
-            if (!newValue) {
-              onChange(parseOnChangeValue(null));
-            } else {
-              onChange({
-                target: {
-                  value: itemToValue(newValue),
-                },
-              });
-            }
+            // $FlowFixMe itemToValue has some flow-type issue.
+            onChange(parseOnChangeValue(itemToValue(newValue)));
           }
         },
         onBlur: () => {
           if (onBlur) {
             if (data.find(item => itemToValue(item) === value)) onBlur();
             else if (onChange) {
-              if (!originalValue) {
-                onChange(parseOnChangeValue(null));
-              } else {
-                onChange({
-                  target: {
-                    value: itemToValue(originalValue),
-                  },
-                });
-              }
+              // $FlowFixMe itemToValue has some flow-type issue.
+              onChange(parseOnChangeValue(itemToValue(originalValue)));
               setTimeout(() => {
                 onBlur();
               }, 0);
