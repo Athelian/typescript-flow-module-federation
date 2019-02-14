@@ -172,6 +172,7 @@ export default function ContainerBatchesArea({
                                 </SlideView>
                                 <ShipmentContainerBatchCard
                                   batch={batch}
+                                  readOnly={!allowToUpdate}
                                   isRepresented={batch.id === representativeBatchId}
                                   saveOnBlur={updateBatch => {
                                     const indexOfAllBatches = batches.indexOf(batch);
