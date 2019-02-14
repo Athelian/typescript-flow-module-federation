@@ -4,6 +4,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { Query } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import usePermission from 'hooks/usePermission';
+import { RM_UPDATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -118,6 +120,7 @@ const Order = ({ intl }: Props) => {
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
+  const { hasPermission } = usePermission();
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
@@ -306,7 +309,11 @@ const Order = ({ intl }: Props) => {
                       }
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
-                      onClick={() => actions.toggleSelectAll(ORDER, Object.keys(orders || []))}
+                      onClick={() =>
+                        hasPermission(RM_UPDATE)
+                          ? actions.toggleSelectAll(ORDER, Object.keys(orders || []))
+                          : () => {}
+                      }
                     />
                     <EntityHeader
                       icon="ORDER_ITEM"
@@ -321,7 +328,9 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
                       onClick={() =>
-                        actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
+                        hasPermission(RM_UPDATE)
+                          ? actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
+                          : () => {}
                       }
                     />
                     <EntityHeader
@@ -333,7 +342,11 @@ const Order = ({ intl }: Props) => {
                       }
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
-                      onClick={() => actions.toggleSelectAll(BATCH, Object.keys(batches || []))}
+                      onClick={() =>
+                        hasPermission(RM_UPDATE)
+                          ? actions.toggleSelectAll(BATCH, Object.keys(batches || []))
+                          : () => {}
+                      }
                     />
                     <EntityHeader
                       icon="SHIPMENT"
@@ -349,7 +362,9 @@ const Order = ({ intl }: Props) => {
                           : Object.keys(shipments || []).length
                       }
                       onClick={() =>
-                        actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
+                        hasPermission(RM_UPDATE)
+                          ? actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
+                          : () => {}
                       }
                     >
                       <div className={AllShipmentsToggleWrapperStyle}>

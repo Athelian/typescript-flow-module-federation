@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import usePermission from 'hooks/usePermission';
+import { RM_UPDATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
@@ -31,6 +33,7 @@ export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }
     item.map(({ id: shipmentId }) => shipmentId).includes(id)
   );
   const isNew = uiSelectors.isNewShipment(id);
+  const { hasPermission } = usePermission();
   return (
     <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
       {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
@@ -77,12 +80,14 @@ export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }
                       toggle={toggle}
                       onClick={() => actions.showEditForm('SHIPMENT', id)}
                     />
-                    <Action
-                      icon="CHECKED"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() => actions.targetShipmentEntity(id, no)}
-                    />
+                    {hasPermission(RM_UPDATE) && (
+                      <Action
+                        icon="CHECKED"
+                        targeted={targeted}
+                        toggle={toggle}
+                        onClick={() => actions.targetShipmentEntity(id, no)}
+                      />
+                    )}
                   </>
                 )}
               </ActionCard>

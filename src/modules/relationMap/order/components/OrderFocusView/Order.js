@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import usePermission from 'hooks/usePermission';
+import { RM_UPDATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import BaseCard from 'components/Cards';
 import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
@@ -38,6 +40,7 @@ export default function Order({
   const showCloneBadge = (Object.entries(clone.orders || {}): Array<any>).some(([, item]) =>
     item.map(({ id: orderId }) => orderId).includes(id)
   );
+  const { hasPermission } = usePermission();
   return (
     <BaseCard id={`order-${id}`} icon="ORDER" color="ORDER" wrapperClassName={wrapperClassName}>
       {(showCloneBadge || isNewOrder) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
@@ -88,43 +91,47 @@ export default function Order({
                       toggle={toggle}
                       onClick={() => actions.showEditForm(ORDER, id)}
                     />
-                    <Action
-                      icon="BRANCH"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() =>
-                        actions.selectBranch([
-                          {
-                            entity: ORDER,
-                            id,
-                            exporterId: `${ORDER}-${exporter.id}`,
-                          },
-                          ...orderItems.map(orderItem => ({
-                            entity: ORDER_ITEM,
-                            id: orderItem.id,
-                            exporterId: `${ORDER_ITEM}-${exporter.id}`,
-                          })),
-                          ...orderItems.reduce(
-                            (result, orderItem) =>
-                              result.concat(
-                                orderItem.batches.map(batch => ({
-                                  entity: BATCH,
-                                  id: batch.id,
-                                  exporterId: `${BATCH}-${exporter.id}`,
-                                }))
+                    {hasPermission(RM_UPDATE) && (
+                      <>
+                        <Action
+                          icon="BRANCH"
+                          targeted={targeted}
+                          toggle={toggle}
+                          onClick={() =>
+                            actions.selectBranch([
+                              {
+                                entity: ORDER,
+                                id,
+                                exporterId: `${ORDER}-${exporter.id}`,
+                              },
+                              ...orderItems.map(orderItem => ({
+                                entity: ORDER_ITEM,
+                                id: orderItem.id,
+                                exporterId: `${ORDER_ITEM}-${exporter.id}`,
+                              })),
+                              ...orderItems.reduce(
+                                (result, orderItem) =>
+                                  result.concat(
+                                    orderItem.batches.map(batch => ({
+                                      entity: BATCH,
+                                      id: batch.id,
+                                      exporterId: `${BATCH}-${exporter.id}`,
+                                    }))
+                                  ),
+                                []
                               ),
-                            []
-                          ),
-                        ])
-                      }
-                      className={RotateIcon}
-                    />
-                    <Action
-                      icon="CHECKED"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() => actions.targetOrderEntity(id, `${ORDER}-${exporter.id}`)}
-                    />
+                            ])
+                          }
+                          className={RotateIcon}
+                        />
+                        <Action
+                          icon="CHECKED"
+                          targeted={targeted}
+                          toggle={toggle}
+                          onClick={() => actions.targetOrderEntity(id, `${ORDER}-${exporter.id}`)}
+                        />
+                      </>
+                    )}
                   </>
                 )}
               </ActionCard>
