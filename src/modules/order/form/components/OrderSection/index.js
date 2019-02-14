@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue, StringValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import FormattedNumber from 'components/FormattedNumber';
+import usePermission from 'hooks/usePermission';
 import { spanWithColor } from 'utils/color';
 import {
   OrderInfoContainer,
@@ -13,27 +15,19 @@ import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, DashedPlusButton, TagsInput, FormTooltip } from 'components/Form';
-import { CustomFieldsFactory } from 'modules/form/factories';
+import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import {
-  textInputFactory,
-  textAreaFactory,
-  dateInputFactory,
-  selectSearchEnumInputFactory,
-} from 'modules/form/helpers';
+  TextInputFactory,
+  TextAreaInputFactory,
+  DateInputFactory,
+  CustomFieldsFactory,
+  EnumSearchSelectInputFactory,
+  UserAssignmentInputFactory,
+} from 'modules/form/factories';
 import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
-import Icon from 'components/Icon';
-import { PartnerCard } from 'components/Cards';
-import UserAvatar from 'components/UserAvatar';
-import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
-import {
-  AssignmentWrapperStyle,
-  AssignmentStyle,
-  RemoveAssignmentButtonStyle,
-  AddAssignmentButtonStyle,
-} from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
+import { PartnerCard, GrayCard } from 'components/Cards';
 import TotalSummary from './components/TotalSummary';
 import PriceDialog from './components/PriceDialog';
 import {
@@ -48,414 +42,393 @@ type Props = {
   isNew: boolean,
 };
 
-const OrderSection = ({ isNew }: Props) => (
-  <div className={OrderSectionWrapperStyle}>
-    <Subscribe to={[OrderInfoContainer]}>
-      {({ originalValues: initialValues, state, setFieldValue }) => {
-        const values = { ...initialValues, ...state };
-        const { currency } = values;
-        return (
-          <>
-            <div className={MainFieldsWrapperStyle}>
-              <GridColumn>
-                <FormField
-                  name="poNo"
-                  initValue={values.poNo}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    textInputFactory({
-                      inputHandlers,
-                      name,
-                      isNew,
-                      originalValue: initialValues[name],
-                      required: true,
-                      label: <FormattedMessage {...messages.PO} />,
-                    })
-                  }
-                </FormField>
-                <FormField
-                  name="piNo"
-                  initValue={values.piNo}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    textInputFactory({
-                      name,
-                      inputHandlers,
-                      isNew,
-                      originalValue: initialValues[name],
-                      label: <FormattedMessage {...messages.PI} />,
-                    })
-                  }
-                </FormField>
-                <FormField
-                  name="issuedAt"
-                  initValue={values.issuedAt}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    dateInputFactory({
-                      name,
-                      inputHandlers,
-                      isNew,
-                      originalValue: initialValues[name],
-                      label: <FormattedMessage {...messages.date} />,
-                    })
-                  }
-                </FormField>
-                <BooleanValue>
-                  {({ value: isOpen, set: setPriceDialog }) => (
-                    <Subscribe to={[OrderItemsContainer]}>
-                      {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
-                        <StringValue>
-                          {({ value: previousCurrency, set: setPreviousCurrency }) => (
-                            <>
-                              <PriceDialog
-                                isOpen={isOpen}
-                                onRequestClose={() => {
-                                  setFieldValue(
-                                    'currency',
-                                    previousCurrency || initialValues.currency
-                                  );
-                                  setPriceDialog(false);
-                                }}
-                                onConfirm={() => {
-                                  setItemFieldValue(
-                                    'orderItems',
-                                    orderItems.map(orderItem => ({
-                                      ...orderItem,
-                                      price: {
-                                        ...orderItem.price,
-                                        amount: 0,
-                                      },
-                                    }))
-                                  );
-                                  setPreviousCurrency(values.currency);
-                                  setPriceDialog(false);
-                                }}
-                                onCancel={() => {
-                                  setFieldValue(
-                                    'currency',
-                                    previousCurrency || initialValues.currency
-                                  );
-                                  setPriceDialog(false);
-                                }}
-                                onDeny={() => {
-                                  setPriceDialog(false);
-                                  setPreviousCurrency(values.currency);
-                                }}
-                                message={
-                                  <>
-                                    <div className={DialogLineStyle}>
-                                      <FormattedMessage
-                                        {...messages.detectPriceChanged}
-                                        values={{
-                                          items: spanWithColor(
-                                            <FormattedMessage {...messages.sectionItems} />,
-                                            'ORDER_ITEM'
-                                          ),
-                                        }}
-                                      />
-                                    </div>
-                                    <div className={DialogLineStyle}>
-                                      <FormattedMessage
-                                        {...messages.changePrice}
-                                        values={{
-                                          items: spanWithColor(
-                                            <FormattedMessage {...messages.sectionItems} />,
-                                            'ORDER_ITEM'
-                                          ),
-                                        }}
-                                      />
-                                    </div>
-                                    <div className={DialogLineStyle}>
-                                      <FormattedMessage {...messages.resetPrice} />
-                                    </div>
-                                  </>
-                                }
-                              />
+const OrderSection = ({ isNew }: Props) => {
+  const { hasPermission } = usePermission();
+  const canCreateOrUpdate =
+    hasPermission('order.orders.create') || hasPermission('order.orders.update');
+  return (
+    <div className={OrderSectionWrapperStyle}>
+      <Subscribe to={[OrderInfoContainer]}>
+        {({ originalValues: initialValues, state, setFieldValue }) => {
+          const values = { ...initialValues, ...state };
+          const { currency } = values;
+          return (
+            <>
+              <div className={MainFieldsWrapperStyle}>
+                <GridColumn>
+                  <FormField
+                    name="poNo"
+                    initValue={values.poNo}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.PO} />}
+                        editable={canCreateOrUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="piNo"
+                    initValue={values.piNo}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.PI} />}
+                        editable={canCreateOrUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="issuedAt"
+                    initValue={values.issuedAt}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.date} />}
+                        editable={canCreateOrUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <BooleanValue>
+                    {({ value: isOpen, set: setPriceDialog }) => (
+                      <Subscribe to={[OrderItemsContainer]}>
+                        {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
+                          <StringValue>
+                            {({ value: previousCurrency, set: setPreviousCurrency }) => (
+                              <>
+                                <PriceDialog
+                                  isOpen={isOpen}
+                                  onRequestClose={() => {
+                                    setFieldValue(
+                                      'currency',
+                                      previousCurrency || initialValues.currency
+                                    );
+                                    setPriceDialog(false);
+                                  }}
+                                  onConfirm={() => {
+                                    setItemFieldValue(
+                                      'orderItems',
+                                      orderItems.map(orderItem => ({
+                                        ...orderItem,
+                                        price: {
+                                          ...orderItem.price,
+                                          amount: 0,
+                                        },
+                                      }))
+                                    );
+                                    setPreviousCurrency(values.currency);
+                                    setPriceDialog(false);
+                                  }}
+                                  onCancel={() => {
+                                    setFieldValue(
+                                      'currency',
+                                      previousCurrency || initialValues.currency
+                                    );
+                                    setPriceDialog(false);
+                                  }}
+                                  onDeny={() => {
+                                    setPriceDialog(false);
+                                    setPreviousCurrency(values.currency);
+                                  }}
+                                  message={
+                                    <>
+                                      <div className={DialogLineStyle}>
+                                        <FormattedMessage
+                                          {...messages.detectPriceChanged}
+                                          values={{
+                                            items: spanWithColor(
+                                              <FormattedMessage {...messages.sectionItems} />,
+                                              'ORDER_ITEM'
+                                            ),
+                                          }}
+                                        />
+                                      </div>
+                                      <div className={DialogLineStyle}>
+                                        <FormattedMessage
+                                          {...messages.changePrice}
+                                          values={{
+                                            items: spanWithColor(
+                                              <FormattedMessage {...messages.sectionItems} />,
+                                              'ORDER_ITEM'
+                                            ),
+                                          }}
+                                        />
+                                      </div>
+                                      <div className={DialogLineStyle}>
+                                        <FormattedMessage {...messages.resetPrice} />
+                                      </div>
+                                    </>
+                                  }
+                                />
 
-                              <FormField
-                                name="currency"
-                                initValue={values.currency}
-                                values={values}
-                                validator={validator}
-                                setFieldValue={setFieldValue}
-                              >
-                                {({ name, ...inputHandlers }) =>
-                                  selectSearchEnumInputFactory({
-                                    required: true,
-                                    enumType: 'Currency',
-                                    name,
-                                    inputHandlers,
-                                    isNew,
-                                    originalValue: initialValues[name],
-                                    event: {
-                                      onBlurHasValue: (value: string) => {
+                                <FormField
+                                  name="currency"
+                                  initValue={values.currency}
+                                  values={values}
+                                  validator={validator}
+                                  setFieldValue={setFieldValue}
+                                >
+                                  {({ name, onBlur, ...inputHandlers }) => (
+                                    <EnumSearchSelectInputFactory
+                                      name={name}
+                                      {...inputHandlers}
+                                      isNew={isNew}
+                                      originalValue={initialValues[name]}
+                                      label={<FormattedMessage {...messages.currency} />}
+                                      editable={canCreateOrUpdate}
+                                      enumType="Currency"
+                                      required
+                                      onBlur={value => {
                                         if (value !== values.currency && orderItems.length > 0) {
                                           setPriceDialog(true);
                                         } else {
                                           setPreviousCurrency(value);
                                         }
-                                      },
-                                    },
-                                    label: <FormattedMessage {...messages.currency} />,
-                                    hideClearButton: true,
-                                  })
-                                }
-                              </FormField>
-                            </>
-                          )}
-                        </StringValue>
-                      )}
-                    </Subscribe>
-                  )}
-                </BooleanValue>
-                <FormField
-                  name="incoterm"
-                  initValue={values.incoterm}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    selectSearchEnumInputFactory({
-                      enumType: 'Incoterm',
-                      name,
-                      inputHandlers,
-                      isNew,
-                      originalValue: initialValues[name],
-                      label: <FormattedMessage {...messages.incoterm} />,
-                    })
-                  }
-                </FormField>
-                <FormField
-                  name="deliveryPlace"
-                  initValue={values.deliveryPlace}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) =>
-                    textInputFactory({
-                      name,
-                      inputHandlers,
-                      isNew,
-                      originalValue: initialValues[name],
-                      label: <FormattedMessage {...messages.deliveryPlace} />,
-                    })
-                  }
-                </FormField>
-                <CustomFieldsFactory
-                  entityType="Order"
-                  customFields={values.customFields}
-                  setFieldValue={setFieldValue}
-                  editable
-                />
-              </GridColumn>
+                                      }}
+                                      hideClearButton
+                                    />
+                                  )}
+                                </FormField>
+                              </>
+                            )}
+                          </StringValue>
+                        )}
+                      </Subscribe>
+                    )}
+                  </BooleanValue>
+                  <FormField
+                    name="incoterm"
+                    initValue={values.incoterm}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <EnumSearchSelectInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.incoterm} />}
+                        editable={canCreateOrUpdate}
+                        enumType="Incoterm"
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="deliveryPlace"
+                    initValue={values.deliveryPlace}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.deliveryPlace} />}
+                        editable={canCreateOrUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <CustomFieldsFactory
+                    entityType="Order"
+                    customFields={values.customFields}
+                    setFieldValue={setFieldValue}
+                    editable={canCreateOrUpdate}
+                  />
+                </GridColumn>
 
-              <GridColumn gap="10px">
-                <FieldItem
-                  label={
-                    <Label>
-                      <FormattedMessage id="modules.Orders.inCharge" defaultMessage="IN CHARGE" /> (
-                      {values.inCharges.length})
-                    </Label>
-                  }
-                  tooltip={
-                    <FormTooltip
-                      infoMessage={
+                <GridColumn gap="10px">
+                  <UserAssignmentInputFactory
+                    name="inCharges"
+                    values={values.inCharges}
+                    onChange={(name: string, assignments: Array<Object>) =>
+                      setFieldValue(name, assignments)
+                    }
+                    label={
+                      <>
                         <FormattedMessage
-                          id="modules.Orders.inChargeExplanation"
-                          defaultMessage="You can choose up to 5 people in charge."
+                          id="components.inputs.inCharge"
+                          defaultMessage="IN CHARGE"
                         />
-                      }
-                    />
-                  }
-                />
-                <div className={AssignmentWrapperStyle}>
-                  {values &&
-                    values.inCharges &&
-                    values.inCharges.map(({ id, firstName, lastName }) => (
-                      <div className={AssignmentStyle} key={id}>
-                        <button
-                          className={RemoveAssignmentButtonStyle}
-                          onClick={() =>
-                            setFieldValue(
-                              'inCharges',
-                              values.inCharges.filter(({ id: userId }) => id !== userId)
-                            )
-                          }
-                          type="button"
-                        >
-                          <Icon icon="REMOVE" />
-                        </button>
-                        <UserAvatar firstName={firstName} lastName={lastName} />
-                      </div>
-                    ))}
-                  {((values && !values.inCharges) ||
-                    (values && values.inCharges && values.inCharges.length < 5)) && (
+                        {' ('}
+                        <FormattedNumber value={values.inCharges.length} />
+                        {')'}
+                      </>
+                    }
+                    infoMessage={
+                      <FormattedMessage
+                        id="modules.Orders.inChargeExplanation"
+                        defaultMessage="You can choose up to 5 people in charge."
+                      />
+                    }
+                    editable={canCreateOrUpdate}
+                  />
+
+                  <Label required>
+                    <FormattedMessage {...messages.exporter} />
+                  </Label>
+
+                  {canCreateOrUpdate ? (
                     <BooleanValue>
-                      {({ value: isOpen, set: slideToggle }) => (
+                      {({ value: opened, set: slideToggle }) => (
                         <>
-                          <button
-                            data-testid="addAssignerButton"
-                            className={AddAssignmentButtonStyle}
-                            type="button"
-                            onClick={() => slideToggle(true)}
-                          >
-                            <Icon icon="ADD" />
-                          </button>
+                          {!values.exporter ? (
+                            <DashedPlusButton
+                              width="195px"
+                              height="215px"
+                              onClick={() => slideToggle(true)}
+                            />
+                          ) : (
+                            <PartnerCard
+                              partner={values.exporter}
+                              onClick={() => slideToggle(true)}
+                            />
+                          )}
+
                           <SlideView
-                            isOpen={isOpen}
+                            isOpen={opened}
                             onRequestClose={() => slideToggle(false)}
                             options={{ width: '1030px' }}
                           >
-                            {isOpen && (
-                              <AssignUsers
-                                selected={values.inCharges}
-                                onSelect={selected => {
-                                  slideToggle(false);
-                                  setFieldValue('inCharges', selected);
-                                }}
-                                onCancel={() => slideToggle(false)}
-                              />
+                            {opened && (
+                              <Subscribe to={[OrderItemsContainer]}>
+                                {({ setFieldValue: resetOrderItems }) => (
+                                  <SelectExporters
+                                    selected={values.exporter}
+                                    onCancel={() => slideToggle(false)}
+                                    onSelect={newValue => {
+                                      slideToggle(false);
+                                      setFieldValue('exporter', newValue);
+                                      resetOrderItems('orderItems', []);
+                                    }}
+                                  />
+                                )}
+                              </Subscribe>
                             )}
                           </SlideView>
                         </>
                       )}
                     </BooleanValue>
-                  )}
-                </div>
-                <Label required>
-                  <FormattedMessage {...messages.exporter} />
-                </Label>
-                <BooleanValue>
-                  {({ value: opened, set: slideToggle }) => (
+                  ) : (
                     <>
                       {!values.exporter ? (
-                        <DashedPlusButton
-                          width="195px"
-                          height="215px"
-                          onClick={() => slideToggle(true)}
-                        />
+                        <GrayCard width="195px" height="215px" />
                       ) : (
-                        <PartnerCard partner={values.exporter} onClick={() => slideToggle(true)} />
+                        <PartnerCard partner={values.exporter} />
                       )}
-
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => slideToggle(false)}
-                        options={{ width: '1030px' }}
-                      >
-                        {opened && (
-                          <Subscribe to={[OrderItemsContainer]}>
-                            {({ setFieldValue: resetOrderItems }) => (
-                              <SelectExporters
-                                selected={values.exporter}
-                                onCancel={() => slideToggle(false)}
-                                onSelect={newValue => {
-                                  slideToggle(false);
-                                  setFieldValue('exporter', newValue);
-                                  resetOrderItems('orderItems', []);
-                                }}
-                              />
-                            )}
-                          </Subscribe>
-                        )}
-                      </SlideView>
                     </>
                   )}
-                </BooleanValue>
-              </GridColumn>
-            </div>
+                </GridColumn>
+              </div>
 
-            <Subscribe to={[OrderTagsContainer]}>
-              {({ state: { tags }, setFieldValue: changeTags }) => (
-                <FieldItem
-                  vertical
-                  label={
-                    <Label>
-                      <FormattedMessage {...messages.tags} />
-                    </Label>
-                  }
-                  input={
-                    <TagsInput
-                      editable={isNew}
-                      id="tags"
-                      name="tags"
-                      tagType="Order"
-                      values={tags}
-                      onChange={(field, value) => {
-                        changeTags(field, value);
-                      }}
-                    />
-                  }
-                />
-              )}
-            </Subscribe>
+              <Subscribe to={[OrderTagsContainer]}>
+                {({ state: { tags }, setFieldValue: changeTags }) => (
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage {...messages.tags} />
+                      </Label>
+                    }
+                    input={
+                      <TagsInput
+                        editable={canCreateOrUpdate}
+                        id="tags"
+                        name="tags"
+                        tagType="Order"
+                        values={tags}
+                        onChange={(field, value) => {
+                          changeTags(field, value);
+                        }}
+                      />
+                    }
+                  />
+                )}
+              </Subscribe>
 
-            <FormField
-              name="memo"
-              initValue={values.memo}
-              values={values}
-              validator={validator}
-              setFieldValue={setFieldValue}
-            >
-              {({ name, ...inputHandlers }) =>
-                textAreaFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  originalValue: initialValues[name],
-                  label: <FormattedMessage {...messages.memo} />,
-                  vertical: true,
-                  width: '680px',
-                  height: '65px',
-                })
-              }
-            </FormField>
+              <FormField
+                name="memo"
+                initValue={values.memo}
+                values={values}
+                validator={validator}
+                setFieldValue={setFieldValue}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <TextAreaInputFactory
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={initialValues[name]}
+                    label={<FormattedMessage {...messages.memo} />}
+                    editable={canCreateOrUpdate}
+                    vertical
+                    inputWidth="680px"
+                    inputHeight="65px"
+                  />
+                )}
+              </FormField>
 
-            <div className={DividerStyle} />
-            <Subscribe to={[OrderItemsContainer]}>
-              {({ state: { orderItems } }) => {
-                const {
-                  orderedQuantity,
-                  batchedQuantity,
-                  shippedQuantity,
-                  totalPrice,
-                  totalItems,
-                  activeBatches,
-                  archivedBatches,
-                } = getQuantitySummary(orderItems);
-                return (
-                  <div className={QuantitySummaryStyle}>
-                    <TotalSummary
-                      orderedQuantity={orderedQuantity}
-                      batchedQuantity={batchedQuantity}
-                      shippedQuantity={shippedQuantity}
-                      currency={currency}
-                      totalPrice={totalPrice}
-                      totalItems={totalItems}
-                      activeBatches={activeBatches}
-                      archivedBatches={archivedBatches}
-                    />
-                  </div>
-                );
-              }}
-            </Subscribe>
-          </>
-        );
-      }}
-    </Subscribe>
-  </div>
-);
+              <div className={DividerStyle} />
+              <Subscribe to={[OrderItemsContainer]}>
+                {({ state: { orderItems } }) => {
+                  const {
+                    orderedQuantity,
+                    batchedQuantity,
+                    shippedQuantity,
+                    totalPrice,
+                    totalItems,
+                    activeBatches,
+                    archivedBatches,
+                  } = getQuantitySummary(orderItems);
+                  return (
+                    <div className={QuantitySummaryStyle}>
+                      <TotalSummary
+                        orderedQuantity={orderedQuantity}
+                        batchedQuantity={batchedQuantity}
+                        shippedQuantity={shippedQuantity}
+                        currency={currency}
+                        totalPrice={totalPrice}
+                        totalItems={totalItems}
+                        activeBatches={activeBatches}
+                        archivedBatches={archivedBatches}
+                      />
+                    </div>
+                  );
+                }}
+              </Subscribe>
+            </>
+          );
+        }}
+      </Subscribe>
+    </div>
+  );
+};
 
 export default OrderSection;
