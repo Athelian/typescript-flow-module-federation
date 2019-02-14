@@ -40,6 +40,7 @@ type Props = LabelProps &
     SearchSelect: () => React.Node,
     Options: () => React.Node,
     enumType: string,
+    editable?: boolean,
   };
 
 const defaultProps = {
@@ -51,6 +52,12 @@ const defaultProps = {
   SearchSelect: DefaultSearchSelect,
   Options: DefaultOptions,
 };
+
+const parseOnChangeValue = (value: ?string): { target: { value: string } } => ({
+  target: {
+    value: value || '',
+  },
+});
 
 const EnumSelectInputFactory = ({
   isTouched,
@@ -81,7 +88,7 @@ const EnumSelectInputFactory = ({
   onBlur,
   onFocus,
   inputAlign,
-  readOnly,
+  editable,
 }: Props): React.Node => (
   <EnumProvider enumType={enumType}>
     {({ loading, error, data }) => {
@@ -124,16 +131,16 @@ const EnumSelectInputFactory = ({
         name,
         onChange: newValue => {
           if (onChange) {
-            if (!newValue) onChange('');
-            else onChange(itemToValue(newValue));
+            // $FlowFixMe itemToValue has some flow-type issue.
+            onChange(parseOnChangeValue(itemToValue(newValue)));
           }
         },
         onBlur: () => {
           if (onBlur) {
             if (data.find(item => itemToValue(item) === value)) onBlur();
             else if (onChange) {
-              if (!originalValue) onChange('');
-              else onChange(itemToValue(originalValue));
+              // $FlowFixMe itemToValue has some flow-type issue.
+              onChange(parseOnChangeValue(itemToValue(originalValue)));
               setTimeout(() => {
                 onBlur();
               }, 0);
@@ -141,10 +148,14 @@ const EnumSelectInputFactory = ({
           }
         },
         onFocus,
-        onSearch: onChange,
+        onSearch: newQuery => {
+          if (onChange) {
+            onChange(parseOnChangeValue(newQuery));
+          }
+        },
         afterClearSelection: () => {
           if (onChange) {
-            onChange('');
+            onChange(parseOnChangeValue(null));
           }
           if (onBlur && onFocus) {
             setTimeout(() => {
@@ -154,7 +165,7 @@ const EnumSelectInputFactory = ({
           }
         },
         align: inputAlign,
-        readOnly,
+        readOnly: !editable,
         itemToString,
         itemToValue,
         renderSelect: ({ ...rest }) => <SearchSelect {...rest} {...inputConfig} />,

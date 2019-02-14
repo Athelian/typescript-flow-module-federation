@@ -23,6 +23,7 @@ type Props = LabelProps &
     Input: () => React.Node,
     showCalculator: boolean,
     onCalculate?: Function,
+    editable?: boolean,
   };
 
 const defaultProps = {
@@ -64,7 +65,7 @@ const NumberInputFactory = ({
   onBlur,
   onFocus,
   inputAlign,
-  readOnly,
+  editable,
   nullable,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
@@ -98,7 +99,7 @@ const NumberInputFactory = ({
     onBlur,
     onFocus,
     align: inputAlign,
-    readOnly,
+    readOnly: !editable,
     nullable,
   };
 
@@ -107,9 +108,7 @@ const NumberInputFactory = ({
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
-        readOnly ? (
-          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        ) : (
+        editable ? (
           <>
             <InputWrapper {...inputWrapperConfig}>
               <Input {...inputConfig} />
@@ -118,6 +117,8 @@ const NumberInputFactory = ({
               <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
             )}
           </>
+        ) : (
+          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
         )
       }
     />

@@ -30,6 +30,7 @@ type Props = LabelProps &
     Select: () => React.Node,
     Options: () => React.Node,
     enumType: string,
+    editable?: boolean,
   };
 
 const defaultProps = {
@@ -40,6 +41,7 @@ const defaultProps = {
   isTouched: false,
   Select: DefaultSelect,
   Options: DefaultOptions,
+  editable: true,
 };
 
 const EnumSelectInputFactory = ({
@@ -70,7 +72,7 @@ const EnumSelectInputFactory = ({
   onBlur,
   onFocus,
   inputAlign,
-  readOnly,
+  editable,
 }: Props): React.Node => (
   <EnumProvider enumType={enumType}>
     {({ loading, error, data }) => {
@@ -114,7 +116,7 @@ const EnumSelectInputFactory = ({
         onBlur,
         onFocus,
         align: inputAlign,
-        readOnly,
+        readOnly: !editable,
         itemToString,
         itemToValue,
         renderSelect: ({ ...rest }) => <Select {...rest} {...inputConfig} />,

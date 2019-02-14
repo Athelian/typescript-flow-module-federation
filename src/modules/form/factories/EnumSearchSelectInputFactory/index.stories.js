@@ -53,7 +53,7 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
               }}
             >
               {({ value: { name, ...inputHandlers } }) => {
-                const readOnly = !!(user.role === 'default');
+                const editable = !!(user.role === 'default');
 
                 return (
                   <>
@@ -63,12 +63,12 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
                       isNew={isNew}
                       originalValue={initialValues[name]}
                       label="FORM MIMIC"
-                      readOnly={readOnly}
+                      editable={editable}
                       placeholder="Please input a value"
                       enumType="Seaport"
                     />
                     <ToggleInput
-                      toggled={readOnly}
+                      toggled={editable}
                       onToggle={() =>
                         set('user', {
                           ...user,
@@ -76,7 +76,7 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
                         })
                       }
                     >
-                      <Label>READ ONLY</Label>
+                      <Label>editable</Label>
                     </ToggleInput>
                     <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
                       <Label>IS NEW</Label>

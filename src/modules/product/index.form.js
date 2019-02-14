@@ -12,6 +12,8 @@ import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
+import NoPermission from 'components/NoPermission';
+import { PermissionConsumer } from 'modules/permission';
 import { encodeId, decodeId } from 'utils/id';
 import {
   ProductInfoContainer,
@@ -27,6 +29,7 @@ import {
   prepareCreateProductInput,
   updateProductMutation,
   prepareUpdateProductInput,
+  prepareProductOnlyProviderFiles,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -98,14 +101,20 @@ class ProductFormModule extends React.Component<Props> {
     formData: Object,
     saveProduct: any => Promise<?{ data?: CreateProductResponse | UpdateProductResponse }>,
     onSuccess: () => void,
-    onErrors: (Array<Object>) => void
+    onErrors: (Array<Object>) => void,
+    onlySetProviderFiles: boolean
   ) => {
     const { productId } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
-    const input = isNewOrClone
-      ? prepareCreateProductInput(formData)
-      : prepareUpdateProductInput(formData);
+    let input = null;
+    if (isNewOrClone) {
+      input = prepareCreateProductInput(formData);
+    } else if (onlySetProviderFiles) {
+      input = prepareProductOnlyProviderFiles(formData);
+    } else {
+      input = prepareUpdateProductInput(formData);
+    }
 
     if (isNewOrClone) {
       const result = await saveProduct({
@@ -175,168 +184,183 @@ class ProductFormModule extends React.Component<Props> {
     }
 
     return (
-      <Provider>
-        <UIConsumer>
-          {uiState => (
-            <Mutation
-              mutation={isNewOrClone ? createProductMutation : updateProductMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(saveProduct, { loading: isLoading, error: apiError }) => (
-                <Layout
-                  {...(isSlideView ? {} : uiState)}
-                  navBar={
-                    <NavBar>
-                      <EntityIcon icon="PRODUCT" color="PRODUCT" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="product_productSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Products.product"
-                              defaultMessage="PRODUCT"
-                            />
-                          }
-                          icon="PRODUCT"
-                        />
-                        <SectionTabs
-                          link="product_productProvidersSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Products.providers"
-                              defaultMessage="END PRODUCTS"
-                            />
-                          }
-                          icon="PROVIDER"
-                        />
-                      </JumpToSection>
-                      <Subscribe
-                        to={[
-                          ProductInfoContainer,
-                          ProductProvidersContainer,
-                          ProductTagsContainer,
-                          ProductFilesContainer,
-                          FormContainer,
-                        ]}
-                      >
-                        {(
-                          productInfoState,
-                          productProvidersState,
-                          productTagsState,
-                          productFilesState,
-                          form
-                        ) =>
-                          (isNewOrClone ||
-                            productInfoState.isDirty() ||
-                            productProvidersState.isDirty() ||
-                            productTagsState.isDirty() ||
-                            productFilesState.isDirty()) && (
-                            <>
-                              {this.isNewOrClone() ? (
-                                <CancelButton onClick={() => this.onCancel()} />
-                              ) : (
-                                <ResetButton
-                                  onClick={() => {
-                                    this.onReset({
-                                      productInfoState,
-                                      productProvidersState,
-                                      productTagsState,
-                                      productFilesState,
-                                      form,
-                                    });
-                                  }}
-                                />
-                              )}
-
-                              <SaveButton
-                                data-testid="saveButton"
-                                disabled={
-                                  !form.isReady(
-                                    {
-                                      ...productInfoState.state,
-                                      ...productProvidersState.state,
-                                      ...productTagsState.state,
-                                      ...productFilesState.state,
-                                    },
-                                    validator
-                                  )
+      <PermissionConsumer>
+        {hasPermission =>
+          hasPermission('product.products.get') ? (
+            <Provider>
+              <UIConsumer>
+                {uiState => (
+                  <Mutation
+                    mutation={isNewOrClone ? createProductMutation : updateProductMutation}
+                    onCompleted={this.onMutationCompleted}
+                    {...mutationKey}
+                  >
+                    {(saveProduct, { loading: isLoading, error: apiError }) => (
+                      <Layout
+                        {...(isSlideView ? {} : uiState)}
+                        navBar={
+                          <NavBar>
+                            <EntityIcon icon="PRODUCT" color="PRODUCT" />
+                            <JumpToSection>
+                              <SectionTabs
+                                link="product_productSection"
+                                label={
+                                  <FormattedMessage
+                                    id="modules.Products.product"
+                                    defaultMessage="PRODUCT"
+                                  />
                                 }
-                                isLoading={isLoading}
-                                onClick={() =>
-                                  this.onSave(
-                                    {
-                                      ...productInfoState.state,
-                                      ...productProvidersState.state,
-                                      ...productTagsState.state,
-                                      ...productFilesState.state,
-                                    },
-                                    saveProduct,
-                                    () => {
-                                      productInfoState.onSuccess();
-                                      productProvidersState.onSuccess();
-                                      productTagsState.onSuccess();
-                                      productFilesState.onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
+                                icon="PRODUCT"
                               />
-                            </>
-                          )
+                              <SectionTabs
+                                link="product_productProvidersSection"
+                                label={
+                                  <FormattedMessage
+                                    id="modules.Products.providers"
+                                    defaultMessage="END PRODUCTS"
+                                  />
+                                }
+                                icon="PROVIDER"
+                              />
+                            </JumpToSection>
+
+                            <Subscribe
+                              to={[
+                                ProductInfoContainer,
+                                ProductProvidersContainer,
+                                ProductTagsContainer,
+                                ProductFilesContainer,
+                                FormContainer,
+                              ]}
+                            >
+                              {(
+                                productInfoState,
+                                productProvidersState,
+                                productTagsState,
+                                productFilesState,
+                                form
+                              ) =>
+                                (isNewOrClone ||
+                                  productInfoState.isDirty() ||
+                                  productProvidersState.isDirty() ||
+                                  productTagsState.isDirty() ||
+                                  productFilesState.isDirty()) && (
+                                  <>
+                                    {this.isNewOrClone() ? (
+                                      <CancelButton onClick={() => this.onCancel()} />
+                                    ) : (
+                                      <ResetButton
+                                        onClick={() => {
+                                          this.onReset({
+                                            productInfoState,
+                                            productProvidersState,
+                                            productTagsState,
+                                            productFilesState,
+                                            form,
+                                          });
+                                        }}
+                                      />
+                                    )}
+
+                                    <SaveButton
+                                      data-testid="saveButton"
+                                      disabled={
+                                        !form.isReady(
+                                          {
+                                            ...productInfoState.state,
+                                            ...productProvidersState.state,
+                                            ...productTagsState.state,
+                                            ...productFilesState.state,
+                                          },
+                                          validator
+                                        )
+                                      }
+                                      isLoading={isLoading}
+                                      onClick={() =>
+                                        this.onSave(
+                                          {
+                                            ...productInfoState.state,
+                                            ...productProvidersState.state,
+                                            ...productTagsState.state,
+                                            ...productFilesState.state,
+                                          },
+                                          saveProduct,
+                                          () => {
+                                            productInfoState.onSuccess();
+                                            productProvidersState.onSuccess();
+                                            productTagsState.onSuccess();
+                                            productFilesState.onSuccess();
+                                            form.onReset();
+                                          },
+                                          form.onErrors,
+                                          hasPermission('product.productProviders.setDocuments')
+                                        )
+                                      }
+                                    />
+                                  </>
+                                )
+                              }
+                            </Subscribe>
+                          </NavBar>
                         }
-                      </Subscribe>
-                    </NavBar>
-                  }
-                >
-                  {apiError && <p>Error: Please try again.</p>}
-                  {!productId ? (
-                    <ProductForm product={{}} isNewOrClone />
-                  ) : (
-                    <QueryForm
-                      query={productFormQuery}
-                      entityId={productId}
-                      entityType="product"
-                      render={product => (
-                        <Subscribe
-                          to={[
-                            ProductInfoContainer,
-                            ProductProvidersContainer,
-                            ProductTagsContainer,
-                            ProductFilesContainer,
-                          ]}
-                        >
-                          {(
-                            productInfoState,
-                            productProvidersState,
-                            productTagsState,
-                            productFilesState
-                          ) => (
-                            <ProductForm
-                              isNewOrClone={isNewOrClone}
-                              product={product}
-                              onFormReady={() => {
-                                const { tags, productProviders, files, ...info } = this.isClone()
-                                  ? cleanUpCloneProductInput(product)
-                                  : product;
-                                productInfoState.initDetailValues(info);
-                                productProvidersState.initDetailValues(productProviders);
-                                productTagsState.initDetailValues(tags);
-                                productFilesState.initDetailValues(files);
-                              }}
-                            />
-                          )}
-                        </Subscribe>
-                      )}
-                    />
-                  )}
-                </Layout>
-              )}
-            </Mutation>
-          )}
-        </UIConsumer>
-      </Provider>
+                      >
+                        {apiError && <p>Error: Please try again.</p>}
+                        {!productId ? (
+                          <ProductForm product={{}} isNewOrClone />
+                        ) : (
+                          <QueryForm
+                            query={productFormQuery}
+                            entityId={productId}
+                            entityType="product"
+                            render={product => (
+                              <Subscribe
+                                to={[
+                                  ProductInfoContainer,
+                                  ProductProvidersContainer,
+                                  ProductTagsContainer,
+                                  ProductFilesContainer,
+                                ]}
+                              >
+                                {(
+                                  productInfoState,
+                                  productProvidersState,
+                                  productTagsState,
+                                  productFilesState
+                                ) => (
+                                  <ProductForm
+                                    isNewOrClone={isNewOrClone}
+                                    product={product}
+                                    onFormReady={() => {
+                                      const {
+                                        tags,
+                                        productProviders,
+                                        files,
+                                        ...info
+                                      } = this.isClone()
+                                        ? cleanUpCloneProductInput(product)
+                                        : product;
+                                      productInfoState.initDetailValues(info);
+                                      productProvidersState.initDetailValues(productProviders);
+                                      productTagsState.initDetailValues(tags);
+                                      productFilesState.initDetailValues(files);
+                                    }}
+                                  />
+                                )}
+                              </Subscribe>
+                            )}
+                          />
+                        )}
+                      </Layout>
+                    )}
+                  </Mutation>
+                )}
+              </UIConsumer>
+            </Provider>
+          ) : (
+            <NoPermission />
+          )
+        }
+      </PermissionConsumer>
     );
   }
 }

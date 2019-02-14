@@ -15,12 +15,12 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
         <ObjectValue
           defaultValue={{
             currentFocused: null,
-            readOnly: false,
+            editable: false,
             isNew: false,
           }}
         >
           {({
-            value: { currentFocused, value, originalValue, readOnly, isNew },
+            value: { currentFocused, value, originalValue, editable, isNew },
             set: setFieldValue,
           }) => (
             <>
@@ -32,7 +32,7 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
                 onBlur={() => setFieldValue('currentFocused', null)}
                 isNew={isNew}
                 isFocused={currentFocused === 'inputOne'}
-                readOnly={readOnly}
+                editable={editable}
                 value={value}
                 originalValue={originalValue}
                 label="BASIC"
@@ -40,8 +40,8 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
                 enumType="BatchAdjustmentReason"
                 type="label"
               />
-              <ToggleInput toggled={readOnly} onToggle={() => setFieldValue('readOnly', !readOnly)}>
-                <Label>READ ONLY</Label>
+              <ToggleInput toggled={editable} onToggle={() => setFieldValue('editable', !editable)}>
+                <Label>editable</Label>
               </ToggleInput>
               <ToggleInput toggled={isNew} onToggle={() => setFieldValue('isNew', !isNew)}>
                 <Label>IS NEW</Label>
@@ -91,7 +91,7 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
               }}
             >
               {({ value: { name, ...inputHandlers } }) => {
-                const readOnly = !!(user.role === 'default');
+                const editable = !!(user.role === 'default');
 
                 return (
                   <>
@@ -101,12 +101,12 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
                       isNew={isNew}
                       originalValue={initialValues[name]}
                       label="FORM MIMIC"
-                      readOnly={readOnly}
+                      editable={editable}
                       placeholder="Please input a value"
                       enumType="Seaport"
                     />
                     <ToggleInput
-                      toggled={readOnly}
+                      toggled={editable}
                       onToggle={() =>
                         set('user', {
                           ...user,
@@ -114,7 +114,7 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
                         })
                       }
                     >
-                      <Label>READ ONLY</Label>
+                      <Label>editable</Label>
                     </ToggleInput>
                     <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
                       <Label>IS NEW</Label>

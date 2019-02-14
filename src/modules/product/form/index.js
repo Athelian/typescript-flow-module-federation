@@ -10,6 +10,7 @@ import { CloneButton } from 'components/Buttons';
 import { encodeId } from 'utils/id';
 import { isEquals, isDataType } from 'utils/fp';
 import { FormContainer } from 'modules/form';
+import { PermissionConsumer } from 'modules/permission';
 import { ProductSection, ProductProvidersSection } from './components';
 import { ProductFormWrapperStyle } from './style';
 
@@ -58,69 +59,76 @@ class ProductForm extends React.Component<Props> {
     const { updatedAt, updatedBy, archived } = product;
 
     return (
-      <div className={ProductFormWrapperStyle}>
-        <SectionWrapper id="product_productSection">
-          <SectionHeader
-            icon="PRODUCT"
-            title={<FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />}
-          >
-            {!isNewOrClone && (
-              <>
-                <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                <BooleanValue>
-                  {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-                    <StatusToggle
-                      archived={archived}
-                      openStatusDialog={() => dialogToggle(true)}
-                      activateDialog={
-                        <ProductActivateDialog
-                          product={product}
-                          isOpen={statusDialogIsOpen && !!archived}
-                          onRequestClose={() => dialogToggle(false)}
+      <PermissionConsumer>
+        {hasPermission => (
+          <div className={ProductFormWrapperStyle}>
+            <SectionWrapper id="product_productSection">
+              <SectionHeader
+                icon="PRODUCT"
+                title={<FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />}
+              >
+                {!isNewOrClone && (
+                  <>
+                    <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                    <BooleanValue>
+                      {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                        <StatusToggle
+                          readOnly={!hasPermission('product.products.update')}
+                          archived={archived}
+                          openStatusDialog={() => dialogToggle(true)}
+                          activateDialog={
+                            <ProductActivateDialog
+                              product={product}
+                              isOpen={statusDialogIsOpen && !!archived}
+                              onRequestClose={() => dialogToggle(false)}
+                            />
+                          }
+                          archiveDialog={
+                            <ProductArchiveDialog
+                              product={product}
+                              isOpen={statusDialogIsOpen && !archived}
+                              onRequestClose={() => dialogToggle(false)}
+                            />
+                          }
                         />
-                      }
-                      archiveDialog={
-                        <ProductArchiveDialog
-                          product={product}
-                          isOpen={statusDialogIsOpen && !archived}
-                          onRequestClose={() => dialogToggle(false)}
-                        />
-                      }
-                    />
-                  )}
-                </BooleanValue>
-                <CloneButton onClick={this.onClone} />
-              </>
-            )}
-          </SectionHeader>
-          <ProductSection isNew={isNewOrClone} />
-        </SectionWrapper>
+                      )}
+                    </BooleanValue>
+                    {hasPermission('product.products.create') && (
+                      <CloneButton onClick={this.onClone} />
+                    )}
+                  </>
+                )}
+              </SectionHeader>
+              <ProductSection isNew={isNewOrClone} />
+            </SectionWrapper>
 
-        <SectionWrapper id="product_productProvidersSection">
-          <SectionHeader
-            icon="PROVIDER"
-            title={
-              <FormattedMessage id="modules.Products.providers" defaultMessage="END PRODUCTS" />
-            }
-          />
-          <Subscribe to={[FormContainer]}>
-            {({ state: { touched, errors } }) => {
-              const errorMessage: ?string | ?Object = errors.productProviders;
-              if (errorMessage && touched.productProviders) {
-                if (isDataType(Object, errorMessage)) {
-                  const [topErrorMessage]: Array<any> = Object.values(errorMessage);
-                  return <p>{topErrorMessage}</p>;
+            <SectionWrapper id="product_productProvidersSection">
+              <SectionHeader
+                icon="PROVIDER"
+                title={
+                  <FormattedMessage id="modules.Products.providers" defaultMessage="END PRODUCTS" />
                 }
+              />
+              <Subscribe to={[FormContainer]}>
+                {({ state: { touched, errors } }) => {
+                  const errorMessage: ?string | ?Object = errors.productProviders;
+                  if (errorMessage && touched.productProviders) {
+                    if (isDataType(Object, errorMessage)) {
+                      const [topErrorMessage]: Array<any> = Object.values(errorMessage);
+                      return <p>{topErrorMessage}</p>;
+                    }
 
-                return <p>{errorMessage}</p>;
-              }
+                    return <p>{errorMessage}</p>;
+                  }
 
-              return '';
-            }}
-          </Subscribe>
-          <ProductProvidersSection />
-        </SectionWrapper>
-      </div>
+                  return '';
+                }}
+              </Subscribe>
+              <ProductProvidersSection />
+            </SectionWrapper>
+          </div>
+        )}
+      </PermissionConsumer>
     );
   }
 }
