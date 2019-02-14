@@ -63,6 +63,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
 
   componentDidMount() {
     const { productProvider, initDetailValues } = this.props;
+    console.log(productProvider);
     initDetailValues(productProvider);
   }
 
