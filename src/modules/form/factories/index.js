@@ -1,4 +1,5 @@
 // @flow
+import AssignmentApprovalFactory from './AssignmentApprovalFactory';
 import CustomFieldsFactory from './CustomFieldsFactory';
 import DateInputFactory from './DateInputFactory';
 import DayInputFactory from './DayInputFactory';
@@ -11,6 +12,7 @@ import TextInputFactory from './TextInputFactory';
 import UserAssignmentInputFactory from './UserAssignmentInputFactory';
 
 export {
+  AssignmentApprovalFactory,
   CustomFieldsFactory,
   DateInputFactory,
   DayInputFactory,
