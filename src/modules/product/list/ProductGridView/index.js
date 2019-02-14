@@ -14,86 +14,77 @@ type Props = {
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: Function,
 };
 
 function onClone(productId: string) {
   navigate(`/product/clone/${encodeId(productId)}`);
 }
 
-const defaultRenderItem = (item: Object, canCreate: boolean, canUpdate: boolean) => (
-  <BooleanValue key={item.id}>
-    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-      <>
-        {item.archived ? (
-          <ProductActivateDialog
-            onRequestClose={() => dialogToggle(false)}
-            isOpen={statusDialogIsOpen}
-            product={item}
-          />
-        ) : (
-          <ProductArchiveDialog
-            onRequestClose={() => dialogToggle(false)}
-            isOpen={statusDialogIsOpen}
-            product={item}
-          />
-        )}
-        <ProductCard
-          product={item}
-          actions={[
-            ...(canCreate ? [<CardAction icon="CLONE" onClick={() => onClone(item.id)} />] : []),
-            ...(canUpdate
-              ? [
-                  <CardAction
-                    icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
-                    onClick={() => dialogToggle(true)}
-                  />,
-                ]
-              : []),
-          ]}
-          showActionsOnHover
-        />
-      </>
-    )}
-  </BooleanValue>
-);
-
-const defaultProps = {
-  renderItem: defaultRenderItem,
-};
-
 const ProductGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+  const { items, onLoadMore, hasMore, isLoading } = props;
 
   return (
     <PermissionConsumer>
-      {hasPermission => (
-        <GridView
-          onLoadMore={onLoadMore}
-          hasMore={hasMore}
-          isLoading={isLoading}
-          itemWidth="195px"
-          isEmpty={items.length === 0}
-          emptyMessage={
-            <FormattedMessage
-              id="modules.Products.noProductFound"
-              defaultMessage="No products found"
-            />
-          }
-        >
-          {items.map(item =>
-            renderItem(
-              item,
-              hasPermission('product.products.create'),
-              hasPermission('product.products.update')
-            )
-          )}
-        </GridView>
-      )}
+      {hasPermission => {
+        const canCreate = hasPermission('product.products.create');
+        const canUpdate = hasPermission('product,products.update');
+        return (
+          <GridView
+            onLoadMore={onLoadMore}
+            hasMore={hasMore}
+            isLoading={isLoading}
+            itemWidth="195px"
+            isEmpty={items.length === 0}
+            emptyMessage={
+              <FormattedMessage
+                id="modules.Products.noProductFound"
+                defaultMessage="No products found"
+              />
+            }
+          >
+            {items.map(item => (
+              <BooleanValue key={item.id}>
+                {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+                  <>
+                    {item.archived ? (
+                      <ProductActivateDialog
+                        onRequestClose={() => dialogToggle(false)}
+                        isOpen={statusDialogIsOpen}
+                        product={item}
+                      />
+                    ) : (
+                      <ProductArchiveDialog
+                        onRequestClose={() => dialogToggle(false)}
+                        isOpen={statusDialogIsOpen}
+                        product={item}
+                      />
+                    )}
+                    <ProductCard
+                      product={item}
+                      actions={[
+                        ...(canCreate
+                          ? [<CardAction icon="CLONE" onClick={() => onClone(item.id)} />]
+                          : []),
+                        ...(canUpdate
+                          ? [
+                              <CardAction
+                                icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+                                onClick={() => dialogToggle(true)}
+                              />,
+                            ]
+                          : []),
+                      ]}
+                      showActionsOnHover
+                    />
+                  </>
+                )}
+              </BooleanValue>
+            ))}
+          </GridView>
+        );
+      }}
     </PermissionConsumer>
   );
 };
-
-ProductGridView.defaultProps = defaultProps;
 
 export default ProductGridView;

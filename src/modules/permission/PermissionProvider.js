@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { ROLE_MANAGER } from 'modules/user/constants';
 import { isEnableBetaFeature } from 'utils/env';
 import PermissionContext from './PermissionContext';
 
@@ -21,13 +22,10 @@ const product = {
   ],
 };
 
-// just for hardcode develop, I will remove these after api is ready.
+// just for hard code develop, I will remove these after api is ready.
 const defaultPermissions = [...product.default];
 
 const managerPermissions = [...product.manager];
-
-console.warn(defaultPermissions);
-console.warn(managerPermissions);
 
 type ContextProviderProps = {
   user: Object,
@@ -36,7 +34,7 @@ type ContextProviderProps = {
 
 const PermissionProvider = ({ user, children }: ContextProviderProps) => {
   const permissions =
-    !isEnableBetaFeature || user.role === 'manager' ? managerPermissions : defaultPermissions;
+    !isEnableBetaFeature || user.role === ROLE_MANAGER ? managerPermissions : defaultPermissions;
   return (
     <PermissionContext.Provider value={{ permissions }}>{children}</PermissionContext.Provider>
   );
