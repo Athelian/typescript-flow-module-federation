@@ -8,6 +8,7 @@ import MetricInputFactory from './MetricInputFactory';
 import NumberInputFactory from './NumberInputFactory';
 import TextAreaInputFactory from './TextAreaInputFactory';
 import TextInputFactory from './TextInputFactory';
+import UserAssignmentInputFactory from './UserAssignmentInputFactory';
 
 export {
   CustomFieldsFactory,
@@ -19,4 +20,5 @@ export {
   NumberInputFactory,
   TextAreaInputFactory,
   TextInputFactory,
+  UserAssignmentInputFactory,
 };
