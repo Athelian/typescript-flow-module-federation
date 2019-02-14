@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
-
 import {
   EnumSearchSelectInputFactory,
   NumberInputFactory,
@@ -207,7 +206,6 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                         enumType="Country"
                       />
                     )}
@@ -231,7 +229,6 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -254,7 +251,6 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -277,7 +273,6 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                         enumType="Currency"
                       />
                     )}

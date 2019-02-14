@@ -58,7 +58,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -81,7 +80,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -104,7 +102,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                         enumType="Currency"
                       />
                     )}
@@ -129,7 +126,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -153,7 +149,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                         showCalculator
                         onCalculate={calculateUnitVolume}
                       />
@@ -179,7 +174,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -203,7 +197,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
@@ -227,7 +220,6 @@ const SpecificationsSection = ({ isNew }: Props) => (
                           />
                         }
                         editable={canCreateOrUpdate}
-                        placeholder="Please input a value"
                       />
                     )}
                   </FormField>
