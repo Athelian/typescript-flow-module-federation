@@ -6,7 +6,7 @@
         "endpoints": {
           "dev": {
             "url": "https://graphql-staging.zenport.io/graphql"
-          },
+          }
         },
         "generate-fragments": {
           "output": "src/generated/fragments.js",
