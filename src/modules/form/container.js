@@ -78,7 +78,6 @@ export default class FormContainer extends Container<FormState> {
       validate: (any, any) => Promise<any>,
     } = EmptyValidation
   ) => {
-    logger.warn('validation', formData, schema);
     const { errors } = this.state;
     schema
       .validate(formData, { abortEarly: false })

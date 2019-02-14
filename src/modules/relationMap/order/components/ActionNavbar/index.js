@@ -383,7 +383,18 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             .map(batchId =>
                               client.mutate({
                                 mutation: cloneBatchMutation,
-                                variables: { id: batchId, input: {} },
+                                variables: {
+                                  id: batchId,
+                                  input: {
+                                    deliveredAt: null,
+                                    desiredAt: null,
+                                    expiredAt: null,
+                                    customFields: null,
+                                    producedAt: null,
+                                    tagIds: [],
+                                    batchAdjustments: [],
+                                  },
+                                },
                                 refetchQueries: allOrderIds.map(orderId => ({
                                   query: orderDetailQuery,
                                   variables: {
