@@ -9,6 +9,8 @@ import useListConfig from 'hooks/useListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
+import NoPermission from 'components/NoPermission';
+import { PermissionConsumer } from 'modules/permission';
 import OrderList from './list';
 import messages from './messages';
 import { ordersExportQuery } from './query';
@@ -60,38 +62,48 @@ function OrderModule(props: Props) {
     'filterOrder'
   );
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="ORDER"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-              <Link to="new">
-                <NewButton />
-              </Link>
-              <ExportButton
-                type="Orders"
-                exportQuery={ordersExportQuery}
-                variables={{
-                  filterBy: filterAndSort.filter,
-                  sortBy: {
-                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                  },
-                }}
-              />
-            </NavBar>
-          }
-        >
-          <OrderList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <PermissionConsumer>
+      {hasPermission =>
+        hasPermission('order.orders.list') ? (
+          <UIConsumer>
+            {uiState => (
+              <Layout
+                {...uiState}
+                navBar={
+                  <NavBar>
+                    <FilterToolBar
+                      icon="ORDER"
+                      sortFields={sortFields}
+                      filtersAndSort={filterAndSort}
+                      onChange={onChangeFilter}
+                    />
+                    {hasPermission('order.orders.create') && (
+                      <Link to="new">
+                        <NewButton />
+                      </Link>
+                    )}
+                    <ExportButton
+                      type="Orders"
+                      exportQuery={ordersExportQuery}
+                      variables={{
+                        filterBy: filterAndSort.filter,
+                        sortBy: {
+                          [filterAndSort.sort.field]: filterAndSort.sort.direction,
+                        },
+                      }}
+                    />
+                  </NavBar>
+                }
+              >
+                <OrderList {...queryVariables} />
+              </Layout>
+            )}
+          </UIConsumer>
+        ) : (
+          <NoPermission />
+        )
+      }
+    </PermissionConsumer>
   );
 }
 
