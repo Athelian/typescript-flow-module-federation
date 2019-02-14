@@ -15,6 +15,7 @@ import {
 } from './style';
 
 type Props = {
+  readOnly: boolean,
   shipment: {
     voyages: Array<{
       arrival?: {
@@ -85,7 +86,7 @@ const voyagesGenerator = (voyages: Array<Object>, total: number) => {
   return [...voyages, ...newVoyages];
 };
 
-class VoyageSelector extends React.Component<Props> {
+class VoyageSelector extends React.PureComponent<Props> {
   renderIcon = (options: RenderIconOptions) => {
     const { numOfIcons, isActive, toggle, isOptionsOpen } = options;
     const { shipment } = this.props;
@@ -145,6 +146,7 @@ class VoyageSelector extends React.Component<Props> {
 
   onClick = (numOfIcons: number, isOptionsOpen: boolean, toggle?: () => void) => () => {
     const { shipment, setFieldDeepValue } = this.props;
+
     const { voyages } = shipment;
     if (isOptionsOpen) {
       setFieldDeepValue('voyages', voyagesGenerator(voyages, numOfIcons));
@@ -155,12 +157,15 @@ class VoyageSelector extends React.Component<Props> {
   render() {
     const {
       shipment: { voyages },
+      readOnly,
     } = this.props;
     return (
       <BooleanValue>
         {({ value: isOptionsOpen, set: selectorToggle }) =>
           isOptionsOpen ? (
-            <OutsideClickHandler onOutsideClick={() => selectorToggle(false)}>
+            <OutsideClickHandler
+              onOutsideClick={() => (!readOnly ? selectorToggle(false) : () => {})}
+            >
               <div data-testid="voyageOptions" className={VoyageOptionsWrapperStyle}>
                 {this.renderIcon({
                   numOfIcons: 1,
@@ -186,7 +191,7 @@ class VoyageSelector extends React.Component<Props> {
             <div
               data-testid="voyageSelector"
               className={VoyageSelectorWrapperStyle}
-              onClick={() => selectorToggle(true)}
+              onClick={() => (!readOnly ? selectorToggle(true) : () => {})}
               role="presentation"
             >
               <Label align="right">

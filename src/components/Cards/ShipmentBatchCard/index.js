@@ -45,6 +45,7 @@ type OptionalProps = {
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
   selectable: boolean,
+  readOnly: boolean,
 };
 
 type Props = OptionalProps & {
@@ -58,6 +59,7 @@ const defaultProps = {
   onClone: () => {},
   onClear: () => {},
   selectable: false,
+  readOnly: false,
 };
 
 const ShipmentBatchCard = ({
@@ -68,16 +70,18 @@ const ShipmentBatchCard = ({
   saveOnBlur,
   currency,
   selectable,
+  readOnly,
   ...rest
 }: Props) => {
   if (!batch) return '';
 
-  const actions = selectable
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-        <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
-      ];
+  const actions =
+    selectable || readOnly
+      ? []
+      : [
+          <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
+        ];
 
   const {
     id,
