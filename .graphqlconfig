@@ -7,9 +7,6 @@
           "dev": {
             "url": "https://graphql-staging.zenport.io/graphql"
           },
-          "localhost": {
-            "url": "http://localhost:8080/graphql"
-          }
         },
         "generate-fragments": {
           "output": "src/generated/fragments.js",
