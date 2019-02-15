@@ -106,9 +106,9 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PACKAGE QUANTITY"
                       />
                     }
-                    // FIXME: calculator is wrong UI
-                    showCalculator={allowCreateOrUpdate}
-                    renderCalculate={() => (
+                    showAutoCalculateToggle={allowCreateOrUpdate}
+                    autoCalculateIsToggled={values.autoCalculateBoolean}
+                    onToggleAutoCalculate={() => (
                       <div className={CalculatorButtonStyle}>
                         <Subscribe to={[BatchFormContainer]}>
                           {({ state: batchFormState, triggerCalculatePackageQuantity }) => (
