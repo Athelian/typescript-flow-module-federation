@@ -2,7 +2,14 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
-import { SelectInput, DefaultSelect, DefaultOptions, Display } from 'components/Form';
+import {
+  SelectInput,
+  DefaultSelect,
+  DefaultOptions,
+  Display,
+  DefaultStyle,
+  TextAreaInput,
+} from 'components/Form';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -19,7 +26,6 @@ import {
   MemoWrapperStyle,
   OpenMemoButtonStyle,
 } from './style';
-import TextAreaInputFactory from '../../../../../modules/form/factories/TextAreaInputFactory';
 
 type OptionalProps = {
   onChange: (string, any) => void,
@@ -144,17 +150,21 @@ class DocumentItem extends React.Component<Props, State> {
         </div>
         <div className={MemoWrapperStyle(isExpanded)}>
           <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
-            {({ name: fieldName, ...inputHandlers }) => (
-              <TextAreaInputFactory
-                name={fieldName}
-                {...inputHandlers}
-                isNew={false}
-                originalValue={value.memo}
-                editable={!readOnly}
-                inputWidth="590px"
-                inputHeight="120px"
-              />
-            )}
+            {({ isFocused, ...inputHandlers }) =>
+              !readOnly ? (
+                <DefaultStyle type="textarea" width="590px" height="120px" isFocused={isFocused}>
+                  <TextAreaInput {...inputHandlers} align="left" />
+                </DefaultStyle>
+              ) : (
+                <TextAreaInput
+                  {...inputHandlers}
+                  readOnly
+                  readOnlyWidth="590px"
+                  readOnlyHeight="120px"
+                  align="left"
+                />
+              )
+            }
           </FormField>
         </div>
         <button
