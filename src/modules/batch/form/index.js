@@ -12,7 +12,7 @@ import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'compon
 import { SyncButton, CloneButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { PermissionConsumer } from 'modules/permission';
-import { BATCH_CREATE } from 'modules/permission/constants/batch';
+import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import {
   BatchSection,
   OrderSection,
@@ -130,36 +130,39 @@ export default class BatchForm extends React.Component<Props> {
                   <FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />
                 }
               >
-                <BooleanValue>
-                  {({ value: syncDialogIsOpen, set: dialogToggle }) => (
-                    <>
-                      <SyncButton onClick={() => dialogToggle(true)} />
-                      <Subscribe to={[BatchFormContainer]}>
-                        {({ state, syncProductProvider }) => (
-                          <>
-                            <ConfirmDialog
-                              isOpen={syncDialogIsOpen}
-                              onRequestClose={() => dialogToggle(false)}
-                              onCancel={() => dialogToggle(false)}
-                              onConfirm={() => {
-                                if (state.orderItem && state.orderItem.productProvider) {
-                                  syncProductProvider(state.orderItem.productProvider);
-                                }
-                                dialogToggle(false);
-                              }}
-                              message={
-                                <FormattedMessage
-                                  id="modules.Batches.syncPackagingMessage"
-                                  defaultMessage="Are you sure sync the packaging?"
+                {hasPermission(BATCH_UPDATE) ||
+                  (hasPermission(BATCH_UPDATE) && (
+                    <BooleanValue>
+                      {({ value: syncDialogIsOpen, set: dialogToggle }) => (
+                        <>
+                          <SyncButton onClick={() => dialogToggle(true)} />
+                          <Subscribe to={[BatchFormContainer]}>
+                            {({ state, syncProductProvider }) => (
+                              <>
+                                <ConfirmDialog
+                                  isOpen={syncDialogIsOpen}
+                                  onRequestClose={() => dialogToggle(false)}
+                                  onCancel={() => dialogToggle(false)}
+                                  onConfirm={() => {
+                                    if (state.orderItem && state.orderItem.productProvider) {
+                                      syncProductProvider(state.orderItem.productProvider);
+                                    }
+                                    dialogToggle(false);
+                                  }}
+                                  message={
+                                    <FormattedMessage
+                                      id="modules.Batches.syncPackagingMessage"
+                                      defaultMessage="Are you sure sync the packaging?"
+                                    />
+                                  }
                                 />
-                              }
-                            />
-                          </>
-                        )}
-                      </Subscribe>
-                    </>
-                  )}
-                </BooleanValue>
+                              </>
+                            )}
+                          </Subscribe>
+                        </>
+                      )}
+                    </BooleanValue>
+                  ))}
               </SectionHeader>
               <PackagingSection isNew={isNew} />
             </SectionWrapper>
