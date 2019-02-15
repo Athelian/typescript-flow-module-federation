@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
 import { SelectInput, DefaultSelect, DefaultOptions, Display } from 'components/Form';
-import { TextAreaInputFactory } from 'modules/form/factories';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -20,6 +19,7 @@ import {
   MemoWrapperStyle,
   OpenMemoButtonStyle,
 } from './style';
+import TextAreaInputFactory from '../../../../../modules/form/factories/TextAreaInputFactory';
 
 type OptionalProps = {
   onChange: (string, any) => void,

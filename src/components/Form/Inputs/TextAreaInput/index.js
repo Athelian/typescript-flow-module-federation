@@ -10,35 +10,33 @@ type Props = InputProps & {
   intl: IntlShape,
 };
 
-// $FlowFixMe it is an open issue on flow https://github.com/facebook/flow/issues/6103
-const TextAreaInput = React.forwardRef(
-  (
-    { intl, value, align, readOnly, readOnlyWidth, readOnlyHeight, placeholder, ...rest }: Props,
-    ref
-  ) =>
-    readOnly ? (
-      <div
-        className={TextAreaReadOnlyStyle({ align, readOnlyWidth, readOnlyHeight })}
-        ref={ref}
-        {...rest}
-      >
-        {value}
-      </div>
-    ) : (
-      <textarea
-        style={{ textAlign: align }}
-        value={value || ''}
-        placeholder={
-          isNullOrUndefined(placeholder)
-            ? intl.formatMessage(messages.defaultPlaceholder)
-            : placeholder
-        }
-        ref={ref}
-        {...rest}
-        spellCheck={false}
-      />
-    )
-);
+const TextAreaInput = ({
+  intl,
+  value,
+  align,
+  readOnly,
+  readOnlyWidth,
+  readOnlyHeight,
+  placeholder,
+  ...rest
+}: Props) =>
+  readOnly ? (
+    <div className={TextAreaReadOnlyStyle({ align, readOnlyWidth, readOnlyHeight })} {...rest}>
+      {value}
+    </div>
+  ) : (
+    <textarea
+      style={{ textAlign: align }}
+      value={value || ''}
+      placeholder={
+        isNullOrUndefined(placeholder)
+          ? intl.formatMessage(messages.defaultPlaceholder)
+          : placeholder
+      }
+      {...rest}
+      spellCheck={false}
+    />
+  );
 
 TextAreaInput.defaultProps = defaultInputProps;
 
