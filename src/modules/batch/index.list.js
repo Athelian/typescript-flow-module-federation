@@ -4,6 +4,8 @@ import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
+import { BATCH_CREATE } from 'modules/permission/constants/batch';
+import usePermission from 'hooks/usePermission';
 import useListConfig from 'hooks/useListConfig';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
@@ -82,6 +84,10 @@ const BatchListModule = (props: Props) => {
     getInitFilter(),
     'filterBatch'
   );
+
+  const { hasPermission } = usePermission();
+  const allowCreate = hasPermission(BATCH_CREATE);
+
   return (
     <UIConsumer>
       {uiState => (
@@ -95,9 +101,11 @@ const BatchListModule = (props: Props) => {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
-              <Link to="new">
-                <NewButton />
-              </Link>
+              {allowCreate && (
+                <Link to="new">
+                  <NewButton />
+                </Link>
+              )}
             </NavBar>
           }
         >
