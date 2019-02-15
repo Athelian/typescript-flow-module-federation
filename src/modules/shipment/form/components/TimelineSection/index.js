@@ -65,6 +65,7 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={BodyWrapperStyle} id="timelineInfoSection">
               <TimelineInfoSection
                 id="cargoReady"
+                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="CARGO_READY"
                 title={
@@ -80,6 +81,7 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="loadPortDeparture"
+                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -95,6 +97,7 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <VoyageInfoSection
                 id="firstVoyage"
+                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon={getTransportIcon(values.transportType)}
                 title={
@@ -122,6 +125,7 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="firstTransitPortArrival"
+                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -144,6 +148,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="firstTransitPortDeparture"
+                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -166,6 +171,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="secondVoyage"
+                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -200,6 +206,7 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="secondTransitPortArrival"
+                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -215,6 +222,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="secondTransitPortDeparture"
+                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -230,6 +238,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="thirdVoyage"
+                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -256,6 +265,7 @@ const TimelineSection = ({ isNew }: Props) => {
 
               <TimelineInfoSection
                 id="dischargePortArrival"
+                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -271,6 +281,7 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="customClearance"
+                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="CUSTOMS"
                 title={
@@ -285,9 +296,10 @@ const TimelineSection = ({ isNew }: Props) => {
                 removeArrayItem={removeArrayItem}
               />
               {containers && containers.length > 0 ? (
-                <ContainerWarehouseArrivalSection />
+                <ContainerWarehouseArrivalSection readOnly={!allowToUpdate} />
               ) : (
                 <TimelineInfoSection
+                  readOnly={!allowToUpdate}
                   id="warehouseArrival"
                   isNew={isNew}
                   icon="WAREHOUSE"
@@ -342,6 +354,7 @@ const TimelineSection = ({ isNew }: Props) => {
               )}
               <TimelineInfoSection
                 id="deliveryReady"
+                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="DELIVERY_READY"
                 title={

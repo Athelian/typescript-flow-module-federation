@@ -62,10 +62,10 @@ export const renderExporters = (exporters: Array<Object>) => {
   return '';
 };
 
-export const renderForwarders = (forwarders: Array<Object>) => {
+export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boolean) => {
   const numOfForwarders = forwarders.length;
 
-  if (numOfForwarders === 0) {
+  if (numOfForwarders === 0 && allowToUpdate) {
     return <DashedPlusButton width="195px" height="215px" />;
   }
   if (numOfForwarders === 1) {
