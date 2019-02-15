@@ -89,7 +89,7 @@ function DefaultSelect({
         onClick={toggle}
         className={SelectInputStyle(align)}
         {...getInputProps({
-          value: itemToString(selectedItem),
+          value: itemToString(selectedItem) || '',
         })}
         placeholder={
           isNullOrUndefined(placeholder)

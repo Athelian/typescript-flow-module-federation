@@ -95,7 +95,7 @@ function DefaultSearchSelect({
         spellCheck={false}
         style={{ textAlign: align }}
         {...getInputProps({
-          value,
+          value: value || '',
           onChange: handleQueryChange,
           ...rest,
         })}

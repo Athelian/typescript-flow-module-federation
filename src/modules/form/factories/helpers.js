@@ -11,3 +11,9 @@ export const parseEnumDescriptionOrValue = (
   if (enumValue && enumValue.description) return enumValue.description;
   return parseEnumValue(enumValue);
 };
+
+export const convertValueToFormFieldFormat = (value: mixed): { target: { value: mixed } } => ({
+  target: {
+    value,
+  },
+});

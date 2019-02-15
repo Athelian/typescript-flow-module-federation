@@ -1,7 +1,10 @@
 // @flow
 import * as React from 'react';
 import EnumProvider from 'providers/enum';
-import { parseEnumDescriptionOrValue } from 'modules/form/factories/helpers';
+import {
+  parseEnumDescriptionOrValue,
+  convertValueToFormFieldFormat,
+} from 'modules/form/factories/helpers';
 import {
   FieldItem,
   Label,
@@ -115,7 +118,11 @@ const EnumSelectInputFactory = ({
         disabled,
         value,
         name,
-        onChange,
+        onChange: newValue => {
+          if (onChange) {
+            onChange(convertValueToFormFieldFormat(itemToValue(newValue)));
+          }
+        },
         onBlur,
         onFocus,
         align: inputAlign,

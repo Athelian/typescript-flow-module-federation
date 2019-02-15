@@ -3,7 +3,11 @@ import * as React from 'react';
 import { StringValue } from 'react-values';
 import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
-import { parseEnumValue, parseEnumDescriptionOrValue } from 'modules/form/factories/helpers';
+import {
+  parseEnumValue,
+  parseEnumDescriptionOrValue,
+  convertValueToFormFieldFormat,
+} from 'modules/form/factories/helpers';
 import {
   FieldItem,
   Label,
@@ -55,12 +59,6 @@ const defaultProps = {
   editable: true,
   vertical: false,
 };
-
-const parseOnChangeValue = (value: ?string): { target: { value: string } } => ({
-  target: {
-    value: value || '',
-  },
-});
 
 const EnumSearchSelectInputFactory = ({
   vertical,
@@ -135,16 +133,14 @@ const EnumSearchSelectInputFactory = ({
         name,
         onChange: newValue => {
           if (onChange) {
-            // $FlowFixMe itemToValue has some flow-type issue.
-            onChange(parseOnChangeValue(itemToValue(newValue)));
+            onChange(convertValueToFormFieldFormat(itemToValue(newValue)));
           }
         },
         onBlur: () => {
           if (onBlur) {
             if (data.find(item => itemToValue(item) === value)) onBlur();
             else if (onChange) {
-              // $FlowFixMe itemToValue has some flow-type issue.
-              onChange(parseOnChangeValue(itemToValue(originalValue)));
+              onChange(convertValueToFormFieldFormat(itemToValue(originalValue)));
               setTimeout(() => {
                 onBlur();
               }, 0);
@@ -154,12 +150,12 @@ const EnumSearchSelectInputFactory = ({
         onFocus,
         onSearch: newQuery => {
           if (onChange) {
-            onChange(parseOnChangeValue(newQuery));
+            onChange(convertValueToFormFieldFormat(newQuery));
           }
         },
         afterClearSelection: () => {
           if (onChange) {
-            onChange(parseOnChangeValue(null));
+            onChange(convertValueToFormFieldFormat(null));
           }
           if (onBlur && onFocus) {
             setTimeout(() => {
