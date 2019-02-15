@@ -6,6 +6,7 @@ import { Subscribe } from 'unstated';
 import { DocumentsInput } from 'components/Form';
 import { OrderFilesContainer } from 'modules/order/form/containers';
 import messages from 'modules/order/messages';
+import usePermission from 'hooks/usePermission';
 import { DocumentSectionStyle } from './style';
 
 type Props = {
@@ -13,11 +14,16 @@ type Props = {
 };
 
 function DocumentsSection({ intl }: Props) {
+  const { hasPermission } = usePermission();
+  const canCreateOrUpdate =
+    hasPermission('order.orders.create ') || hasPermission('order.orders.update');
+
   return (
     <div className={DocumentSectionStyle}>
       <Subscribe to={[OrderFilesContainer]}>
         {({ state: { files }, setFieldValue: changeFiles }) => (
           <DocumentsInput
+            readOnly={!canCreateOrUpdate}
             id="files"
             name="files"
             values={files}
