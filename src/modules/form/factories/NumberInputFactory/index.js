@@ -7,7 +7,7 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'modules/form/factories/type';
-import { CalculatorButton } from 'modules/form/factories/components';
+import { CalculatorButton, AutoCalculateToggle } from 'modules/form/factories/components';
 
 type InputProps = StandardInputProps & {
   nullable?: boolean,
@@ -24,6 +24,9 @@ type Props = LabelProps &
     Input: () => React.Node,
     showCalculator: boolean,
     onCalculate?: Function,
+    showAutoCalculateToggle: boolean,
+    onToggleAutoCalculate?: Function,
+    autoCalculateIsToggled: boolean,
     editable?: boolean,
   };
 
@@ -38,6 +41,8 @@ const defaultProps = {
   editable: true,
   vertical: false,
   showCalculator: false,
+  showAutoCalculateToggle: false,
+  autoCalculateIsToggled: true,
 };
 
 const NumberInputFactory = ({
@@ -48,6 +53,9 @@ const NumberInputFactory = ({
   Input,
   showCalculator,
   onCalculate,
+  showAutoCalculateToggle,
+  onToggleAutoCalculate,
+  autoCalculateIsToggled,
   required,
   labelAlign,
   labelWidth,
@@ -120,6 +128,12 @@ const NumberInputFactory = ({
             </InputWrapper>
             {showCalculator && (
               <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
+            )}
+            {showAutoCalculateToggle && (
+              <AutoCalculateToggle
+                toggled={autoCalculateIsToggled}
+                onClick={onToggleAutoCalculate}
+              />
             )}
           </>
         ) : (
