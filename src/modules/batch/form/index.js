@@ -11,6 +11,8 @@ import { encodeId } from 'utils/id';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import { SyncButton, CloneButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import { PermissionConsumer } from 'modules/permission';
+import { BATCH_CREATE } from 'modules/permission/constants/batch';
 import {
   BatchSection,
   OrderSection,
@@ -66,119 +68,134 @@ export default class BatchForm extends React.Component<Props> {
   render() {
     const { batch, isNew, isClone, selectable } = this.props;
     return (
-      <div className={BatchFormWrapperStyle}>
-        <SectionWrapper id="batch_batchSection">
-          <SectionHeader
-            icon="BATCH"
-            title={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
-          >
-            {!isNew && (
-              <>
-                <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
-                {!isClone && <CloneButton onClick={this.onClone} />}
-                <div className={StatusStyle(batch.archived)}>
-                  <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                  <div className={StatusLabelStyle}>
-                    {batch.archived ? (
-                      <FormattedMessage id="modules.Batches.archived" defaultMessage="Archived" />
-                    ) : (
-                      <FormattedMessage id="modules.Batches.active" defaultMessage="Active" />
+      <PermissionConsumer>
+        {hasPermission => (
+          <div className={BatchFormWrapperStyle}>
+            <SectionWrapper id="batch_batchSection">
+              <SectionHeader
+                icon="BATCH"
+                title={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
+              >
+                {!isNew && (
+                  <>
+                    <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
+                    {!isClone && hasPermission(BATCH_CREATE) && (
+                      <CloneButton onClick={this.onClone} />
                     )}
-                  </div>
-                  <FormTooltip
-                    infoMessage={
-                      <FormattedMessage
-                        id="modules.Batches.archived.tooltip.infoMessage"
-                        defaultMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                    <div className={StatusStyle(batch.archived)}>
+                      <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
+                      <div className={StatusLabelStyle}>
+                        {batch.archived ? (
+                          <FormattedMessage
+                            id="modules.Batches.archived"
+                            defaultMessage="Archived"
+                          />
+                        ) : (
+                          <FormattedMessage id="modules.Batches.active" defaultMessage="Active" />
+                        )}
+                      </div>
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Batches.archived.tooltip.infoMessage"
+                            defaultMessage="The status is controlled by the Order and Shipment this Batch belongs to"
+                          />
+                        }
+                        position="bottom"
                       />
-                    }
-                    position="bottom"
+                    </div>
+                  </>
+                )}
+              </SectionHeader>
+              <BatchSection isNew={isNew} selectable={selectable} />
+            </SectionWrapper>
+
+            <SectionWrapper id="batch_quantityAdjustmentsSection">
+              <SectionHeader
+                icon="QUANTITY_ADJUSTMENTS"
+                title={
+                  <FormattedMessage
+                    id="modules.Batches.quantityAdjustments"
+                    defaultMessage="QUANTITY ADJUSTMENTS"
                   />
-                </div>
-              </>
-            )}
-          </SectionHeader>
-          <BatchSection isNew={isNew} selectable={selectable} />
-        </SectionWrapper>
-
-        <SectionWrapper id="batch_quantityAdjustmentsSection">
-          <SectionHeader
-            icon="QUANTITY_ADJUSTMENTS"
-            title={
-              <FormattedMessage
-                id="modules.Batches.quantityAdjustments"
-                defaultMessage="QUANTITY ADJUSTMENTS"
+                }
               />
-            }
-          />
-          <QuantityAdjustmentsSection isNew={isNew} />
-        </SectionWrapper>
+              <QuantityAdjustmentsSection isNew={isNew} />
+            </SectionWrapper>
 
-        <SectionWrapper id="batch_packagingSection">
-          <SectionHeader
-            icon="PACKAGING"
-            title={<FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />}
-          >
-            <BooleanValue>
-              {({ value: syncDialogIsOpen, set: dialogToggle }) => (
-                <>
-                  <SyncButton onClick={() => dialogToggle(true)} />
-                  <Subscribe to={[BatchFormContainer]}>
-                    {({ state, syncProductProvider }) => (
-                      <>
-                        <ConfirmDialog
-                          isOpen={syncDialogIsOpen}
-                          onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
-                          onConfirm={() => {
-                            if (state.orderItem && state.orderItem.productProvider) {
-                              syncProductProvider(state.orderItem.productProvider);
-                            }
-                            dialogToggle(false);
-                          }}
-                          message={
-                            <FormattedMessage
-                              id="modules.Batches.syncPackagingMessage"
-                              defaultMessage="Are you sure sync the packaging?"
+            <SectionWrapper id="batch_packagingSection">
+              <SectionHeader
+                icon="PACKAGING"
+                title={
+                  <FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />
+                }
+              >
+                <BooleanValue>
+                  {({ value: syncDialogIsOpen, set: dialogToggle }) => (
+                    <>
+                      <SyncButton onClick={() => dialogToggle(true)} />
+                      <Subscribe to={[BatchFormContainer]}>
+                        {({ state, syncProductProvider }) => (
+                          <>
+                            <ConfirmDialog
+                              isOpen={syncDialogIsOpen}
+                              onRequestClose={() => dialogToggle(false)}
+                              onCancel={() => dialogToggle(false)}
+                              onConfirm={() => {
+                                if (state.orderItem && state.orderItem.productProvider) {
+                                  syncProductProvider(state.orderItem.productProvider);
+                                }
+                                dialogToggle(false);
+                              }}
+                              message={
+                                <FormattedMessage
+                                  id="modules.Batches.syncPackagingMessage"
+                                  defaultMessage="Are you sure sync the packaging?"
+                                />
+                              }
                             />
-                          }
-                        />
-                      </>
-                    )}
-                  </Subscribe>
-                </>
-              )}
-            </BooleanValue>
-          </SectionHeader>
-          <PackagingSection isNew={isNew} />
-        </SectionWrapper>
+                          </>
+                        )}
+                      </Subscribe>
+                    </>
+                  )}
+                </BooleanValue>
+              </SectionHeader>
+              <PackagingSection isNew={isNew} />
+            </SectionWrapper>
 
-        <SectionWrapper id="batch_shipmentSection">
-          <SectionHeader
-            icon="SHIPMENT"
-            title={<FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />}
-          />
-          <ShipmentSection shipment={batch.shipment} />
-        </SectionWrapper>
+            <SectionWrapper id="batch_shipmentSection">
+              <SectionHeader
+                icon="SHIPMENT"
+                title={<FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />}
+              />
+              <ShipmentSection shipment={batch.shipment} />
+            </SectionWrapper>
 
-        <SectionWrapper id="batch_containerSection">
-          <SectionHeader
-            icon="CONTAINER"
-            title={<FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />}
-          />
-          <ContainerSection container={batch.container} />
-        </SectionWrapper>
+            <SectionWrapper id="batch_containerSection">
+              <SectionHeader
+                icon="CONTAINER"
+                title={
+                  <FormattedMessage id="modules.Batches.container" defaultMessage="CONTAINER" />
+                }
+              />
+              <ContainerSection container={batch.container} />
+            </SectionWrapper>
 
-        <SectionWrapper id="batch_orderSection">
-          <SectionHeader
-            icon="ORDER"
-            title={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
-          />
-          <Subscribe to={[BatchFormContainer]}>
-            {({ state: { orderItem } }) => <OrderSection order={orderItem && orderItem.order} />}
-          </Subscribe>
-        </SectionWrapper>
-      </div>
+            <SectionWrapper id="batch_orderSection">
+              <SectionHeader
+                icon="ORDER"
+                title={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
+              />
+              <Subscribe to={[BatchFormContainer]}>
+                {({ state: { orderItem } }) => (
+                  <OrderSection order={orderItem && orderItem.order} />
+                )}
+              </Subscribe>
+            </SectionWrapper>
+          </div>
+        )}
+      </PermissionConsumer>
     );
   }
 }
