@@ -10,8 +10,11 @@ import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
+import { UserConsumer } from 'modules/user';
 import { ButtonStyle, DropDownStyle, WrapperStyle, ItemStyle, ItemIconStyle } from './style';
 import { exportTemplatesQuery } from './query';
+
+const DEMO_ACCOUNT_ID = 'baqcpn6hksk001ulcjpg';
 
 type OptionalProps = {
   label: React.Node,
@@ -133,6 +136,33 @@ class ExportButton extends React.Component<Props, State> {
                                 <LoadingIcon size={10} />
                               </div>
                             )}
+
+                            <UserConsumer>
+                              {({ user }) =>
+                                !loading &&
+                                type === 'Order' &&
+                                user.id === DEMO_ACCOUNT_ID && (
+                                  <button
+                                    type="button"
+                                    className={ItemStyle}
+                                    onClick={() => {
+                                      window.open(
+                                        'https://storage.googleapis.com/zenport-public/Purchase%20Order%20%2020.pdf',
+                                        '_blank'
+                                      );
+                                    }}
+                                  >
+                                    <div className={ItemIconStyle}>
+                                      <Icon icon="PDF" />
+                                    </div>
+                                    <FormattedMessage
+                                      id="components.buttons.orderPdf"
+                                      defaultMessage="Order PDF"
+                                    />
+                                  </button>
+                                )
+                              }
+                            </UserConsumer>
 
                             {!loading &&
                               (templates.length > 0 ? (
