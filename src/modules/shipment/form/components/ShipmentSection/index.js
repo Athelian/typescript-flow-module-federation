@@ -9,14 +9,15 @@ import usePermission from 'hooks/usePermission';
 import { SHIPMENT_CREATE, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { CloneButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { CustomFieldsFactory } from 'modules/form/factories';
 import {
-  textInputFactory,
-  dateInputFactory,
-  selectEnumInputFactory,
-  selectSearchEnumInputFactory,
-  textAreaFactory,
-} from 'modules/form/helpers';
+  TextInputFactory,
+  DateInputFactory,
+  EnumSelectInputFactory,
+  EnumSearchSelectInputFactory,
+  TextAreaInputFactory,
+  CustomFieldsFactory,
+  UserAssignmentInputFactory,
+} from 'modules/form/factories';
 import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
@@ -27,7 +28,6 @@ import {
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
 import GridColumn from 'components/GridColumn';
 import {
   FieldItem,
@@ -40,13 +40,6 @@ import {
   StatusToggle,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
-import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
-import {
-  AssignmentWrapperStyle,
-  AssignmentStyle,
-  RemoveAssignmentButtonStyle,
-  AddAssignmentButtonStyle,
-} from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 import SelectForwarders from '../SelectForwarders';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
@@ -67,6 +60,7 @@ type Props = {
 const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
   const { hasPermission } = usePermission();
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
+  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <SectionWrapper id="shipment_shipmentSection">
       <SectionHeader
@@ -82,7 +76,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
-                  readOnly={!hasPermission(SHIPMENT_UPDATE)}
+                  readOnly={!allowToUpdate}
                   archived={archived}
                   openStatusDialog={() => dialogToggle(true)}
                   activateDialog={
@@ -121,16 +115,17 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      textInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        required: true,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.shipmentId} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.shipmentId} />}
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="blNo"
@@ -139,15 +134,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      textInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.blNo} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.blNo} />}
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="blDate"
@@ -156,15 +152,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      dateInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.blDate} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.blDate} />}
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="bookingNo"
@@ -173,15 +170,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      textInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.bookingNo} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.bookingNo} />}
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="bookingDate"
@@ -190,15 +188,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      dateInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.bookingDate} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <DateInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.bookingDate} />}
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="invoiceNo"
@@ -207,15 +206,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      textInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.invoiceNo} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.invoiceNo} />}
+                      />
+                    )}
                   </FormField>
                   <Subscribe to={[ShipmentTransportTypeContainer, ShipmentTimelineContainer]}>
                     {(
@@ -242,22 +242,22 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           values={values}
                           validator={validator}
                         >
-                          {({ name, ...inputHandlers }) =>
-                            selectEnumInputFactory({
-                              enumType: 'TransportType',
-                              align: 'right',
-                              label: (
+                          {({ name, ...inputHandlers }) => (
+                            <EnumSelectInputFactory
+                              {...inputHandlers}
+                              editable={allowToUpdate}
+                              enumType="TransportType"
+                              name={name}
+                              isNew={isNew}
+                              originalValue={transportTypeValues[name]}
+                              label={
                                 <FormattedMessage
                                   id="modules.Shipments.transportation"
                                   defaultMessage="TRANSPORTATION"
                                 />
-                              ),
-                              originalValue: transportTypeValues[name],
-                              inputHandlers,
-                              name,
-                              isNew,
-                            })
-                          }
+                              }
+                            />
+                          )}
                         </FormField>
                       );
                     }}
@@ -269,22 +269,22 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      selectEnumInputFactory({
-                        enumType: 'LoadType',
-                        align: 'right',
-                        label: (
+                    {({ name, ...inputHandlers }) => (
+                      <EnumSelectInputFactory
+                        {...inputHandlers}
+                        enumType="LoadType"
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
                           <FormattedMessage
                             id="modules.Shipments.loadType"
                             defaultMessage="LOAD TYPE"
                           />
-                        ),
-                        originalValue: initialValues[name],
-                        inputHandlers,
-                        name,
-                        isNew,
-                      })
-                    }
+                        }
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="incoterm"
@@ -293,21 +293,22 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      selectSearchEnumInputFactory({
-                        enumType: 'Incoterm',
-                        label: (
+                    {({ name, ...inputHandlers }) => (
+                      <EnumSearchSelectInputFactory
+                        {...inputHandlers}
+                        enumType="Incoterm"
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
                           <FormattedMessage
                             id="modules.Shipments.incoterms"
                             defaultMessage="INCOTERMS"
                           />
-                        ),
-                        originalValue: initialValues[name],
-                        inputHandlers,
-                        name,
-                        isNew,
-                      })
-                    }
+                        }
+                      />
+                    )}
                   </FormField>
                   <FormField
                     name="carrier"
@@ -316,28 +317,34 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     values={values}
                     validator={validator}
                   >
-                    {({ name, ...inputHandlers }) =>
-                      textInputFactory({
-                        inputHandlers,
-                        name,
-                        isNew,
-                        originalValue: initialValues[name],
-                        label: <FormattedMessage {...messages.carrier} />,
-                      })
-                    }
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        name={name}
+                        editable={allowToUpdate}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.carrier} />}
+                      />
+                    )}
                   </FormField>
 
                   <CustomFieldsFactory
                     entityType="Shipment"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable
+                    editable={allowToUpdate}
                   />
                 </GridColumn>
 
                 <GridColumn>
                   <GridColumn gap="10px">
-                    <FieldItem
+                    <UserAssignmentInputFactory
+                      name="inCharges"
+                      values={values.inCharges}
+                      onChange={(name: string, assignments: Array<Object>) =>
+                        setFieldValue(name, assignments)
+                      }
                       label={
                         <Label>
                           <FormattedMessage
@@ -347,70 +354,14 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           ({values.inCharges.length})
                         </Label>
                       }
-                      tooltip={
-                        <FormTooltip
-                          infoMessage={
-                            <FormattedMessage
-                              id="modules.Shipments.tooltipInCharge"
-                              defaultMessage="You can choose up to 5 people in charge."
-                            />
-                          }
+                      infoMessage={
+                        <FormattedMessage
+                          id="modules.Shipments.tooltipInCharge"
+                          defaultMessage="You can choose up to 5 people in charge."
                         />
                       }
+                      editable={allowToUpdate}
                     />
-                    <div className={AssignmentWrapperStyle}>
-                      {values &&
-                        values.inCharges &&
-                        values.inCharges.map(({ id, firstName, lastName }) => (
-                          <div className={AssignmentStyle} key={id}>
-                            <button
-                              className={RemoveAssignmentButtonStyle}
-                              onClick={() =>
-                                setFieldValue(
-                                  'inCharges',
-                                  values.inCharges.filter(({ id: userId }) => id !== userId)
-                                )
-                              }
-                              type="button"
-                            >
-                              <Icon icon="REMOVE" />
-                            </button>
-                            <UserAvatar firstName={firstName} lastName={lastName} />
-                          </div>
-                        ))}
-                      {((values && !values.inCharges) ||
-                        (values && values.inCharges && values.inCharges.length < 5)) && (
-                        <BooleanValue>
-                          {({ value: isOpen, set: slideToggle }) => (
-                            <>
-                              <button
-                                className={AddAssignmentButtonStyle}
-                                type="button"
-                                onClick={() => slideToggle(true)}
-                              >
-                                <Icon icon="ADD" />
-                              </button>
-                              <SlideView
-                                isOpen={isOpen}
-                                onRequestClose={() => slideToggle(false)}
-                                options={{ width: '1030px' }}
-                              >
-                                {isOpen && (
-                                  <AssignUsers
-                                    selected={values.inCharges}
-                                    onSelect={selected => {
-                                      slideToggle(false);
-                                      setFieldValue('inCharges', selected);
-                                    }}
-                                    onCancel={() => slideToggle(false)}
-                                  />
-                                )}
-                              </SlideView>
-                            </>
-                          )}
-                        </BooleanValue>
-                      )}
-                    </div>
                     <FieldItem
                       label={
                         <Label>
@@ -435,8 +386,11 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
-                          <div onClick={() => slideToggle(true)} role="presentation">
-                            {renderForwarders(forwarders)}
+                          <div
+                            onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
+                            role="presentation"
+                          >
+                            {renderForwarders(forwarders, allowToUpdate)}
                           </div>
                           <SlideView
                             isOpen={opened}
@@ -513,6 +467,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     }
                     input={
                       <TagsInput
+                        editable={allowToUpdate}
                         id="tags"
                         name="tags"
                         tagType="Shipment"
@@ -533,18 +488,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                 validator={validator}
                 setFieldValue={setFieldValue}
               >
-                {({ name, ...inputHandlers }) =>
-                  textAreaFactory({
-                    name,
-                    inputHandlers,
-                    isNew,
-                    originalValue: initialValues[name],
-                    label: <FormattedMessage {...messages.memo} />,
-                    vertical: true,
-                    width: '680px',
-                    height: '65px',
-                  })
-                }
+                {({ name, ...inputHandlers }) => (
+                  <TextAreaInputFactory
+                    {...inputHandlers}
+                    editable={allowToUpdate}
+                    name={name}
+                    isNew={isNew}
+                    originalValue={initialValues[name]}
+                    label={<FormattedMessage {...messages.memo} />}
+                  />
+                )}
               </FormField>
 
               <div className={DividerStyle} />
