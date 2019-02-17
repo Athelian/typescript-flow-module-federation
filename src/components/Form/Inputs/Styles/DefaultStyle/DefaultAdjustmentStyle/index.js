@@ -1,14 +1,26 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import EnumProvider from 'providers/enum';
+import {
+  parseEnumDescriptionOrValue,
+  convertValueToFormFieldFormat,
+} from 'modules/form/factories/helpers';
 import { isDataType } from 'utils/fp';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import GridRow from 'components/GridRow';
 import { FormField } from 'modules/form';
-import { textAreaFactory, selectEnumInputFactory } from 'modules/form/helpers';
-import { Label, Display } from 'components/Form';
+import {
+  Label,
+  Display,
+  SelectInput,
+  DefaultSelect,
+  DefaultOptions,
+  TextAreaInput,
+  DefaultStyle,
+} from 'components/Form';
 import {
   AdjustmentWrapperStyle,
   AdjustmentFieldsWrapperStyle,
@@ -20,7 +32,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  isNew: boolean,
+  editable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -36,7 +48,7 @@ type Props = OptionalProps & {
 };
 
 export const defaultProps = {
-  isNew: false,
+  editable: true,
 };
 
 type State = {
@@ -60,7 +72,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
     const {
       adjustment,
       index,
-      isNew,
+      editable,
       setFieldArrayValue,
       removeArrayItem,
       enumType,
@@ -73,6 +85,9 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
 
     const hasMemo = !!adjustment[memoName];
 
+    const updatedByFirstName = adjustment.updatedBy ? adjustment.updatedBy.firstName : null;
+    const updatedByLastName = adjustment.updatedBy ? adjustment.updatedBy.lastName : null;
+
     return (
       <div className={AdjustmentWrapperStyle}>
         <div className={AdjustmentFieldsWrapperStyle}>
@@ -81,7 +96,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             onClick={this.toggleMemo}
             type="button"
           >
-            <Icon icon={hasMemo ? 'MEMO' : 'MEMO_ADD'} />
+            <Icon icon={hasMemo || !editable ? 'MEMO' : 'MEMO_ADD'} />
           </button>
 
           <FormField
@@ -89,30 +104,53 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
           >
-            {({ name, ...inputHandlers }) =>
-              selectEnumInputFactory({
-                required: true,
-                type: 'label',
-                enumType,
-                name,
-                inputHandlers,
-                isNew,
-                originalValue: adjustment[typeName],
-              })
-            }
+            {({ name, onChange, ...inputHandlers }) => (
+              <EnumProvider enumType={enumType}>
+                {({ loading, error, data }) => {
+                  const itemToString = parseEnumDescriptionOrValue;
+                  const itemToValue = item => (item ? item.name : '');
+
+                  return error ? (
+                    `Error!: ${error}`
+                  ) : (
+                    <SelectInput
+                      {...inputHandlers}
+                      onChange={newValue =>
+                        onChange(convertValueToFormFieldFormat(itemToValue(newValue)))
+                      }
+                      name={name}
+                      items={loading ? [] : data}
+                      renderSelect={({ ...rest }) => (
+                        <DefaultSelect required width="200px" height="30px" {...rest} />
+                      )}
+                      renderOptions={({ ...rest }) => <DefaultOptions width="200px" {...rest} />}
+                      itemToString={itemToString}
+                      itemToValue={itemToValue}
+                      type="label"
+                      align="left"
+                      readOnlyWidth="200px"
+                      readOnlyHeight="30px"
+                      readOnly={!editable}
+                    />
+                  );
+                }}
+              </EnumProvider>
+            )}
           </FormField>
 
           {valueInput}
 
-          <button
-            className={RemoveButtonStyle}
-            onClick={() => {
-              removeArrayItem(`${targetName}[${index}]`);
-            }}
-            type="button"
-          >
-            <Icon icon="REMOVE" />
-          </button>
+          {editable && (
+            <button
+              className={RemoveButtonStyle}
+              onClick={() => {
+                removeArrayItem(`${targetName}[${index}]`);
+              }}
+              type="button"
+            >
+              <Icon icon="REMOVE" />
+            </button>
+          )}
         </div>
         <div className={MemoSectionWrapperStyle(isMemoOpen)}>
           <div className={LastModifiedWrapperStyle}>
@@ -125,9 +163,16 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
                   <FormattedDate value={adjustment.updatedAt} />
                 </Display>
               )}
-              <div className={UserIconStyle}>
-                <UserAvatar firstName="TODO" lastName="TODO" width="20px" height="20px" />
-              </div>
+              {updatedByFirstName && updatedByLastName && (
+                <div className={UserIconStyle}>
+                  <UserAvatar
+                    firstName={updatedByFirstName}
+                    lastName={updatedByLastName}
+                    width="20px"
+                    height="20px"
+                  />
+                </div>
+              )}
             </GridRow>
           </div>
           <FormField
@@ -135,15 +180,20 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             initValue={adjustment[memoName]}
             setFieldValue={setFieldArrayValue}
           >
-            {({ name, ...inputHandlers }) =>
-              textAreaFactory({
-                inputHandlers,
-                name,
-                isNew,
-                originalValue: adjustment[memoName],
-                width: '360px',
-                height: '150px',
-              })
+            {({ isFocused, ...inputHandlers }) =>
+              editable ? (
+                <DefaultStyle type="textarea" width="360px" height="150px" isFocused={isFocused}>
+                  <TextAreaInput {...inputHandlers} align="left" />
+                </DefaultStyle>
+              ) : (
+                <TextAreaInput
+                  {...inputHandlers}
+                  readOnly
+                  readOnlyWidth="360px"
+                  readOnlyHeight="150px"
+                  align="left"
+                />
+              )
             }
           </FormField>
         </div>

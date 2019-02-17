@@ -105,6 +105,7 @@ const EnumSelectInputFactory = ({
         height: inputHeight,
         forceHoverStyle,
         placeholder,
+        required,
       };
 
       const optionsConfig = {
