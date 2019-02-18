@@ -6,7 +6,6 @@ import { FormField } from 'modules/form';
 import { Label, TextInput, DefaultStyle, Display } from 'components/Form';
 import {
   DefaultCustomFieldDefinitionWrapperStyle,
-  CustomFieldWrapperStyle,
   DraggingIconStyle,
   CustomFieldIconStyle,
   RemoveButtonStyle,
@@ -14,6 +13,7 @@ import {
 
 type OptionalProps = {
   editable: boolean,
+  deletable: boolean,
   onRemove: Function,
 };
 
@@ -26,6 +26,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   editable: true,
+  deletable: true,
   onRemove: () => {},
 };
 
@@ -35,53 +36,52 @@ const DefaultCustomFieldDefinitionStyle = ({
   targetName,
   setFieldValue,
   editable,
+  deletable,
   onRemove,
 }: Props) => (
   <div className={DefaultCustomFieldDefinitionWrapperStyle}>
-    <div className={CustomFieldWrapperStyle}>
-      {editable ? (
-        <div className={DraggingIconStyle} {...dragHandleProps}>
-          <Icon icon="DRAG_HANDLE" />
-        </div>
-      ) : (
-        <div className={CustomFieldIconStyle}>
-          <Icon icon="METADATA" />
-        </div>
-      )}
+    {editable ? (
+      <div className={DraggingIconStyle} {...dragHandleProps}>
+        <Icon icon="DRAG_HANDLE" />
+      </div>
+    ) : (
+      <div className={CustomFieldIconStyle}>
+        <Icon icon="METADATA" />
+      </div>
+    )}
 
-      {editable ? (
-        <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
-          {({ name, ...inputHandlers }) => {
-            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-            return (
-              <DefaultStyle
-                width="200px"
-                isFocused={isFocused}
-                hasError={isTouched && errorMessage}
-                type="label"
-              >
-                <TextInput name={name} {...rest} align="left" />
-              </DefaultStyle>
-            );
-          }}
-        </FormField>
-      ) : (
-        <Label width="200px">{fieldName}</Label>
-      )}
+    {editable ? (
+      <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
+        {({ name, ...inputHandlers }) => {
+          const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
+          return (
+            <DefaultStyle
+              width="200px"
+              isFocused={isFocused}
+              hasError={isTouched && errorMessage}
+              type="label"
+            >
+              <TextInput name={name} {...rest} align="left" />
+            </DefaultStyle>
+          );
+        }}
+      </FormField>
+    ) : (
+      <Label width="200px">{fieldName}</Label>
+    )}
 
-      <Display width="200px" height="30px" color="GRAY_LIGHT" style={{ userSelect: 'none' }}>
-        <FormattedMessage
-          id="components.inputs.customFieldDefinitionPlaceholder"
-          defaultMessage="Value will be entered here"
-        />
-      </Display>
+    <Display width="200px" height="30px" color="GRAY_LIGHT" style={{ userSelect: 'none' }}>
+      <FormattedMessage
+        id="components.inputs.customFieldDefinitionPlaceholder"
+        defaultMessage="Value will be entered here"
+      />
+    </Display>
 
-      {editable && (
-        <button className={RemoveButtonStyle} onClick={onRemove} type="button">
-          <Icon icon="REMOVE" />
-        </button>
-      )}
-    </div>
+    {deletable && (
+      <button className={RemoveButtonStyle} onClick={onRemove} type="button">
+        <Icon icon="REMOVE" />
+      </button>
+    )}
   </div>
 );
 

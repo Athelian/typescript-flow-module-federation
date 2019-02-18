@@ -20,6 +20,7 @@ export const LabelWrapperStyle = ({ align, width, color }: LabelWrapperType): st
   text-align: ${align};
   flex: 1;
   max-width: ${width};
+  text-transform: uppercase;
 `;
 
 export default LabelWrapperStyle;

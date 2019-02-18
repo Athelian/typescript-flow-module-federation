@@ -6,15 +6,18 @@ import { Query, Mutation } from 'react-apollo';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { SaveButton } from 'components/Buttons';
+import { Label } from 'components/Form';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
 import { getByPathWithDefault } from 'utils/fp';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import { updateFieldDefinitionsMutation } from 'modules/metadata/mutation';
-
-import FormHeader from '../FormHeader';
 import FieldDefinitionsContainer from './container';
-import { WrapperStyle, HeaderStyle, ContainerWrapperStyle } from './style';
+import {
+  FieldDefinitionsWrapperStyle,
+  FieldDefinitionsHeaderStyle,
+  FieldDefinitionsBodyStyle,
+} from './style';
 
 type Props = {
   entityType: string,
@@ -69,37 +72,35 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
 
                   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
                     {({ initDetailValues, state, isDirty, onSuccess }, form) => (
-                      <div className={WrapperStyle}>
-                        <div className={HeaderStyle}>
-                          <FormHeader
-                            name={
-                              <FormattedMessage
-                                id="modules.metadata.customFields"
-                                defaultMessage="CUSTOM FIELDS"
-                              />
-                            }
-                          >
-                            {isDirty() && (
-                              <SaveButton
-                                onClick={() => {
-                                  this.onSaveFieldDefinitions(
-                                    {
-                                      entityType,
-                                      fieldDefinitions: state.fieldDefinitions,
-                                    },
-                                    saveFieldDefinitions,
-                                    () => {
-                                      onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  );
-                                }}
-                              />
-                            )}
-                          </FormHeader>
+                      <div className={FieldDefinitionsWrapperStyle}>
+                        <div className={FieldDefinitionsHeaderStyle}>
+                          <Label>
+                            <FormattedMessage
+                              id="modules.metadata.customFields"
+                              defaultMessage="CUSTOM FIELDS"
+                            />
+                          </Label>
+
+                          {isDirty() && (
+                            <SaveButton
+                              onClick={() => {
+                                this.onSaveFieldDefinitions(
+                                  {
+                                    entityType,
+                                    fieldDefinitions: state.fieldDefinitions,
+                                  },
+                                  saveFieldDefinitions,
+                                  () => {
+                                    onSuccess();
+                                    form.onReset();
+                                  },
+                                  form.onErrors
+                                );
+                              }}
+                            />
+                          )}
                         </div>
-                        <div className={ContainerWrapperStyle}>
+                        <div className={FieldDefinitionsBodyStyle}>
                           <FieldDefinitionsForm
                             fieldDefinitions={fieldDefinitions}
                             onFormReady={() => {

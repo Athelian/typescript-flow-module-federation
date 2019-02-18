@@ -4,6 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 // $FlowFixMe https://github.com/atlassian/react-beautiful-dnd/issues/286#issuecomment-426604779
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import {
+  CUSTOM_FIELD_DEFINITIONS_CREATE,
+  CUSTOM_FIELD_DEFINITIONS_UPDATE,
+  CUSTOM_FIELD_DEFINITIONS_DELETE,
+} from 'modules/permission/constants/customFields';
+import { PermissionConsumer } from 'modules/permission';
 import { NewButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
 import { DefaultCustomFieldDefinitionStyle } from 'components/Form';
@@ -51,76 +57,102 @@ class FieldDefinitionsForm extends React.Component<Props> {
 
   render() {
     return (
-      <Subscribe to={[FieldDefinitionsContainer]}>
-        {({ state, setFieldArrayValue, removeArrayItem }) => {
-          const { fieldDefinitions } = state;
+      <PermissionConsumer>
+        {hasPermission => {
+          const allowCreate = hasPermission(CUSTOM_FIELD_DEFINITIONS_CREATE);
+          const allowUpdate = hasPermission(CUSTOM_FIELD_DEFINITIONS_UPDATE);
+          const allowDelete = hasPermission(CUSTOM_FIELD_DEFINITIONS_DELETE);
+
           return (
-            <div className={ContainerStyle}>
-              <DragDropContext
-                onDragEnd={(result: any) => {
-                  if (!result.destination) {
-                    return;
-                  }
+            <Subscribe to={[FieldDefinitionsContainer]}>
+              {({ state, setFieldArrayValue, removeArrayItem }) => {
+                const { fieldDefinitions } = state;
+                return (
+                  <div className={ContainerStyle}>
+                    {allowUpdate ? (
+                      <DragDropContext
+                        onDragEnd={(result: any) => {
+                          if (!result.destination) {
+                            return;
+                          }
 
-                  setFieldArrayValue(
-                    'fieldDefinitions',
-                    reorder(fieldDefinitions, result.source.index, result.destination.index)
-                  );
-                }}
-              >
-                <Droppable droppableId="droppable">
-                  {dropProvided => (
-                    <GridColumn gap="10px">
-                      <div ref={dropProvided.innerRef}>
-                        <GridColumn gap="10px">
-                          {fieldDefinitions &&
-                            fieldDefinitions.map((fieldDefinition, index) => (
-                              <Draggable
-                                key={fieldDefinition.id}
-                                draggableId={fieldDefinition.id}
-                                index={index}
-                              >
-                                {provided => (
-                                  <div ref={provided.innerRef} {...provided.draggableProps}>
-                                    <DefaultCustomFieldDefinitionStyle
-                                      dragHandleProps={provided.dragHandleProps}
-                                      targetName={`fieldDefinitions.${index}`}
-                                      fieldName={fieldDefinition.name}
-                                      setFieldValue={setFieldArrayValue}
-                                      onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
-                                      editable
-                                    />
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
-                        </GridColumn>
+                          setFieldArrayValue(
+                            'fieldDefinitions',
+                            reorder(fieldDefinitions, result.source.index, result.destination.index)
+                          );
+                        }}
+                      >
+                        <Droppable droppableId="droppable">
+                          {dropProvided => (
+                            <div ref={dropProvided.innerRef}>
+                              <GridColumn gap="10px">
+                                {fieldDefinitions &&
+                                  fieldDefinitions.map((fieldDefinition, index) => (
+                                    <Draggable
+                                      key={fieldDefinition.id}
+                                      draggableId={fieldDefinition.id}
+                                      index={index}
+                                    >
+                                      {provided => (
+                                        <div ref={provided.innerRef} {...provided.draggableProps}>
+                                          <DefaultCustomFieldDefinitionStyle
+                                            dragHandleProps={provided.dragHandleProps}
+                                            targetName={`fieldDefinitions.${index}`}
+                                            fieldName={fieldDefinition.name}
+                                            setFieldValue={setFieldArrayValue}
+                                            onRemove={() =>
+                                              removeArrayItem(`fieldDefinitions.${index}`)
+                                            }
+                                            editable
+                                            deletable={allowDelete}
+                                          />
+                                        </div>
+                                      )}
+                                    </Draggable>
+                                  ))}
+                              </GridColumn>
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
+                    ) : (
+                      <GridColumn gap="10px">
+                        {fieldDefinitions &&
+                          fieldDefinitions.map(fieldDefinition => (
+                            <DefaultCustomFieldDefinitionStyle
+                              fieldName={fieldDefinition.name}
+                              editable={false}
+                              deletable={allowDelete}
+                            />
+                          ))}
+                      </GridColumn>
+                    )}
+
+                    {allowCreate && (
+                      <div className={AddButtonWrapperStyle}>
+                        <NewButton
+                          label={
+                            <FormattedMessage
+                              id="modules.metadata.addCustomField"
+                              defaultMessage="ADD CUSTOM FIELD"
+                            />
+                          }
+                          onClick={() => {
+                            setFieldArrayValue('fieldDefinitions', [
+                              ...fieldDefinitions,
+                              { id: uuid(), name: '', isNew: true },
+                            ]);
+                          }}
+                        />
                       </div>
-                    </GridColumn>
-                  )}
-                </Droppable>
-              </DragDropContext>
-
-              <div className={AddButtonWrapperStyle}>
-                <NewButton
-                  label={
-                    <FormattedMessage
-                      id="modules.metadata.addCustomFields"
-                      defaultMessage="ADD CUSTOM FIELDS"
-                    />
-                  }
-                  onClick={() => {
-                    setFieldArrayValue('fieldDefinitions', [
-                      ...fieldDefinitions,
-                      { id: uuid(), name: '', isNew: true },
-                    ]);
-                  }}
-                />
-              </div>
-            </div>
+                    )}
+                  </div>
+                );
+              }}
+            </Subscribe>
           );
         }}
-      </Subscribe>
+      </PermissionConsumer>
     );
   }
 }
