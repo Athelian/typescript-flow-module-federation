@@ -55,6 +55,7 @@ export const prepareCreateBatchInput = (
     shipment = {},
     tags = [],
     batchAdjustments = [],
+    totalAdjusted,
     orderItem = {},
     deliveredAt,
     desiredAt,
@@ -133,6 +134,7 @@ export const prepareUpdateBatchInput = (
     producedAt,
     tags = [],
     batchAdjustments = [],
+    totalAdjusted,
     archived,
     ...rest
   }: Object,
