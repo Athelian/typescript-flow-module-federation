@@ -555,7 +555,6 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
         })
       );
     }
-    return null;
   }, [state]);
 
   const sameFilter = isEquals(initialFilter, filterQuery);
