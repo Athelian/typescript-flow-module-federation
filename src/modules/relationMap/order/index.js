@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { Query } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
+import logger from 'utils/logger';
 import usePermission from 'hooks/usePermission';
 import { RM_UPDATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
@@ -92,7 +93,7 @@ const findRelateShipment = ({
   }
 };
 
-function manualSortByAction(shipments: Object, state: Object) {
+function manualSortByAction(shipments: Object = {}, state: Object = {}) {
   const sortShipments = [];
   state.new.shipments.reverse().forEach(shipmentId => {
     if (shipments[shipmentId]) {
@@ -134,7 +135,9 @@ const Order = ({ intl }: Props) => {
           }
 
           if (state.refetchAll) {
-            refetch(queryVariables).then(() => actions.setRefetchAll(false));
+            refetch(queryVariables)
+              .then(() => actions.setRefetchAll(false))
+              .catch(logger.warn);
           }
 
           if (state.refetchShipmentId) {
@@ -146,25 +149,28 @@ const Order = ({ intl }: Props) => {
                 id: newShipmentId,
               },
             };
-            client.query(queryOption).then(responseData => {
-              updateQuery(prevResult => {
-                const orderIds = state.connectShipment.parentOrderIds.map(item => {
-                  const [, orderId] = item.split('-');
-                  return orderId;
-                });
-                prevResult.orders.nodes
-                  .filter(order => orderIds.includes(order.id))
-                  .forEach(order => {
-                    // insert on the top
-                    order.shipments.push(responseData.data.shipment);
+            client
+              .query(queryOption)
+              .then(responseData => {
+                updateQuery(prevResult => {
+                  const orderIds = state.connectShipment.parentOrderIds.map(item => {
+                    const [, orderId] = item.split('-');
+                    return orderId;
                   });
-                scrollIntoView({
-                  targetId: `shipment-${newShipmentId}`,
-                });
+                  prevResult.orders.nodes
+                    .filter(order => orderIds.includes(order.id))
+                    .forEach(order => {
+                      // insert on the top
+                      order.shipments.push(responseData.data.shipment);
+                    });
+                  scrollIntoView({
+                    targetId: `shipment-${newShipmentId}`,
+                  });
 
-                return prevResult;
-              });
-            });
+                  return prevResult;
+                });
+              })
+              .catch(logger.warn);
           }
 
           if (state.refetchOrderId) {
@@ -183,58 +189,63 @@ const Order = ({ intl }: Props) => {
                   },
                 })
               )
-            ).then(() => {});
+            )
+              .then(() => {})
+              .catch(logger.warn);
             const queryOption: any = {
               query: orderDetailQuery,
               variables: {
                 id: newOrderId,
               },
             };
-            client.query(queryOption).then(responseData => {
-              updateQuery(prevResult => {
-                // insert on the top
-                if (
-                  prevResult.orders &&
-                  responseData.data.order &&
-                  !prevResult.orders.nodes.includes(responseData.data.order)
-                ) {
-                  prevResult.orders.nodes.splice(0, 0, responseData.data.order);
-                }
-                scrollIntoView({
-                  targetId: `order-${newOrderId}`,
-                });
+            client
+              .query(queryOption)
+              .then(responseData => {
+                updateQuery(prevResult => {
+                  // insert on the top
+                  if (
+                    prevResult.orders &&
+                    responseData.data.order &&
+                    !prevResult.orders.nodes.includes(responseData.data.order)
+                  ) {
+                    prevResult.orders.nodes.splice(0, 0, responseData.data.order);
+                  }
+                  scrollIntoView({
+                    targetId: `order-${newOrderId}`,
+                  });
 
-                actions.targetNewEntities([
-                  ...getByPathWithDefault([], 'order.orderItems', responseData.data).map(
-                    orderItem => ({
-                      entity: ORDER_ITEM,
-                      id: orderItem.id,
-                      exporterId: `${ORDER_ITEM}-${getByPathWithDefault(
-                        '',
-                        'order.exporter.id',
-                        responseData.data
-                      )}`,
-                    })
-                  ),
-                  ...getByPathWithDefault([], 'order.orderItems', responseData.data).reduce(
-                    (result, orderItem) =>
-                      result.concat(
-                        orderItem.batches.map(batch => ({
-                          entity: BATCH,
-                          id: batch.id,
-                          exporterId: `${BATCH}-${getByPathWithDefault(
-                            '',
-                            'order.exporter.id',
-                            responseData.data
-                          )}`,
-                        }))
-                      ),
-                    []
-                  ),
-                ]);
-                return prevResult;
-              });
-            });
+                  actions.targetNewEntities([
+                    ...getByPathWithDefault([], 'order.orderItems', responseData.data).map(
+                      orderItem => ({
+                        entity: ORDER_ITEM,
+                        id: orderItem.id,
+                        exporterId: `${ORDER_ITEM}-${getByPathWithDefault(
+                          '',
+                          'order.exporter.id',
+                          responseData.data
+                        )}`,
+                      })
+                    ),
+                    ...getByPathWithDefault([], 'order.orderItems', responseData.data).reduce(
+                      (result, orderItem) =>
+                        result.concat(
+                          orderItem.batches.map(batch => ({
+                            entity: BATCH,
+                            id: batch.id,
+                            exporterId: `${BATCH}-${getByPathWithDefault(
+                              '',
+                              'order.exporter.id',
+                              responseData.data
+                            )}`,
+                          }))
+                        ),
+                      []
+                    ),
+                  ]);
+                  return prevResult;
+                });
+              })
+              .catch(logger.warn);
           }
 
           const { entities } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
