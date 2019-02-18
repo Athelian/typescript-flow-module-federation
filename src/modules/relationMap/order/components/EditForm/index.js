@@ -68,7 +68,6 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
           orderId={encodeId(id)}
           isSlideView
           onSuccessCallback={({ orderUpdate }) => {
-            console.trace('onSuccessCallback', orderUpdate);
             const queryOption = {
               query: orderDetailQuery,
               variables: {
