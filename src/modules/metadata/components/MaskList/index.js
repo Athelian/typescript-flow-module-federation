@@ -5,119 +5,134 @@ import { Query } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import { CUSTOM_FIELD_MASKS_CREATE } from 'modules/permission/constants/customFields';
+import { PermissionConsumer } from 'modules/permission';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
-import FormHeader from 'modules/metadata/components/FormHeader';
+import LoadingIcon from 'components/LoadingIcon';
+import { Label } from 'components/Form';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
 import { masksQuery } from 'modules/metadata/query';
 import { MaskCard } from 'components/Cards';
-
-import { MaskListHeaderStyle, MaskListWrapperStyle } from './style';
+import { TemplatesListWrapperStyle, TemplatesHeaderStyle, TemplatesBodyStyle } from './style';
 
 type Props = {
   entityType: string,
 };
 
 const MaskList = ({ entityType }: Props) => (
-  <Query
-    query={masksQuery}
-    variables={{
-      page: 1,
-      perPage: 10,
-      filter: { entityTypes: entityType },
-    }}
-    fetchPolicy="network-only"
-  >
-    {({ loading, data, fetchMore, error, refetch }) => {
-      if (error) {
-        return error.message;
-      }
-
-      const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
-      const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
-      const hasMore = nextPage <= totalPage;
+  <PermissionConsumer>
+    {hasPermission => {
+      const allowCreate = hasPermission(CUSTOM_FIELD_MASKS_CREATE);
 
       return (
-        <BooleanValue>
-          <div className={MaskListHeaderStyle}>
-            <FormHeader
-              name={<FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />}
-            >
-              <BooleanValue>
-                {({ value: isOpen, set: toggle }) => (
-                  <>
-                    <NewButton onClick={() => toggle(true)} />
-                    <SlideView
-                      isOpen={isOpen}
-                      onRequestClose={() => toggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {isOpen && (
-                        <MaskFormWrapper
-                          entityType={entityType}
-                          isNew
-                          onSave={() => {
-                            toggle(false);
-                            refetch();
-                          }}
-                          onCancel={() => toggle(false)}
-                        />
+        <Query
+          query={masksQuery}
+          variables={{
+            page: 1,
+            perPage: 10,
+            filter: { entityTypes: entityType },
+          }}
+          fetchPolicy="network-only"
+        >
+          {({ loading, data, fetchMore, error, refetch }) => {
+            if (error) {
+              return error.message;
+            }
+
+            if (loading) return <LoadingIcon />;
+
+            const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
+            const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
+            const hasMore = nextPage <= totalPage;
+
+            return (
+              <div className={TemplatesListWrapperStyle}>
+                <div className={TemplatesHeaderStyle}>
+                  <Label>
+                    <FormattedMessage id="modules.metadata.templates" defaultMessage="TEMPLATES" />
+                  </Label>
+                  {allowCreate && (
+                    <BooleanValue>
+                      {({ value: isOpen, set: toggle }) => (
+                        <>
+                          <NewButton onClick={() => toggle(true)} />
+                          <SlideView
+                            isOpen={isOpen}
+                            onRequestClose={() => toggle(false)}
+                            options={{ width: '1030px' }}
+                          >
+                            {isOpen && (
+                              <MaskFormWrapper
+                                entityType={entityType}
+                                isNew
+                                onSave={() => {
+                                  toggle(false);
+                                  refetch();
+                                }}
+                                onCancel={() => toggle(false)}
+                              />
+                            )}
+                          </SlideView>
+                        </>
                       )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-            </FormHeader>
-          </div>
-          <BooleanValue>
-            <div className={MaskListWrapperStyle}>
-              <MaskGridView
-                entityType={entityType}
-                items={getByPathWithDefault([], 'masks.nodes', data)}
-                onLoadMore={() =>
-                  loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
-                }
-                hasMore={hasMore}
-                isLoading={loading}
-                renderItem={mask => (
-                  <BooleanValue key={mask.id}>
-                    {({ value: isOpen, set: toggle }) => (
-                      <>
-                        <MaskCard
-                          mask={mask}
-                          onClick={() => {
-                            toggle(true);
-                          }}
-                        />
-                        <SlideView
-                          isOpen={isOpen}
-                          onRequestClose={() => toggle(false)}
-                          options={{ width: '1030px' }}
-                        >
-                          {isOpen && (
-                            <MaskFormWrapper
-                              entityType={entityType}
-                              id={mask.id}
-                              onSave={() => {
-                                toggle(false);
-                                refetch();
+                    </BooleanValue>
+                  )}
+                </div>
+                <div className={TemplatesBodyStyle}>
+                  <MaskGridView
+                    entityType={entityType}
+                    items={getByPathWithDefault([], 'masks.nodes', data)}
+                    onLoadMore={() =>
+                      loadMore(
+                        { fetchMore, data },
+                        { filter: { entityTypes: entityType } },
+                        'masks'
+                      )
+                    }
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    renderItem={mask => (
+                      <BooleanValue key={mask.id}>
+                        {({ value: isOpen, set: toggle }) => (
+                          <>
+                            <MaskCard
+                              mask={mask}
+                              onClick={() => {
+                                toggle(true);
                               }}
-                              onCancel={() => toggle(false)}
                             />
-                          )}
-                        </SlideView>
-                      </>
+                            <SlideView
+                              isOpen={isOpen}
+                              onRequestClose={() => toggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {isOpen && (
+                                <MaskFormWrapper
+                                  entityType={entityType}
+                                  id={mask.id}
+                                  onSave={() => {
+                                    toggle(false);
+                                    refetch();
+                                  }}
+                                  onCancel={() => toggle(false)}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
                     )}
-                  </BooleanValue>
-                )}
-              />
-            </div>
-          </BooleanValue>
-        </BooleanValue>
+                  />
+                </div>
+              </div>
+            );
+          }}
+        </Query>
       );
     }}
-  </Query>
+  </PermissionConsumer>
 );
 
 export default MaskList;

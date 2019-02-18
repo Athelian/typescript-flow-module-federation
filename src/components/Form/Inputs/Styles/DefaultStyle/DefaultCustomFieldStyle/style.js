@@ -7,7 +7,7 @@ export const DefaultCustomFieldWrapperStyle: string = css`
   flex-direction: column;
 `;
 
-export const CustomFieldsWrapperStyle: string = css`
+export const CustomFieldWrapperStyle: string = css`
   position: relative;
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
@@ -23,4 +23,5 @@ export const CustomFieldIconStyle = css`
   ${fontSizes.SMALL};
   opacity: 1;
   color: ${colors.GRAY_LIGHT};
+  cursor: default;
 `;

@@ -2,16 +2,20 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
-import ContentWrapper from 'components/ContentWrapper';
+import { CUSTOM_FIELD_MASKS_UPDATE } from 'modules/permission/constants/customFields';
+import { PermissionConsumer } from 'modules/permission';
 import { SectionHeader, SectionWrapper } from 'components/Form';
-import GridColumn from 'components/GridColumn';
 import { FormContainer, FormField } from 'modules/form';
-import { textInputFactory, textAreaFactory } from 'modules/form/helpers';
+import { TextInputFactory, TextAreaInputFactory } from 'modules/form/factories';
 import validator from 'modules/metadata/components/MaskFormWrapper/validator';
-
 import MaskContainer from 'modules/metadata/components/MaskForm/container';
-import FieldItem from './components/FieldItem';
-import { TemplateFormWrapperStyle, FormFieldsStyle, DescriptionLabelWrapperStyle } from './style';
+import {
+  TemplateFormWrapperStyle,
+  TemplateSectionWrapperStyle,
+  DescriptionLabelWrapperStyle,
+  TemplateFieldsSectionWrapperStyle,
+} from './style';
+import { CustomFieldTemplateItem } from './components';
 
 type OptionalProps = {
   isNew: boolean,
@@ -45,116 +49,129 @@ class MaskForm extends React.Component<Props> {
     const { isNew, fieldDefinitions } = this.props;
 
     return (
-      <Provider inject={[formContainer]}>
-        <Subscribe to={[MaskContainer]}>
-          {({ originalValues, state, setFieldValue }) => {
-            const values = { ...originalValues, ...state };
-            return (
-              <div className={TemplateFormWrapperStyle}>
-                <SectionWrapper id="metadata_templateSection">
-                  <SectionHeader
-                    icon="TEMPLATE"
-                    title={
-                      <FormattedMessage id="modules.metadata.template" defaultMessage="TEMPLATE" />
-                    }
-                  />
-                  <ContentWrapper width="880px" className={FormFieldsStyle}>
-                    <GridColumn>
-                      <FormField
-                        name="name"
-                        initValue={values.name}
-                        validator={validator}
-                        values={values}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) =>
-                          textInputFactory({
-                            label: (
-                              <FormattedMessage
-                                id="modules.metadata.templateName"
-                                defaultMessage="TEMPLATE NAME"
-                              />
-                            ),
-                            required: true,
-                            isNew,
-                            name,
-                            inputHandlers,
-                            originalValue: originalValues[name],
-                          })
-                        }
-                      </FormField>
+      <PermissionConsumer>
+        {hasPermission => {
+          const allowUpdate = hasPermission(CUSTOM_FIELD_MASKS_UPDATE);
 
-                      <FormField
-                        name="memo"
-                        initValue={values.memo}
-                        validator={validator}
-                        values={values}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) =>
-                          textAreaFactory({
-                            label: (
-                              <div className={DescriptionLabelWrapperStyle}>
-                                <FormattedMessage
-                                  id="modules.metadata.description"
-                                  defaultMessage="DESCRIPTION"
-                                />
-                              </div>
-                            ),
-                            isNew,
-                            height: '100px',
-                            align: 'right',
-                            name,
-                            inputHandlers,
-                            originalValue: originalValues[name],
-                          })
-                        }
-                      </FormField>
-                    </GridColumn>
-                  </ContentWrapper>
-                </SectionWrapper>
-                <SectionWrapper id="metadata_customFieldsSection">
-                  <SectionHeader
-                    icon="METADATA"
-                    title={
-                      <FormattedMessage
-                        id="modules.metadata.customFieldsSection"
-                        defaultMessage="CUSTOM FIELDS"
-                      />
-                    }
-                  />
-                  <ContentWrapper width="880px" className={FormFieldsStyle}>
-                    <div>
-                      {fieldDefinitions.map(fieldDefinition => (
-                        <FieldItem
-                          key={fieldDefinition.id}
-                          checked={values.fieldDefinitionIDs.includes(fieldDefinition.id)}
-                          item={fieldDefinition}
-                          onClick={() => {
-                            if (values.fieldDefinitionIDs.includes(fieldDefinition.id)) {
-                              setFieldValue(
-                                'fieldDefinitionIDs',
-                                values.fieldDefinitionIDs.filter(
-                                  item => item !== fieldDefinition.id
-                                )
-                              );
-                            } else {
-                              setFieldValue('fieldDefinitionIDs', [
-                                ...values.fieldDefinitionIDs,
-                                fieldDefinition.id,
-                              ]);
-                            }
-                          }}
+          return (
+            <Provider inject={[formContainer]}>
+              <Subscribe to={[MaskContainer]}>
+                {({ originalValues, state, setFieldValue }) => {
+                  const values = { ...originalValues, ...state };
+                  return (
+                    <div className={TemplateFormWrapperStyle}>
+                      <SectionWrapper id="metadata_templateSection">
+                        <SectionHeader
+                          icon="TEMPLATE"
+                          title={
+                            <FormattedMessage
+                              id="modules.metadata.template"
+                              defaultMessage="TEMPLATE"
+                            />
+                          }
                         />
-                      ))}
+                        <div className={TemplateSectionWrapperStyle}>
+                          <FormField
+                            name="name"
+                            initValue={values.name}
+                            validator={validator}
+                            values={values}
+                            setFieldValue={setFieldValue}
+                          >
+                            {({ name, ...inputHandlers }) => (
+                              <TextInputFactory
+                                label={
+                                  <FormattedMessage
+                                    id="modules.metadata.templateName"
+                                    defaultMessage="TEMPLATE NAME"
+                                  />
+                                }
+                                required
+                                isNew={isNew}
+                                name={name}
+                                originalValue={originalValues[name]}
+                                {...inputHandlers}
+                                editable={allowUpdate}
+                              />
+                            )}
+                          </FormField>
+
+                          <FormField
+                            name="memo"
+                            initValue={values.memo}
+                            validator={validator}
+                            values={values}
+                            setFieldValue={setFieldValue}
+                          >
+                            {({ name, ...inputHandlers }) => (
+                              <TextAreaInputFactory
+                                label={
+                                  <div className={DescriptionLabelWrapperStyle}>
+                                    <FormattedMessage
+                                      id="modules.metadata.description"
+                                      defaultMessage="DESCRIPTION"
+                                    />
+                                  </div>
+                                }
+                                isNew={isNew}
+                                name={name}
+                                originalValue={originalValues[name]}
+                                {...inputHandlers}
+                                inputHeight="100px"
+                                inputWidth="200px"
+                                inputAlign="right"
+                                editable={allowUpdate}
+                                vertical={false}
+                              />
+                            )}
+                          </FormField>
+                        </div>
+                      </SectionWrapper>
+
+                      <SectionWrapper id="metadata_customFieldsSection">
+                        <SectionHeader
+                          icon="METADATA"
+                          title={
+                            <FormattedMessage
+                              id="modules.metadata.customFieldsSection"
+                              defaultMessage="CUSTOM FIELDS"
+                            />
+                          }
+                        />
+                        <div className={TemplateFieldsSectionWrapperStyle}>
+                          {fieldDefinitions.map(fieldDefinition => (
+                            <CustomFieldTemplateItem
+                              key={fieldDefinition.id}
+                              checked={values.fieldDefinitionIDs.includes(fieldDefinition.id)}
+                              item={fieldDefinition}
+                              onClick={() => {
+                                if (values.fieldDefinitionIDs.includes(fieldDefinition.id)) {
+                                  setFieldValue(
+                                    'fieldDefinitionIDs',
+                                    values.fieldDefinitionIDs.filter(
+                                      item => item !== fieldDefinition.id
+                                    )
+                                  );
+                                } else {
+                                  setFieldValue('fieldDefinitionIDs', [
+                                    ...values.fieldDefinitionIDs,
+                                    fieldDefinition.id,
+                                  ]);
+                                }
+                              }}
+                              editable={allowUpdate}
+                            />
+                          ))}
+                        </div>
+                      </SectionWrapper>
                     </div>
-                  </ContentWrapper>
-                </SectionWrapper>
-              </div>
-            );
-          }}
-        </Subscribe>
-      </Provider>
+                  );
+                }}
+              </Subscribe>
+            </Provider>
+          );
+        }}
+      </PermissionConsumer>
     );
   }
 }
