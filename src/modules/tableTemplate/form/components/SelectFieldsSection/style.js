@@ -8,7 +8,7 @@ export const ContentWrapperStyle: string = css`
   width: 880px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   overflow-y: hidden;
-  padding: 40px 0;
+  padding: 40px;
 `;
 
 export default ContentWrapperStyle;
