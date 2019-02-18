@@ -44,6 +44,19 @@ import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
 import NumberRangeInput from './NumberRangeInput';
 import UserAssignmentInput from './UserAssignmentInput';
+import {
+  AssignmentApprovalFactory,
+  CustomFieldsFactory,
+  DateInputFactory,
+  DayInputFactory,
+  EnumSearchSelectInputFactory,
+  EnumSelectInputFactory,
+  MetricInputFactory,
+  NumberInputFactory,
+  TextAreaInputFactory,
+  TextInputFactory,
+  UserAssignmentInputFactory,
+} from './Factories';
 
 export {
   DateInput,
@@ -90,4 +103,15 @@ export {
   ImagesUploadInput,
   NumberRangeInput,
   UserAssignmentInput,
+  AssignmentApprovalFactory,
+  CustomFieldsFactory,
+  DateInputFactory,
+  DayInputFactory,
+  EnumSearchSelectInputFactory,
+  EnumSelectInputFactory,
+  MetricInputFactory,
+  NumberInputFactory,
+  TextAreaInputFactory,
+  TextInputFactory,
+  UserAssignmentInputFactory,
 };

@@ -5,7 +5,7 @@ import EnumProvider from 'providers/enum';
 import {
   parseEnumDescriptionOrValue,
   convertValueToFormFieldFormat,
-} from 'modules/form/factories/helpers';
+} from 'components/Form/Factories/helpers';
 import { isDataType } from 'utils/fp';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';

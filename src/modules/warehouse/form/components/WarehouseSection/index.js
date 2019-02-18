@@ -5,14 +5,13 @@ import { Subscribe } from 'unstated';
 import WarehouseContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
 import { FormField } from 'modules/form';
-import { CustomFieldsFactory } from 'modules/form/factories';
 import {
   textInputFactory,
   numberInputFactory,
   selectSearchEnumInputFactory,
 } from 'modules/form/helpers';
 import GridColumn from 'components/GridColumn';
-import { DefaultSurfaceStyle } from 'components/Form';
+import { DefaultSurfaceStyle, CustomFieldsFactory } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { WarehouseSectionWrapperStyle } from './style';
 

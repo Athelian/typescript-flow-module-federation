@@ -4,12 +4,18 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
-import { TextInputFactory, NumberInputFactory, DateInputFactory } from 'modules/form/factories';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { FieldItem, Label, Display } from 'components/Form';
+import {
+  FieldItem,
+  Label,
+  Display,
+  TextInputFactory,
+  NumberInputFactory,
+  DateInputFactory,
+} from 'components/Form';
 import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';

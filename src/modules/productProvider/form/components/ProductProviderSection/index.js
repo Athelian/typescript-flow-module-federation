@@ -4,12 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
-import {
-  EnumSearchSelectInputFactory,
-  NumberInputFactory,
-  CustomFieldsFactory,
-  DayInputFactory,
-} from 'modules/form/factories';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
@@ -17,7 +11,16 @@ import validator from 'modules/product/form/validator';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { PartnerCard, GrayCard } from 'components/Cards';
-import { FieldItem, FormTooltip, Label, DashedPlusButton } from 'components/Form';
+import {
+  FieldItem,
+  FormTooltip,
+  Label,
+  DashedPlusButton,
+  EnumSearchSelectInputFactory,
+  NumberInputFactory,
+  CustomFieldsFactory,
+  DayInputFactory,
+} from 'components/Form';
 import { PermissionConsumer } from 'modules/permission';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';

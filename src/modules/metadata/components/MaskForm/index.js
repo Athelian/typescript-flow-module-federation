@@ -4,9 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { CUSTOM_FIELD_MASKS_UPDATE } from 'modules/permission/constants/customFields';
 import { PermissionConsumer } from 'modules/permission';
-import { SectionHeader, SectionWrapper } from 'components/Form';
+import {
+  SectionHeader,
+  SectionWrapper,
+  TextInputFactory,
+  TextAreaInputFactory,
+} from 'components/Form';
 import { FormContainer, FormField } from 'modules/form';
-import { TextInputFactory, TextAreaInputFactory } from 'modules/form/factories';
 import validator from 'modules/metadata/components/MaskFormWrapper/validator';
 import MaskContainer from 'modules/metadata/components/MaskForm/container';
 import {

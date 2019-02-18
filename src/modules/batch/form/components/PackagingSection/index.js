@@ -4,12 +4,16 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
-import { TextInputFactory, NumberInputFactory, MetricInputFactory } from 'modules/form/factories';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField, FormContainer } from 'modules/form';
 import { CalculatorButtonStyle } from 'modules/form/helpers/numberInput/style';
 import GridColumn from 'components/GridColumn';
-import { ToggleInput } from 'components/Form';
+import {
+  ToggleInput,
+  TextInputFactory,
+  NumberInputFactory,
+  MetricInputFactory,
+} from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 

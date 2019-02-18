@@ -10,15 +10,6 @@ import { SHIPMENT_CREATE, SHIPMENT_UPDATE } from 'modules/permission/constants/s
 import { CloneButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import {
-  TextInputFactory,
-  DateInputFactory,
-  EnumSelectInputFactory,
-  EnumSearchSelectInputFactory,
-  TextAreaInputFactory,
-  CustomFieldsFactory,
-  UserAssignmentInputFactory,
-} from 'modules/form/factories';
-import {
   ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
@@ -38,6 +29,13 @@ import {
   SectionHeader,
   LastModified,
   StatusToggle,
+  TextInputFactory,
+  DateInputFactory,
+  EnumSelectInputFactory,
+  EnumSearchSelectInputFactory,
+  TextAreaInputFactory,
+  CustomFieldsFactory,
+  UserAssignmentInputFactory,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';

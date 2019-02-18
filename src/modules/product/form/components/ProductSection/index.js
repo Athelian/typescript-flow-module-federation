@@ -12,10 +12,16 @@ import {
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, TagsInput, ImagesUploadInput } from 'components/Form';
+import {
+  FieldItem,
+  Label,
+  TagsInput,
+  ImagesUploadInput,
+  TextInputFactory,
+  CustomFieldsFactory,
+} from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
 import { PermissionConsumer } from 'modules/permission';
-import { TextInputFactory, CustomFieldsFactory } from 'modules/form/factories';
 import {
   ProductSectionWrapperStyle,
   ProductImagesWrapperStyle,
