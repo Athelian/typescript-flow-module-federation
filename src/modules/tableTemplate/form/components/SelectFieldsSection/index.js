@@ -2,9 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { uuid } from 'utils/id';
 import GridColumn from 'components/GridColumn';
-import { ToggleInput } from 'components/Form';
+import { ToggleInput, Display, Label } from 'components/Form';
 import TemplateFormContainer from 'modules/tableTemplate/form/container';
 import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCustomFields';
 import { FormField } from 'modules/form';
@@ -27,11 +26,11 @@ const renderGroup = ({
   hasSelectField: Function,
   toggleSelectField: Function,
 }) =>
-  groups.map(({ group, columns }, index) => (
-    <React.Fragment key={uuid()}>
-      <h3> {group} </h3>
+  groups.map(({ id, group, columns }, index) => (
+    <GridColumn gap="10px" key={id}>
+      <Display align="left">{group}</Display>
       {columns.map((column, position) => (
-        <div style={{ display: 'flex' }} key={uuid()}>
+        <div style={{ display: 'flex' }} key={column.name}>
           <FormField
             name={column}
             initValue={`${type}-${
@@ -53,13 +52,13 @@ const renderGroup = ({
                     );
                   }}
                 />
-                {name}
+                <Label>{name}</Label>
               </>
             )}
           </FormField>
         </div>
       ))}
-    </React.Fragment>
+    </GridColumn>
   ));
 
 const renderCustomFields = ({
@@ -73,10 +72,10 @@ const renderCustomFields = ({
   hasSelectField: Function,
   toggleSelectField: Function,
 }) => (
-  <div>
-    <h3>
+  <GridColumn gap="10px">
+    <Display align="left">
       <FormattedMessage id="modules.tableTemplate.customFields" defaultMessage="CUSTOM FIELDS" />
-    </h3>
+    </Display>
 
     {customFields.map(({ id, name: text }, index) => {
       const fieldName = `${type}-customFields-${index}`;
@@ -92,14 +91,14 @@ const renderCustomFields = ({
                     toggleSelectField(fieldName);
                   }}
                 />
-                {text}
+                <Label>{text}</Label>
               </>
             )}
           </FormField>
         </div>
       );
     })}
-  </div>
+  </GridColumn>
 );
 
 const TableTemplateSection = () => (
