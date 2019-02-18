@@ -107,6 +107,7 @@ const TimelineInfoSection = (props: Props) => {
               adjustment && (
                 <DefaultAdjustmentStyle
                   isNew={isNew}
+                  editable={!readOnly}
                   index={timelineDateRevisions.length - 1 - index}
                   adjustment={adjustment}
                   key={adjustment.id}
