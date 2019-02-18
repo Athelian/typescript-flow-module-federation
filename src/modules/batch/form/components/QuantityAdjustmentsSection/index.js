@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import usePermission from 'hooks/usePermission';
 import { numberInputFactory } from 'modules/form/helpers';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
@@ -22,131 +24,138 @@ type Props = {
   isNew: boolean,
 };
 
-const QuantityAdjustmentsSection = ({ isNew }: Props) => (
-  <div className={QuantityAdjustmentsSectionWrapperStyle}>
-    <Subscribe to={[BatchFormContainer]}>
-      {({
-        originalValues,
-        state,
-        setFieldArrayValue,
-        removeArrayItem,
-        calculatePackageQuantity,
-      }) => {
-        const values = { ...originalValues, ...state };
+const QuantityAdjustmentsSection = ({ isNew }: Props) => {
+  const { hasPermission } = usePermission();
+  const allowCreateOrUpdate = hasPermission(BATCH_CREATE) || hasPermission(BATCH_UPDATE);
 
-        const currentQuantity = values.batchAdjustments.reduce(
-          (total, adjustment) => adjustment.quantity + total,
-          values.quantity
-        );
+  return (
+    <div className={QuantityAdjustmentsSectionWrapperStyle}>
+      <Subscribe to={[BatchFormContainer]}>
+        {({
+          originalValues,
+          state,
+          setFieldArrayValue,
+          removeArrayItem,
+          calculatePackageQuantity,
+        }) => {
+          const values = { ...originalValues, ...state };
 
-        return (
-          <GridColumn gap="10px">
-            <FieldItem
-              label={
-                <Label>
-                  <FormattedMessage
-                    id="modules.Batches.initialQuantity"
-                    defaultMessage="INITIAL QUANTITY"
-                  />
-                </Label>
-              }
-              input={
-                <div data-testid="initialQuantityDiv" className={InitialQuantityStyle}>
-                  <FormattedNumber value={values.quantity || 0} />
-                </div>
-              }
-            />
-            {values.batchAdjustments &&
-              values.batchAdjustments.map(
-                (adjustment, index) =>
-                  adjustment && (
-                    <Subscribe key={adjustment.id} to={[FormContainer]}>
-                      {({ setFieldTouched }) => (
-                        <DefaultAdjustmentStyle
-                          isNew={isNew}
-                          index={index}
-                          adjustment={adjustment}
-                          setFieldArrayValue={setFieldArrayValue}
-                          removeArrayItem={targetName => {
-                            removeArrayItem(targetName);
-                            calculatePackageQuantity(setFieldTouched);
-                          }}
-                          enumType="BatchAdjustmentReason"
-                          targetName="batchAdjustments"
-                          typeName="reason"
-                          memoName="memo"
-                          valueInput={
-                            <FormField
-                              name={`batchAdjustments.${index}.quantity`}
-                              initValue={adjustment.quantity}
-                              setFieldValue={setFieldArrayValue}
-                            >
-                              {({ name, ...inputHandlers }) =>
-                                numberInputFactory({
-                                  inputHandlers: {
-                                    ...inputHandlers,
-                                    onBlur: evt => {
-                                      inputHandlers.onBlur(evt);
-                                      setFieldArrayValue(name, inputHandlers.value);
-                                      calculatePackageQuantity(setFieldTouched);
-                                    },
-                                  },
-                                  name,
-                                  isNew,
-                                  originalValue: adjustment.quantity,
-                                })
-                              }
-                            </FormField>
-                          }
-                        />
-                      )}
-                    </Subscribe>
-                  )
-              )}
-            <div className={AddAdjustmentButtonWrapperStyle}>
-              <NewButton
-                data-testid="addAdjustmentButton"
+          const currentQuantity = values.batchAdjustments.reduce(
+            (total, adjustment) => adjustment.quantity + total,
+            values.quantity
+          );
+
+          return (
+            <GridColumn gap="10px">
+              <FieldItem
                 label={
-                  <FormattedMessage
-                    id="modules.Batches.newAdjustment"
-                    defaultMessage="NEW ADJUSTMENT"
-                  />
+                  <Label>
+                    <FormattedMessage
+                      id="modules.Batches.initialQuantity"
+                      defaultMessage="INITIAL QUANTITY"
+                    />
+                  </Label>
                 }
-                onClick={() => {
-                  setFieldArrayValue(
-                    `batchAdjustments[${values.batchAdjustments.length}]`,
-                    injectUid({
-                      isNew: true,
-                      reason: 'Other',
-                      quantity: 0,
-                      memo: '',
-                      updatedAt: new Date(),
-                    })
-                  );
-                }}
+                input={
+                  <div data-testid="initialQuantityDiv" className={InitialQuantityStyle}>
+                    <FormattedNumber value={values.quantity || 0} />
+                  </div>
+                }
               />
-            </div>
-            <Divider />
-            <FieldItem
-              label={
-                <Label>
-                  <FormattedMessage
-                    id="modules.Batches.currentQuantity"
-                    defaultMessage="CURRENT QUANTITY"
+              {values.batchAdjustments &&
+                values.batchAdjustments.map(
+                  (adjustment, index) =>
+                    adjustment && (
+                      <Subscribe key={adjustment.id} to={[FormContainer]}>
+                        {({ setFieldTouched }) => (
+                          <DefaultAdjustmentStyle
+                            isNew={isNew}
+                            index={index}
+                            adjustment={adjustment}
+                            setFieldArrayValue={setFieldArrayValue}
+                            removeArrayItem={targetName => {
+                              removeArrayItem(targetName);
+                              calculatePackageQuantity(setFieldTouched);
+                            }}
+                            enumType="BatchAdjustmentReason"
+                            targetName="batchAdjustments"
+                            typeName="reason"
+                            memoName="memo"
+                            valueInput={
+                              <FormField
+                                name={`batchAdjustments.${index}.quantity`}
+                                initValue={adjustment.quantity}
+                                setFieldValue={setFieldArrayValue}
+                              >
+                                {({ name, ...inputHandlers }) =>
+                                  numberInputFactory({
+                                    inputHandlers: {
+                                      ...inputHandlers,
+                                      onBlur: evt => {
+                                        inputHandlers.onBlur(evt);
+                                        setFieldArrayValue(name, inputHandlers.value);
+                                        calculatePackageQuantity(setFieldTouched);
+                                      },
+                                    },
+                                    name,
+                                    isNew,
+                                    originalValue: adjustment.quantity,
+                                  })
+                                }
+                              </FormField>
+                            }
+                          />
+                        )}
+                      </Subscribe>
+                    )
+                )}
+              {allowCreateOrUpdate && (
+                <div className={AddAdjustmentButtonWrapperStyle}>
+                  <NewButton
+                    data-testid="addAdjustmentButton"
+                    label={
+                      <FormattedMessage
+                        id="modules.Batches.newAdjustment"
+                        defaultMessage="NEW ADJUSTMENT"
+                      />
+                    }
+                    onClick={() => {
+                      setFieldArrayValue(
+                        `batchAdjustments[${values.batchAdjustments.length}]`,
+                        injectUid({
+                          isNew: true,
+                          reason: 'Other',
+                          quantity: 0,
+                          memo: '',
+                          updatedAt: new Date(),
+                        })
+                      );
+                    }}
                   />
-                </Label>
-              }
-              input={
-                <div data-testid="currentQuantityDiv" className={CurrentQuantityStyle}>
-                  <FormattedNumber value={currentQuantity || 0} />
                 </div>
-              }
-            />
-          </GridColumn>
-        );
-      }}
-    </Subscribe>
-  </div>
-);
+              )}
+              <Divider />
+              <FieldItem
+                label={
+                  <Label>
+                    <FormattedMessage
+                      id="modules.Batches.currentQuantity"
+                      defaultMessage="CURRENT QUANTITY"
+                    />
+                  </Label>
+                }
+                input={
+                  <div data-testid="currentQuantityDiv" className={CurrentQuantityStyle}>
+                    <FormattedNumber value={currentQuantity || 0} />
+                  </div>
+                }
+              />
+            </GridColumn>
+          );
+        }}
+      </Subscribe>
+    </div>
+  );
+};
 
 export default QuantityAdjustmentsSection;

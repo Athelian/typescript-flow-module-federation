@@ -338,10 +338,10 @@ const OrderSection = ({ isNew }: Props) => {
                     </BooleanValue>
                   ) : (
                     <>
-                      {!values.exporter ? (
-                        <GrayCard width="195px" height="215px" />
-                      ) : (
+                      {values.exporter ? (
                         <PartnerCard partner={values.exporter} />
+                      ) : (
+                        <GrayCard width="195px" height="215px" />
                       )}
                     </>
                   )}
