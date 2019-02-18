@@ -202,6 +202,7 @@ class OrderFormModule extends React.PureComponent<Props> {
       mutationKey = { key: decodeId(orderId) };
     }
     const updateOrder = updateOrderMutation;
+    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     return (
       <PermissionConsumer>
         {hasPermission =>
@@ -233,7 +234,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                           <Layout
                             {...(isSlideView ? {} : uiState)}
                             navBar={
-                              <NavBar>
+                              <CurrentNavBar>
                                 <EntityIcon icon="ORDER" color="ORDER" />
                                 <JumpToSection>
                                   <SectionTabs
@@ -380,7 +381,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                       />
                                     )}
                                 </>
-                              </NavBar>
+                              </CurrentNavBar>
                             }
                           >
                             {apiError && <p>Error: Please try again.</p>}
