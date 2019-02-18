@@ -45,7 +45,6 @@ const PackagingSection = ({ isNew }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    required
                     originalValue={originalValues[name]}
                     label={
                       <FormattedMessage
