@@ -142,7 +142,10 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                     <SaveButton
                       data-testid="saveButtonOnSelectBatches"
                       disabled={selected.length === 0}
-                      onClick={() => onSelect(selected)}
+                      onClick={() => {
+                        console.log(selected);
+                        onSelect(selected);
+                      }}
                     />
                   </SlideViewNavBar>
                 }

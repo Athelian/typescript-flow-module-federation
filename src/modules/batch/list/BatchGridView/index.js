@@ -9,7 +9,7 @@ import { encodeId } from 'utils/id';
 import { BatchCard, CardAction } from 'components/Cards';
 
 type OptionalProps = {
-  renderItem?: (item: Object) => React.Node,
+  renderItem?: Function,
 };
 
 type Props = OptionalProps & {
@@ -19,7 +19,7 @@ type Props = OptionalProps & {
   isLoading: boolean,
 };
 
-const defaultRenderItem = ({ allowCreate, ...item }: Object) => (
+const defaultRenderItem = (item: Object, allowCreate: boolean) => (
   <BatchCard
     key={item.id}
     actions={[
@@ -58,7 +58,7 @@ const BatchGridView = (props: Props) => {
         <FormattedMessage id="modules.Batches.noBatchesFound" defaultMessage="No batches found" />
       }
     >
-      {items.map(item => renderItem({ ...item, allowCreate }))}
+      {items.map(item => renderItem(item, allowCreate))}
     </GridView>
   );
 };
