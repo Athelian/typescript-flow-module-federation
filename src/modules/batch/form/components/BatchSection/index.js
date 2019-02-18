@@ -9,17 +9,20 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
 import { FormField, FormContainer } from 'modules/form';
+import { OrderItemCard, GrayCard } from 'components/Cards';
+import { totalAdjustQuantity } from 'components/Cards/utils';
+import GridColumn from 'components/GridColumn';
 import {
+  FieldItem,
+  Label,
+  DashedPlusButton,
+  TagsInput,
   CustomFieldsFactory,
   TextInputFactory,
   NumberInputFactory,
   DateInputFactory,
   TextAreaInputFactory,
-} from 'modules/form/factories';
-import { OrderItemCard, GrayCard } from 'components/Cards';
-import { totalAdjustQuantity } from 'components/Cards/utils';
-import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
+} from 'components/Form';
 import messages from 'modules/batch/messages';
 import SelectOrderItem from 'modules/batch/common/SelectOrderItem';
 import {

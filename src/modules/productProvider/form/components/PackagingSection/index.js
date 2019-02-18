@@ -4,9 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { FormField } from 'modules/form';
-import { TextInputFactory, NumberInputFactory, MetricInputFactory } from 'modules/form/factories';
+import { TextInputFactory, NumberInputFactory, MetricInputFactory } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-
 import { getByPath } from 'utils/fp';
 import { PermissionConsumer } from 'modules/permission';
 import { PackagingSectionWrapperStyle } from './style';

@@ -9,7 +9,7 @@ import {
   NumberInputFactory,
   EnumSearchSelectInputFactory,
   MetricInputFactory,
-} from 'modules/form/factories';
+} from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { PermissionConsumer } from 'modules/permission';
 import { getByPath } from 'utils/fp';

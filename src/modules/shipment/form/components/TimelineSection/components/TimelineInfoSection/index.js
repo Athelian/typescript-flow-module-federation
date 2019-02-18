@@ -5,8 +5,12 @@ import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { DateInputFactory, AssignmentApprovalFactory } from 'modules/form/factories';
-import { SectionHeader, DefaultAdjustmentStyle } from 'components/Form';
+import {
+  SectionHeader,
+  DefaultAdjustmentStyle,
+  DateInputFactory,
+  AssignmentApprovalFactory,
+} from 'components/Form';
 import { TimelineInfoSectionWrapperStyle, AddDateButtonWrapperStyle } from './style';
 
 type OptionalProps = {

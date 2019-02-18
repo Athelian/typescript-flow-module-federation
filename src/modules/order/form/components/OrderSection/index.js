@@ -15,15 +15,18 @@ import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
-import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
 import {
+  FieldItem,
+  Label,
+  DashedPlusButton,
+  TagsInput,
   TextInputFactory,
   TextAreaInputFactory,
   DateInputFactory,
   CustomFieldsFactory,
   EnumSearchSelectInputFactory,
   UserAssignmentInputFactory,
-} from 'modules/form/factories';
+} from 'components/Form';
 import { getQuantitySummary } from 'modules/order/helpers';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';

@@ -4,14 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
-import { NumberInputFactory } from 'modules/form/factories';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
 import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';
 import Divider from 'components/Divider';
 import { FormField, FormContainer } from 'modules/form';
-import { FieldItem, Label, DefaultAdjustmentStyle } from 'components/Form';
+import { FieldItem, Label, DefaultAdjustmentStyle, NumberInputFactory } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import {
   QuantityAdjustmentsSectionWrapperStyle,

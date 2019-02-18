@@ -5,13 +5,16 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { CONTAINER_CREATE, CONTAINER_UPDATE } from 'modules/permission/constants/container';
 import usePermission from 'hooks/usePermission';
+import SlideView from 'components/SlideView';
 import {
+  FieldItem,
+  Label,
+  DashedPlusButton,
+  TagsInput,
   TextInputFactory,
   TextAreaInputFactory,
   AssignmentApprovalFactory,
-} from 'modules/form/factories';
-import SlideView from 'components/SlideView';
-import { FieldItem, Label, DashedPlusButton, TagsInput } from 'components/Form';
+} from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard, GrayCard } from 'components/Cards';
 import { FormField } from 'modules/form';
