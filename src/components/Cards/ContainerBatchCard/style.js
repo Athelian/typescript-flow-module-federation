@@ -71,7 +71,7 @@ export const ProductSupplierStyle: string = css`
   }
 `;
 
-export const RepresentIconStyle = (isRepresented: boolean) => css`
+export const RepresentIconStyle = (isRepresented: boolean, clickable?: boolean) => css`
   position: absolute;
   bottom: 5px;
   right: 0;
@@ -79,11 +79,13 @@ export const RepresentIconStyle = (isRepresented: boolean) => css`
   width: 20px;
   height: 20px;
   ${presets.BUTTON};
+  ${!clickable && 'cursor:default'};
   color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
-  &:hover,
+  ${clickable &&
+    `&:hover,
   :focus {
     color: ${isRepresented ? colors.YELLOW_DARK : colors.WHITE};
-  }
+  }`}
 `;
 
 export const ProductIconLinkStyle: string = css`

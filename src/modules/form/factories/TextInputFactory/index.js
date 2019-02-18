@@ -45,6 +45,7 @@ const TextInputFactory = ({
   required,
   labelAlign,
   labelWidth,
+  inputAlign,
   hideTooltip,
   isNew,
   errorMessage,
@@ -63,7 +64,6 @@ const TextInputFactory = ({
   onChange,
   onBlur,
   onFocus,
-  inputAlign,
   editable,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
