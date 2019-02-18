@@ -50,6 +50,7 @@ type OptionalProps = {
     vesselCode: string,
     vesselName: string,
   },
+  readOnly: boolean,
 };
 
 type Props = OptionalProps & {
@@ -63,6 +64,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   voyage: {},
   initialVoyage: {},
+  readOnly: false,
 };
 
 class VoyageInfoSection extends React.PureComponent<Props> {
@@ -77,6 +79,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
       initialVoyage,
       sourceName,
       setFieldDeepValue,
+      readOnly,
       ...rest
     } = this.props;
 
@@ -100,6 +103,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) => (
                 <EnumSearchSelectInputFactory
                   {...inputHandlers}
+                  editable={!readOnly}
                   enumType={enumType}
                   originalValue={
                     initialVoyage &&
@@ -160,6 +164,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               {({ name, ...inputHandlers }) => (
                 <EnumSearchSelectInputFactory
                   {...inputHandlers}
+                  editable={!readOnly}
                   enumType={enumType}
                   originalValue={
                     initialVoyage &&
@@ -217,6 +222,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
             {({ name, ...inputHandlers }) => (
               <TextAreaInputFactory
                 {...inputHandlers}
+                editable={!readOnly}
                 originalValue={initialVoyage.vesselName}
                 name={name}
                 isNew={isNew}
@@ -235,6 +241,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
             {({ name, ...inputHandlers }) => (
               <TextAreaInputFactory
                 {...inputHandlers}
+                editable={!readOnly}
                 originalValue={initialVoyage.vesselCode}
                 name={name}
                 isNew={isNew}

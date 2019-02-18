@@ -135,6 +135,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                       <>
                                         <ShipmentContainerCard
                                           container={container}
+                                          readOnly={!allowToUpdate}
                                           update={newContainer => {
                                             setDeepFieldValue(
                                               `containers.${position}`,
@@ -142,7 +143,11 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             );
                                           }}
                                           onClick={() => toggleContainerForm(true)}
-                                          onSelectWarehouse={() => toggleSelectWarehouse(true)}
+                                          onSelectWarehouse={
+                                            allowToUpdate
+                                              ? () => toggleSelectWarehouse(true)
+                                              : () => {}
+                                          }
                                           actions={[
                                             allowToUpdate && (
                                               <CardAction

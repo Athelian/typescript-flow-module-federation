@@ -6,11 +6,10 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
-import { textInputFactory, dateTimeInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display, DefaultStyle } from 'components/Form';
+import { Label, Display, DefaultStyle, TextInputFactory, DateInputFactory } from 'components/Form';
 
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
@@ -32,7 +31,6 @@ import {
   InputIconStyle,
   WarehouseIconStyle,
   LabelStyle,
-  // WarehouseSelectButtonStyle,
   ApprovalIconStyle,
   TagsWrapperStyle,
 } from './style';
@@ -135,23 +133,23 @@ const ShipmentContainerCard = ({
                   validator={validation}
                   values={values}
                 >
-                  {({ name: fieldName, ...inputHandlers }) =>
-                    textInputFactory({
-                      width: '185px',
-                      height: '20px',
-                      inputHandlers: {
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <TextInputFactory
+                      width="185px"
+                      height="20px"
+                      editable={!readOnly}
+                      {...{
                         ...inputHandlers,
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
                           update({ ...container, no: inputHandlers.value });
                         },
-                      },
-                      name: fieldName,
-                      isNew: false,
-                      originalValue: no,
-                      align: 'left',
-                    })
-                  }
+                      }}
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={no}
+                    />
+                  )}
                 </FormField>
               </div>
               <div className={LabelInputStyle}>
@@ -177,6 +175,7 @@ const ShipmentContainerCard = ({
               <div className={DividerStyle} />
 
               <div className={IconInputStyle}>
+                {/* TODO: add warehouse style for read only */}
                 {isNullOrUndefined(warehouse) ? (
                   <div className={WarehouseIconStyle(false)}>
                     <Icon icon="WAREHOUSE" />
@@ -225,14 +224,15 @@ const ShipmentContainerCard = ({
                   name={`container.${id}.warehouseArrivalAgreedDate`}
                   initValue={warehouseArrivalAgreedDate}
                 >
-                  {({ name: fieldName, ...inputHandlers }) =>
-                    dateTimeInputFactory({
-                      width: '165px',
-                      height: '20px',
-                      name: fieldName,
-                      isNew: false,
-                      originalValue: warehouseArrivalAgreedDate,
-                      inputHandlers: {
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      width="165px"
+                      height="20px"
+                      name={fieldName}
+                      editable={!readOnly}
+                      isNew={false}
+                      originalValue={warehouseArrivalAgreedDate}
+                      {...{
                         ...inputHandlers,
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
@@ -243,9 +243,9 @@ const ShipmentContainerCard = ({
                               : null,
                           });
                         },
-                      },
-                    })
-                  }
+                      }}
+                    />
+                  )}
                 </FormField>
 
                 {warehouseArrivalAgreedDateApprovedBy ? (
@@ -254,10 +254,12 @@ const ShipmentContainerCard = ({
                     className={ApprovalIconStyle(true)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalAgreedDateApprovedBy: null,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalAgreedDateApprovedBy: null,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="CHECKED" />
@@ -268,10 +270,12 @@ const ShipmentContainerCard = ({
                     className={ApprovalIconStyle(false)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalAgreedDateApprovedBy: user,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalAgreedDateApprovedBy: user,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="UNCHECKED" />
@@ -296,14 +300,15 @@ const ShipmentContainerCard = ({
                   name={`container.${id}.warehouseArrivalActualDate`}
                   initValue={warehouseArrivalActualDate}
                 >
-                  {({ name: fieldName, ...inputHandlers }) =>
-                    dateTimeInputFactory({
-                      width: '165px',
-                      height: '20px',
-                      name: fieldName,
-                      isNew: false,
-                      originalValue: warehouseArrivalActualDate,
-                      inputHandlers: {
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      width="165px"
+                      height="20px"
+                      name={fieldName}
+                      isNew={false}
+                      editable={!readOnly}
+                      originalValue={warehouseArrivalActualDate}
+                      {...{
                         ...inputHandlers,
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
@@ -314,9 +319,9 @@ const ShipmentContainerCard = ({
                               : null,
                           });
                         },
-                      },
-                    })
-                  }
+                      }}
+                    />
+                  )}
                 </FormField>
 
                 {warehouseArrivalActualDateApprovedBy ? (
@@ -325,10 +330,12 @@ const ShipmentContainerCard = ({
                     className={ApprovalIconStyle(true)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalActualDateApprovedBy: null,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalActualDateApprovedBy: null,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="CHECKED" />
@@ -339,10 +346,12 @@ const ShipmentContainerCard = ({
                     className={ApprovalIconStyle(false)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalActualDateApprovedBy: user,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalActualDateApprovedBy: user,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="UNCHECKED" />

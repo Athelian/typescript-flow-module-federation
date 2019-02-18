@@ -317,16 +317,17 @@ const TimelineSection = ({ isNew }: Props) => {
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
-                          {!warehouse ? (
+                          {!warehouse && allowToUpdate && (
                             <DashedPlusButton
                               width="195px"
                               height="40px"
-                              onClick={() => slideToggle(true)}
+                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
                             />
-                          ) : (
+                          )}
+                          {warehouse && (
                             <ShipmentWarehouseCard
                               warehouse={warehouse}
-                              onClick={() => slideToggle(true)}
+                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
                             />
                           )}
 
