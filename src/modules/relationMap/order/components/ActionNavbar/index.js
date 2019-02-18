@@ -537,11 +537,31 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       onClearSelectShipment={() => actions.toggleSelectedShipment('')}
                       onDisconnect={async () => {
                         const batchIds = uiSelectors.targetedBatchIds();
+                        const allOrderItemIds = [];
+                        (Object.entries(orderItems || {}): Array<any>).forEach(
+                          ([orderItemId, orderItem]) => {
+                            if (
+                              !allOrderItemIds.includes(orderItemId) &&
+                              intersection(orderItem.batches, batchIds).length > 0
+                            ) {
+                              allOrderItemIds.push(orderItemId);
+                            }
+                          }
+                        );
+                        const orderIds = [];
+                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                          if (
+                            !orderIds.includes(orderId) &&
+                            intersection(order.orderItems, allOrderItemIds).length > 0
+                          ) {
+                            orderIds.push(orderId);
+                          }
+                        });
                         const shipmentId = null;
                         actions.disconnectShipment(batchIds);
                         try {
                           const updateBatches = await Promise.all(
-                            batchIds.map(id =>
+                            batchIds.map((id, idx) =>
                               client.mutate({
                                 mutation: updateBatchMutation,
                                 variables: {
@@ -550,6 +570,16 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     shipmentId,
                                   },
                                 },
+                                ...(idx === batchIds.length - 1
+                                  ? {
+                                      refetchQueries: orderIds.map(orderId => ({
+                                        query: orderDetailQuery,
+                                        variables: {
+                                          id: orderId,
+                                        },
+                                      })),
+                                    }
+                                  : {}),
                               })
                             )
                           );
@@ -564,11 +594,31 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       }}
                       onMoveToExistShipment={async () => {
                         const batchIds = uiSelectors.targetedBatchIds();
+                        const allOrderItemIds = [];
+                        (Object.entries(orderItems || {}): Array<any>).forEach(
+                          ([orderItemId, orderItem]) => {
+                            if (
+                              !allOrderItemIds.includes(orderItemId) &&
+                              intersection(orderItem.batches, batchIds).length > 0
+                            ) {
+                              allOrderItemIds.push(orderItemId);
+                            }
+                          }
+                        );
+                        const orderIds = [];
+                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                          if (
+                            !orderIds.includes(orderId) &&
+                            intersection(order.orderItems, allOrderItemIds).length > 0
+                          ) {
+                            orderIds.push(orderId);
+                          }
+                        });
                         const { shipmentId } = state.connectShipment;
                         actions.moveToShipment(batchIds);
                         try {
                           const updateBatches = await Promise.all(
-                            batchIds.map(id =>
+                            batchIds.map((id, idx) =>
                               client.mutate({
                                 mutation: updateBatchMutation,
                                 variables: {
@@ -578,6 +628,16 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     containerId: null,
                                   },
                                 },
+                                ...(idx === batchIds.length - 1
+                                  ? {
+                                      refetchQueries: orderIds.map(orderId => ({
+                                        query: orderDetailQuery,
+                                        variables: {
+                                          id: orderId,
+                                        },
+                                      })),
+                                    }
+                                  : {}),
                               })
                             )
                           );
@@ -592,7 +652,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       }}
                       onMoveToNewShipment={() => {
                         const batchIds = uiSelectors.targetedBatchIds();
-
                         const initBatches = batchIds.map(batchId => {
                           const [orderItemId, orderItem] =
                             (Object.entries(orderItems || {}): Array<any>).find(([, item]) =>
