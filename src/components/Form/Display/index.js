@@ -22,8 +22,10 @@ const defaultProps = {
   fontSize: 'MAIN',
 };
 
-const Display = ({ align, width, height, color, fontSize, children }: Props) => (
-  <div className={DisplayWrapperStyle({ align, width, height, color, fontSize })}>{children}</div>
+const Display = ({ align, width, height, color, fontSize, children, ...rest }: Props) => (
+  <div className={DisplayWrapperStyle({ align, width, height, color, fontSize })} {...rest}>
+    {children}
+  </div>
 );
 
 Display.defaultProps = defaultProps;

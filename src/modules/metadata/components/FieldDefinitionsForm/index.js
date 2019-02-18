@@ -83,15 +83,12 @@ class FieldDefinitionsForm extends React.Component<Props> {
                                 {provided => (
                                   <div ref={provided.innerRef} {...provided.draggableProps}>
                                     <DefaultCustomFieldDefinitionStyle
-                                      rearrange
                                       dragHandleProps={provided.dragHandleProps}
-                                      isKeyReadOnly={false}
-                                      isValueReadOnly
                                       targetName={`fieldDefinitions.${index}`}
-                                      width="200px"
                                       fieldName={fieldDefinition.name}
-                                      setFieldArrayValue={setFieldArrayValue}
+                                      setFieldValue={setFieldArrayValue}
                                       onRemove={() => removeArrayItem(`fieldDefinitions.${index}`)}
+                                      editable
                                     />
                                   </div>
                                 )}

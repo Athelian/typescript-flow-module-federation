@@ -5,7 +5,7 @@ import { FormField } from 'modules/form';
 import { Label, TextInput, DefaultStyle, Display } from 'components/Form';
 import {
   DefaultCustomFieldWrapperStyle,
-  CustomFieldsWrapperStyle,
+  CustomFieldWrapperStyle,
   CustomFieldIconStyle,
 } from './style';
 
@@ -33,7 +33,7 @@ const DefaultCustomFieldStyle = ({
   editable,
 }: Props) => (
   <div className={DefaultCustomFieldWrapperStyle}>
-    <div className={CustomFieldsWrapperStyle}>
+    <div className={CustomFieldWrapperStyle}>
       <div className={CustomFieldIconStyle}>
         <Icon icon="METADATA" />
       </div>

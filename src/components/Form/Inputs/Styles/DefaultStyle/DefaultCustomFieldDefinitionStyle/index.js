@@ -1,76 +1,61 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { FormField } from 'modules/form';
 import { Label, TextInput, DefaultStyle, Display } from 'components/Form';
 import {
-  AdjustmentWrapperStyle,
-  AdjustmentFieldsWrapperStyle,
-  DragBarStyle,
-  EditHandleStyle,
+  DefaultCustomFieldDefinitionWrapperStyle,
+  CustomFieldWrapperStyle,
+  DraggingIconStyle,
+  CustomFieldIconStyle,
   RemoveButtonStyle,
 } from './style';
 
 type OptionalProps = {
-  rearrange: boolean,
-  isKeyReadOnly: boolean,
-  isValueReadOnly: boolean,
-  onRemove?: Function,
-  width: string,
-  value: Object,
+  editable: boolean,
+  onRemove: Function,
 };
 
 type Props = OptionalProps & {
   fieldName: any,
   targetName: string,
-  setFieldArrayValue: Function,
+  setFieldValue: Function,
   dragHandleProps?: any,
 };
 
 const defaultProps = {
-  rearrange: false,
-  isKeyReadOnly: true,
-  isValueReadOnly: false,
-  width: '200px',
-  value: {},
+  editable: true,
+  onRemove: () => {},
 };
 
 const DefaultCustomFieldDefinitionStyle = ({
-  rearrange,
-  isKeyReadOnly,
-  isValueReadOnly,
-  value,
   fieldName,
   dragHandleProps,
   targetName,
-  setFieldArrayValue,
+  setFieldValue,
+  editable,
   onRemove,
-  width,
 }: Props) => (
-  <div className={AdjustmentWrapperStyle}>
-    <div className={AdjustmentFieldsWrapperStyle}>
-      {rearrange ? (
-        <div className={DragBarStyle} {...dragHandleProps}>
+  <div className={DefaultCustomFieldDefinitionWrapperStyle}>
+    <div className={CustomFieldWrapperStyle}>
+      {editable ? (
+        <div className={DraggingIconStyle} {...dragHandleProps}>
           <Icon icon="DRAG_HANDLE" />
         </div>
       ) : (
-        <div className={EditHandleStyle}>
+        <div className={CustomFieldIconStyle}>
           <Icon icon="METADATA" />
         </div>
       )}
-      {isKeyReadOnly ? (
-        <Label width={width}>{fieldName}</Label>
-      ) : (
-        <FormField
-          name={`${targetName}.name`}
-          initValue={fieldName}
-          setFieldValue={setFieldArrayValue}
-        >
+
+      {editable ? (
+        <FormField name={`${targetName}.name`} initValue={fieldName} setFieldValue={setFieldValue}>
           {({ name, ...inputHandlers }) => {
             const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
             return (
               <DefaultStyle
-                width={width}
+                width="200px"
                 isFocused={isFocused}
                 hasError={isTouched && errorMessage}
                 type="label"
@@ -80,31 +65,18 @@ const DefaultCustomFieldDefinitionStyle = ({
             );
           }}
         </FormField>
-      )}
-      {isValueReadOnly ? (
-        <Display>{value.string}</Display>
       ) : (
-        <FormField
-          name={`${targetName}.value.string`}
-          initValue={value.string}
-          setFieldValue={setFieldArrayValue}
-        >
-          {({ name, ...inputHandlers }) => {
-            const { isFocused, isTouched, errorMessage, ...rest } = inputHandlers;
-            return (
-              <DefaultStyle
-                width={width}
-                isFocused={isFocused}
-                hasError={isTouched && errorMessage}
-              >
-                <TextInput name={name} {...rest} />
-              </DefaultStyle>
-            );
-          }}
-        </FormField>
+        <Label width="200px">{fieldName}</Label>
       )}
 
-      {onRemove && (
+      <Display width="200px" height="30px" color="GRAY_LIGHT" style={{ userSelect: 'none' }}>
+        <FormattedMessage
+          id="components.inputs.customFieldDefinitionPlaceholder"
+          defaultMessage="Value will be entered here"
+        />
+      </Display>
+
+      {editable && (
         <button className={RemoveButtonStyle} onClick={onRemove} type="button">
           <Icon icon="REMOVE" />
         </button>
