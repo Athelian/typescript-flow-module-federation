@@ -143,7 +143,6 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                       data-testid="saveButtonOnSelectBatches"
                       disabled={selected.length === 0}
                       onClick={() => {
-                        console.log(selected);
                         onSelect(selected);
                       }}
                     />
