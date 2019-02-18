@@ -67,7 +67,6 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
             <Mutation mutation={updateFieldDefinitionsMutation} onCompleted={() => refetch()}>
               {(saveFieldDefinitions, { loading: isLoading, error: apiError }) => (
                 <>
-                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
 
                   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
@@ -97,6 +96,7 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
                                   form.onErrors
                                 );
                               }}
+                              isLoading={isLoading}
                             />
                           )}
                         </div>

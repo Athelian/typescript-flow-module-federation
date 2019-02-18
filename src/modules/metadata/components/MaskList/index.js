@@ -9,6 +9,7 @@ import { CUSTOM_FIELD_MASKS_CREATE } from 'modules/permission/constants/customFi
 import { PermissionConsumer } from 'modules/permission';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
+import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
@@ -39,6 +40,8 @@ const MaskList = ({ entityType }: Props) => (
             if (error) {
               return error.message;
             }
+
+            if (loading) return <LoadingIcon />;
 
             const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
             const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
