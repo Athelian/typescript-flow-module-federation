@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
-import { numberInputFactory } from 'modules/form/helpers';
+import { NumberInputFactory } from 'modules/form/factories';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
 import { NewButton } from 'components/Buttons';
@@ -69,6 +69,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                       <Subscribe key={adjustment.id} to={[FormContainer]}>
                         {({ setFieldTouched }) => (
                           <DefaultAdjustmentStyle
+                            editable={allowCreateOrUpdate}
                             isNew={isNew}
                             index={index}
                             adjustment={adjustment}
@@ -87,21 +88,20 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                                 initValue={adjustment.quantity}
                                 setFieldValue={setFieldArrayValue}
                               >
-                                {({ name, ...inputHandlers }) =>
-                                  numberInputFactory({
-                                    inputHandlers: {
-                                      ...inputHandlers,
-                                      onBlur: evt => {
-                                        inputHandlers.onBlur(evt);
-                                        setFieldArrayValue(name, inputHandlers.value);
-                                        calculatePackageQuantity(setFieldTouched);
-                                      },
-                                    },
-                                    name,
-                                    isNew,
-                                    originalValue: adjustment.quantity,
-                                  })
-                                }
+                                {({ name, ...inputHandlers }) => (
+                                  <NumberInputFactory
+                                    name={name}
+                                    {...inputHandlers}
+                                    onBlur={evt => {
+                                      inputHandlers.onBlur(evt);
+                                      setFieldArrayValue(name, inputHandlers.value);
+                                      calculatePackageQuantity(setFieldTouched);
+                                    }}
+                                    isNew={isNew}
+                                    originalValue={adjustment.quantity}
+                                    editable={allowCreateOrUpdate}
+                                  />
+                                )}
                               </FormField>
                             }
                           />
