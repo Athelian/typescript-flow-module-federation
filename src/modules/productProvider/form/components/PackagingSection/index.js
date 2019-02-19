@@ -67,7 +67,7 @@ const PackagingSection = ({ isNew }: Props) => (
                         name={name}
                         {...inputHandlers}
                         isNew={isNew}
-                        originalValue={originalValues.unitPrice.amount}
+                        originalValue={originalValues[name]}
                         label={
                           <FormattedMessage
                             id="modules.ProductProviders.packageCapacity"
