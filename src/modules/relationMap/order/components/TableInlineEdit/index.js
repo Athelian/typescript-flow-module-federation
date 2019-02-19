@@ -21,8 +21,8 @@ type Props = {
 const TableView = (props: Props) => {
   const { entities, onCancel } = props;
   const { state } = React.useContext(ActionDispatch);
-  logger.warn('entities', entities);
   const allId = findAllPossibleIds(state.targets, entities);
+  logger.warn({ entities, allId });
   const { orderIds } = allId;
   return (
     <Query

@@ -51,11 +51,12 @@ function actionCreators(dispatch: Function) {
           selectedIds,
         },
       }),
-    countShipment: (total: number) =>
+    countShipment: (total: number, shipments: Array<Object>) =>
       dispatch({
         type: 'TOTAL_SHIPMENT',
         payload: {
           total,
+          shipments,
         },
       }),
     showEditForm: (type: string, selectedId: string) =>

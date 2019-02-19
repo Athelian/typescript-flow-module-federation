@@ -18,7 +18,7 @@ import { selectors } from 'modules/relationMap/order/store';
 import Shipment from '../Shipment';
 
 type Props = {
-  onCountShipment: number => any,
+  onCountShipment: (Array<Object>) => any,
   highLightEntities: Array<string>,
 };
 
@@ -42,7 +42,7 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
     <Query
       query={shipmentListQuery}
       variables={queryVariables}
-      onCompleted={result => onCountShipment(result.shipments.nodes.length)}
+      onCompleted={result => onCountShipment(result.shipments.nodes)}
       fetchPolicy="network-only"
     >
       {({ loading, data, fetchMore, error, refetch, client }) => {

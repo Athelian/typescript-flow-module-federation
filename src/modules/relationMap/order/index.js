@@ -248,7 +248,10 @@ const Order = ({ intl }: Props) => {
               .catch(logger.warn);
           }
 
-          const { entities } = normalize({ orders: data && data.orders ? data.orders.nodes : [] });
+          const { entities } = normalize({
+            shipments: state.toggleShipmentList ? state.shipments : [],
+            orders: data && data.orders ? data.orders.nodes : [],
+          });
           const { orders, orderItems, batches, shipments } = entities;
           const highLightEntities = findHighLightEntities(state.highlight, {
             orders,
@@ -435,8 +438,10 @@ const Order = ({ intl }: Props) => {
                     {state.toggleShipmentList ? (
                       <ShipmentList
                         highLightEntities={highLightEntities}
-                        onCountShipment={total =>
-                          total !== state.totalShipment ? actions.countShipment(total) : null
+                        onCountShipment={allShipments =>
+                          allShipments.length !== state.totalShipment
+                            ? actions.countShipment(allShipments.length, allShipments)
+                            : null
                         }
                       />
                     ) : (

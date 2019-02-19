@@ -41,14 +41,14 @@ export function findHighLightEntities(
       batches.forEach(id => {
         highLightIds.push(`${BATCH}-${id}`);
         const [orderItemId] =
-          (Object.entries(orderItems || {}): Array<any>).find(([, orderItem]) =>
-            orderItem.batches.includes(id)
+          (Object.entries(orderItems || {}): Array<any>).find(
+            ([, orderItem]) => orderItem.batches && orderItem.batches.includes(id)
           ) || [];
         if (orderItemId) {
           highLightIds.push(`${ORDER_ITEM}-${orderItemId}`);
           const [orderId] =
-            (Object.entries(orders || {}): Array<any>).find(([, order]) =>
-              order.orderItems.includes(orderItemId)
+            (Object.entries(orders || {}): Array<any>).find(
+              ([, order]) => order.orderItems && order.orderItems.includes(orderItemId)
             ) || [];
           if (orderId) highLightIds.push(`${ORDER}-${orderId}`);
         }
@@ -82,14 +82,14 @@ export function findHighLightEntities(
       batches.forEach(id => {
         highLightIds.push(`${BATCH}-${id}`);
         const [shipmentId] =
-          (Object.entries(shipments || {}): Array<any>).find(([, shipment]) =>
-            shipment.batches.includes(id)
+          (Object.entries(shipments || {}): Array<any>).find(
+            ([, shipment]) => shipment.batches && shipment.batches.includes(id)
           ) || [];
         if (shipmentId) highLightIds.push(`${SHIPMENT}-${shipmentId}`);
       });
       const [orderId] =
-        (Object.entries(orders || {}): Array<any>).find(([, order]) =>
-          order.orderItems.includes(highlight.selectedId)
+        (Object.entries(orders || {}): Array<any>).find(
+          ([, order]) => order.orderItems && order.orderItems.includes(highlight.selectedId)
         ) || [];
       if (orderId) highLightIds.push(`${ORDER}-${orderId}`);
       break;
@@ -99,19 +99,19 @@ export function findHighLightEntities(
       const { shipments, orders, orderItems } = entities;
       highLightIds.push(`${BATCH}-${highlight.selectedId}`);
       const [shipmentId] =
-        (Object.entries(shipments || {}): Array<any>).find(([, shipment]) =>
-          shipment.batches.includes(highlight.selectedId)
+        (Object.entries(shipments || {}): Array<any>).find(
+          ([, shipment]) => shipment.batches && shipment.batches.includes(highlight.selectedId)
         ) || [];
       if (shipmentId) highLightIds.push(`${SHIPMENT}-${shipmentId}`);
       const [orderItemId] =
-        (Object.entries(orderItems || {}): Array<any>).find(([, orderItem]) =>
-          orderItem.batches.includes(highlight.selectedId)
+        (Object.entries(orderItems || {}): Array<any>).find(
+          ([, orderItem]) => orderItem.batches && orderItem.batches.includes(highlight.selectedId)
         ) || [];
       if (orderItemId) {
         highLightIds.push(`${ORDER_ITEM}-${orderItemId}`);
         const [orderId] =
-          (Object.entries(orders || {}): Array<any>).find(([, order]) =>
-            order.orderItems.includes(orderItemId)
+          (Object.entries(orders || {}): Array<any>).find(
+            ([, order]) => order.orderItems && order.orderItems.includes(orderItemId)
           ) || [];
         if (orderId) highLightIds.push(`${ORDER}-${orderId}`);
       }

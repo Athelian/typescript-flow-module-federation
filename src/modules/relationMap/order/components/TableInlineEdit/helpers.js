@@ -24,7 +24,10 @@ type MappingObject = {
   },
 };
 
-export const findAllPossibleIds = (targets: Object, entities: Object) => {
+export const findAllPossibleIds = (
+  targets: Object,
+  entities: { shipments: Object, orders: Object, orderItems: Object, batches: Object }
+) => {
   const selected = {
     ORDER: [],
     ORDER_ITEM: [],
@@ -35,67 +38,84 @@ export const findAllPossibleIds = (targets: Object, entities: Object) => {
     const [entityType, entityId] = target.split('-');
     selected[entityType].push(entityId);
   });
-  const {
-    ORDER: orderIds,
-    ORDER_ITEM: orderItemIds,
-    BATCH: batchIds,
-    SHIPMENT: shipmentIds,
-  } = selected;
-  (Object.values(entities.orders || {}): any).forEach(order => {
-    if (orderIds.includes(order.id)) {
-      orderItemIds.push(...order.orderItems);
-      order.orderItems.forEach(orderItemId => {
-        const orderItem = entities.orderItems[orderItemId];
-        if (orderItem && orderItem.batches) {
-          batchIds.push(...orderItem.batches);
-        }
-      });
-      return;
-    }
-    order.shipments.forEach(shipmentId => {
-      const shipment = entities.shipments[shipmentId];
-      if (shipmentIds.includes(shipmentId) && shipment.batches) {
-        orderIds.push(order.id);
-        order.orderItems.forEach(orderItemId => {
-          const orderItem = entities.orderItems[orderItemId] || {};
-          if (orderItem && orderItem.batches) {
-            orderItem.batches.forEach(batchId => {
-              if (shipment.batches.includes(batchId)) {
-                batchIds.push(batchId);
-              }
-            });
-          }
-        });
-      }
-    });
 
-    order.orderItems.forEach(orderItemId => {
-      const orderItem = entities.orderItems[orderItemId];
-      if (orderItemIds.includes(orderItemId)) {
-        orderIds.push(order.id);
-        if (orderItem && orderItem.batches) {
-          batchIds.push(...orderItem.batches);
-        }
-      } else {
-        orderItem.batches.forEach(batchId => {
-          if (batchIds.includes(batchId)) {
-            if (!orderItemIds.includes(orderItemId)) {
-              orderItemIds.push(orderItemId);
-            }
-            if (!orderIds.includes(order.id)) {
-              orderIds.push(order.id);
+  const orderIds = selected.ORDER.slice();
+  const orderItemIds = selected.ORDER_ITEM.slice();
+  const batchIds = selected.BATCH.slice();
+  const shipmentIds = selected.SHIPMENT.slice();
+
+  // If Order is selected, the entire Order tree (Order, Items, and Batches)
+  // plus all related Shipments go to the Edit view
+  (Object.values(entities.orders || {}): any).forEach(order => {
+    if (selected.ORDER.includes(order.id)) {
+      if (order.orderItems) {
+        orderItemIds.push(...order.orderItems);
+        order.orderItems.forEach(orderItemId => {
+          const orderItem = entities.orderItems[orderItemId];
+          if (orderItem && orderItem.batches) {
+            batchIds.push(...orderItem.batches);
+          }
+        });
+      }
+
+      if (order.shipments) {
+        shipmentIds.push(...order.shipments);
+      }
+    }
+  });
+
+  // If Shipment is selected, the Shipment itself, all of its Batches,
+  // all of the Item parents of those Batches, and all of the Order parents of those Items go to the Edit view
+  (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
+    const [shipmentId, shipment] = item;
+    if (selected.SHIPMENT.includes(shipmentId)) {
+      console.warn({ shipment });
+      if (shipment.batches) {
+        batchIds.push(...shipment.batches);
+        shipment.batches.forEach(batchId => {
+          const batch = entities.batches[batchId];
+          if (batch && batch.orderItem) {
+            orderItemIds.push(batch.orderItem);
+            const orderItem = entities.orderItems[batch.orderItem];
+            if (orderItem && orderItem.order) {
+              orderIds.push(orderItem.order);
             }
           }
         });
       }
-    });
+    }
+  });
+
+  // If Batch is selected, the Order and Item parent and the Batch itself
+  // and the related Shipment go to the Edit view
+  (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
+    if (selected.BATCH.includes(batchId)) {
+      if (!orderItemIds.includes(batch.orderItem)) {
+        orderItemIds.push(batch.orderItem);
+        const orderItem = entities.orderItems[batch.orderItem];
+        if (orderItem && orderItem.order) {
+          orderIds.push(orderItem.order);
+        }
+      }
+    }
+  });
+
+  // If Item is selected, the Order parent, the Item and all of its Batches
+  // with all the related Shipments, go to the Edit view
+  (Object.entries(entities.orderItems || {}): Array<any>).forEach(([orderItemId, orderItem]) => {
+    if (selected.ORDER_ITEM.includes(orderItemId)) {
+      orderIds.push(orderItem.order);
+      if (orderItem && orderItem.batches) {
+        batchIds.push(...orderItem.batches);
+      }
+    }
   });
 
   return {
-    orderIds: [...new Set(selected.ORDER)],
-    orderItemIds: [...new Set(selected.ORDER_ITEM)],
-    batchIds: [...new Set(selected.BATCH)],
-    shipmentIds: [...new Set(selected.SHIPMENT)],
+    orderIds: [...new Set(orderIds)],
+    orderItemIds: [...new Set(orderItemIds)],
+    batchIds: [...new Set(batchIds)],
+    shipmentIds: [...new Set(shipmentIds)],
   };
 };
 
