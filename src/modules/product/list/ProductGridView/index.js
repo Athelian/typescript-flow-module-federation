@@ -7,6 +7,7 @@ import GridView from 'components/GridView';
 import { ProductCard, CardAction } from 'components/Cards';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 import { PermissionConsumer } from 'modules/permission';
+import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
 import { encodeId } from 'utils/id';
 
 type Props = {
@@ -26,8 +27,8 @@ const ProductGridView = (props: Props) => {
   return (
     <PermissionConsumer>
       {hasPermission => {
-        const canCreate = hasPermission('product.products.create');
-        const canUpdate = hasPermission('product,products.update');
+        const canCreate = hasPermission(PRODUCT_CREATE);
+        const canUpdate = hasPermission(PRODUCT_UPDATE);
         return (
           <GridView
             onLoadMore={onLoadMore}

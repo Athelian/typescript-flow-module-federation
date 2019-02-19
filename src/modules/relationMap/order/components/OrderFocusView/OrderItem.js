@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
-import { RM_UPDATE } from 'modules/permission/constants/relationMap';
+import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import BaseCard from 'components/Cards';
 import { OrderItemCard, WrapperCard } from 'components/RelationMap';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
@@ -91,7 +91,7 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
                     toggle={toggle}
                     onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
                   />
-                  {hasPermission(RM_UPDATE) && (
+                  {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                     <>
                       <Action
                         icon="BRANCH"

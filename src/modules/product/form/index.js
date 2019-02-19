@@ -9,6 +9,7 @@ import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'compo
 import { CloneButton } from 'components/Buttons';
 import { encodeId } from 'utils/id';
 import { isEquals, isDataType } from 'utils/fp';
+import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
 import { FormContainer } from 'modules/form';
 import { PermissionConsumer } from 'modules/permission';
 import { ProductSection, ProductProvidersSection } from './components';
@@ -73,7 +74,7 @@ class ProductForm extends React.Component<Props> {
                     <BooleanValue>
                       {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                         <StatusToggle
-                          readOnly={!hasPermission('product.products.update')}
+                          readOnly={!hasPermission(PRODUCT_UPDATE)}
                           archived={archived}
                           openStatusDialog={() => dialogToggle(true)}
                           activateDialog={
@@ -93,9 +94,7 @@ class ProductForm extends React.Component<Props> {
                         />
                       )}
                     </BooleanValue>
-                    {hasPermission('product.products.create') && (
-                      <CloneButton onClick={this.onClone} />
-                    )}
+                    {hasPermission(PRODUCT_CREATE) && <CloneButton onClick={this.onClone} />}
                   </>
                 )}
               </SectionHeader>

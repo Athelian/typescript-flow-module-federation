@@ -4,6 +4,7 @@ import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
+import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import GridView from 'components/GridView';
 import { OrderCard, CardAction } from 'components/Cards';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
@@ -69,8 +70,8 @@ const OrderGridView = ({
   renderItem = defaultRenderItem,
 }: Props): React.Node => {
   const { hasPermission } = usePermission();
-  const canCreate = hasPermission('order.orders.create');
-  const canUpdate = hasPermission('order.orders.update');
+  const canCreate = hasPermission(ORDER_CREATE);
+  const canUpdate = hasPermission(ORDER_UPDATE);
 
   return (
     <GridView

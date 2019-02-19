@@ -12,6 +12,7 @@ import {
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
+import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
 import {
   FieldItem,
   Label,
@@ -51,8 +52,7 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 const ProductSection = ({ isNew }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
-      const canCreateOrUpdate =
-        hasPermission('product.products.create') || hasPermission('product.products.update');
+      const canCreateOrUpdate = hasPermission(PRODUCT_CREATE) || hasPermission(PRODUCT_UPDATE);
       return (
         <Subscribe to={[ProductInfoContainer]}>
           {({ originalValues: initialValues, state, setFieldValue }) => {

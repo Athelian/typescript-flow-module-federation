@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
-import { RM_UPDATE } from 'modules/permission/constants/relationMap';
+import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
@@ -80,7 +80,7 @@ export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }
                       toggle={toggle}
                       onClick={() => actions.showEditForm('SHIPMENT', id)}
                     />
-                    {hasPermission(RM_UPDATE) && (
+                    {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                       <Action
                         icon="CHECKED"
                         targeted={targeted}

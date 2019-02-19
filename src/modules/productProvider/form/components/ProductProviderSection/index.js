@@ -22,6 +22,10 @@ import {
   DayInputFactory,
 } from 'components/Form';
 import { PermissionConsumer } from 'modules/permission';
+import {
+  PRODUCT_PROVIDER_CREATE,
+  PRODUCT_PROVIDER_UPDATE,
+} from 'modules/permission/constants/product';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 
@@ -34,8 +38,7 @@ const ProductProviderSection = ({ isNew, isExist }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
       const canCreateOrUpdate =
-        hasPermission('product.productProviders.create') ||
-        hasPermission('product.productProviders.update');
+        hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
 
       return (
         <Subscribe to={[ProductProviderContainer]}>

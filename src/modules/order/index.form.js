@@ -15,6 +15,7 @@ import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import NoPermission from 'components/NoPermission';
+import { ORDER_GET } from 'modules/permission/constants/order';
 import { PermissionConsumer } from 'modules/permission';
 import { decodeId, encodeId } from 'utils/id';
 import { OrderEventsList } from 'modules/history';
@@ -206,7 +207,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     return (
       <PermissionConsumer>
         {hasPermission =>
-          hasPermission('order.orders.get') ? (
+          hasPermission(ORDER_GET) ? (
             <Provider>
               <UIConsumer>
                 {uiState => (

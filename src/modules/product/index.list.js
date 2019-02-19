@@ -10,6 +10,7 @@ import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import NoPermission from 'components/NoPermission';
+import { PRODUCT_CREATE, PRODUCT_LIST } from 'modules/permission/constants/product';
 import { PermissionConsumer } from 'modules/permission';
 import ProductList from './list';
 import { productsExportQuery } from './query';
@@ -66,7 +67,7 @@ const ProductListModule = (props: Props) => {
   return (
     <PermissionConsumer>
       {hasPermission =>
-        hasPermission('product.products.list') ? (
+        hasPermission(PRODUCT_LIST) ? (
           <UIConsumer>
             {uiState => (
               <Layout
@@ -79,7 +80,7 @@ const ProductListModule = (props: Props) => {
                       filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
-                    {hasPermission('product.products.create') && (
+                    {hasPermission(PRODUCT_CREATE) && (
                       <Link to="new">
                         <NewButton data-testid="newButton" />
                       </Link>

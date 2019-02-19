@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
-import { RM_UPDATE } from 'modules/permission/constants/relationMap';
+import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import BaseCard from 'components/Cards';
 import { OrderCard, WrapperCard, Tags } from 'components/RelationMap';
@@ -91,7 +91,7 @@ export default function Order({
                       toggle={toggle}
                       onClick={() => actions.showEditForm(ORDER, id)}
                     />
-                    {hasPermission(RM_UPDATE) && (
+                    {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                       <>
                         <Action
                           icon="BRANCH"

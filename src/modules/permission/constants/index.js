@@ -16,6 +16,7 @@ export const defaultPermissions = [
   ...customFields.default,
   ...warehouse.default,
 ];
+
 export const managerPermissions = [
   ...product.manager,
   ...order.manager,

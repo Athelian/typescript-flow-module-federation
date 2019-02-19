@@ -12,6 +12,10 @@ import {
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { PermissionConsumer } from 'modules/permission';
+import {
+  PRODUCT_PROVIDER_CREATE,
+  PRODUCT_PROVIDER_UPDATE,
+} from 'modules/permission/constants/product';
 import { getByPath } from 'utils/fp';
 import { SpecificationsSectionWrapperStyle } from './style';
 
@@ -23,8 +27,7 @@ const SpecificationsSection = ({ isNew }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
       const canCreateOrUpdate =
-        hasPermission('product.productProviders.create') ||
-        hasPermission('product.productProviders.update');
+        hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
 
       return (
         <div className={SpecificationsSectionWrapperStyle}>
