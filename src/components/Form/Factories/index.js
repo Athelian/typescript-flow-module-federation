@@ -2,6 +2,7 @@
 import AssignmentApprovalFactory from './AssignmentApprovalFactory';
 import CustomFieldsFactory from './CustomFieldsFactory';
 import DateInputFactory from './DateInputFactory';
+import DateTimeInputFactory from './DateTimeInputFactory';
 import DayInputFactory from './DayInputFactory';
 import EnumSearchSelectInputFactory from './EnumSearchSelectInputFactory';
 import EnumSelectInputFactory from './EnumSelectInputFactory';
@@ -15,6 +16,7 @@ export {
   AssignmentApprovalFactory,
   CustomFieldsFactory,
   DateInputFactory,
+  DateTimeInputFactory,
   DayInputFactory,
   EnumSearchSelectInputFactory,
   EnumSelectInputFactory,

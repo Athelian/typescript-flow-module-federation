@@ -24,7 +24,7 @@ const DateTimeInput = ({
 }: Props) => {
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
-      <FormattedDate value={value} />
+      <FormattedDate value={value} mode="datetime" />
     </Display>
   ) : (
     <input
