@@ -191,6 +191,7 @@ const ShipmentContainerBatchCard = ({
                 <TextInputFactory
                   inputWidth="185px"
                   inputHeight="20px"
+                  inputAlign="left"
                   editable={!readOnly}
                   {...{
                     ...inputHandlers,

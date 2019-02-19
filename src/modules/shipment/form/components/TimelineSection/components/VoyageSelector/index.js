@@ -53,6 +53,7 @@ type RenderIconOptions = {
   isActive: boolean,
   isOptionsOpen: boolean,
   toggle?: () => void,
+  editable: boolean,
 };
 
 const voyagesGenerator = (voyages: Array<Object>, total: number) => {
@@ -88,7 +89,7 @@ const voyagesGenerator = (voyages: Array<Object>, total: number) => {
 
 class VoyageSelector extends React.PureComponent<Props> {
   renderIcon = (options: RenderIconOptions) => {
-    const { numOfIcons, isActive, toggle, isOptionsOpen } = options;
+    const { numOfIcons, isActive, toggle, isOptionsOpen, editable } = options;
     const { shipment } = this.props;
     const { transportType } = shipment;
 
@@ -97,7 +98,7 @@ class VoyageSelector extends React.PureComponent<Props> {
     if (numOfIcons === 3) {
       return (
         <button
-          className={VoyageIconWrapperStyle(isActive)}
+          className={VoyageIconWrapperStyle(isActive, editable)}
           onClick={this.onClick(numOfIcons, isOptionsOpen, toggle)}
           type="button"
         >
@@ -117,7 +118,7 @@ class VoyageSelector extends React.PureComponent<Props> {
     if (numOfIcons === 2) {
       return (
         <button
-          className={VoyageIconWrapperStyle(isActive)}
+          className={VoyageIconWrapperStyle(isActive, editable)}
           onClick={this.onClick(numOfIcons, isOptionsOpen, toggle)}
           type="button"
         >
@@ -133,7 +134,7 @@ class VoyageSelector extends React.PureComponent<Props> {
 
     return (
       <button
-        className={VoyageIconWrapperStyle(isActive)}
+        className={VoyageIconWrapperStyle(isActive, editable)}
         onClick={this.onClick(numOfIcons, isOptionsOpen, toggle)}
         type="button"
       >
@@ -172,25 +173,28 @@ class VoyageSelector extends React.PureComponent<Props> {
                   isActive: voyages.length === 1,
                   isOptionsOpen,
                   toggle: () => selectorToggle(false),
+                  editable: !readOnly,
                 })}
                 {this.renderIcon({
                   numOfIcons: 2,
                   isActive: voyages.length === 2,
                   isOptionsOpen,
                   toggle: () => selectorToggle(false),
+                  editable: !readOnly,
                 })}
                 {this.renderIcon({
                   numOfIcons: 3,
                   isActive: voyages.length === 3,
                   isOptionsOpen,
                   toggle: () => selectorToggle(false),
+                  editable: !readOnly,
                 })}
               </div>
             </OutsideClickHandler>
           ) : (
             <div
               data-testid="voyageSelector"
-              className={VoyageSelectorWrapperStyle}
+              className={VoyageSelectorWrapperStyle(!readOnly)}
               onClick={() => (!readOnly ? selectorToggle(true) : () => {})}
               role="presentation"
             >
@@ -201,6 +205,7 @@ class VoyageSelector extends React.PureComponent<Props> {
                 numOfIcons: voyages.length,
                 isActive: true,
                 isOptionsOpen,
+                editable: !readOnly,
               })}
             </div>
           )

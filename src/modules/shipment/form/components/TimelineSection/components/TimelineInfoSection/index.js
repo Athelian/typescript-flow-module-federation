@@ -5,6 +5,7 @@ import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
+import { UserConsumer } from 'modules/user';
 import {
   SectionHeader,
   DefaultAdjustmentStyle,
@@ -82,24 +83,29 @@ const TimelineInfoSection = (props: Props) => {
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>
             {!readOnly && (
-              <NewButton
-                data-testid={`${sourceName}_addDateButton`}
-                label={
-                  <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
-                }
-                onClick={() => {
-                  setFieldDeepValue(
-                    `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
-                    injectUid({
-                      isNew: true,
-                      type: 'Other',
-                      date: '',
-                      memo: '',
-                      updatedAt: new Date(),
-                    })
-                  );
-                }}
-              />
+              <UserConsumer>
+                {({ user }) => (
+                  <NewButton
+                    data-testid={`${sourceName}_addDateButton`}
+                    label={
+                      <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
+                    }
+                    onClick={() => {
+                      setFieldDeepValue(
+                        `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
+                        injectUid({
+                          isNew: true,
+                          type: 'Other',
+                          date: '',
+                          memo: '',
+                          updatedAt: new Date(),
+                          updatedBy: user,
+                        })
+                      );
+                    }}
+                  />
+                )}
+              </UserConsumer>
             )}
           </div>
           {timelineDateRevisions.reverse().map(

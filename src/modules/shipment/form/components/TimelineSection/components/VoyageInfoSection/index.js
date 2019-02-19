@@ -9,7 +9,7 @@ import {
   FieldItem,
   FormTooltip,
   EnumSearchSelectInputFactory,
-  TextAreaInputFactory,
+  TextInputFactory,
 } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
 
@@ -220,7 +220,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
             setFieldValue={setFieldDeepValue}
           >
             {({ name, ...inputHandlers }) => (
-              <TextAreaInputFactory
+              <TextInputFactory
                 {...inputHandlers}
                 editable={!readOnly}
                 originalValue={initialVoyage.vesselName}
@@ -239,7 +239,7 @@ class VoyageInfoSection extends React.PureComponent<Props> {
             setFieldValue={setFieldDeepValue}
           >
             {({ name, ...inputHandlers }) => (
-              <TextAreaInputFactory
+              <TextInputFactory
                 {...inputHandlers}
                 editable={!readOnly}
                 originalValue={initialVoyage.vesselCode}

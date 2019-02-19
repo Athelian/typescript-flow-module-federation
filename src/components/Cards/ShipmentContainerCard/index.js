@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
@@ -10,7 +9,6 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, DefaultStyle, TextInputFactory, DateInputFactory } from 'components/Form';
-
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import validator from './validator';
@@ -137,6 +135,7 @@ const ShipmentContainerCard = ({
                     <TextInputFactory
                       inputWidth="185px"
                       inputHeight="20px"
+                      inputAlign="left"
                       editable={!readOnly}
                       {...{
                         ...inputHandlers,
@@ -175,7 +174,6 @@ const ShipmentContainerCard = ({
               <div className={DividerStyle} />
 
               <div className={IconInputStyle}>
-                {/* TODO: add warehouse style for read only */}
                 {isNullOrUndefined(warehouse) ? (
                   <div className={WarehouseIconStyle(false)}>
                     <Icon icon="WAREHOUSE" />
@@ -192,19 +190,25 @@ const ShipmentContainerCard = ({
                   </Link>
                 )}
 
-                <button
-                  type="button"
-                  onClick={evt => {
-                    evt.stopPropagation();
-                    onSelectWarehouse();
-                  }}
-                >
-                  <DefaultStyle type="button" inputHeight="20px">
-                    <Display align="left">
-                      {isNullOrUndefined(warehouse) ? '' : warehouse.name}
-                    </Display>
-                  </DefaultStyle>
-                </button>
+                {!readOnly ? (
+                  <button
+                    type="button"
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      onSelectWarehouse();
+                    }}
+                  >
+                    <DefaultStyle type="button" width="155px" height="20px">
+                      <Display align="left">
+                        {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                      </Display>
+                    </DefaultStyle>
+                  </button>
+                ) : (
+                  <Display align="left" width="155px">
+                    {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                  </Display>
+                )}
               </div>
 
               <div className={LabelStyle}>
@@ -228,6 +232,7 @@ const ShipmentContainerCard = ({
                     <DateInputFactory
                       inputWidth="165px"
                       inputHeight="20px"
+                      inputAlign="left"
                       name={fieldName}
                       editable={!readOnly}
                       isNew={false}
@@ -251,7 +256,7 @@ const ShipmentContainerCard = ({
                 {warehouseArrivalAgreedDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true)}
+                    className={ApprovalIconStyle(true, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
                       if (!readOnly) {
@@ -267,7 +272,7 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false)}
+                    className={ApprovalIconStyle(false, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
                       if (!readOnly) {
@@ -304,6 +309,7 @@ const ShipmentContainerCard = ({
                     <DateInputFactory
                       inputWidth="165px"
                       inputHeight="20px"
+                      inputAlign="left"
                       name={fieldName}
                       isNew={false}
                       editable={!readOnly}
@@ -327,7 +333,7 @@ const ShipmentContainerCard = ({
                 {warehouseArrivalActualDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true)}
+                    className={ApprovalIconStyle(true, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
                       if (!readOnly) {
@@ -343,7 +349,7 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false)}
+                    className={ApprovalIconStyle(false, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
                       if (!readOnly) {

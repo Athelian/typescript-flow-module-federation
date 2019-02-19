@@ -188,6 +188,7 @@ const ShipmentBatchCard = ({
                   editable={!readOnly}
                   inputWidth="185px"
                   inputHeight="20px"
+                  inputAlign="left"
                   name={fieldName}
                   isNew={false}
                   originalValue={no}
