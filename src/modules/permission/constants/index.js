@@ -6,6 +6,7 @@ import batch from './batch';
 import container from './container';
 import customFields from './customFields';
 import warehouse from './warehouse';
+import tag from './tag';
 
 export const defaultPermissions = [
   ...product.default,
@@ -15,6 +16,7 @@ export const defaultPermissions = [
   ...container.default,
   ...customFields.default,
   ...warehouse.default,
+  ...tag.default,
 ];
 
 export const managerPermissions = [
@@ -24,6 +26,7 @@ export const managerPermissions = [
   ...batch.manager,
   ...container.manager,
   ...warehouse.manager,
+  ...tag.manager,
   ...relationMap,
   ...customFields.manager,
 ];
