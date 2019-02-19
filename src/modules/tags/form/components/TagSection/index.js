@@ -135,6 +135,7 @@ const TagSection = ({ isNew }: Props) => {
                         inputWidth="200px"
                         inputAlign="right"
                         editable={allowCreateOrUpdate}
+                        vertical={false}
                       />
                     )}
                   </FormField>
@@ -164,27 +165,33 @@ const TagSection = ({ isNew }: Props) => {
                           />
                         }
                         input={
-                          <div className={ColorInputWrapperStyle}>
-                            <DefaultStyle
-                              isFocused={isFocused}
-                              hasError={isTouched && errorMessage}
-                              forceHoverStyle={isNew}
-                              width="200px"
-                            >
-                              <TextInput
-                                name={name}
-                                {...inputHandlers}
-                                readOnly={!allowCreateOrUpdate}
-                              />
-                            </DefaultStyle>
-                            <div className={ColorInputButtonStyle}>
-                              <ColorInput
-                                name={name}
-                                {...inputHandlers}
-                                editable={allowCreateOrUpdate}
-                              />
+                          allowCreateOrUpdate ? (
+                            <div className={ColorInputWrapperStyle}>
+                              <DefaultStyle
+                                isFocused={isFocused}
+                                hasError={isTouched && errorMessage}
+                                forceHoverStyle={isNew}
+                                width="200px"
+                              >
+                                <TextInput
+                                  name={name}
+                                  {...inputHandlers}
+                                  readOnly={!allowCreateOrUpdate}
+                                />
+                              </DefaultStyle>
+                              <div className={ColorInputButtonStyle}>
+                                <ColorInput
+                                  name={name}
+                                  {...inputHandlers}
+                                  editable={allowCreateOrUpdate}
+                                />
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            <div className={ColorInputWrapperStyle}>
+                              <TextInput name={name} {...inputHandlers} readOnly />
+                            </div>
+                          )
                         }
                       />
                     )}
