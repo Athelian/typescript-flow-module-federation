@@ -21,9 +21,7 @@ const TextAreaInput = ({
   ...rest
 }: Props) =>
   readOnly ? (
-    <div className={TextAreaReadOnlyStyle({ align, readOnlyWidth, readOnlyHeight })} {...rest}>
-      {value}
-    </div>
+    <div className={TextAreaReadOnlyStyle({ align, readOnlyWidth, readOnlyHeight })}>{value}</div>
   ) : (
     <textarea
       style={{ textAlign: align }}

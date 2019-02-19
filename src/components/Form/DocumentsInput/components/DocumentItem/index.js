@@ -7,8 +7,7 @@ import {
   DefaultSelect,
   DefaultOptions,
   Display,
-  DefaultStyle,
-  TextAreaInput,
+  TextAreaInputFactory,
 } from 'components/Form';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
@@ -136,21 +135,15 @@ const DocumentItem = ({
       </div>
       <div className={MemoWrapperStyle(isExpanded)}>
         <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
-          {({ isFocused, ...inputHandlers }) =>
-            !readOnly ? (
-              <DefaultStyle type="textarea" width="590px" height="120px" isFocused={isFocused}>
-                <TextAreaInput {...inputHandlers} align="left" />
-              </DefaultStyle>
-            ) : (
-              <TextAreaInput
-                {...inputHandlers}
-                readOnly
-                readOnlyWidth="590px"
-                readOnlyHeight="120px"
-                align="left"
-              />
-            )
-          }
+          {({ ...inputHandlers }) => (
+            <TextAreaInputFactory
+              {...inputHandlers}
+              isNew
+              editable={!readOnly}
+              inputWidth="590px"
+              inputHeight="120px"
+            />
+          )}
         </FormField>
       </div>
       <button
