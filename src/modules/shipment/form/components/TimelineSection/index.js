@@ -321,7 +321,7 @@ const TimelineSection = ({ isNew }: Props) => {
                             <DashedPlusButton
                               width="195px"
                               height="40px"
-                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
+                              onClick={() => slideToggle(true)}
                             />
                           )}
                           {warehouse && (

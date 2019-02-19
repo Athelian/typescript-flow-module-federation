@@ -135,8 +135,8 @@ const ShipmentContainerCard = ({
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
                     <TextInputFactory
-                      width="185px"
-                      height="20px"
+                      inputWidth="185px"
+                      inputHeight="20px"
                       editable={!readOnly}
                       {...{
                         ...inputHandlers,
@@ -199,7 +199,7 @@ const ShipmentContainerCard = ({
                     onSelectWarehouse();
                   }}
                 >
-                  <DefaultStyle type="button" height="20px">
+                  <DefaultStyle type="button" inputHeight="20px">
                     <Display align="left">
                       {isNullOrUndefined(warehouse) ? '' : warehouse.name}
                     </Display>
@@ -226,8 +226,8 @@ const ShipmentContainerCard = ({
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
                     <DateInputFactory
-                      width="165px"
-                      height="20px"
+                      inputWidth="165px"
+                      inputHeight="20px"
                       name={fieldName}
                       editable={!readOnly}
                       isNew={false}
@@ -302,8 +302,8 @@ const ShipmentContainerCard = ({
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
                     <DateInputFactory
-                      width="165px"
-                      height="20px"
+                      inputWidth="165px"
+                      inputHeight="20px"
                       name={fieldName}
                       isNew={false}
                       editable={!readOnly}

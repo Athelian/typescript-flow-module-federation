@@ -189,8 +189,8 @@ const ShipmentContainerBatchCard = ({
             >
               {({ name: fieldName, ...inputHandlers }) => (
                 <TextInputFactory
-                  width="185px"
-                  height="20px"
+                  inputWidth="185px"
+                  inputHeight="20px"
                   editable={!readOnly}
                   {...{
                     ...inputHandlers,
@@ -223,8 +223,8 @@ const ShipmentContainerBatchCard = ({
             >
               {({ name: fieldName, ...inputHandlers }) => (
                 <NumberInputFactory
-                  width="90px"
-                  height="20px"
+                  inputWidth="90px"
+                  inputHeight="20px"
                   editable={!readOnly}
                   {...{
                     ...inputHandlers,
@@ -255,8 +255,8 @@ const ShipmentContainerBatchCard = ({
             <FormField name={`batch.${id}.deliveredAt`} initValue={deliveredAt}>
               {({ name: fieldName, ...inputHandlers }) => (
                 <DateInputFactory
-                  width="120px"
-                  height="20px"
+                  inputWidth="120px"
+                  inputHeight="20px"
                   name={fieldName}
                   isNew={false}
                   originalValue={deliveredAt}
@@ -287,8 +287,8 @@ const ShipmentContainerBatchCard = ({
             <FormField name={`batch.${id}.desiredAt`} initValue={desiredAt}>
               {({ name: fieldName, ...inputHandlers }) => (
                 <DateInputFactory
-                  width="120px"
-                  height="20px"
+                  inputWidth="120px"
+                  inputHeight="20px"
                   name={fieldName}
                   isNew={false}
                   originalValue={desiredAt}
