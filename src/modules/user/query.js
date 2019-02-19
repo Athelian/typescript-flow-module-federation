@@ -23,6 +23,7 @@ export const userDetailQuery = gql`
           }
         }
       }
+      permissions
     }
   }
 `;

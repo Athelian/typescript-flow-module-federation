@@ -28,6 +28,7 @@ import {
   UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantitySummary } from 'modules/order/helpers';
+import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import { PartnerCard, GrayCard } from 'components/Cards';
@@ -47,8 +48,7 @@ type Props = {
 
 const OrderSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const canCreateOrUpdate =
-    hasPermission('order.orders.create') || hasPermission('order.orders.update');
+  const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
   return (
     <div className={OrderSectionWrapperStyle}>
       <Subscribe to={[OrderInfoContainer]}>

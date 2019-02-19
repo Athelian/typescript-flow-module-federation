@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
 import usePermission from 'hooks/usePermission';
-import { RM_UPDATE } from 'modules/permission/constants/relationMap';
+import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -256,7 +256,7 @@ const Order = ({ intl }: Props) => {
             batches,
             shipments,
           });
-          const allowToUpdate = hasPermission(RM_UPDATE);
+          const allowToUpdate = hasPermission(RM_ORDER_FOCUS_MANIPULATE);
           return (
             <>
               <SortFilter

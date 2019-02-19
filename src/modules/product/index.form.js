@@ -14,6 +14,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import NoPermission from 'components/NoPermission';
 import { PermissionConsumer } from 'modules/permission';
+import { PRODUCT_GET, PRODUCT_PROVIDER_SET_DOCUMENTS } from 'modules/permission/constants/product';
 import { encodeId, decodeId } from 'utils/id';
 import {
   ProductInfoContainer,
@@ -186,7 +187,7 @@ class ProductFormModule extends React.Component<Props> {
     return (
       <PermissionConsumer>
         {hasPermission =>
-          hasPermission('product.products.get') ? (
+          hasPermission(PRODUCT_GET) ? (
             <Provider>
               <UIConsumer>
                 {uiState => (
@@ -293,7 +294,7 @@ class ProductFormModule extends React.Component<Props> {
                                             form.onReset();
                                           },
                                           form.onErrors,
-                                          hasPermission('product.productProviders.setDocuments')
+                                          hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS)
                                         )
                                       }
                                     />

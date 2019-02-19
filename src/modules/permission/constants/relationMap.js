@@ -1,5 +1,7 @@
-export const RM_UPDATE = 'relationMap.update';
+export const RM_ORDER_FOCUS_MANIPULATE = 'relationMap.orders.manipulate';
+export const RM_ORDER_FOCUS_LIST = 'relationMap.orders.list';
+export const RM_PRODUCT_FOCUS_LIST = 'relationMap.products.list';
 
-const relationMap = [RM_UPDATE];
+const rm = [RM_ORDER_FOCUS_MANIPULATE, RM_ORDER_FOCUS_LIST, RM_PRODUCT_FOCUS_LIST];
 
-export default relationMap;
+export default rm;

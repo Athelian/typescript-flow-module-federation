@@ -7,6 +7,7 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { CloneButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
+import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
@@ -65,8 +66,8 @@ export default class OrderForm extends React.Component<Props> {
       <Suspense fallback={<LoadingIcon />}>
         <PermissionConsumer>
           {hasPermission => {
-            const canCreate = hasPermission('order.orders.create');
-            const canUpdate = hasPermission('order.orders.update');
+            const canCreate = hasPermission(ORDER_CREATE);
+            const canUpdate = hasPermission(ORDER_UPDATE);
 
             return (
               <div className={OrderFormWrapperStyle}>

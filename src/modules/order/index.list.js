@@ -6,6 +6,7 @@ import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import NoPermission from 'components/NoPermission';
+import { ORDER_LIST, ORDER_CREATE } from 'modules/permission/constants/order';
 import usePermission from 'hooks/usePermission';
 import useListConfig from 'hooks/useListConfig';
 import { UIConsumer } from 'modules/ui';
@@ -64,7 +65,7 @@ function OrderModule(props: Props) {
 
   const { hasPermission } = usePermission();
 
-  if (!hasPermission('order.orders.list')) {
+  if (!hasPermission(ORDER_LIST)) {
     return <NoPermission />;
   }
 
@@ -81,7 +82,7 @@ function OrderModule(props: Props) {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
-              {hasPermission('order.orders.create') && (
+              {hasPermission(ORDER_CREATE) && (
                 <Link to="new">
                   <NewButton />
                 </Link>

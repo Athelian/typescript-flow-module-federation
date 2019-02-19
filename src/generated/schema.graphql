@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Feb 11 2019 12:39:45 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Feb 19 2019 14:37:35 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27303,6 +27303,11 @@ input ContainerUpdateInput {
   tagIds: [ID!]
 }
 
+input ContainerUpdateWrapperInput {
+  id: ID!
+  input: ContainerUpdateInput!
+}
+
 enum Country {
   """Andorra"""
   AND
@@ -28892,6 +28897,7 @@ type Group implements Model {
   avatar: FilePayload
   disabled: Boolean!
   dummy: Boolean!
+  users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
 
   """Resolving the current partnership of this group from user's group"""
   partner: PartnerPayload
@@ -29768,6 +29774,8 @@ type Mutation {
   login(input: CredentialsInput!): TokenPayload!
   logout: Boolean!
   userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
+  userAddRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
+  userRemoveRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
   groupUpdate(id: ID!, input: GroupUpdateInput!): GroupPayload!
   productCreate(input: ProductCreateInput!): ProductPayload!
   productUpdate(id: ID!, input: ProductUpdateInput!): ProductPayload!
@@ -29793,7 +29801,7 @@ type Mutation {
   warehouseCreate(input: WarehouseCreateInput!): WarehousePayload!
   warehouseUpdate(id: ID!, input: WarehouseUpdateInput!): WarehousePayload!
   warehouseUpdateMany(warehouses: [WarehouseUpdateWrapperInput!]!): [WarehousePayload!]!
-  entitiesUpdateMany(orders: [OrderUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], products: [ProductUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMany!
+  entitiesUpdateMany(products: [ProductUpdateWrapperInput!], orders: [OrderUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], containers: [ContainerUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMany!
   tagCreate(input: TagCreateInput!): TagPayload!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagPayload!
   fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
@@ -29810,6 +29818,9 @@ type Mutation {
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
+  roleCreate(input: RoleCreateInput!): RolePayload!
+  roleUpdate(id: ID!, input: RoleUpdateInput!): RolePayload!
+  roleDelete(id: ID!): Boolean!
 }
 
 type NotFound {
@@ -30311,11 +30322,13 @@ type Partnership implements Model {
   leftName: String
   leftCode: String
   leftConfirmedAt: DateTime
+  leftRoles: [RolePayload!]!
   rightGroup: GroupPayload!
   rightTypes: [GroupType!]!
   rightName: String
   rightCode: String
   rightConfirmedAt: DateTime
+  rightRoles: [RolePayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30611,6 +30624,8 @@ type Query {
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
   genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): FilePayload!
+  roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPagination!
+  permissions: [String!]!
 }
 
 type Reference {
@@ -30631,6 +30646,50 @@ enum ResizePreset {
 
   """Large 880x880"""
   Large
+}
+
+type Role implements Model & Memorizable {
+  name: String!
+  parents: [RolePayload!]!
+  permissions: [String!]!
+  flattenPermissions: [String!]!
+  partnership: PartnershipPayload
+  ownedBy: GroupPayload
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  memo: String
+}
+
+input RoleCreateInput {
+  name: String!
+  parentIds: [ID!]
+  permissions: [String!]!
+  partnerId: ID
+  memo: String
+}
+
+union RolePayload = Role | BadRequest | Forbidden | NotFound
+
+type RolePayloadPagination {
+  nodes: [RolePayload!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input RoleUpdateInput {
+  name: String
+  parentIds: [ID!]
+  permissions: [String!]
+  partnerId: ID
+  memo: String
 }
 
 enum Seaport {
@@ -35965,6 +36024,7 @@ type User implements Model & Tagged & Memorizable {
   email: String!
   group: GroupPayload
   role: String!
+  roles: [RolePayload!]!
   disabled: Boolean!
   firstName: String!
   lastName: String!
@@ -36002,6 +36062,16 @@ type UserPayloadPagination {
   totalCount: Int!
 }
 
+input UserRoleInput {
+  roleId: ID!
+}
+
+type UserRoles {
+  roles: [RolePayload!]!
+}
+
+union UserRolesPayload = UserRoles | BadRequest | Forbidden | NotFound
+
 input UserSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
@@ -36015,6 +36085,7 @@ input UserUpdateInput {
   email: String
   password: String
   role: String
+  roleIds: [ID!]
   disabled: Boolean
   language: Language
   timezone: String
@@ -36044,6 +36115,8 @@ type Values {
 
 type Viewer {
   user: UserPayload!
+  permissions: [String!]!
+  permissionsFromPartner(partnerId: ID!): [String!]!
   notifications(page: Int! = 1, perPage: Int! = 10): NotificationPayloadPagination!
   notificationUnread: Int!
   notificationUnseen: Int!

@@ -11,6 +11,11 @@ import { injectUid } from 'utils/id';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { PermissionConsumer } from 'modules/permission';
+import {
+  PRODUCT_PROVIDER_GET,
+  PRODUCT_PROVIDER_CREATE,
+  PRODUCT_PROVIDER_UPDATE,
+} from 'modules/permission/constants/product';
 import ProductProviderFormWrapper from './components/ProductProviderFormWrapper';
 import {
   ProductProviderSectionWrapperStyle,
@@ -23,13 +28,13 @@ function ProductProvidersSection() {
   return (
     <PermissionConsumer>
       {hasPermission =>
-        hasPermission('product.productProviders.get') && (
+        hasPermission(PRODUCT_PROVIDER_GET) && (
           <Subscribe to={[ProductProvidersContainer]}>
             {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
               <div className={ProductProviderSectionWrapperStyle}>
                 <SectionNavBar>
-                  {(hasPermission('product.productProviders.create') ||
-                    hasPermission('product.productProviders.update')) && (
+                  {(hasPermission(PRODUCT_PROVIDER_CREATE) ||
+                    hasPermission(PRODUCT_PROVIDER_UPDATE)) && (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>

@@ -5,6 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
+import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import { findBatchQuantity } from 'utils/batch';
 import { isEquals } from 'utils/fp';
@@ -127,8 +128,7 @@ class OrderItems extends React.Component<Props> {
     return orderItems.length > 0 ? (
       <PermissionConsumer>
         {hasPermission => {
-          const canCreateOrUpdate =
-            hasPermission('order.orders.create') || hasPermission('order.orders.update');
+          const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
           return (
             <div className={ItemGridStyle}>
               {orderItems.map((item, index) => (
