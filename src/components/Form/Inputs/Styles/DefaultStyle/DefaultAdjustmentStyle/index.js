@@ -17,8 +17,7 @@ import {
   SelectInput,
   DefaultSelect,
   DefaultOptions,
-  TextAreaInput,
-  DefaultStyle,
+  TextAreaInputFactory,
 } from 'components/Form';
 import {
   AdjustmentWrapperStyle,
@@ -179,21 +178,15 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             initValue={adjustment[memoName]}
             setFieldValue={setFieldArrayValue}
           >
-            {({ isFocused, ...inputHandlers }) =>
-              editable ? (
-                <DefaultStyle type="textarea" width="360px" height="150px" isFocused={isFocused}>
-                  <TextAreaInput {...inputHandlers} align="left" />
-                </DefaultStyle>
-              ) : (
-                <TextAreaInput
-                  {...inputHandlers}
-                  readOnly
-                  readOnlyWidth="360px"
-                  readOnlyHeight="150px"
-                  align="left"
-                />
-              )
-            }
+            {({ ...inputHandlers }) => (
+              <TextAreaInputFactory
+                {...inputHandlers}
+                isNew
+                editable={editable}
+                inputWidth="360px"
+                inputHeight="150px"
+              />
+            )}
           </FormField>
         </div>
       </div>
