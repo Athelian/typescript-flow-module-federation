@@ -14,6 +14,7 @@ import {
   TextInputFactory,
   TextAreaInputFactory,
   AssignmentApprovalFactory,
+  DateTimeInputFactory,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard, GrayCard } from 'components/Cards';
@@ -21,7 +22,6 @@ import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
-import { dateTimeInputFactory } from 'modules/form/helpers';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -77,20 +77,20 @@ const ContainerSection = () => {
                         validator={validator}
                         values={values}
                       >
-                        {({ name, ...inputHandlers }) =>
-                          dateTimeInputFactory({
-                            inputHandlers,
-                            name,
-                            isNew: false,
-                            originalValue: originalValues[name],
-                            label: (
+                        {({ name, ...inputHandlers }) => (
+                          <DateTimeInputFactory
+                            {...inputHandlers}
+                            name={name}
+                            originalValue={originalValues[name]}
+                            label={
                               <FormattedMessage
                                 id="module.container.agreedArrival"
                                 defaultMessage="AGREED ARRIVAL"
                               />
-                            ),
-                          })
-                        }
+                            }
+                            editable={allowCreateOrUpdate}
+                          />
+                        )}
                       </FormField>
                       <AssignmentApprovalFactory
                         assignmentsName="warehouseArrivalAgreedDateAssignedTo"
@@ -112,20 +112,20 @@ const ContainerSection = () => {
                         validator={validator}
                         values={values.warehouseArrivalActualDate}
                       >
-                        {({ name, ...inputHandlers }) =>
-                          dateTimeInputFactory({
-                            inputHandlers,
-                            name,
-                            isNew: false,
-                            originalValue: originalValues[name],
-                            label: (
+                        {({ name, ...inputHandlers }) => (
+                          <DateTimeInputFactory
+                            {...inputHandlers}
+                            name={name}
+                            originalValue={originalValues[name]}
+                            label={
                               <FormattedMessage
                                 id="module.container.actualArrival"
                                 defaultMessage="ACTUAL ARRIVAL"
                               />
-                            ),
-                          })
-                        }
+                            }
+                            editable={allowCreateOrUpdate}
+                          />
+                        )}
                       </FormField>
 
                       <AssignmentApprovalFactory
