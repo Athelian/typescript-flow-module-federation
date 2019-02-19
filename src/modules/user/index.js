@@ -85,7 +85,7 @@ const UserProvider = ({ children }: Props) => (
 
           return (
             <UserContext.Provider value={{ user, permissions }}>
-              <PermissionProvider user={user}>
+              <PermissionProvider permissions={permissions}>
                 {children}
                 {isAppInProduction && (
                   <Intercom appID={process.env.ZENPORT_INTERCOM_ID} {...userProfile} />
