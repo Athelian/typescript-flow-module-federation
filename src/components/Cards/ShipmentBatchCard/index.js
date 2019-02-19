@@ -5,13 +5,19 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
-import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import { calculatePackageQuantity } from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { FieldItem, Label, Display } from 'components/Form';
+import {
+  FieldItem,
+  Label,
+  Display,
+  NumberInputFactory,
+  TextInputFactory,
+  DateInputFactory,
+} from 'components/Form';
 import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -170,23 +176,24 @@ const ShipmentBatchCard = ({
               validator={validation}
               values={values}
             >
-              {({ name: fieldName, ...inputHandlers }) =>
-                textInputFactory({
-                  width: '185px',
-                  height: '20px',
-                  inputHandlers: {
+              {({ name: fieldName, ...inputHandlers }) => (
+                <TextInputFactory
+                  {...{
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
                       saveOnBlur({ ...batch, no: inputHandlers.value });
                     },
-                  },
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: no,
-                  align: 'left',
-                })
-              }
+                  }}
+                  editable={!readOnly}
+                  inputWidth="185px"
+                  inputHeight="20px"
+                  inputAlign="left"
+                  name={fieldName}
+                  isNew={false}
+                  originalValue={no}
+                />
+              )}
             </FormField>
           </div>
 
@@ -204,11 +211,12 @@ const ShipmentBatchCard = ({
               validator={validation}
               values={values}
             >
-              {({ name: fieldName, ...inputHandlers }) =>
-                numberInputFactory({
-                  width: '90px',
-                  height: '20px',
-                  inputHandlers: {
+              {({ name: fieldName, ...inputHandlers }) => (
+                <NumberInputFactory
+                  inputWidth="90px"
+                  inputHeight="20px"
+                  editable={!readOnly}
+                  {...{
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
@@ -226,12 +234,12 @@ const ShipmentBatchCard = ({
                           : {}),
                       });
                     },
-                  },
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: quantity + totalAdjustment,
-                })
-              }
+                  }}
+                  name={fieldName}
+                  isNew={false}
+                  originalValue={quantity + totalAdjustment}
+                />
+              )}
             </FormField>
           </div>
 
@@ -244,14 +252,15 @@ const ShipmentBatchCard = ({
               <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
             </Label>
             <FormField name={`batch.${id}.deliveredAt`} initValue={deliveredAt}>
-              {({ name: fieldName, ...inputHandlers }) =>
-                dateInputFactory({
-                  width: '120px',
-                  height: '20px',
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: deliveredAt,
-                  inputHandlers: {
+              {({ name: fieldName, ...inputHandlers }) => (
+                <DateInputFactory
+                  inputWidth="120px"
+                  inputHeight="20px"
+                  name={fieldName}
+                  isNew={false}
+                  originalValue={deliveredAt}
+                  editable={!readOnly}
+                  {...{
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
@@ -260,9 +269,9 @@ const ShipmentBatchCard = ({
                         deliveredAt: inputHandlers.value ? inputHandlers.value : null,
                       });
                     },
-                  },
-                })
-              }
+                  }}
+                />
+              )}
             </FormField>
           </div>
 
@@ -275,14 +284,15 @@ const ShipmentBatchCard = ({
               <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
             </Label>
             <FormField name={`batch.${id}.desiredAt`} initValue={desiredAt}>
-              {({ name: fieldName, ...inputHandlers }) =>
-                dateInputFactory({
-                  width: '120px',
-                  height: '20px',
-                  name: fieldName,
-                  isNew: false,
-                  originalValue: desiredAt,
-                  inputHandlers: {
+              {({ name: fieldName, ...inputHandlers }) => (
+                <DateInputFactory
+                  inputWidth="120px"
+                  inputHeight="20px"
+                  name={fieldName}
+                  isNew={false}
+                  originalValue={desiredAt}
+                  editable={!readOnly}
+                  {...{
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
@@ -291,9 +301,9 @@ const ShipmentBatchCard = ({
                         desiredAt: inputHandlers.value ? inputHandlers.value : null,
                       });
                     },
-                  },
-                })
-              }
+                  }}
+                />
+              )}
             </FormField>
           </div>
 

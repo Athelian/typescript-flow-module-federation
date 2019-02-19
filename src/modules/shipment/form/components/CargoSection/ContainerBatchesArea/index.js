@@ -137,11 +137,12 @@ export default function ContainerBatchesArea({
                       <React.Fragment key={batch.id}>
                         {isSelectBatchesMode ? (
                           <ShipmentContainerBatchCard
+                            readOnly={!allowToUpdate}
                             batch={batch}
                             isRepresented={batch.id === representativeBatchId}
                             selectable
                             selected={selectedBatches.includes(batch)}
-                            onSelect={() => setSelectedBatches(batch)}
+                            onSelect={() => (allowToUpdate ? setSelectedBatches(batch) : () => {})}
                           />
                         ) : (
                           <BooleanValue>
