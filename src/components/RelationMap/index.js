@@ -5,5 +5,3 @@ export { default as BatchCard } from './OrderElement/BatchCard';
 export { default as TotalCard } from './OrderElement/TotalCard';
 export { default as WrapperCard } from './OrderElement/WrapperCard';
 export { default as Tags } from './OrderElement/Tags';
-export { default as ShipmentCard } from './ShipmentElement';
-export { default as ShipmentCollapsed } from './ShipmentElement/ShipmentCollapsed';

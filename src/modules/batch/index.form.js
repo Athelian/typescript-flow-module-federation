@@ -7,7 +7,7 @@ import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -114,6 +114,7 @@ class BatchFormModule extends React.PureComponent<Props> {
       mutationKey = { key: decodeId(batchId) };
     }
 
+    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     return (
       <Provider>
         <UIConsumer>
@@ -127,7 +128,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                 <Layout
                   {...(isSlideView ? {} : uiState)}
                   navBar={
-                    <NavBar>
+                    <CurrentNavBar>
                       <EntityIcon icon="BATCH" color="BATCH" />
                       <JumpToSection>
                         <SectionTabs
@@ -216,7 +217,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                           )
                         }
                       </Subscribe>
-                    </NavBar>
+                    </CurrentNavBar>
                   }
                 >
                   {apiError && <p>Error: Please try again.</p>}

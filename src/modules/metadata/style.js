@@ -1,11 +1,10 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
 
 export const MainContentWrapperStyle: string = css`
   width: 100%;
-  ${layout.GRID_HORIZONTAL};
-  grid-template-columns: 640px auto;
+  display: grid;
+  grid-template-columns: 610px 1fr;
   overflow-y: hidden;
 `;
 

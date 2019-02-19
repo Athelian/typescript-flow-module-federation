@@ -7,7 +7,7 @@ const loadMore = (
   filtersAndSort: Object = {},
   selectedField: string = ''
 ) => {
-  const { data, fetchMore } = clientData;
+  const { data = { [`${selectedField}`]: { page: 1, totalPage: 0 } }, fetchMore } = clientData;
   logger.warn('loadMore', data);
   if (!data) return Promise.resolve({});
   const nextPage = get(`${selectedField}.page`, data) + 1;

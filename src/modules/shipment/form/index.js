@@ -2,15 +2,12 @@
 import React, { lazy, Suspense } from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
-import { isEquals } from 'utils/fp';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
-import { CloneButton } from 'components/Buttons';
+import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import scrollIntoView from 'utils/scrollIntoView';
-import { SectionWrapper, SectionHeader, LastModified, StatusToggle } from 'components/Form';
-import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
+import { SectionWrapper, SectionHeader } from 'components/Form';
 import { uniqueOrders } from 'modules/container/utils';
 import { ShipmentBatchesContainer } from './containers';
 import { ShipmentSection } from './components';
@@ -64,47 +61,12 @@ class ShipmentForm extends React.Component<Props> {
   };
 
   render() {
-    const { isNew, isClone, shipment } = this.props;
-    const { updatedAt, updatedBy, archived } = shipment;
+    const { isNew } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
-          <SectionWrapper id="shipment_shipmentSection">
-            <SectionHeader
-              icon="SHIPMENT"
-              title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
-            >
-              {!isNew && (
-                <>
-                  <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                  {!isClone && <CloneButton onClick={this.onClone} />}
-                  <BooleanValue>
-                    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-                      <StatusToggle
-                        archived={archived}
-                        openStatusDialog={() => dialogToggle(true)}
-                        activateDialog={
-                          <ShipmentActivateDialog
-                            shipment={shipment}
-                            isOpen={statusDialogIsOpen && !!archived}
-                            onRequestClose={() => dialogToggle(false)}
-                          />
-                        }
-                        archiveDialog={
-                          <ShipmentArchiveDialog
-                            shipment={shipment}
-                            isOpen={statusDialogIsOpen && !archived}
-                            onRequestClose={() => dialogToggle(false)}
-                          />
-                        }
-                      />
-                    )}
-                  </BooleanValue>
-                </>
-              )}
-            </SectionHeader>
-            <ShipmentSection isNew={isNew} />
-          </SectionWrapper>
+          <ShipmentSection {...this.props} />
+
           <SectionWrapper id="shipment_timelineSection">
             <SectionHeader
               icon="TIMELINE"

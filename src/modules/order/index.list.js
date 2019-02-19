@@ -5,6 +5,9 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
+import NoPermission from 'components/NoPermission';
+import { ORDER_LIST, ORDER_CREATE } from 'modules/permission/constants/order';
+import usePermission from 'hooks/usePermission';
 import useListConfig from 'hooks/useListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
@@ -59,6 +62,13 @@ function OrderModule(props: Props) {
     getInitFilter(),
     'filterOrder'
   );
+
+  const { hasPermission } = usePermission();
+
+  if (!hasPermission(ORDER_LIST)) {
+    return <NoPermission />;
+  }
+
   return (
     <UIConsumer>
       {uiState => (
@@ -72,9 +82,11 @@ function OrderModule(props: Props) {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
-              <Link to="new">
-                <NewButton />
-              </Link>
+              {hasPermission(ORDER_CREATE) && (
+                <Link to="new">
+                  <NewButton />
+                </Link>
+              )}
               <ExportButton
                 type="Orders"
                 exportQuery={ordersExportQuery}

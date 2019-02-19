@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { WAREHOUSE_CREATE } from 'modules/permission/constants/warehouse';
+import usePermission from 'hooks/usePermission';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useListConfig from 'hooks/useListConfig';
@@ -51,6 +53,8 @@ const WarehouseModule = (props: Props) => {
     getInitFilter(),
     'filterWarehouse'
   );
+  const { hasPermission } = usePermission();
+  const allowCreate = hasPermission(WAREHOUSE_CREATE);
   return (
     <UIConsumer>
       {uiState => (
@@ -64,9 +68,11 @@ const WarehouseModule = (props: Props) => {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
-              <Link to="new">
-                <NewButton />
-              </Link>
+              {allowCreate && (
+                <Link to="new">
+                  <NewButton />
+                </Link>
+              )}
             </NavBar>
           }
         >

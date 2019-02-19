@@ -3,6 +3,8 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { defineMessages, injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import usePermission from 'hooks/usePermission';
+import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { DocumentsInput } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
 import { DocumentSectionStyle } from './style';
@@ -39,6 +41,8 @@ type Props = {
 };
 
 function DocumentsSection({ intl }: Props) {
+  const { hasPermission } = usePermission();
+  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <div className={DocumentSectionStyle}>
       <Subscribe to={[ShipmentFilesContainer]}>
@@ -46,6 +50,7 @@ function DocumentsSection({ intl }: Props) {
           <DocumentsInput
             id="files"
             name="files"
+            readOnly={!allowToUpdate}
             values={files}
             onChange={(field, value) => {
               changeFiles(field, value);

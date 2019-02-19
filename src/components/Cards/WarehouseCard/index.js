@@ -35,7 +35,7 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...r
 
   const { name } = warehouse;
 
-  const actions = selectable ? [] : [<CardAction icon="CLONE" onClick={onClone} />];
+  const actions = selectable || readOnly ? [] : [<CardAction icon="CLONE" onClick={onClone} />];
 
   return (
     <BaseCard

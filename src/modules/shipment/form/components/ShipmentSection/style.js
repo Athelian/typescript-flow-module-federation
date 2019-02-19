@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout, colors, borderRadiuses, fontSizes } from 'styles/common';
+import { presets, layout, colors, fontSizes } from 'styles/common';
 
 export const ShipmentSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -29,13 +29,6 @@ export const ExporterSeeMoreButtonStyle: string = css`
   :focus {
     color: ${colors.BLUE};
   }
-`;
-
-export const ExporterEmptyCardStyle: string = css`
-  ${borderRadiuses.MAIN};
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  width: 195px;
-  height: 215px;
 `;
 
 export const QuantitySummaryStyle: string = css`
