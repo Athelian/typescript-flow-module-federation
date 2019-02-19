@@ -64,9 +64,9 @@ class ColorInput extends React.Component<Props> {
   };
 
   render() {
-    const { value } = this.props;
+    const { value, editable } = this.props;
 
-    return (
+    return editable ? (
       <Downshift onStateChange={this.handleStateChange}>
         {({ isOpen, getToggleButtonProps }) => (
           <div className={WrapperStyle}>
@@ -101,6 +101,12 @@ class ColorInput extends React.Component<Props> {
           </div>
         )}
       </Downshift>
+    ) : (
+      <div className={WrapperStyle}>
+        <div className={ColorPreviewStyle(value)}>
+          <Icon icon="COLOR" />
+        </div>
+      </div>
     );
   }
 }
