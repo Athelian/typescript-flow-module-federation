@@ -33,36 +33,30 @@ const renderGroup = ({
   groups.map(({ id, group, columns }, index) => (
     <GridColumn gap="10px" key={id}>
       <Display align="left">{group}</Display>
-      {columns.map((column, position) => (
-        <div style={{ display: 'flex' }} key={column.name}>
-          <FormField
-            name={column}
-            initValue={`${type}-${
-              index > 0 ? groups[index - 1].columns.length + position : position
-            }`}
-          >
-            {({ name, onBlur }) => (
-              <>
-                <ToggleInput
-                  toggled={hasSelectField(
-                    `${type}-${index > 0 ? groups[index - 1].columns.length + position : position}`
-                  )}
-                  onToggle={() => {
-                    onBlur();
-                    toggleSelectField(
-                      `${type}-${
-                        index > 0 ? groups[index - 1].columns.length + position : position
-                      }`
-                    );
-                  }}
-                  editable={editable}
-                />
-                <Label>{name}</Label>
-              </>
-            )}
-          </FormField>
-        </div>
-      ))}
+      {columns.map((column, position) => {
+        const fieldName = `${type}-${
+          index > 0 ? groups[index - 1].columns.length + position : position
+        }`;
+        return (
+          <div style={{ display: 'flex' }} key={column.name}>
+            <FormField name={fieldName} initValue={hasSelectField(fieldName)}>
+              {({ name, onBlur }) => (
+                <>
+                  <ToggleInput
+                    toggled={hasSelectField(fieldName)}
+                    onToggle={() => {
+                      onBlur();
+                      toggleSelectField(fieldName);
+                    }}
+                    editable={editable}
+                  />
+                  <Label>{name}</Label>
+                </>
+              )}
+            </FormField>
+          </div>
+        );
+      })}
     </GridColumn>
   ));
 
