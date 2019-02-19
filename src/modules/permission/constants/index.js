@@ -7,6 +7,7 @@ import container from './container';
 import customFields from './customFields';
 import warehouse from './warehouse';
 import tag from './tag';
+import template from './template';
 
 export const defaultPermissions = [
   ...product.default,
@@ -17,6 +18,7 @@ export const defaultPermissions = [
   ...customFields.default,
   ...warehouse.default,
   ...tag.default,
+  ...template.default,
 ];
 
 export const managerPermissions = [
@@ -29,4 +31,5 @@ export const managerPermissions = [
   ...tag.manager,
   ...relationMap,
   ...customFields.manager,
+  ...template.manager,
 ];
