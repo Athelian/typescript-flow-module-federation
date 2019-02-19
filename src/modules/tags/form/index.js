@@ -32,10 +32,10 @@ export default class TagForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew } = this.props;
+    const { isNew, tag } = this.props;
     return (
       <div className={TagFormWrapperStyle}>
-        <TagSection isNew={isNew} />
+        <TagSection isNew={isNew} tag={tag} />
       </div>
     );
   }

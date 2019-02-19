@@ -41,9 +41,10 @@ import {
 
 type Props = {
   isNew: boolean,
+  tag: Object,
 };
 
-const TagSection = ({ isNew }: Props) => {
+const TagSection = ({ isNew, tag }: Props) => {
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(TAG_CREATE);
   const allowUpdate = hasPermission(TAG_UPDATE);
@@ -62,14 +63,9 @@ const TagSection = ({ isNew }: Props) => {
             >
               {!isNew && (
                 <>
-                  <LastModified
-                    updatedAt={originalValues.updatedAt}
-                    updatedBy={originalValues.updatedBy}
-                  />
+                  <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
                   {allowCreate && (
-                    <CloneButton
-                      onClick={() => navigate(`/tags/clone/${encodeId(originalValues.id)}`)}
-                    />
+                    <CloneButton onClick={() => navigate(`/tags/clone/${encodeId(tag.id)}`)} />
                   )}
                 </>
               )}
