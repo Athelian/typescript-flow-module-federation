@@ -426,7 +426,9 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 input: {
                                   batches: [],
                                   containers: [],
-                                  no: `[cloned] ${uiSelectors.shipmentNo(shipmentId)}`,
+                                  no: `[cloned][${Date.now()}] ${uiSelectors.shipmentNo(
+                                    shipmentId
+                                  )}`,
                                 },
                               },
                             })
