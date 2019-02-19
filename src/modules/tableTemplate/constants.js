@@ -65,6 +65,7 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.batchNo} />,
       <FormattedMessage {...batchMessages.quantity} />,
       <FormattedMessage {...batchMessages.deliveredAt} />,
+      <FormattedMessage {...batchMessages.desiredAt} />,
       <FormattedMessage {...batchMessages.expiredAt} />,
       <FormattedMessage {...batchMessages.producedAt} />,
       <FormattedMessage {...batchMessages.tags} />,
@@ -297,6 +298,11 @@ export const batchColumnFields = [
   {
     messageId: batchMessages.deliveredAt.id,
     name: 'deliveredAt',
+    type: 'date',
+  },
+  {
+    messageId: batchMessages.desiredAt.id,
+    name: 'desiredAt',
     type: 'date',
   },
   {

@@ -91,6 +91,7 @@ const batchTableFragment = gql`
     no
     quantity
     deliveredAt
+    desiredAt
     expiredAt
     producedAt
     totalAdjusted
