@@ -7,9 +7,9 @@ import { DocumentsInput } from 'components/Form';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { PermissionConsumer } from 'modules/permission';
 import {
-  PRODUCT_CREATE,
   PRODUCT_UPDATE,
   PRODUCT_PROVIDER_SET_DOCUMENTS,
+  PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS,
 } from 'modules/permission/constants/product';
 import { DocumentSectionStyle } from './style';
 
@@ -21,13 +21,17 @@ function DocumentsSection({ intl }: Props) {
   return (
     <PermissionConsumer>
       {hasPermission => {
-        const canCreateOrUpdate = hasPermission(PRODUCT_CREATE) || hasPermission(PRODUCT_UPDATE);
+        const allowUpdate =
+          hasPermission(PRODUCT_UPDATE) || hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS);
+        const allowDownload = hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS);
+
         return (
           <div className={DocumentSectionStyle}>
             <Subscribe to={[ProductProviderContainer]}>
               {({ state: { files }, setFieldValue: changeFiles }) => (
                 <DocumentsInput
-                  readOnly={!canCreateOrUpdate && !hasPermission(PRODUCT_PROVIDER_SET_DOCUMENTS)}
+                  editable={allowUpdate}
+                  downloadable={allowDownload}
                   id="files"
                   name="files"
                   values={files}
