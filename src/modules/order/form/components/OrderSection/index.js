@@ -28,7 +28,7 @@ import {
   UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantitySummary } from 'modules/order/helpers';
-import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import { PartnerCard, GrayCard } from 'components/Cards';
@@ -48,7 +48,8 @@ type Props = {
 
 const OrderSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
+  const allowUpdate = hasPermission(ORDER_UPDATE);
+  
   return (
     <div className={OrderSectionWrapperStyle}>
       <Subscribe to={[OrderInfoContainer]}>
@@ -74,7 +75,7 @@ const OrderSection = ({ isNew }: Props) => {
                         required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.PO} />}
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -93,7 +94,7 @@ const OrderSection = ({ isNew }: Props) => {
                         required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.PI} />}
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -111,7 +112,7 @@ const OrderSection = ({ isNew }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.date} />}
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -201,7 +202,7 @@ const OrderSection = ({ isNew }: Props) => {
                                       isNew={isNew}
                                       originalValue={initialValues[name]}
                                       label={<FormattedMessage {...messages.currency} />}
-                                      editable={canCreateOrUpdate}
+                                      editable={allowUpdate}
                                       enumType="Currency"
                                       required
                                       onBlur={value => {
@@ -236,7 +237,7 @@ const OrderSection = ({ isNew }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.incoterm} />}
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                         enumType="Incoterm"
                       />
                     )}
@@ -255,7 +256,7 @@ const OrderSection = ({ isNew }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.deliveryPlace} />}
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -263,7 +264,7 @@ const OrderSection = ({ isNew }: Props) => {
                     entityType="Order"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={canCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 </GridColumn>
 
@@ -291,14 +292,14 @@ const OrderSection = ({ isNew }: Props) => {
                         defaultMessage="You can choose up to 5 people in charge."
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={allowUpdate}
                   />
 
                   <Label required>
                     <FormattedMessage {...messages.exporter} />
                   </Label>
 
-                  {canCreateOrUpdate ? (
+                  {allowUpdate ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
@@ -362,7 +363,7 @@ const OrderSection = ({ isNew }: Props) => {
                     }
                     input={
                       <TagsInput
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                         id="tags"
                         name="tags"
                         tagType="Order"
@@ -390,7 +391,7 @@ const OrderSection = ({ isNew }: Props) => {
                     isNew={isNew}
                     originalValue={initialValues[name]}
                     label={<FormattedMessage {...messages.memo} />}
-                    editable={canCreateOrUpdate}
+                    editable={allowUpdate}
                     vertical
                     inputWidth="680px"
                     inputHeight="65px"

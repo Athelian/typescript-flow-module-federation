@@ -11,7 +11,7 @@ import { SectionNavBar } from 'components/NavBar';
 import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import messages from 'modules/order/messages';
-import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
 import { FormContainer } from 'modules/form';
 import SelectProducts from 'modules/order/common/SelectProducts';
@@ -28,7 +28,7 @@ type Props = {
 function ItemSection({ intl, isNew }: Props) {
   const { hasPermission } = usePermission();
 
-  const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
+  const allowUpdate = hasPermission(ORDER_UPDATE);
 
   return (
     <ArrayValue defaultValue={[]}>
@@ -55,7 +55,7 @@ function ItemSection({ intl, isNew }: Props) {
                     />
                   )}
                 </Subscribe>
-                {canCreateOrUpdate && (
+                {allowUpdate && (
                   <Subscribe to={[OrderInfoContainer]}>
                     {({ state: { exporter, currency } }) => (
                       <BooleanValue>
