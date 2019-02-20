@@ -24,10 +24,10 @@ import loginIcon from './media/icon_white.png';
 import loginIconName from './media/logo_white.png';
 
 type Props = {
-  redirectUrl: string,
+  redirectUrl?: string,
 };
 
-const Login = ({ redirectUrl }: Props) => (
+const Login = ({ redirectUrl = '/' }: Props) => (
   <AuthenticationConsumer>
     {({ authenticated, setAuthenticated }) =>
       authenticated ? (

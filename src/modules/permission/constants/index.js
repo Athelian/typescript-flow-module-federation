@@ -8,6 +8,8 @@ import customFields from './customFields';
 import warehouse from './warehouse';
 import tag from './tag';
 import template from './template';
+import staff from './staff';
+import partner from './partner';
 
 export const defaultPermissions = [
   ...product.default,
@@ -19,6 +21,8 @@ export const defaultPermissions = [
   ...warehouse.default,
   ...tag.default,
   ...template.default,
+  ...staff.default,
+  ...partner.default,
 ];
 
 export const managerPermissions = [
@@ -32,4 +36,6 @@ export const managerPermissions = [
   ...relationMap,
   ...customFields.manager,
   ...template.manager,
+  ...staff.manager,
+  ...partner.manager,
 ];
