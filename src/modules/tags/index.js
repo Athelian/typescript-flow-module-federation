@@ -1,15 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
-import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { TAG_CREATE, TAG_FORM, TAG_LIST } from 'modules/permission/constants/tag';
 import TagListModule from './index.list';
 import TagFormModule from './index.form';
 
-const TagFormModuleWrapper = withNotFound(TagFormModule, 'tagId');
-const TagFormModuleDetailWrapper = withForbidden(TagFormModuleWrapper, TAG_FORM);
-const TagFormModuleCreationWrapper = withForbidden(TagFormModuleWrapper, TAG_CREATE);
+const TagFormModuleDetailWrapper = withForbidden(TagFormModule, TAG_FORM);
+const TagFormModuleCreationWrapper = withForbidden(TagFormModule, TAG_CREATE);
 const TagModuleListWrapper = withForbidden(TagListModule, TAG_LIST);
 
 const TagApp = () => (
