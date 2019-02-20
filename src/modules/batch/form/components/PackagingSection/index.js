@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField, FormContainer } from 'modules/form';
@@ -23,7 +23,7 @@ type Props = {
 
 const PackagingSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const allowCreateOrUpdate = hasPermission(BATCH_CREATE) || hasPermission(BATCH_UPDATE);
+  const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
     <div className={PackagingSectionWrapperStyle}>
@@ -56,7 +56,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PACKAGE NAME"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -85,7 +85,7 @@ const PackagingSection = ({ isNew }: Props) => {
                             defaultMessage="PACKAGE CAPACITY"
                           />
                         }
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </Subscribe>
@@ -109,7 +109,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PACKAGE QUANTITY"
                       />
                     }
-                    showAutoCalculateToggle={allowCreateOrUpdate}
+                    showAutoCalculateToggle={allowUpdate}
                     autoCalculateIsToggled={values.autoCalculateBoolean}
                     onToggleAutoCalculate={() => (
                       <div className={CalculatorButtonStyle}>
@@ -131,7 +131,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         </Subscribe>
                       </div>
                     )}
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -153,7 +153,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG GROSS WEIGHT"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -176,7 +176,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG VOLUME"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                     showCalculator
                     onCalculate={calculatePackageVolume}
                   />
@@ -201,7 +201,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG LENGTH"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -224,7 +224,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG WIDTH"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -247,7 +247,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG HEIGHT"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>

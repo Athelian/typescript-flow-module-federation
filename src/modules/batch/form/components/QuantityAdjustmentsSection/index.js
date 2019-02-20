@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
@@ -25,7 +25,7 @@ type Props = {
 
 const QuantityAdjustmentsSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const allowCreateOrUpdate = hasPermission(BATCH_CREATE) || hasPermission(BATCH_UPDATE);
+  const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
     <div className={QuantityAdjustmentsSectionWrapperStyle}>
@@ -68,7 +68,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                       <Subscribe key={adjustment.id} to={[FormContainer]}>
                         {({ setFieldTouched }) => (
                           <DefaultAdjustmentStyle
-                            editable={allowCreateOrUpdate}
+                            editable={allowUpdate}
                             isNew={isNew}
                             index={index}
                             adjustment={adjustment}
@@ -98,7 +98,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                                     }}
                                     isNew={isNew}
                                     originalValue={adjustment.quantity}
-                                    editable={allowCreateOrUpdate}
+                                    editable={allowUpdate}
                                   />
                                 )}
                               </FormField>
@@ -108,7 +108,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                       </Subscribe>
                     )
                 )}
-              {allowCreateOrUpdate && (
+              {allowUpdate && (
                 <div className={AddAdjustmentButtonWrapperStyle}>
                   <NewButton
                     data-testid="addAdjustmentButton"

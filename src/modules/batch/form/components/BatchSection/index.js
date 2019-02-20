@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
@@ -39,7 +39,7 @@ type Props = {
 
 const BatchSection = ({ isNew, selectable }: Props) => {
   const { hasPermission } = usePermission();
-  const allowCreateOrUpdate = hasPermission(BATCH_CREATE) || hasPermission(BATCH_UPDATE);
+  const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
     <div className={BatchSectionWrapperStyle}>
@@ -68,7 +68,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.batchNo} />}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -95,7 +95,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                             required
                             originalValue={initialValues[name] + totalAdjustment}
                             label={<FormattedMessage {...messages.quantity} />}
-                            editable={allowCreateOrUpdate}
+                            editable={allowUpdate}
                           />
                         )}
                       </Subscribe>
@@ -116,7 +116,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.deliveredAt} />}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -135,7 +135,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.desiredAt} />}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -154,7 +154,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.expiredAt} />}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -173,7 +173,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.producedAt} />}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -181,14 +181,14 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                     entityType="Batch"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 </GridColumn>
                 <div className={ItemSectionStyle}>
                   <Label required>
                     <FormattedMessage {...messages.orderItem} />
                   </Label>
-                  {allowCreateOrUpdate ? (
+                  {allowUpdate ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <React.Fragment>
@@ -268,7 +268,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                     onChange={(field, value) => {
                       setFieldValue(field, value);
                     }}
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 }
               />
@@ -287,7 +287,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                     isNew={isNew}
                     originalValue={initialValues[name]}
                     label={<FormattedMessage {...messages.memo} />}
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                     vertical
                     inputWidth="680px"
                     inputHeight="65px"
