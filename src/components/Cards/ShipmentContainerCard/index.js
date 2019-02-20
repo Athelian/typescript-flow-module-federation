@@ -1,17 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
-import { textInputFactory, dateTimeInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display, DefaultStyle } from 'components/Form';
-
+import { Label, Display, DefaultStyle, TextInputFactory, DateInputFactory } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import validator from './validator';
@@ -32,7 +29,6 @@ import {
   InputIconStyle,
   WarehouseIconStyle,
   LabelStyle,
-  // WarehouseSelectButtonStyle,
   ApprovalIconStyle,
   TagsWrapperStyle,
 } from './style';
@@ -42,6 +38,7 @@ type OptionalProps = {
   onClick: (container: Object) => void,
   onRemove: (container: Object) => void,
   selectable: boolean,
+  readOnly: boolean,
   actions: Array<React.Node>,
 };
 
@@ -56,6 +53,7 @@ const defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   selectable: false,
+  readOnly: false,
   actions: [],
 };
 
@@ -66,6 +64,7 @@ const ShipmentContainerCard = ({
   onSelectWarehouse,
   update,
   selectable,
+  readOnly,
   ...rest
 }: Props) => {
   if (!container) return '';
@@ -132,23 +131,24 @@ const ShipmentContainerCard = ({
                   validator={validation}
                   values={values}
                 >
-                  {({ name: fieldName, ...inputHandlers }) =>
-                    textInputFactory({
-                      width: '185px',
-                      height: '20px',
-                      inputHandlers: {
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <TextInputFactory
+                      inputWidth="185px"
+                      inputHeight="20px"
+                      inputAlign="left"
+                      editable={!readOnly}
+                      {...{
                         ...inputHandlers,
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
                           update({ ...container, no: inputHandlers.value });
                         },
-                      },
-                      name: fieldName,
-                      isNew: false,
-                      originalValue: no,
-                      align: 'left',
-                    })
-                  }
+                      }}
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={no}
+                    />
+                  )}
                 </FormField>
               </div>
               <div className={LabelInputStyle}>
@@ -190,19 +190,25 @@ const ShipmentContainerCard = ({
                   </Link>
                 )}
 
-                <button
-                  type="button"
-                  onClick={evt => {
-                    evt.stopPropagation();
-                    onSelectWarehouse();
-                  }}
-                >
-                  <DefaultStyle type="button" height="20px">
-                    <Display align="left">
-                      {isNullOrUndefined(warehouse) ? '' : warehouse.name}
-                    </Display>
-                  </DefaultStyle>
-                </button>
+                {!readOnly ? (
+                  <button
+                    type="button"
+                    onClick={evt => {
+                      evt.stopPropagation();
+                      onSelectWarehouse();
+                    }}
+                  >
+                    <DefaultStyle type="button" width="155px" height="20px">
+                      <Display align="left">
+                        {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                      </Display>
+                    </DefaultStyle>
+                  </button>
+                ) : (
+                  <Display align="left" width="155px">
+                    {isNullOrUndefined(warehouse) ? '' : warehouse.name}
+                  </Display>
+                )}
               </div>
 
               <div className={LabelStyle}>
@@ -222,14 +228,16 @@ const ShipmentContainerCard = ({
                   name={`container.${id}.warehouseArrivalAgreedDate`}
                   initValue={warehouseArrivalAgreedDate}
                 >
-                  {({ name: fieldName, ...inputHandlers }) =>
-                    dateTimeInputFactory({
-                      width: '165px',
-                      height: '20px',
-                      name: fieldName,
-                      isNew: false,
-                      originalValue: warehouseArrivalAgreedDate,
-                      inputHandlers: {
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      inputWidth="165px"
+                      inputHeight="20px"
+                      inputAlign="left"
+                      name={fieldName}
+                      editable={!readOnly}
+                      isNew={false}
+                      originalValue={warehouseArrivalAgreedDate}
+                      {...{
                         ...inputHandlers,
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
@@ -240,21 +248,23 @@ const ShipmentContainerCard = ({
                               : null,
                           });
                         },
-                      },
-                    })
-                  }
+                      }}
+                    />
+                  )}
                 </FormField>
 
                 {warehouseArrivalAgreedDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true)}
+                    className={ApprovalIconStyle(true, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalAgreedDateApprovedBy: null,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalAgreedDateApprovedBy: null,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="CHECKED" />
@@ -262,13 +272,15 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false)}
+                    className={ApprovalIconStyle(false, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalAgreedDateApprovedBy: user,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalAgreedDateApprovedBy: user,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="UNCHECKED" />
@@ -293,14 +305,16 @@ const ShipmentContainerCard = ({
                   name={`container.${id}.warehouseArrivalActualDate`}
                   initValue={warehouseArrivalActualDate}
                 >
-                  {({ name: fieldName, ...inputHandlers }) =>
-                    dateTimeInputFactory({
-                      width: '165px',
-                      height: '20px',
-                      name: fieldName,
-                      isNew: false,
-                      originalValue: warehouseArrivalActualDate,
-                      inputHandlers: {
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      inputWidth="165px"
+                      inputHeight="20px"
+                      inputAlign="left"
+                      name={fieldName}
+                      isNew={false}
+                      editable={!readOnly}
+                      originalValue={warehouseArrivalActualDate}
+                      {...{
                         ...inputHandlers,
                         onBlur: evt => {
                           inputHandlers.onBlur(evt);
@@ -311,21 +325,23 @@ const ShipmentContainerCard = ({
                               : null,
                           });
                         },
-                      },
-                    })
-                  }
+                      }}
+                    />
+                  )}
                 </FormField>
 
                 {warehouseArrivalActualDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true)}
+                    className={ApprovalIconStyle(true, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalActualDateApprovedBy: null,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalActualDateApprovedBy: null,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="CHECKED" />
@@ -333,13 +349,15 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false)}
+                    className={ApprovalIconStyle(false, !readOnly)}
                     onClick={evt => {
                       evt.stopPropagation();
-                      update({
-                        ...container,
-                        warehouseArrivalActualDateApprovedBy: user,
-                      });
+                      if (!readOnly) {
+                        update({
+                          ...container,
+                          warehouseArrivalActualDateApprovedBy: user,
+                        });
+                      }
                     }}
                   >
                     <Icon icon="UNCHECKED" />

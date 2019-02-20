@@ -38,7 +38,6 @@ export default function EnumInput({ data, value, onChange, onRemove }: Props) {
     if (prevValue && value.description === '') {
       setValue('');
     }
-    return null;
   });
 
   return (

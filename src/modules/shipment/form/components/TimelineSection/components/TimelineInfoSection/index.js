@@ -1,34 +1,18 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
-import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
-import Icon from 'components/Icon';
 import { injectUid } from 'utils/id';
-import { UserConsumer } from 'modules/user';
-import UserAvatar from 'components/UserAvatar';
-import FormattedName from 'components/FormattedName';
-import FormattedDate from 'components/FormattedDate';
-import { ApproveButton, NewButton } from 'components/Buttons';
+import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { dateInputFactory } from 'modules/form/helpers';
-import { SectionHeader, Label, DefaultAdjustmentStyle } from 'components/Form';
-import AssignUsers from '../AssignUsers';
+import { UserConsumer } from 'modules/user';
 import {
-  TimelineInfoSectionWrapperStyle,
-  AssignedAndApprovalWrapperStyle,
-  AssignmentWrapperStyle,
-  AssignmentStyle,
-  RemoveAssignmentButtonStyle,
-  AddAssignmentButtonStyle,
-  ApprovalWrapperStyle,
-  ApprovedByWrapperStyle,
-  ApprovedByStyle,
-  ApprovedAtStyle,
-  UnapproveButtonStyle,
-  AddDateButtonWrapperStyle,
-} from './style';
+  SectionHeader,
+  DefaultAdjustmentStyle,
+  DateInputFactory,
+  AssignmentApprovalFactory,
+} from 'components/Form';
+import { TimelineInfoSectionWrapperStyle, AddDateButtonWrapperStyle } from './style';
 
 type OptionalProps = {
   timelineDate: {
@@ -39,6 +23,7 @@ type OptionalProps = {
     }>,
     approvedAt: ?Date,
     approvedBy: ?{
+      id: string,
       firstName: string,
       lastName: string,
     },
@@ -46,6 +31,7 @@ type OptionalProps = {
     date: Date,
   },
   renderBelowHeader: React.Node,
+  readOnly: boolean,
 };
 
 type Props = OptionalProps & {
@@ -60,237 +46,133 @@ type Props = OptionalProps & {
 const defaultProps = {
   renderBelowHeader: null,
   timelineDate: { assignedTo: [], timelineDateRevisions: [] },
+  readOnly: false,
 };
 
-class TimelineInfoSection extends React.Component<Props> {
-  static defaultProps = defaultProps;
+const TimelineInfoSection = (props: Props) => {
+  const {
+    isNew,
+    icon,
+    title,
+    timelineDate,
+    sourceName,
+    setFieldDeepValue,
+    removeArrayItem,
+    renderBelowHeader,
+    readOnly,
+    ...rest
+  } = props;
+  const timelineDateRevisions = [...((timelineDate && timelineDate.timelineDateRevisions) || [])];
+  return (
+    <div className={TimelineInfoSectionWrapperStyle} {...rest}>
+      <GridColumn gap="10px">
+        <SectionHeader icon={icon} title={title}>
+          {renderBelowHeader}
+        </SectionHeader>
 
-  handleRemoveAssignedTo = (index: number) => {
-    const { sourceName, removeArrayItem } = this.props;
-
-    removeArrayItem(`${sourceName}.assignedTo[${index}]`);
-  };
-
-  handleUnapprove = () => {
-    const { timelineDate, sourceName, setFieldDeepValue } = this.props;
-
-    const newState = { ...timelineDate, approvedAt: null, approvedBy: null };
-
-    setFieldDeepValue(sourceName, newState);
-  };
-
-  handleApprove = (user: Object) => {
-    const { timelineDate, sourceName, setFieldDeepValue } = this.props;
-
-    const newState = { ...timelineDate, approvedAt: new Date(), approvedBy: user };
-
-    setFieldDeepValue(sourceName, newState);
-  };
-
-  render() {
-    const {
-      isNew,
-      icon,
-      title,
-      timelineDate,
-      sourceName,
-      setFieldDeepValue,
-      removeArrayItem,
-      renderBelowHeader,
-      ...rest
-    } = this.props;
-    const timelineDateRevisions = [...((timelineDate && timelineDate.timelineDateRevisions) || [])];
-    return (
-      <div className={TimelineInfoSectionWrapperStyle} {...rest}>
-        <GridColumn gap="10px">
-          <SectionHeader icon={icon} title={title}>
-            {renderBelowHeader}
-          </SectionHeader>
-
-          <div className={AssignedAndApprovalWrapperStyle}>
-            <GridColumn gap="5px">
-              <Label>
-                <FormattedMessage id="modules.Shipments.assignedTo" defaultMessage="ASSIGNED TO" />
-              </Label>
-              <div className={AssignmentWrapperStyle}>
-                {timelineDate &&
-                  timelineDate.assignedTo &&
-                  timelineDate.assignedTo.map(({ id, firstName, lastName }, index) => (
-                    <div className={AssignmentStyle} key={id}>
-                      <button
-                        className={RemoveAssignmentButtonStyle}
-                        onClick={() => this.handleRemoveAssignedTo(index)}
-                        type="button"
-                      >
-                        <Icon icon="REMOVE" />
-                      </button>
-                      <UserAvatar firstName={firstName} lastName={lastName} />
-                    </div>
-                  ))}
-                {((timelineDate && !timelineDate.assignedTo) ||
-                  (timelineDate &&
-                    timelineDate.assignedTo &&
-                    timelineDate.assignedTo.length < 5)) && (
-                  <BooleanValue>
-                    {({ value: isOpen, set: slideToggle }) => (
-                      <>
-                        <button
-                          className={AddAssignmentButtonStyle}
-                          type="button"
-                          onClick={() => slideToggle(true)}
-                        >
-                          <Icon icon="ADD" />
-                        </button>
-                        <SlideView
-                          isOpen={isOpen}
-                          onRequestClose={() => slideToggle(false)}
-                          options={{ width: '1030px' }}
-                        >
-                          {isOpen && (
-                            <AssignUsers
-                              selected={timelineDate.assignedTo}
-                              onSelect={selected => {
-                                slideToggle(false);
-                                setFieldDeepValue(`${sourceName}.assignedTo`, selected);
-                              }}
-                              onCancel={() => slideToggle(false)}
-                            />
-                          )}
-                        </SlideView>
-                      </>
-                    )}
-                  </BooleanValue>
-                )}
-              </div>
-            </GridColumn>
-
-            <GridColumn gap="5px">
-              <Label align="right">
-                <FormattedMessage id="modules.Shipments.approval" defaultMessage="APPROVAL" />
-              </Label>
-              <div className={ApprovalWrapperStyle}>
-                {timelineDate && timelineDate.approvedAt && timelineDate.approvedBy ? (
-                  <>
-                    <div className={ApprovedByWrapperStyle}>
-                      <div className={ApprovedByStyle}>
-                        <FormattedName
-                          firstName={timelineDate.approvedBy.firstName}
-                          lastName={timelineDate.approvedBy.lastName}
-                        />
-                      </div>
-                      <div className={ApprovedAtStyle}>
-                        <FormattedDate value={timelineDate.approvedAt} />
-                      </div>
-                    </div>
-                    <UserAvatar
-                      firstName={timelineDate.approvedBy.firstName}
-                      lastName={timelineDate.approvedBy.lastName}
-                    />
-                    <button
-                      data-testid={`${sourceName}_unApproveButton`}
-                      className={UnapproveButtonStyle}
-                      onClick={this.handleUnapprove}
-                      type="button"
-                    >
-                      <Icon icon="CLEAR" />
-                    </button>
-                  </>
-                ) : (
-                  <UserConsumer>
-                    {({ user }) => (
-                      <ApproveButton
-                        data-testid={`${sourceName}_approveButton`}
-                        onClick={() => this.handleApprove(user)}
-                      />
-                    )}
-                  </UserConsumer>
-                )}
-              </div>
-            </GridColumn>
-          </div>
-
-          <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
-            <div className={AddDateButtonWrapperStyle}>
-              <NewButton
-                data-testid={`${sourceName}_addDateButton`}
-                label={
-                  <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
-                }
-                onClick={() => {
-                  setFieldDeepValue(
-                    `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
-                    injectUid({
-                      isNew: true,
-                      type: 'Other',
-                      date: '',
-                      memo: '',
-                      updatedAt: new Date(),
-                    })
-                  );
-                }}
-              />
-            </div>
-            {timelineDateRevisions.reverse().map(
-              (adjustment, index) =>
-                adjustment && (
-                  <DefaultAdjustmentStyle
-                    isNew={isNew}
-                    index={timelineDateRevisions.length - 1 - index}
-                    adjustment={adjustment}
-                    key={adjustment.id}
-                    setFieldArrayValue={setFieldDeepValue}
-                    removeArrayItem={removeArrayItem}
-                    values={timelineDate}
-                    enumType="TimelineDateRevisionType"
-                    targetName={`${sourceName}.timelineDateRevisions`}
-                    typeName="type"
-                    memoName="memo"
-                    valueInput={
-                      <FormField
-                        name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
-                          1 -
-                          index}.date`}
-                        initValue={adjustment.date}
-                        setFieldValue={setFieldDeepValue}
-                      >
-                        {({ name, ...inputHandlers }) =>
-                          dateInputFactory({
-                            name,
-                            inputHandlers,
-                            isNew,
-                            originalValue: adjustment.date,
-                          })
-                        }
-                      </FormField>
+        <AssignmentApprovalFactory
+          assignmentsName={`${sourceName}.assignedTo`}
+          assignments={timelineDate && timelineDate.assignedTo}
+          approvedAtName={`${sourceName}.approvedAt`}
+          approvedAt={timelineDate && timelineDate.approvedAt}
+          approvedByName={`${sourceName}.approvedBy`}
+          approvedBy={timelineDate && timelineDate.approvedBy}
+          setFieldValue={setFieldDeepValue}
+          editable={!readOnly}
+        />
+        <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
+          <div className={AddDateButtonWrapperStyle}>
+            {!readOnly && (
+              <UserConsumer>
+                {({ user }) => (
+                  <NewButton
+                    data-testid={`${sourceName}_addDateButton`}
+                    label={
+                      <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
                     }
+                    onClick={() => {
+                      setFieldDeepValue(
+                        `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
+                        injectUid({
+                          isNew: true,
+                          type: 'Other',
+                          date: '',
+                          memo: '',
+                          updatedAt: new Date(),
+                          updatedBy: user,
+                        })
+                      );
+                    }}
                   />
-                )
+                )}
+              </UserConsumer>
             )}
-            <FormField
-              name={`${sourceName}.date`}
-              initValue={timelineDate && timelineDate.date}
-              setFieldValue={setFieldDeepValue}
-            >
-              {({ name, ...inputHandlers }) =>
-                dateInputFactory({
-                  name,
-                  inputHandlers,
-                  isNew,
-                  originalValue: timelineDate && timelineDate.date,
-                  label: (
-                    <FormattedMessage
-                      id="modules.Shipments.initialDate"
-                      defaultMessage="INITIAL DATE"
-                    />
-                  ),
-                })
-              }
-            </FormField>
-          </GridColumn>
+          </div>
+          {timelineDateRevisions.reverse().map(
+            (adjustment, index) =>
+              adjustment && (
+                <DefaultAdjustmentStyle
+                  isNew={isNew}
+                  editable={!readOnly}
+                  index={timelineDateRevisions.length - 1 - index}
+                  adjustment={adjustment}
+                  key={adjustment.id}
+                  setFieldArrayValue={setFieldDeepValue}
+                  removeArrayItem={removeArrayItem}
+                  values={timelineDate}
+                  enumType="TimelineDateRevisionType"
+                  targetName={`${sourceName}.timelineDateRevisions`}
+                  typeName="type"
+                  memoName="memo"
+                  valueInput={
+                    <FormField
+                      name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
+                        1 -
+                        index}.date`}
+                      initValue={adjustment.date}
+                      setFieldValue={setFieldDeepValue}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DateInputFactory
+                          {...inputHandlers}
+                          name={name}
+                          isNew={isNew}
+                          originalValue={adjustment.date}
+                          editable={!readOnly}
+                        />
+                      )}
+                    </FormField>
+                  }
+                />
+              )
+          )}
+          <FormField
+            name={`${sourceName}.date`}
+            initValue={timelineDate && timelineDate.date}
+            setFieldValue={setFieldDeepValue}
+          >
+            {({ name, ...inputHandlers }) => (
+              <DateInputFactory
+                {...inputHandlers}
+                name={name}
+                isNew={isNew}
+                originalValue={timelineDate && timelineDate.date}
+                editable={!readOnly}
+                label={
+                  <FormattedMessage
+                    id="modules.Shipments.initialDate"
+                    defaultMessage="INITIAL DATE"
+                  />
+                }
+              />
+            )}
+          </FormField>
         </GridColumn>
-      </div>
-    );
-  }
-}
+      </GridColumn>
+    </div>
+  );
+};
+
+TimelineInfoSection.defaultProps = defaultProps;
 
 export default TimelineInfoSection;

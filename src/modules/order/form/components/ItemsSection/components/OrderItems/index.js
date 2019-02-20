@@ -5,6 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
+import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import { findBatchQuantity } from 'utils/batch';
 import { isEquals } from 'utils/fp';
@@ -14,6 +15,7 @@ import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import { PermissionConsumer } from 'modules/permission';
 import {
   ItemGridStyle,
   ItemStyle,
@@ -124,131 +126,147 @@ class OrderItems extends React.Component<Props> {
     } = this.props;
 
     return orderItems.length > 0 ? (
-      <div className={ItemGridStyle}>
-        {orderItems.map((item, index) => (
-          <div id={`orderItem_${item.id}`} className={ItemStyle} key={item.id}>
-            <OrderItemCard
-              item={item}
-              currency={currency}
-              saveOnBlur={newValue => onSave(index, newValue)}
-              selected={selected.includes(item.id)}
-              onClick={() => {
-                scrollIntoView({
-                  targetId: `orderItem_${item.id}`,
-                  boundaryId: 'orderItemsSection',
-                });
-                if (!selected.includes(item.id)) {
-                  push(item.id);
-                } else {
-                  set(selected.filter(selectedId => selectedId !== item.id));
-                }
-              }}
-              onClone={onClone}
-              onRemove={onRemove}
-            />
+      <PermissionConsumer>
+        {hasPermission => {
+          const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
+          return (
+            <div className={ItemGridStyle}>
+              {orderItems.map((item, index) => (
+                <div id={`orderItem_${item.id}`} className={ItemStyle} key={item.id}>
+                  <OrderItemCard
+                    readOnly={!canCreateOrUpdate}
+                    item={item}
+                    currency={currency}
+                    saveOnBlur={newValue => onSave(index, newValue)}
+                    selected={selected.includes(item.id)}
+                    onClick={() => {
+                      scrollIntoView({
+                        targetId: `orderItem_${item.id}`,
+                        boundaryId: 'orderItemsSection',
+                      });
+                      if (!selected.includes(item.id)) {
+                        push(item.id);
+                      } else {
+                        set(selected.filter(selectedId => selectedId !== item.id));
+                      }
+                    }}
+                    onClone={onClone}
+                    onRemove={onRemove}
+                  />
 
-            {selected.includes(item.id) &&
-              (item.batches && (
-                <ArrayValue value={item.batches} onChange={batches => onSave(index, { batches })}>
-                  {({ value: batches, push: addNewBatch, splice: changeBatch, filter }) => (
-                    <div className={BatchAreaStyle}>
-                      <div className={BatchAreaHeaderStyle}>
-                        <div className={TitleWrapperStyle}>
-                          <div className={IconStyle}>
-                            <Icon icon="BATCH" />
-                          </div>
-                          <div className={TitleStyle}>BATCHES ({batches.length})</div>
-                        </div>
-                        <NewButton
-                          label={
-                            <FormattedMessage
-                              id="modules.Orders.newBatch"
-                              defaultMessage="NEW BATCH"
-                            />
-                          }
-                          onClick={() => addNewBatch(generateBatchItem(item, batches))}
-                        />
-                        <BaseButton
-                          label={
-                            <FormattedMessage
-                              id="modules.Orders.autoFillBatch"
-                              defaultMessage="AUTOFILL BATCH"
-                            />
-                          }
-                          onClick={() => autoFillBatch(item, batches, addNewBatch)}
-                        />
-                      </div>
+                  {selected.includes(item.id) &&
+                    (item.batches && (
+                      <ArrayValue
+                        value={item.batches}
+                        onChange={batches => onSave(index, { batches })}
+                      >
+                        {({ value: batches, push: addNewBatch, splice: changeBatch, filter }) => (
+                          <div className={BatchAreaStyle}>
+                            <div className={BatchAreaHeaderStyle}>
+                              <div className={TitleWrapperStyle}>
+                                <div className={IconStyle}>
+                                  <Icon icon="BATCH" />
+                                </div>
+                                <div className={TitleStyle}>BATCHES ({batches.length})</div>
+                              </div>
+                              {canCreateOrUpdate && (
+                                <>
+                                  <NewButton
+                                    label={
+                                      <FormattedMessage
+                                        id="modules.Orders.newBatch"
+                                        defaultMessage="NEW BATCH"
+                                      />
+                                    }
+                                    onClick={() => addNewBatch(generateBatchItem(item, batches))}
+                                  />
+                                  <BaseButton
+                                    label={
+                                      <FormattedMessage
+                                        id="modules.Orders.autoFillBatch"
+                                        defaultMessage="AUTOFILL BATCH"
+                                      />
+                                    }
+                                    onClick={() => autoFillBatch(item, batches, addNewBatch)}
+                                  />
+                                </>
+                              )}
+                            </div>
 
-                      <div className={BatchGridStyle}>
-                        {batches.map((batch, position) => (
-                          <BooleanValue key={batch.id}>
-                            {({ value: opened, set: slideToggle }) => (
-                              <>
-                                <SlideView
-                                  isOpen={opened}
-                                  onRequestClose={() => slideToggle(false)}
-                                  options={{ width: '1030px' }}
-                                >
-                                  {opened && (
-                                    <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
-                                      {({ initDetailValues }, { state }) => (
-                                        <BatchFormWrapper
-                                          batch={state.orderItems[index].batches[position]}
-                                          isNew={!!batch.isNew}
-                                          orderItem={item}
-                                          initDetailValues={initDetailValues}
-                                          onCancel={() => slideToggle(false)}
-                                          onSave={updatedBatch => {
-                                            slideToggle(false);
-                                            changeBatch(position, 1, updatedBatch);
-                                          }}
-                                        />
-                                      )}
-                                    </Subscribe>
+                            <div className={BatchGridStyle}>
+                              {batches.map((batch, position) => (
+                                <BooleanValue key={batch.id}>
+                                  {({ value: opened, set: slideToggle }) => (
+                                    <>
+                                      <SlideView
+                                        isOpen={opened}
+                                        onRequestClose={() => slideToggle(false)}
+                                        options={{ width: '1030px' }}
+                                      >
+                                        {opened && (
+                                          <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
+                                            {({ initDetailValues }, { state }) => (
+                                              <BatchFormWrapper
+                                                batch={state.orderItems[index].batches[position]}
+                                                isNew={!!batch.isNew}
+                                                orderItem={item}
+                                                initDetailValues={initDetailValues}
+                                                onCancel={() => slideToggle(false)}
+                                                onSave={updatedBatch => {
+                                                  slideToggle(false);
+                                                  changeBatch(position, 1, updatedBatch);
+                                                }}
+                                              />
+                                            )}
+                                          </Subscribe>
+                                        )}
+                                      </SlideView>
+                                      <OrderBatchCard
+                                        readOnly={!canCreateOrUpdate}
+                                        batch={batch}
+                                        currency={currency}
+                                        price={item.price}
+                                        onClick={() => slideToggle(true)}
+                                        saveOnBlur={updatedBatch => {
+                                          changeBatch(position, 1, updatedBatch);
+                                        }}
+                                        onRemove={() => filter(({ id }) => id !== batch.id)}
+                                        onClone={({
+                                          id,
+                                          deliveredAt,
+                                          desiredAt,
+                                          expiredAt,
+                                          producedAt,
+                                          no,
+                                          ...rest
+                                        }) => {
+                                          changeBatch(
+                                            batches.length,
+                                            1,
+                                            injectUid({
+                                              ...rest,
+                                              batchAdjustments: [],
+                                              no: `${no}- clone`,
+                                              isNew: true,
+                                            })
+                                          );
+                                        }}
+                                      />
+                                    </>
                                   )}
-                                </SlideView>
-                                <OrderBatchCard
-                                  batch={batch}
-                                  currency={currency}
-                                  price={item.price}
-                                  onClick={() => slideToggle(true)}
-                                  saveOnBlur={updatedBatch => {
-                                    changeBatch(position, 1, updatedBatch);
-                                  }}
-                                  onRemove={() => filter(({ id }) => id !== batch.id)}
-                                  onClone={({
-                                    id,
-                                    deliveredAt,
-                                    desiredAt,
-                                    expiredAt,
-                                    producedAt,
-                                    no,
-                                    ...rest
-                                  }) => {
-                                    changeBatch(
-                                      batches.length,
-                                      1,
-                                      injectUid({
-                                        ...rest,
-                                        batchAdjustments: [],
-                                        no: `${no}- clone`,
-                                        isNew: true,
-                                      })
-                                    );
-                                  }}
-                                />
-                              </>
-                            )}
-                          </BooleanValue>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </ArrayValue>
+                                </BooleanValue>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </ArrayValue>
+                    ))}
+                </div>
               ))}
-          </div>
-        ))}
-      </div>
+            </div>
+          );
+        }}
+      </PermissionConsumer>
     ) : (
       <div className={EmptyMessageStyle}>
         <FormattedMessage

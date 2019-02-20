@@ -1,6 +1,7 @@
 // @flow
 import DateInput from './DateInput';
 import DateTimeInput from './DateTimeInput';
+import DayInput from './DayInput';
 import EmailInput from './EmailInput';
 import MetricInput from './MetricInput';
 import NumberInput from './NumberInput';
@@ -11,6 +12,8 @@ import TextAreaInput from './TextAreaInput';
 import TextInput from './TextInput';
 import {
   DefaultAdjustmentStyle,
+  DefaultCustomFieldDefinitionStyle,
+  DefaultCustomFieldStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultDayStyle,
@@ -26,6 +29,7 @@ import {
 export {
   DateInput,
   DateTimeInput,
+  DayInput,
   EmailInput,
   MetricInput,
   NumberInput,
@@ -35,6 +39,8 @@ export {
   TextAreaInput,
   TextInput,
   DefaultAdjustmentStyle,
+  DefaultCustomFieldDefinitionStyle,
+  DefaultCustomFieldStyle,
   DefaultStyle,
   DefaultPriceStyle,
   DefaultDayStyle,

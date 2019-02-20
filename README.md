@@ -81,8 +81,7 @@ run tests using [jest](https://github.com/facebook/jest).
 run e2e tests using [cypress](https://docs.cypress.io/guides/getting-started/installing-cypress.html#Adding-npm-scripts).
 
 ```
- yarn cy:install
- yarn cy:open
+ yarn e2e
 ```
 
 ## Coding style

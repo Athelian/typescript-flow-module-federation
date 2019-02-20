@@ -64,7 +64,6 @@ export default function MiniSelector({
       setIsActive(true);
       setIsArchive(true);
     }
-    return null;
   });
   return (
     <div className={MiniSelectorWrapperStyle}>

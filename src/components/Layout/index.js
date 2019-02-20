@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Raven from 'raven-js';
+import * as Sentry from '@sentry/browser';
 import { isDevEnvironment } from 'utils/env';
 import InternalError from 'components/InternalError';
 import { DesktopWrapperStyle } from 'styles/main';
@@ -26,22 +26,22 @@ export default class Layout extends React.Component<Props, State> {
   state: State = { hasError: false };
 
   onReportError = () => {
-    if (Raven.lastEventId() && !isDevEnvironment) {
-      Raven.showReportDialog();
+    if (Sentry.lastEventId() && !isDevEnvironment) {
+      Sentry.showReportDialog();
     }
   };
 
   static getDerivedStateFromError(error: Object) {
     if (!isDevEnvironment) {
-      Raven.captureException(error);
+      Sentry.captureException(error);
     }
     return { hasError: true };
   }
 
-  componentDidCatch(error: Object, info: Object) {
+  componentDidCatch(error: Object) {
     this.setState({ hasError: true });
     if (!isDevEnvironment) {
-      Raven.captureException(error, { info });
+      Sentry.captureException(error);
     }
   }
 

@@ -1,11 +1,27 @@
 // @flow
 import * as React from 'react';
+import { injectIntl, type IntlShape } from 'react-intl';
 import { Display } from 'components/Form';
 import { formatToDateInput } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
-import { type InputProps as Props, defaultInputProps } from 'components/Form/Inputs/type';
+import { type InputProps, defaultInputProps } from 'components/Form/Inputs/type';
+import { isNullOrUndefined } from 'utils/fp';
+import messages from 'components/Form/Inputs/messages';
 
-const DateInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...rest }: Props) => {
+type Props = InputProps & {
+  intl: IntlShape,
+};
+
+const DateInput = ({
+  intl,
+  value,
+  align,
+  readOnly,
+  readOnlyWidth,
+  readOnlyHeight,
+  placeholder,
+  ...rest
+}: Props) => {
   return readOnly ? (
     <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
       <FormattedDate value={value} />
@@ -14,6 +30,11 @@ const DateInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...r
     <input
       value={value ? formatToDateInput(value) : ''}
       style={{ textAlign: align }}
+      placeholder={
+        isNullOrUndefined(placeholder)
+          ? intl.formatMessage(messages.defaultPlaceholder)
+          : placeholder
+      }
       {...rest}
       type="date"
     />
@@ -22,4 +43,4 @@ const DateInput = ({ value, align, readOnly, readOnlyWidth, readOnlyHeight, ...r
 
 DateInput.defaultProps = defaultInputProps;
 
-export default DateInput;
+export default injectIntl(DateInput);
