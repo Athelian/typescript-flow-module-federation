@@ -22,6 +22,14 @@ import messages from './messages';
 const SideBar = () => {
   const [expandedSubMenu, setExpandedSubMenu] = useState(null);
   const { hasPermission } = usePermission();
+
+  const hasSettingMenu =
+    hasPermission(TAG_LIST) ||
+    hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) ||
+    hasPermission(TEMPLATE_LIST);
+
+  const hasNetworkMenu = hasPermission(PARTNER_LIST) || hasPermission(STAFF_LIST);
+
   return (
     <Location>
       {({ location }) =>
@@ -94,84 +102,81 @@ const SideBar = () => {
                       onClick={() => setExpandedSubMenu(null)}
                     />
                   )}
-                  {hasPermission(PARTNER_LIST) ||
-                    (hasPermission(STAFF_LIST) && (
-                      <SubMenu
-                        id="network"
-                        isExpanded={expandedSubMenu === 'network'}
-                        hasActiveChild={
-                          `/${location.pathname.split('/')[1]}` === '/partner' ||
-                          `/${location.pathname.split('/')[1]}` === '/staff'
-                        }
-                        icon="NETWORK"
-                        label={<FormattedMessage {...messages.network} />}
-                        onClick={(id: ?string) => setExpandedSubMenu(id)}
-                      >
-                        {hasPermission(PARTNER_LIST) && (
-                          <MenuItem
-                            path="/partner"
-                            isActive={`/${location.pathname.split('/')[1]}` === '/partner'}
-                            icon="PARTNER"
-                            label={<FormattedMessage {...messages.partner} />}
-                            onClick={() => setExpandedSubMenu(null)}
-                          />
-                        )}
-                        {hasPermission(STAFF_LIST) && (
-                          <MenuItem
-                            path="/staff"
-                            isActive={`/${location.pathname.split('/')[1]}` === '/staff'}
-                            icon="STAFF"
-                            label={<FormattedMessage {...messages.staff} />}
-                            onClick={() => setExpandedSubMenu(null)}
-                          />
-                        )}
-                      </SubMenu>
-                    ))}
+                  {hasNetworkMenu && (
+                    <SubMenu
+                      id="network"
+                      isExpanded={expandedSubMenu === 'network'}
+                      hasActiveChild={
+                        `/${location.pathname.split('/')[1]}` === '/partner' ||
+                        `/${location.pathname.split('/')[1]}` === '/staff'
+                      }
+                      icon="NETWORK"
+                      label={<FormattedMessage {...messages.network} />}
+                      onClick={(id: ?string) => setExpandedSubMenu(id)}
+                    >
+                      {hasPermission(PARTNER_LIST) && (
+                        <MenuItem
+                          path="/partner"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/partner'}
+                          icon="PARTNER"
+                          label={<FormattedMessage {...messages.partner} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                      {hasPermission(STAFF_LIST) && (
+                        <MenuItem
+                          path="/staff"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/staff'}
+                          icon="STAFF"
+                          label={<FormattedMessage {...messages.staff} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                    </SubMenu>
+                  )}
 
-                  {hasPermission(TAG_LIST) ||
-                    hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) ||
-                    (hasPermission(TEMPLATE_LIST) && (
-                      <SubMenu
-                        id="settings"
-                        isExpanded={expandedSubMenu === 'settings'}
-                        hasActiveChild={
-                          `/${location.pathname.split('/')[1]}` === '/tags' ||
-                          `/${location.pathname.split('/')[1]}` === '/metadata' ||
-                          `/${location.pathname.split('/')[1]}` === '/template'
-                        }
-                        icon="SETTINGS"
-                        label={<FormattedMessage {...messages.settings} />}
-                        onClick={(id: ?string) => setExpandedSubMenu(id)}
-                      >
-                        {hasPermission(TAG_LIST) && (
-                          <MenuItem
-                            path="/tags"
-                            isActive={`/${location.pathname.split('/')[1]}` === '/tags'}
-                            icon="TAG"
-                            label={<FormattedMessage {...messages.tags} />}
-                            onClick={() => setExpandedSubMenu(null)}
-                          />
-                        )}
-                        {hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) && (
-                          <MenuItem
-                            path="/metadata"
-                            isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
-                            icon="METADATA"
-                            label={<FormattedMessage {...messages.metadata} />}
-                            onClick={() => setExpandedSubMenu(null)}
-                          />
-                        )}
-                        {hasPermission(TEMPLATE_LIST) && (
-                          <MenuItem
-                            path="/template"
-                            isActive={`/${location.pathname.split('/')[1]}` === '/template'}
-                            icon="TEMPLATE"
-                            label={<FormattedMessage {...messages.template} />}
-                            onClick={() => setExpandedSubMenu(null)}
-                          />
-                        )}
-                      </SubMenu>
-                    ))}
+                  {hasSettingMenu && (
+                    <SubMenu
+                      id="settings"
+                      isExpanded={expandedSubMenu === 'settings'}
+                      hasActiveChild={
+                        `/${location.pathname.split('/')[1]}` === '/tags' ||
+                        `/${location.pathname.split('/')[1]}` === '/metadata' ||
+                        `/${location.pathname.split('/')[1]}` === '/template'
+                      }
+                      icon="SETTINGS"
+                      label={<FormattedMessage {...messages.settings} />}
+                      onClick={(id: ?string) => setExpandedSubMenu(id)}
+                    >
+                      {hasPermission(TAG_LIST) && (
+                        <MenuItem
+                          path="/tags"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/tags'}
+                          icon="TAG"
+                          label={<FormattedMessage {...messages.tags} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                      {hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) && (
+                        <MenuItem
+                          path="/metadata"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
+                          icon="METADATA"
+                          label={<FormattedMessage {...messages.metadata} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                      {hasPermission(TEMPLATE_LIST) && (
+                        <MenuItem
+                          path="/template"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/template'}
+                          icon="TEMPLATE"
+                          label={<FormattedMessage {...messages.template} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                    </SubMenu>
+                  )}
                 </div>
               </div>
             )}

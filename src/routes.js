@@ -4,6 +4,7 @@ import React, { lazy, Suspense } from 'react';
 import type { ComponentType, StatelessFunctionalComponent } from 'react';
 import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
+import UserProvider from 'modules/user';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
 import NoPermission from './components/NoPermission';
@@ -39,7 +40,9 @@ const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <>
-    <SideBar />
+    <UserProvider>
+      <SideBar />
+    </UserProvider>
     <Suspense fallback={<LoadingIcon />}>
       <Router>
         <Authorized path="/">
