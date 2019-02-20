@@ -132,21 +132,24 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                           />
                         </JumpToSection>
 
-                        {isNew ? (
-                          <CancelButton onClick={() => onCancel()} />
-                        ) : (
-                          <ResetButton onClick={() => this.onReset(formState)} />
+                        {formState.isDirty() && (
+                          <>
+                            {isNew ? (
+                              <CancelButton onClick={() => onCancel()} />
+                            ) : (
+                              <ResetButton onClick={() => this.onReset(formState)} />
+                            )}
+                            <SaveButton
+                              data-testid="saveProviderButton"
+                              disabled={
+                                !formState.isDirty() ||
+                                !formContainer.isReady(formState.state, validator) ||
+                                isExist(formState.state, productProviders, isAddedProvider)
+                              }
+                              onClick={() => onSave(formState.state)}
+                            />
+                          </>
                         )}
-
-                        <SaveButton
-                          data-testid="saveProviderButton"
-                          disabled={
-                            !formState.isDirty() ||
-                            !formContainer.isReady(formState.state, validator) ||
-                            isExist(formState.state, productProviders, isAddedProvider)
-                          }
-                          onClick={() => onSave(formState.state)}
-                        />
                       </SlideViewNavBar>
                     }
                   >

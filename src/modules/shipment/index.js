@@ -6,14 +6,14 @@ import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import {
   SHIPMENT_CREATE,
-  SHIPMENT_GET,
+  SHIPMENT_FORM,
   SHIPMENT_LIST,
 } from 'modules/permission/constants/shipment';
 import ShipmentListModule from './index.list';
 import ShipmentFormModule from './index.form';
 
 const ShipmentFormModuleWrapper = withNotFound(ShipmentFormModule, 'shipmentId');
-const ShipmentFormModuleDetailWrapper = withForbidden(ShipmentFormModuleWrapper, SHIPMENT_GET);
+const ShipmentFormModuleDetailWrapper = withForbidden(ShipmentFormModuleWrapper, SHIPMENT_FORM);
 const ShipmentFormModuleCreationWrapper = withForbidden(ShipmentFormModuleWrapper, SHIPMENT_CREATE);
 const ShipmentModuleListWrapper = withForbidden(ShipmentListModule, SHIPMENT_LIST);
 

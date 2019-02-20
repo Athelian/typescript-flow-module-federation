@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
-import { PRODUCT_CREATE, PRODUCT_GET, PRODUCT_LIST } from 'modules/permission/constants/product';
+import { PRODUCT_CREATE, PRODUCT_FORM, PRODUCT_LIST } from 'modules/permission/constants/product';
 import ProductListModule from './index.list';
 import ProductFormModule from './index.form';
 
 const ProductFormModuleWrapper = withNotFound(ProductFormModule, 'productId');
-const ProductFormModuleDetailWrapper = withForbidden(ProductFormModuleWrapper, PRODUCT_GET);
+const ProductFormModuleDetailWrapper = withForbidden(ProductFormModuleWrapper, PRODUCT_FORM);
 const ProductFormModuleCreationWrapper = withForbidden(ProductFormModuleWrapper, PRODUCT_CREATE);
 const ProductModuleListWrapper = withForbidden(ProductListModule, PRODUCT_LIST);
 
