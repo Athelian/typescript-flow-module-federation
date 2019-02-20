@@ -62,7 +62,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncTableTemplate path="template/*" />
           <PageNotFound default />
         </Authorized>
-        <Login path="/login" redirectUrl="/order" />
+        <Login path="/login" />
         <NoPermission path="/403" />
         <PageNotFound default />
       </Router>
