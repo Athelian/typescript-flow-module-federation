@@ -73,7 +73,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         name={name}
                         {...inputHandlers}
                         onBlur={evt => {
-                          inputHandlers.onBlur(evt);
+                          onBlur(evt);
                           setFieldValue('packageCapacity', inputHandlers.value);
                           calculatePackageQuantity(setFieldTouched);
                         }}
