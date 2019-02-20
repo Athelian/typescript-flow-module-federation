@@ -511,7 +511,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   }}
                 />
               )}
-              {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectOrder() && (
+              {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectShipment() && (
                 <Subscribe
                   to={[
                     ShipmentBatchesContainer,
