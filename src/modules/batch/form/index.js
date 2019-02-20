@@ -130,7 +130,7 @@ export default class BatchForm extends React.Component<Props> {
                   <FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />
                 }
               >
-                {(hasPermission(BATCH_UPDATE) || hasPermission(BATCH_UPDATE)) && (
+                {(hasPermission(BATCH_CREATE) || hasPermission(BATCH_UPDATE)) && (
                   <BooleanValue>
                     {({ value: syncDialogIsOpen, set: dialogToggle }) => (
                       <>
