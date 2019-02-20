@@ -135,7 +135,7 @@ function BaseFilterMenu({
             const { name, label: text, field, value } = UIItem;
 
             return (
-              <div key={`${name}-${field}`} className={RadioInputWrapperStyle}>
+              <div className={RadioInputWrapperStyle}>
                 <RadioInput
                   key={name}
                   selected={isSelectedStatus(
@@ -158,7 +158,7 @@ function BaseFilterMenu({
             const { name, label: text, field, value } = UIItem;
 
             return (
-              <div key={`${name}-${field}`} className={RadioInputWrapperStyle}>
+              <div className={RadioInputWrapperStyle}>
                 <RadioInput
                   key={name}
                   selected={isCompleted(
@@ -183,7 +183,7 @@ function BaseFilterMenu({
             const { name, label: text, field, value } = UIItem;
 
             return (
-              <div key={`${name}-${field}`} className={RadioInputWrapperStyle}>
+              <div className={RadioInputWrapperStyle}>
                 <RadioInput
                   key={name}
                   selected={isCompleted(

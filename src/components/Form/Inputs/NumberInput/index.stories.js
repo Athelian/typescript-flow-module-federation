@@ -6,7 +6,7 @@ import { StringValue, NumberValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { FieldItem, Label, DefaultStyle, NumberInput } from 'components/Form';
 
-storiesOf('Form/Inputs/Number Input', module).add('Number Input', () => (
+storiesOf('Inputs', module).add('Number Input', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <StringValue>
@@ -26,6 +26,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input', () => (
                       <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
                         <NumberInput
                           name={INPUT_1}
+                          placeholder="Editable"
                           onChange={e => set(e.target.value)}
                           onFocus={() => onFocus(INPUT_1)}
                           onBlur={() => onBlur()}
@@ -45,6 +46,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input', () => (
                       <DefaultStyle isFocused={currentFocused === INPUT_2} type="number">
                         <NumberInput
                           name={INPUT_2}
+                          placeholder="Editable"
                           onChange={e => set(e.target.value)}
                           onFocus={() => onFocus(INPUT_2)}
                           onBlur={() => onBlur()}

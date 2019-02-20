@@ -4,7 +4,7 @@ import { layout } from 'styles/common';
 
 export const VerticalLayoutWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
-  flex: 1;
+  height: 100%;
   padding: 10px;
 `;
 

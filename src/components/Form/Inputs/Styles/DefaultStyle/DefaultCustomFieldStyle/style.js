@@ -2,19 +2,27 @@
 import { css } from 'react-emotion';
 import { presets, layout, colors, fontSizes } from 'styles/common';
 
-export const DefaultCustomFieldWrapperStyle: string = css`
+export const AdjustmentWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
+  &:hover {
+    & > div {
+      & > button,
+      div {
+        opacity: 1;
+      }
+    }
+  }
 `;
 
-export const CustomFieldWrapperStyle: string = css`
+export const AdjustmentFieldsWrapperStyle: string = css`
+  width: 440px;
   position: relative;
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
-  align-items: center;
 `;
 
-export const CustomFieldIconStyle = css`
+export const EditHandleStyle = css`
   position: absolute;
   width: 30px;
   height: 30px;
@@ -23,5 +31,34 @@ export const CustomFieldIconStyle = css`
   ${fontSizes.SMALL};
   opacity: 1;
   color: ${colors.GRAY_LIGHT};
-  cursor: default;
+`;
+
+export const DragBarStyle = css`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: -30px;
+  ${presets.BUTTON};
+  ${fontSizes.SMALL};
+  opacity: 0;
+  color: ${colors.GRAY_LIGHT};
+  &:hover,
+  :focus {
+    color: ${colors.RED};
+  }
+`;
+
+export const RemoveButtonStyle: string = css`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  right: 0;
+  ${presets.BUTTON};
+  ${fontSizes.SMALL};
+  opacity: 0;
+  color: ${colors.GRAY_LIGHT};
+  &:hover,
+  :focus {
+    color: ${colors.RED};
+  }
 `;

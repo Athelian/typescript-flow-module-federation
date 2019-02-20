@@ -6,21 +6,21 @@ import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, Tabs } from 'components/NavBar';
 import Layout from 'components/Layout';
-import messages from 'modules/relationMap/messages';
-import { ResetContentWrapperStyle } from 'modules/relationMap/style';
-import Order from './order';
-import Product from './product';
+import Order from './index.orders';
+import Products from './index.products';
+import messages from './messages';
+import { ResetContentWrapperStyle } from './style';
 
 const RelationMap = () => {
   const tabs = [
     {
-      id: 'relation-map-menu-1',
+      id: 'order-menu-1',
       key: 'orders',
       icon: 'ORDER',
       label: <FormattedMessage {...messages.ordersTab} />,
     },
     {
-      id: 'relation-map-menu-2',
+      id: 'order-menu-2',
       key: 'products',
       icon: 'PRODUCT',
       label: <FormattedMessage {...messages.productsTab} />,
@@ -43,9 +43,9 @@ const RelationMap = () => {
                       activeIndex={location.pathname.includes('products') ? 1 : 0}
                       onChange={tabId => {
                         if (tabId) {
-                          navigate('/relation-map/products');
+                          navigate('products');
                         } else {
-                          navigate('/relation-map/orders');
+                          navigate('orders');
                         }
                       }}
                     />
@@ -57,7 +57,7 @@ const RelationMap = () => {
             {/* $FlowFixMe override Router's div style */}
             <Router primary={false} className={ResetContentWrapperStyle}>
               <Order path="/orders" default />
-              <Product path="/products" />
+              <Products path="/products" />
             </Router>
           </Layout>
         )}

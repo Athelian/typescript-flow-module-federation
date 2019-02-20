@@ -136,17 +136,14 @@ export const InputIconStyle: string = css`
   padding: 0 5px;
 `;
 
-export const ApprovalIconStyle = (approval: boolean, editable: boolean): string => css`
+export const ApprovalIconStyle = (approval: boolean): string => css`
   ${fontSizes.MAIN};
   ${presets.BUTTON};
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
-  ${editable &&
-    `
-    &:hover,
-    :focus {
-      color: ${approval ? colors.BLUE_DARK : colors.GRAY};
-    }
-  `}
+  &:hover,
+  :focus {
+    color: ${approval ? colors.BLUE_DARK : colors.GRAY};
+  }
 `;
 
 export const TagsWrapperStyle: string = css`

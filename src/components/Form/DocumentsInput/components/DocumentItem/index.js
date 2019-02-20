@@ -2,13 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
-import {
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
-  Display,
-  TextAreaInputFactory,
-} from 'components/Form';
+import { SelectInput, DefaultSelect, DefaultOptions, Display } from 'components/Form';
+import { textAreaFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -40,6 +35,10 @@ type Props = OptionalProps & {
   types: Array<FileType>,
 };
 
+type State = {
+  isExpanded: boolean,
+};
+
 const defaultProps = {
   onChange: () => {},
   onBlur: () => {},
@@ -48,115 +47,126 @@ const defaultProps = {
   downloadDisabled: false,
 };
 
-const DocumentItem = ({
-  name,
-  value,
-  onChange,
-  onBlur,
-  onRemove,
-  types,
-  readOnly,
-  downloadDisabled,
-}: Props) => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const toggleMemo = React.useCallback(() => {
-    setIsExpanded(!isExpanded);
-  }, []);
+class DocumentItem extends React.Component<Props, State> {
+  static defaultProps = defaultProps;
 
-  // return null when file not found or forbidden
-  if (!value.id) return null;
+  state = {
+    isExpanded: false,
+  };
 
-  const fileExtension = getFileExtension(value.name);
-  const fileName = getFileName(value.name);
-  const fileIcon = computeIcon(fileExtension);
-  const type = types.find(t => t.type === value.type);
+  toggleMemo = () => {
+    const { isExpanded } = this.state;
+    this.setState({ isExpanded: !isExpanded });
+  };
 
-  return (
-    <div className={DocumentWrapperStyle(isExpanded)}>
-      {!readOnly && (
-        <button type="button" className={DeleteButtonStyle} onClick={onRemove}>
-          <Icon icon="REMOVE" />
-        </button>
-      )}
-      <div className={DocumentCardStyle}>
-        {readOnly ? (
-          <Display height="30px" align="left">
-            {type ? type.label : ''}
-          </Display>
-        ) : (
-          <SelectInput
-            name={`${name}.type`}
-            value={value.type}
-            onBlur={onBlur}
-            onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
-            readOnly={readOnly}
-            items={types}
-            itemToValue={v => (v ? v.type : null)}
-            itemToString={v => (v ? v.label : '')}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect {...rest} required align="left" width="120px" />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="120px" />}
-          />
+  render() {
+    const {
+      name,
+      value,
+      onChange,
+      onBlur,
+      onRemove,
+      types,
+      readOnly,
+      downloadDisabled,
+    } = this.props;
+    const { isExpanded } = this.state;
+
+    const fileExtension = getFileExtension(value.name);
+    const fileName = getFileName(value.name);
+    const fileIcon = computeIcon(fileExtension);
+
+    const type = types.find(t => t.type === value.type);
+
+    return (
+      <div className={DocumentWrapperStyle(isExpanded)}>
+        {!readOnly && (
+          <button type="button" className={DeleteButtonStyle} onClick={onRemove}>
+            <Icon icon="REMOVE" />
+          </button>
         )}
-        <div className={FileExtensionIconStyle(fileIcon.color)}>
-          <Icon icon={fileIcon.icon} />
-        </div>
-        <div className={BottomWrapperStyle}>
-          <div className={FileNameWrapperStyle}>
-            <div className={FileNameStyle}>{fileName}</div>
-            {`.${fileExtension}`}
-          </div>
-          {downloadDisabled ? (
-            <Tooltip
-              message={
-                <FormattedMessage
-                  id="components.documentInput.cantDownload"
-                  defaultMessage="You do not have the rights to download this document"
-                />
-              }
-            >
-              <div className={DownloadButtonStyle(true)}>
-                <Icon icon="DOWNLOAD" />
-              </div>
-            </Tooltip>
+        <div className={DocumentCardStyle}>
+          {readOnly ? (
+            <Display height="30px" align="left">
+              {type ? type.label : ''}
+            </Display>
           ) : (
-            <button
-              type="button"
-              className={DownloadButtonStyle(false)}
-              onClick={() => {
-                window.open(value.path, '_blank');
-              }}
-            >
-              <Icon icon="DOWNLOAD" />
-            </button>
-          )}
-        </div>
-      </div>
-      <div className={MemoWrapperStyle(isExpanded)}>
-        <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
-          {({ ...inputHandlers }) => (
-            <TextAreaInputFactory
-              {...inputHandlers}
-              isNew
-              editable={!readOnly}
-              inputWidth="590px"
-              inputHeight="120px"
+            <SelectInput
+              name={`${name}.type`}
+              value={value.type}
+              onBlur={onBlur}
+              onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
+              readOnly={readOnly}
+              items={types}
+              itemToValue={v => (v ? v.type : null)}
+              itemToString={v => (v ? v.label : '')}
+              renderSelect={({ ...rest }) => (
+                <DefaultSelect {...rest} required align="left" width="120px" />
+              )}
+              renderOptions={({ ...rest }) => (
+                <DefaultOptions {...rest} align="left" width="120px" />
+              )}
             />
           )}
-        </FormField>
+          <div className={FileExtensionIconStyle(fileIcon.color)}>
+            <Icon icon={fileIcon.icon} />
+          </div>
+          <div className={BottomWrapperStyle}>
+            <div className={FileNameWrapperStyle}>
+              <div className={FileNameStyle}>{fileName}</div>
+              {`.${fileExtension}`}
+            </div>
+            {downloadDisabled ? (
+              <Tooltip
+                message={
+                  <FormattedMessage
+                    id="components.documentInput.cantDownload"
+                    defaultMessage="You do not have the rights to download this document"
+                  />
+                }
+              >
+                <div className={DownloadButtonStyle(true)}>
+                  <Icon icon="DOWNLOAD" />
+                </div>
+              </Tooltip>
+            ) : (
+              <button
+                type="button"
+                className={DownloadButtonStyle(false)}
+                onClick={() => {
+                  window.open(value.path, '_blank');
+                }}
+              >
+                <Icon icon="DOWNLOAD" />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className={MemoWrapperStyle(isExpanded)}>
+          <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
+            {({ name: fieldName, ...inputHandlers }) =>
+              textAreaFactory({
+                name: fieldName,
+                isNew: false,
+                originalValue: value.memo,
+                inputHandlers,
+                align: 'left',
+                width: '600px',
+                height: '150px',
+              })
+            }
+          </FormField>
+        </div>
+        <button
+          type="button"
+          onClick={() => this.toggleMemo()}
+          className={OpenMemoButtonStyle(isExpanded, !!value.memo)}
+        >
+          <Icon icon={isExpanded ? 'CHEVRON_DOWN' : 'MEMO'} />
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={toggleMemo}
-        className={OpenMemoButtonStyle(isExpanded, !!value.memo)}
-      >
-        <Icon icon={isExpanded ? 'CHEVRON_DOWN' : 'MEMO'} />
-      </button>
-    </div>
-  );
-};
-
-DocumentItem.defaultProps = defaultProps;
+    );
+  }
+}
 
 export default DocumentItem;

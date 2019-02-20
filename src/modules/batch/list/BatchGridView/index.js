@@ -2,36 +2,24 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
-import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { encodeId } from 'utils/id';
 import { BatchCard, CardAction } from 'components/Cards';
 
-type OptionalProps = {
-  renderItem?: Function,
-};
-
-type Props = OptionalProps & {
+type Props = {
   items: Array<Object>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
+  renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object, allowCreate: boolean) => (
+const defaultRenderItem = (item: Object) => (
   <BatchCard
-    key={item.id}
     actions={[
-      ...(allowCreate
-        ? [
-            <CardAction
-              icon="CLONE"
-              onClick={() => navigate(`/batch/clone/${encodeId(item.id)}`)}
-            />,
-          ]
-        : []),
+      <CardAction icon="CLONE" onClick={() => navigate(`/batch/clone/${encodeId(item.id)}`)} />,
     ]}
+    key={item.id}
     batch={item}
     showActionsOnHover
   />
@@ -44,9 +32,6 @@ const defaultProps = {
 const BatchGridView = (props: Props) => {
   const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
 
-  const { hasPermission } = usePermission();
-  const allowCreate = hasPermission(BATCH_CREATE);
-
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -58,7 +43,7 @@ const BatchGridView = (props: Props) => {
         <FormattedMessage id="modules.Batches.noBatchesFound" defaultMessage="No batches found" />
       }
     >
-      {items.map(item => renderItem(item, allowCreate))}
+      {items.map(item => renderItem(item))}
     </GridView>
   );
 };

@@ -56,7 +56,6 @@ const metricInputFactory = ({
             width={width}
             height={height}
           >
-            {/* $FlowFixMe says it needs intl but really it doesnt */}
             <MetricInput
               {...inputHandler}
               metricSelectWidth={metricSelectWidth}

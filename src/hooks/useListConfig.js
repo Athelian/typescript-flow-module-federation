@@ -1,6 +1,6 @@
 // @flow
 import { useCallback } from 'react';
-import useFilter from 'modules/relationMap/hooks/useFilter';
+import useFilter from 'modules/relationMapBeta/hooks/useFilter';
 
 const useListConfig = (initFilter: Object, filterName: string) => {
   const localFilter = window.localStorage.getItem(filterName);

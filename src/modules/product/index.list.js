@@ -9,9 +9,6 @@ import useListConfig from 'hooks/useListConfig';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
-import NoPermission from 'components/NoPermission';
-import { PRODUCT_CREATE, PRODUCT_LIST } from 'modules/permission/constants/product';
-import { PermissionConsumer } from 'modules/permission';
 import ProductList from './list';
 import { productsExportQuery } from './query';
 import messages from './messages';
@@ -65,48 +62,38 @@ const ProductListModule = (props: Props) => {
     'filterProduct'
   );
   return (
-    <PermissionConsumer>
-      {hasPermission =>
-        hasPermission(PRODUCT_LIST) ? (
-          <UIConsumer>
-            {uiState => (
-              <Layout
-                {...uiState}
-                navBar={
-                  <NavBar>
-                    <FilterToolBar
-                      icon="PRODUCT"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    {hasPermission(PRODUCT_CREATE) && (
-                      <Link to="new">
-                        <NewButton data-testid="newButton" />
-                      </Link>
-                    )}
-                    <ExportButton
-                      type="Products"
-                      exportQuery={productsExportQuery}
-                      variables={{
-                        sortBy: {
-                          [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                        },
-                        filterBy: filterAndSort.filter,
-                      }}
-                    />
-                  </NavBar>
-                }
-              >
-                <ProductList {...queryVariables} />
-              </Layout>
-            )}
-          </UIConsumer>
-        ) : (
-          <NoPermission />
-        )
-      }
-    </PermissionConsumer>
+    <UIConsumer>
+      {uiState => (
+        <Layout
+          {...uiState}
+          navBar={
+            <NavBar>
+              <FilterToolBar
+                icon="PRODUCT"
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+              <Link to="new">
+                <NewButton data-testid="newButton" />
+              </Link>
+              <ExportButton
+                type="Products"
+                exportQuery={productsExportQuery}
+                variables={{
+                  sortBy: {
+                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
+                  },
+                  filterBy: filterAndSort.filter,
+                }}
+              />
+            </NavBar>
+          }
+        >
+          <ProductList {...queryVariables} />
+        </Layout>
+      )}
+    </UIConsumer>
   );
 };
 

@@ -7,7 +7,11 @@ export const WrapperStyle: string = css`
   position: relative;
 `;
 
-export const ColorPreviewStyle = (color: string): string => css`
+export const ColorPreviewStyle = (
+  color: string,
+  disabled: boolean,
+  readOnly: boolean
+): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   color: ${computeTextColor(color)};
@@ -18,7 +22,7 @@ export const ColorPreviewStyle = (color: string): string => css`
   ${fontSizes.MAIN};
   &:hover,
   :focus {
-    ${shadows.INPUT};
+    ${!readOnly && !disabled && `${shadows.INPUT}`};
   }
 `;
 

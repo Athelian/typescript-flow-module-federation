@@ -3,35 +3,19 @@ import * as React from 'react';
 import Icon from 'components/Icon/index';
 import { ToggleButtonStyle, ToggleInputStyle } from './style';
 
-type OptionalProps = {
-  onToggle: Function,
-  editable: boolean,
-};
-
-type Props = OptionalProps & {
+type Props = {
   toggled: boolean,
+  onToggle: Function,
   children: React.Node,
 };
 
-const defaultProps = {
-  editable: true,
-  onToggle: () => {},
-};
-
-const ToggleInput = ({ toggled, onToggle, children, editable }: Props) => (
-  <div className={ToggleInputStyle}>
+const ToggleInput = ({ toggled, onToggle, children }: Props) => (
+  <div className={ToggleInputStyle(toggled)}>
     {children}
-    <button
-      type="button"
-      className={ToggleButtonStyle(toggled, editable)}
-      tabIndex={-1}
-      onClick={editable ? onToggle : () => {}}
-    >
+    <button type="button" className={ToggleButtonStyle(toggled)} tabIndex={-1} onClick={onToggle}>
       {toggled ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
     </button>
   </div>
 );
-
-ToggleInput.defaultProps = defaultProps;
 
 export default ToggleInput;

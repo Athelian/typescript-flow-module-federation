@@ -12,13 +12,6 @@ export const orderFormFragment = gql`
     memo
     poNo
     currency
-    totalOrdered
-    totalBatched
-    totalShipped
-    orderItemCount
-    batchCount
-    batchShippedCount
-    shipmentCount
     issuedAt
     piNo
     incoterm

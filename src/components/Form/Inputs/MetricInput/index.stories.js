@@ -6,7 +6,7 @@ import { StringValue, ObjectValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import { FieldItem, Label, DefaultStyle, MetricInput } from 'components/Form';
 
-storiesOf('Form/Inputs/Metric Input', module).add('Metric Input', () => (
+storiesOf('Inputs', module).add('Metric Input', () => (
   <StoryBookWrapper>
     <IntlProvider>
       <StringValue>
@@ -33,6 +33,7 @@ storiesOf('Form/Inputs/Metric Input', module).add('Metric Input', () => (
                         <DefaultStyle isFocused={currentFocused === INPUT_1} type="number">
                           <MetricInput
                             name={INPUT_1}
+                            placeholder="Editable"
                             onChange={e => set('inputOne', e.target.value)}
                             onFocus={() => onFocus(INPUT_1)}
                             onBlur={() => onBlur()}

@@ -5,10 +5,12 @@ import { navigate } from '@reach/router';
 import { Provider } from 'unstated';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
+import GridColumn from 'components/GridColumn';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import FieldDefinitionsFormWrapper from 'modules/metadata/components/FieldDefinitionsFormWrapper';
 import MaskList from 'modules/metadata/components/MaskList';
+
 import { MainContentWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -111,8 +113,12 @@ const MetadataForm = ({ entityType: entity }: Props) => {
             }
           >
             <div className={MainContentWrapperStyle}>
-              <FieldDefinitionsFormWrapper entityType={entityType} />
-              <MaskList entityType={entityType} />
+              <GridColumn>
+                <FieldDefinitionsFormWrapper entityType={entityType} />
+              </GridColumn>
+              <GridColumn gap="10px">
+                <MaskList entityType={entityType} />
+              </GridColumn>
             </div>
           </Layout>
         )}

@@ -13,18 +13,20 @@ import {
 } from 'components/Form/ColorInput/style';
 import Icon from 'components/Icon';
 
-type OptionalProps = {
-  onChange: Object => void,
-  onBlur: (event: any) => void,
-  editable: boolean,
-};
-
-type Props = OptionalProps & {
+type Props = {
   name: string,
   value: string,
+  disabled?: boolean,
+  readOnly?: boolean,
+  error?: boolean,
+  onChange?: Object => void,
+  onBlur?: (event: any) => void,
 };
 
 const defaultProps = {
+  disabled: false,
+  readOnly: false,
+  error: false,
   onChange: () => {},
   onBlur: () => {},
 };
@@ -64,13 +66,17 @@ class ColorInput extends React.Component<Props> {
   };
 
   render() {
-    const { value, editable } = this.props;
+    const { value, disabled, readOnly } = this.props;
 
-    return editable ? (
+    return (
       <Downshift onStateChange={this.handleStateChange}>
         {({ isOpen, getToggleButtonProps }) => (
           <div className={WrapperStyle}>
-            <button type="button" className={ColorPreviewStyle(value)} {...getToggleButtonProps()}>
+            <button
+              type="button"
+              className={ColorPreviewStyle(value, disabled || false, readOnly || false)}
+              {...getToggleButtonProps()}
+            >
               <Icon icon="COLOR" />
             </button>
             {isOpen && (
@@ -101,12 +107,6 @@ class ColorInput extends React.Component<Props> {
           </div>
         )}
       </Downshift>
-    ) : (
-      <div className={WrapperStyle}>
-        <div className={ColorPreviewStyle(value)}>
-          <Icon icon="COLOR" />
-        </div>
-      </div>
     );
   }
 }

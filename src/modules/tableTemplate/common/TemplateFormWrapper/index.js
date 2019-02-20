@@ -170,31 +170,29 @@ class TemplateFormWrapper extends React.Component<Props> {
                           icon="METADATA"
                         />
                       </JumpToSection>
-                      {formState.isDirty() && (
-                        <>
-                          {isNew ? (
-                            <CancelButton onClick={() => onCancel()} />
-                          ) : (
-                            <ResetButton onClick={() => this.onReset(formState)} />
-                          )}
-                          <SaveButton
-                            disabled={!formContainer.isReady(formState.state, validator)}
-                            isLoading={isLoading}
-                            data-testid="saveButtonOnTemplate"
-                            onClick={() =>
-                              this.onSave(
-                                formState.state,
-                                saveTemplate,
-                                () => {
-                                  formState.onSuccess();
-                                  formContainer.onReset();
-                                },
-                                formContainer.onErrors
-                              )
-                            }
-                          />
-                        </>
+                      {isNew ? (
+                        <CancelButton onClick={() => onCancel()} />
+                      ) : (
+                        <ResetButton onClick={() => this.onReset(formState)} />
                       )}
+                      <SaveButton
+                        disabled={
+                          !formState.isDirty() || !formContainer.isReady(formState.state, validator)
+                        }
+                        isLoading={isLoading}
+                        data-testid="saveButtonOnTemplate"
+                        onClick={() =>
+                          this.onSave(
+                            formState.state,
+                            saveTemplate,
+                            () => {
+                              formState.onSuccess();
+                              formContainer.onReset();
+                            },
+                            formContainer.onErrors
+                          )
+                        }
+                      />
                     </SlideViewNavBar>
                   }
                 >

@@ -3,11 +3,9 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { DocumentsInput } from 'components/Form';
 import { OrderFilesContainer } from 'modules/order/form/containers';
 import messages from 'modules/order/messages';
-import usePermission from 'hooks/usePermission';
 import { DocumentSectionStyle } from './style';
 
 type Props = {
@@ -15,15 +13,11 @@ type Props = {
 };
 
 function DocumentsSection({ intl }: Props) {
-  const { hasPermission } = usePermission();
-  const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
-
   return (
     <div className={DocumentSectionStyle}>
       <Subscribe to={[OrderFilesContainer]}>
         {({ state: { files }, setFieldValue: changeFiles }) => (
           <DocumentsInput
-            readOnly={!canCreateOrUpdate}
             id="files"
             name="files"
             values={files}

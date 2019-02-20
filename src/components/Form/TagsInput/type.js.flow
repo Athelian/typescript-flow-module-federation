@@ -1,0 +1,24 @@
+// @flow
+import type {
+  DefaultHTMLProps,
+  DefaultInputProps,
+  ZenInputProps,
+} from 'components/common/type.js.flow';
+import type { Tag as TagType } from 'components/Tag/type.js.flow';
+
+export type Props = DefaultHTMLProps &
+  DefaultInputProps &
+  ZenInputProps & {
+    /**
+     * @type {?Array<TagType>}
+     */
+    values: ?Array<TagType>,
+    /**
+     * @type {boolean}
+     */
+    multiSelect: boolean,
+    /**
+     * @type {Array<TagType>}
+     */
+    tags: Array<TagType>,
+  };

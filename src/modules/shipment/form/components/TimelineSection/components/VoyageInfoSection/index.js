@@ -4,26 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
 import {
-  SectionHeader,
-  Label,
-  FieldItem,
-  FormTooltip,
-  EnumSearchSelectInputFactory,
-  TextInputFactory,
-} from 'components/Form';
+  parseEnumDescriptionOrValue,
+  selectSearchEnumInputFactory,
+  textInputFactory,
+} from 'modules/form/helpers';
+import { SectionHeader, Label, FieldItem, FormTooltip } from 'components/Form';
 import { VoyageInfoSectionWrapperStyle, SelectTransportTypeMessageStyle } from './style';
-
-const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
-  if (enumValue && enumValue.name) return enumValue.name;
-  return enumValue;
-};
-
-const parseEnumDescriptionOrValue = (
-  enumValue: ?string | ?{ description: string, name: string }
-) => {
-  if (enumValue && enumValue.description) return enumValue.description;
-  return parseEnumValue(enumValue);
-};
 
 type OptionalProps = {
   voyage: {
@@ -50,7 +36,6 @@ type OptionalProps = {
     vesselCode: string,
     vesselName: string,
   },
-  readOnly: boolean,
 };
 
 type Props = OptionalProps & {
@@ -64,7 +49,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   voyage: {},
   initialVoyage: {},
-  readOnly: false,
 };
 
 class VoyageInfoSection extends React.PureComponent<Props> {
@@ -79,7 +63,6 @@ class VoyageInfoSection extends React.PureComponent<Props> {
       initialVoyage,
       sourceName,
       setFieldDeepValue,
-      readOnly,
       ...rest
     } = this.props;
 
@@ -100,26 +83,24 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               )}
               setFieldValue={setFieldDeepValue}
             >
-              {({ name, ...inputHandlers }) => (
-                <EnumSearchSelectInputFactory
-                  {...inputHandlers}
-                  editable={!readOnly}
-                  enumType={enumType}
-                  originalValue={
+              {({ name, ...inputHandlers }) =>
+                selectSearchEnumInputFactory({
+                  enumType,
+                  originalValue:
                     initialVoyage &&
                     initialVoyage.departurePort &&
-                    initialVoyage.departurePort[deepField]
-                  }
-                  name={name}
-                  isNew={isNew}
-                  label={
+                    initialVoyage.departurePort[deepField],
+                  inputHandlers,
+                  name,
+                  isNew,
+                  label: (
                     <FormattedMessage
                       id="modules.Voyages.departurePort"
                       defaultMessage="DEPARTURE PORT"
                     />
-                  }
-                />
-              )}
+                  ),
+                })
+              }
             </FormField>
           ) : (
             <FieldItem
@@ -161,26 +142,24 @@ class VoyageInfoSection extends React.PureComponent<Props> {
               )}
               setFieldValue={setFieldDeepValue}
             >
-              {({ name, ...inputHandlers }) => (
-                <EnumSearchSelectInputFactory
-                  {...inputHandlers}
-                  editable={!readOnly}
-                  enumType={enumType}
-                  originalValue={
+              {({ name, ...inputHandlers }) =>
+                selectSearchEnumInputFactory({
+                  enumType,
+                  originalValue:
                     initialVoyage &&
                     initialVoyage.arrivalPort &&
-                    initialVoyage.arrivalPort[deepField]
-                  }
-                  name={name}
-                  isNew={isNew}
-                  label={
+                    initialVoyage.arrivalPort[deepField],
+                  inputHandlers,
+                  name,
+                  isNew,
+                  label: (
                     <FormattedMessage
                       id="modules.Voyages.arrivalPort"
                       defaultMessage="ARRIVAL PORT"
                     />
-                  }
-                />
-              )}
+                  ),
+                })
+              }
             </FormField>
           ) : (
             <FieldItem
@@ -219,18 +198,17 @@ class VoyageInfoSection extends React.PureComponent<Props> {
             initValue={voyage.vesselName}
             setFieldValue={setFieldDeepValue}
           >
-            {({ name, ...inputHandlers }) => (
-              <TextInputFactory
-                {...inputHandlers}
-                editable={!readOnly}
-                originalValue={initialVoyage.vesselName}
-                name={name}
-                isNew={isNew}
-                label={
+            {({ name, ...inputHandlers }) =>
+              textInputFactory({
+                originalValue: initialVoyage.vesselName,
+                inputHandlers,
+                name,
+                isNew,
+                label: (
                   <FormattedMessage id="modules.Voyages.vesselName" defaultMessage="VESSEL NAME" />
-                }
-              />
-            )}
+                ),
+              })
+            }
           </FormField>
 
           <FormField
@@ -238,18 +216,17 @@ class VoyageInfoSection extends React.PureComponent<Props> {
             initValue={voyage.vesselCode}
             setFieldValue={setFieldDeepValue}
           >
-            {({ name, ...inputHandlers }) => (
-              <TextInputFactory
-                {...inputHandlers}
-                editable={!readOnly}
-                originalValue={initialVoyage.vesselCode}
-                name={name}
-                isNew={isNew}
-                label={
+            {({ name, ...inputHandlers }) =>
+              textInputFactory({
+                originalValue: initialVoyage.vesselCode,
+                inputHandlers,
+                name,
+                isNew,
+                label: (
                   <FormattedMessage id="modules.Voyages.vesselCode" defaultMessage="VESSEL CODE" />
-                }
-              />
-            )}
+                ),
+              })
+            }
           </FormField>
         </GridColumn>
       </div>

@@ -12,9 +12,4 @@ export const FieldItemWrapperStyle = (vertical: boolean): string => css`
 export const TooltipAbsoluteWrapperStyle: string = css`
   position: absolute;
   left: -20px;
-  height: 20px;
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
