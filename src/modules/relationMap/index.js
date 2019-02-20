@@ -48,10 +48,12 @@ const RelationMap = () => {
                       tabs={tabs}
                       activeIndex={location.pathname.includes('products') ? 1 : 0}
                       onChange={tabId => {
-                        if (tabId) {
-                          navigate('/relation-map/products');
-                        } else {
-                          navigate('/relation-map/orders');
+                        if (tabs.length > 1) {
+                          if (tabId) {
+                            navigate('/relation-map/products');
+                          } else {
+                            navigate('/relation-map/orders');
+                          }
                         }
                       }}
                     />
@@ -62,8 +64,17 @@ const RelationMap = () => {
           >
             {/* $FlowFixMe override Router's div style */}
             <Router primary={false} className={ResetContentWrapperStyle}>
-              {hasPermission(RM_ORDER_FOCUS_LIST) && <Order path="/orders" default />}
-              {hasPermission(RM_PRODUCT_FOCUS_LIST) && <Product path="/products" />}
+              {hasPermission(RM_ORDER_FOCUS_LIST) && (
+                <Order path="/orders" default={hasPermission(RM_ORDER_FOCUS_LIST)} />
+              )}
+              {hasPermission(RM_PRODUCT_FOCUS_LIST) && (
+                <Product
+                  path="/products"
+                  default={
+                    !hasPermission(RM_ORDER_FOCUS_LIST) && hasPermission(RM_PRODUCT_FOCUS_LIST)
+                  }
+                />
+              )}
             </Router>
           </Layout>
         )}

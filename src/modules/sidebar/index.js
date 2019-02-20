@@ -41,7 +41,7 @@ const SideBar = () => {
                 <div className={SideBarBodyStyle}>
                   <div className={BetaTagWrapperStyle}>
                     <MenuItem
-                      path="/relation-map/orders"
+                      path="/relation-map"
                       isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
                       icon="RELATION_MAP"
                       label={<FormattedMessage {...messages.relationMap} />}
