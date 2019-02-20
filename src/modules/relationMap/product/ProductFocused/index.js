@@ -4,7 +4,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import ProductCard from 'components/RelationMap/ProductElement/ProductCard';
 import BatchCard from 'components/RelationMap/ProductElement/BatchCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
-import { RM_PRODUCT_BATCH_GET } from 'modules/permission/constants/relationMap';
+import { RM_PRODUCT_BATCH_FORM } from 'modules/permission/constants/relationMap';
 import usePermission from 'hooks/usePermission';
 import { sortBatchByArrivalDate } from 'modules/relationMap/util';
 import DetailFocused, { ToggleSlide } from 'modules/relationMap/common/SlideForm';
@@ -59,7 +59,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => {
                         {({ assign: setSlide }) => (
                           <WrapperCard
                             onDoubleClick={() =>
-                              hasPermission(RM_PRODUCT_BATCH_GET)
+                              hasPermission(RM_PRODUCT_BATCH_FORM)
                                 ? setSlide({
                                     show: true,
                                     type: 'BATCH',
