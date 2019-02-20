@@ -1,18 +1,21 @@
 // @flow
 import React from 'react';
 import { Router } from '@reach/router';
-import { CONTAINER_LIST, CONTAINER_GET } from 'modules/permission/constants/container';
-import usePermission from 'hooks/usePermission';
+import withNotFound from 'hoc/withNotFound';
+import withForbidden from 'hoc/withForbidden';
+import { CONTAINER_LIST, CONTAINER_FORM } from 'modules/permission/constants/container';
 import ContainerListModule from './index.list';
 import ContainerFormModule from './index.form';
 
-const ContainerModule = () => {
-  const { hasPermission } = usePermission();
+const ContainerFormModuleWrapper = withNotFound(ContainerFormModule, 'containerId');
+const ContainerFormModuleDetailWrapper = withForbidden(ContainerFormModuleWrapper, CONTAINER_FORM);
+const ContainerModuleListWrapper = withForbidden(ContainerListModule, CONTAINER_LIST);
 
+const ContainerModule = () => {
   return (
     <Router>
-      {hasPermission(CONTAINER_LIST) && <ContainerListModule path="/" />}
-      {hasPermission(CONTAINER_GET) && <ContainerFormModule path=":containerId" />}
+      <ContainerModuleListWrapper path="/" />
+      <ContainerFormModuleDetailWrapper path=":containerId" />
     </Router>
   );
 };

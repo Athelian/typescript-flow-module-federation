@@ -1,29 +1,31 @@
 // @flow
 import * as React from 'react';
 import { Router } from '@reach/router';
+import withNotFound from 'hoc/withNotFound';
+import withForbidden from 'hoc/withForbidden';
 import {
-  WAREHOUSE_LIST,
   WAREHOUSE_CREATE,
-  WAREHOUSE_GET,
+  WAREHOUSE_FORM,
+  WAREHOUSE_LIST,
 } from 'modules/permission/constants/warehouse';
-import usePermission from 'hooks/usePermission';
-import WarehouseListContainer from './index.list';
-import WarehouseFormContainer from './index.form';
+import WarehouseListModule from './index.list';
+import WarehouseFormModule from './index.form';
 
-const WarehouseApp = () => {
-  const { hasPermission } = usePermission();
-  const allowList = hasPermission(WAREHOUSE_LIST);
-  const allowCreate = hasPermission(WAREHOUSE_CREATE);
-  const allowGet = hasPermission(WAREHOUSE_GET);
+const WarehouseFormModuleWrapper = withNotFound(WarehouseFormModule, 'warehouseId');
+const WarehouseFormModuleDetailWrapper = withForbidden(WarehouseFormModuleWrapper, WAREHOUSE_FORM);
+const WarehouseFormModuleCreationWrapper = withForbidden(
+  WarehouseFormModuleWrapper,
+  WAREHOUSE_CREATE
+);
+const WarehouseModuleListWrapper = withForbidden(WarehouseListModule, WAREHOUSE_LIST);
 
-  return (
-    <Router>
-      {allowList && <WarehouseListContainer path="/" />}
-      {allowCreate && <WarehouseFormContainer path="new" />}
-      {allowCreate && <WarehouseFormContainer path="clone/:warehouseId" />}
-      {allowGet && <WarehouseFormContainer path=":warehouseId" />}
-    </Router>
-  );
-};
+const WarehouseApp = () => (
+  <Router>
+    <WarehouseModuleListWrapper path="/" />
+    <WarehouseFormModuleCreationWrapper path="new" />
+    <WarehouseFormModuleCreationWrapper path="clone/:warehouseId" />
+    <WarehouseFormModuleDetailWrapper path=":warehouseId" />
+  </Router>
+);
 
 export default WarehouseApp;

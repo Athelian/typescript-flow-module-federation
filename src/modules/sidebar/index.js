@@ -1,90 +1,108 @@
 // @flow
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Location } from '@reach/router';
+import { ORDER_LIST } from 'modules/permission/constants/order';
+import { BATCH_LIST } from 'modules/permission/constants/batch';
+import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
+import { CONTAINER_LIST } from 'modules/permission/constants/container';
+import { PRODUCT_LIST } from 'modules/permission/constants/product';
+import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/customFields';
+import { TEMPLATE_LIST } from 'modules/permission/constants/template';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { STAFF_LIST } from 'modules/permission/constants/staff';
+import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import { Logo, MenuItem, SubMenu } from './components';
 import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle } from './style';
 import messages from './messages';
 
-type Props = {};
+const SideBar = () => {
+  const [expandedSubMenu, setExpandedSubMenu] = useState(null);
+  const { hasPermission } = usePermission();
 
-type State = {
-  expandedSubMenu: ?string,
-};
+  const hasSettingMenu =
+    hasPermission(TAG_LIST) ||
+    hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) ||
+    hasPermission(TEMPLATE_LIST);
 
-class SideBar extends React.Component<Props, State> {
-  state = {
-    expandedSubMenu: null,
-  };
+  const hasNetworkMenu = hasPermission(PARTNER_LIST) || hasPermission(STAFF_LIST);
 
-  setExpandedSubMenu = (subMenu: ?string): void => {
-    this.setState({ expandedSubMenu: subMenu });
-  };
-
-  render() {
-    const { expandedSubMenu } = this.state;
-
-    return (
-      <Location>
-        {({ location }) =>
-          location.pathname !== '/login' && (
-            <UIConsumer>
-              {uiState => (
-                <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
-                  <Logo {...uiState} />
-                  <div className={SideBarBodyStyle}>
-                    <div className={BetaTagWrapperStyle}>
-                      <MenuItem
-                        path="/relation-map/orders"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
-                        icon="RELATION_MAP"
-                        label={<FormattedMessage {...messages.relationMap} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
-                    </div>
+  return (
+    <Location>
+      {({ location }) =>
+        location.pathname !== '/login' && (
+          <UIConsumer>
+            {uiState => (
+              <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
+                <Logo {...uiState} />
+                <div className={SideBarBodyStyle}>
+                  <div className={BetaTagWrapperStyle}>
+                    <MenuItem
+                      path="/relation-map"
+                      isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
+                      icon="RELATION_MAP"
+                      label={<FormattedMessage {...messages.relationMap} />}
+                      onClick={() => setExpandedSubMenu(null)}
+                    />
+                  </div>
+                  {hasPermission(ORDER_LIST) && (
                     <MenuItem
                       path="/order"
                       isActive={`/${location.pathname.split('/')[1]}` === '/order'}
                       icon="ORDER"
                       label={<FormattedMessage {...messages.order} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
+                      onClick={() => setExpandedSubMenu(null)}
                     />
+                  )}
+                  {hasPermission(BATCH_LIST) && (
                     <MenuItem
                       path="/batch"
                       isActive={`/${location.pathname.split('/')[1]}` === '/batch'}
                       icon="BATCH"
                       label={<FormattedMessage {...messages.batch} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
+                      onClick={() => setExpandedSubMenu(null)}
                     />
+                  )}
+                  {hasPermission(SHIPMENT_LIST) && (
                     <MenuItem
                       path="/shipment"
                       isActive={`/${location.pathname.split('/')[1]}` === '/shipment'}
                       icon="SHIPMENT"
                       label={<FormattedMessage {...messages.shipment} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
+                      onClick={() => setExpandedSubMenu(null)}
                     />
+                  )}
+                  {hasPermission(CONTAINER_LIST) && (
                     <MenuItem
                       path="/container"
                       isActive={`/${location.pathname.split('/')[1]}` === '/container'}
                       icon="CONTAINER"
                       label={<FormattedMessage {...messages.container} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
+                      onClick={() => setExpandedSubMenu(null)}
                     />
+                  )}
+                  {hasPermission(PRODUCT_LIST) && (
                     <MenuItem
                       path="/product"
                       isActive={`/${location.pathname.split('/')[1]}` === '/product'}
                       icon="PRODUCT"
                       label={<FormattedMessage {...messages.product} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
+                      onClick={() => setExpandedSubMenu(null)}
                     />
+                  )}
+                  {hasPermission(WAREHOUSE_LIST) && (
                     <MenuItem
                       path="/warehouse"
                       isActive={`/${location.pathname.split('/')[1]}` === '/warehouse'}
                       icon="WAREHOUSE"
                       label={<FormattedMessage {...messages.warehouse} />}
-                      onClick={() => this.setExpandedSubMenu(null)}
+                      onClick={() => setExpandedSubMenu(null)}
                     />
+                  )}
+                  {hasNetworkMenu && (
                     <SubMenu
                       id="network"
                       isExpanded={expandedSubMenu === 'network'}
@@ -94,23 +112,30 @@ class SideBar extends React.Component<Props, State> {
                       }
                       icon="NETWORK"
                       label={<FormattedMessage {...messages.network} />}
-                      onClick={(id: ?string) => this.setExpandedSubMenu(id)}
+                      onClick={(id: ?string) => setExpandedSubMenu(id)}
                     >
-                      <MenuItem
-                        path="/partner"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/partner'}
-                        icon="PARTNER"
-                        label={<FormattedMessage {...messages.partner} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
-                      <MenuItem
-                        path="/staff"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/staff'}
-                        icon="STAFF"
-                        label={<FormattedMessage {...messages.staff} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
+                      {hasPermission(PARTNER_LIST) && (
+                        <MenuItem
+                          path="/partner"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/partner'}
+                          icon="PARTNER"
+                          label={<FormattedMessage {...messages.partner} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                      {hasPermission(STAFF_LIST) && (
+                        <MenuItem
+                          path="/staff"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/staff'}
+                          icon="STAFF"
+                          label={<FormattedMessage {...messages.staff} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
                     </SubMenu>
+                  )}
+
+                  {hasSettingMenu && (
                     <SubMenu
                       id="settings"
                       isExpanded={expandedSubMenu === 'settings'}
@@ -121,39 +146,45 @@ class SideBar extends React.Component<Props, State> {
                       }
                       icon="SETTINGS"
                       label={<FormattedMessage {...messages.settings} />}
-                      onClick={(id: ?string) => this.setExpandedSubMenu(id)}
+                      onClick={(id: ?string) => setExpandedSubMenu(id)}
                     >
-                      <MenuItem
-                        path="/tags"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/tags'}
-                        icon="TAG"
-                        label={<FormattedMessage {...messages.tags} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
-                      <MenuItem
-                        path="/metadata"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
-                        icon="METADATA"
-                        label={<FormattedMessage {...messages.metadata} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
-                      <MenuItem
-                        path="/template"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/template'}
-                        icon="TEMPLATE"
-                        label={<FormattedMessage {...messages.template} />}
-                        onClick={() => this.setExpandedSubMenu(null)}
-                      />
+                      {hasPermission(TAG_LIST) && (
+                        <MenuItem
+                          path="/tags"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/tags'}
+                          icon="TAG"
+                          label={<FormattedMessage {...messages.tags} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                      {hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) && (
+                        <MenuItem
+                          path="/metadata"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
+                          icon="METADATA"
+                          label={<FormattedMessage {...messages.metadata} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
+                      {hasPermission(TEMPLATE_LIST) && (
+                        <MenuItem
+                          path="/template"
+                          isActive={`/${location.pathname.split('/')[1]}` === '/template'}
+                          icon="TEMPLATE"
+                          label={<FormattedMessage {...messages.template} />}
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
                     </SubMenu>
-                  </div>
+                  )}
                 </div>
-              )}
-            </UIConsumer>
-          )
-        }
-      </Location>
-    );
-  }
-}
+              </div>
+            )}
+          </UIConsumer>
+        )
+      }
+    </Location>
+  );
+};
 
 export default SideBar;

@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+import { removeNulls, cleanFalsy, cleanUpData, cleanUpFiles } from 'utils/data';
 import { calculateVolume } from 'modules/batch/form/container';
 
 type Price = {
@@ -148,7 +148,12 @@ export default class ProductProviderContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const { files, ...restValues } = values;
+    const parsedValues: Object = {
+      ...initValues,
+      ...cleanUpData(restValues),
+      files: [...cleanUpFiles(files)],
+    };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
