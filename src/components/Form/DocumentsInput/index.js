@@ -16,8 +16,8 @@ type OptionalProps = {
   onBlur: (string, boolean) => void,
   onUpload?: ({ uploading: boolean, progress: number }) => void,
   types: Array<FileType>,
-  readOnly: boolean,
-  downloadDisabled: boolean,
+  editable: boolean,
+  downloadable: boolean,
 };
 
 type Props = OptionalProps;
@@ -34,8 +34,8 @@ const defaultProps = {
   onBlur: () => {},
   onUpload: () => {},
   types: [],
-  readOnly: false,
-  downloadDisabled: false,
+  editable: true,
+  downloadable: true,
 };
 
 class DocumentsInput extends React.Component<Props, State> {
@@ -115,69 +115,70 @@ class DocumentsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, values, onChange, onBlur, types, readOnly, downloadDisabled } = this.props;
+    const { name, values, onChange, onBlur, types, editable, downloadable } = this.props;
     const { uploading, progress } = this.state;
 
-    if (readOnly) {
-      return values && values.length > 0 ? (
+    if (editable) {
+      return (
         <div className={DocumentListStyle}>
-          {values.map(document => (
-            <DocumentItem
-              name={document.id}
-              key={document.id}
-              value={document}
-              types={types}
-              readOnly
-              downloadDisabled={downloadDisabled}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className={NoDocumentsStyle}>
-          <FormattedMessage {...messages.noDocuments} />
+          {values &&
+            values.map((document, index) => {
+              const documentName = `${name}[${index}]`;
+
+              return (
+                <DocumentItem
+                  name={documentName}
+                  key={documentName}
+                  value={document}
+                  types={types}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  onRemove={() => {
+                    onChange(name, values.filter(d => d.id !== document.id));
+                  }}
+                  editable
+                  downloadable={downloadable}
+                />
+              );
+            })}
+          {uploading ? (
+            <div className={ProgressStyle}>{`${progress}%`}</div>
+          ) : (
+            <label className={AddDocumentStyle}>
+              <Icon icon="ADD" />
+              <input
+                type="file"
+                accept="*"
+                disabled={uploading}
+                hidden
+                onChange={e => {
+                  this.handleChange(e, newFile => {
+                    onChange(name, [...values, newFile]);
+                  });
+                }}
+              />
+            </label>
+          )}
         </div>
       );
     }
 
-    return (
+    return values && values.length > 0 ? (
       <div className={DocumentListStyle}>
-        {values &&
-          values.map((document, index) => {
-            const documentName = `${name}[${index}]`;
-
-            return (
-              <DocumentItem
-                name={documentName}
-                key={documentName}
-                value={document}
-                types={types}
-                onChange={onChange}
-                onBlur={onBlur}
-                onRemove={() => {
-                  onChange(name, values.filter(d => d.id !== document.id));
-                }}
-                downloadDisabled={downloadDisabled}
-              />
-            );
-          })}
-        {uploading ? (
-          <div className={ProgressStyle}>{`${progress}%`}</div>
-        ) : (
-          <label className={AddDocumentStyle}>
-            <Icon icon="ADD" />
-            <input
-              type="file"
-              accept="*"
-              disabled={uploading}
-              hidden
-              onChange={e => {
-                this.handleChange(e, newFile => {
-                  onChange(name, [...values, newFile]);
-                });
-              }}
-            />
-          </label>
-        )}
+        {values.map(document => (
+          <DocumentItem
+            name={document.id}
+            key={document.id}
+            value={document}
+            types={types}
+            editable={false}
+            downloadable={downloadable}
+          />
+        ))}
+      </div>
+    ) : (
+      <div className={NoDocumentsStyle}>
+        <FormattedMessage {...messages.noDocuments} />
       </div>
     );
   }
