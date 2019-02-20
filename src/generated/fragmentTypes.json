@@ -33,6 +33,16 @@
       },
       {
         "kind": "UNION",
+        "name": "UserRolesPayload",
+        "possibleTypes": [
+          { "name": "UserRoles" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "BatchAdjustmentPayload",
         "possibleTypes": [
           { "name": "BatchAdjustment" },
@@ -277,6 +287,7 @@
           { "name": "MaskEdit" },
           { "name": "Order" },
           { "name": "ProductProvider" },
+          { "name": "Role" },
           { "name": "Shipment" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
@@ -311,6 +322,7 @@
           { "name": "Partnership" },
           { "name": "Product" },
           { "name": "ProductProvider" },
+          { "name": "Role" },
           { "name": "Shipment" },
           { "name": "Tag" },
           { "name": "TimelineDate" },
@@ -422,6 +434,16 @@
         "name": "ProductProviderPayload",
         "possibleTypes": [
           { "name": "ProductProvider" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "RolePayload",
+        "possibleTypes": [
+          { "name": "Role" },
           { "name": "BadRequest" },
           { "name": "Forbidden" },
           { "name": "NotFound" }
