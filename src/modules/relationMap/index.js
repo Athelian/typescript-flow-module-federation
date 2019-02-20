@@ -8,24 +8,30 @@ import NavBar, { EntityIcon, Tabs } from 'components/NavBar';
 import Layout from 'components/Layout';
 import messages from 'modules/relationMap/messages';
 import { ResetContentWrapperStyle } from 'modules/relationMap/style';
+import {
+  RM_PRODUCT_FOCUS_LIST,
+  RM_ORDER_FOCUS_LIST,
+} from 'modules/permission/constants/relationMap';
+import usePermission from 'hooks/usePermission';
 import Order from './order';
 import Product from './product';
 
 const RelationMap = () => {
-  const tabs = [
-    {
+  const { hasPermission } = usePermission();
+  const tabs: Array<Object> = [
+    hasPermission(RM_ORDER_FOCUS_LIST) && {
       id: 'relation-map-menu-1',
       key: 'orders',
       icon: 'ORDER',
       label: <FormattedMessage {...messages.ordersTab} />,
     },
-    {
+    hasPermission(RM_PRODUCT_FOCUS_LIST) && {
       id: 'relation-map-menu-2',
       key: 'products',
       icon: 'PRODUCT',
       label: <FormattedMessage {...messages.productsTab} />,
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <Provider>
@@ -56,8 +62,8 @@ const RelationMap = () => {
           >
             {/* $FlowFixMe override Router's div style */}
             <Router primary={false} className={ResetContentWrapperStyle}>
-              <Order path="/orders" default />
-              <Product path="/products" />
+              {hasPermission(RM_ORDER_FOCUS_LIST) && <Order path="/orders" default />}
+              {hasPermission(RM_PRODUCT_FOCUS_LIST) && <Product path="/products" />}
             </Router>
           </Layout>
         )}
