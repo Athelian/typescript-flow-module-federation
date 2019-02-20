@@ -5,14 +5,14 @@ import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import {
   WAREHOUSE_CREATE,
-  WAREHOUSE_GET,
+  WAREHOUSE_FORM,
   WAREHOUSE_LIST,
 } from 'modules/permission/constants/warehouse';
 import WarehouseListModule from './index.list';
 import WarehouseFormModule from './index.form';
 
 const WarehouseFormModuleWrapper = withNotFound(WarehouseFormModule, 'warehouseId');
-const WarehouseFormModuleDetailWrapper = withForbidden(WarehouseFormModuleWrapper, WAREHOUSE_GET);
+const WarehouseFormModuleDetailWrapper = withForbidden(WarehouseFormModuleWrapper, WAREHOUSE_FORM);
 const WarehouseFormModuleCreationWrapper = withForbidden(
   WarehouseFormModuleWrapper,
   WAREHOUSE_CREATE
