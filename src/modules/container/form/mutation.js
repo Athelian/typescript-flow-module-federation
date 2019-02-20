@@ -63,7 +63,6 @@ const getIdOrReturnNull = (obj: { id: string }): string | null =>
 const getDateOrReturnNull = (date: string): Date | null => (date ? new Date(date) : null);
 
 export const prepareContainer = ({
-  id,
   updatedAt,
   updatedBy,
   archived,
@@ -88,10 +87,11 @@ export const prepareContainer = ({
   batches,
   representativeBatch,
   isNew,
+  id,
   ...rest
 }: Object) => ({
   ...rest,
-  ...(isNullOrUndefined(id) ? { id } : {}),
+  ...(isNew ? {} : { id }),
   warehouseId: getIdOrReturnNull(warehouse),
   warehouseArrivalAgreedDate: getDateOrReturnNull(warehouseArrivalAgreedDate),
   warehouseArrivalActualDate: getDateOrReturnNull(warehouseArrivalActualDate),
