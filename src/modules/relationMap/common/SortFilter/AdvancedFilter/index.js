@@ -10,13 +10,17 @@ import {
   isNullOrUndefined,
   isEquals,
 } from 'utils/fp';
-import { formatEndDate, formatFromDate } from 'utils/date';
+import { formatToDateTimeGraphql } from 'utils/date';
 import { CancelButton, SaveButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { UIConsumer } from 'modules/ui';
-import { isValidOfMetricRangeInput, isValidOfPortsInput, filterPorts } from './utils';
+import {
+  isValidOfMetricRangeInput,
+  isValidOfPortsInput,
+  filterPorts,
+} from 'modules/relationMap/common/SortFilter/AdvancedFilter/utils';
 import EntityTypesMenu from './EntityTypesMenu';
 import FilterMenu from './FilterMenu';
 import FilterInputArea from './FilterInputArea';
@@ -121,7 +125,11 @@ const FILTER = {
   },
   batch: {
     deliveredAt: 'batchDeliveredAt',
+    // expiredAt: 'batchExpiredAt',
+    // producedAt: 'batchProducedAt',
     tags: 'batchTagIds',
+    // createdAt: 'batchCreatedAt',
+    // updatedAt: 'batchUpdatedAt',
   },
   shipment: {
     cargoReady: 'shipmentCargoReady',
@@ -172,8 +180,8 @@ const getFilterValue = (name: string, data: any) => {
     case 'warehouseArrival':
     case 'deliveryReady':
       return {
-        ...(data.before && { before: formatEndDate(data.before) }),
-        ...(data.after && { after: formatFromDate(data.after) }),
+        ...(data.before && { before: formatToDateTimeGraphql(data.before) }),
+        ...(data.after && { after: formatToDateTimeGraphql(data.after) }),
       };
     case 'price': {
       const currency = getByPath('currency.name', data);
@@ -542,20 +550,23 @@ function AdvanceFilter({ onApply, initialFilter }: Props) {
   const defaultInitialFilter = isDefaultFilter(initialFilter);
   const defaultFilterQuery = isDefaultFilter(filterQuery);
 
-  useEffect(() => {
-    if (window.localStorage) {
-      const advanceFilterQuery = convertToFilterQuery(state);
-      const localFilter = JSON.parse(window.localStorage.getItem('filterRelationMap') || '{}');
-      window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
-      window.localStorage.setItem(
-        'filterRelationMap',
-        JSON.stringify({
-          ...localFilter,
-          filter: advanceFilterQuery,
-        })
-      );
-    }
-  }, [state]);
+  useEffect(
+    () => {
+      if (window.localStorage) {
+        const advanceFilterQuery = convertToFilterQuery(state);
+        const localFilter = JSON.parse(window.localStorage.getItem('filterRelationMap') || '{}');
+        window.localStorage.setItem(ADVANCE_FILTER_STORAGE, JSON.stringify(state));
+        window.localStorage.setItem(
+          'filterRelationMap',
+          JSON.stringify({
+            ...localFilter,
+            filter: advanceFilterQuery,
+          })
+        );
+      }
+    },
+    [state]
+  );
 
   const sameFilter = isEquals(initialFilter, filterQuery);
   const showApplyButton = !defaultInitialFilter || !sameFilter;

@@ -46,9 +46,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   width: -moz-min-content;
   width: min-content;
   min-width: 75px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
 }
 
 .emotion-11:focus {
@@ -115,10 +112,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   user-select: none;
   padding: 0 5px;
   text-align: left;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 100%;
 }
 
 .emotion-2 {
@@ -136,10 +129,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   background-color: #ffffff;
   height: 30px;
   width: 200px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 200px;
+  min-width: 200px;
   cursor: text;
   -webkit-transition: all 0.1s linear;
   transition: all 0.1s linear;
@@ -167,7 +157,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   width: 100%;
   height: 100%;
   line-height: 20px;
-  padding: 0 4px;
+  padding: 0 5px;
   background: none;
   border-radius: 5px;
   color: #555555;
@@ -281,7 +271,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
             class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
             data-icon="sign-in-alt"
             data-prefix="fas"
-            focusable="false"
             role="img"
             viewBox="0 0 512 512"
             xmlns="http://www.w3.org/2000/svg"
@@ -307,7 +296,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
       class="css-13fmzcs"
     >
       <div
-        class="css-1xa9w2h"
+        class="css-qwdb27"
       >
         <div
           class="css-p52le"
@@ -316,12 +305,12 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             class="css-1n42b97"
           />
           <div
-            class="css-kmo8zu"
+            class="css-1o4txpy"
           >
             EMAIL
           </div>
           <div
-            class="css-bnsvj3"
+            class="css-19eu71p"
           >
             <input
               data-testid="email"
@@ -341,12 +330,12 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             class="css-1n42b97"
           />
           <div
-            class="css-kmo8zu"
+            class="css-1o4txpy"
           >
             PASSWORD
           </div>
           <div
-            class="css-bnsvj3"
+            class="css-19eu71p"
           >
             <input
               data-testid="password"
@@ -361,7 +350,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
         </div>
       </div>
       <button
-        class="css-1obbnpt"
+        class="css-198dvuf"
         data-testid="submitButton"
         disabled=""
         type="submit"
@@ -379,7 +368,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
             data-icon="sign-in-alt"
             data-prefix="fas"
-            focusable="false"
             role="img"
             viewBox="0 0 512 512"
             xmlns="http://www.w3.org/2000/svg"
@@ -442,9 +430,6 @@ exports[`<LoginForm /> should render without crash 1`] = `
   width: -moz-min-content;
   width: min-content;
   min-width: 75px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
 }
 
 .emotion-11:focus {
@@ -511,10 +496,6 @@ exports[`<LoginForm /> should render without crash 1`] = `
   user-select: none;
   padding: 0 5px;
   text-align: left;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 100%;
 }
 
 .emotion-2 {
@@ -532,10 +513,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   background-color: #ffffff;
   height: 30px;
   width: 200px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  max-width: 200px;
+  min-width: 200px;
   cursor: text;
   -webkit-transition: all 0.1s linear;
   transition: all 0.1s linear;
@@ -563,7 +541,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   width: 100%;
   height: 100%;
   line-height: 20px;
-  padding: 0 4px;
+  padding: 0 5px;
   background: none;
   border-radius: 5px;
   color: #555555;
@@ -677,7 +655,6 @@ exports[`<LoginForm /> should render without crash 1`] = `
             class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
             data-icon="sign-in-alt"
             data-prefix="fas"
-            focusable="false"
             role="img"
             viewBox="0 0 512 512"
             xmlns="http://www.w3.org/2000/svg"

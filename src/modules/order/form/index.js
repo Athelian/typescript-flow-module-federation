@@ -7,12 +7,10 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { CloneButton } from 'components/Buttons';
 import LoadingIcon from 'components/LoadingIcon';
-import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
-import { PermissionConsumer } from 'modules/permission';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
@@ -64,111 +62,98 @@ export default class OrderForm extends React.Component<Props> {
     const { updatedAt, updatedBy, archived } = order;
     return (
       <Suspense fallback={<LoadingIcon />}>
-        <PermissionConsumer>
-          {hasPermission => {
-            const canCreate = hasPermission(ORDER_CREATE);
-            const canUpdate = hasPermission(ORDER_UPDATE);
+        <div className={OrderFormWrapperStyle}>
+          <SectionWrapper id="order_orderSection">
+            <SectionHeader
+              icon="ORDER"
+              title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
+            >
+              {!isNew && (
+                <>
+                  <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                  {!isClone && <CloneButton onClick={this.onClone} />}
+                  <BooleanValue>
+                    {({ value: isDialogOpen, set: dialogToggle }) => (
+                      <StatusToggle
+                        archived={archived}
+                        openStatusDialog={() => dialogToggle(true)}
+                        activateDialog={
+                          <OrderActivateDialog
+                            order={order}
+                            isOpen={isDialogOpen && !!archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                        archiveDialog={
+                          <OrderArchiveDialog
+                            order={order}
+                            isOpen={isDialogOpen && !archived}
+                            onRequestClose={() => dialogToggle(false)}
+                          />
+                        }
+                      />
+                    )}
+                  </BooleanValue>
+                </>
+              )}
+            </SectionHeader>
 
-            return (
-              <div className={OrderFormWrapperStyle}>
-                <SectionWrapper id="order_orderSection">
+            <OrderSection isNew={isNew} />
+          </SectionWrapper>
+          <SectionWrapper id="order_itemsSection">
+            <Subscribe to={[OrderItemsContainer]}>
+              {({ state: values }) => (
+                <SectionHeader
+                  icon="ORDER_ITEM"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
+                      {values.orderItems ? values.orderItems.length : 0})
+                    </>
+                  }
+                />
+              )}
+            </Subscribe>
+            <AsyncItemsSection isNew={isNew} />
+          </SectionWrapper>
+          <SectionWrapper id="order_documentsSection">
+            <Subscribe to={[OrderFilesContainer]}>
+              {({ state: values }) => (
+                <SectionHeader
+                  icon="DOCUMENT"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />{' '}
+                      ({values.files.length})
+                    </>
+                  }
+                />
+              )}
+            </Subscribe>
+            <AsyncDocumentsSection />
+          </SectionWrapper>
+          <SectionWrapper id="order_shipmentsSection">
+            <Subscribe to={[OrderInfoContainer]}>
+              {({ state: { shipments } }) => (
+                <>
                   <SectionHeader
-                    icon="ORDER"
-                    title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
-                  >
-                    {!isNew && (
+                    icon="SHIPMENT"
+                    title={
                       <>
-                        <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                        {!isClone && canCreate && <CloneButton onClick={this.onClone} />}
-                        <BooleanValue>
-                          {({ value: isDialogOpen, set: dialogToggle }) => (
-                            <StatusToggle
-                              readOnly={!canUpdate}
-                              archived={archived}
-                              openStatusDialog={() => dialogToggle(true)}
-                              activateDialog={
-                                <OrderActivateDialog
-                                  order={order}
-                                  isOpen={isDialogOpen && !!archived}
-                                  onRequestClose={() => dialogToggle(false)}
-                                />
-                              }
-                              archiveDialog={
-                                <OrderArchiveDialog
-                                  order={order}
-                                  isOpen={isDialogOpen && !archived}
-                                  onRequestClose={() => dialogToggle(false)}
-                                />
-                              }
-                            />
-                          )}
-                        </BooleanValue>
+                        <FormattedMessage
+                          id="modules.Orders.shipments"
+                          defaultMessage="SHIPMENTS"
+                        />{' '}
+                        ({shipments.length})
                       </>
-                    )}
-                  </SectionHeader>
-
-                  <OrderSection isNew={isNew} />
-                </SectionWrapper>
-                <SectionWrapper id="order_itemsSection">
-                  <Subscribe to={[OrderItemsContainer]}>
-                    {({ state: values }) => (
-                      <SectionHeader
-                        icon="ORDER_ITEM"
-                        title={
-                          <>
-                            <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
-                            {values.orderItems ? values.orderItems.length : 0})
-                          </>
-                        }
-                      />
-                    )}
-                  </Subscribe>
-                  <AsyncItemsSection isNew={isNew} />
-                </SectionWrapper>
-                <SectionWrapper id="order_documentsSection">
-                  <Subscribe to={[OrderFilesContainer]}>
-                    {({ state: values }) => (
-                      <SectionHeader
-                        icon="DOCUMENT"
-                        title={
-                          <>
-                            <FormattedMessage
-                              id="modules.Orders.documents"
-                              defaultMessage="DOCUMENTS"
-                            />{' '}
-                            ({values.files.length})
-                          </>
-                        }
-                      />
-                    )}
-                  </Subscribe>
-                  <AsyncDocumentsSection />
-                </SectionWrapper>
-                <SectionWrapper id="order_shipmentsSection">
-                  <Subscribe to={[OrderInfoContainer]}>
-                    {({ state: { shipments } }) => (
-                      <>
-                        <SectionHeader
-                          icon="SHIPMENT"
-                          title={
-                            <>
-                              <FormattedMessage
-                                id="modules.Orders.shipments"
-                                defaultMessage="SHIPMENTS"
-                              />{' '}
-                              ({shipments.length})
-                            </>
-                          }
-                        />
-                        <AsyncShipmentsSection shipments={shipments} />
-                      </>
-                    )}
-                  </Subscribe>
-                </SectionWrapper>
-              </div>
-            );
-          }}
-        </PermissionConsumer>
+                    }
+                  />
+                  <AsyncShipmentsSection shipments={shipments} />
+                </>
+              )}
+            </Subscribe>
+          </SectionWrapper>
+        </div>
       </Suspense>
     );
   }

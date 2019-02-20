@@ -4,18 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
+import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import {
-  FieldItem,
-  Label,
-  Display,
-  NumberInputFactory,
-  TextInputFactory,
-  DateInputFactory,
-} from 'components/Form';
+import { FieldItem, Label, Display } from 'components/Form';
 import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -49,7 +43,6 @@ type OptionalProps = {
   onClear: (batch: Object) => void,
   onClickRepresentative: () => void,
   selectable: boolean,
-  readOnly: boolean,
   isRepresented: boolean,
 };
 
@@ -65,7 +58,6 @@ const defaultProps = {
   onClear: () => {},
   onClickRepresentative: () => {},
   selectable: false,
-  readOnly: false,
   isRepresented: false,
 };
 
@@ -78,19 +70,17 @@ const ShipmentContainerBatchCard = ({
   saveOnBlur,
   currency,
   selectable,
-  readOnly,
   isRepresented,
   ...rest
 }: Props) => {
   if (!batch) return '';
 
-  const actions =
-    selectable || readOnly
-      ? []
-      : [
-          <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
-        ];
+  const actions = selectable
+    ? []
+    : [
+        <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+        <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
+      ];
 
   const {
     id,
@@ -166,9 +156,7 @@ const ShipmentContainerBatchCard = ({
             type="button"
             onClick={evt => {
               evt.stopPropagation();
-              if (!readOnly) {
-                onClickRepresentative();
-              }
+              onClickRepresentative();
             }}
             className={RepresentIconStyle(isRepresented)}
           >
@@ -187,24 +175,23 @@ const ShipmentContainerBatchCard = ({
               validator={validation}
               values={values}
             >
-              {({ name: fieldName, ...inputHandlers }) => (
-                <TextInputFactory
-                  inputWidth="185px"
-                  inputHeight="20px"
-                  inputAlign="left"
-                  editable={!readOnly}
-                  {...{
+              {({ name: fieldName, ...inputHandlers }) =>
+                textInputFactory({
+                  width: '185px',
+                  height: '20px',
+                  inputHandlers: {
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
                       saveOnBlur({ ...batch, no: inputHandlers.value });
                     },
-                  }}
-                  name={fieldName}
-                  isNew={false}
-                  originalValue={no}
-                />
-              )}
+                  },
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: no,
+                  align: 'left',
+                })
+              }
             </FormField>
           </div>
 
@@ -222,12 +209,11 @@ const ShipmentContainerBatchCard = ({
               validator={validation}
               values={values}
             >
-              {({ name: fieldName, ...inputHandlers }) => (
-                <NumberInputFactory
-                  inputWidth="90px"
-                  inputHeight="20px"
-                  editable={!readOnly}
-                  {...{
+              {({ name: fieldName, ...inputHandlers }) =>
+                numberInputFactory({
+                  width: '90px',
+                  height: '20px',
+                  inputHandlers: {
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
@@ -236,12 +222,12 @@ const ShipmentContainerBatchCard = ({
                         quantity: inputHandlers.value - totalAdjustment,
                       });
                     },
-                  }}
-                  name={fieldName}
-                  isNew={false}
-                  originalValue={quantity + totalAdjustment}
-                />
-              )}
+                  },
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: quantity + totalAdjustment,
+                })
+              }
             </FormField>
           </div>
 
@@ -254,15 +240,14 @@ const ShipmentContainerBatchCard = ({
               <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
             </Label>
             <FormField name={`batch.${id}.deliveredAt`} initValue={deliveredAt}>
-              {({ name: fieldName, ...inputHandlers }) => (
-                <DateInputFactory
-                  inputWidth="120px"
-                  inputHeight="20px"
-                  name={fieldName}
-                  isNew={false}
-                  originalValue={deliveredAt}
-                  editable={!readOnly}
-                  {...{
+              {({ name: fieldName, ...inputHandlers }) =>
+                dateInputFactory({
+                  width: '120px',
+                  height: '20px',
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: deliveredAt,
+                  inputHandlers: {
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
@@ -271,9 +256,9 @@ const ShipmentContainerBatchCard = ({
                         deliveredAt: inputHandlers.value ? inputHandlers.value : null,
                       });
                     },
-                  }}
-                />
-              )}
+                  },
+                })
+              }
             </FormField>
           </div>
 
@@ -286,15 +271,14 @@ const ShipmentContainerBatchCard = ({
               <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
             </Label>
             <FormField name={`batch.${id}.desiredAt`} initValue={desiredAt}>
-              {({ name: fieldName, ...inputHandlers }) => (
-                <DateInputFactory
-                  inputWidth="120px"
-                  inputHeight="20px"
-                  name={fieldName}
-                  isNew={false}
-                  originalValue={desiredAt}
-                  editable={!readOnly}
-                  {...{
+              {({ name: fieldName, ...inputHandlers }) =>
+                dateInputFactory({
+                  width: '120px',
+                  height: '20px',
+                  name: fieldName,
+                  isNew: false,
+                  originalValue: desiredAt,
+                  inputHandlers: {
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
@@ -303,9 +287,9 @@ const ShipmentContainerBatchCard = ({
                         desiredAt: inputHandlers.value ? inputHandlers.value : null,
                       });
                     },
-                  }}
-                />
-              )}
+                  },
+                })
+              }
             </FormField>
           </div>
 

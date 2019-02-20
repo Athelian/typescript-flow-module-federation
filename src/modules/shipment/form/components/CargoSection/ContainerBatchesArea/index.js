@@ -4,8 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
-import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { ShipmentContainerBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
@@ -53,8 +51,6 @@ export default function ContainerBatchesArea({
   selectedBatches,
   setSelectedBatches,
 }: Props) {
-  const { hasPermission } = usePermission();
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -100,7 +96,7 @@ export default function ContainerBatchesArea({
                       </div>
                     </div>
 
-                    {batchesInContainer.length > 0 && allowToUpdate && (
+                    {batchesInContainer.length > 0 && (
                       <>
                         {isSelectBatchesMode ? (
                           <>
@@ -137,12 +133,11 @@ export default function ContainerBatchesArea({
                       <React.Fragment key={batch.id}>
                         {isSelectBatchesMode ? (
                           <ShipmentContainerBatchCard
-                            readOnly={!allowToUpdate}
                             batch={batch}
                             isRepresented={batch.id === representativeBatchId}
                             selectable
                             selected={selectedBatches.includes(batch)}
-                            onSelect={() => (allowToUpdate ? setSelectedBatches(batch) : () => {})}
+                            onSelect={() => setSelectedBatches(batch)}
                           />
                         ) : (
                           <BooleanValue>
@@ -173,7 +168,6 @@ export default function ContainerBatchesArea({
                                 </SlideView>
                                 <ShipmentContainerBatchCard
                                   batch={batch}
-                                  readOnly={!allowToUpdate}
                                   isRepresented={batch.id === representativeBatchId}
                                   saveOnBlur={updateBatch => {
                                     const indexOfAllBatches = batches.indexOf(batch);
@@ -246,7 +240,7 @@ export default function ContainerBatchesArea({
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>
-              {!isSelectBatchesMode && allowToUpdate && (
+              {!isSelectBatchesMode && (
                 <>
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (

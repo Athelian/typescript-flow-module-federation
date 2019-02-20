@@ -1,10 +1,11 @@
 // @flow
 import * as React from 'react';
 import { uniqBy } from 'lodash';
-import { PartnerCard, GrayCard } from 'components/Cards';
+import { PartnerCard } from 'components/Cards';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { DashedPlusButton } from 'components/Form';
+import { ExporterEmptyCardStyle } from './style';
 
 export const getUniqueExporters = (batches: Array<Object>) => {
   // $FlowFixMe need to change type from lodash
@@ -20,7 +21,7 @@ export const renderExporters = (exporters: Array<Object>) => {
   const numOfExporters = exporters.length;
 
   if (numOfExporters === 0) {
-    return <GrayCard width="195px" height="215px" />;
+    return <div className={ExporterEmptyCardStyle} />;
   }
   if (numOfExporters === 1) {
     return <PartnerCard partner={exporters[0]} readOnly />;
@@ -61,14 +62,11 @@ export const renderExporters = (exporters: Array<Object>) => {
   return '';
 };
 
-export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boolean) => {
+export const renderForwarders = (forwarders: Array<Object>) => {
   const numOfForwarders = forwarders.length;
 
   if (numOfForwarders === 0) {
-    if (allowToUpdate) {
-      return <DashedPlusButton width="195px" height="215px" />;
-    }
-    return <GrayCard width="195px" height="215px" />;
+    return <DashedPlusButton width="195px" height="215px" />;
   }
   if (numOfForwarders === 1) {
     return <PartnerCard partner={forwarders[0]} />;

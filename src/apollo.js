@@ -1,5 +1,4 @@
 // @flow
-import * as Sentry from '@sentry/browser';
 import { navigate } from '@reach/router';
 import { getOperationAST } from 'graphql/utilities/getOperationAST';
 import { print } from 'graphql/language/printer';
@@ -8,6 +7,7 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 import { ApolloLink, Observable, type Operation } from 'apollo-link';
 import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
+import Raven from 'raven-js';
 import { isDevEnvironment } from './utils/env';
 import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
@@ -79,7 +79,7 @@ const errorLogger = errors => {
   errors.forEach(error => {
     const { message, locations, path } = error;
     if (!isDevEnvironment) {
-      if (!(path && path.includes('login'))) Sentry.captureException(error);
+      if (!(path && path.includes('login'))) Raven.captureException(error, error);
     } else {
       logger.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
     }

@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, colors, borderRadiuses, fontSizes, shadows } from 'styles/common';
 
-export const VoyageSelectorWrapperStyle = (editable: boolean): string => css`
+export const VoyageSelectorWrapperStyle: string = css`
   position: relative;
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
@@ -14,16 +14,10 @@ export const VoyageSelectorWrapperStyle = (editable: boolean): string => css`
   flex-shrink: 0;
   ${shadows.FAINT};
   padding: 0 0 0 10px;
-  ${editable
-    ? `
-    &:hover,
-    :focus {
-      background-color: ${colors.GRAY_SUPER_LIGHT};
-    }
-  `
-    : `
-    cursor: default;
-  `};
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  }
 `;
 
 export const VoyageOptionsWrapperStyle: string = css`
@@ -38,7 +32,7 @@ export const VoyageOptionsWrapperStyle: string = css`
   ${shadows.FAINT};
 `;
 
-export const VoyageIconWrapperStyle = (isActive: boolean, editable: boolean): string => css`
+export const VoyageIconWrapperStyle = (isActive: boolean): string => css`
   ${presets.BUTTON};
   width: 70px;
   height: 50px;
@@ -54,7 +48,6 @@ export const VoyageIconWrapperStyle = (isActive: boolean, editable: boolean): st
       background-color: ${colors.TEAL};
     }
   `};
-  ${!editable && 'cursor: default'};
   &:first-child {
     ${borderRadiuses.MAIN};
     border-top-left-radius: 0;

@@ -24,6 +24,7 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
     if (!isNew) {
       initDetailValues(template);
     }
+    return null;
   });
   return (
     <div className={TemplateFormWrapperStyle}>

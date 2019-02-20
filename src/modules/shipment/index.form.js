@@ -276,7 +276,6 @@ class ShipmentFormModule extends React.Component<Props> {
     if (shipmentId && !isNewOrClone) {
       mutationKey = { key: decodeId(shipmentId) };
     }
-    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
 
     return (
       <UIConsumer>
@@ -330,7 +329,7 @@ class ShipmentFormModule extends React.Component<Props> {
                     <Layout
                       {...(isSlideView ? {} : uiState)}
                       navBar={
-                        <CurrentNavBar>
+                        <NavBar>
                           <EntityIcon icon="SHIPMENT" color="SHIPMENT" />
                           <JumpToSection>
                             <SectionTabs
@@ -486,7 +485,7 @@ class ShipmentFormModule extends React.Component<Props> {
                               variables={{ id: decodeId(shipmentId) }}
                             />
                           )}
-                        </CurrentNavBar>
+                        </NavBar>
                       }
                     >
                       {apiError && <p>Error: Please try again.</p>}

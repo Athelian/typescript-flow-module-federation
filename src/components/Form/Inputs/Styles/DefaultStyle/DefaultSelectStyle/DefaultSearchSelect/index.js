@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { injectIntl, type IntlShape } from 'react-intl';
 import DebounceInput from 'react-debounce-input';
 import Icon from 'components/Icon';
 import { type RenderSearchSelectProps } from 'components/Form/Inputs/SearchSelectInput/type';
@@ -9,8 +8,6 @@ import {
   ClearButtonStyle,
   ArrowDownStyle,
 } from 'components/Form/Inputs/Styles/DefaultStyle/DefaultSelectStyle/DefaultSelect/style';
-import { isNullOrUndefined } from 'utils/fp';
-import messages from 'components/Form/Inputs/messages';
 
 type OptionalProps = {
   hasError: boolean,
@@ -20,12 +17,10 @@ type OptionalProps = {
   height: string,
   align: 'left' | 'right' | 'center',
   hideClearButton: boolean,
-  placeholder: string,
 };
 
 type Props = OptionalProps &
   RenderSearchSelectProps & {
-    intl: IntlShape,
     hasError: boolean,
     disabled: boolean,
     forceHoverStyle: boolean,
@@ -41,11 +36,9 @@ const defaultProps = {
   height: '30px',
   align: 'right',
   hideClearButton: false,
-  placeholder: null,
 };
 
 function DefaultSearchSelect({
-  intl,
   hasError,
   disabled,
   forceHoverStyle,
@@ -61,7 +54,6 @@ function DefaultSearchSelect({
   handleQueryChange,
   itemToString,
   hideClearButton,
-  placeholder,
   ...rest
 }: Props) {
   return (
@@ -95,15 +87,10 @@ function DefaultSearchSelect({
         spellCheck={false}
         style={{ textAlign: align }}
         {...getInputProps({
-          value: value || '',
+          value,
           onChange: handleQueryChange,
           ...rest,
         })}
-        placeholder={
-          isNullOrUndefined(placeholder)
-            ? intl.formatMessage(messages.defaultSelectPlaceholder)
-            : placeholder
-        }
       />
       {align === 'left' &&
         (!hideClearButton && selectedItem ? (
@@ -121,4 +108,4 @@ function DefaultSearchSelect({
 
 DefaultSearchSelect.defaultProps = defaultProps;
 
-export default injectIntl(DefaultSearchSelect);
+export default DefaultSearchSelect;

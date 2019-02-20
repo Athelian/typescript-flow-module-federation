@@ -4,7 +4,6 @@ import { GridColumnWrapperStyle } from './style';
 
 type OptionalProps = {
   gap: string,
-  maxWidth?: string,
 };
 
 type Props = OptionalProps & {
@@ -15,9 +14,9 @@ const defaultProps = {
   gap: '20px',
 };
 
-function GridColumn({ children, gap, maxWidth, ...rest }: Props) {
+function GridColumn({ children, gap, ...rest }: Props) {
   return (
-    <div className={GridColumnWrapperStyle(gap, maxWidth)} {...rest}>
+    <div className={GridColumnWrapperStyle(gap)} {...rest}>
       {children}
     </div>
   );

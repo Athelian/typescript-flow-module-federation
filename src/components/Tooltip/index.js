@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import Tippy from '@tippy.js/react';
+import 'tippy.js/dist/tippy.css';
 
 type Props = {
   message: React.Node | string,
@@ -16,7 +17,7 @@ export default function Tooltip({ message, children, ...rest }: Props) {
       delay={[200, 200]}
       distance={10}
       interactive
-      ignoreAttributes
+      performance
       {...rest}
     >
       {children}

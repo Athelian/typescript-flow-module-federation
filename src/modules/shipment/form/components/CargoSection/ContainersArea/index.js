@@ -3,8 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
-import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -66,8 +64,6 @@ const cleanBatchesContainerByContainerId = (
   );
 
 function ContainersArea({ selectCardId, setSelected }: Props) {
-  const { hasPermission } = usePermission();
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
@@ -135,7 +131,6 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                       <>
                                         <ShipmentContainerCard
                                           container={container}
-                                          readOnly={!allowToUpdate}
                                           update={newContainer => {
                                             setDeepFieldValue(
                                               `containers.${position}`,
@@ -143,33 +138,27 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             );
                                           }}
                                           onClick={() => toggleContainerForm(true)}
-                                          onSelectWarehouse={
-                                            allowToUpdate
-                                              ? () => toggleSelectWarehouse(true)
-                                              : () => {}
-                                          }
+                                          onSelectWarehouse={() => toggleSelectWarehouse(true)}
                                           actions={[
-                                            allowToUpdate && (
-                                              <CardAction
-                                                icon="REMOVE"
-                                                hoverColor="RED"
-                                                onClick={evt => {
-                                                  evt.stopPropagation();
-                                                  if (
-                                                    container.batches &&
-                                                    container.batches.length > 0
-                                                  ) {
-                                                    toggleDialog(true);
-                                                  } else {
-                                                    setFieldValue(
-                                                      'containers',
-                                                      removeContainerById(containers, container.id)
-                                                    );
-                                                  }
-                                                }}
-                                              />
-                                            ),
-                                          ].filter(Boolean)}
+                                            <CardAction
+                                              icon="REMOVE"
+                                              hoverColor="RED"
+                                              onClick={evt => {
+                                                evt.stopPropagation();
+                                                if (
+                                                  container.batches &&
+                                                  container.batches.length > 0
+                                                ) {
+                                                  toggleDialog(true);
+                                                } else {
+                                                  setFieldValue(
+                                                    'containers',
+                                                    removeContainerById(containers, container.id)
+                                                  );
+                                                }
+                                              }}
+                                            />,
+                                          ]}
                                         />
                                         <RemoveContainerConfirmDialog
                                           isOpen={isOpenDialog}
@@ -261,43 +250,41 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                 })}
               </div>
             </div>
-            {allowToUpdate && (
-              <div className={ContainersFooterWrapperStyle}>
-                <NewButton
-                  label={
-                    <FormattedMessage
-                      id="modules.Shipments.newContainer"
-                      defaultMessage="NEW CONTAINER"
-                    />
-                  }
-                  onClick={() => {
-                    const clonedContainers = containers.slice(0);
-                    setFieldValue('containers', [
-                      ...clonedContainers,
-                      injectUid({
-                        no: `container no ${containers.length + 1}`,
-                        isNew: true,
-                        batches: [],
-                        tags: [],
-                        totalVolume: {
-                          metric: 'm³',
-                          value: 0,
-                        },
-                        totalWeight: {
-                          metric: 'kg',
-                          value: 0,
-                        },
-                        totalBatchQuantity: 0,
-                        totalBatchPackages: 0,
-                        totalNumberOfUniqueOrderItems: 0,
-                        warehouseArrivalActualDateAssignedTo: [],
-                        warehouseArrivalAgreedDateAssignedTo: [],
-                      }),
-                    ]);
-                  }}
-                />
-              </div>
-            )}
+            <div className={ContainersFooterWrapperStyle}>
+              <NewButton
+                label={
+                  <FormattedMessage
+                    id="modules.Shipments.newContainer"
+                    defaultMessage="NEW CONTAINER"
+                  />
+                }
+                onClick={() => {
+                  const clonedContainers = containers.slice(0);
+                  setFieldValue('containers', [
+                    ...clonedContainers,
+                    injectUid({
+                      no: `container no ${containers.length + 1}`,
+                      isNew: true,
+                      batches: [],
+                      tags: [],
+                      totalVolume: {
+                        metric: 'm³',
+                        value: 0,
+                      },
+                      totalWeight: {
+                        metric: 'kg',
+                        value: 0,
+                      },
+                      totalBatchQuantity: 0,
+                      totalBatchPackages: 0,
+                      totalNumberOfUniqueOrderItems: 0,
+                      warehouseArrivalActualDateAssignedTo: [],
+                      warehouseArrivalAgreedDateAssignedTo: [],
+                    }),
+                  ]);
+                }}
+              />
+            </div>
           </div>
         );
       }}

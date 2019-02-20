@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Mutation, Query } from 'react-apollo';
+
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
@@ -110,6 +111,7 @@ class MaskFormWrapper extends React.Component<Props> {
             >
               {(saveMask, { loading: isLoading, error: apiError }) => (
                 <>
+                  {isLoading && <LoadingIcon />}
                   {apiError && <p>Error: Please try again.</p>}
                   <Layout
                     navBar={
@@ -139,36 +141,33 @@ class MaskFormWrapper extends React.Component<Props> {
                         </JumpToSection>
 
                         <Subscribe to={[MaskContainer, FormContainer]}>
-                          {(maskContainer, form) =>
-                            maskContainer.isDirty() && (
-                              <>
-                                {isNew ? (
-                                  <CancelButton onClick={() => onCancel()} />
-                                ) : (
-                                  <ResetButton onClick={() => this.onReset(maskContainer, form)} />
-                                )}
+                          {(maskContainer, form) => (
+                            <>
+                              {isNew ? (
+                                <CancelButton onClick={() => onCancel()} />
+                              ) : (
+                                <ResetButton onClick={() => this.onReset(maskContainer, form)} />
+                              )}
 
-                                <SaveButton
-                                  disabled={
-                                    !maskContainer.isDirty() ||
-                                    !form.isReady(maskContainer.state, validator)
-                                  }
-                                  onClick={() => {
-                                    this.onSave(
-                                      maskContainer.state,
-                                      saveMask,
-                                      () => {
-                                        maskContainer.onSuccess();
-                                        form.onReset();
-                                      },
-                                      form.onErrors
-                                    );
-                                  }}
-                                  isLoading={isLoading}
-                                />
-                              </>
-                            )
-                          }
+                              <SaveButton
+                                disabled={
+                                  !maskContainer.isDirty() ||
+                                  !form.isReady(maskContainer.state, validator)
+                                }
+                                onClick={() => {
+                                  this.onSave(
+                                    maskContainer.state,
+                                    saveMask,
+                                    () => {
+                                      maskContainer.onSuccess();
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  );
+                                }}
+                              />
+                            </>
+                          )}
                         </Subscribe>
                       </SlideViewNavBar>
                     }

@@ -16,7 +16,6 @@ type Metric = {
 };
 
 type FormState = {
-  isNew?: boolean,
   exporter?: ?Object,
   supplier?: ?Object,
   origin?: string,
@@ -45,7 +44,6 @@ type FormState = {
 };
 
 const initValues = {
-  isNew: false,
   exporter: null,
   supplier: null,
   origin: '',

@@ -278,6 +278,7 @@
           { "name": "Order" },
           { "name": "ProductProvider" },
           { "name": "Shipment" },
+          { "name": "Tag" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
           { "name": "User" }
@@ -455,7 +456,7 @@
       {
         "kind": "INTERFACE",
         "name": "Supervised",
-        "possibleTypes": [{ "name": "Order" }, { "name": "Shipment" }, { "name": "Warehouse" }]
+        "possibleTypes": [{ "name": "Order" }, { "name": "Shipment" }]
       },
       {
         "kind": "UNION",

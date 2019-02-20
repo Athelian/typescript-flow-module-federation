@@ -22,7 +22,6 @@ import { mapColumnId } from './helpers';
 
 export const orderColumns = [
   {
-    id: 0,
     group: <FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />,
     columns: [
       <FormattedMessage {...orderMessages.PO} />,
@@ -40,7 +39,6 @@ export const orderColumns = [
 
 export const orderItemColumns = [
   {
-    id: 0,
     group: <FormattedMessage id="modules.Items.item" defaultMessage="ITEM" />,
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
@@ -59,20 +57,17 @@ export const orderItemColumns = [
 
 export const batchColumns = [
   {
-    id: 0,
     group: <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />,
     columns: [
       <FormattedMessage {...batchMessages.batchNo} />,
       <FormattedMessage {...batchMessages.quantity} />,
       <FormattedMessage {...batchMessages.deliveredAt} />,
-      <FormattedMessage {...batchMessages.desiredAt} />,
       <FormattedMessage {...batchMessages.expiredAt} />,
       <FormattedMessage {...batchMessages.producedAt} />,
       <FormattedMessage {...batchMessages.tags} />,
     ],
   },
   {
-    id: 1,
     group: <FormattedMessage id="modules.Batches.packing" defaultMessage="PACKAGING" />,
     columns: [
       <FormattedMessage {...batchMessages.packageName} />,
@@ -88,7 +83,6 @@ export const batchColumns = [
 
 export const shipmentColumns = [
   {
-    id: 0,
     group: <FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />,
     columns: [
       <FormattedMessage {...shipmentMessages.shipmentId} />,
@@ -107,7 +101,6 @@ export const shipmentColumns = [
     ],
   },
   {
-    id: 1,
     group: <FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />,
     columns: [
       <FormattedMessage {...shipmentMessages.cargoReady} />,
@@ -298,11 +291,6 @@ export const batchColumnFields = [
   {
     messageId: batchMessages.deliveredAt.id,
     name: 'deliveredAt',
-    type: 'date',
-  },
-  {
-    messageId: batchMessages.desiredAt.id,
-    name: 'desiredAt',
     type: 'date',
   },
   {

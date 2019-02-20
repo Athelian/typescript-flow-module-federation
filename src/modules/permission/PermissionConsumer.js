@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import PermissionContext from './PermissionContext';
 
 const hasPermission = (permissions: Array<string>): Function => (path: string): boolean =>

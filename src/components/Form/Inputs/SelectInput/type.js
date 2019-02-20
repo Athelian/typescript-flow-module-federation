@@ -10,7 +10,6 @@ type OptionalProps = {
   readOnlyWidth?: string,
   readOnlyHeight?: string,
   align: 'left' | 'right' | 'center',
-  placeholder: ?string,
 };
 
 export type RenderSelectProps = {
@@ -43,7 +42,6 @@ export const defaultSelectInputProps = {
   onChange: () => {},
   onBlur: () => {},
   onFocus: () => {},
-  placeholder: null,
 };
 
 export default defaultSelectInputProps;

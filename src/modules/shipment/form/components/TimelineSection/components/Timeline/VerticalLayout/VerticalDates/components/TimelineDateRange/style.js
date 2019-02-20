@@ -17,7 +17,6 @@ export const LabelStyle: string = css`
   width: 18px;
   height: 18px;
   letter-spacing: 1px;
-  white-space: nowrap;
 `;
 
 export const DateStyle = (hasDate: boolean, color: string): string => css`

@@ -1,9 +1,0 @@
-{
-  "threshold": 50,
-  "identifiers": true,
-  "literals": true,
-  "color": true,
-  "minInstances": 2,
-  "ignore": "test|spec|mock",
-  "truncate": 100
-}
