@@ -30,8 +30,8 @@ type OptionalProps = {
   onChange: (string, any) => void,
   onBlur: (string, boolean) => void,
   onRemove: Function,
-  readOnly: boolean,
-  downloadDisabled: boolean,
+  editable: boolean,
+  downloadable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -44,8 +44,8 @@ const defaultProps = {
   onChange: () => {},
   onBlur: () => {},
   onRemove: () => {},
-  readOnly: false,
-  downloadDisabled: false,
+  editable: true,
+  downloadable: true,
 };
 
 const DocumentItem = ({
@@ -55,15 +55,14 @@ const DocumentItem = ({
   onBlur,
   onRemove,
   types,
-  readOnly,
-  downloadDisabled,
+  editable,
+  downloadable,
 }: Props) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const toggleMemo = React.useCallback(() => {
     setIsExpanded(!isExpanded);
   }, []);
 
-  // return null when file not found or forbidden
   if (!value.id) return null;
 
   const fileExtension = getFileExtension(value.name);
@@ -73,23 +72,20 @@ const DocumentItem = ({
 
   return (
     <div className={DocumentWrapperStyle(isExpanded)}>
-      {!readOnly && (
+      {editable && (
         <button type="button" className={DeleteButtonStyle} onClick={onRemove}>
           <Icon icon="REMOVE" />
         </button>
       )}
+
       <div className={DocumentCardStyle}>
-        {readOnly ? (
-          <Display height="30px" align="left">
-            {type ? type.label : ''}
-          </Display>
-        ) : (
+        {editable ? (
           <SelectInput
             name={`${name}.type`}
             value={value.type}
             onBlur={onBlur}
             onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
-            readOnly={readOnly}
+            readOnly={!editable}
             items={types}
             itemToValue={v => (v ? v.type : null)}
             itemToString={v => (v ? v.label : '')}
@@ -98,16 +94,33 @@ const DocumentItem = ({
             )}
             renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="120px" />}
           />
+        ) : (
+          <Display height="30px" align="left">
+            {type ? type.label : ''}
+          </Display>
         )}
+
         <div className={FileExtensionIconStyle(fileIcon.color)}>
           <Icon icon={fileIcon.icon} />
         </div>
+
         <div className={BottomWrapperStyle}>
           <div className={FileNameWrapperStyle}>
             <div className={FileNameStyle}>{fileName}</div>
             {`.${fileExtension}`}
           </div>
-          {downloadDisabled ? (
+
+          {downloadable ? (
+            <button
+              type="button"
+              className={DownloadButtonStyle(false)}
+              onClick={() => {
+                window.open(value.path, '_blank');
+              }}
+            >
+              <Icon icon="DOWNLOAD" />
+            </button>
+          ) : (
             <Tooltip
               message={
                 <FormattedMessage
@@ -120,32 +133,24 @@ const DocumentItem = ({
                 <Icon icon="DOWNLOAD" />
               </div>
             </Tooltip>
-          ) : (
-            <button
-              type="button"
-              className={DownloadButtonStyle(false)}
-              onClick={() => {
-                window.open(value.path, '_blank');
-              }}
-            >
-              <Icon icon="DOWNLOAD" />
-            </button>
           )}
         </div>
       </div>
+
       <div className={MemoWrapperStyle(isExpanded)}>
         <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
           {({ ...inputHandlers }) => (
             <TextAreaInputFactory
               {...inputHandlers}
               isNew
-              editable={!readOnly}
+              editable={editable}
               inputWidth="590px"
               inputHeight="120px"
             />
           )}
         </FormField>
       </div>
+
       <button
         type="button"
         onClick={toggleMemo}
