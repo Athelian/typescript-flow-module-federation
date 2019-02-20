@@ -11,12 +11,13 @@ import {
   borderRadiuses,
 } from 'styles/common';
 
-export const WrapperStyle = (focused: boolean, disabled: boolean, readonly: boolean): string => css`
+export const WrapperStyle = (focused: boolean, disabled: boolean, editable: boolean): string => css`
   ${layout.HORIZONTAL};
   ${transitions.MAIN};
-  background: #fff;
+  background: ${colors.WHITE};
+  min-height: 30px;
   ${disabled && `background: ${colors.GRAY_SUPER_LIGHT}`};
-  ${readonly &&
+  ${!editable &&
     `
       border: none;
       cursor: default;
@@ -67,6 +68,7 @@ export const InputStyle = (isHover: boolean): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
   ${isHover && shadows.DROPDOWN};
+  ${transitions.MAIN};
   input {
     flex: 1;
     color: ${colors.BLACK};

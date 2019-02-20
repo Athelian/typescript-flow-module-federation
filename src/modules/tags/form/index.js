@@ -1,11 +1,6 @@
 // @flow
 import * as React from 'react';
-import { navigate } from '@reach/router';
-import { FormattedMessage } from 'react-intl';
-import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
-import { CloneButton } from 'components/Buttons';
 import { isEquals } from 'utils/fp';
-import { encodeId } from 'utils/id';
 import { TagSection } from './components';
 import { TagFormWrapperStyle } from './style';
 
@@ -28,40 +23,19 @@ export default class TagForm extends React.Component<Props> {
 
   componentDidMount() {
     const { onFormReady } = this.props;
-
     if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProps: Props) {
     const { tag } = this.props;
-
     return !isEquals(tag, nextProps.tag);
   }
 
-  onClone = () => {
-    const { tag } = this.props;
-    navigate(`/tags/clone/${encodeId(tag.id)}`);
-  };
-
   render() {
-    const { tag, isNew } = this.props;
-
+    const { isNew, tag } = this.props;
     return (
       <div className={TagFormWrapperStyle}>
-        <SectionWrapper id="tag_tagSection">
-          <SectionHeader
-            icon="TAG"
-            title={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
-          >
-            {!isNew && (
-              <>
-                <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
-                <CloneButton onClick={this.onClone} />
-              </>
-            )}
-          </SectionHeader>
-          <TagSection isNew={isNew} />
-        </SectionWrapper>
+        <TagSection isNew={isNew} tag={tag} />
       </div>
     );
   }

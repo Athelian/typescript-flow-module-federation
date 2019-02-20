@@ -4,7 +4,6 @@ import GenericNavBar from './GenericNavBar';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
 import FilterInput from './components/FilterInput';
-import AdvanceFilterInput from './components/AdvanceFilterInput';
 import SortInput from './components/SortInput';
 import SearchInput from './components/SearchInput';
 import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
@@ -21,7 +20,6 @@ export {
   EntityIcon,
   ViewToggle,
   FilterInput,
-  AdvanceFilterInput,
   SortInput,
   SearchInput,
   StatusToggleTabs,

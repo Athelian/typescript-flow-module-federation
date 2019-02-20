@@ -15,7 +15,6 @@ import distanceInputFactory from './metricInput/distanceInput';
 import areaInputFactory from './metricInput/areaInput';
 import volumeInputFactory from './metricInput/volumeInput';
 import weightInputFactory from './metricInput/weightInput';
-import customFieldsInputFactory from './customFieldsInput';
 
 export {
   parseEnumValue,
@@ -33,5 +32,4 @@ export {
   areaInputFactory,
   volumeInputFactory,
   weightInputFactory,
-  customFieldsInputFactory,
 };

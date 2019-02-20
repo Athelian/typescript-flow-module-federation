@@ -1,8 +1,11 @@
 // @flow
 import * as React from 'react';
+import { injectIntl, type IntlShape } from 'react-intl';
 import Icon from 'components/Icon';
 import { type RenderSelectProps } from 'components/Form/Inputs/SelectInput/type';
 import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
+import { isNullOrUndefined } from 'utils/fp';
+import messages from 'components/Form/Inputs/messages';
 import { SelectInputStyle, ClearButtonStyle, ArrowDownStyle } from './style';
 
 type OptionalProps = {
@@ -15,11 +18,12 @@ type OptionalProps = {
   height: string,
   align: 'left' | 'right' | 'center',
   hideDropdownArrow: boolean,
-  placeholder: React.Node,
+  placeholder: string,
 };
 
 type Props = OptionalProps &
   RenderSelectProps & {
+    intl: IntlShape,
     itemToString: any => string,
   };
 
@@ -33,10 +37,11 @@ const defaultProps = {
   height: '30px',
   align: 'right',
   hideDropdownArrow: false,
-  placeholder: '',
+  placeholder: null,
 };
 
 function DefaultSelect({
+  intl,
   type,
   required,
   hasError,
@@ -52,6 +57,7 @@ function DefaultSelect({
   getInputProps,
   itemToString,
   hideDropdownArrow,
+  placeholder,
   ...rest
 }: Props) {
   return (
@@ -83,8 +89,13 @@ function DefaultSelect({
         onClick={toggle}
         className={SelectInputStyle(align)}
         {...getInputProps({
-          value: itemToString(selectedItem),
+          value: itemToString(selectedItem) || '',
         })}
+        placeholder={
+          isNullOrUndefined(placeholder)
+            ? intl.formatMessage(messages.defaultSelectPlaceholder)
+            : placeholder
+        }
         {...rest}
       />
       {align === 'left' && !required && selectedItem && (
@@ -103,4 +114,4 @@ function DefaultSelect({
 
 DefaultSelect.defaultProps = defaultProps;
 
-export default DefaultSelect;
+export default injectIntl(DefaultSelect);

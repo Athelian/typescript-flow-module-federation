@@ -4,6 +4,8 @@ import { Provider } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
+import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import { UIConsumer } from 'modules/ui';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
@@ -61,6 +63,8 @@ const TableTemplateModule = (props: Props) => {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
+  const { hasPermission } = usePermission();
+  const canCreate = hasPermission(TEMPLATE_CREATE);
   return (
     <Provider>
       <UIConsumer>
@@ -88,7 +92,7 @@ const TableTemplateModule = (props: Props) => {
                 <BooleanValue>
                   {({ value: isOpen, set: toggle }) => (
                     <>
-                      <NewButton onClick={() => toggle(true)} />
+                      {canCreate && <NewButton onClick={() => toggle(true)} />}
                       <SlideView
                         isOpen={isOpen}
                         onRequestClose={() => toggle(false)}
