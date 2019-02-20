@@ -3,11 +3,12 @@ import * as React from 'react';
 import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
-import { ORDER_CREATE, ORDER_LIST } from 'modules/permission/constants/order';
+import { ORDER_CREATE, ORDER_GET, ORDER_LIST } from 'modules/permission/constants/order';
 import OrderListModule from './index.list';
 import OrderFormModule from './index.form';
 
 const OrderFormModuleWrapper = withNotFound(OrderFormModule, 'orderId');
+const OrderFormModuleDetailWrapper = withForbidden(OrderFormModuleWrapper, ORDER_GET);
 const OrderFormModuleCreationWrapper = withForbidden(OrderFormModuleWrapper, ORDER_CREATE);
 const OrderFormModuleListWrapper = withForbidden(OrderListModule, ORDER_LIST);
 
@@ -16,7 +17,7 @@ const OrderApp = () => (
     <OrderFormModuleListWrapper path="/" />
     <OrderFormModuleCreationWrapper path="new" />
     <OrderFormModuleCreationWrapper path="clone/:orderId" />
-    <OrderFormModuleCreationWrapper path=":orderId" />
+    <OrderFormModuleDetailWrapper path=":orderId" />
   </Router>
 );
 
