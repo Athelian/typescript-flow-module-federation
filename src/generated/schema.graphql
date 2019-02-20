@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Feb 19 2019 14:37:35 GMT+0900 (Tokyo Standard Time)
+# timestamp: Wed Feb 20 2019 12:13:25 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30591,15 +30591,19 @@ type Query {
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
   order(id: ID!): OrderPayload!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
+  ordersByIDs(ids: [ID!]!): [OrderPayload!]!
   orderExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
   ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput, fields: [String!]): FilePayload!
   ordersByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
   orderItem(id: ID!): OrderItemPayload!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
+  orderItemsByIDs(ids: [ID!]!): [OrderItemPayload!]!
   batch(id: ID!): BatchPayload!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
+  batchesByIDs(ids: [ID!]!): [BatchPayload!]!
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
+  shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
   shipmentExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
   shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput, fields: [String!]): FilePayload!
   shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
