@@ -10,11 +10,11 @@ import OrderFormModule from './index.form';
 const OrderFormModuleWrapper = withNotFound(OrderFormModule, 'orderId');
 const OrderFormModuleDetailWrapper = withForbidden(OrderFormModuleWrapper, ORDER_GET);
 const OrderFormModuleCreationWrapper = withForbidden(OrderFormModuleWrapper, ORDER_CREATE);
-const OrderFormModuleListWrapper = withForbidden(OrderListModule, ORDER_LIST);
+const OrderModuleListWrapper = withForbidden(OrderListModule, ORDER_LIST);
 
 const OrderApp = () => (
   <Router>
-    <OrderFormModuleListWrapper path="/" />
+    <OrderModuleListWrapper path="/" />
     <OrderFormModuleCreationWrapper path="new" />
     <OrderFormModuleCreationWrapper path="clone/:orderId" />
     <OrderFormModuleDetailWrapper path=":orderId" />
