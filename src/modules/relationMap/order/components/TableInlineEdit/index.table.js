@@ -416,7 +416,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           batchCustomFieldsFilter,
           shipmentCustomFieldsFilter,
         };
-        logger.warn({ rowCounter });
         return (
           <ApolloConsumer>
             {client => (
