@@ -50,15 +50,7 @@ const orderTableFragment = gql`
       ...orderItemTableFragment
     }
     shipments {
-      ... on Shipment {
-        id
-        batches {
-          ... on Batch {
-            id
-          }
-        }
-        ...shipmentTableFragment
-      }
+      ...shipmentTableFragment
     }
   }
 `;
