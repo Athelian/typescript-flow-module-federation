@@ -56,7 +56,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
   ) => {
     const { containerId } = this.props;
 
-    const input = prepareContainer(formData);
+    const { id, ...input } = prepareContainer(formData);
 
     const result = await saveContainer({
       variables: { input, id: decodeId(containerId) },
