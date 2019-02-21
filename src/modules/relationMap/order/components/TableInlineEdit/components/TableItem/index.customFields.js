@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
-import { list2Map } from 'utils/customFields';
 import { FormField } from 'modules/form';
 import { WrapperStyle, ItemStyle } from './style';
 import InlineTextInput from './components/InlineTextInput';
@@ -38,16 +37,18 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
     values
   );
   const { fieldValues } = customFields;
-  const fieldValueMap = list2Map(fieldValues);
   return (
     <div className={WrapperStyle}>
       {fields.map(({ id }, fieldCounter) => {
-        const fieldValue = fieldValueMap.get(id);
+        const fieldValue = fieldValues.find(({ fieldDefinition }) => fieldDefinition.id === id);
+        const findPosition = fieldValues.findIndex(
+          ({ fieldDefinition }) => fieldDefinition.id === id
+        );
         const inputId = `${rowNo}-${fieldCounter + columnNo + 1}`;
         return (
-          <div className={ItemStyle} key={id}>
+          <div className={ItemStyle} key={inputId}>
             <FormField
-              name={`${cell}.customFields.fieldValues[${fieldCounter}].value.string`}
+              name={`${cell}.customFields.fieldValues[${findPosition}].value.string`}
               initValue={fieldValue ? fieldValue.value.string : ''}
               validator={validator}
               values={values}
