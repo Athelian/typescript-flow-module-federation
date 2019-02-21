@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import usePermission from 'hooks/usePermission';
-import NoPermission from 'components/NoPermission';
+import PageNotFound from 'components/PageNotFound';
 
 export default function withForbidden(
   WrappedComponent: React.ComponentType<any>,
@@ -10,6 +10,6 @@ export default function withForbidden(
   return function ForbiddenWrappedComponent(props: any) {
     const { hasPermission } = usePermission();
     if (hasPermission(permission)) return <WrappedComponent {...props} />;
-    return <NoPermission />;
+    return <PageNotFound />;
   };
 }

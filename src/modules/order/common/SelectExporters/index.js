@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { ObjectValue } from 'react-values';
 import { isEquals } from 'utils/fp';
+import { cleanUpData } from 'utils/data';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -51,7 +52,7 @@ const SelectExporters = ({ selected, onCancel, onSelect }: Props) => (
               renderItem={item => (
                 <PartnerCard
                   partner={item}
-                  onSelect={() => set(item)}
+                  onSelect={() => set(cleanUpData(item))}
                   selectable
                   selected={value && item.id === value.id}
                   key={item.id}

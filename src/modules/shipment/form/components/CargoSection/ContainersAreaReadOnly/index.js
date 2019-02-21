@@ -42,6 +42,18 @@ type Props = {
 const includesById = (id: string, batches: Array<Object>): boolean =>
   batches.map(({ id: batchId }) => batchId).includes(id);
 
+const getNewSourceContainer = (
+  sourceContainer: Object,
+  selectedBatches: Array<Object>
+): { batches: Array<Object>, representativeBatch: Object } => {
+  const { batches, representativeBatch } = sourceContainer;
+  const newBatches = batches.filter(({ id }) => !includesById(id, selectedBatches));
+  const newRepresentativeBatch = includesById(representativeBatch.id, newBatches)
+    ? representativeBatch
+    : newBatches[0];
+  return { ...sourceContainer, batches: newBatches, representativeBatch: newRepresentativeBatch };
+};
+
 function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
@@ -117,23 +129,18 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                   ...rest,
                                 }
                           );
-                          const containerIndex = findIndex(
+                          setBatches('batches', newBatches);
+
+                          const sourceContainerIndex = findIndex(
                             containers,
                             ({ id }) => id === selectCardId
                           );
-                          setBatches('batches', newBatches);
-                          const containerBatches = containers[containerIndex].batches || [];
-                          setDeepFieldValue(`containers.${containerIndex}`, {
-                            ...containers[containerIndex],
-                            ...(containerBatches.length === 0
-                              ? {
-                                  representativeBatch: selectedBatches[0],
-                                }
-                              : {}),
-                            batches: containerBatches.filter(
-                              ({ id }) => !includesById(id, selectedBatches)
-                            ),
-                          });
+                          const sourceContainer = containers[sourceContainerIndex];
+
+                          setDeepFieldValue(
+                            `containers.${sourceContainerIndex}`,
+                            getNewSourceContainer(sourceContainer, selectedBatches)
+                          );
                           setIsSelectBatchesMode(false);
                         }}
                         message={
@@ -148,7 +155,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                 </div>
 
                 <>
-                  {containers.map((container, index) => {
+                  {containers.map((container, targetContainerIndex) => {
                     return (
                       <div key={container.id} className={SelectContainerCardWrapperStyle}>
                         <ShipmentContainerCard container={container} />
@@ -182,8 +189,18 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                           return (
                             <Action
                               onClick={() => {
+                                const newBatches = batches.map(
+                                  ({ id, container: currentContainer, ...rest }) => ({
+                                    id,
+                                    ...(includesById(id, selectedBatches)
+                                      ? { container }
+                                      : { container: currentContainer }),
+                                    ...rest,
+                                  })
+                                );
+                                setBatches('batches', newBatches);
                                 if (isSelectedBatchesPoolCard) {
-                                  setDeepFieldValue(`containers.${index}`, {
+                                  setDeepFieldValue(`containers.${targetContainerIndex}`, {
                                     ...container,
                                     ...(container.batches.length === 0
                                       ? {
@@ -197,29 +214,13 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                     containers,
                                     ({ id }) => id === selectCardId
                                   );
-                                  const sourceContainerBatches = containers[
-                                    sourceContainerIndex
-                                  ].batches.filter(({ id }) => !includesById(id, selectedBatches));
+                                  const sourceContainer = containers[sourceContainerIndex];
+                                  setDeepFieldValue(
+                                    `containers.${sourceContainerIndex}`,
+                                    getNewSourceContainer(sourceContainer, selectedBatches)
+                                  );
 
-                                  const sourceContainerRepresentativeBatch =
-                                    containers[sourceContainerIndex].representativeBatch;
-
-                                  setDeepFieldValue(`containers.${sourceContainerIndex}`, {
-                                    ...containers[sourceContainerIndex],
-                                    batches: sourceContainerBatches,
-                                    ...(includesById(
-                                      sourceContainerRepresentativeBatch.id,
-                                      selectedBatches
-                                    )
-                                      ? {
-                                          representativeBatch: sourceContainerBatches[0],
-                                        }
-                                      : {
-                                          representativeBatch: sourceContainerRepresentativeBatch,
-                                        }),
-                                  });
-
-                                  setDeepFieldValue(`containers.${index}`, {
+                                  setDeepFieldValue(`containers.${targetContainerIndex}`, {
                                     ...container,
                                     ...(container.batches.length === 0
                                       ? {
@@ -229,16 +230,6 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                     batches: [...container.batches, ...selectedBatches],
                                   });
                                 }
-                                const newBatches = batches.map(
-                                  ({ id, container: currentContainer, ...rest }) => ({
-                                    id,
-                                    ...(includesById(id, selectedBatches)
-                                      ? { container }
-                                      : { container: currentContainer }),
-                                    ...rest,
-                                  })
-                                );
-                                setBatches('batches', newBatches);
                                 setIsSelectBatchesMode(false);
                               }}
                               message={
