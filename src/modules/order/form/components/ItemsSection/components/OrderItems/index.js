@@ -5,7 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
-import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
 import { findBatchQuantity } from 'utils/batch';
 import { isEquals } from 'utils/fp';
@@ -128,13 +128,14 @@ class OrderItems extends React.Component<Props> {
     return orderItems.length > 0 ? (
       <PermissionConsumer>
         {hasPermission => {
-          const canCreateOrUpdate = hasPermission(ORDER_CREATE) || hasPermission(ORDER_UPDATE);
+          const allowUpdate = hasPermission(ORDER_UPDATE);
+
           return (
             <div className={ItemGridStyle}>
               {orderItems.map((item, index) => (
                 <div id={`orderItem_${item.id}`} className={ItemStyle} key={item.id}>
                   <OrderItemCard
-                    readOnly={!canCreateOrUpdate}
+                    readOnly={!allowUpdate}
                     item={item}
                     currency={currency}
                     saveOnBlur={newValue => onSave(index, newValue)}
@@ -169,7 +170,7 @@ class OrderItems extends React.Component<Props> {
                                 </div>
                                 <div className={TitleStyle}>BATCHES ({batches.length})</div>
                               </div>
-                              {canCreateOrUpdate && (
+                              {allowUpdate && (
                                 <>
                                   <NewButton
                                     label={
@@ -222,7 +223,7 @@ class OrderItems extends React.Component<Props> {
                                         )}
                                       </SlideView>
                                       <OrderBatchCard
-                                        readOnly={!canCreateOrUpdate}
+                                        readOnly={!allowUpdate}
                                         batch={batch}
                                         currency={currency}
                                         price={item.price}
