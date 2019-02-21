@@ -91,7 +91,6 @@ const OrderSection = ({ isNew }: Props) => {
                         name={name}
                         {...inputHandlers}
                         isNew={isNew}
-                        required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.PI} />}
                         editable={allowUpdate}
