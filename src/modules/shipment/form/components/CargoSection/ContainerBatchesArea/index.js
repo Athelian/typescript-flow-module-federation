@@ -68,13 +68,11 @@ export default function ContainerBatchesArea({
           state
         );
 
-        if (batchesInContainer.length > 0) {
-          if (isNullOrUndefined(representativeBatchId)) {
-            setDeepFieldValue(
-              `containers.${containerIndex}.representativeBatch`,
-              batchesInContainer[0]
-            );
-          }
+        if (batchesInContainer.length > 0 && isNullOrUndefined(representativeBatchId)) {
+          setDeepFieldValue(
+            `containers.${containerIndex}.representativeBatch`,
+            batchesInContainer[0]
+          );
         }
         return (
           <div className={BatchesWrapperStyle}>
@@ -189,14 +187,17 @@ export default function ContainerBatchesArea({
                                       'batches',
                                       batches.filter(({ id: batchId }) => id !== batchId)
                                     );
+                                    const newBatchesInContainer = batchesInContainer.filter(
+                                      ({ id: batchId }) => id !== batchId
+                                    );
                                     setDeepFieldValue(
                                       `containers.${containerIndex}.batches`,
-                                      batchesInContainer.filter(({ id: batchId }) => id !== batchId)
+                                      newBatchesInContainer
                                     );
                                     if (batch.id === representativeBatchId) {
                                       setDeepFieldValue(
                                         `containers.${containerIndex}.representativeBatch`,
-                                        null
+                                        newBatchesInContainer[0]
                                       );
                                     }
                                   }}
@@ -280,6 +281,12 @@ export default function ContainerBatchesArea({
                                   ...batchesInContainer,
                                   ...newSelectBatches,
                                 ]);
+                                if (batchesInContainer.length === 0) {
+                                  setDeepFieldValue(
+                                    `containers.${containerIndex}.representativeBatch`,
+                                    newSelectBatches[0]
+                                  );
+                                }
                                 selectBatchesSlideToggle(false);
                               }}
                               onCancel={() => selectBatchesSlideToggle(false)}
@@ -342,6 +349,12 @@ export default function ContainerBatchesArea({
                                   ...batchesInContainer,
                                   ...createdBatches,
                                 ]);
+                                if (batchesInContainer.length === 0) {
+                                  setDeepFieldValue(
+                                    `containers.${containerIndex}.representativeBatch`,
+                                    createdBatches[0]
+                                  );
+                                }
                                 createBatchesSlideToggle(false);
                               }}
                               onCancel={() => createBatchesSlideToggle(false)}
