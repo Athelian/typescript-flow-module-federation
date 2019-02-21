@@ -169,13 +169,16 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       },
     } = productProvider;
 
-    this.setState({
+    this.setState(prevState => ({
+      packageQuantity: prevState.autoCalculatePackageQuantity
+        ? calculatePackageQuantity(prevState)
+        : prevState.packageQuantity,
       packageCapacity,
       packageGrossWeight,
       packageName,
       packageVolume,
       packageSize,
-    });
+    }));
   };
 
   getPackageQuantity = () => calculatePackageQuantity(this.state);
