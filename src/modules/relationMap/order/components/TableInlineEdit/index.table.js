@@ -261,13 +261,11 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
         Object.keys(editData.orders || {}).length === 0 &&
         Object.keys(editData.shipments || {}).length === 0
       ) {
-        logger.warn('copy data');
         const { entities } = normalize(dataSource);
         setEditData(cloneDeep(entities));
       }
 
       const listener = emitter.once('INLINE_CHANGE', newData => {
-        logger.warn({ newData, editData });
         setErrorMessage('');
 
         const { name, value, hasError } = newData;
@@ -305,9 +303,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     return () => {};
   });
 
-  const { orderIds, orderItemIds, batchIds, shipmentIds } = allId;
-  logger.warn({ mappingObjects });
-  logger.warn({ orderIds, orderItemIds, batchIds, shipmentIds });
+  const { orderIds, orderItemIds, batchIds } = allId;
   const { entities } = normalize(dataSource);
   const orderColumnFieldsFilter = findColumns({
     showAll,
@@ -457,7 +453,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
                                 item => !!item
                               );
-                              logger.warn({ errorMessages });
                               if (errorMessages.length)
                                 setErrorMessage(errorMessages[0][0].message);
                             }
@@ -468,7 +463,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
                                 item => !!item
                               );
-                              logger.warn({ errorMessages });
                               if (errorMessages.length)
                                 setErrorMessage(errorMessages[0][0].message);
                             }
@@ -479,14 +473,12 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
                                 item => !!item
                               );
-                              logger.warn({ errorMessages });
                               if (errorMessages.length)
                                 setErrorMessage(errorMessages[0][0].message);
                             }
                           }
                           setTouched({});
                         } catch (error) {
-                          logger.warn(error);
                           toast.error(error.message);
                           setLoading(false);
                         }

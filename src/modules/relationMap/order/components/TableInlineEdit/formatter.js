@@ -12,11 +12,6 @@ export const formatOrders = ({
   shipments: Array<Object>,
 }) => {
   const { entities } = normalize({ orders, orderItems: [], batches: [], shipments });
-  console.warn({
-    entities,
-    orders,
-    shipments,
-  });
   const order = {};
   const orderItem = {};
   const batch = {};
