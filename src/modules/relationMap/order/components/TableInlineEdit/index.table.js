@@ -411,6 +411,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           batchCustomFieldsFilter,
           shipmentCustomFieldsFilter,
         };
+        logger.warn({ mappingObjects });
         return (
           <ApolloConsumer>
             {client => (

@@ -202,9 +202,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         onRequestClose={() => openTableView(false)}
                         options={{ width: '1030px' }}
                       >
-                        {opened && (
-                          <TableView entities={entities} onCancel={() => openTableView(false)} />
-                        )}
+                        {opened && <TableView onCancel={() => openTableView(false)} />}
                       </SlideView>
                     </>
                   )}

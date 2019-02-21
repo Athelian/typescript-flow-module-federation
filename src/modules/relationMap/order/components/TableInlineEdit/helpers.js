@@ -12,18 +12,6 @@ import {
   formatVoyages,
 } from 'modules/shipment/form/mutation';
 
-type MappingObject = {
-  data: {
-    id: string,
-  },
-  relation: {
-    order: Object,
-    orderItem: Object,
-    batch: Object,
-    shipment: Object,
-  },
-};
-
 export const findAllPossibleIds = (
   targets: Object,
   entities: { shipments: Object, orders: Object, orderItems: Object, batches: Object }
@@ -96,6 +84,9 @@ export const findAllPossibleIds = (
           orderIds.push(orderItem.order);
         }
       }
+      if (batch.shipment && !shipmentIds.includes(batch.shipment)) {
+        shipmentIds.push(batch.shipment);
+      }
     }
   });
 
@@ -106,90 +97,16 @@ export const findAllPossibleIds = (
       orderIds.push(orderItem.order);
       if (orderItem && orderItem.batches) {
         batchIds.push(...orderItem.batches);
+        orderItem.batches.forEach(batchId => {
+          const batch = entities.batches[batchId];
+          const shipmentId = batch.shipment;
+          if (shipmentId && !shipmentIds.includes(shipmentId)) {
+            shipmentIds.push(shipmentId);
+          }
+        });
       }
     }
   });
-
-  return {
-    orderIds: [...new Set(orderIds)],
-    orderItemIds: [...new Set(orderItemIds)],
-    batchIds: [...new Set(batchIds)],
-    shipmentIds: [...new Set(shipmentIds)],
-  };
-};
-
-export const findAllPossibleOrders = (
-  selected: {
-    order: Object,
-    orderItem: Object,
-    batch: Object,
-    shipment: Object,
-  },
-  mappingObjects: {
-    order: Object,
-    orderItem: Object,
-    batch: Object,
-    shipment: Object,
-  }
-): {
-  orderIds: Array<string>,
-  orderItemIds: Array<string>,
-  batchIds: Array<string>,
-  shipmentIds: Array<string>,
-} => {
-  const orderIds = selected.order ? Object.keys(selected.order || {}) : [];
-  const orderItemIds = selected.orderItem ? Object.keys(selected.orderItem) : [];
-  const batchIds = selected.batch ? Object.keys(selected.batch || {}) : [];
-  const shipmentIds = selected.shipment ? Object.keys(selected.shipment || {}) : [];
-
-  // find all orders from selected order
-  if (orderIds.length) {
-    (Object.entries(mappingObjects.order || {}): any).forEach((item: [string, MappingObject]) => {
-      const [orderId, order] = item;
-      if (selected.order && selected.order[orderId]) {
-        orderItemIds.push(...Object.keys(order.relation.orderItem));
-        batchIds.push(...Object.keys(order.relation.batch));
-        shipmentIds.push(...Object.keys(order.relation.shipment));
-      }
-    });
-  }
-
-  if (orderItemIds.length) {
-    (Object.entries(mappingObjects.orderItem || {}): any).forEach(
-      (item: [string, MappingObject]) => {
-        const [orderItemId, orderItem] = item;
-        if (selected.orderItem && selected.orderItem[orderItemId]) {
-          orderIds.push(...Object.keys(orderItem.relation.order));
-          batchIds.push(...Object.keys(orderItem.relation.batch));
-          shipmentIds.push(...Object.keys(orderItem.relation.shipment));
-        }
-      }
-    );
-  }
-
-  if (shipmentIds.length) {
-    (Object.entries(mappingObjects.shipment || {}): any).forEach(
-      (item: [string, MappingObject]) => {
-        const [shipmentId, shipment] = item;
-        if (selected.shipment && selected.shipment[shipmentId]) {
-          orderIds.push(...Object.keys(shipment.relation.order));
-          orderItemIds.push(...Object.keys(shipment.relation.orderItem));
-          batchIds.push(...Object.keys(shipment.relation.batch));
-        }
-      }
-    );
-  }
-
-  if (batchIds.length) {
-    (Object.entries(mappingObjects.batch || {}): any).forEach((item: [string, MappingObject]) => {
-      const [batchId, batch] = item;
-      if (selected.batch && selected.batch[batchId]) {
-        orderIds.push(...Object.keys(batch.relation.order));
-        orderItemIds.push(...Object.keys(batch.relation.orderItem));
-        shipmentIds.push(...Object.keys(batch.relation.shipment));
-      }
-    });
-  }
 
   return {
     orderIds: [...new Set(orderIds)],
