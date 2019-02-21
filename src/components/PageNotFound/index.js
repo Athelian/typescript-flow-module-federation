@@ -1,54 +1,52 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import ReactSVG from 'react-svg';
+import { UIConsumer } from 'modules/ui';
+import NavBar from 'components/NavBar';
+import Layout from 'components/Layout';
+import Icon from 'components/Icon';
 import {
-  PageNotFoundContainerStyle,
-  PageNotFoundTitleContainerStyle,
-  PageNotFoundLogoStyle,
-  PageNotFoundTravoltaStyle,
-  PageNotFoundH1Style,
-  PageNotFoundH3Style,
-  PageNotFoundButtonStyle,
-  PageNotFoundLinkContainerStyle,
+  PageNotFoundWrapperStyle,
+  PageNotFoundMessageWrapperStyle,
+  PageNotFoundIconStyle,
+  PageNotFoundTitleStyle,
+  PageNotFoundDescriptionStyle,
+  PageNotFoundGraphicsWrapperStyle,
+  PageNotFoundGraphicStyle,
 } from './style';
-import loginIcon from './media/icon_white.png';
-import messages from './messages';
 
-type Props = {
-  goBack?: Function,
-};
-
-const PageNotFound = ({ goBack }: Props) => (
-  <div className={PageNotFoundContainerStyle}>
-    <div className={PageNotFoundTitleContainerStyle}>
-      <h1 className={PageNotFoundH1Style}>
-        {process.env.NODE_ENV !== 'production' ? (
-          <img
-            className={PageNotFoundTravoltaStyle}
-            src="https://media.giphy.com/media/jWexOOlYe241y/giphy.gif"
-            alt="lost"
+const PageNotFound = () => (
+  <UIConsumer>
+    {uiState => (
+      <Layout {...uiState} navBar={<NavBar />}>
+        <div className={PageNotFoundWrapperStyle}>
+          <div className={PageNotFoundMessageWrapperStyle}>
+            <div className={PageNotFoundIconStyle}>
+              <Icon icon="WARNING_TRIANGLE" />
+            </div>
+            <div className={PageNotFoundTitleStyle}>
+              <FormattedMessage
+                id="components.pageNotFound.title"
+                defaultMessage="PAGE NOT FOUND"
+              />
+            </div>
+            <div className={PageNotFoundDescriptionStyle}>
+              <FormattedMessage
+                id="components.pageNotFound.description"
+                defaultMessage="SORRY, EITHER YOU DO NOT HAVE ACCESS TO THIS PAGE OR THIS PAGE DOES NOT EXIST AT ALL."
+              />
+            </div>
+          </div>
+          <ReactSVG
+            src="error.svg"
+            className={PageNotFoundGraphicsWrapperStyle}
+            svgClassName={PageNotFoundGraphicStyle}
           />
-        ) : (
-          '404'
-        )}
-      </h1>
-      <h3 className={PageNotFoundH3Style}>
-        <FormattedMessage {...messages.message} />
-      </h3>
-    </div>
-    <div className={PageNotFoundLinkContainerStyle}>
-      <button type="button" onClick={goBack} className={PageNotFoundButtonStyle}>
-        <img src={loginIcon} className={PageNotFoundLogoStyle} alt="Go back" />
-        <span>
-          <FormattedMessage {...messages.goBack} />
-        </span>
-      </button>
-    </div>
-  </div>
+        </div>
+      </Layout>
+    )}
+  </UIConsumer>
 );
-
-PageNotFound.defaultProps = {
-  goBack: () => window.history.back(),
-};
 
 export default PageNotFound;

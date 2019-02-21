@@ -12,7 +12,7 @@ import { PRODUCT_PROVIDER_GET } from 'modules/permission/constants/product';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import NoPermission from 'components/NoPermission';
+import PageNotFound from 'components/PageNotFound';
 import { PermissionConsumer } from 'modules/permission';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
@@ -163,7 +163,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
               </Subscribe>
             </Provider>
           ) : (
-            <NoPermission />
+            <PageNotFound />
           )
         }
       </PermissionConsumer>

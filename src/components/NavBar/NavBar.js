@@ -4,7 +4,7 @@ import Setting from 'modules/setting';
 import { NavBarStyle, ChildrenWrapperStyle } from './style';
 
 type Props = {
-  children: React.Node,
+  children?: React.Node,
 };
 
 const NavBar = ({ children }: Props) => (

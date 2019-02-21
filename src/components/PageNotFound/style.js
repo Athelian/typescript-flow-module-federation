@@ -1,62 +1,66 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, gradients, transitions, presets } from 'styles/common';
+import { colors } from 'styles/common';
 
-export const PageNotFoundContainerStyle: string = css`
-  ${layout.FIT};
-  ${layout.VERTICAL};
-  ${layout.CENTER_CENTER};
-  background: ${gradients.BLUE_TEAL_DIAGONAL};
-  justify-content: space-between;
-  color: #fff;
+export const PageNotFoundWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
 `;
 
-export const PageNotFoundTitleContainerStyle: string = css`
-  ${layout.VERTICAL};
-  ${layout.CENTER_CENTER};
-  user-select: none;
-  flex: 3;
+export const PageNotFoundMessageWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+  width: 880px;
+  padding: 100px 0 0 0;
 `;
 
-export const PageNotFoundH1Style: string = css`
-  font-size: 200px;
-  line-height: 250px;
-  font-weight: 100;
+export const PageNotFoundIconStyle: string = css`
+  color: ${colors.BLUE};
+  font-size: 40px;
 `;
 
-export const PageNotFoundTravoltaStyle: string = css`
-  height: 300px;
+export const PageNotFoundTitleStyle: string = css`
+  color: ${colors.BLUE};
+  font-size: 40px;
+  letter-spacing: 6px;
+  text-align: center;
+  margin: 40px 0;
+  font-weight: bold;
 `;
 
-export const PageNotFoundH3Style: string = css`
+export const PageNotFoundDescriptionStyle: string = css`
+  color: ${colors.BLACK};
   font-size: 20px;
-  font-weight: 400;
-  line-height: 26px;
-  padding: 20px;
+  line-height: 40px;
+  letter-spacing: 4px;
   text-align: center;
 `;
 
-export const PageNotFoundLinkContainerStyle: string = css`
+export const PageNotFoundGraphicsWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
   flex: 1;
-`;
-
-export const PageNotFoundButtonStyle: string = css`
-  ${layout.VERTICAL};
-  ${layout.CENTER};
-  ${transitions.MAIN};
-  ${presets.BUTTON};
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 36px;
-  letter-spacing: 2px;
-  color: #fff;
-  text-decoration: none;
-  text-shadow: none;
-  &:hover {
-    text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  & > div {
+    width: 2000px;
+    min-width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
   }
 `;
 
-export const PageNotFoundLogoStyle: string = css`
-  width: 60px;
+export const PageNotFoundGraphicStyle: string = css`
+  width: 100%;
+  flex: 1;
 `;

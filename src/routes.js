@@ -8,7 +8,6 @@ import UserProvider from 'modules/user';
 import { AuthenticationConsumer } from 'modules/authentication';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
-import NoPermission from './components/NoPermission';
 import DashBoard from './modules/dashboard';
 import Order from './modules/order';
 import Login from './modules/login';
@@ -70,7 +69,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <PageNotFound default />
         </Authorized>
         <Login path="/login" />
-        <NoPermission path="/403" />
+        <PageNotFound path="/403" />
         <PageNotFound default />
       </Router>
     </Suspense>
