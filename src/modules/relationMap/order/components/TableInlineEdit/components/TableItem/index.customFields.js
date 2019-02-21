@@ -51,8 +51,6 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
               initValue={fieldValue ? fieldValue.value.string : ''}
               validator={validator}
               values={values}
-              id={inputId}
-              cachedFields={['id']}
             >
               {({ name: fieldName }) => (
                 <InlineTextInput

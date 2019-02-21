@@ -1,10 +1,11 @@
 // @flow
-import { format, min, max, startOfDay, endOfDay } from 'date-fns';
+import { format, min, max, startOfDay, endOfDay, isValid } from 'date-fns';
 import { zonedTimeToUtc } from 'date-fns-tz';
 
 export { min as earliest, max as latest };
 
-export const formatToDateInput = (date: string): string => format(new Date(date), 'yyyy-MM-dd');
+export const formatToDateInput = (date: string): string =>
+  isValid(new Date(date)) ? format(new Date(date), 'yyyy-MM-dd') : '';
 
 export const formatToDateTimeInput = (time: string): string =>
   format(new Date(time), "yyyy-MM-dd'T'HH:mm");
