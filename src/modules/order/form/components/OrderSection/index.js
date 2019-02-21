@@ -205,6 +205,7 @@ const OrderSection = ({ isNew }: Props) => {
                                       enumType="Currency"
                                       required
                                       onBlur={value => {
+                                        onBlur();
                                         if (value !== values.currency && orderItems.length > 0) {
                                           setPriceDialog(true);
                                         } else {
