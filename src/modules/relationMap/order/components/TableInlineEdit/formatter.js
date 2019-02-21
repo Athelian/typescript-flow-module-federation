@@ -27,11 +27,6 @@ function* iterateOrders(orders: Array<Object>) {
   }
 }
 
-const getBatchedQuantity = (batch: Object) => {
-  const { quantity, batchAdjustments = [] } = batch;
-  return batchAdjustments.reduce((total, adjustment) => total + adjustment.quantity, quantity || 0);
-};
-
 const getBatchRelation = (batch: Object, info: Object) => {
   const { orderId, orderItemId, index } = info;
   return {
@@ -39,37 +34,6 @@ const getBatchRelation = (batch: Object, info: Object) => {
     rootId: orderId,
     parentId: orderItemId,
     index,
-  };
-};
-
-const summary = (orders: Array<Object>) => {
-  const sumOrders = orders.length;
-  let sumOrderItems = 0;
-  let sumBatches = 0;
-  let sumShipments = 0;
-
-  const getSummary = () => ({
-    sumOrders,
-    sumOrderItems,
-    sumBatches,
-    sumShipments,
-  });
-
-  const findSummary = (entity: Object) => {
-    if (entity.type === 'ORDER') {
-      const { orderItems = [], shipments = [] } = entity.data;
-      sumOrderItems += orderItems.length;
-      sumShipments += shipments.length;
-    }
-    if (entity.type === 'ORDER_ITEM') {
-      const { batches = [] } = entity.data;
-      sumBatches += batches.length;
-    }
-    return getSummary();
-  };
-  return {
-    findSummary,
-    getSummary,
   };
 };
 
@@ -102,17 +66,14 @@ const createOrderObj = () => {
     }
     if (type === 'BATCH') {
       const { shipment } = data;
-      const { relation: orderRelation, data: orderData } = orderObj[orderId];
-      const batchedQuantity = getBatchedQuantity(data);
+      const { relation: orderRelation } = orderObj[orderId];
       batchId = id;
-      orderData.batchedQuantity += batchedQuantity;
       orderRelation.batch[batchId] = getBatchRelation(data, {
         orderId,
         orderItemId,
         index,
       });
       if (shipment) {
-        orderData.shippedQuantity += batchedQuantity;
         orderRelation.shipment[shipment.id] = true;
       }
     }
@@ -158,16 +119,13 @@ const createOrderItemObj = () => {
     }
     if (type === 'BATCH') {
       const { shipment } = data;
-      const batchedQuantity = getBatchedQuantity(data);
-      const { relation: orderItemRelation, data: orderItemData } = orderItemObj[orderItemId];
+      const { relation: orderItemRelation } = orderItemObj[orderItemId];
       orderItemRelation.batch[id] = getBatchRelation(data, {
         orderId,
         orderItemId,
         index,
       });
-      orderItemData.batchedQuantity += batchedQuantity;
       if (shipment) {
-        orderItemData.shippedQuantity += batchedQuantity;
         orderItemRelation.shipment[shipment.id] = true;
       }
     }
@@ -198,8 +156,6 @@ const createBatchObj = () => {
       if (!batchObj[id]) {
         batchObj[id] = initBatchObj(data, orderId, orderItem);
       }
-      const { data: batchData } = batchObj[id];
-      batchData.batchedQuantity = getBatchedQuantity(data);
     }
   };
   return {
@@ -249,28 +205,44 @@ const createShipmentObj = () => {
   };
 };
 
-export const formatOrders = (orders: Array<Object>) => {
+export const formatOrders = (orders: Array<Object>, shipments: Array<Object>) => {
   const orderGenerator = iterateOrders(orders);
-  const summaryData = summary(orders);
   const orderData = createOrderObj();
   const itemData = createOrderItemObj();
   const batchData = createBatchObj();
   const shipmentData = createShipmentObj();
   let result = orderGenerator.next();
   while (!result.done) {
-    summaryData.findSummary(result.value);
     orderData.formatOrderObj(result.value);
     itemData.formatOrderItemObj(result.value);
     batchData.formatBatchObj(result.value);
     shipmentData.formatShipmentObj(result.value);
     result = orderGenerator.next();
   }
-  return {
-    ...summaryData.getSummary(),
+  const shipment = shipmentData.getShipmentObj();
+  const formattedResultObject = {
     ...orderData.getOrderObj(),
     ...itemData.getOrderItemObj(),
     ...batchData.getBatchObj(),
-    ...shipmentData.getShipmentObj(),
+  };
+  shipments.forEach(item => {
+    if (!shipment[item.id]) {
+      shipment[item.id] = {
+        data: shipmentData,
+        relation: {
+          batch: {},
+          orderItem: {},
+          order: {},
+          shipment: {
+            [item.id]: true,
+          },
+        },
+      };
+    }
+  });
+  return {
+    ...formattedResultObject,
+    ...shipment,
   };
 };
 

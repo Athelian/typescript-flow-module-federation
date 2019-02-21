@@ -69,7 +69,6 @@ export const findAllPossibleIds = (
   (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
     const [shipmentId, shipment] = item;
     if (selected.SHIPMENT.includes(shipmentId)) {
-      console.warn({ shipment });
       if (shipment.batches) {
         batchIds.push(...shipment.batches);
         shipment.batches.forEach(batchId => {

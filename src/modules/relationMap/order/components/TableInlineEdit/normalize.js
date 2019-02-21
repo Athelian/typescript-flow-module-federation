@@ -23,4 +23,10 @@ shipment.define({
   batches: [batch],
 });
 
-export default originalData => normalize(originalData, { orders: [order] });
+export default originalData =>
+  normalize(originalData, {
+    orders: [order],
+    shipments: [shipment],
+    orderItems: [orderItem],
+    batches: [batch],
+  });

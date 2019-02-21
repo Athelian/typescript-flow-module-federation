@@ -70,7 +70,10 @@ import {
 type Props = {
   onCancel: () => void,
   allId: Object,
-  data: Array<Object>,
+  orders: Array<Object>,
+  shipments: Array<Object>,
+  batches: Array<Object>,
+  orderItems: Array<Object>,
   intl: IntlShape,
 };
 
@@ -196,8 +199,7 @@ const getRowCounter = (counter, type) => {
 
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
 
-function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
-  logger.warn('data', data);
+function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [errors, setErrors] = useState({});
@@ -253,14 +255,12 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
     [templateColumns]
   );
 
-  const { sumShipments, sumOrders, sumOrderItems, sumBatches, ...mappingObjects } = formatOrderData(
-    data
-  );
+  const mappingObjects = formatOrderData(dataSource.orders, dataSource.shipments);
   useEffect(() => {
-    if (data.length) {
-      if (Object.keys(editData.orders).length === 0) {
+    if (dataSource.orders.length) {
+      if (Object.keys(editData.orders || {}).length === 0) {
         logger.warn('copy data');
-        const { entities } = normalize({ orders: data });
+        const { entities } = normalize(dataSource);
         setEditData(cloneDeep(entities));
       }
 
@@ -306,7 +306,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
   const { orderIds, orderItemIds, batchIds, shipmentIds } = allId;
   logger.warn({ mappingObjects });
   logger.warn({ orderIds, orderItemIds, batchIds, shipmentIds });
-  const { entities } = normalize({ orders: data });
+  const { entities } = normalize(dataSource);
   const orderColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
@@ -579,17 +579,18 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                 </div>
                 <HotKeys keyMap={keyMap} handlers={handlers} className={EditTableViewWrapperStyle}>
                   <div className={BodyWrapperStyle} ref={bodyRef}>
-                    {Object.keys(editData.orders).length === 0 && <LoadingIcon />}
+                    {Object.keys(editData.orders || {}).length === 0 && <LoadingIcon />}
                     {orderIds.map((orderId, counter) => {
                       const order = mappingObjects.order[orderId];
                       if (!order) return null;
-                      // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-                      const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+                      const orderItems = (Object.values(
+                        mappingObjects.orderItem || {}
+                      ): any).filter(
                         item =>
                           order.relation.orderItem[item.data.id] &&
                           orderItemIds.includes(item.data.id)
                       );
-                      const batches = (Object.values(mappingObjects.batch): any).filter(
+                      const batches = (Object.values(mappingObjects.batch || {}): any).filter(
                         item =>
                           order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
                       );
@@ -607,7 +608,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                               />
                             ) : (
                               orderItems.map(orderItem =>
-                                Object.keys(orderItem.relation.batch).length === 0 ? (
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
                                   <TableItem
                                     rowNo={getRowCounter(rowCounter, 'order')}
                                     key={`order.${order.data.id}.${counter + 1}.duplication.${
@@ -624,7 +625,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                                       orderItem.data.id
                                     }`}
                                   >
-                                    {Object.keys(orderItem.relation.batch)
+                                    {Object.keys(orderItem.relation.batch || {})
                                       .filter(batchId => batchIds.includes(batchId))
                                       .map(batchId => (
                                         <TableItem
@@ -656,7 +657,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                               />
                             ) : (
                               orderItems.map(orderItem =>
-                                Object.keys(orderItem.relation.batch).length === 0 ? (
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
                                   <TableItemForCustomFields
                                     rowNo={getRowCounter(rowCounter, 'orderCustom')}
                                     columnNo={columnOrderCustomNo}
@@ -674,7 +675,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                                       orderItem.data.id
                                     }`}
                                   >
-                                    {Object.keys(orderItem.relation.batch)
+                                    {Object.keys(orderItem.relation.batch || {})
                                       .filter(batchId => batchIds.includes(batchId))
                                       .map(batchId => (
                                         <TableItemForCustomFields
@@ -698,7 +699,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                           <div>
                             {orderItems.length ? (
                               orderItems.map(orderItem =>
-                                Object.keys(orderItem.relation.batch).length === 0 ? (
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
                                   <TableItem
                                     rowNo={getRowCounter(rowCounter, 'orderItem')}
                                     columnNo={columnOrderItemNo}
@@ -712,7 +713,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                                   <React.Fragment
                                     key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                                   >
-                                    {Object.keys(orderItem.relation.batch)
+                                    {Object.keys(orderItem.relation.batch || {})
                                       .filter(batchId => batchIds.includes(batchId))
                                       .map(batchId => (
                                         <TableItem
@@ -739,7 +740,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                           <div>
                             {orderItems.length ? (
                               orderItems.map(orderItem =>
-                                Object.keys(orderItem.relation.batch).length === 0 ? (
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
                                   <TableItemForCustomFields
                                     rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
                                     columnNo={columnOrderItemCustomNo}
@@ -753,7 +754,7 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                                   <React.Fragment
                                     key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                                   >
-                                    {Object.keys(orderItem.relation.batch)
+                                    {Object.keys(orderItem.relation.batch || {})
                                       .filter(batchId => batchIds.includes(batchId))
                                       .map(batchId => (
                                         <TableItemForCustomFields
@@ -877,7 +878,8 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                                       <TableItem
                                         rowNo={getRowCounter(rowCounter, 'shipment')}
                                         columnNo={columnShipmentNo}
-                                        key={`shipment.${counter + 1}.${shipmentId}`}
+                                        key={`shipment.${counter +
+                                          1}.${shipmentId}-${columnShipmentNo}`}
                                         cell={`shipments.${shipment.data.id}`}
                                         fields={shipmentColumnFieldsFilter}
                                         values={editData.shipments[shipment.data.id]}
@@ -1006,7 +1008,9 @@ function TableInlineEdit({ allId, onCancel, data, intl }: Props) {
                       const order = mappingObjects.order[orderId];
                       if (!order) return null;
                       // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
-                      const orderItems = (Object.values(mappingObjects.orderItem): any).filter(
+                      const orderItems = (Object.values(
+                        mappingObjects.orderItem || {}
+                      ): any).filter(
                         item =>
                           order.relation.orderItem[item.data.id] &&
                           orderItemIds.includes(item.data.id)
