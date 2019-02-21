@@ -47,7 +47,7 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
         return (
           <div className={ItemStyle} key={id}>
             <FormField
-              name={`${cell}.customFields.fieldValues[${inputId}].value.string`}
+              name={`${cell}.customFields.fieldValues[${fieldCounter}].value.string`}
               initValue={fieldValue ? fieldValue.value.string : ''}
               validator={validator}
               values={values}
