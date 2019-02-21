@@ -9,6 +9,10 @@ import {
   partnerNameFragment,
   priceFragment,
   sizeFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const ordersByIDsExportQuery = gql`
@@ -33,6 +37,9 @@ const orderTableFragment = gql`
     currency
     incoterm
     deliveryPlace
+    customFields {
+      ...customFieldsFragment
+    }
     inCharges {
       ...userAvatarFragment
     }
@@ -61,6 +68,9 @@ const orderItemTableFragment = gql`
     quantity
     price {
       ...priceFragment
+    }
+    customFields {
+      ...customFieldsFragment
     }
     productProvider {
       ... on ProductProvider {
@@ -96,6 +106,9 @@ const batchTableFragment = gql`
     expiredAt
     producedAt
     totalAdjusted
+    customFields {
+      ...customFieldsFragment
+    }
     tags {
       ...tagFragment
     }
@@ -128,7 +141,9 @@ const shipmentTableFragment = gql`
     loadType
     incoterm
     carrier
-
+    customFields {
+      ...customFieldsFragment
+    }
     forwarders {
       ...partnerNameFragment
     }
@@ -292,6 +307,10 @@ export const editTableViewQuery = gql`
   ${partnerNameFragment}
   ${priceFragment}
   ${sizeFragment}
+  ${customFieldsFragment}
+  ${fieldValuesFragment}
+  ${maskFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default ordersByIDsExportQuery;
