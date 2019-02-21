@@ -12,7 +12,7 @@ import {
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
-import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
+import { PRODUCT_UPDATE } from 'modules/permission/constants/product';
 import {
   FieldItem,
   Label,
@@ -52,7 +52,8 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 const ProductSection = ({ isNew }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
-      const canCreateOrUpdate = hasPermission(PRODUCT_CREATE) || hasPermission(PRODUCT_UPDATE);
+      const allowUpdate = hasPermission(PRODUCT_UPDATE);
+
       return (
         <Subscribe to={[ProductInfoContainer]}>
           {({ originalValues: initialValues, state, setFieldValue }) => {
@@ -89,7 +90,7 @@ const ProductSection = ({ isNew }: Props) => (
                                       onRequestClose={() => dialogToggle(false)}
                                       image={selectedImage}
                                     />
-                                    {canCreateOrUpdate && (
+                                    {allowUpdate && (
                                       <>
                                         <button
                                           className={DeleteImageButtonStyle}
@@ -135,7 +136,7 @@ const ProductSection = ({ isNew }: Props) => (
                                     )}
                                   </div>
                                 ))}
-                                {canCreateOrUpdate && (
+                                {allowUpdate && (
                                   <ImagesUploadInput
                                     id="files"
                                     name="files"
@@ -172,7 +173,7 @@ const ProductSection = ({ isNew }: Props) => (
                         label={
                           <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />
                         }
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -193,7 +194,7 @@ const ProductSection = ({ isNew }: Props) => (
                         label={
                           <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />
                         }
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -216,7 +217,7 @@ const ProductSection = ({ isNew }: Props) => (
                             defaultMessage="JAN CODE"
                           />
                         }
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -236,7 +237,7 @@ const ProductSection = ({ isNew }: Props) => (
                         label={
                           <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />
                         }
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -259,7 +260,7 @@ const ProductSection = ({ isNew }: Props) => (
                             defaultMessage="MATERIAL"
                           />
                         }
-                        editable={canCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -267,7 +268,7 @@ const ProductSection = ({ isNew }: Props) => (
                     entityType="Product"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={canCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                   <div className={TagsInputStyle}>
                     <Subscribe to={[ProductTagsContainer]}>
@@ -281,7 +282,7 @@ const ProductSection = ({ isNew }: Props) => (
                           }
                           input={
                             <TagsInput
-                              editable={canCreateOrUpdate}
+                              editable={allowUpdate}
                               id="tags"
                               name="tags"
                               tagType="Product"

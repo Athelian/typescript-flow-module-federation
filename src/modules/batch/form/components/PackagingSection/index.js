@@ -2,18 +2,12 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField, FormContainer } from 'modules/form';
-import { CalculatorButtonStyle } from 'modules/form/helpers/numberInput/style';
 import GridColumn from 'components/GridColumn';
-import {
-  ToggleInput,
-  TextInputFactory,
-  NumberInputFactory,
-  MetricInputFactory,
-} from 'components/Form';
+import { TextInputFactory, NumberInputFactory, MetricInputFactory } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 
@@ -23,7 +17,7 @@ type Props = {
 
 const PackagingSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const allowCreateOrUpdate = hasPermission(BATCH_CREATE) || hasPermission(BATCH_UPDATE);
+  const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
     <div className={PackagingSectionWrapperStyle}>
@@ -35,6 +29,7 @@ const PackagingSection = ({ isNew }: Props) => {
           setFieldArrayValue,
           calculatePackageVolume,
           calculatePackageQuantity,
+          triggerCalculatePackageQuantity,
         }) => {
           const values = { ...originalValues, ...state };
           return (
@@ -43,6 +38,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageName"
                 initValue={values.packageName}
                 setFieldValue={setFieldValue}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <TextInputFactory
@@ -56,7 +52,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PACKAGE NAME"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -65,6 +61,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageCapacity"
                 initValue={values.packageCapacity}
                 setFieldValue={setFieldValue}
+                values={values}
               >
                 {({ name, onBlur, ...inputHandlers }) => (
                   <Subscribe to={[FormContainer]}>
@@ -85,7 +82,7 @@ const PackagingSection = ({ isNew }: Props) => {
                             defaultMessage="PACKAGE CAPACITY"
                           />
                         }
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </Subscribe>
@@ -96,6 +93,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageQuantity"
                 initValue={values.packageQuantity}
                 setFieldValue={setFieldValue}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <NumberInputFactory
@@ -109,29 +107,18 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PACKAGE QUANTITY"
                       />
                     }
-                    showAutoCalculateToggle={allowCreateOrUpdate}
-                    autoCalculateIsToggled={values.autoCalculateBoolean}
-                    onToggleAutoCalculate={() => (
-                      <div className={CalculatorButtonStyle}>
-                        <Subscribe to={[BatchFormContainer]}>
-                          {({ state: batchFormState, triggerCalculatePackageQuantity }) => (
-                            <ToggleInput
-                              toggled={batchFormState.autoCalculatePackageQuantity}
-                              onToggle={() => {
-                                setFieldValue(
-                                  'autoCalculatePackageQuantity',
-                                  !batchFormState.autoCalculatePackageQuantity
-                                );
-                                if (!batchFormState.autoCalculatePackageQuantity) {
-                                  triggerCalculatePackageQuantity();
-                                }
-                              }}
-                            />
-                          )}
-                        </Subscribe>
-                      </div>
-                    )}
-                    editable={allowCreateOrUpdate}
+                    showAutoCalculateToggle={allowUpdate}
+                    autoCalculateIsToggled={values.autoCalculatePackageQuantity}
+                    onToggleAutoCalculate={() => {
+                      setFieldValue(
+                        'autoCalculatePackageQuantity',
+                        !values.autoCalculatePackageQuantity
+                      );
+                      if (!values.autoCalculatePackageQuantity) {
+                        triggerCalculatePackageQuantity();
+                      }
+                    }}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -139,6 +126,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageGrossWeight"
                 initValue={getByPath('packageGrossWeight', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('packageGrossWeight', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -153,7 +141,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG GROSS WEIGHT"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -162,6 +150,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageVolume"
                 initValue={getByPath('packageVolume', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('packageVolume', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -176,7 +165,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG VOLUME"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                     showCalculator
                     onCalculate={calculatePackageVolume}
                   />
@@ -187,6 +176,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageSize.length"
                 initValue={getByPath('packageSize.length', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('packageSize.length', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -201,7 +191,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG LENGTH"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -210,6 +200,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageSize.width"
                 initValue={getByPath('packageSize.width', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -224,7 +215,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG WIDTH"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -233,6 +224,7 @@ const PackagingSection = ({ isNew }: Props) => {
                 name="packageSize.height"
                 initValue={getByPath('packageSize.height', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('packageSize.height', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -247,7 +239,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG HEIGHT"
                       />
                     }
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
