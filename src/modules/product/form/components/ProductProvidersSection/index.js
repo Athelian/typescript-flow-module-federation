@@ -113,6 +113,7 @@ function ProductProvidersSection() {
                                           metric: 'cm',
                                         },
                                       },
+                                      files: [],
                                     })}
                                     isNew
                                     initDetailValues={initDetailValues}
