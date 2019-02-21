@@ -49,7 +49,7 @@ type Props = {
 const OrderSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_UPDATE);
-  
+
   return (
     <div className={OrderSectionWrapperStyle}>
       <Subscribe to={[OrderInfoContainer]}>
