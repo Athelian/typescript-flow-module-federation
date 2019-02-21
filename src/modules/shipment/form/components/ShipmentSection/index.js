@@ -228,6 +228,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         ...initialTransportTypeValues,
                         ...transportTypeState,
                       };
+
                       return (
                         <FormField
                           name="transportType"
@@ -237,7 +238,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                             if (transportTypeValues.transportType !== newValue)
                               cleanDataAfterChangeTransport();
                           }}
-                          values={values}
+                          values={transportTypeValues}
                           validator={validator}
                         >
                           {({ name, ...inputHandlers }) => (
@@ -247,7 +248,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                               enumType="TransportType"
                               name={name}
                               isNew={isNew}
-                              originalValue={transportTypeValues[name]}
+                              originalValue={initialTransportTypeValues[name]}
                               label={
                                 <FormattedMessage
                                   id="modules.Shipments.transportation"
