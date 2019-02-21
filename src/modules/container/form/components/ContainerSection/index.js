@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { CONTAINER_CREATE, CONTAINER_UPDATE } from 'modules/permission/constants/container';
+import { CONTAINER_UPDATE } from 'modules/permission/constants/container';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import {
@@ -33,7 +33,7 @@ import {
 
 const ContainerSection = () => {
   const { hasPermission } = usePermission();
-  const allowCreateOrUpdate = hasPermission(CONTAINER_CREATE) || hasPermission(CONTAINER_UPDATE);
+  const allowUpdate = hasPermission(CONTAINER_UPDATE);
 
   return (
     <div className={ContainerSectionWrapperStyle}>
@@ -63,7 +63,7 @@ const ContainerSection = () => {
                             defaultMessage="CONTAINER NO"
                           />
                         }
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     )}
                   </FormField>
@@ -88,7 +88,7 @@ const ContainerSection = () => {
                                 defaultMessage="AGREED ARRIVAL"
                               />
                             }
-                            editable={allowCreateOrUpdate}
+                            editable={allowUpdate}
                           />
                         )}
                       </FormField>
@@ -100,7 +100,7 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalAgreedDateApprovedBy"
                         approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     </GridColumn>
 
@@ -123,7 +123,7 @@ const ContainerSection = () => {
                                 defaultMessage="ACTUAL ARRIVAL"
                               />
                             }
-                            editable={allowCreateOrUpdate}
+                            editable={allowUpdate}
                           />
                         )}
                       </FormField>
@@ -136,7 +136,7 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalActualDateApprovedBy"
                         approvedBy={values.warehouseArrivalActualDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        editable={allowCreateOrUpdate}
+                        editable={allowUpdate}
                       />
                     </GridColumn>
                   </GridColumn>
@@ -146,7 +146,7 @@ const ContainerSection = () => {
                   <Label>
                     <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                   </Label>
-                  {allowCreateOrUpdate ? (
+                  {allowUpdate ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
@@ -213,7 +213,7 @@ const ContainerSection = () => {
                     onChange={(field, value) => {
                       setFieldValue(field, value);
                     }}
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 }
               />
@@ -234,7 +234,7 @@ const ContainerSection = () => {
                     vertical
                     inputWidth="680px"
                     inputHeight="65px"
-                    editable={allowCreateOrUpdate}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
