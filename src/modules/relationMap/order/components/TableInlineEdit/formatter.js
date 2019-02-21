@@ -219,16 +219,20 @@ export const formatOrders = (orders: Array<Object>, shipments: Array<Object>) =>
     shipmentData.formatShipmentObj(result.value);
     result = orderGenerator.next();
   }
-  const shipment = shipmentData.getShipmentObj();
+  const { shipment } = shipmentData.getShipmentObj();
   const formattedResultObject = {
     ...orderData.getOrderObj(),
     ...itemData.getOrderItemObj(),
     ...batchData.getBatchObj(),
   };
-  shipments.forEach(item => {
-    if (!shipment[item.id]) {
+
+  // Tracking all shipment which has no order/item/batch
+  const shipmentNoRelation = {};
+  shipments
+    .filter(item => !shipment[item.id])
+    .forEach(item => {
       shipment[item.id] = {
-        data: shipmentData,
+        data: item,
         relation: {
           batch: {},
           orderItem: {},
@@ -238,11 +242,22 @@ export const formatOrders = (orders: Array<Object>, shipments: Array<Object>) =>
           },
         },
       };
-    }
-  });
+      shipmentNoRelation[item.id] = {
+        data: item,
+        relation: {
+          batch: {},
+          orderItem: {},
+          order: {},
+          shipment: {
+            [item.id]: true,
+          },
+        },
+      };
+    });
   return {
     ...formattedResultObject,
-    ...shipment,
+    shipment,
+    shipmentNoRelation,
   };
 };
 

@@ -257,8 +257,11 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
 
   const mappingObjects = formatOrderData(dataSource.orders, dataSource.shipments);
   useEffect(() => {
-    if (dataSource.orders.length) {
-      if (Object.keys(editData.orders || {}).length === 0) {
+    if (dataSource.orders.length || dataSource.shipments.length) {
+      if (
+        Object.keys(editData.orders || {}).length === 0 &&
+        Object.keys(editData.shipments || {}).length === 0
+      ) {
         logger.warn('copy data');
         const { entities } = normalize(dataSource);
         setEditData(cloneDeep(entities));
@@ -413,6 +416,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           batchCustomFieldsFilter,
           shipmentCustomFieldsFilter,
         };
+        logger.warn({ rowCounter });
         return (
           <ApolloConsumer>
             {client => (
@@ -579,7 +583,80 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                 </div>
                 <HotKeys keyMap={keyMap} handlers={handlers} className={EditTableViewWrapperStyle}>
                   <div className={BodyWrapperStyle} ref={bodyRef}>
-                    {Object.keys(editData.orders || {}).length === 0 && <LoadingIcon />}
+                    {Object.keys(editData.orders || {}).length === 0 &&
+                      Object.keys(editData.shipments || {}).length === 0 && <LoadingIcon />}
+                    {/* Shipment has no relation rendering logic */}
+                    {(Object.entries(mappingObjects.shipmentNoRelation || {}): any).map(
+                      ([shipmentId]) => (
+                        <TableRow key={`shipment-row-${shipmentId}`}>
+                          <div>
+                            <TableEmptyItem
+                              fields={orderColumnFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'order')}
+                              columnNo={columnOrderItemNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={orderCustomFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'orderCustom')}
+                              columnNo={columnOrderItemCustomNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={orderItemColumnFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'orderItem')}
+                              columnNo={columnOrderItemNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={orderItemCustomFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
+                              columnNo={columnOrderItemCustomNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={batchColumnFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'batch')}
+                              columnNo={columnOrderItemNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={batchCustomFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'batchCustom')}
+                              columnNo={columnOrderItemCustomNo}
+                            />
+                          </div>
+                          <div>
+                            <TableItem
+                              rowNo={getRowCounter(rowCounter, 'shipment')}
+                              columnNo={columnShipmentNo}
+                              key={`shipment.${shipmentId}`}
+                              cell={`shipments.${shipmentId}`}
+                              fields={shipmentColumnFieldsFilter}
+                              values={editData.shipments[shipmentId]}
+                              validator={shipmentValidator}
+                            />
+                          </div>
+                          <div>
+                            <TableItemForCustomFields
+                              rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                              columnNo={columnShipmentCustomNo}
+                              cell={`shipments.${shipmentId}`}
+                              key={`shipments.customFields.${shipmentId}`}
+                              fields={shipmentCustomFieldsFilter}
+                              values={editData.shipments[shipmentId]}
+                              validator={shipmentValidator}
+                            />
+                          </div>
+                        </TableRow>
+                      )
+                    )}
+                    {/* order rendering logic */}
                     {orderIds.map((orderId, counter) => {
                       const order = mappingObjects.order[orderId];
                       if (!order) return null;
@@ -596,7 +673,8 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                       );
                       const totalLines = totalLinePerOrder(orderItems, batchIds);
                       return (
-                        <TableRow key={orderId}>
+                        <TableRow key={`order-row-${orderId}`}>
+                          {/* ORDER */}
                           <div>
                             {orderItems.length === 0 ? (
                               <TableItem
@@ -696,6 +774,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             )}
                           </div>
 
+                          {/* ORDER ITEM */}
                           <div>
                             {orderItems.length ? (
                               orderItems.map(orderItem =>
@@ -778,7 +857,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               />
                             )}
                           </div>
-
+                          {/* BATCH */}
                           <div>
                             {batchIds.length ? (
                               <>
@@ -817,7 +896,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               ))
                             )}
                           </div>
-
                           <div>
                             {batchIds.length ? (
                               <>
@@ -856,6 +934,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               ))
                             )}
                           </div>
+                          {/* SHIPMENT */}
                           <div>
                             <>
                               {orderItems.map(orderItem =>
@@ -898,7 +977,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               ))}
                             </>
                           </div>
-
                           <div>
                             <>
                               {orderItems.map(orderItem =>
@@ -1004,10 +1082,18 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                     <div className={TableHeaderClearFixStyle} />
                   </div>
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
+                    {(Object.entries(mappingObjects.shipmentNoRelation || {}): any).map(
+                      ([shipmentId], idx) => (
+                        <LineNumber
+                          height="40px"
+                          line={idx + 1}
+                          key={`shipment-line-${shipmentId}`}
+                        />
+                      )
+                    )}
                     {orderIds.map((orderId, counter) => {
                       const order = mappingObjects.order[orderId];
                       if (!order) return null;
-                      // it is a flow issue so cast value to any https://github.com/facebook/flow/issues/2174
                       const orderItems = (Object.values(
                         mappingObjects.orderItem || {}
                       ): any).filter(
@@ -1016,11 +1102,12 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                           orderItemIds.includes(item.data.id)
                       );
                       const totalLines = totalLinePerOrder(orderItems, batchIds);
-
+                      const shipmentLines = Object.entries(mappingObjects.shipmentNoRelation || {})
+                        .length;
                       return (
                         <LineNumber
                           height={`${totalLines * 40}px`}
-                          line={counter + 1}
+                          line={shipmentLines + counter + 1}
                           key={`line-for-${orderId}`}
                         />
                       );

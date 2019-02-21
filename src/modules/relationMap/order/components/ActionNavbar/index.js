@@ -76,6 +76,15 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
     <ApolloConsumer>
       {client => (
         <>
+          {uiSelectors.isHighLightAnyItem() && (
+            <HighLightToolBar
+              totalOrder={uiSelectors.countHighLightBy(highLightEntities, ORDER)}
+              totalOrderItem={uiSelectors.countHighLightBy(highLightEntities, ORDER_ITEM)}
+              totalBatch={uiSelectors.countHighLightBy(highLightEntities, BATCH)}
+              totalShipment={uiSelectors.countHighLightBy(highLightEntities, SHIPMENT)}
+              onCancel={() => actions.clearAllBy('HIGHLIGHT')}
+            />
+          )}
           {uiSelectors.isTargetAnyItem() && (
             <>
               <TargetToolBar
@@ -1168,15 +1177,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 />
               )}
             </>
-          )}
-          {uiSelectors.isHighLightAnyItem() && (
-            <HighLightToolBar
-              totalOrder={uiSelectors.countHighLightBy(highLightEntities, ORDER)}
-              totalOrderItem={uiSelectors.countHighLightBy(highLightEntities, ORDER_ITEM)}
-              totalBatch={uiSelectors.countHighLightBy(highLightEntities, BATCH)}
-              totalShipment={uiSelectors.countHighLightBy(highLightEntities, SHIPMENT)}
-              onCancel={() => actions.clearAllBy('HIGHLIGHT')}
-            />
           )}
         </>
       )}
