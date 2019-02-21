@@ -115,6 +115,11 @@ const batchTableFragment = gql`
     packageSize {
       ...sizeFragment
     }
+    shipment {
+      ... on Shipment {
+        id
+      }
+    }
   }
 `;
 

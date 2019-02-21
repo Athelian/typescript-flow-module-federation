@@ -62,8 +62,6 @@ const TableView = (props: Props) => {
               return (
                 <TableInlineEdit
                   orders={getByPathWithDefault([], 'ordersByIDs', fullData)}
-                  orderItems={getByPathWithDefault([], 'orderItemsByIDs', fullData)}
-                  batches={getByPathWithDefault([], 'batchesByIDs', fullData)}
                   shipments={getByPathWithDefault([], 'shipmentsByIDs', fullData)}
                   allId={allId}
                   onCancel={onCancel}

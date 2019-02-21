@@ -223,10 +223,15 @@ export const totalLinePerOrder = (orderItems: Array<Object>, batchIds: Array<str
   return totalLines;
 };
 
-export const parseChangedData = (
+export const parseChangedData = ({
+  changedData,
+  editData,
+  mappingObjects,
+}: {
   changedData: { orders?: Object, shipments?: Object, orderItems?: Object, batches?: Object },
-  editData: Object
-) => {
+  editData: Object,
+  mappingObjects: Object,
+}) => {
   logger.warn({ changedData, editData });
   const orders = [];
   const batches = [];
@@ -345,7 +350,8 @@ export const parseChangedData = (
             changedOrderItem[key] = updateValue;
         }
       });
-      const orderId = editData.orderItems[id].order;
+
+      const [orderId] = Object.keys(mappingObjects.orderItem[id].relation.order || {});
       const existUpdateOrder = orders.find(order => order.id === orderId);
       const order = editData.orders[orderId];
       if (existUpdateOrder) {

@@ -7,6 +7,7 @@ const order = new schema.Entity('orders');
 
 batch.define({
   orderItem,
+  shipment,
 });
 
 orderItem.define({

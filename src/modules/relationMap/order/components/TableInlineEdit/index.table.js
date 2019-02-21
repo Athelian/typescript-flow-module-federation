@@ -1,5 +1,6 @@
 // @flow
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { toast } from 'react-toastify';
 import { ApolloConsumer } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
 import { FormattedMessage, injectIntl } from 'react-intl';
@@ -46,7 +47,7 @@ import {
   TableEmptyItem,
 } from './components';
 import TableItemForCustomFields from './components/TableItem/index.customFields';
-import { formatOrders as formatOrderData } from './formatter';
+import { formatOrders } from './formatter';
 import { entitiesUpdateManyMutation } from './mutation';
 import {
   totalLinePerOrder,
@@ -72,8 +73,6 @@ type Props = {
   allId: Object,
   orders: Array<Object>,
   shipments: Array<Object>,
-  batches: Array<Object>,
-  orderItems: Array<Object>,
   intl: IntlShape,
 };
 
@@ -255,7 +254,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     [templateColumns]
   );
 
-  const mappingObjects = formatOrderData(dataSource.orders, dataSource.shipments);
+  const mappingObjects = formatOrders(dataSource);
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
       if (
@@ -446,7 +445,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             },
                           } = await client.mutate({
                             mutation: entitiesUpdateManyMutation,
-                            variables: parseChangedData(changedData, editData),
+                            variables: parseChangedData({ changedData, editData, mappingObjects }),
                           });
                           setLoading(false);
                           logger.warn({ result });
@@ -487,6 +486,8 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                           }
                           setTouched({});
                         } catch (error) {
+                          logger.warn(error);
+                          toast.error(error.message);
                           setLoading(false);
                         }
                       }}
@@ -646,7 +647,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
                               columnNo={columnShipmentCustomNo}
                               cell={`shipments.${shipmentId}`}
-                              key={`shipments.customFields.${shipmentId}`}
+                              key={`shipments.customFields.1.${shipmentId}`}
                               fields={shipmentCustomFieldsFilter}
                               values={editData.shipments[shipmentId]}
                               validator={shipmentValidator}
@@ -956,8 +957,9 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                       <TableItem
                                         rowNo={getRowCounter(rowCounter, 'shipment')}
                                         columnNo={columnShipmentNo}
-                                        key={`shipment.${counter +
-                                          1}.${shipmentId}-${columnShipmentNo}`}
+                                        key={`shipment.${
+                                          batch.id
+                                        }.${shipmentId}-${columnShipmentNo}`}
                                         cell={`shipments.${shipment.data.id}`}
                                         fields={shipmentColumnFieldsFilter}
                                         values={editData.shipments[shipment.data.id]}
@@ -998,8 +1000,10 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                       <TableItemForCustomFields
                                         rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
                                         columnNo={columnShipmentCustomNo}
-                                        cell={`shipments.${shipment.data.id}`}
-                                        key={`shipments.customFields.${shipment.data.id}`}
+                                        cell={`shipments.${batch.id}.${shipment.data.id}`}
+                                        key={`shipments.customFields.${batch.id}.${
+                                          shipment.data.id
+                                        }`}
                                         fields={shipmentCustomFieldsFilter}
                                         values={editData.shipments[shipment.data.id]}
                                         validator={shipmentValidator}
