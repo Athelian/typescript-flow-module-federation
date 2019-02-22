@@ -53,6 +53,7 @@ export const entitiesUpdateManyMutation = gql`
         ...badRequestFragment
       }
       batches {
+        ...batchFormFragment
         ...badRequestFragment
       }
       warehouses {

@@ -331,6 +331,7 @@ export const parseChangedData = ({
         const updateValue = editData.batches[id][key];
         switch (key) {
           case 'deliveredAt':
+          case 'desiredAt':
           case 'expiredAt':
           case 'producedAt': {
             changedBatch[key] = updateValue ? new Date(updateValue) : null;
@@ -397,6 +398,7 @@ export const getFieldValueByType = (type: string) => (value: any) => {
       return `${value}` || '';
   }
 };
+
 export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
   const fieldValues: Array<string> = (fields: Array<Object>).map(
     ({ name, type, getExportValue }): any => {
@@ -461,6 +463,7 @@ export function getExportColumns(
 }
 
 export function getExportRows(info: Object): Array<Array<?string>> {
+  // TODO: support export shipment only
   const {
     data: { editData, mappingObjects },
     ids: { orderIds, orderItemIds, batchIds },
@@ -546,3 +549,28 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   });
   return rows;
 }
+
+export const setPackageBatchData = (batch: Object) => {
+  return {
+    ...batch,
+    packageGrossWeight: batch.packageGrossWeight || { value: 0, metric: 'kg' },
+    packageVolume: batch.packageVolume || {
+      metric: 'm³',
+      value: 0,
+    },
+    packageSize: batch.packageSize || {
+      width: {
+        metric: 'cm',
+        value: 0,
+      },
+      height: {
+        metric: 'cm',
+        value: 0,
+      },
+      length: {
+        metric: 'cm',
+        value: 0,
+      },
+    },
+  };
+};

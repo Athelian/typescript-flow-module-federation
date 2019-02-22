@@ -9,6 +9,7 @@ import { HotKeys } from 'react-hotkeys';
 import { range, set, cloneDeep, isEqual } from 'lodash';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
+import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
@@ -55,6 +56,7 @@ import {
   getOrderItemIdsByOrderId,
   getExportColumns,
   getExportRows,
+  setPackageBatchData,
 } from './helpers';
 import normalize from './normalize';
 import {
@@ -70,7 +72,12 @@ import {
 
 type Props = {
   onCancel: () => void,
-  allId: Object,
+  allId: {
+    orderIds: Array<string>,
+    orderItemIds: Array<string>,
+    batchIds: Array<string>,
+    shipmentIds: Array<string>,
+  },
   orders: Array<Object>,
   shipments: Array<Object>,
   intl: IntlShape,
@@ -197,7 +204,6 @@ const getRowCounter = (counter, type) => {
 };
 
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
-
 function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
@@ -279,7 +285,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           });
         }
         newEditData = set(newEditData, name, value);
-
         setEditData(newEditData);
 
         if (!touched[name]) {
@@ -440,6 +445,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                 },
                               },
                             },
+                            errors?: Array<Object>,
                           } = await client.mutate({
                             mutation: entitiesUpdateManyMutation,
                             variables: parseChangedData({ changedData, editData, mappingObjects }),
@@ -477,11 +483,14 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               if (errorMessages.length)
                                 setErrorMessage(errorMessages[0][0].message);
                             }
+                          } else if (result.errors) {
+                            trackingError(result.errors);
+                            toast.error('There was an error. Please try again later');
                           }
-                          setTouched({});
                         } catch (error) {
-                          toast.error(error.message);
+                          toast.error('There was an error. Please try again later');
                           setLoading(false);
+                          trackingError(error);
                         }
                       }}
                       disabled={
@@ -497,7 +506,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                       rows={() =>
                         getExportRows({
                           data: { editData, mappingObjects },
-                          ids: { orderIds, orderItemIds, batchIds },
+                          ids: allId,
                           columns: allColumns,
                         })
                       }
@@ -864,7 +873,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                         cell={`batches.${batch.id}`}
                                         key={batch.id}
                                         fields={batchColumnFieldsFilter}
-                                        values={editData.batches[batch.id]}
+                                        values={setPackageBatchData(editData.batches[batch.id])}
                                         validator={batchValidator}
                                       />
                                     ))
@@ -902,7 +911,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                         cell={`batches.${batch.id}`}
                                         key={`batches.customFields.${batch.id}`}
                                         fields={batchCustomFieldsFilter}
-                                        values={editData.batches[batch.id]}
+                                        values={setPackageBatchData(editData.batches[batch.id])}
                                         validator={batchValidator}
                                       />
                                     ))
