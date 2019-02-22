@@ -80,6 +80,16 @@ export const orderCardRMFragment = gql`
         batches {
           ... on Batch {
             id
+            orderItem {
+              ... on OrderItem {
+                id
+                order {
+                  ... on Order {
+                    id
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -217,6 +227,21 @@ export const shipmentListQuery = gql`
       nodes {
         ... on Shipment {
           id
+          batches {
+            ... on Batch {
+              id
+              orderItem {
+                ... on OrderItem {
+                  id
+                  order {
+                    ... on Order {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
         ...shipmentCardRMFragment
       }

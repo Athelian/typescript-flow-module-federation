@@ -140,9 +140,8 @@ const FormField = (props: {
   setFieldValue?: (field: string, value: any) => void,
   values?: any,
   validator?: Object,
-  cachedFields?: Array<string>,
 }) => {
-  const { values, validator, setFieldValue, cachedFields, ...rest } = props;
+  const { values, validator, setFieldValue, ...rest } = props;
   return (
     <Subscribe to={[FormContainer]}>
       {({
@@ -161,7 +160,6 @@ const FormField = (props: {
           setActiveField={setActiveField}
           setFieldValue={setFieldValue}
           onValidate={newValue => onValidation({ ...values, ...newValue }, validator)}
-          cachedFields={cachedFields}
           {...rest}
         />
       )}
@@ -175,7 +173,6 @@ FormField.defaultProps = {
   },
   setFieldValue: () => {},
   values: {},
-  cachedFields: [],
 };
 
 export default FormField;

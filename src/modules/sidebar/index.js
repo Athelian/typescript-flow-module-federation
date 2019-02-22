@@ -16,7 +16,7 @@ import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import { Logo, MenuItem, SubMenu } from './components';
-import { SideBarWrapperStyle, SideBarBodyStyle, BetaTagWrapperStyle } from './style';
+import { SideBarWrapperStyle, SideBarBodyStyle } from './style';
 import messages from './messages';
 
 const SideBar = () => {
@@ -39,15 +39,13 @@ const SideBar = () => {
               <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
                 <Logo {...uiState} />
                 <div className={SideBarBodyStyle}>
-                  <div className={BetaTagWrapperStyle}>
-                    <MenuItem
-                      path="/relation-map"
-                      isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
-                      icon="RELATION_MAP"
-                      label={<FormattedMessage {...messages.relationMap} />}
-                      onClick={() => setExpandedSubMenu(null)}
-                    />
-                  </div>
+                  <MenuItem
+                    path="/relation-map"
+                    isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
+                    icon="RELATION_MAP"
+                    label={<FormattedMessage {...messages.relationMap} />}
+                    onClick={() => setExpandedSubMenu(null)}
+                  />
                   {hasPermission(ORDER_LIST) && (
                     <MenuItem
                       path="/order"

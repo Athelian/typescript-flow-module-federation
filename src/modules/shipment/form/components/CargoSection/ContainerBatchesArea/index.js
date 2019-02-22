@@ -162,7 +162,8 @@ export default function ContainerBatchesArea({
                                           onCancel={() => batchSlideToggle(false)}
                                           onSave={updatedBatch => {
                                             batchSlideToggle(false);
-                                            setFieldArrayValue(position, updatedBatch);
+                                            const indexOfAllBatches = batches.indexOf(batch);
+                                            setFieldArrayValue(indexOfAllBatches, updatedBatch);
                                           }}
                                         />
                                       )}
