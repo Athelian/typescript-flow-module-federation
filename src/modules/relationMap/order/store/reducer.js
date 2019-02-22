@@ -46,6 +46,8 @@ export const uiInitState: UIState = {
     selectedId: '',
   },
   targets: [],
+  // all shipment on
+  shipments: [],
   totalShipment: 0,
   split: {
     parentOrderIds: [],
@@ -699,7 +701,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'TOTAL_SHIPMENT': {
       const { payload } = action;
       const total = payload && payload.total ? payload.total : 0;
-      return { ...state, totalShipment: total };
+      const shipments = payload && payload.shipments ? payload.shipments : [];
+      return { ...state, shipments, totalShipment: total };
     }
     case 'TOGGLE_HIGH_LIGHT': {
       const { payload } = action;

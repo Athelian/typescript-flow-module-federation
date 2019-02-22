@@ -125,14 +125,7 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
         const id = `${rowNo}-${fieldCounter + columnNo + 1}`;
         return (
           <div className={ItemStyle} key={name}>
-            <FormField
-              name={cellName}
-              initValue={value}
-              validator={validator}
-              values={values}
-              cachedFields={['id']}
-              id={id}
-            >
+            <FormField name={cellName} initValue={value} validator={validator} values={values}>
               {() =>
                 renderItem({
                   id,

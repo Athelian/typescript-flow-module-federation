@@ -1,5 +1,5 @@
 // @flow
-import { intersection } from 'lodash';
+import { uniq, intersection } from 'lodash';
 import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
 import type { UIState } from './type.js.flow';
 
@@ -137,7 +137,7 @@ function selectors(state: UIState) {
     countTargetBy: (entity: string) =>
       state.targets.filter(item => item.includes(`${entity}-`)).length,
     countHighLightBy: (highLightEntities: Array<string>, entity: string) =>
-      highLightEntities.filter(item => item.includes(`${entity}-`)).length,
+      uniq(highLightEntities.filter(item => item.includes(`${entity}-`))).length,
     targetedBatchId: () => {
       const batch = state.targets.find(item => item.includes(`${BATCH}-`));
       if (batch) {

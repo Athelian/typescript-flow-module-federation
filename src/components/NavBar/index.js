@@ -10,7 +10,6 @@ import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import Tabs from './components/Tabs';
 import SectionNavBar from './SectionNavBar';
 import SlideViewNavBar from './SlideViewNavBar';
-import FocusInput from './components/FocusInput';
 import LogsButton from './components/LogsButton';
 
 export default NavBar;
@@ -26,6 +25,5 @@ export {
   Tabs,
   SectionNavBar,
   SlideViewNavBar,
-  FocusInput,
   LogsButton,
 };

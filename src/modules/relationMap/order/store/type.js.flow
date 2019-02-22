@@ -8,6 +8,8 @@ export type UIState = {
   error: boolean,
   showTag: boolean,
   toggleShipmentList: boolean,
+  // all shipment toggle
+  shipments: Array<Object>,
   totalShipment: number,
   expandCards: {
     orders: Array<string>,

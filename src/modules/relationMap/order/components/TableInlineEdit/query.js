@@ -9,6 +9,10 @@ import {
   partnerNameFragment,
   priceFragment,
   sizeFragment,
+  customFieldsFragment,
+  maskFragment,
+  fieldValuesFragment,
+  fieldDefinitionFragment,
 } from 'graphql';
 
 export const ordersByIDsExportQuery = gql`
@@ -33,6 +37,9 @@ const orderTableFragment = gql`
     currency
     incoterm
     deliveryPlace
+    customFields {
+      ...customFieldsFragment
+    }
     inCharges {
       ...userAvatarFragment
     }
@@ -40,26 +47,22 @@ const orderTableFragment = gql`
       ...tagFragment
     }
     orderItems {
-      ...orderItemTableFragmemt
+      ...orderItemTableFragment
     }
     shipments {
-      ... on Shipment {
-        batches {
-          ... on Batch {
-            id
-          }
-        }
-      }
-      ...shipmentTableFramgent
+      ...shipmentTableFragment
     }
   }
 `;
-const orderItemTableFragmemt = gql`
-  fragment orderItemTableFragmemt on OrderItem {
+const orderItemTableFragment = gql`
+  fragment orderItemTableFragment on OrderItem {
     id
     quantity
     price {
       ...priceFragment
+    }
+    customFields {
+      ...customFieldsFragment
     }
     productProvider {
       ... on ProductProvider {
@@ -95,6 +98,9 @@ const batchTableFragment = gql`
     expiredAt
     producedAt
     totalAdjusted
+    customFields {
+      ...customFieldsFragment
+    }
     tags {
       ...tagFragment
     }
@@ -109,11 +115,16 @@ const batchTableFragment = gql`
     packageSize {
       ...sizeFragment
     }
+    shipment {
+      ... on Shipment {
+        id
+      }
+    }
   }
 `;
 
-const shipmentTableFramgent = gql`
-  fragment shipmentTableFramgent on Shipment {
+const shipmentTableFragment = gql`
+  fragment shipmentTableFragment on Shipment {
     id
     no
     blNo
@@ -127,7 +138,9 @@ const shipmentTableFramgent = gql`
     loadType
     incoterm
     carrier
-
+    customFields {
+      ...customFieldsFragment
+    }
     forwarders {
       ...partnerNameFragment
     }
@@ -179,20 +192,110 @@ const shipmentTableFramgent = gql`
     }
   }
 `;
-export const orderListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
-    orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
-      nodes {
-        ...orderTableFragment
+
+export const findIdsQuery = gql`
+  query($orderIds: [ID!]!, $orderItemIds: [ID!]!, $batchIds: [ID!]!, $shipmentIds: [ID!]!) {
+    ordersByIDs(ids: $orderIds) {
+      ... on Order {
+        id
+        orderItems {
+          ... on OrderItem {
+            id
+            batches {
+              ... on Batch {
+                id
+                shipment {
+                  ... on Shipment {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+        shipments {
+          ... on Shipment {
+            id
+          }
+        }
       }
-      page
-      totalPage
+    }
+    orderItemsByIDs(ids: $orderItemIds) {
+      ... on OrderItem {
+        id
+        batches {
+          ... on Batch {
+            id
+            shipment {
+              ... on Shipment {
+                id
+              }
+            }
+          }
+        }
+        order {
+          ... on Order {
+            id
+          }
+        }
+      }
+    }
+    batchesByIDs(ids: $batchIds) {
+      ... on Batch {
+        id
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
+        orderItem {
+          ... on OrderItem {
+            id
+            order {
+              ... on Order {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+    shipmentsByIDs(ids: $shipmentIds) {
+      ... on Shipment {
+        id
+        batches {
+          ... on Batch {
+            id
+            orderItem {
+              ... on OrderItem {
+                id
+                order {
+                  ... on Order {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const editTableViewQuery = gql`
+  query($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
+    ordersByIDs(ids: $orderIds) {
+      ...orderTableFragment
+    }
+    shipmentsByIDs(ids: $shipmentIds) {
+      ...shipmentTableFragment
     }
   }
   ${orderTableFragment}
-  ${orderItemTableFragmemt}
+  ${orderItemTableFragment}
   ${batchTableFragment}
-  ${shipmentTableFramgent}
+  ${shipmentTableFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
@@ -201,6 +304,10 @@ export const orderListQuery = gql`
   ${partnerNameFragment}
   ${priceFragment}
   ${sizeFragment}
+  ${customFieldsFragment}
+  ${fieldValuesFragment}
+  ${maskFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default ordersByIDsExportQuery;

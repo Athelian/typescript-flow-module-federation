@@ -7,6 +7,7 @@ const order = new schema.Entity('orders');
 
 batch.define({
   orderItem,
+  shipment,
 });
 
 orderItem.define({
@@ -23,4 +24,10 @@ shipment.define({
   batches: [batch],
 });
 
-export default originalData => normalize(originalData, { orders: [order] });
+export default originalData =>
+  normalize(originalData, {
+    orders: [order],
+    shipments: [shipment],
+    orderItems: [orderItem],
+    batches: [batch],
+  });

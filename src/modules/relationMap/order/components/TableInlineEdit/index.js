@@ -3,39 +3,34 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import LoadingIcon from 'components/LoadingIcon';
 import ActionDispatch from 'modules/relationMap/order/provider';
+import { selectors } from 'modules/relationMap/order/store';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import TableInlineEdit from './index.table';
 import { findAllPossibleIds } from './helpers';
-import { orderListQuery } from './query';
+import { findIdsQuery, editTableViewQuery } from './query';
+import normalize from './normalize';
 
 type Props = {
   onCancel: Function,
-  entities: {
-    orders: Object,
-    orderItems: Object,
-    batches: Object,
-    shipments: Object,
-  },
 };
 const TableView = (props: Props) => {
-  const { entities, onCancel } = props;
+  const { onCancel } = props;
   const { state } = React.useContext(ActionDispatch);
-  logger.warn('entities', entities);
-  const allId = findAllPossibleIds(state.targets, entities);
-  const { orderIds } = allId;
+  const uiSelectors = selectors(state);
+  const shipmentIds = uiSelectors.targetedShipmentIds();
+  const batchIds = uiSelectors.targetedBatchIds();
+  const orderItemIds = uiSelectors.targetedOrderItemIds();
+  const orderIds = uiSelectors.targetedOrderIds();
+
   return (
     <Query
-      query={orderListQuery}
+      query={findIdsQuery}
       variables={{
-        page: 1,
-        perPage: orderIds.length,
-        filterBy: {
-          ids: orderIds,
-        },
-        sortBy: {
-          updatedAt: 'DESCENDING',
-        },
+        orderIds,
+        shipmentIds,
+        batchIds,
+        orderItemIds,
       }}
       fetchPolicy="network-only"
     >
@@ -46,12 +41,34 @@ const TableView = (props: Props) => {
         if (loading) {
           return <LoadingIcon />;
         }
+        const { entities } = normalize({
+          orders: getByPathWithDefault([], 'ordersByIDs', data),
+          orderItems: getByPathWithDefault([], 'orderItemsByIDs', data),
+          batches: getByPathWithDefault([], 'batchesByIDs', data),
+          shipments: getByPathWithDefault([], 'shipmentsByIDs', data),
+        });
+
+        const allId = findAllPossibleIds(state.targets, entities);
+        logger.warn({ entities, allId });
         return (
-          <TableInlineEdit
-            data={getByPathWithDefault([], 'orders.nodes', data)}
-            allId={allId}
-            onCancel={onCancel}
-          />
+          <Query query={editTableViewQuery} variables={allId} fetchPolicy="network-only">
+            {({ data: fullData, error: fetchError, loading: isLoading }) => {
+              if (fetchError) {
+                return fetchError.message;
+              }
+              if (isLoading) {
+                return <LoadingIcon />;
+              }
+              return (
+                <TableInlineEdit
+                  orders={getByPathWithDefault([], 'ordersByIDs', fullData)}
+                  shipments={getByPathWithDefault([], 'shipmentsByIDs', fullData)}
+                  allId={allId}
+                  onCancel={onCancel}
+                />
+              );
+            }}
+          </Query>
         );
       }}
     </Query>
