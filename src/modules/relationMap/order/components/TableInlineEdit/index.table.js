@@ -9,6 +9,7 @@ import { HotKeys } from 'react-hotkeys';
 import { range, set, cloneDeep, isEqual } from 'lodash';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
+import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
@@ -440,6 +441,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                 },
                               },
                             },
+                            errors?: Array<Object>,
                           } = await client.mutate({
                             mutation: entitiesUpdateManyMutation,
                             variables: parseChangedData({ changedData, editData, mappingObjects }),
@@ -477,10 +479,13 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               if (errorMessages.length)
                                 setErrorMessage(errorMessages[0][0].message);
                             }
+                          } else if (result.errors) {
+                            trackingError(result.errors);
+                            toast.error('There was an error. Please try again later');
                           }
-                          setTouched({});
                         } catch (error) {
-                          toast.error(error.message);
+                          trackingError(error);
+                          toast.error('There was an error. Please try again later');
                           setLoading(false);
                         }
                       }}
