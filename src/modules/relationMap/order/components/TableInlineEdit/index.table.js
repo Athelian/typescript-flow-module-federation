@@ -56,6 +56,7 @@ import {
   getOrderItemIdsByOrderId,
   getExportColumns,
   getExportRows,
+  setPackageBatchData,
 } from './helpers';
 import normalize from './normalize';
 import {
@@ -71,7 +72,12 @@ import {
 
 type Props = {
   onCancel: () => void,
-  allId: Object,
+  allId: {
+    orderIds: Array<string>,
+    orderItemIds: Array<string>,
+    batchIds: Array<string>,
+    shipmentIds: Array<string>,
+  },
   orders: Array<Object>,
   shipments: Array<Object>,
   intl: IntlShape,
@@ -198,7 +204,6 @@ const getRowCounter = (counter, type) => {
 };
 
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
-
 function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
@@ -280,7 +285,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           });
         }
         newEditData = set(newEditData, name, value);
-
         setEditData(newEditData);
 
         if (!touched[name]) {
@@ -484,9 +488,9 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             toast.error('There was an error. Please try again later');
                           }
                         } catch (error) {
-                          trackingError(error);
                           toast.error('There was an error. Please try again later');
                           setLoading(false);
+                          trackingError(error);
                         }
                       }}
                       disabled={
@@ -502,7 +506,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                       rows={() =>
                         getExportRows({
                           data: { editData, mappingObjects },
-                          ids: { orderIds, orderItemIds, batchIds },
+                          ids: allId,
                           columns: allColumns,
                         })
                       }
@@ -869,7 +873,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                         cell={`batches.${batch.id}`}
                                         key={batch.id}
                                         fields={batchColumnFieldsFilter}
-                                        values={editData.batches[batch.id]}
+                                        values={setPackageBatchData(editData.batches[batch.id])}
                                         validator={batchValidator}
                                       />
                                     ))
@@ -907,7 +911,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                         cell={`batches.${batch.id}`}
                                         key={`batches.customFields.${batch.id}`}
                                         fields={batchCustomFieldsFilter}
-                                        values={editData.batches[batch.id]}
+                                        values={setPackageBatchData(editData.batches[batch.id])}
                                         validator={batchValidator}
                                       />
                                     ))

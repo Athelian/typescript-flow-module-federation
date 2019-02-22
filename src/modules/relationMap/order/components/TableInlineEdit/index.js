@@ -5,7 +5,6 @@ import LoadingIcon from 'components/LoadingIcon';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
 import { getByPathWithDefault } from 'utils/fp';
-import logger from 'utils/logger';
 import TableInlineEdit from './index.table';
 import { findAllPossibleIds } from './helpers';
 import { findIdsQuery, editTableViewQuery } from './query';
@@ -41,6 +40,7 @@ const TableView = (props: Props) => {
         if (loading) {
           return <LoadingIcon />;
         }
+        // find all possible ids base on target entities
         const { entities } = normalize({
           orders: getByPathWithDefault([], 'ordersByIDs', data),
           orderItems: getByPathWithDefault([], 'orderItemsByIDs', data),
@@ -49,7 +49,6 @@ const TableView = (props: Props) => {
         });
 
         const allId = findAllPossibleIds(state.targets, entities);
-        logger.warn({ entities, allId });
         return (
           <Query query={editTableViewQuery} variables={allId} fetchPolicy="network-only">
             {({ data: fullData, error: fetchError, loading: isLoading }) => {
@@ -59,6 +58,7 @@ const TableView = (props: Props) => {
               if (isLoading) {
                 return <LoadingIcon />;
               }
+              // render the table with orders and shipments base on the ids
               return (
                 <TableInlineEdit
                   orders={getByPathWithDefault([], 'ordersByIDs', fullData)}
