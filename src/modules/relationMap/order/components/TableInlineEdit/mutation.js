@@ -1,30 +1,26 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  orderFormFragment,
-  shipmentFormFragment,
   userAvatarFragment,
   tagFragment,
-  partnerCardFragment,
-  documentFragment,
-  shipmentCardFragment,
   priceFragment,
-  imageFragment,
   partnerNameFragment,
   timelineDateMinimalFragment,
   portFragment,
-  batchFormFragment,
   metricFragment,
   sizeFragment,
-  orderCardFragment,
-  timelineDateFullFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
   badRequestFragment,
-  shipmentContainerCardFragment,
 } from 'graphql';
+import {
+  orderTableFragment,
+  shipmentTableFragment,
+  orderItemTableFragment,
+  batchTableFragment,
+} from './query';
 
 export const entitiesUpdateManyMutation = gql`
   mutation entitiesUpdateMany(
@@ -42,18 +38,18 @@ export const entitiesUpdateManyMutation = gql`
       warehouses: $warehouses
     ) {
       orders {
-        ...orderFormFragment
+        ...orderTableFragment
         ...badRequestFragment
       }
       shipments {
-        ...shipmentFormFragment
+        ...shipmentTableFragment
         ...badRequestFragment
       }
       products {
         ...badRequestFragment
       }
       batches {
-        ...batchFormFragment
+        ...batchTableFragment
         ...badRequestFragment
       }
       warehouses {
@@ -62,28 +58,22 @@ export const entitiesUpdateManyMutation = gql`
     }
   }
   ${badRequestFragment}
-  ${orderFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
-  ${partnerCardFragment}
-  ${documentFragment}
-  ${shipmentCardFragment}
   ${priceFragment}
-  ${imageFragment}
   ${partnerNameFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${batchFormFragment}
+  ${batchTableFragment}
   ${metricFragment}
   ${sizeFragment}
-  ${orderCardFragment}
-  ${shipmentFormFragment}
-  ${timelineDateFullFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
-  ${shipmentContainerCardFragment}
+  ${orderItemTableFragment}
+  ${orderTableFragment}
+  ${shipmentTableFragment}
 `;
 
 export default entitiesUpdateManyMutation;

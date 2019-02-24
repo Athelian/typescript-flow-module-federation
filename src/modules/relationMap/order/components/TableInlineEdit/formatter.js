@@ -51,40 +51,42 @@ export const formatOrders = ({
 
       orderData.orderItems.forEach(orderItemId => {
         const orderItemData = entities.orderItems[orderItemId];
-        orderItem[orderItemId] = {
-          data: {
-            ...orderItemData,
-            batches: orderItemData.batches
-              .map(batchId => entities.batches[batchId])
-              .map(batchItem => ({
-                ...batchItem,
-                shipment: entities.shipments[batchItem.shipment],
-              })),
-          },
-          relation: {
-            order: {
-              [orderId]: true,
+        if (orderItemData) {
+          orderItem[orderItemId] = {
+            data: {
+              ...orderItemData,
+              batches: orderItemData.batches
+                .map(batchId => entities.batches[batchId])
+                .map(batchItem => ({
+                  ...batchItem,
+                  shipment: batchItem.shipment ? entities.shipments[batchItem.shipment] : null,
+                })),
             },
-            batch: array2Object(orderItemData.batches || []),
-          },
-        };
-        (orderItemData.batches || []).forEach(batchId => {
-          const batchData = entities.batches[batchId];
-          batch[batchId] = {
-            data: batchData,
             relation: {
               order: {
                 [orderId]: true,
               },
-              orderItem: {
-                [orderItemId]: true,
-              },
-              shipment: {
-                ...(batchData.shipment ? { [batchData.shipment]: true } : {}),
-              },
+              batch: array2Object(orderItemData.batches || []),
             },
           };
-        });
+          (orderItemData.batches || []).forEach(batchId => {
+            const batchData = entities.batches[batchId];
+            batch[batchId] = {
+              data: batchData,
+              relation: {
+                order: {
+                  [orderId]: true,
+                },
+                orderItem: {
+                  [orderItemId]: true,
+                },
+                shipment: {
+                  ...(batchData.shipment ? { [batchData.shipment]: true } : {}),
+                },
+              },
+            };
+          });
+        }
       });
     }
   });
