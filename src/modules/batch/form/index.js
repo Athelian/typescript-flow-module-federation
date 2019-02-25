@@ -11,6 +11,7 @@ import { encodeId } from 'utils/id';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import { SyncButton, CloneButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import { FormContainer } from 'modules/form';
 import { PermissionConsumer } from 'modules/permission';
 import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import {
@@ -135,8 +136,8 @@ export default class BatchForm extends React.Component<Props> {
                     {({ value: syncDialogIsOpen, set: dialogToggle }) => (
                       <>
                         <SyncButton onClick={() => dialogToggle(true)} />
-                        <Subscribe to={[BatchFormContainer]}>
-                          {({ state, syncProductProvider }) => (
+                        <Subscribe to={[BatchFormContainer, FormContainer]}>
+                          {({ state, syncProductProvider }, { setFieldTouched }) => (
                             <>
                               <ConfirmDialog
                                 isOpen={syncDialogIsOpen}
@@ -145,6 +146,14 @@ export default class BatchForm extends React.Component<Props> {
                                 onConfirm={() => {
                                   if (state.orderItem && state.orderItem.productProvider) {
                                     syncProductProvider(state.orderItem.productProvider);
+                                    setFieldTouched('packageName');
+                                    setFieldTouched('packageCapacity');
+                                    setFieldTouched('packageQuantity');
+                                    setFieldTouched('packageGrossWeight');
+                                    setFieldTouched('packageVolume');
+                                    setFieldTouched('packageSize.length');
+                                    setFieldTouched('packageSize.width');
+                                    setFieldTouched('packageSize.height');
                                   }
                                   dialogToggle(false);
                                 }}
