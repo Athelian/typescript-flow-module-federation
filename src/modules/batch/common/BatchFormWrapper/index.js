@@ -61,71 +61,81 @@ class BatchFormWrapper extends React.Component<Props> {
     return (
       <Provider inject={[formContainer]}>
         <Subscribe to={[BatchFormContainer]}>
-          {({ state, isDirty }) => (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="BATCH" color="BATCH" />
-                  <JumpToSection>
-                    <SectionTabs
-                      link="batch_batchSection"
-                      label={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
-                      icon="BATCH"
+          {({ originalValues, state, isDirty }) => {
+            const values = { ...originalValues, ...state };
+            return (
+              <Layout
+                navBar={
+                  <SlideViewNavBar>
+                    <EntityIcon icon="BATCH" color="BATCH" />
+                    <JumpToSection>
+                      <SectionTabs
+                        link="batch_batchSection"
+                        label={
+                          <FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />
+                        }
+                        icon="BATCH"
+                      />
+                      <SectionTabs
+                        link="batch_quantityAdjustmentsSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.quantityAdjustments"
+                            defaultMessage="QUANTITY ADJUSTMENTS"
+                          />
+                        }
+                        icon="QUANTITY_ADJUSTMENTS"
+                      />
+                      <SectionTabs
+                        link="batch_packagingSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.packaging"
+                            defaultMessage="PACKAGING"
+                          />
+                        }
+                        icon="PACKAGING"
+                      />
+                      <SectionTabs
+                        link="batch_shipmentSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.shipment"
+                            defaultMessage="SHIPMENT"
+                          />
+                        }
+                        icon="SHIPMENT"
+                      />
+                      <SectionTabs
+                        link="batch_containerSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Batches.container"
+                            defaultMessage="SHIPMENT"
+                          />
+                        }
+                        icon="CONTAINER"
+                      />
+                      <SectionTabs
+                        link="batch_orderSection"
+                        label={
+                          <FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />
+                        }
+                        icon="ORDER"
+                      />
+                    </JumpToSection>
+                    <CancelButton onClick={onCancel} />
+                    <SaveButton
+                      disabled={!isDirty() || !formContainer.isReady(values, validator)}
+                      onClick={() => onSave(formatDateValue(values))}
                     />
-                    <SectionTabs
-                      link="batch_quantityAdjustmentsSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Batches.quantityAdjustments"
-                          defaultMessage="QUANTITY ADJUSTMENTS"
-                        />
-                      }
-                      icon="QUANTITY_ADJUSTMENTS"
-                    />
-                    <SectionTabs
-                      link="batch_packagingSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Batches.packaging"
-                          defaultMessage="PACKAGING"
-                        />
-                      }
-                      icon="PACKAGING"
-                    />
-                    <SectionTabs
-                      link="batch_shipmentSection"
-                      label={
-                        <FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />
-                      }
-                      icon="SHIPMENT"
-                    />
-                    <SectionTabs
-                      link="batch_containerSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Batches.container"
-                          defaultMessage="SHIPMENT"
-                        />
-                      }
-                      icon="CONTAINER"
-                    />
-                    <SectionTabs
-                      link="batch_orderSection"
-                      label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
-                      icon="ORDER"
-                    />
-                  </JumpToSection>
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    disabled={!isDirty() || !formContainer.isReady(state, validator)}
-                    onClick={() => onSave(formatDateValue(state))}
-                  />
-                </SlideViewNavBar>
-              }
-            >
-              <BatchForm batch={state} isNew={isNew} />
-            </Layout>
-          )}
+                  </SlideViewNavBar>
+                }
+              >
+                <BatchForm batch={values} isNew={isNew} />
+              </Layout>
+            );
+          }}
         </Subscribe>
       </Provider>
     );
