@@ -6,8 +6,13 @@ import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
 import usePermission from 'hooks/usePermission';
-import { SHIPMENT_CREATE, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_CREATE,
+  SHIPMENT_UPDATE,
+  SHIPMENT_IMPORTER_CREATE,
+} from 'modules/permission/constants/shipment';
 import { CloneButton } from 'components/Buttons';
+import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
 import {
   ShipmentInfoContainer,
@@ -20,6 +25,7 @@ import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
+import { UserConsumer } from 'modules/user';
 import {
   FieldItem,
   Label,
@@ -59,6 +65,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
   const { hasPermission } = usePermission();
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
+  const allowSetImporter = hasPermission(SHIPMENT_IMPORTER_CREATE);
   return (
     <SectionWrapper id="shipment_shipmentSection">
       <SectionHeader
@@ -100,7 +107,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
       <Subscribe to={[ShipmentInfoContainer]}>
         {({ originalValues: initialValues, state, setFieldValue }) => {
           const values: Object = { ...initialValues, ...state };
-          const { forwarders = [] } = values;
+          const { forwarders = [], importer } = values;
 
           return (
             <div className={ShipmentSectionWrapperStyle}>
@@ -410,6 +417,34 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         </>
                       )}
                     </BooleanValue>
+                  </GridColumn>
+                  <GridColumn gap="10px">
+                    <FieldItem
+                      label={
+                        <Label required>
+                          <FormattedMessage
+                            id="modules.Shipments.importer"
+                            defaultMessage="IMPORTER"
+                          />
+                        </Label>
+                      }
+                    />
+                    <UserConsumer>
+                      {({ user }) => {
+                        const { group } = user;
+                        const { types = [] } = group;
+                        if (types.includes('Importer')) {
+                          if (isNew && allowSetImporter) {
+                            return <PartnerCard partner={group} readOnly />;
+                          }
+                          return <PartnerCard partner={importer} readOnly />;
+                        }
+                        if (types.includes('Forwarder')) {
+                          return 'Forwarder logic';
+                        }
+                        return 'TODO';
+                      }}
+                    </UserConsumer>
                   </GridColumn>
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches } }) => {

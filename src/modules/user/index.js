@@ -14,6 +14,7 @@ import query from './query';
 type ContextProps = {
   user: {
     id: string,
+    group: Object,
   },
   permissions: Array<string>,
 };
@@ -21,6 +22,7 @@ type ContextProps = {
 const UserContext: React.Context<ContextProps> = React.createContext({
   user: {
     id: '-1',
+    group: {},
   },
   permissions: [],
 });
@@ -62,6 +64,9 @@ const UserProvider = ({ children }: Props) => (
               lastName: '',
               language: 'en',
               role: 'manager',
+              group: {
+                types: [],
+              },
             },
             permissions = [],
           } = getByPathWithDefault({}, 'viewer', data);

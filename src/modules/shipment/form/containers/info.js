@@ -14,6 +14,7 @@ type FormState = {
   incoterm?: string,
   carrier?: string,
   forwarders: Array<{ id: string, name: string }>,
+  importer: { id: string, name: string },
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
   customFields: Object,
 };
@@ -29,6 +30,7 @@ const initValues = {
   incoterm: '',
   carrier: '',
   forwarders: [],
+  importer: {},
   inCharges: [],
   customFields: {
     mask: null,

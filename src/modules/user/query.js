@@ -16,6 +16,7 @@ export const userDetailQuery = gql`
           group {
             ... on Group {
               id
+              types
               name
               name2
               types
