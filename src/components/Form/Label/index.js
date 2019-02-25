@@ -6,6 +6,7 @@ import { LabelWrapperStyle } from './style';
 type OptionalProps = {
   required: boolean,
   align: 'left' | 'right' | 'center',
+  height: string,
   width: string,
   className: string,
   color: string,
@@ -19,12 +20,13 @@ const defaultProps = {
   className: '',
   required: false,
   align: 'left',
+  height: '20px',
   width: '100%',
   color: '',
 };
 
-const Label = ({ required, align, width, children, className, color }: Props) => (
-  <div className={cx(LabelWrapperStyle({ align, width, color }), className)}>
+const Label = ({ required, align, height, width, children, className, color }: Props) => (
+  <div className={cx(LabelWrapperStyle({ align, height, width, color }), className)}>
     {children}
     {required && ' *'}
   </div>

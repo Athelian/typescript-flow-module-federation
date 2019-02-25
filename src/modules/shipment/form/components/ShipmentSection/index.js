@@ -24,6 +24,7 @@ import {
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
+import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import { UserConsumer } from 'modules/user';
 import {
@@ -341,198 +342,211 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     setFieldValue={setFieldValue}
                     editable={allowToUpdate}
                   />
+
+                  <Subscribe to={[ShipmentTagsContainer]}>
+                    {({ state: { tags }, setFieldValue: changeTags }) => (
+                      <FieldItem
+                        vertical
+                        label={
+                          <Label>
+                            <FormattedMessage {...messages.tags} />
+                          </Label>
+                        }
+                        input={
+                          <TagsInput
+                            editable={allowToUpdate}
+                            id="tags"
+                            name="tags"
+                            tagType="Shipment"
+                            values={tags}
+                            onChange={(field, value) => {
+                              changeTags(field, value);
+                            }}
+                          />
+                        }
+                      />
+                    )}
+                  </Subscribe>
+
+                  <FormField
+                    name="memo"
+                    initValue={values.memo}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextAreaInputFactory
+                        {...inputHandlers}
+                        editable={allowToUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.memo} />}
+                        inputWidth="400px"
+                        inputHeight="120px"
+                      />
+                    )}
+                  </FormField>
                 </GridColumn>
 
                 <GridColumn>
-                  <GridColumn gap="10px">
-                    <UserAssignmentInputFactory
-                      name="inCharges"
-                      values={values.inCharges}
-                      onChange={(name: string, assignments: Array<Object>) =>
-                        setFieldValue(name, assignments)
-                      }
-                      label={
-                        <Label>
-                          <FormattedMessage
-                            id="modules.Shipments.inCharge"
-                            defaultMessage="IN CHARGE "
-                          />
-                          ({values.inCharges.length})
-                        </Label>
-                      }
-                      infoMessage={
+                  <UserAssignmentInputFactory
+                    name="inCharges"
+                    values={values.inCharges}
+                    onChange={(name: string, assignments: Array<Object>) =>
+                      setFieldValue(name, assignments)
+                    }
+                    label={
+                      <>
                         <FormattedMessage
-                          id="modules.Shipments.tooltipInCharge"
-                          defaultMessage="You can choose up to 5 people in charge."
+                          id="modules.Shipments.inCharge"
+                          defaultMessage="IN CHARGE"
                         />
-                      }
-                      editable={allowToUpdate}
-                    />
-                    <FieldItem
-                      label={
-                        <Label>
-                          <FormattedMessage
-                            id="modules.Shipments.canChooseUp5People"
-                            defaultMessage="FORWARDER "
-                          />
-                          ({forwarders.length})
-                        </Label>
-                      }
-                      tooltip={
-                        <FormTooltip
-                          infoMessage={
-                            <FormattedMessage
-                              id="modules.Shipments.tooltipForwarder"
-                              defaultMessage="You can choose up to 4 Forwarders."
-                            />
-                          }
+                        {' ('}
+                        <FormattedNumber value={values.inCharges.length} />
+                        {')'}
+                      </>
+                    }
+                    infoMessage={
+                      <FormattedMessage
+                        id="modules.Shipments.tooltipInCharge"
+                        defaultMessage="You can choose up to 5 people in charge."
+                      />
+                    }
+                    editable={allowToUpdate}
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label required>
+                        <FormattedMessage
+                          id="modules.Shipments.importer"
+                          defaultMessage="IMPORTER"
                         />
-                      }
-                    />
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          <div
-                            onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
-                            role="presentation"
-                          >
-                            {renderForwarders(forwarders, allowToUpdate)}
-                          </div>
-                          <SlideView
-                            isOpen={opened}
-                            onRequestClose={() => slideToggle(false)}
-                            options={{ width: '1030px' }}
-                          >
-                            {opened && (
-                              <SelectForwarders
-                                selected={values.forwarders}
-                                onCancel={() => slideToggle(false)}
-                                onSelect={selected => {
-                                  slideToggle(false);
-                                  setFieldValue('forwarders', selected);
-                                }}
-                              />
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  </GridColumn>
-                  <GridColumn gap="10px">
-                    <FieldItem
-                      label={
-                        <Label required>
-                          <FormattedMessage
-                            id="modules.Shipments.importer"
-                            defaultMessage="IMPORTER"
-                          />
-                        </Label>
-                      }
-                    />
-                    <UserConsumer>
-                      {({ user }) => {
-                        const { group } = user;
-                        const { types = [] } = group;
-                        if (types.includes('Importer')) {
-                          if (isNew && allowSetImporter) {
-                            return <PartnerCard partner={group} readOnly />;
+                      </Label>
+                    }
+                    input={
+                      <UserConsumer>
+                        {({ user }) => {
+                          const { group } = user;
+                          const { types = [] } = group;
+                          if (types.includes('Importer')) {
+                            if (isNew && allowSetImporter) {
+                              return <PartnerCard partner={group} readOnly />;
+                            }
+                            return <PartnerCard partner={importer} readOnly />;
                           }
-                          return <PartnerCard partner={importer} readOnly />;
+                          if (types.includes('Forwarder')) {
+                            return 'Forwarder logic';
+                          }
+                          return 'TODO';
+                        }}
+                      </UserConsumer>
+                    }
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.Shipments.forwarder"
+                          defaultMessage="FORWARDER"
+                        />
+                        {' ('}
+                        <FormattedNumber value={forwarders.length} />
+                        {')'}
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Shipments.tooltipForwarder"
+                            defaultMessage="You can choose up to 4 Forwarders."
+                          />
                         }
-                        if (types.includes('Forwarder')) {
-                          return 'Forwarder logic';
-                        }
-                        return 'TODO';
-                      }}
-                    </UserConsumer>
-                  </GridColumn>
+                      />
+                    }
+                    input={
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) => (
+                          <>
+                            <div
+                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
+                              role="presentation"
+                            >
+                              {renderForwarders(forwarders, allowToUpdate)}
+                            </div>
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <SelectForwarders
+                                  selected={values.forwarders}
+                                  onCancel={() => slideToggle(false)}
+                                  onSelect={selected => {
+                                    slideToggle(false);
+                                    setFieldValue('forwarders', selected);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
+                  />
+
                   <Subscribe to={[ShipmentBatchesContainer]}>
                     {({ state: { batches } }) => {
                       const uniqueExporters = getUniqueExporters(batches);
                       return (
-                        <GridColumn gap="10px">
-                          <FieldItem
-                            label={
-                              <div className={ExporterLabelStyle}>
-                                <Label>
-                                  <FormattedMessage
-                                    id="modules.Shipments.exporter"
-                                    defaultMessage="EXPORTER"
-                                  />
-                                  ({uniqueExporters.length})
-                                </Label>
-                                {uniqueExporters.length > 4 && (
-                                  <button
-                                    className={ExporterSeeMoreButtonStyle}
-                                    type="button"
-                                    onClick={() => {}}
-                                  >
-                                    <Icon icon="HORIZONTAL_ELLIPSIS" />
-                                  </button>
-                                )}
-                              </div>
-                            }
-                            tooltip={
-                              <FormTooltip
-                                infoMessage={
-                                  <FormattedMessage
-                                    id="modules.Shipments.tooltipExporter"
-                                    defaultMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment."
-                                  />
-                                }
-                              />
-                            }
-                          />
-                          {renderExporters(uniqueExporters)}
-                        </GridColumn>
+                        <FieldItem
+                          vertical
+                          label={
+                            <div className={ExporterLabelStyle}>
+                              <Label>
+                                <FormattedMessage
+                                  id="modules.Shipments.exporter"
+                                  defaultMessage="EXPORTER"
+                                />
+                                {' ('}
+                                <FormattedNumber value={uniqueExporters.length} />
+                                {')'}
+                              </Label>
+                              {uniqueExporters.length > 4 && (
+                                <button
+                                  className={ExporterSeeMoreButtonStyle}
+                                  type="button"
+                                  onClick={() => {}}
+                                >
+                                  <Icon icon="HORIZONTAL_ELLIPSIS" />
+                                </button>
+                              )}
+                            </div>
+                          }
+                          tooltip={
+                            <FormTooltip
+                              infoMessage={
+                                <FormattedMessage
+                                  id="modules.Shipments.tooltipExporter"
+                                  defaultMessage="Exporters are automatically shown based off of the Batches chosen for the Cargo of this Shipment."
+                                />
+                              }
+                            />
+                          }
+                          input={renderExporters(uniqueExporters)}
+                        />
                       );
                     }}
                   </Subscribe>
                 </GridColumn>
               </div>
-              <Subscribe to={[ShipmentTagsContainer]}>
-                {({ state: { tags }, setFieldValue: changeTags }) => (
-                  <FieldItem
-                    vertical
-                    label={
-                      <Label>
-                        <FormattedMessage {...messages.tags} />
-                      </Label>
-                    }
-                    input={
-                      <TagsInput
-                        editable={allowToUpdate}
-                        id="tags"
-                        name="tags"
-                        tagType="Shipment"
-                        values={tags}
-                        onChange={(field, value) => {
-                          changeTags(field, value);
-                        }}
-                      />
-                    }
-                  />
-                )}
-              </Subscribe>
-
-              <FormField
-                name="memo"
-                initValue={values.memo}
-                values={values}
-                validator={validator}
-                setFieldValue={setFieldValue}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextAreaInputFactory
-                    {...inputHandlers}
-                    editable={allowToUpdate}
-                    name={name}
-                    isNew={isNew}
-                    originalValue={initialValues[name]}
-                    label={<FormattedMessage {...messages.memo} />}
-                  />
-                )}
-              </FormField>
 
               <div className={DividerStyle} />
             </div>
