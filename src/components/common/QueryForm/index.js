@@ -43,7 +43,7 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
           return (
             <Query
               query={partnerPermissionQuery}
-              variables={{ id: decodeId(entityId) }}
+              variables={{ partnerId: ownerGroupId }}
               fetchPolicy="cache-first"
             >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {
