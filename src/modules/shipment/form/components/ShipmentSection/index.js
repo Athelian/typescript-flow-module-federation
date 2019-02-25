@@ -433,12 +433,12 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           const { group } = user;
                           const { types = [] } = group;
                           if (types.includes('Importer')) {
-                            if (isNew && allowSetImporter) {
+                            if (isNew) {
                               return <PartnerCard partner={group} readOnly />;
                             }
                             return <PartnerCard partner={importer} readOnly />;
                           }
-                          if (types.includes('Forwarder')) {
+                          if (types.includes('Forwarder') && allowSetImporter) {
                             return 'Forwarder logic';
                           }
                           return 'TODO';

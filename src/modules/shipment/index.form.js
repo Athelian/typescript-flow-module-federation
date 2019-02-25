@@ -8,6 +8,7 @@ import { isNullOrUndefined } from 'utils/fp';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
+import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
@@ -145,6 +146,7 @@ class ShipmentFormModule extends React.Component<Props> {
     const { shipmentId, onSuccessCallback } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
+
     const input = isNewOrClone
       ? prepareCreateShipmentInput(formData)
       : prepareUpdateShipmentInput(formData);
@@ -491,7 +493,24 @@ class ShipmentFormModule extends React.Component<Props> {
                     >
                       {apiError && <p>Error: Please try again.</p>}
                       {this.isNew() || !shipmentId ? (
-                        <ShipmentForm shipment={{}} isNew />
+                        <UserConsumer>
+                          {({ user }) => {
+                            const { group } = user;
+                            const { types = [] } = group;
+                            const isImporter = types.includes('Importer');
+                            return (
+                              <ShipmentForm
+                                shipment={{}}
+                                isNew
+                                onFormReady={() => {
+                                  shipmentInfoContainer.initDetailValues({
+                                    importer: isImporter ? group : {},
+                                  });
+                                }}
+                              />
+                            );
+                          }}
+                        </UserConsumer>
                       ) : (
                         <QueryForm
                           query={shipmentFormQuery}
