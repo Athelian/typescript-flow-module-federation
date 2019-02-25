@@ -62,6 +62,7 @@ export const prepareCreateBatchInput = (
     expiredAt,
     customFields,
     producedAt,
+    ownedBy,
     ...rest
   }: Object,
   inShipmentOrBatchForm: boolean = true
@@ -132,6 +133,7 @@ export const prepareUpdateBatchInput = (
     expiredAt,
     customFields,
     producedAt,
+    ownedBy,
     tags = [],
     batchAdjustments = [],
     totalAdjusted,
