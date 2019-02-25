@@ -145,10 +145,15 @@ export default class BatchForm extends React.Component<Props> {
                                 onCancel={() => dialogToggle(false)}
                                 onConfirm={() => {
                                   if (state.orderItem && state.orderItem.productProvider) {
-                                    syncProductProvider(
-                                      state.orderItem.productProvider,
-                                      setFieldTouched
-                                    );
+                                    syncProductProvider(state.orderItem.productProvider);
+                                    setFieldTouched('packageName');
+                                    setFieldTouched('packageCapacity');
+                                    setFieldTouched('packageQuantity');
+                                    setFieldTouched('packageGrossWeight');
+                                    setFieldTouched('packageVolume');
+                                    setFieldTouched('packageSize.length');
+                                    setFieldTouched('packageSize.width');
+                                    setFieldTouched('packageSize.height');
                                   }
                                   dialogToggle(false);
                                 }}

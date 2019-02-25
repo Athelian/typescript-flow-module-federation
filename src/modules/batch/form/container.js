@@ -151,7 +151,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     });
   };
 
-  syncProductProvider = (productProvider: ProductProvider, setFieldTouched: Function) => {
+  syncProductProvider = (productProvider: ProductProvider) => {
     const { quantity, batchAdjustments } = this.state;
     const {
       packageName = '',
@@ -184,16 +184,6 @@ export default class BatchFormContainer extends Container<BatchFormState> {
       packageVolume,
       packageSize,
     }));
-    if (setFieldTouched) {
-      setFieldTouched('packageName');
-      setFieldTouched('packageCapacity');
-      setFieldTouched('packageQuantity');
-      setFieldTouched('packageGrossWeight');
-      setFieldTouched('packageVolume');
-      setFieldTouched('packageSize.length');
-      setFieldTouched('packageSize.width');
-      setFieldTouched('packageSize.height');
-    }
   };
 
   getPackageQuantity = () => calculatePackageQuantity(this.state);
