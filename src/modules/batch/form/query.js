@@ -24,6 +24,14 @@ export const batchFormQuery = gql`
   query($id: ID!) {
     batch(id: $id) {
       ...batchFormFragment
+      ... on Batch {
+        ownedBy {
+          ... on Group {
+            id
+            name
+          }
+        }
+      }
     }
   }
 
