@@ -39,7 +39,7 @@ const renderGroup = ({
         }`;
         return (
           <div style={{ display: 'flex' }} key={column.name}>
-            <FormField name={fieldName} initValue={hasSelectField(fieldName)}>
+            <FormField name={column} initValue={hasSelectField(fieldName)}>
               {({ name, onBlur }) => (
                 <>
                   <ToggleInput
@@ -103,7 +103,7 @@ const renderCustomFields = ({
   </GridColumn>
 );
 
-const TableTemplateSection = () => {
+const SelectFieldsSection = () => {
   const { hasPermission } = usePermission();
   const canCreateOrUpdate = hasPermission(TEMPLATE_CREATE) || hasPermission(TEMPLATE_UPDATE);
   return (
@@ -191,4 +191,4 @@ const TableTemplateSection = () => {
   );
 };
 
-export default TableTemplateSection;
+export default SelectFieldsSection;
