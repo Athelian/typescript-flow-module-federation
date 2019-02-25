@@ -86,6 +86,7 @@ export const prepareContainer = ({
   totalAdjusted,
   batches,
   representativeBatch,
+  ownedBy,
   isNew,
   id,
   ...rest
