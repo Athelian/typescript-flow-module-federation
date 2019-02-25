@@ -37,7 +37,7 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
           navigate('/404');
         }
 
-        const ownerGroupId = getByPath(`${entityType}.ownerBy.id`, data);
+        const ownerGroupId = getByPath(`${entityType}.ownedBy.id`, data);
         if (!isOwner(ownerGroupId)) {
           // query permission for partner
           return (

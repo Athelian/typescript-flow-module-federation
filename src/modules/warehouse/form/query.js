@@ -14,6 +14,14 @@ export const warehouseFormQuery = gql`
   query($id: ID!) {
     warehouse(id: $id) {
       ...warehouseFormFragment
+      ... on Warehouse {
+        ownedBy {
+          ... on Group {
+            id
+            name
+          }
+        }
+      }
     }
   }
 

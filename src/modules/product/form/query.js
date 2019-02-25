@@ -21,6 +21,14 @@ export const productFormQuery = gql`
   query($id: ID!) {
     product(id: $id) {
       ...productFormFragment
+      ... on Product {
+        ownedBy {
+          ... on Group {
+            id
+            name
+          }
+        }
+      }
     }
   }
 
