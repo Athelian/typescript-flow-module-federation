@@ -204,7 +204,7 @@ export const orderColumnFields = [
     meta: {
       max: 5,
     },
-    getExportValue: ({ inCharges }: { inCharges: Array<Object> }) =>
+    getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
       inCharges &&
       inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
   },
@@ -215,7 +215,7 @@ export const orderColumnFields = [
     meta: {
       tagType: 'Order',
     },
-    getExportValue: ({ tags }: { tags: Array<Object> }) =>
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
 ];
@@ -225,7 +225,7 @@ export const orderItemColumnFields = [
     messageId: 'modules.Products.name',
     name: 'productProvider',
     type: 'productProvider',
-    getExportValue: ({ productProvider }: { productProvider: Object }) =>
+    getExportValue: ({ productProvider }: { productProvider: Object } = {}) =>
       getByPathWithDefault('', 'product.name', productProvider),
   },
   {
@@ -322,7 +322,7 @@ export const batchColumnFields = [
     meta: {
       tagType: 'Batch',
     },
-    getExportValue: ({ tags }: { tags: Array<Object> }) =>
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
@@ -343,7 +343,7 @@ export const batchColumnFields = [
       metrics: weightMetrics,
       convert: weightConvert,
     },
-    getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object }) =>
+    getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) =>
       packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`,
   },
   {
@@ -354,7 +354,7 @@ export const batchColumnFields = [
       metrics: volumeMetrics,
       convert: volumeConvert,
     },
-    getExportValue: ({ packageVolume }: { packageVolume: Object }) =>
+    getExportValue: ({ packageVolume }: { packageVolume: Object } = {}) =>
       packageVolume && `${packageVolume.value} ${packageVolume.metric}`,
   },
   {
@@ -367,7 +367,7 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'width',
     },
-    getExportValue: ({ packageSize }: { packageSize: Object }) =>
+    getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
       packageSize && packageSize.width && `${packageSize.width.value} ${packageSize.width.metric}`,
   },
   {
@@ -380,7 +380,7 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'height',
     },
-    getExportValue: ({ packageSize }: { packageSize: Object }) =>
+    getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
       packageSize &&
       packageSize.height &&
       `${packageSize.height.value} ${packageSize.height.metric}`,
@@ -395,7 +395,7 @@ export const batchColumnFields = [
       sourcePath: 'packageSize',
       destPath: 'length',
     },
-    getExportValue: ({ packageSize }: { packageSize: Object }) =>
+    getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
       packageSize &&
       packageSize.length &&
       `${packageSize.length.value} ${packageSize.length.metric}`,
@@ -472,7 +472,7 @@ export const shipmentColumnFields = [
     meta: {
       max: 4,
     },
-    getExportValue: ({ forwarders }: { forwarders: Array<Object> }) =>
+    getExportValue: ({ forwarders }: { forwarders: Array<Object> } = {}) =>
       forwarders && forwarders.reduce((field, value) => `${field}${value.name}, `, ''),
   },
   {
@@ -482,7 +482,7 @@ export const shipmentColumnFields = [
     meta: {
       max: 5,
     },
-    getExportValue: ({ inCharges }: { inCharges: Array<Object> }) =>
+    getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
       inCharges &&
       inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
   },
@@ -493,20 +493,20 @@ export const shipmentColumnFields = [
     meta: {
       tagType: 'Shipment',
     },
-    getExportValue: ({ tags }: { tags: Array<Object> }) =>
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
     messageId: shipmentMessages.cargoReady.id,
     name: 'cargoReady',
     type: 'timeline',
-    getExportValue: ({ cargoReady }: { cargoReady: Object }) => cargoReady && cargoReady.date,
+    getExportValue: ({ cargoReady }: { cargoReady: Object } = {}) => cargoReady && cargoReady.date,
   },
   {
     messageId: 'modules.Shipments.loadPortDeparture',
     name: 'voyages.0.departure',
     type: 'timeline',
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+    getExportValue: ({ voyages }: { voyages: Array<Object> } = {}) => {
       const dates = getByPathWithDefault([], '0.departure.timelineDateRevisions', voyages);
       const lastDate = dates[dates.length - 1];
       return lastDate && lastDate.date;
@@ -516,7 +516,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.firstTransitPortArrival',
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 1 ? '0' : ''}.arrival`, voyages),
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+    getExportValue: ({ voyages }: { voyages: Array<Object> } = {}) => {
       const dates = getByPathWithDefault(
         [],
         `${voyages && voyages.length > 1 ? '0' : ''}.arrival.timelineDateRevisions`,
@@ -532,7 +532,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.firstTransitPortDeparture',
     name: 'voyages.1.departure',
     type: 'timeline',
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+    getExportValue: ({ voyages }: { voyages: Array<Object> } = {}) => {
       const dates = getByPathWithDefault([], '1.departure.date', voyages);
       const lastDate = dates[dates.length - 1];
       return lastDate && lastDate.date;
@@ -542,7 +542,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.secondTransitPortArrival',
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages && voyages.length > 2 ? '1' : ''}.arrival`, voyages),
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+    getExportValue: ({ voyages }: { voyages: Array<Object> } = {}) => {
       const dates = getByPathWithDefault(
         [],
         `${voyages && voyages.length > 2 ? '1' : ''}.arrival.timelineDateRevisions`,
@@ -558,7 +558,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.secondTransitPortDeparture',
     name: 'voyages.2.departure',
     type: 'timeline',
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+    getExportValue: ({ voyages }: { voyages: Array<Object> } = {}) => {
       const dates = getByPathWithDefault([], '2.departure.timelineDateRevisions', voyages);
       const lastDate = dates[dates.length - 1];
       return lastDate && lastDate.date;
@@ -572,7 +572,7 @@ export const shipmentColumnFields = [
     },
     getFieldName: ({ voyages }: { voyages: Array<Object> }) =>
       `voyages.${voyages ? voyages.length - 1 : 0}.arrival`,
-    getExportValue: ({ voyages }: { voyages: Array<Object> }) => {
+    getExportValue: ({ voyages }: { voyages: Array<Object> } = {}) => {
       const index = voyages ? voyages.length - 1 : 0;
       const dates = getByPathWithDefault([], `${index}.arrival.timelineDateRevisions`, voyages);
       const lastDate = dates[dates.length - 1];
@@ -585,7 +585,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.customsClearance',
     name: 'containerGroups.0.customClearance',
     type: 'timeline',
-    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) => {
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> } = {}) => {
       const dates = getByPathWithDefault(
         [],
         '0.customClearance.timelineDateRevisions',
@@ -599,7 +599,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.warehouseArrival',
     name: 'containerGroups.0.warehouseArrival',
     type: 'timeline',
-    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) => {
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> } = {}) => {
       const dates = getByPathWithDefault(
         '',
         '0.warehouseArrival.timelineDateRevisions',
@@ -613,7 +613,7 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.deliveryReady',
     name: 'containerGroups.0.deliveryReady',
     type: 'timeline',
-    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> }) => {
+    getExportValue: ({ containerGroups }: { containerGroups: Array<Object> } = {}) => {
       const dates = getByPathWithDefault('', '0.deliveryReady.date', containerGroups);
       const lastDate = dates[dates.length - 1];
       return lastDate && lastDate.date;

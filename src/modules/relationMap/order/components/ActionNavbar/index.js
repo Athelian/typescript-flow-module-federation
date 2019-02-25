@@ -663,12 +663,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         const batchIds = uiSelectors.targetedBatchIds();
                         const initBatches = batchIds.map(batchId => {
                           const [orderItemId, orderItem] =
-                            (Object.entries(orderItems || {}): Array<any>).find(([, item]) =>
-                              item.batches.includes(batchId)
+                            (Object.entries(orderItems || {}): Array<any>).find(
+                              ([, item]) => item.batches && item.batches.includes(batchId)
                             ) || [];
                           const [, order] =
-                            (Object.entries(orders || {}): Array<any>).find(([, item]) =>
-                              item.orderItems.includes(orderItemId)
+                            (Object.entries(orders || {}): Array<any>).find(
+                              ([, item]) => item.orderItems && item.orderItems.includes(orderItemId)
                             ) || [];
                           const { totalAdjusted, ...batch } = batches[batchId];
                           return {
