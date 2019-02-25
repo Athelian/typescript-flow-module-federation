@@ -103,6 +103,7 @@ export const shipmentCardFragment = gql`
     }
     importer {
       ... on Group {
+        id
         name
       }
     }
