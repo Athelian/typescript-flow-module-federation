@@ -18,6 +18,8 @@ import {
   ShipmentBLStyle,
   ShipmentRightWrapperStyle,
   ShipmentTagsWrapperStyle,
+  ShipmentImporterWrapperStyle,
+  ShipmentHeaderWrapperStyle,
   ShipmentDataWrapperStyle,
   ShipmentInChargeWrapperStyle,
   ShipmentBadgeWrapperStyle,
@@ -51,6 +53,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     orderItemCount,
     totalVolume,
     containers,
+    importer,
   } = shipment;
 
   return (
@@ -66,8 +69,14 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
             <div className={ShipmentBLStyle}>{blNo}</div>
           </div>
           <div className={ShipmentRightWrapperStyle}>
-            <div className={ShipmentTagsWrapperStyle}>
-              {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            <div className={ShipmentHeaderWrapperStyle}>
+              <div className={ShipmentTagsWrapperStyle}>
+                {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              </div>
+              <div className={ShipmentImporterWrapperStyle}>
+                <Icon icon="IMPORTER" />
+                {importer && importer.name}
+              </div>
             </div>
             <div className={ShipmentDataWrapperStyle}>
               <div className={ShipmentInChargeWrapperStyle}>

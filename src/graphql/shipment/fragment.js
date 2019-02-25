@@ -101,6 +101,11 @@ export const shipmentCardFragment = gql`
     totalVolume {
       ...metricFragment
     }
+    importer {
+      ... on Group {
+        name
+      }
+    }
     cargoReady {
       ...timelineDateMinimalFragment
     }

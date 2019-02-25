@@ -56,6 +56,23 @@ export const ShipmentTagsWrapperStyle: string = css`
   height: 18px;
 `;
 
+export const ShipmentImporterWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  ${fontSizes.SMALL};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  grid-auto-columns: 15px auto;
+  grid-gap: 5px;
+  border-radius: 5px;
+  padding: 2px 10px 0px 10px;
+  margin-left: 5px;
+  min-width: 180px;
+`;
+
+export const ShipmentHeaderWrapperStyle: string = css`
+  ${layout.LAYOUT};
+  justify-content: flex-end;
+`;
+
 export const ShipmentDataWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   justify-content: end;
