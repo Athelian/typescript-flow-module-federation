@@ -8,6 +8,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { decodeId } from 'utils/id';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import QueryFormPermissionContext from './context';
+import { partnerPermissionQuery } from './query';
 
 type Props = {
   query: DocumentNode,
@@ -40,7 +41,11 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
         if (!isOwner(ownerGroupId)) {
           // query permission for partner
           return (
-            <Query query={query} variables={{ id: decodeId(entityId) }} fetchPolicy="cache-first">
+            <Query
+              query={partnerPermissionQuery}
+              variables={{ id: decodeId(entityId) }}
+              fetchPolicy="cache-first"
+            >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {
                 if (isLoading) return <LoadingIcon />;
                 if (permissionError) {
