@@ -28,7 +28,8 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
 
         if (loading) return <LoadingIcon />;
 
-        if (getByPath(`${entityType}.__typename`, data) === 'NotFound') {
+        const errorType = getByPath(`${entityType}.__typename`, data);
+        if (['NotFound', 'Forbidden'].includes(errorType)) {
           navigate('/404');
         }
 
