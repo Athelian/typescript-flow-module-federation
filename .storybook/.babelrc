@@ -1,0 +1,19 @@
+{
+  "presets": ["react-app"],
+  "plugins": [
+    ["ramda"],
+    [
+      "module-resolver",
+      {
+        "root": ["./src"]
+      }
+    ],
+    [
+      "emotion",
+      {
+        "sourceMap": true,
+        "autoLabel": true
+      }
+    ]
+  ]
+}
