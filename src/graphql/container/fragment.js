@@ -105,6 +105,12 @@ export const containerCardFragment = gql`
       ... on Shipment {
         id
         no
+        importer {
+          ... on Group {
+            id
+            name
+          }
+        }
       }
     }
     tags {

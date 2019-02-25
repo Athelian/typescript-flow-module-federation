@@ -12,7 +12,7 @@ What things you need to install the software and how to install them
 
 - **Essential**
 
-  - Node.js 
+  - Node.js
 
     Install node.js using [nvm](https://github.com/creationix/nvm) or on windows use [nvm-windows](https://github.com/coreybutler/nvm-windows).
 
@@ -125,14 +125,6 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
   ```
 
   starts [storybook](https://github.com/storybooks/storybook) development server for designing isolated components.
-
-- **styleguide**
-
-  ```
-  yarn styleguide
-  ```
-
-  starts [styleguide](https://github.com/styleguidist/react-styleguidist) development server for document and live example components.
 
 - **flow**
 
