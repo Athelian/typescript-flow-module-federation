@@ -9,7 +9,7 @@ import usePermission from 'hooks/usePermission';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
-  SHIPMENT_IMPORTER_CREATE,
+  SHIPMENT_SET_IMPORTER,
 } from 'modules/permission/constants/shipment';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
@@ -65,7 +65,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
   const { hasPermission } = usePermission();
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
-  const allowSetImporter = hasPermission(SHIPMENT_IMPORTER_CREATE);
+  const allowSetImporter = hasPermission(SHIPMENT_SET_IMPORTER);
   return (
     <SectionWrapper id="shipment_shipmentSection">
       <SectionHeader
