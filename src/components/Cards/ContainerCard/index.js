@@ -28,6 +28,9 @@ import {
   WarehouseIconStyle,
   LabelStyle,
   ApprovalIconStyle,
+  ContainerImporterWrapperStyle,
+  ContainerImporterIconStyle,
+  ContainerImporterStyle,
   TagsWrapperStyle,
 } from './style';
 
@@ -182,6 +185,15 @@ const ContainerCard = ({ container, ...rest }: Props) => {
                 <Display align="left">{shipment.no}</Display>
               </>
             )}
+          </div>
+
+          <div className={ContainerImporterWrapperStyle}>
+            <div className={ContainerImporterIconStyle}>
+              <Icon icon="IMPORTER" />
+            </div>
+            <div className={ContainerImporterStyle}>
+              {shipment && shipment.importer && shipment.importer.name}
+            </div>
           </div>
           <div className={TagsWrapperStyle}>
             {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}

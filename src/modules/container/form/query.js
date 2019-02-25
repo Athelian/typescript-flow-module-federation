@@ -26,6 +26,14 @@ export const containerFormQuery = gql`
   query($id: ID!) {
     container(id: $id) {
       ...containerFormFragment
+      ... on Container {
+        ownedBy {
+          ... on Group {
+            id
+            name
+          }
+        }
+      }
     }
   }
 

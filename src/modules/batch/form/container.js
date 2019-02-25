@@ -34,13 +34,17 @@ export function calculateVolume(
 
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
-export const calculatePackageQuantity = (prevState: Object) => {
-  if (prevState.packageCapacity > 0) {
-    const totalQuantity = prevState.batchAdjustments.reduce(
+export const calculatePackageQuantity = ({
+  packageCapacity = 0,
+  quantity,
+  batchAdjustments,
+}: Object) => {
+  if (packageCapacity > 0) {
+    const totalQuantity = batchAdjustments.reduce(
       (total, adjustment) => adjustment.quantity + total,
-      prevState.quantity
+      quantity
     );
-    return totalQuantity > 0 ? totalQuantity / prevState.packageCapacity : 0;
+    return totalQuantity > 0 ? totalQuantity / packageCapacity : 0;
   }
   return 0;
 };
@@ -148,6 +152,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
   };
 
   syncProductProvider = (productProvider: ProductProvider) => {
+    const { quantity, batchAdjustments } = this.state;
     const {
       packageName = '',
       packageCapacity = 0,
@@ -170,12 +175,12 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     } = productProvider;
 
     this.setState(prevState => ({
-      packageQuantity: prevState.autoCalculatePackageQuantity
-        ? calculatePackageQuantity(prevState)
-        : prevState.packageQuantity,
-      packageCapacity,
-      packageGrossWeight,
       packageName,
+      packageCapacity,
+      packageQuantity: prevState.autoCalculatePackageQuantity
+        ? calculatePackageQuantity({ packageCapacity, quantity, batchAdjustments })
+        : prevState.packageQuantity,
+      packageGrossWeight,
       packageVolume,
       packageSize,
     }));
