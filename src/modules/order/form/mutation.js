@@ -95,7 +95,7 @@ export const prepareCreateOrderInput = ({
   tagIds: tags.map(({ id }) => id),
   inChargeIds: inCharges.map(({ id }) => id),
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, order, price, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
       price: { ...price, currency },
       productProviderId: productProvider.id,
@@ -192,7 +192,7 @@ export const prepareUpdateOrderInput = ({
   tagIds: tags.map(({ id: tagId }) => tagId),
   inChargeIds: inCharges.map(({ id: userId }) => userId),
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, price, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, price, order, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
