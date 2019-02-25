@@ -183,6 +183,8 @@ const ContainerCard = ({ container, ...rest }: Props) => {
               </>
             )}
           </div>
+          {/* TODO: importer name here which is same styling with shipment card */}
+          <div>{shipment && shipment.importer && shipment.importer.name}</div>
           <div className={TagsWrapperStyle}>
             {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
           </div>
