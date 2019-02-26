@@ -12,7 +12,7 @@ import { injectUid } from 'utils/id';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import {
-  PRODUCT_PROVIDER_GET,
+  PRODUCT_PROVIDER_FORM,
   PRODUCT_PROVIDER_CREATE,
   PRODUCT_PROVIDER_UPDATE,
 } from 'modules/permission/constants/product';
@@ -27,7 +27,7 @@ import {
 function ProductProvidersSection() {
   const { hasPermission } = usePermission();
   return (
-    hasPermission(PRODUCT_PROVIDER_GET) && (
+    hasPermission(PRODUCT_PROVIDER_FORM) && (
       <Subscribe to={[ProductProvidersContainer]}>
         {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
           <div className={ProductProviderSectionWrapperStyle}>
