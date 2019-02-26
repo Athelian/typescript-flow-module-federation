@@ -14,7 +14,7 @@ type Props = {
   query: DocumentNode,
   entityId: string,
   entityType: string,
-  render: Object => React.Node,
+  render: (Object, boolean) => React.Node,
 };
 
 export default function QueryForm({ query, entityId, entityType, render }: Props) {
@@ -66,14 +66,15 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
                       ),
                     }}
                   >
-                    {render(getByPathWithDefault({}, entityType, data))}
+                    {render(getByPathWithDefault({}, entityType, data), false)}
                   </QueryFormPermissionContext.Provider>
                 );
               }}
             </Query>
           );
         }
-        if (getByPath(entityType, data)) return render(getByPathWithDefault({}, entityType, data));
+        if (getByPath(entityType, data))
+          return render(getByPathWithDefault({}, entityType, data), true);
         navigate(`/${entityType}`);
         return <LoadingIcon />;
       }}

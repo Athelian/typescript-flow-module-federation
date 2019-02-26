@@ -311,7 +311,7 @@ class ProductFormModule extends React.Component<Props> {
                           query={productFormQuery}
                           entityId={productId}
                           entityType="product"
-                          render={product => (
+                          render={(product, isOwner) => (
                             <Subscribe
                               to={[
                                 ProductInfoContainer,
@@ -327,6 +327,7 @@ class ProductFormModule extends React.Component<Props> {
                                 productFilesState
                               ) => (
                                 <ProductForm
+                                  isOwner={isOwner}
                                   isNewOrClone={isNewOrClone}
                                   product={product}
                                   onFormReady={() => {

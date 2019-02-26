@@ -45,6 +45,7 @@ import {
 
 type Props = {
   isNew: boolean,
+  isOwner: boolean,
   product: Object,
 };
 
@@ -57,8 +58,8 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
   return cloneItems;
 };
 
-const ProductSection = ({ isNew, product }: Props) => {
-  const { hasPermission } = usePermission();
+const ProductSection = ({ isNew, isOwner, product }: Props) => {
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(PRODUCT_UPDATE);
   const { updatedAt, updatedBy, archived } = product;
   return (

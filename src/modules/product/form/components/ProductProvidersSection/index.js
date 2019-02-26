@@ -23,8 +23,12 @@ import {
   EmptyMessageStyle,
 } from './style';
 
-function ProductProvidersSection() {
-  const { hasPermission } = usePermission();
+type Props = {
+  isOwner: boolean,
+};
+
+function ProductProvidersSection({ isOwner }: Props) {
+  const { hasPermission } = usePermission(isOwner);
   return (
     hasPermission(PRODUCT_PROVIDER_FORM) && (
       <Subscribe to={[ProductProvidersContainer]}>
