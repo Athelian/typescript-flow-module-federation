@@ -81,7 +81,7 @@ export const getQuantitySummary = (orderItems: Array<Object>) => {
 
 export const sumBatchQuantity = (total: number, batch: Object) => total + findBatchQuantity(batch);
 
-export const getBatchByFillBatch = (orderItem: Object) => {
+export const getBatchByFillBatch = (orderItem: Object): Object => {
   const { batches = [] } = orderItem;
   const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
   const wantingBatchQuantity = orderItem.quantity - totalBatchQuantity;
@@ -119,7 +119,7 @@ export const getBatchByFillBatch = (orderItem: Object) => {
   return null;
 };
 
-export const getOrderItemByFillBatch = (orderItem: Object) => {
+export const getOrderItemByFillBatch = (orderItem: Object): Object => {
   const { batches = [], quantity } = orderItem;
   const totalBatchQuantity = batches.reduce(sumBatchQuantity, 0);
   const wantingBatchQuantity = quantity - totalBatchQuantity;
