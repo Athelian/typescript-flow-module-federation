@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { defineMessages, injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
@@ -44,7 +45,8 @@ type Props = {
 };
 
 function DocumentsSection({ intl }: Props) {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(SHIPMENT_UPDATE);
   const allowDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
 

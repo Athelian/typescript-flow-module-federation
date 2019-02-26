@@ -37,14 +37,14 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
           navigate('/404');
         }
 
-        const ownerGroupId = getByPath(`${entityType}.ownedBy.id`, data);
-        const isOwner = isOwnerBy(ownerGroupId);
+        const partnerId = getByPath(`${entityType}.ownedBy.id`, data);
+        const isOwner = isOwnerBy(partnerId);
         if (!isOwner) {
           // query permission for partner
           return (
             <Query
               query={partnerPermissionQuery}
-              variables={{ partnerId: ownerGroupId }}
+              variables={{ partnerId }}
               fetchPolicy="cache-first"
             >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {
@@ -59,7 +59,7 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
                 return (
                   <QueryFormPermissionContext.Provider
                     value={{
-                      ownerGroupId,
+                      isOwner: false,
                       permissions: getByPathWithDefault(
                         [],
                         'viewer.permissionsFromPartner',
@@ -74,8 +74,18 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
             </Query>
           );
         }
-        if (getByPath(entityType, data))
-          return render(getByPathWithDefault({}, entityType, data), isOwner);
+        if (getByPath(entityType, data)) {
+          return (
+            <QueryFormPermissionContext.Provider
+              value={{
+                isOwner: true,
+                permissions: [],
+              }}
+            >
+              {render(getByPathWithDefault({}, entityType, data), isOwner)}
+            </QueryFormPermissionContext.Provider>
+          );
+        }
         navigate(`/${entityType}`);
         return <LoadingIcon />;
       }}

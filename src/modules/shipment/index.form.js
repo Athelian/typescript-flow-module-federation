@@ -516,8 +516,9 @@ class ShipmentFormModule extends React.Component<Props> {
                           query={shipmentFormQuery}
                           entityId={shipmentId}
                           entityType="shipment"
-                          render={shipment => (
+                          render={(shipment, isOwner) => (
                             <ShipmentForm
+                              isOwner={isOwner}
                               isClone={this.isClone()}
                               shipment={shipment}
                               anchor={anchor}
