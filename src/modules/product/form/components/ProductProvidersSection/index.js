@@ -14,7 +14,6 @@ import ProductProviderContainer from 'modules/productProvider/form/container';
 import {
   PRODUCT_PROVIDER_FORM,
   PRODUCT_PROVIDER_CREATE,
-  PRODUCT_PROVIDER_UPDATE,
 } from 'modules/permission/constants/product';
 import ProductProviderFormWrapper from './components/ProductProviderFormWrapper';
 import {
@@ -32,8 +31,7 @@ function ProductProvidersSection() {
         {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
           <div className={ProductProviderSectionWrapperStyle}>
             <SectionNavBar>
-              {(hasPermission(PRODUCT_PROVIDER_CREATE) ||
-                hasPermission(PRODUCT_PROVIDER_UPDATE)) && (
+              {hasPermission(PRODUCT_PROVIDER_CREATE) && (
                 <BooleanValue>
                   {({ value: opened, set: slideToggle }) => (
                     <>
