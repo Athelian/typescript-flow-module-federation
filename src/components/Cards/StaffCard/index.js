@@ -36,7 +36,7 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
 
   let userRoleIcon = 'USER';
 
-  // check roles array, otherwise check deprecated role field
+  // TODO remove deprecated role field
   if (roles && roles.length > 0) {
     if (roles.some(role => role.name === 'admin')) {
       userRoleIcon = 'MANAGER';
