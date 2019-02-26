@@ -7,7 +7,7 @@ import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import BatchFormContainer from 'modules/batch/form/container';
-import { autoFillBatchReturnBatch } from 'modules/order/helpers';
+import { getBatchByFillBatch } from 'modules/order/helpers';
 import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -152,7 +152,7 @@ class OrderItems extends React.Component<Props> {
                                       />
                                     }
                                     onClick={() => {
-                                      const newBatch = autoFillBatchReturnBatch(item);
+                                      const newBatch = getBatchByFillBatch(item);
                                       if (newBatch) {
                                         addNewBatch(newBatch);
                                       }
