@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+import { calculatePackageQuantity } from 'utils/batch';
 
 type Metric = {
   value: number,
@@ -34,20 +35,6 @@ export function calculateVolume(
 
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
-export const calculatePackageQuantity = ({
-  packageCapacity = 0,
-  quantity,
-  batchAdjustments,
-}: Object) => {
-  if (packageCapacity > 0) {
-    const totalQuantity = batchAdjustments.reduce(
-      (total, adjustment) => adjustment.quantity + total,
-      quantity
-    );
-    return totalQuantity > 0 ? totalQuantity / packageCapacity : 0;
-  }
-  return 0;
-};
 
 export type BatchFormState = {
   id?: ?string,

@@ -1,5 +1,5 @@
 // @flow
-const findBatchQuantity = ({
+export const findBatchQuantity = ({
   quantity = 0,
   batchAdjustments,
 }: {
@@ -15,5 +15,17 @@ const findBatchQuantity = ({
   return batchQuantity;
 };
 
-export { findBatchQuantity };
-export default findBatchQuantity;
+export const calculatePackageQuantity = ({
+  packageCapacity = 0,
+  quantity,
+  batchAdjustments,
+}: Object) => {
+  if (packageCapacity > 0) {
+    const totalQuantity = batchAdjustments.reduce(
+      (total, adjustment) => adjustment.quantity + total,
+      quantity
+    );
+    return totalQuantity > 0 ? totalQuantity / packageCapacity : 0;
+  }
+  return 0;
+};

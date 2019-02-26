@@ -6,8 +6,8 @@ import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
-import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
-import { findBatchQuantity } from 'utils/batch';
+import BatchFormContainer from 'modules/batch/form/container';
+import { autoFillBatchReturnBatch } from 'modules/order/helpers';
 import { isEquals } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -65,45 +65,6 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
     no: `batch no ${batches.length + 1}`,
     autoCalculatePackageQuantity: true,
   });
-}
-
-function autoFillBatch(orderItem: Object, addNewBatch: Function) {
-  const { batches = [] } = orderItem;
-  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
-  const wantingBatchQuantity = orderItem.quantity - totalBatchQuantity;
-  if (wantingBatchQuantity > 0) {
-    const {
-      productProvider: {
-        packageName,
-        packageCapacity,
-        packageGrossWeight,
-        packageVolume,
-        packageSize,
-      },
-    } = orderItem;
-
-    addNewBatch(
-      injectUid({
-        isNew: true,
-        no: `batch no ${batches.length + 1}`,
-        orderItem,
-        tags: [],
-        packageName,
-        packageCapacity,
-        packageGrossWeight,
-        packageVolume,
-        packageSize,
-        quantity: wantingBatchQuantity,
-        batchAdjustments: [],
-        autoCalculatePackageQuantity: true,
-        packageQuantity: calculatePackageQuantity({
-          batchAdjustments: [],
-          packageCapacity,
-          quantity: wantingBatchQuantity,
-        }),
-      })
-    );
-  }
 }
 
 class OrderItems extends React.Component<Props> {
@@ -190,7 +151,7 @@ class OrderItems extends React.Component<Props> {
                                         defaultMessage="AUTOFILL BATCH"
                                       />
                                     }
-                                    onClick={() => autoFillBatch(item, addNewBatch)}
+                                    onClick={() => addNewBatch(autoFillBatchReturnBatch(item))}
                                   />
                                 </>
                               )}

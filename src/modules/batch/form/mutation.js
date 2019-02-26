@@ -21,7 +21,7 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
-import { calculatePackageQuantity } from './container';
+import { calculatePackageQuantity } from 'utils/batch';
 import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`

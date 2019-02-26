@@ -1,8 +1,7 @@
 // @flow
 
-import { findBatchQuantity } from 'utils/batch';
+import { findBatchQuantity, calculatePackageQuantity } from 'utils/batch';
 import { injectUid } from 'utils/id';
-import { calculatePackageQuantity } from 'modules/batch/form/container';
 
 export const getBatchesSummary = (order: Object) => {
   let totalBatches = 0;
@@ -82,9 +81,48 @@ export const getQuantitySummary = (orderItems: Array<Object>) => {
 
 export const sumBatchQuantity = (total: number, batch: Object) => total + findBatchQuantity(batch);
 
-export const fillBatchForOrderItem = (orderItem: Object) => {
-  const totalBatchQuantity = orderItem.batches.reduce(sumBatchQuantity, 0);
+export const autoFillBatchReturnBatch = (orderItem: Object) => {
+  const { batches = [] } = orderItem;
+  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
   const wantingBatchQuantity = orderItem.quantity - totalBatchQuantity;
+  if (wantingBatchQuantity > 0) {
+    const {
+      productProvider: {
+        packageName,
+        packageCapacity,
+        packageGrossWeight,
+        packageVolume,
+        packageSize,
+      },
+    } = orderItem;
+
+    return injectUid({
+      isNew: true,
+      no: `batch no ${batches.length + 1}`,
+      orderItem,
+      tags: [],
+      packageName,
+      packageCapacity,
+      packageGrossWeight,
+      packageVolume,
+      packageSize,
+      quantity: wantingBatchQuantity,
+      batchAdjustments: [],
+      autoCalculatePackageQuantity: true,
+      packageQuantity: calculatePackageQuantity({
+        batchAdjustments: [],
+        packageCapacity,
+        quantity: wantingBatchQuantity,
+      }),
+    });
+  }
+  return null;
+};
+
+export const autoFillBatchReturnOrderItem = (orderItem: Object) => {
+  const { batches = [], quantity } = orderItem;
+  const totalBatchQuantity = batches.reduce(sumBatchQuantity, 0);
+  const wantingBatchQuantity = quantity - totalBatchQuantity;
   if (wantingBatchQuantity > 0) {
     const {
       productProvider: {
@@ -98,7 +136,7 @@ export const fillBatchForOrderItem = (orderItem: Object) => {
     return {
       ...orderItem,
       batches: [
-        ...orderItem.batches,
+        ...batches,
         injectUid({
           orderItem,
           tags: [],
@@ -110,7 +148,7 @@ export const fillBatchForOrderItem = (orderItem: Object) => {
           quantity: wantingBatchQuantity,
           isNew: true,
           batchAdjustments: [],
-          no: `batch no ${orderItem.batches.length + 1}`,
+          no: `batch no ${batches.length + 1}`,
           autoCalculatePackageQuantity: true,
           packageQuantity: calculatePackageQuantity({
             batchAdjustments: [],

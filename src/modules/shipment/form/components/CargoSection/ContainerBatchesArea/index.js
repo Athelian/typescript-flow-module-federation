@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
+import { calculatePackageQuantity } from 'utils/batch';
 import usePermission from 'hooks/usePermission';
 import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
@@ -17,7 +18,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
