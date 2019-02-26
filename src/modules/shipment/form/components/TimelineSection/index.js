@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import {
@@ -29,7 +30,8 @@ type Props = {
 };
 
 const TimelineSection = ({ isNew }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner());
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
 
   return (

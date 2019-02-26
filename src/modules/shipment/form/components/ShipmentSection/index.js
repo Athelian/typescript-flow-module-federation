@@ -21,6 +21,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -63,7 +64,8 @@ type Props = {
 };
 
 const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner());
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   const allowSetImporter = hasPermission(SHIPMENT_SET_IMPORTER);

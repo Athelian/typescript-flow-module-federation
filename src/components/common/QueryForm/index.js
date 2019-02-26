@@ -74,8 +74,18 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
             </Query>
           );
         }
-        if (getByPath(entityType, data))
-          return render(getByPathWithDefault({}, entityType, data), isOwner);
+        if (getByPath(entityType, data)) {
+          return (
+            <QueryFormPermissionContext.Provider
+              value={{
+                ownerGroupId: '',
+                permissions: [],
+              }}
+            >
+              {render(getByPathWithDefault({}, entityType, data), isOwner)}
+            </QueryFormPermissionContext.Provider>
+          );
+        }
         navigate(`/${entityType}`);
         return <LoadingIcon />;
       }}
