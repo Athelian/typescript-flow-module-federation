@@ -59,9 +59,11 @@ import {
   TextAreaInputFactory,
   CustomFieldsFactory,
   UserAssignmentInputFactory,
+  DashedPlusButton,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
+import SelectImporter from '../SelectImporter';
 import SelectForwarders from '../SelectForwarders';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
@@ -450,11 +452,47 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       if (isImporter()) {
                         return <PartnerCard partner={importer} readOnly />;
                       }
-                      if (
-                        isForwarder() &&
-                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])
-                      ) {
-                        return 'Forwarder logic';
+                      if (isForwarder()) {
+                        if (isNew && hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])) {
+                          return (
+                            <BooleanValue>
+                              {({ value: opened, set: slideToggle }) => (
+                                <>
+                                  {importer && importer.id ? (
+                                    <PartnerCard
+                                      partner={importer}
+                                      onClick={() => slideToggle(true)}
+                                    />
+                                  ) : (
+                                    <DashedPlusButton
+                                      width="195px"
+                                      height="215px"
+                                      onClick={() => slideToggle(true)}
+                                    />
+                                  )}
+                                  <SlideView
+                                    isOpen={opened}
+                                    onRequestClose={() => slideToggle(false)}
+                                    options={{ width: '1030px' }}
+                                  >
+                                    {opened && (
+                                      <SelectImporter
+                                        selected={values.importer}
+                                        onCancel={() => slideToggle(false)}
+                                        onSelect={selected => {
+                                          slideToggle(false);
+                                          setFieldValue('importer', selected);
+                                        }}
+                                      />
+                                    )}
+                                  </SlideView>
+                                </>
+                              )}
+                            </BooleanValue>
+                          );
+                        }
+
+                        return <PartnerCard partner={importer} readOnly />;
                       }
                       return 'N/A';
                     })()}
