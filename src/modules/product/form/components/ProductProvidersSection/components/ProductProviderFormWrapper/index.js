@@ -8,16 +8,14 @@ import ProductProviderForm from 'modules/productProvider/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import { PRODUCT_PROVIDER_FORM } from 'modules/permission/constants/product';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import PageNotFound from 'components/PageNotFound';
-import { PermissionConsumer } from 'modules/permission';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
   isAddedProvider: boolean,
+  isOwner: boolean,
 };
 
 type Props = OptionalProps & {
@@ -31,6 +29,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isAddedProvider: false,
+  isOwner: true,
 };
 
 const formContainer = new FormContainer();
@@ -76,97 +75,90 @@ class ProductProviderFormWrapper extends React.Component<Props> {
   };
 
   render() {
-    const { isNew, onSave, productProviders, isAddedProvider, onCancel } = this.props;
+    const { isNew, isOwner, onSave, productProviders, isAddedProvider, onCancel } = this.props;
 
     return (
-      <PermissionConsumer>
-        {hasPermission =>
-          hasPermission(PRODUCT_PROVIDER_FORM) ? (
-            <Provider inject={[formContainer]}>
-              <Subscribe to={[ProductProviderContainer]}>
-                {formState => (
-                  <Layout
-                    navBar={
-                      <SlideViewNavBar>
-                        <EntityIcon icon="PROVIDER" color="PROVIDER" />
-                        <JumpToSection>
-                          <SectionTabs
-                            link="productProvider_productProviderSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Products.provider"
-                                defaultMessage="END PRODUCT"
-                              />
-                            }
-                            icon="PROVIDER"
-                          />
-                          <SectionTabs
-                            link="productProvider_specificationsSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Products.specifications"
-                                defaultMessage="SPECIFICATIONS"
-                              />
-                            }
-                            icon="SPECIFICATIONS"
-                          />
-                          <SectionTabs
-                            link="productProvider_productProviderPackagingSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Products.packaging"
-                                defaultMessage="PACKAGING"
-                              />
-                            }
-                            icon="PACKAGING"
-                          />
-                          <SectionTabs
-                            link="productProvider_documentsSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.Products.documents"
-                                defaultMessage="DOCUMENTS"
-                              />
-                            }
-                            icon="DOCUMENT"
-                          />
-                        </JumpToSection>
-
-                        {formState.isDirty() && (
-                          <>
-                            {isNew ? (
-                              <CancelButton onClick={() => onCancel()} />
-                            ) : (
-                              <ResetButton onClick={() => this.onReset(formState)} />
-                            )}
-                            <SaveButton
-                              data-testid="saveProviderButton"
-                              disabled={
-                                !formState.isDirty() ||
-                                !formContainer.isReady(formState.state, validator) ||
-                                isExist(formState.state, productProviders, isAddedProvider)
-                              }
-                              onClick={() => onSave(formState.state)}
-                            />
-                          </>
-                        )}
-                      </SlideViewNavBar>
-                    }
-                  >
-                    <ProductProviderForm
-                      productProvider={formState.state}
-                      isExist={isExist(formState.state, productProviders, isAddedProvider)}
-                      isNew={isNew}
+      <Provider inject={[formContainer]}>
+        <Subscribe to={[ProductProviderContainer]}>
+          {formState => (
+            <Layout
+              navBar={
+                <SlideViewNavBar>
+                  <EntityIcon icon="PROVIDER" color="PROVIDER" />
+                  <JumpToSection>
+                    <SectionTabs
+                      link="productProvider_productProviderSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.provider"
+                          defaultMessage="END PRODUCT"
+                        />
+                      }
+                      icon="PROVIDER"
                     />
-                  </Layout>
-                )}
-              </Subscribe>
-            </Provider>
-          ) : (
-            <PageNotFound />
-          )
-        }
-      </PermissionConsumer>
+                    <SectionTabs
+                      link="productProvider_specificationsSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.specifications"
+                          defaultMessage="SPECIFICATIONS"
+                        />
+                      }
+                      icon="SPECIFICATIONS"
+                    />
+                    <SectionTabs
+                      link="productProvider_productProviderPackagingSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.packaging"
+                          defaultMessage="PACKAGING"
+                        />
+                      }
+                      icon="PACKAGING"
+                    />
+                    <SectionTabs
+                      link="productProvider_documentsSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.documents"
+                          defaultMessage="DOCUMENTS"
+                        />
+                      }
+                      icon="DOCUMENT"
+                    />
+                  </JumpToSection>
+
+                  {formState.isDirty() && (
+                    <>
+                      {isNew ? (
+                        <CancelButton onClick={() => onCancel()} />
+                      ) : (
+                        <ResetButton onClick={() => this.onReset(formState)} />
+                      )}
+                      <SaveButton
+                        data-testid="saveProviderButton"
+                        disabled={
+                          !formState.isDirty() ||
+                          !formContainer.isReady(formState.state, validator) ||
+                          isExist(formState.state, productProviders, isAddedProvider)
+                        }
+                        onClick={() => onSave(formState.state)}
+                      />
+                    </>
+                  )}
+                </SlideViewNavBar>
+              }
+            >
+              <ProductProviderForm
+                productProvider={formState.state}
+                isExist={isExist(formState.state, productProviders, isAddedProvider)}
+                isNew={isNew}
+                isOwner={isOwner}
+              />
+            </Layout>
+          )}
+        </Subscribe>
+      </Provider>
     );
   }
 }

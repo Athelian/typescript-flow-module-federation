@@ -1,5 +1,4 @@
 // @flow
-// $FlowFixMe: it is open issue on flow repo https://github.com/facebook/flow/issues/7093
 import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
@@ -12,6 +11,7 @@ import { ProductProviderFormWrapperStyle } from './style';
 type OptionalProps = {
   isNew: boolean,
   isExist: boolean,
+  isOwner: boolean,
 };
 
 type Props = OptionalProps & {
@@ -21,11 +21,12 @@ type Props = OptionalProps & {
 const defaultProps = {
   isNew: false,
   isExist: false,
+  isOwner: true,
 };
 
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 
-const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
+const ProductProviderForm = ({ productProvider, isNew, isOwner, isExist }: Props) => (
   <Suspense fallback={<LoadingIcon />}>
     <div className={ProductProviderFormWrapperStyle}>
       <SectionWrapper id="productProvider_productProviderSection">
@@ -42,7 +43,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
             />
           )}
         </SectionHeader>
-        <ProductProviderSection isExist={isExist} isNew={isNew} />
+        <ProductProviderSection isExist={isExist} isNew={isNew} isOwner={isOwner} />
       </SectionWrapper>
 
       <SectionWrapper id="productProvider_specificationsSection">
@@ -55,7 +56,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
             />
           }
         />
-        <SpecificationsSection isNew={isNew} />
+        <SpecificationsSection isNew={isNew} isOwner={isOwner} />
       </SectionWrapper>
 
       <SectionWrapper id="productProvider_productProviderPackagingSection">
@@ -65,7 +66,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
             <FormattedMessage id="modules.ProductProviders.packaging" defaultMessage="PACKAGING" />
           }
         />
-        <PackagingSection isNew={isNew} />
+        <PackagingSection isNew={isNew} isOwner={isOwner} />
       </SectionWrapper>
       <SectionWrapper id="productProvider_documentsSection">
         <Subscribe to={[ProductProviderContainer]}>
@@ -84,7 +85,7 @@ const ProductProviderForm = ({ productProvider, isNew, isExist }: Props) => (
             />
           )}
         </Subscribe>
-        <AsyncDocumentsSection />
+        <AsyncDocumentsSection isOwner={isOwner} />
       </SectionWrapper>
     </div>
   </Suspense>
