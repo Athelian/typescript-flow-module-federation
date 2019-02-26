@@ -15,7 +15,7 @@ import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/cont
 import { FormContainer } from 'modules/form';
 import SelectProducts from 'modules/order/common/SelectProducts';
 import usePermission from 'hooks/usePermission';
-import { getOrderItemByFillBatch } from 'modules/order/helpers';
+import { getBatchByFillBatch } from 'modules/order/helpers';
 import ExpandButtons from './components/ExpandButtons';
 import OrderItems from './components/OrderItems';
 import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle } from './style';
@@ -94,7 +94,17 @@ function ItemSection({ intl, isNew }: Props) {
                                   <BaseButton
                                     label={intl.formatMessage(messages.autoFillBatch)}
                                     onClick={() => {
-                                      const newOrderItems = orderItems.map(getOrderItemByFillBatch);
+                                      const newOrderItems = orderItems.map(orderItem => {
+                                        const { batches } = orderItem;
+                                        const newBatch = getBatchByFillBatch(orderItem);
+                                        if (newBatch) {
+                                          return {
+                                            ...orderItem,
+                                            batches: [...batches, newBatch],
+                                          };
+                                        }
+                                        return orderItem;
+                                      });
                                       setFieldValue('orderItems', newOrderItems);
                                     }}
                                   />
