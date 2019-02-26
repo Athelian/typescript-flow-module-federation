@@ -18,20 +18,13 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
   query($id: ID!) {
     batch(id: $id) {
       ...batchFormFragment
-      ... on Batch {
-        ownedBy {
-          ... on Group {
-            id
-            name
-          }
-        }
-      }
     }
   }
 
@@ -52,6 +45,7 @@ export const batchFormQuery = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${ownedByFragment}
 `;
 
 export default batchFormQuery;

@@ -6,7 +6,6 @@ import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { uniqueOrders } from 'modules/container/utils';
 import { ShipmentBatchesContainer } from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
@@ -56,7 +55,7 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, isOwner } = this.props;
+    const { isNew } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
@@ -83,7 +82,7 @@ class ShipmentForm extends React.Component<Props> {
                 />
               )}
             </Subscribe>
-            <AsyncCargoSection isOwner={isOwner} />
+            <AsyncCargoSection />
           </SectionWrapper>
           <SectionWrapper id="shipment_documentsSection">
             <SectionHeader
@@ -94,27 +93,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <SectionWrapper id="shipment_orderSection">
-            <Subscribe to={[ShipmentBatchesContainer]}>
-              {({ state: { batches } }) => {
-                const orders = uniqueOrders(batches);
-                return (
-                  <>
-                    <SectionHeader
-                      icon="ORDER"
-                      title={
-                        <>
-                          <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
-                          {orders.length})
-                        </>
-                      }
-                    />
-                    <AsyncOrdersSection orders={orders} />
-                  </>
-                );
-              }}
-            </Subscribe>
-          </SectionWrapper>
+          <AsyncOrdersSection />
         </div>
       </Suspense>
     );

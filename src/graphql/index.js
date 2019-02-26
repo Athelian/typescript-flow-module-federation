@@ -33,6 +33,7 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  ownedByFragment,
 } from './common/fragment';
 
 export {
@@ -77,4 +78,5 @@ export {
   badRequestFragment,
   notFoundFragment,
   forbiddenFragment,
+  ownedByFragment,
 };

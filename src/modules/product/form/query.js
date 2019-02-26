@@ -15,20 +15,13 @@ import {
   fieldDefinitionFragment,
   productProviderFormFragment,
   documentFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const productFormQuery = gql`
   query($id: ID!) {
     product(id: $id) {
       ...productFormFragment
-      ... on Product {
-        ownedBy {
-          ... on Group {
-            id
-            name
-          }
-        }
-      }
     }
   }
 
@@ -46,6 +39,7 @@ export const productFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${documentFragment}
+  ${ownedByFragment}
 `;
 
 export default productFormQuery;
