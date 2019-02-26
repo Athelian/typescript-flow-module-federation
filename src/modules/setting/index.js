@@ -8,7 +8,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import { NotificationsDropdown, UserMenuDropdown } from './components';
 import { notificationSeeAllMutation } from './mutation';
-import query from './query';
+import { countNotificationQuery } from './query';
 import subscription from './subscription';
 import {
   SettingsWrapperStyle,
@@ -71,7 +71,7 @@ class Setting extends React.Component<Props, State> {
 
     return (
       <div className={SettingsWrapperStyle}>
-        <Query query={query} fetchPolicy="network-only">
+        <Query query={countNotificationQuery} fetchPolicy="network-only">
           {({ data, client, refetch }) => {
             const viewer = {
               firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),

@@ -6,10 +6,10 @@ import PermissionContext from 'modules/permission/PermissionContext';
 /**
  *  Grab the owner permission or partner permission
  *
- * @param {boolean} isPartnerPermission
+ * @param {boolean} isOwner
  *
  */
-const usePermission = (isPartnerPermission: boolean = false) => {
+const usePermission = (isOwner: boolean = true) => {
   const hasPermission = useCallback((checkPermission: string, permissions: Array<string>) => {
     return permissions.includes(checkPermission);
   });
@@ -18,7 +18,7 @@ const usePermission = (isPartnerPermission: boolean = false) => {
 
   return {
     hasPermission: (checkPermission: string) =>
-      hasPermission(checkPermission, isPartnerPermission ? partnerPermissions : permissions),
+      hasPermission(checkPermission, isOwner ? permissions : partnerPermissions),
   };
 };
 

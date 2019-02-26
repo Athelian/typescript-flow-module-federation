@@ -34,9 +34,9 @@ class ProductForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { product } = this.props;
+    const { product, isOwner } = this.props;
 
-    return !isEquals(product, nextProps.product);
+    return !isEquals(product, nextProps.product) || nextProps.isOwner !== isOwner;
   }
 
   componentDidUpdate() {
