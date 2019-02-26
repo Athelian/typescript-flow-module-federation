@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import { calculatePackageQuantity } from 'utils/batch';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
@@ -16,7 +17,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';

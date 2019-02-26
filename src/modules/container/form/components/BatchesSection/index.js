@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
 import { isNullOrUndefined } from 'utils/fp';
+import { calculatePackageQuantity } from 'utils/batch';
 import { CONTAINER_UPDATE } from 'modules/permission/constants/container';
 import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
@@ -15,7 +16,7 @@ import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import BatchFormContainer, { calculatePackageQuantity } from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/container';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
