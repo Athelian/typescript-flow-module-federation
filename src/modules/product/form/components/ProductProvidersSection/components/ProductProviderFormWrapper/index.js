@@ -15,6 +15,7 @@ import { contains, getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
   isAddedProvider: boolean,
+  isOwner: boolean,
 };
 
 type Props = OptionalProps & {
@@ -28,6 +29,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isAddedProvider: false,
+  isOwner: true,
 };
 
 const formContainer = new FormContainer();
@@ -73,7 +75,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
   };
 
   render() {
-    const { isNew, onSave, productProviders, isAddedProvider, onCancel } = this.props;
+    const { isNew, isOwner, onSave, productProviders, isAddedProvider, onCancel } = this.props;
 
     return (
       <Provider inject={[formContainer]}>
@@ -151,6 +153,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                 productProvider={formState.state}
                 isExist={isExist(formState.state, productProviders, isAddedProvider)}
                 isNew={isNew}
+                isOwner={isOwner}
               />
             </Layout>
           )}

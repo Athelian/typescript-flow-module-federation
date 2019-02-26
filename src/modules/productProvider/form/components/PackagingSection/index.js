@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import usePermission from 'hooks/usePermission';
 import ProductProviderContainer from 'modules/productProvider/form/container';
 import { FormField } from 'modules/form';
 import { TextInputFactory, NumberInputFactory, MetricInputFactory } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { getByPath } from 'utils/fp';
-import { PermissionConsumer } from 'modules/permission';
 import {
   PRODUCT_PROVIDER_CREATE,
   PRODUCT_PROVIDER_UPDATE,
@@ -16,202 +16,188 @@ import { PackagingSectionWrapperStyle } from './style';
 
 type Props = {
   isNew: boolean,
+  isOwner: boolean,
 };
 
-const PackagingSection = ({ isNew }: Props) => (
-  <PermissionConsumer>
-    {hasPermission => {
-      const canCreateOrUpdate =
-        hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
+const PackagingSection = ({ isNew, isOwner }: Props) => {
+  const { hasPermission } = usePermission(isOwner);
+  const canCreateOrUpdate =
+    hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
 
-      return (
-        <div className={PackagingSectionWrapperStyle}>
-          <Subscribe to={[ProductProviderContainer]}>
-            {({
-              originalValues,
-              state,
-              setFieldValue,
-              setFieldArrayValue,
-              calculatePackageVolume,
-            }) => {
-              const values = { ...originalValues, ...state };
+  return (
+    <div className={PackagingSectionWrapperStyle}>
+      <Subscribe to={[ProductProviderContainer]}>
+        {({ originalValues, state, setFieldValue, setFieldArrayValue, calculatePackageVolume }) => {
+          const values = { ...originalValues, ...state };
 
-              return (
-                <GridColumn>
-                  <FormField
-                    name="packageName"
-                    initValue={values.packageName}
-                    setFieldValue={setFieldValue}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <TextInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={originalValues[name]}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.packageName"
-                            defaultMessage="PACKAGE NAME"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
+          return (
+            <GridColumn>
+              <FormField
+                name="packageName"
+                initValue={values.packageName}
+                setFieldValue={setFieldValue}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <TextInputFactory
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={originalValues[name]}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.packageName"
+                        defaultMessage="PACKAGE NAME"
                       />
-                    )}
-                  </FormField>
-
-                  <FormField
-                    name="packageCapacity"
-                    initValue={values.packageCapacity}
-                    setFieldValue={setFieldValue}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <NumberInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={originalValues[name]}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.packageCapacity"
-                            defaultMessage="PACKAGE CAPACITY"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
-                      />
-                    )}
-                  </FormField>
-
-                  <FormField
-                    name="packageGrossWeight"
-                    initValue={getByPath('packageGrossWeight', values)}
-                    setFieldValue={(field, value) =>
-                      setFieldArrayValue('packageGrossWeight', value)
                     }
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <MetricInputFactory
-                        metricType="weight"
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={getByPath('packageGrossWeight', originalValues)}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.pkgWeight"
-                            defaultMessage="PKG GROSS WEIGHT"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
-                      />
-                    )}
-                  </FormField>
+                    editable={canCreateOrUpdate}
+                  />
+                )}
+              </FormField>
 
-                  <FormField
-                    name="packageVolume"
-                    initValue={getByPath('packageVolume', values)}
-                    setFieldValue={(field, value) => setFieldArrayValue('packageVolume', value)}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <MetricInputFactory
-                        metricType="volume"
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={getByPath('packageVolume', originalValues)}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.pkgVolume"
-                            defaultMessage="PKG VOLUME"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
-                        showCalculator
-                        onCalculate={calculatePackageVolume}
+              <FormField
+                name="packageCapacity"
+                initValue={values.packageCapacity}
+                setFieldValue={setFieldValue}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <NumberInputFactory
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={originalValues[name]}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.packageCapacity"
+                        defaultMessage="PACKAGE CAPACITY"
                       />
-                    )}
-                  </FormField>
-
-                  <FormField
-                    name="packageSize.length"
-                    initValue={getByPath('packageSize.length', values)}
-                    setFieldValue={(field, value) =>
-                      setFieldArrayValue('packageSize.length', value)
                     }
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <MetricInputFactory
-                        metricType="distance"
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={getByPath('packageSize.length', originalValues)}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.pkgLength"
-                            defaultMessage="PKG LENGTH"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
-                      />
-                    )}
-                  </FormField>
+                    editable={canCreateOrUpdate}
+                  />
+                )}
+              </FormField>
 
-                  <FormField
-                    name="packageSize.width"
-                    initValue={getByPath('packageSize.width', values)}
-                    setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <MetricInputFactory
-                        metricType="distance"
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={getByPath('packageSize.width', originalValues)}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.pkgWidth"
-                            defaultMessage="PKG WIDTH"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
+              <FormField
+                name="packageGrossWeight"
+                initValue={getByPath('packageGrossWeight', values)}
+                setFieldValue={(field, value) => setFieldArrayValue('packageGrossWeight', value)}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="weight"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('packageGrossWeight', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.pkgWeight"
+                        defaultMessage="PKG GROSS WEIGHT"
                       />
-                    )}
-                  </FormField>
-
-                  <FormField
-                    name="packageSize.height"
-                    initValue={getByPath('packageSize.height', values)}
-                    setFieldValue={(field, value) =>
-                      setFieldArrayValue('packageSize.height', value)
                     }
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <MetricInputFactory
-                        metricType="distance"
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={getByPath('packageSize.height', originalValues)}
-                        label={
-                          <FormattedMessage
-                            id="modules.ProductProviders.pkgHeight"
-                            defaultMessage="PKG HEIGHT"
-                          />
-                        }
-                        editable={canCreateOrUpdate}
+                    editable={canCreateOrUpdate}
+                  />
+                )}
+              </FormField>
+
+              <FormField
+                name="packageVolume"
+                initValue={getByPath('packageVolume', values)}
+                setFieldValue={(field, value) => setFieldArrayValue('packageVolume', value)}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="volume"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('packageVolume', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.pkgVolume"
+                        defaultMessage="PKG VOLUME"
                       />
-                    )}
-                  </FormField>
-                </GridColumn>
-              );
-            }}
-          </Subscribe>
-        </div>
-      );
-    }}
-  </PermissionConsumer>
-);
+                    }
+                    editable={canCreateOrUpdate}
+                    showCalculator
+                    onCalculate={calculatePackageVolume}
+                  />
+                )}
+              </FormField>
+
+              <FormField
+                name="packageSize.length"
+                initValue={getByPath('packageSize.length', values)}
+                setFieldValue={(field, value) => setFieldArrayValue('packageSize.length', value)}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="distance"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('packageSize.length', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.pkgLength"
+                        defaultMessage="PKG LENGTH"
+                      />
+                    }
+                    editable={canCreateOrUpdate}
+                  />
+                )}
+              </FormField>
+
+              <FormField
+                name="packageSize.width"
+                initValue={getByPath('packageSize.width', values)}
+                setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="distance"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('packageSize.width', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.pkgWidth"
+                        defaultMessage="PKG WIDTH"
+                      />
+                    }
+                    editable={canCreateOrUpdate}
+                  />
+                )}
+              </FormField>
+
+              <FormField
+                name="packageSize.height"
+                initValue={getByPath('packageSize.height', values)}
+                setFieldValue={(field, value) => setFieldArrayValue('packageSize.height', value)}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="distance"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('packageSize.height', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.pkgHeight"
+                        defaultMessage="PKG HEIGHT"
+                      />
+                    }
+                    editable={canCreateOrUpdate}
+                  />
+                )}
+              </FormField>
+            </GridColumn>
+          );
+        }}
+      </Subscribe>
+    </div>
+  );
+};
 
 export default PackagingSection;

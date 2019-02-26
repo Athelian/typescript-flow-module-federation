@@ -160,6 +160,7 @@ function ProductProvidersSection({ isOwner }: Props) {
                                 <Subscribe to={[ProductProviderContainer]}>
                                   {({ initDetailValues }) => (
                                     <ProductProviderFormWrapper
+                                      isOwner={isOwner}
                                       productProviders={productProviders}
                                       productProvider={productProviders[index]}
                                       isNew={!!productProvider.isNew}
