@@ -5,6 +5,7 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
+import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import {
   SHIPMENT_CREATE,
@@ -42,7 +43,6 @@ import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
-import { UserConsumer } from 'modules/user';
 import {
   FieldItem,
   Label,
@@ -80,10 +80,9 @@ type Props = {
 
 const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
   const { isOwner } = usePartnerPermission();
+  const { isImporter, isForwarder } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
-  const allowSetImporter = hasPermission(SHIPMENT_SET_IMPORTER);
   return (
     <SectionWrapper id="shipment_shipmentSection">
       <SectionHeader
@@ -99,7 +98,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
-                  readOnly={!allowToUpdate}
+                  readOnly={!hasPermission(SHIPMENT_UPDATE)}
                   archived={archived}
                   openStatusDialog={() => dialogToggle(true)}
                   activateDialog={
@@ -447,24 +446,18 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         />
                       </Label>
                     }
-                    input={
-                      <UserConsumer>
-                        {({ user }) => {
-                          const { group } = user;
-                          const { types = [] } = group;
-                          if (types.includes('Importer')) {
-                            if (isNew) {
-                              return <PartnerCard partner={group} readOnly />;
-                            }
-                            return <PartnerCard partner={importer} readOnly />;
-                          }
-                          if (types.includes('Forwarder') && allowSetImporter) {
-                            return 'Forwarder logic';
-                          }
-                          return 'TODO';
-                        }}
-                      </UserConsumer>
-                    }
+                    input={(() => {
+                      if (isImporter()) {
+                        return <PartnerCard partner={importer} readOnly />;
+                      }
+                      if (
+                        isForwarder() &&
+                        hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])
+                      ) {
+                        return 'Forwarder logic';
+                      }
+                      return 'N/A';
+                    })()}
                   />
 
                   <FieldItem
