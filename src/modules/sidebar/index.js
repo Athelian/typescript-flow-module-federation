@@ -1,6 +1,10 @@
 // @flow
 import React, { useState } from 'react';
 import { Location } from '@reach/router';
+import {
+  RM_ORDER_FOCUS_LIST,
+  RM_PRODUCT_FOCUS_LIST,
+} from 'modules/permission/constants/relationMap';
 import { ORDER_LIST } from 'modules/permission/constants/order';
 import { BATCH_LIST } from 'modules/permission/constants/batch';
 import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
@@ -39,13 +43,15 @@ const SideBar = () => {
               <div className={SideBarWrapperStyle(uiState.isSideBarExpanded)}>
                 <Logo {...uiState} />
                 <div className={SideBarBodyStyle}>
-                  <MenuItem
-                    path="/relation-map"
-                    isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
-                    icon="RELATION_MAP"
-                    label={<FormattedMessage {...messages.relationMap} />}
-                    onClick={() => setExpandedSubMenu(null)}
-                  />
+                  {(hasPermission(RM_ORDER_FOCUS_LIST) || hasPermission(RM_PRODUCT_FOCUS_LIST)) && (
+                    <MenuItem
+                      path="/relation-map"
+                      isActive={`/${location.pathname.split('/')[1]}` === '/relation-map'}
+                      icon="RELATION_MAP"
+                      label={<FormattedMessage {...messages.relationMap} />}
+                      onClick={() => setExpandedSubMenu(null)}
+                    />
+                  )}
                   {hasPermission(ORDER_LIST) && (
                     <MenuItem
                       path="/order"
