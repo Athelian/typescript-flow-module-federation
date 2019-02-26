@@ -14,9 +14,7 @@ import query from './query';
 type ContextProps = {
   user: {
     id: string,
-    group: {
-      id: string,
-    },
+    group: Object,
   },
   permissions: Array<string>,
 };
@@ -65,6 +63,7 @@ const UserProvider = ({ children }: Props) => (
               id: '-1',
               group: {
                 id: '-1',
+                types: [],
               },
               email: '',
               firstName: '',

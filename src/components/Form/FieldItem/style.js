@@ -1,11 +1,20 @@
 // @flow
 import { css } from 'react-emotion';
+import { layout } from 'styles/common';
 
-export const FieldItemWrapperStyle = (vertical: boolean): string => css`
+export const FieldItemWrapperStyle = (vertical: boolean, verticalGap: string): string => css`
   position: relative;
   display: flex;
-  ${!vertical && 'align-items: center; justify-content: space-between'};
-  flex-direction: ${vertical ? 'column' : 'row'};
+  ${vertical
+    ? `
+    ${layout.GRID_VERTICAL};
+    grid-gap: ${verticalGap};
+  `
+    : `
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `};
   width: 100%;
 `;
 

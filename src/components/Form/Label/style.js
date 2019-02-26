@@ -1,16 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, fontSizesWithHeights, fontSizes } from 'styles/common';
+import { presets, colors, fontSizes } from 'styles/common';
 
 type LabelWrapperType = {
   align: 'left' | 'right' | 'center',
+  height: string,
   width: string,
   color: string,
 };
 
-export const LabelWrapperStyle = ({ align, width, color }: LabelWrapperType): string => css`
+export const LabelWrapperStyle = ({ align, height, width, color }: LabelWrapperType): string => css`
   width: ${width};
-  ${fontSizesWithHeights.MAIN};
+  height: ${height};
+  line-height: ${height};
   ${fontSizes.SMALL};
   ${presets.ELLIPSIS};
   color: ${colors[color] || colors.GRAY_DARK};

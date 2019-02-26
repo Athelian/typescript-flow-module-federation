@@ -26,6 +26,9 @@ export const shipmentFormFragment = gql`
     forwarders {
       ...partnerCardFragment
     }
+    importer {
+      ...partnerCardFragment
+    }
     inCharges {
       ...userAvatarFragment
     }
