@@ -151,7 +151,12 @@ class OrderItems extends React.Component<Props> {
                                         defaultMessage="AUTOFILL BATCH"
                                       />
                                     }
-                                    onClick={() => addNewBatch(autoFillBatchReturnBatch(item))}
+                                    onClick={() => {
+                                      const newBatch = autoFillBatchReturnBatch(item);
+                                      if (newBatch) {
+                                        addNewBatch(newBatch);
+                                      }
+                                    }}
                                   />
                                 </>
                               )}
