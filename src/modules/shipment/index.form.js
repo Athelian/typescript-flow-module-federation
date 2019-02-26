@@ -498,6 +498,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             const { group } = user;
                             const { types = [] } = group;
                             const isImporter = types.includes('Importer');
+                            const isForwarder = types.includes('Forwarder');
                             return (
                               <ShipmentForm
                                 shipment={{}}
@@ -505,6 +506,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                 onFormReady={() => {
                                   shipmentInfoContainer.initDetailValues({
                                     importer: isImporter ? group : {},
+                                    forwarders: isForwarder ? [group] : [],
                                   });
                                 }}
                               />

@@ -527,6 +527,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           <>
                             <div
                               onClick={() =>
+                                isImporter() &&
                                 hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
                                   ? slideToggle(true)
                                   : () => {}
