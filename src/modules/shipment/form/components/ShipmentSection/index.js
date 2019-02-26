@@ -14,6 +14,17 @@ import {
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_CUSTOM_FIELDS,
   SHIPMENT_SET_FORWARDERS,
+  SHIPMENT_SET_NO,
+  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_BL_DATE,
+  SHIPMENT_SET_BOOKING_NO,
+  SHIPMENT_SET_BOOKING_DATE,
+  SHIPMENT_SET_INVOICE_NO,
+  SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_LOAD_TYPE,
+  SHIPMENT_SET_INCOTERM,
+  SHIPMENT_SET_CARRIER,
+  SHIPMENT_SET_MEMO,
 } from 'modules/permission/constants/shipment';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
@@ -130,7 +141,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_NO])}
                         name={name}
                         isNew={isNew}
                         required
@@ -149,7 +160,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -167,7 +178,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -185,7 +196,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -203,7 +214,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -221,7 +232,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_INVOICE_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -258,7 +269,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           {({ name, ...inputHandlers }) => (
                             <EnumSelectInputFactory
                               {...inputHandlers}
-                              editable={allowToUpdate}
+                              editable={hasPermission([
+                                SHIPMENT_UPDATE,
+                                SHIPMENT_SET_TRANSPORT_TYPE,
+                              ])}
                               enumType="TransportType"
                               name={name}
                               isNew={isNew}
@@ -286,7 +300,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <EnumSelectInputFactory
                         {...inputHandlers}
                         enumType="LoadType"
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_LOAD_TYPE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -310,7 +324,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <EnumSearchSelectInputFactory
                         {...inputHandlers}
                         enumType="Incoterm"
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_INCOTERM])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -334,7 +348,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <TextInputFactory
                         {...inputHandlers}
                         name={name}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CARRIER])}
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.carrier} />}
@@ -384,7 +398,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextAreaInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_MEMO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
