@@ -6,7 +6,6 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { findBatchQuantity } from 'utils/batch';
 import { SectionNavBar } from 'components/NavBar';
 import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -16,6 +15,7 @@ import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/cont
 import { FormContainer } from 'modules/form';
 import SelectProducts from 'modules/order/common/SelectProducts';
 import usePermission from 'hooks/usePermission';
+import { fillBatchForOrderItem } from 'modules/order/helpers';
 import ExpandButtons from './components/ExpandButtons';
 import OrderItems from './components/OrderItems';
 import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle } from './style';
@@ -94,43 +94,7 @@ function ItemSection({ intl, isNew }: Props) {
                                   <BaseButton
                                     label={intl.formatMessage(messages.autoFillBatch)}
                                     onClick={() => {
-                                      const newOrderItems = orderItems.map(orderItem => {
-                                        const totalBatchQuantity = orderItem.batches.reduce(
-                                          (total, batch) => total + findBatchQuantity(batch),
-                                          0
-                                        );
-                                        if (orderItem.quantity > totalBatchQuantity) {
-                                          const {
-                                            productProvider: {
-                                              packageName,
-                                              packageCapacity,
-                                              packageGrossWeight,
-                                              packageVolume,
-                                              packageSize,
-                                            },
-                                          } = orderItem;
-                                          return {
-                                            ...orderItem,
-                                            batches: [
-                                              ...orderItem.batches,
-                                              injectUid({
-                                                orderItem,
-                                                tags: [],
-                                                packageName,
-                                                packageCapacity,
-                                                packageGrossWeight,
-                                                packageVolume,
-                                                packageSize,
-                                                quantity: orderItem.quantity - totalBatchQuantity,
-                                                isNew: true,
-                                                batchAdjustments: [],
-                                                no: `batch auto fill`,
-                                              }),
-                                            ],
-                                          };
-                                        }
-                                        return orderItem;
-                                      });
+                                      const newOrderItems = orderItems.map(fillBatchForOrderItem);
                                       setFieldValue('orderItems', newOrderItems);
                                     }}
                                   />

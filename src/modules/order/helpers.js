@@ -1,5 +1,9 @@
 // @flow
 
+import { findBatchQuantity } from 'utils/batch';
+import { injectUid } from 'utils/id';
+import { calculatePackageQuantity } from 'modules/batch/form/container';
+
 export const getBatchesSummary = (order: Object) => {
   let totalBatches = 0;
   let shippedBatches = 0;
@@ -74,6 +78,50 @@ export const getQuantitySummary = (orderItems: Array<Object>) => {
     activeBatches,
     archivedBatches,
   };
+};
+
+export const sumBatchQuantity = (total: number, batch: Object) => total + findBatchQuantity(batch);
+
+export const fillBatchForOrderItem = (orderItem: Object) => {
+  const totalBatchQuantity = orderItem.batches.reduce(sumBatchQuantity, 0);
+  const wantingBatchQuantity = orderItem.quantity - totalBatchQuantity;
+  if (wantingBatchQuantity > 0) {
+    const {
+      productProvider: {
+        packageName,
+        packageCapacity,
+        packageGrossWeight,
+        packageVolume,
+        packageSize,
+      },
+    } = orderItem;
+    return {
+      ...orderItem,
+      batches: [
+        ...orderItem.batches,
+        injectUid({
+          orderItem,
+          tags: [],
+          packageName,
+          packageCapacity,
+          packageGrossWeight,
+          packageVolume,
+          packageSize,
+          quantity: wantingBatchQuantity,
+          isNew: true,
+          batchAdjustments: [],
+          no: `batch no ${orderItem.batches.length + 1}`,
+          autoCalculatePackageQuantity: true,
+          packageQuantity: calculatePackageQuantity({
+            batchAdjustments: [],
+            packageCapacity,
+            quantity: wantingBatchQuantity,
+          }),
+        }),
+      ],
+    };
+  }
+  return orderItem;
 };
 
 export default getBatchesSummary;

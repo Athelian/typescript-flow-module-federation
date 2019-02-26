@@ -67,12 +67,11 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
   });
 }
 
-function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: Function) {
-  const totalBatchQuantity = orderItem.batches.reduce(
-    (total, batch) => total + findBatchQuantity(batch),
-    0
-  );
-  if (orderItem.quantity > totalBatchQuantity) {
+function autoFillBatch(orderItem: Object, addNewBatch: Function) {
+  const { batches = [] } = orderItem;
+  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
+  const wantingBatchQuantity = orderItem.quantity - totalBatchQuantity;
+  if (wantingBatchQuantity > 0) {
     const {
       productProvider: {
         packageName,
@@ -82,25 +81,28 @@ function autoFillBatch(orderItem: Object, batches: Array<Object>, addNewBatch: F
         packageSize,
       },
     } = orderItem;
-    addNewBatch({
-      orderItem,
-      tags: [],
-      packageName,
-      packageCapacity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-      quantity: orderItem.quantity - totalBatchQuantity,
-      packageQuantity: calculatePackageQuantity({
-        batchAdjustments: [],
+
+    addNewBatch(
+      injectUid({
+        isNew: true,
+        no: `batch no ${batches.length + 1}`,
+        orderItem,
+        tags: [],
+        packageName,
         packageCapacity,
-        quantity: orderItem.quantity,
-      }),
-      isNew: true,
-      batchAdjustments: [],
-      no: `batch no ${batches.length + 1}`,
-      autoCalculatePackageQuantity: true,
-    });
+        packageGrossWeight,
+        packageVolume,
+        packageSize,
+        quantity: wantingBatchQuantity,
+        batchAdjustments: [],
+        autoCalculatePackageQuantity: true,
+        packageQuantity: calculatePackageQuantity({
+          batchAdjustments: [],
+          packageCapacity,
+          quantity: wantingBatchQuantity,
+        }),
+      })
+    );
   }
 }
 
@@ -188,7 +190,7 @@ class OrderItems extends React.Component<Props> {
                                         defaultMessage="AUTOFILL BATCH"
                                       />
                                     }
-                                    onClick={() => autoFillBatch(item, batches, addNewBatch)}
+                                    onClick={() => autoFillBatch(item, addNewBatch)}
                                   />
                                 </>
                               )}
