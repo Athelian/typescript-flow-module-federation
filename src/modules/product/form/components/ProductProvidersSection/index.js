@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
 import { ProductProviderCard } from 'components/Cards';
 import { BooleanValue } from 'react-values';
@@ -10,11 +11,9 @@ import SlideView from 'components/SlideView';
 import { injectUid } from 'utils/id';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
 import ProductProviderContainer from 'modules/productProvider/form/container';
-import { PermissionConsumer } from 'modules/permission';
 import {
-  PRODUCT_PROVIDER_GET,
+  PRODUCT_PROVIDER_FORM,
   PRODUCT_PROVIDER_CREATE,
-  PRODUCT_PROVIDER_UPDATE,
 } from 'modules/permission/constants/product';
 import ProductProviderFormWrapper from './components/ProductProviderFormWrapper';
 import {
@@ -25,182 +24,178 @@ import {
 } from './style';
 
 function ProductProvidersSection() {
+  const { hasPermission } = usePermission();
   return (
-    <PermissionConsumer>
-      {hasPermission =>
-        hasPermission(PRODUCT_PROVIDER_GET) && (
-          <Subscribe to={[ProductProvidersContainer]}>
-            {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
-              <div className={ProductProviderSectionWrapperStyle}>
-                <SectionNavBar>
-                  {(hasPermission(PRODUCT_PROVIDER_CREATE) ||
-                    hasPermission(PRODUCT_PROVIDER_UPDATE)) && (
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          <NewButton
-                            label={
-                              <FormattedMessage
-                                id="modules.Products.newProvider"
-                                defaultMessage="NEW END PRODUCT"
-                              />
-                            }
-                            onClick={() => slideToggle(true)}
-                            data-testid="newProviderButton"
+    hasPermission(PRODUCT_PROVIDER_FORM) && (
+      <Subscribe to={[ProductProvidersContainer]}>
+        {({ state: { productProviders }, setFieldValue, removeArrayItem }) => (
+          <div className={ProductProviderSectionWrapperStyle}>
+            <SectionNavBar>
+              {hasPermission(PRODUCT_PROVIDER_CREATE) && (
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) => (
+                    <>
+                      <NewButton
+                        label={
+                          <FormattedMessage
+                            id="modules.Products.newProvider"
+                            defaultMessage="NEW END PRODUCT"
                           />
-                          <SlideView
-                            isOpen={opened}
-                            onRequestClose={() => slideToggle(false)}
-                            options={{ width: '1030px' }}
-                          >
-                            {opened && (
-                              <Subscribe to={[ProductProviderContainer]}>
-                                {({ initDetailValues }) => (
-                                  <ProductProviderFormWrapper
-                                    isAddedProvider
-                                    productProviders={productProviders}
-                                    productProvider={injectUid({
-                                      isNew: true,
-                                      unitVolume: {
-                                        value: 0,
-                                        metric: 'm³',
-                                      },
-                                      unitSize: {
-                                        width: {
-                                          value: 0,
-                                          metric: 'cm',
-                                        },
-                                        height: {
-                                          value: 0,
-                                          metric: 'cm',
-                                        },
-                                        length: {
-                                          value: 0,
-                                          metric: 'cm',
-                                        },
-                                      },
-                                      unitWeight: {
-                                        value: 0,
-                                        metric: 'kg',
-                                      },
-                                      unitPrice: {
-                                        amount: 0,
-                                        currency: 'JPY',
-                                      },
-                                      inspectionFee: {
-                                        amount: 0,
-                                        currency: 'JPY',
-                                      },
-                                      packageGrossWeight: {
-                                        value: 0,
-                                        metric: 'kg',
-                                      },
-                                      packageVolume: {
-                                        value: 0,
-                                        metric: 'm³',
-                                      },
-                                      packageSize: {
-                                        width: {
-                                          value: 0,
-                                          metric: 'cm',
-                                        },
-                                        height: {
-                                          value: 0,
-                                          metric: 'cm',
-                                        },
-                                        length: {
-                                          value: 0,
-                                          metric: 'cm',
-                                        },
-                                      },
-                                      files: [],
-                                    })}
-                                    isNew
-                                    initDetailValues={initDetailValues}
-                                    onCancel={() => slideToggle(false)}
-                                    onSave={newProvider => {
-                                      slideToggle(false);
-                                      setFieldValue(
-                                        `productProviders.${productProviders.length}`,
-                                        newProvider
-                                      );
-                                    }}
-                                  />
-                                )}
-                              </Subscribe>
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  )}
-                </SectionNavBar>
-                <div className={ProductProviderSectionBodyStyle}>
-                  {productProviders.length === 0 ? (
-                    <div className={EmptyMessageStyle}>
-                      <FormattedMessage
-                        id="modules.Products.noProviderFound"
-                        defaultMessage="Please create at least one end product"
+                        }
+                        onClick={() => slideToggle(true)}
+                        data-testid="newProviderButton"
                       />
-                    </div>
-                  ) : (
-                    <div className={ItemGridStyle}>
-                      {productProviders.map(
-                        (productProvider, index): React.Node => (
-                          <BooleanValue key={productProvider.id}>
-                            {({ value: opened, set: slideToggle }) => (
-                              <>
-                                <SlideView
-                                  isOpen={opened}
-                                  onRequestClose={() => slideToggle(false)}
-                                  options={{ width: '1030px' }}
-                                >
-                                  {opened && (
-                                    <Subscribe to={[ProductProviderContainer]}>
-                                      {({ initDetailValues }) => (
-                                        <ProductProviderFormWrapper
-                                          productProviders={productProviders}
-                                          productProvider={productProviders[index]}
-                                          isNew={!!productProvider.isNew}
-                                          initDetailValues={initDetailValues}
-                                          onCancel={() => slideToggle(false)}
-                                          onSave={newProvider => {
-                                            slideToggle(false);
-                                            setFieldValue(`productProviders.${index}`, newProvider);
-                                          }}
-                                        />
-                                      )}
-                                    </Subscribe>
-                                  )}
-                                </SlideView>
-                                <ProductProviderCard
-                                  productProvider={productProvider}
-                                  onClick={() => slideToggle(true)}
-                                  onRemove={() => removeArrayItem(`productProviders.${index}`)}
-                                  onClone={({ id, ...rest }) => {
-                                    setFieldValue(
-                                      `productProviders.${productProviders.length}`,
-                                      injectUid({
-                                        ...rest,
-                                        isNew: true,
-                                      })
-                                    );
-                                  }}
-                                />
-                              </>
+                      <SlideView
+                        isOpen={opened}
+                        onRequestClose={() => slideToggle(false)}
+                        options={{ width: '1030px' }}
+                      >
+                        {opened && (
+                          <Subscribe to={[ProductProviderContainer]}>
+                            {({ initDetailValues }) => (
+                              <ProductProviderFormWrapper
+                                isAddedProvider
+                                productProviders={productProviders}
+                                productProvider={injectUid({
+                                  isNew: true,
+                                  unitVolume: {
+                                    value: 0,
+                                    metric: 'm³',
+                                  },
+                                  unitSize: {
+                                    width: {
+                                      value: 0,
+                                      metric: 'cm',
+                                    },
+                                    height: {
+                                      value: 0,
+                                      metric: 'cm',
+                                    },
+                                    length: {
+                                      value: 0,
+                                      metric: 'cm',
+                                    },
+                                  },
+                                  unitWeight: {
+                                    value: 0,
+                                    metric: 'kg',
+                                  },
+                                  unitPrice: {
+                                    amount: 0,
+                                    currency: 'JPY',
+                                  },
+                                  inspectionFee: {
+                                    amount: 0,
+                                    currency: 'JPY',
+                                  },
+                                  packageGrossWeight: {
+                                    value: 0,
+                                    metric: 'kg',
+                                  },
+                                  packageVolume: {
+                                    value: 0,
+                                    metric: 'm³',
+                                  },
+                                  packageSize: {
+                                    width: {
+                                      value: 0,
+                                      metric: 'cm',
+                                    },
+                                    height: {
+                                      value: 0,
+                                      metric: 'cm',
+                                    },
+                                    length: {
+                                      value: 0,
+                                      metric: 'cm',
+                                    },
+                                  },
+                                  files: [],
+                                })}
+                                isNew
+                                initDetailValues={initDetailValues}
+                                onCancel={() => slideToggle(false)}
+                                onSave={newProvider => {
+                                  slideToggle(false);
+                                  setFieldValue(
+                                    `productProviders.${productProviders.length}`,
+                                    newProvider
+                                  );
+                                }}
+                              />
                             )}
-                          </BooleanValue>
-                        )
-                      )}
-                    </div>
+                          </Subscribe>
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              )}
+            </SectionNavBar>
+            <div className={ProductProviderSectionBodyStyle}>
+              {productProviders.length === 0 ? (
+                <div className={EmptyMessageStyle}>
+                  <FormattedMessage
+                    id="modules.Products.noProviderFound"
+                    defaultMessage="Please create at least one end product"
+                  />
+                </div>
+              ) : (
+                <div className={ItemGridStyle}>
+                  {productProviders.map(
+                    (productProvider, index): React.Node => (
+                      <BooleanValue key={productProvider.id}>
+                        {({ value: opened, set: slideToggle }) => (
+                          <>
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <Subscribe to={[ProductProviderContainer]}>
+                                  {({ initDetailValues }) => (
+                                    <ProductProviderFormWrapper
+                                      productProviders={productProviders}
+                                      productProvider={productProviders[index]}
+                                      isNew={!!productProvider.isNew}
+                                      initDetailValues={initDetailValues}
+                                      onCancel={() => slideToggle(false)}
+                                      onSave={newProvider => {
+                                        slideToggle(false);
+                                        setFieldValue(`productProviders.${index}`, newProvider);
+                                      }}
+                                    />
+                                  )}
+                                </Subscribe>
+                              )}
+                            </SlideView>
+                            <ProductProviderCard
+                              productProvider={productProvider}
+                              onClick={() => slideToggle(true)}
+                              onRemove={() => removeArrayItem(`productProviders.${index}`)}
+                              onClone={({ id, ...rest }) => {
+                                setFieldValue(
+                                  `productProviders.${productProviders.length}`,
+                                  injectUid({
+                                    ...rest,
+                                    isNew: true,
+                                  })
+                                );
+                              }}
+                            />
+                          </>
+                        )}
+                      </BooleanValue>
+                    )
                   )}
                 </div>
-              </div>
-            )}
-          </Subscribe>
-        )
-      }
-    </PermissionConsumer>
+              )}
+            </div>
+          </div>
+        )}
+      </Subscribe>
+    )
   );
 }
 

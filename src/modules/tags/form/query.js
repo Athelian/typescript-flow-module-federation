@@ -6,6 +6,14 @@ export const tagFormQuery = gql`
   query($id: ID!) {
     tag(id: $id) {
       ...tagFormFragment
+      ... on Tag {
+        ownedBy {
+          ... on Group {
+            id
+            name
+          }
+        }
+      }
     }
   }
 

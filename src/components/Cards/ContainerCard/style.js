@@ -14,7 +14,7 @@ export const CardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 350px;
+  height: 373px;
 `;
 
 export const ImagePartWrapperStyle: string = css`
@@ -131,7 +131,6 @@ export const InputIconStyle: string = css`
   display: grid;
   align-items: center;
   grid-template-columns: 165px 20px;
-  // grid-gap: 5px;
   width: 100%;
   padding: 0 5px;
 `;
@@ -139,6 +138,29 @@ export const InputIconStyle: string = css`
 export const ApprovalIconStyle = (approval: boolean): string => css`
   ${fontSizes.MAIN};
   color: ${approval ? colors.BLUE : colors.GRAY_LIGHT};
+`;
+
+export const ContainerImporterWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  padding: 0 5px;
+  width: 175px;
+  margin: 0 10px;
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+  height: 18px;
+`;
+
+export const ContainerImporterIconStyle: string = css`
+  color: ${colors.GRAY_DARK};
+  ${fontSizes.SMALL};
+`;
+
+export const ContainerImporterStyle: string = css`
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  ${fontSizes.SMALL};
+  width: 145px;
 `;
 
 export const TagsWrapperStyle: string = css`

@@ -11,6 +11,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Label, Display, DefaultStyle, TextInputFactory, DateInputFactory } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
+import { calculateContainerTotalVolume } from 'modules/container/utils';
 import validator from './validator';
 import BaseCard from '../BaseCard';
 import {
@@ -73,7 +74,6 @@ const ShipmentContainerCard = ({
     representativeBatch,
     id,
     no,
-    totalVolume,
     batches,
     warehouse,
     warehouseArrivalAgreedDate,
@@ -82,6 +82,7 @@ const ShipmentContainerCard = ({
     warehouseArrivalActualDateApprovedBy,
     tags,
   } = container;
+  const totalVolume = calculateContainerTotalVolume(container);
 
   const product = getByPathWithDefault(
     {},
@@ -157,7 +158,11 @@ const ShipmentContainerCard = ({
                 </Label>
                 <Display align="right">
                   {totalVolume && (
-                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                    <FormattedNumber
+                      value={totalVolume.value}
+                      suffix={totalVolume.metric}
+                      minimumFractionDigits={6}
+                    />
                   )}
                 </Display>
               </div>

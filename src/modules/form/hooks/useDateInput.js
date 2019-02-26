@@ -15,7 +15,7 @@ function useDateInput(initialValue: string, schema: ValidationObject) {
     : false;
   const onChange = useCallback((event: Object) => {
     const newDate = new Date(event.currentTarget.value);
-    if (event && event.currentTarget) setValue(isValid(newDate) ? newDate : '');
+    if (event && event.currentTarget) setValue(isValid(newDate) ? newDate : null);
   }, []);
   const onFocus = useCallback(() => {
     setFocus(true);

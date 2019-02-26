@@ -25,7 +25,7 @@ export const ordersByIDsExportQuery = gql`
   }
 `;
 
-const orderTableFragment = gql`
+export const orderTableFragment = gql`
   fragment orderTableFragment on Order {
     id
     poNo
@@ -54,7 +54,7 @@ const orderTableFragment = gql`
     }
   }
 `;
-const orderItemTableFragment = gql`
+export const orderItemTableFragment = gql`
   fragment orderItemTableFragment on OrderItem {
     id
     quantity
@@ -88,7 +88,7 @@ const orderItemTableFragment = gql`
   }
 `;
 
-const batchTableFragment = gql`
+export const batchTableFragment = gql`
   fragment batchTableFragment on Batch {
     id
     no
@@ -123,7 +123,7 @@ const batchTableFragment = gql`
   }
 `;
 
-const shipmentTableFragment = gql`
+export const shipmentTableFragment = gql`
   fragment shipmentTableFragment on Shipment {
     id
     no

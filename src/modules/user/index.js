@@ -14,13 +14,17 @@ import query from './query';
 type ContextProps = {
   user: {
     id: string,
+    group: Object,
   },
   permissions: Array<string>,
 };
 
-const UserContext: React.Context<ContextProps> = React.createContext({
+export const UserContext: React.Context<ContextProps> = React.createContext({
   user: {
     id: '-1',
+    group: {
+      id: '-1',
+    },
   },
   permissions: [],
 });
@@ -56,8 +60,12 @@ const UserProvider = ({ children }: Props) => (
           if (loading) return <LoadingIcon />;
           const {
             user = {
-              email: '',
               id: '-1',
+              group: {
+                id: '-1',
+                types: [],
+              },
+              email: '',
               firstName: '',
               lastName: '',
               language: 'en',

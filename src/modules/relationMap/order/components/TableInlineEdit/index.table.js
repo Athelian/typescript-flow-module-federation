@@ -6,7 +6,8 @@ import type { IntlShape } from 'react-intl';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
-import { range, set, cloneDeep, isEqual } from 'lodash';
+import { range, set, isEqual } from 'lodash';
+import { usePrevious } from 'modules/form/hooks';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
@@ -213,7 +214,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     initTemplateColumn ? JSON.parse(initTemplateColumn) : [...allColumnIds]
   );
   const [isReady, setIsReady] = useState(false);
-
   const [showAll, setShowAll] = useState(Number.isInteger(+initShowAll) ? !!+initShowAll : true);
   const [loading, setLoading] = useState(false);
   const [showTemplate, setShowTemplate] = useState(false);
@@ -224,6 +224,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     batches: {},
     shipments: {},
   });
+  const [isChangeData, setIsChangeData] = useState(false);
 
   const headerRef = useRef();
   const sidebarRef = useRef();
@@ -260,17 +261,18 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     [templateColumns]
   );
 
+  const { entities } = normalize(dataSource);
   const mappingObjects = formatOrders(dataSource);
+  const prevEntities = usePrevious(entities);
+  useEffect(() => {
+    if (!isEqual(prevEntities, entities) || isChangeData) {
+      logger.warn('copy data');
+      setEditData(entities);
+      setIsChangeData(false);
+    }
+  });
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
-      if (
-        Object.keys(editData.orders || {}).length === 0 &&
-        Object.keys(editData.shipments || {}).length === 0
-      ) {
-        const { entities } = normalize(dataSource);
-        setEditData(cloneDeep(entities));
-      }
-
       const listener = emitter.once('INLINE_CHANGE', newData => {
         setErrorMessage('');
 
@@ -309,7 +311,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   });
 
   const { orderIds, orderItemIds, batchIds } = allId;
-  const { entities } = normalize(dataSource);
   const orderColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
@@ -416,7 +417,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           batchCustomFieldsFilter,
           shipmentCustomFieldsFilter,
         };
-        logger.warn({ mappingObjects });
+        logger.warn({ mappingObjects, editData, entities });
         return (
           <ApolloConsumer>
             {client => (
@@ -483,6 +484,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               if (errorMessages.length)
                                 setErrorMessage(errorMessages[0][0].message);
                             }
+                            setIsChangeData(true);
                           } else if (result.errors) {
                             trackingError(result.errors);
                             toast.error('There was an error. Please try again later');

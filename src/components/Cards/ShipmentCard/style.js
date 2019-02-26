@@ -45,7 +45,13 @@ export const ShipmentBLStyle: string = css`
 export const ShipmentRightWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  flex: 1;
+  flex: 2;
+`;
+
+export const ShipmentHeaderWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  justify-content: end;
+  grid-gap: 5px;
 `;
 
 export const ShipmentTagsWrapperStyle: string = css`
@@ -54,6 +60,27 @@ export const ShipmentTagsWrapperStyle: string = css`
   grid-gap: 5px;
   overflow: hidden;
   height: 18px;
+`;
+
+export const ShipmentImporterWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  padding: 0 5px;
+  width: 150px;
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+`;
+
+export const ShipmentImporterIconStyle: string = css`
+  color: ${colors.GRAY_DARK};
+  ${fontSizes.SMALL};
+`;
+
+export const ShipmentImporterStyle: string = css`
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  ${fontSizes.SMALL};
+  width: 120px;
 `;
 
 export const ShipmentDataWrapperStyle: string = css`

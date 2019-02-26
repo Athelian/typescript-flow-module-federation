@@ -663,12 +663,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         const batchIds = uiSelectors.targetedBatchIds();
                         const initBatches = batchIds.map(batchId => {
                           const [orderItemId, orderItem] =
-                            (Object.entries(orderItems || {}): Array<any>).find(([, item]) =>
-                              item.batches.includes(batchId)
+                            (Object.entries(orderItems || {}): Array<any>).find(
+                              ([, item]) => item.batches && item.batches.includes(batchId)
                             ) || [];
                           const [, order] =
-                            (Object.entries(orders || {}): Array<any>).find(([, item]) =>
-                              item.orderItems.includes(orderItemId)
+                            (Object.entries(orders || {}): Array<any>).find(
+                              ([, item]) => item.orderItems && item.orderItems.includes(orderItemId)
                             ) || [];
                           const { totalAdjusted, ...batch } = batches[batchId];
                           return {
@@ -806,7 +806,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             processBatchIds.push(batchId);
                             if (batch) {
                               const [, orderItem] = (Object.entries(orderItems): any).find(
-                                ([, { batches: currentBatches }]) => {
+                                ([, { batches: currentBatches = [] }]) => {
                                   return currentBatches.includes(batch.id);
                                 }
                               );
@@ -849,13 +849,23 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           updateOrdersInput.push({
                             id: orderId,
                             orderItems: currentOrderItems
-                              .filter(orderItemId => !orderItemIds.includes(orderItemId))
+                              .filter(
+                                orderItemId =>
+                                  orderItemIds &&
+                                  Array.isArray(orderItemIds) &&
+                                  !orderItemIds.includes(orderItemId)
+                              )
                               .map(orderItemId => {
                                 const orderItem = orderItems[orderItemId];
                                 return {
                                   ...orderItem,
                                   batches: orderItem.batches
-                                    .filter(batchId => !batchIds.includes(batchId))
+                                    .filter(
+                                      batchId =>
+                                        batchIds &&
+                                        Array.isArray(batchIds) &&
+                                        !batchIds.includes(batchId)
+                                    )
                                     .map(batchId => ({ id: batchId, isNew: false })),
                                 };
                               }),

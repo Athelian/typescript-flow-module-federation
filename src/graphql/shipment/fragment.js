@@ -26,6 +26,9 @@ export const shipmentFormFragment = gql`
     forwarders {
       ...partnerCardFragment
     }
+    importer {
+      ...partnerCardFragment
+    }
     inCharges {
       ...userAvatarFragment
     }
@@ -100,6 +103,12 @@ export const shipmentCardFragment = gql`
     orderItemCount
     totalVolume {
       ...metricFragment
+    }
+    importer {
+      ... on Group {
+        id
+        name
+      }
     }
     cargoReady {
       ...timelineDateMinimalFragment

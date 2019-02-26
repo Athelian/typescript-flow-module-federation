@@ -71,11 +71,17 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
-        { state: { containers }, setFieldValue, setDeepFieldValue },
+        {
+          originalValues: containersOriginalValues,
+          state: containersState,
+          setFieldValue,
+          setDeepFieldValue,
+        },
         { state: { batches }, setFieldValue: updateBatchesState }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
 
+        const { containers } = { ...containersOriginalValues, ...containersState };
         return (
           <div className={ContainersWrapperStyle}>
             <div className={ContainersNavbarWrapperStyle} />

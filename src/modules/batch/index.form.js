@@ -194,9 +194,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                               {this.isNewOrClone() ? (
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
-                                <ResetButton
-                                  onClick={() => this.onReset({ batchContainer, form })}
-                                />
+                                <ResetButton onClick={() => this.onReset(batchContainer, form)} />
                               )}
                               <SaveButton
                                 disabled={!form.isReady(batchContainer.state, validator)}

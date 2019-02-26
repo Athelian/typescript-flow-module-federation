@@ -12,6 +12,12 @@ export const staffCardFragment = gql`
     id
     email
     role
+    roles {
+      ... on Role {
+        id
+        name
+      }
+    }
     firstName
     lastName
     tags {

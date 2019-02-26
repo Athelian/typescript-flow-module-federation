@@ -463,7 +463,6 @@ export function getExportColumns(
 }
 
 export function getExportRows(info: Object): Array<Array<?string>> {
-  // TODO: support export shipment only
   const {
     data: { editData, mappingObjects },
     ids: { orderIds, orderItemIds, batchIds },
@@ -479,6 +478,22 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     },
   } = info;
   const rows = [];
+  (Object.entries(mappingObjects.shipmentNoRelation): Array<any>).forEach(([shipmentId]) => {
+    const emptyRow = getEmptyValues([
+      ...orderColumnFieldsFilter,
+      ...orderCustomFieldsFilter,
+      ...orderItemColumnFieldsFilter,
+      ...orderItemCustomFieldsFilter,
+      ...batchColumnFieldsFilter,
+      ...batchCustomFieldsFilter,
+    ]);
+    const shipmentData = editData.shipments[shipmentId];
+    const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
+    const shipmentCustomValues = getCustomFieldValues(shipmentCustomFieldsFilter, shipmentData);
+    const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+    const currentRow = [...emptyRow, ...shipmentRow];
+    rows.push(currentRow);
+  });
   orderIds.forEach(orderId => {
     const order = mappingObjects.order[orderId];
     if (!order) return null;

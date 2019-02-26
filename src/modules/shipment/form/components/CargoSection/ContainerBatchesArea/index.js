@@ -164,6 +164,10 @@ export default function ContainerBatchesArea({
                                             batchSlideToggle(false);
                                             const indexOfAllBatches = batches.indexOf(batch);
                                             setFieldArrayValue(indexOfAllBatches, updatedBatch);
+                                            setDeepFieldValue(
+                                              `containers.${containerIndex}.batches.${position}`,
+                                              updatedBatch
+                                            );
                                           }}
                                         />
                                       )}
