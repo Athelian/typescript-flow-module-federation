@@ -83,7 +83,7 @@ class ShipmentForm extends React.Component<Props> {
                 />
               )}
             </Subscribe>
-            <AsyncCargoSection isOwner={isOwner} />
+            <AsyncCargoSection />
           </SectionWrapper>
           <SectionWrapper id="shipment_documentsSection">
             <SectionHeader
@@ -94,27 +94,32 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <SectionWrapper id="shipment_orderSection">
-            <Subscribe to={[ShipmentBatchesContainer]}>
-              {({ state: { batches } }) => {
-                const orders = uniqueOrders(batches);
-                return (
-                  <>
-                    <SectionHeader
-                      icon="ORDER"
-                      title={
-                        <>
-                          <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
-                          {orders.length})
-                        </>
-                      }
-                    />
-                    <AsyncOrdersSection orders={orders} />
-                  </>
-                );
-              }}
-            </Subscribe>
-          </SectionWrapper>
+          {isOwner && (
+            <SectionWrapper id="shipment_orderSection">
+              <Subscribe to={[ShipmentBatchesContainer]}>
+                {({ state: { batches } }) => {
+                  const orders = uniqueOrders(batches);
+                  return (
+                    <>
+                      <SectionHeader
+                        icon="ORDER"
+                        title={
+                          <>
+                            <FormattedMessage
+                              id="modules.Shipments.order"
+                              defaultMessage="ORDERS"
+                            />
+                            ({orders.length})
+                          </>
+                        }
+                      />
+                      <AsyncOrdersSection orders={orders} />
+                    </>
+                  );
+                }}
+              </Subscribe>
+            </SectionWrapper>
+          )}
         </div>
       </Suspense>
     );
