@@ -9,6 +9,9 @@ export const productFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    ownedBy {
+      ...ownedByFragment
+    }
     name
     serial
     hsCode

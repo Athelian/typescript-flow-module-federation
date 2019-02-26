@@ -1,24 +1,17 @@
 // @flow
 import gql from 'graphql-tag';
-import { tagFormFragment, userAvatarFragment } from 'graphql';
+import { tagFormFragment, userAvatarFragment, ownedByFragment } from 'graphql';
 
 export const tagFormQuery = gql`
   query($id: ID!) {
     tag(id: $id) {
       ...tagFormFragment
-      ... on Tag {
-        ownedBy {
-          ... on Group {
-            id
-            name
-          }
-        }
-      }
     }
   }
 
   ${tagFormFragment}
   ${userAvatarFragment}
+  ${ownedByFragment}
 `;
 
 export default tagFormQuery;

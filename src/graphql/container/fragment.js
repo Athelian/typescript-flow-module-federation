@@ -7,6 +7,9 @@ export const containerFormFragment = gql`
     updatedAt
     no
     memo
+    ownedBy {
+      ...ownedByFragment
+    }
     updatedBy {
       ...userAvatarFragment
     }

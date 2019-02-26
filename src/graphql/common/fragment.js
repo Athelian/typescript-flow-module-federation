@@ -170,3 +170,15 @@ export const fieldDefinitionFragment = gql`
     sort
   }
 `;
+
+export const ownedByFragment = gql`
+  fragment ownedByFragment on Group {
+    id
+    partner {
+      ... on Partner {
+        id
+      }
+    }
+    name
+  }
+`;

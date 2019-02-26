@@ -7,7 +7,7 @@ const useUser = () => {
   const { group } = user;
 
   return {
-    isOwnerBy: (ownerId: string) => ownerId === group.id,
+    isOwnerBy: (ownerId: string) => !ownerId || ownerId === group.id,
     isImporter: (): boolean => {
       const { types = [] } = group;
       return types.includes('Importer');

@@ -8,6 +8,9 @@ export const tagFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    ownedBy {
+      ...ownedByFragment
+    }
     name
     description
     color
