@@ -8,7 +8,7 @@ import ProductProviderForm from 'modules/productProvider/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import { PRODUCT_PROVIDER_GET } from 'modules/permission/constants/product';
+import { PRODUCT_PROVIDER_FORM } from 'modules/permission/constants/product';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
@@ -81,7 +81,7 @@ class ProductProviderFormWrapper extends React.Component<Props> {
     return (
       <PermissionConsumer>
         {hasPermission =>
-          hasPermission(PRODUCT_PROVIDER_GET) ? (
+          hasPermission(PRODUCT_PROVIDER_FORM) ? (
             <Provider inject={[formContainer]}>
               <Subscribe to={[ProductProviderContainer]}>
                 {formState => (
