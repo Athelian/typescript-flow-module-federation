@@ -31,7 +31,7 @@ type Props = {
 
 const TimelineSection = ({ isNew }: Props) => {
   const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner());
+  const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
 
   return (

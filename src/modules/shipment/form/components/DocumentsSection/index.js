@@ -46,7 +46,7 @@ type Props = {
 
 function DocumentsSection({ intl }: Props) {
   const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner());
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(SHIPMENT_UPDATE);
   const allowDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
 

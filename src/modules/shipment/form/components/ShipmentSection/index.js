@@ -65,7 +65,7 @@ type Props = {
 
 const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
   const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner());
+  const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   const allowSetImporter = hasPermission(SHIPMENT_SET_IMPORTER);

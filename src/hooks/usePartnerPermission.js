@@ -9,10 +9,10 @@ import QueryFormPermissionContext from 'components/common/QueryForm/context';
  *
  */
 const usePartnerPermission = () => {
-  const { ownerGroupId } = useContext(QueryFormPermissionContext);
+  const { isOwner } = useContext(QueryFormPermissionContext);
 
   return {
-    isOwner: () => ownerGroupId === '',
+    isOwner,
   };
 };
 
