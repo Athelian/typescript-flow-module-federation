@@ -3,7 +3,20 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { BATCH_UPDATE } from 'modules/permission/constants/batch';
+import {
+  BATCH_UPDATE,
+  BATCH_SET_NO,
+  BATCH_SET_QUANTITY,
+  BATCH_SET_DELIVERY_DATE,
+  BATCH_SET_DESIRED_DATE,
+  BATCH_SET_EXPIRY,
+  BATCH_SET_PRODUCTION_DATE,
+  BATCH_SET_CUSTOM_FIELDS,
+  BATCH_SET_TAGS,
+  BATCH_SET_MEMO,
+  BATCH_SET_ORDER_ITEM,
+} from 'modules/permission/constants/batch';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
@@ -38,7 +51,8 @@ type Props = {
 };
 
 const BatchSection = ({ isNew, selectable }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
@@ -68,7 +82,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.batchNo} />}
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(BATCH_SET_NO)}
                       />
                     )}
                   </FormField>
@@ -95,7 +109,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                             required
                             originalValue={initialValues[name] + totalAdjustment}
                             label={<FormattedMessage {...messages.quantity} />}
-                            editable={allowUpdate}
+                            editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY)}
                           />
                         )}
                       </Subscribe>
@@ -116,7 +130,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.deliveredAt} />}
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(BATCH_SET_DELIVERY_DATE)}
                       />
                     )}
                   </FormField>
@@ -135,7 +149,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.desiredAt} />}
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(BATCH_SET_DESIRED_DATE)}
                       />
                     )}
                   </FormField>
@@ -154,7 +168,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.expiredAt} />}
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(BATCH_SET_EXPIRY)}
                       />
                     )}
                   </FormField>
@@ -173,7 +187,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.producedAt} />}
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(BATCH_SET_PRODUCTION_DATE)}
                       />
                     )}
                   </FormField>
@@ -181,14 +195,14 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                     entityType="Batch"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_CUSTOM_FIELDS)}
                   />
                 </GridColumn>
                 <div className={ItemSectionStyle}>
                   <Label required>
                     <FormattedMessage {...messages.orderItem} />
                   </Label>
-                  {allowUpdate ? (
+                  {allowUpdate || hasPermission(BATCH_SET_ORDER_ITEM) ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <React.Fragment>
@@ -268,7 +282,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                     onChange={(field, value) => {
                       setFieldValue(field, value);
                     }}
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_TAGS)}
                   />
                 }
               />
@@ -287,7 +301,7 @@ const BatchSection = ({ isNew, selectable }: Props) => {
                     isNew={isNew}
                     originalValue={initialValues[name]}
                     label={<FormattedMessage {...messages.memo} />}
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_MEMO)}
                     vertical
                     inputWidth="680px"
                     inputHeight="65px"

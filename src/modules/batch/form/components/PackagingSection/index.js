@@ -2,7 +2,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BATCH_UPDATE } from 'modules/permission/constants/batch';
+import {
+  BATCH_UPDATE,
+  BATCH_SET_PACKAGE_NAME,
+  BATCH_SET_PACKAGE_CAPACITY,
+  BATCH_SET_PACKAGE_QUANTITY,
+  BATCH_SET_PACKAGE_WEIGHT,
+  BATCH_SET_PACKAGE_VOLUME,
+  BATCH_SET_PACKAGE_SIZE,
+} from 'modules/permission/constants/batch';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import BatchFormContainer from 'modules/batch/form/container';
 import { FormField, FormContainer } from 'modules/form';
@@ -16,7 +25,8 @@ type Props = {
 };
 
 const PackagingSection = ({ isNew }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
@@ -52,7 +62,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PACKAGE NAME"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_NAME)}
                   />
                 )}
               </FormField>
@@ -82,7 +92,7 @@ const PackagingSection = ({ isNew }: Props) => {
                             defaultMessage="PACKAGE CAPACITY"
                           />
                         }
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_CAPACITY)}
                       />
                     )}
                   </Subscribe>
@@ -118,7 +128,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         triggerCalculatePackageQuantity();
                       }
                     }}
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_QUANTITY)}
                   />
                 )}
               </FormField>
@@ -141,7 +151,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG GROSS WEIGHT"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_WEIGHT)}
                   />
                 )}
               </FormField>
@@ -165,9 +175,9 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG VOLUME"
                       />
                     }
-                    editable={allowUpdate}
                     showCalculator
                     onCalculate={calculatePackageVolume}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME)}
                   />
                 )}
               </FormField>
@@ -191,7 +201,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG LENGTH"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_SIZE)}
                   />
                 )}
               </FormField>
@@ -215,7 +225,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG WIDTH"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_SIZE)}
                   />
                 )}
               </FormField>
@@ -239,7 +249,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         defaultMessage="PKG HEIGHT"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_SIZE)}
                   />
                 )}
               </FormField>

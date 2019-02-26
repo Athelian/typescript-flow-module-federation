@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { BATCH_UPDATE, BATCH_SET_QUANTITY_ADJUSTMENTS } from 'modules/permission/constants/batch';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import BatchFormContainer from 'modules/batch/form/container';
 import FormattedNumber from 'components/FormattedNumber';
@@ -24,7 +25,8 @@ type Props = {
 };
 
 const QuantityAdjustmentsSection = ({ isNew }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
@@ -68,7 +70,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                       <Subscribe key={adjustment.id} to={[FormContainer]}>
                         {({ setFieldTouched }) => (
                           <DefaultAdjustmentStyle
-                            editable={allowUpdate}
+                            editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)}
                             isNew={isNew}
                             index={index}
                             adjustment={adjustment}
@@ -98,7 +100,9 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                                     }}
                                     isNew={isNew}
                                     originalValue={adjustment.quantity}
-                                    editable={allowUpdate}
+                                    editable={
+                                      allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
+                                    }
                                   />
                                 )}
                               </FormField>
@@ -108,7 +112,7 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                       </Subscribe>
                     )
                 )}
-              {allowUpdate && (
+              {(allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)) && (
                 <div className={AddAdjustmentButtonWrapperStyle}>
                   <NewButton
                     data-testid="addAdjustmentButton"
