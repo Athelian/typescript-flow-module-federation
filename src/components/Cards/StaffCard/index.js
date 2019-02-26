@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { type User as Staff } from 'modules/staff/type.js.flow';
 import Tag from 'components/Tag';
@@ -17,6 +17,7 @@ import {
 
 type OptionalProps = {
   onClick: Function,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
@@ -25,17 +26,24 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onClick: () => {},
+  actions: [],
 };
 
-const StaffCard = ({ staff, onClick, ...rest }: Props) => {
+const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
   if (!staff) return '';
 
-  const { firstName, lastName, role, email, tags } = staff;
-
-  const actions = [];
+  const { firstName, lastName, role: deprecatedRole, roles, email, tags } = staff;
 
   let userRoleIcon = 'USER';
-  if (role === 'manager') {
+
+  // TODO remove deprecated role field
+  if (roles && roles.length > 0) {
+    if (roles.some(role => role.name === 'admin')) {
+      userRoleIcon = 'MANAGER';
+    } else if (deprecatedRole === 'manager') {
+      userRoleIcon = 'MANAGER';
+    }
+  } else if (deprecatedRole === 'manager') {
     userRoleIcon = 'MANAGER';
   }
 
@@ -56,7 +64,7 @@ const StaffCard = ({ staff, onClick, ...rest }: Props) => {
         <div className={StaffEmailStyle}>{email}</div>
         <div className={StaffRoleStyle}>
           <Icon icon={userRoleIcon} />
-          {role === 'manager' ? (
+          {userRoleIcon === 'MANAGER' ? (
             <FormattedMessage id="components.cards.managerUser" defaultMessage="Manager" />
           ) : (
             <FormattedMessage id="components.cards.defaultUser" defaultMessage="User" />

@@ -3,7 +3,7 @@ import * as React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
-import { GridViewWrapperStyle } from './style';
+import { GridViewWrapperStyle, EmptyGridViewStyle } from './style';
 
 type OptionalProps = {
   gap?: string,
@@ -51,7 +51,11 @@ function GridView(props: Props) {
   }
 
   if (isEmpty) {
-    return <Display>{emptyMessage}</Display>;
+    return (
+      <div className={EmptyGridViewStyle}>
+        <Display align="center">{emptyMessage}</Display>
+      </div>
+    );
   }
 
   return (

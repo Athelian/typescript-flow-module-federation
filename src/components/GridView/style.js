@@ -24,4 +24,10 @@ export const GridViewWrapperStyle = ({
   justify-content: center;
 `;
 
-export default GridViewWrapperStyle;
+export const EmptyGridViewStyle: string = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

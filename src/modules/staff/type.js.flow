@@ -28,6 +28,10 @@ export type User = {
   lastName: string,
   email: string,
   role: string,
+  roles: Array<{
+    id: string,
+    name: string,
+  }>,
   tags: Array<Tag>,
   createdAt: string,
   updatedAt: string,
