@@ -10,6 +10,10 @@ import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_IMPORTER,
+  SHIPMENT_SET_IN_CHARGE,
+  SHIPMENT_SET_TAGS,
+  SHIPMENT_SET_CUSTOM_FIELDS,
+  SHIPMENT_SET_FORWARDERS,
 } from 'modules/permission/constants/shipment';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
@@ -342,7 +346,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     entityType="Shipment"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={allowToUpdate}
+                    editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CUSTOM_FIELDS])}
                   />
 
                   <Subscribe to={[ShipmentTagsContainer]}>
@@ -356,7 +360,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         }
                         input={
                           <TagsInput
-                            editable={allowToUpdate}
+                            editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TAGS])}
                             id="tags"
                             name="tags"
                             tagType="Shipment"
@@ -416,7 +420,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         defaultMessage="You can choose up to 5 people in charge."
                       />
                     }
-                    editable={allowToUpdate}
+                    editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IN_CHARGE])}
                   />
 
                   <FieldItem
@@ -477,10 +481,17 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         {({ value: opened, set: slideToggle }) => (
                           <>
                             <div
-                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
+                              onClick={() =>
+                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
+                                  ? slideToggle(true)
+                                  : () => {}
+                              }
                               role="presentation"
                             >
-                              {renderForwarders(forwarders, allowToUpdate)}
+                              {renderForwarders(
+                                forwarders,
+                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
+                              )}
                             </div>
                             <SlideView
                               isOpen={opened}
