@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function QueryForm({ query, entityId, entityType, render }: Props) {
-  const { isOwner } = useUser();
+  const { isOwnerBy } = useUser();
   return (
     <Query query={query} variables={{ id: decodeId(entityId) }} fetchPolicy="network-only">
       {({ loading, data, error }) => {
@@ -38,7 +38,8 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
         }
 
         const ownerGroupId = getByPath(`${entityType}.ownedBy.id`, data);
-        if (!isOwner(ownerGroupId)) {
+        const isOwner = isOwnerBy(ownerGroupId);
+        if (!isOwner) {
           // query permission for partner
           return (
             <Query
@@ -66,7 +67,7 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
                       ),
                     }}
                   >
-                    {render(getByPathWithDefault({}, entityType, data), false)}
+                    {render(getByPathWithDefault({}, entityType, data), isOwner)}
                   </QueryFormPermissionContext.Provider>
                 );
               }}
@@ -74,7 +75,7 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
           );
         }
         if (getByPath(entityType, data))
-          return render(getByPathWithDefault({}, entityType, data), true);
+          return render(getByPathWithDefault({}, entityType, data), isOwner);
         navigate(`/${entityType}`);
         return <LoadingIcon />;
       }}
