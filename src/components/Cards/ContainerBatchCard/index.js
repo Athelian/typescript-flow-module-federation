@@ -47,8 +47,8 @@ import {
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
-  onClone: (batch: Object) => void,
-  onClear: (batch: Object) => void,
+  onClone?: (batch: Object) => void,
+  onClear?: (batch: Object) => void,
   onClickRepresentative: () => void,
   selectable: boolean,
   readOnly: boolean,
@@ -64,8 +64,6 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onClick: () => {},
-  onClone: () => {},
-  onClear: () => {},
   onClickRepresentative: () => {},
   selectable: false,
   readOnly: false,
@@ -92,8 +90,10 @@ const ContainerBatchCard = ({
     selectable || readOnly
       ? []
       : [
-          <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
+          ...(onClone ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />] : []),
+          ...(onClear
+            ? [<CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />]
+            : []),
         ];
 
   const {

@@ -6,7 +6,13 @@ import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
 import { isNullOrUndefined } from 'utils/fp';
 import { calculatePackageQuantity } from 'utils/batch';
-import { CONTAINER_UPDATE } from 'modules/permission/constants/container';
+import {
+  CONTAINER_UPDATE,
+  CONTAINER_BATCHES_ADD,
+  CONTAINER_BATCHES_REMOVE,
+} from 'modules/permission/constants/container';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
 import { ContainerBatchCard } from 'components/Cards';
@@ -26,13 +32,14 @@ import {
 } from './style';
 
 function BatchesSection() {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
 
   return (
     <div className={BatchesSectionWrapperStyle}>
       <SectionNavBar>
-        {allowUpdate && (
+        {(allowUpdate || hasPermission(CONTAINER_BATCHES_ADD)) && (
           <>
             <BooleanValue>
               {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
@@ -205,39 +212,49 @@ function BatchesSection() {
                             onClickRepresentative={() =>
                               setDeepFieldValue(`representativeBatch`, batch)
                             }
-                            onClick={() => batchSlideToggle(true)}
-                            onClear={({ id }) => {
-                              const newBatches = batches.filter(
-                                ({ id: batchId }) => id !== batchId
-                              );
-                              setFieldValue('batches', newBatches);
-                              if (id === representativeBatch.id) {
-                                if (newBatches.length > 0) {
-                                  setDeepFieldValue('representativeBatch', newBatches[0]);
-                                } else {
-                                  setDeepFieldValue('representativeBatch', null);
-                                }
-                              }
-                            }}
-                            onClone={({
-                              id,
-                              deliveredAt,
-                              desired,
-                              expiredAt,
-                              producedAt,
-                              no,
-                              ...rest
-                            }) => {
-                              setFieldValue('batches', [
-                                ...batches,
-                                injectUid({
-                                  ...rest,
-                                  isNew: true,
-                                  batchAdjustments: [],
-                                  no: `${no}- clone`,
-                                }),
-                              ]);
-                            }}
+                            onClick={
+                              hasPermission(ORDER_FORM) ? () => batchSlideToggle(true) : () => {}
+                            }
+                            onClear={
+                              hasPermission(CONTAINER_BATCHES_REMOVE)
+                                ? ({ id }) => {
+                                    const newBatches = batches.filter(
+                                      ({ id: batchId }) => id !== batchId
+                                    );
+                                    setFieldValue('batches', newBatches);
+                                    if (id === representativeBatch.id) {
+                                      if (newBatches.length > 0) {
+                                        setDeepFieldValue('representativeBatch', newBatches[0]);
+                                      } else {
+                                        setDeepFieldValue('representativeBatch', null);
+                                      }
+                                    }
+                                  }
+                                : null
+                            }
+                            onClone={
+                              hasPermission(CONTAINER_BATCHES_ADD)
+                                ? ({
+                                    id,
+                                    deliveredAt,
+                                    desired,
+                                    expiredAt,
+                                    producedAt,
+                                    no,
+                                    ...rest
+                                  }) => {
+                                    setFieldValue('batches', [
+                                      ...batches,
+                                      injectUid({
+                                        ...rest,
+                                        isNew: true,
+                                        batchAdjustments: [],
+                                        no: `${no}- clone`,
+                                      }),
+                                    ]);
+                                  }
+                                : null
+                            }
                           />
                         </div>
                       </>
