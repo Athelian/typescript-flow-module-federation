@@ -106,6 +106,12 @@ export const shipmentCardRMFragment = gql`
     transportType
     batchCount
     orderItemCount
+    importer {
+      ... on Group {
+        id
+        name
+      }
+    }
     totalVolume {
       ...metricFragment
     }
@@ -153,6 +159,26 @@ export const shipmentCardRMFragment = gql`
             name
           }
         }
+      }
+    }
+    containers {
+      ... on Container {
+        id
+        warehouseArrivalAgreedDate
+        warehouseArrivalAgreedDateApprovedAt
+        warehouseArrivalActualDate
+        warehouseArrivalActualDateApprovedAt
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+          }
+        }
+      }
+    }
+    batches {
+      ... on Batch {
+        id
       }
     }
   }
