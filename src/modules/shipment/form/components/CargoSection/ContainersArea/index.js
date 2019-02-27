@@ -4,7 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import { CONTAINER_CREATE } from 'modules/permission/constants/container';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -66,7 +68,8 @@ const cleanBatchesContainerByContainerId = (
   );
 
 function ContainersArea({ selectCardId, setSelected }: Props) {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
@@ -267,7 +270,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                 })}
               </div>
             </div>
-            {allowToUpdate && (
+            {hasPermission([SHIPMENT_UPDATE, CONTAINER_CREATE]) && (
               <div className={ContainersFooterWrapperStyle}>
                 <NewButton
                   label={
