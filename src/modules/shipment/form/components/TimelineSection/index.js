@@ -12,7 +12,7 @@ import {
   SHIPMENT_SET_REVISE_TIMELINE_DATE,
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_ASSIGN_TIMELINE_DATE,
-  SHIPMENT_SET_WARE_HOUSE,
+  SHIPMENT_SET_WAREHOUSE,
 } from 'modules/permission/constants/shipment';
 import {
   ShipmentTransportTypeContainer,
@@ -74,7 +74,7 @@ const TimelineSection = ({ isNew }: Props) => {
                     SHIPMENT_SET_REVISE_TIMELINE_DATE,
                     SHIPMENT_APPROVE_TIMELINE_DATE,
                     SHIPMENT_ASSIGN_TIMELINE_DATE,
-                    SHIPMENT_SET_WARE_HOUSE,
+                    SHIPMENT_SET_WAREHOUSE,
                   ])
                 }
                 shipment={values}
@@ -329,7 +329,7 @@ const TimelineSection = ({ isNew }: Props) => {
                       {({ value: opened, set: slideToggle }) => (
                         <>
                           {!warehouse &&
-                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE]) ? (
+                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
                               <DashedPlusButton
                                 width="195px"
                                 height="40px"
@@ -339,7 +339,7 @@ const TimelineSection = ({ isNew }: Props) => {
                               <GrayCard width="195px" height="40px" />
                             ))}
                           {warehouse &&
-                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE]) ? (
+                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
                               <ShipmentWarehouseCard
                                 warehouse={warehouse}
                                 onClick={() => slideToggle(true)}
