@@ -1,11 +1,20 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import useUser from 'hooks/useUser';
+import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_APPROVE_TIMELINE_DATE,
+  SHIPMENT_ASSIGN_TIMELINE_DATE,
+  SHIPMENT_SET_REVISE_TIMELINE_DATE,
+  SHIPMENT_SET_TIMELINE_DATE,
+} from 'modules/permission/constants/shipment';
 import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
-import { UserConsumer } from 'modules/user';
 import {
   SectionHeader,
   DefaultAdjustmentStyle,
@@ -31,7 +40,6 @@ type OptionalProps = {
     date: Date,
   },
   renderBelowHeader: React.Node,
-  readOnly: boolean,
 };
 
 type Props = OptionalProps & {
@@ -46,7 +54,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   renderBelowHeader: null,
   timelineDate: { assignedTo: [], timelineDateRevisions: [] },
-  readOnly: false,
 };
 
 const TimelineInfoSection = (props: Props) => {
@@ -59,9 +66,11 @@ const TimelineInfoSection = (props: Props) => {
     setFieldDeepValue,
     removeArrayItem,
     renderBelowHeader,
-    readOnly,
     ...rest
   } = props;
+  const { user } = useUser();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const timelineDateRevisions = [...((timelineDate && timelineDate.timelineDateRevisions) || [])];
   return (
     <div className={TimelineInfoSectionWrapperStyle} {...rest}>
@@ -78,34 +87,32 @@ const TimelineInfoSection = (props: Props) => {
           approvedByName={`${sourceName}.approvedBy`}
           approvedBy={timelineDate && timelineDate.approvedBy}
           setFieldValue={setFieldDeepValue}
-          editable={!readOnly}
+          editable={hasPermission([SHIPMENT_UPDATE])}
+          approvable={hasPermission([SHIPMENT_APPROVE_TIMELINE_DATE])}
+          assignable={hasPermission([SHIPMENT_ASSIGN_TIMELINE_DATE])}
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>
-            {!readOnly && (
-              <UserConsumer>
-                {({ user }) => (
-                  <NewButton
-                    data-testid={`${sourceName}_addDateButton`}
-                    label={
-                      <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
-                    }
-                    onClick={() => {
-                      setFieldDeepValue(
-                        `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
-                        injectUid({
-                          isNew: true,
-                          type: 'Other',
-                          date: '',
-                          memo: '',
-                          updatedAt: new Date(),
-                          updatedBy: user,
-                        })
-                      );
-                    }}
-                  />
-                )}
-              </UserConsumer>
+            {hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE]) && (
+              <NewButton
+                data-testid={`${sourceName}_addDateButton`}
+                label={
+                  <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
+                }
+                onClick={() => {
+                  setFieldDeepValue(
+                    `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
+                    injectUid({
+                      isNew: true,
+                      type: 'Other',
+                      date: '',
+                      memo: '',
+                      updatedAt: new Date(),
+                      updatedBy: user,
+                    })
+                  );
+                }}
+              />
             )}
           </div>
           {timelineDateRevisions.reverse().map(
@@ -113,7 +120,7 @@ const TimelineInfoSection = (props: Props) => {
               adjustment && (
                 <DefaultAdjustmentStyle
                   isNew={isNew}
-                  editable={!readOnly}
+                  editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
                   index={timelineDateRevisions.length - 1 - index}
                   adjustment={adjustment}
                   key={adjustment.id}
@@ -138,7 +145,10 @@ const TimelineInfoSection = (props: Props) => {
                           name={name}
                           isNew={isNew}
                           originalValue={adjustment.date}
-                          editable={!readOnly}
+                          editable={hasPermission([
+                            SHIPMENT_UPDATE,
+                            SHIPMENT_SET_REVISE_TIMELINE_DATE,
+                          ])}
                         />
                       )}
                     </FormField>
@@ -157,7 +167,7 @@ const TimelineInfoSection = (props: Props) => {
                 name={name}
                 isNew={isNew}
                 originalValue={timelineDate && timelineDate.date}
-                editable={!readOnly}
+                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TIMELINE_DATE])}
                 label={
                   <FormattedMessage
                     id="modules.Shipments.initialDate"

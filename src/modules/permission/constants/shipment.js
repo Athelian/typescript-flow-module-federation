@@ -27,4 +27,4 @@ export const SHIPMENT_SET_TIMELINE_DATE = 'shipment.shipments.setTimelineDate';
 export const SHIPMENT_SET_REVISE_TIMELINE_DATE = 'shipment.shipments.reviseTimelineDate';
 export const SHIPMENT_APPROVE_TIMELINE_DATE = 'shipment.shipments.approveTimelineDate';
 export const SHIPMENT_ASSIGN_TIMELINE_DATE = 'shipment.shipments.assignTimelineDate';
-export const SHIPMENT_SET_WARE_HOUSE = 'shipment.shipments.setWarehouse';
+export const SHIPMENT_SET_WAREHOUSE = 'shipment.shipments.setWarehouse';
