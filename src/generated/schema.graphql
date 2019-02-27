@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Feb 20 2019 12:13:25 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Feb 27 2019 15:45:48 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30580,8 +30580,8 @@ type Query {
   authenticated: Boolean!
   user(id: ID!): UserPayload!
   users(page: Int! = 1, perPage: Int! = 10, filterBy: UserFilterInput, sortBy: UserSortInput): UserPayloadPagination!
-  partner(id: ID!): PartnershipPayload!
-  partners(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPagination!
+  partnership(id: ID!): PartnershipPayload!
+  partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPagination!
   product(id: ID!): ProductPayload!
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
   productExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
@@ -35609,6 +35609,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   cargoReady: TimelineDatePayload!
   voyages: [VoyagePayload!]!
   containerGroups: [ContainerGroupPayload!]!
+  importer: GroupPayload!
   forwarders: [GroupPayload!]!
   totalVolume: MetricValue
   orderCount: Int
@@ -35619,7 +35620,6 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   batchesWithoutContainer: [BatchPayload!]!
   integrationLinks: [IntegrationLinkPayload!]!
   containers: [ContainerPayload!]!
-  importer: GroupPayload
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -35744,7 +35744,7 @@ input ShipmentCreateInput {
   memo: String
   customFields: CustomFieldsInput
   containers: [ShipmentContainerCreateInput!]
-  importerId: ID
+  importerId: ID!
 }
 
 input ShipmentFilterInput {

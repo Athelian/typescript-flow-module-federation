@@ -83,7 +83,7 @@ export const updateOrderMutation = gql`
 
 export const prepareUpdateOrderInput = ({ orderItems = [] }: Object): Object => ({
   orderItems: orderItems.map(
-    ({ batches = [], productProvider = {}, isNew, id: itemId, ...orderItem }) => ({
+    ({ batches = [], productProvider = {}, order, isNew, id: itemId, ...orderItem }) => ({
       ...orderItem,
       ...(isNew ? {} : { id: itemId }),
       productProviderId: productProvider.id,
