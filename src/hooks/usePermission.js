@@ -1,5 +1,6 @@
 // @flow
 import { useContext, useCallback } from 'react';
+import { intersection } from 'lodash';
 import QueryFormPermissionContext from 'components/common/QueryForm/context';
 import PermissionContext from 'modules/permission/PermissionContext';
 
@@ -10,14 +11,19 @@ import PermissionContext from 'modules/permission/PermissionContext';
  *
  */
 const usePermission = (isOwner: boolean = true) => {
-  const hasPermission = useCallback((checkPermission: string, permissions: Array<string>) => {
-    return permissions.includes(checkPermission);
-  });
+  const hasPermission = useCallback(
+    (checkPermission: string | Array<string>, permissions: Array<string>) => {
+      if (Array.isArray(checkPermission)) {
+        return intersection(permissions, checkPermission).length > 0;
+      }
+      return permissions.includes(checkPermission);
+    }
+  );
   const { permissions } = useContext(PermissionContext);
   const { permissions: partnerPermissions } = useContext(QueryFormPermissionContext);
 
   return {
-    hasPermission: (checkPermission: string) =>
+    hasPermission: (checkPermission: string | Array<string>) =>
       hasPermission(checkPermission, isOwner ? permissions : partnerPermissions),
   };
 };

@@ -16,6 +16,7 @@ import {
   productProviderFormFragment,
   documentFragment,
   badRequestFragment,
+  ownedByFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import type { ProductCreate, ProductUpdate } from '../type.js.flow';
@@ -43,6 +44,7 @@ export const createProductMutation: Object = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${ownedByFragment}
 `;
 
 export const prepareCreateProductInput = ({
@@ -116,6 +118,7 @@ export const updateProductMutation: Object = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${ownedByFragment}
 `;
 
 export const prepareUpdateProductInput = ({

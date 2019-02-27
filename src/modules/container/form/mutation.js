@@ -22,6 +22,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   badRequestFragment,
+  ownedByFragment,
 } from 'graphql';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { cleanUpData } from 'utils/data';
@@ -55,6 +56,7 @@ export const updateContainerMutation = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${badRequestFragment}
+  ${ownedByFragment}
 `;
 
 const getIdOrReturnNull = (obj: { id: string }): string | null =>

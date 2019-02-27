@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { toast } from 'react-toastify';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { isNullOrUndefined } from 'utils/fp';
@@ -244,6 +245,11 @@ class ShipmentFormModule extends React.Component<Props> {
   }: ShipmentFormState) => (result: CreateShipmentResponse | UpdateShipmentResponse) => {
     const isNewOrClone = this.isNewOrClone();
     const { redirectAfterSuccess } = this.props;
+
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+      return;
+    }
 
     if (isNewOrClone && result.shipmentCreate) {
       const { shipmentCreate } = result;
@@ -498,6 +504,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             const { group } = user;
                             const { types = [] } = group;
                             const isImporter = types.includes('Importer');
+                            const isForwarder = types.includes('Forwarder');
                             return (
                               <ShipmentForm
                                 shipment={{}}
@@ -505,6 +512,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                 onFormReady={() => {
                                   shipmentInfoContainer.initDetailValues({
                                     importer: isImporter ? group : {},
+                                    forwarders: isForwarder ? [group] : [],
                                   });
                                 }}
                               />

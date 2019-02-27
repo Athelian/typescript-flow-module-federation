@@ -12,6 +12,10 @@ const useUser = () => {
       const { types = [] } = group;
       return types.includes('Importer');
     },
+    isForwarder: (): boolean => {
+      const { types = [] } = group;
+      return types.includes('Forwarder');
+    },
   };
 };
 
