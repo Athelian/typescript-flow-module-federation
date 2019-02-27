@@ -487,7 +487,7 @@ const OrderItemCard = ({
                     </Label>
                   }
                   input={
-                    <Display>
+                    <Display width="90px">
                       <FormattedNumber
                         value={price.amount * quantity}
                         suffix={currency || price.currency}
