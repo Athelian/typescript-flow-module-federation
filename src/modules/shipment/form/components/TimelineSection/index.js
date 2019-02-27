@@ -5,7 +5,15 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_SET_PORT,
+  SHIPMENT_SET_TIMELINE_DATE,
+  SHIPMENT_SET_REVISE_TIMELINE_DATE,
+  SHIPMENT_APPROVE_TIMELINE_DATE,
+  SHIPMENT_ASSIGN_TIMELINE_DATE,
+  SHIPMENT_SET_WARE_HOUSE,
+} from 'modules/permission/constants/shipment';
 import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
@@ -14,7 +22,7 @@ import {
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
-import { ShipmentWarehouseCard } from 'components/Cards';
+import { ShipmentWarehouseCard, GrayCard } from 'components/Cards';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -58,7 +66,17 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={TimelineWrapperStyle}>
               <VerticalLayout shipment={values} />
               <VoyageSelector
-                readOnly={!allowToUpdate}
+                readOnly={
+                  !hasPermission([
+                    SHIPMENT_UPDATE,
+                    SHIPMENT_SET_PORT,
+                    SHIPMENT_SET_TIMELINE_DATE,
+                    SHIPMENT_SET_REVISE_TIMELINE_DATE,
+                    SHIPMENT_APPROVE_TIMELINE_DATE,
+                    SHIPMENT_ASSIGN_TIMELINE_DATE,
+                    SHIPMENT_SET_WARE_HOUSE,
+                  ])
+                }
                 shipment={values}
                 setFieldDeepValue={setFieldDeepValue}
                 removeArrayItem={removeArrayItem}
@@ -67,7 +85,6 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={BodyWrapperStyle} id="timelineInfoSection">
               <TimelineInfoSection
                 id="cargoReady"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="CARGO_READY"
                 title={
@@ -83,7 +100,6 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="loadPortDeparture"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -99,7 +115,7 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <VoyageInfoSection
                 id="firstVoyage"
-                readOnly={!allowToUpdate}
+                readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                 isNew={isNew}
                 icon={getTransportIcon(values.transportType)}
                 title={
@@ -127,7 +143,6 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="firstTransitPortArrival"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -150,7 +165,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="firstTransitPortDeparture"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -173,7 +187,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="secondVoyage"
-                    readOnly={!allowToUpdate}
+                    readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -208,7 +222,6 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="secondTransitPortArrival"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -224,7 +237,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="secondTransitPortDeparture"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -240,7 +252,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="thirdVoyage"
-                    readOnly={!allowToUpdate}
+                    readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -267,7 +279,6 @@ const TimelineSection = ({ isNew }: Props) => {
 
               <TimelineInfoSection
                 id="dischargePortArrival"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -283,7 +294,6 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="customClearance"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="CUSTOMS"
                 title={
@@ -301,7 +311,6 @@ const TimelineSection = ({ isNew }: Props) => {
                 <ContainerWarehouseArrivalSection readOnly={!allowToUpdate} />
               ) : (
                 <TimelineInfoSection
-                  readOnly={!allowToUpdate}
                   id="warehouseArrival"
                   isNew={isNew}
                   icon="WAREHOUSE"
@@ -319,18 +328,28 @@ const TimelineSection = ({ isNew }: Props) => {
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
-                          {!warehouse && allowToUpdate && (
-                            <DashedPlusButton
-                              width="195px"
-                              height="40px"
-                              onClick={() => slideToggle(true)}
-                            />
-                          )}
-                          {warehouse && (
+                          {!warehouse &&
+                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE]) ? (
+                              <DashedPlusButton
+                                width="195px"
+                                height="40px"
+                                onClick={() => slideToggle(true)}
+                              />
+                            ) : (
+                              <GrayCard width="195px" height="40px" />
+                            ))}
+                          {warehouse &&
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE]) ? (
                             <ShipmentWarehouseCard
                               warehouse={warehouse}
-                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
+                              onClick={() =>
+                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE])
+                                  ? slideToggle(true)
+                                  : () => {}
+                              }
                             />
+                          ) : (
+                            <ShipmentWarehouseCard warehouse={warehouse} readOnly />
                           )}
 
                           <SlideView
@@ -357,7 +376,6 @@ const TimelineSection = ({ isNew }: Props) => {
               )}
               <TimelineInfoSection
                 id="deliveryReady"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="DELIVERY_READY"
                 title={
