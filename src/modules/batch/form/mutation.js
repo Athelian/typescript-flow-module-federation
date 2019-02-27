@@ -19,7 +19,6 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
-  ownedByFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from './container';
@@ -117,7 +116,6 @@ export const updateBatchMutation = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${badRequestFragment}
-  ${ownedByFragment}
 `;
 
 export const prepareUpdateBatchInput = (
