@@ -614,6 +614,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             }
                           }
                         );
+
                         const orderIds = [];
                         (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
                           if (
@@ -672,6 +673,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             ) || [];
                           const { totalAdjusted, ...batch } = batches[batchId];
                           return {
+                            ...batch,
                             orderItem: {
                               ...orderItem,
                               productProvider: {
@@ -683,7 +685,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 exporter: exporters[order.exporter],
                               },
                             },
-                            ...batch,
                           };
                         });
                         shipmentBatchesContainer.initDetailValues(initBatches);
