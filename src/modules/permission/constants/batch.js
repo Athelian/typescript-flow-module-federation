@@ -21,3 +21,4 @@ export const BATCH_SET_PACKAGE_QUANTITY = 'batch.batches.setPackageQuantity';
 export const BATCH_SET_PACKAGE_WEIGHT = 'batch.batches.setPackageWeight';
 export const BATCH_SET_PACKAGE_VOLUME = 'batch.batches.setPackageVolume';
 export const BATCH_SET_PACKAGE_SIZE = 'batch.batches.setPackageSize';
+export const BATCH_ORDERS_LIST = 'batch.orders.list';
