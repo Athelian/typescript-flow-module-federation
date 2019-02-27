@@ -339,18 +339,14 @@ const TimelineSection = ({ isNew }: Props) => {
                               <GrayCard width="195px" height="40px" />
                             ))}
                           {warehouse &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE]) ? (
-                            <ShipmentWarehouseCard
-                              warehouse={warehouse}
-                              onClick={() =>
-                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE])
-                                  ? slideToggle(true)
-                                  : () => {}
-                              }
-                            />
-                          ) : (
-                            <ShipmentWarehouseCard warehouse={warehouse} readOnly />
-                          )}
+                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WARE_HOUSE]) ? (
+                              <ShipmentWarehouseCard
+                                warehouse={warehouse}
+                                onClick={() => slideToggle(true)}
+                              />
+                            ) : (
+                              <ShipmentWarehouseCard warehouse={warehouse} readOnly />
+                            ))}
 
                           <SlideView
                             isOpen={opened}
