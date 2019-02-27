@@ -11,6 +11,7 @@ import {
   CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
   CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
@@ -119,7 +120,7 @@ const ContainerSection = () => {
                           allowUpdate || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
                         }
                         approvable={
-                          allowUpdate || hasPermission(CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE)
+                          allowUpdate || hasPermission(CONTAINER_APPROVE_AGREE_ARRIVAL_DATE)
                         }
                       />
                     </GridColumn>
