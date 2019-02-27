@@ -5,8 +5,13 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
 import { calculatePackageQuantity } from 'utils/batch';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_ADD_BATCH_IN_CONTAINER,
+  SHIPMENT_ADD_BATCH,
+} from 'modules/permission/constants/shipment';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { ShipmentContainerBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
@@ -54,7 +59,8 @@ export default function ContainerBatchesArea({
   selectedBatches,
   setSelectedBatches,
 }: Props) {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
@@ -99,37 +105,40 @@ export default function ContainerBatchesArea({
                       </div>
                     </div>
 
-                    {batchesInContainer.length > 0 && allowToUpdate && (
-                      <>
-                        {isSelectBatchesMode ? (
-                          <>
-                            <div className={SubTitleWrapperStyle}>
-                              <FormattedMessage
-                                id="modules.Shipments.selected"
-                                defaultMessage="SELECTED {numOfBatches}"
-                                values={{
-                                  numOfBatches: <FormattedNumber value={selectedBatches.length} />,
-                                }}
-                              />
-                              <div className={SubTitleIconStyle}>
-                                <Icon icon="BATCH" />
+                    {batchesInContainer.length > 0 &&
+                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH_IN_CONTAINER]) && (
+                        <>
+                          {isSelectBatchesMode ? (
+                            <>
+                              <div className={SubTitleWrapperStyle}>
+                                <FormattedMessage
+                                  id="modules.Shipments.selected"
+                                  defaultMessage="SELECTED {numOfBatches}"
+                                  values={{
+                                    numOfBatches: (
+                                      <FormattedNumber value={selectedBatches.length} />
+                                    ),
+                                  }}
+                                />
+                                <div className={SubTitleIconStyle}>
+                                  <Icon icon="BATCH" />
+                                </div>
                               </div>
-                            </div>
-                            <CancelButton onClick={() => setIsSelectBatchesMode(false)} />
-                          </>
-                        ) : (
-                          <MoveButton
-                            label={
-                              <FormattedMessage
-                                id="modules.Shipments.moveBatches"
-                                defaultMessage="MOVE BATCHES"
-                              />
-                            }
-                            onClick={() => setIsSelectBatchesMode(true)}
-                          />
-                        )}
-                      </>
-                    )}
+                              <CancelButton onClick={() => setIsSelectBatchesMode(false)} />
+                            </>
+                          ) : (
+                            <MoveButton
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.moveBatches"
+                                  defaultMessage="MOVE BATCHES"
+                                />
+                              }
+                              onClick={() => setIsSelectBatchesMode(true)}
+                            />
+                          )}
+                        </>
+                      )}
                   </div>
                   <div className={BatchesGridStyle}>
                     {batchesInContainer.map((batch, position) => (
@@ -253,7 +262,7 @@ export default function ContainerBatchesArea({
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>
-              {!isSelectBatchesMode && allowToUpdate && (
+              {!isSelectBatchesMode && hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) && (
                 <>
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
