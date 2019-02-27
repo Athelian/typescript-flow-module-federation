@@ -23,7 +23,7 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, id, tags, no, ...shipment }: Props) {
+export default function Shipment({ wrapperClassName, id, no, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const { showTag, clone } = state;
