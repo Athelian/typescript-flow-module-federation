@@ -38,7 +38,7 @@ function BatchesSection() {
 
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
   const allowAddBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_ADD);
-  const allowCreateBatches = allowUpdate || hasPermission(BATCH_CREATE);
+  const allowCreateBatches = hasPermission(BATCH_CREATE);
   const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
 
   return (
