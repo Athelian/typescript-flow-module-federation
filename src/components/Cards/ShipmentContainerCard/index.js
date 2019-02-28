@@ -193,7 +193,8 @@ const ShipmentContainerCard = ({
               <div className={DividerStyle} />
 
               <div className={IconInputStyle}>
-                {editable.warehouse &&
+                {warehouse &&
+                  warehouse.id &&
                   (editable.viewWarehouse ? (
                     <Link
                       className={WarehouseIconStyle(true)}
@@ -210,8 +211,8 @@ const ShipmentContainerCard = ({
                     </div>
                   ))}
 
-                {!editable.warehouse && (
-                  <div className={WarehouseIconStyle(!isNullOrUndefined(warehouse))}>
+                {!warehouse && (
+                  <div className={WarehouseIconStyle(false)}>
                     <Icon icon="WAREHOUSE" />
                   </div>
                 )}
