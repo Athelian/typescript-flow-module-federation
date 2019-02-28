@@ -76,6 +76,7 @@ const ContainerSection = () => {
                             defaultMessage="CONTAINER NO"
                           />
                         }
+                        // TODO: || set
                         editable={allowUpdate}
                       />
                     )}
@@ -115,6 +116,7 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalAgreedDateApprovedBy"
                         approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                         setFieldValue={setFieldValue}
+                        // TODO: remove editable prop
                         editable={allowUpdate}
                         assignable={
                           allowUpdate || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
@@ -159,6 +161,7 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalActualDateApprovedBy"
                         approvedBy={values.warehouseArrivalActualDateApprovedBy}
                         setFieldValue={setFieldValue}
+                        // TODO: remove editable prop
                         editable={allowUpdate}
                         assignable={
                           allowUpdate || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
@@ -175,6 +178,7 @@ const ContainerSection = () => {
                   <Label>
                     <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                   </Label>
+                  {/* TODO: (a || b) && warehouse list */}
                   {allowUpdate || hasPermission(CONTAINER_SET_WAREHOUSE) ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
@@ -242,6 +246,7 @@ const ContainerSection = () => {
                     onChange={(field, value) => {
                       setFieldValue(field, value);
                     }}
+                    // TODO: (a || b) && tag list
                     editable={allowUpdate || hasPermission(CONTAINER_SET_TAGS)}
                   />
                 }

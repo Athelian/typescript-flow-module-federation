@@ -17,6 +17,7 @@ import CustomFieldsForm from './CustomFieldsForm';
 import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, CustomFieldsIconStyle } from './style';
 
+// TODO: editable : { values, mask }
 type OptionalProps = {
   editable: boolean,
 };

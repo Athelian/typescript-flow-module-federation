@@ -66,6 +66,7 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={TimelineWrapperStyle}>
               <VerticalLayout shipment={values} />
               <VoyageSelector
+                // TODO: change to update || ( rest && and add && vesselname && vesselcode)
                 readOnly={
                   !hasPermission([
                     SHIPMENT_UPDATE,
@@ -74,7 +75,6 @@ const TimelineSection = ({ isNew }: Props) => {
                     SHIPMENT_SET_REVISE_TIMELINE_DATE,
                     SHIPMENT_APPROVE_TIMELINE_DATE,
                     SHIPMENT_ASSIGN_TIMELINE_DATE,
-                    SHIPMENT_SET_WAREHOUSE,
                   ])
                 }
                 shipment={values}
@@ -115,6 +115,7 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <VoyageInfoSection
                 id="firstVoyage"
+                // TODO: put perms inside
                 readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                 isNew={isNew}
                 icon={getTransportIcon(values.transportType)}
@@ -325,6 +326,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                   renderBelowHeader={
+                    // TODO: add && warehouse.list
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>

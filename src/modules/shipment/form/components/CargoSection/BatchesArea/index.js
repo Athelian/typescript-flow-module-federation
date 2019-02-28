@@ -151,24 +151,6 @@ function BatchesArea({
                         {isSelectBatchesMode ? (
                           <ShipmentBatchCard
                             batch={batch}
-                            editable={{
-                              no: hasPermission([SHIPMENT_UPDATE, BATCH_SET_NO]),
-                              quantity: hasPermission([SHIPMENT_UPDATE, BATCH_SET_QUANTITY]),
-                              deliveredAt: hasPermission([
-                                SHIPMENT_UPDATE,
-                                BATCH_SET_DELIVERY_DATE,
-                              ]),
-                              desiredAt: hasPermission([SHIPMENT_UPDATE, BATCH_SET_DESIRED_DATE]),
-                              deleteBatch: hasPermission([
-                                SHIPMENT_UPDATE,
-                                SHIPMENT_REMOVE_BATCH_IN_CONTAINER,
-                              ]),
-                              cloneBatch: hasPermission([
-                                SHIPMENT_UPDATE,
-                                SHIPMENT_ADD_BATCH_IN_CONTAINER,
-                              ]),
-                              viewOrder: hasPermission([ORDER_FORM]),
-                            }}
                             selectable
                             selected={selectedBatches.includes(batch)}
                             onSelect={() => setSelectedBatches(batch)}
@@ -203,6 +185,7 @@ function BatchesArea({
 
                                 <ShipmentBatchCard
                                   editable={{
+                                    // TODO: change all shipment_update to batch update
                                     no: hasPermission([SHIPMENT_UPDATE, BATCH_SET_NO]),
                                     quantity: hasPermission([SHIPMENT_UPDATE, BATCH_SET_QUANTITY]),
                                     deliveredAt: hasPermission([
@@ -213,15 +196,19 @@ function BatchesArea({
                                       SHIPMENT_UPDATE,
                                       BATCH_SET_DESIRED_DATE,
                                     ]),
+                                    // TODO: if has container SHIPMENT_REMOVE_BATCH_IN_CONTAINER else SHIPMENT_REMOVE_BATCH
                                     deleteBatch: hasPermission([
                                       SHIPMENT_UPDATE,
                                       SHIPMENT_REMOVE_BATCH_IN_CONTAINER,
                                     ]),
+                                    // TODO: (if has container SHIPMENT_ADD_BATCH_IN_CONTAINER else SHIPMENT_ADD_BATCH) && batch.create
                                     cloneBatch: hasPermission([
                                       SHIPMENT_UPDATE,
                                       SHIPMENT_ADD_BATCH_IN_CONTAINER,
                                     ]),
                                     viewOrder: hasPermission([ORDER_FORM]),
+                                    // TODO: add for product icon product_form
+                                    // TODO: add for container icon container_form
                                   }}
                                   batch={batch}
                                   saveOnBlur={updateBatch => {
@@ -289,8 +276,10 @@ function BatchesArea({
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>
+              {/* TODO: remove the full wrap */}
               {!isSelectBatchesMode && hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) && (
                 <>
+                  {/* TODO: (shipment_update || shipment_add_batch) && batch list */}
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                       <>
@@ -327,6 +316,7 @@ function BatchesArea({
                       </>
                     )}
                   </BooleanValue>
+                  {/* TODO: (shipment_update || shipment_add_batch) && batch create && items list */}
                   <BooleanValue>
                     {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                       <>
