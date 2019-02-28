@@ -100,9 +100,10 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                   errorMessage={
                     !validation.isValidSync({ quantity }) && (
                       <FormattedMessage
-                        id="modules.RelationMap.split.validationErrorMessage"
-                        defaultMessage="Cannot split Batch that has quantity less than {max}"
+                        id="modules.RelationMap.split.validationError"
+                        defaultMessage="Please enter the number between {min} and {max}"
                         values={{
+                          min: activeTab + 1,
                           max,
                         }}
                       />
@@ -151,9 +152,10 @@ function SplitPanel({ intl, onSplit, max }: Props) {
                   errorMessage={
                     !validation.isValidSync({ quantity }) && (
                       <FormattedMessage
-                        id="modules.RelationMap.split.validationErrorMessage"
-                        defaultMessage="Cannot split Batch that has quantity less than {max}"
+                        id="modules.RelationMap.split.validationError"
+                        defaultMessage="Please enter the number between {min} and {max}"
                         values={{
+                          min: activeTab + 1,
                           max,
                         }}
                       />
