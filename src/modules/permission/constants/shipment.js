@@ -28,3 +28,7 @@ export const SHIPMENT_SET_REVISE_TIMELINE_DATE = 'shipment.shipments.reviseTimel
 export const SHIPMENT_APPROVE_TIMELINE_DATE = 'shipment.shipments.approveTimelineDate';
 export const SHIPMENT_ASSIGN_TIMELINE_DATE = 'shipment.shipments.assignTimelineDate';
 export const SHIPMENT_SET_WAREHOUSE = 'shipment.shipments.setWarehouse';
+export const SHIPMENT_ADD_BATCH = 'shipment.batches.add';
+export const SHIPMENT_REMOVE_BATCH = 'shipment.batches.remove';
+export const SHIPMENT_ADD_BATCH_IN_CONTAINER = 'shipment.containerBatches.add';
+export const SHIPMENT_REMOVE_BATCH_IN_CONTAINER = 'shipment.containerBatches.remove';

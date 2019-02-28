@@ -13,13 +13,16 @@ import {
 
 type Props = {
   isOpen: boolean,
+  removable: boolean,
   onRequestClose: Function,
   onCancel: Function,
   onToBatchesPool: Function,
   onRemove: Function,
 };
+
 function RemoveContainerConfirmDialog({
   isOpen,
+  removable,
   onRequestClose,
   onCancel,
   onToBatchesPool,
@@ -52,27 +55,47 @@ function RemoveContainerConfirmDialog({
             />
           </div>
           <div>
-            <FormattedMessage
-              id="modules.shipment.moveToBatchesPoolOrRemove"
-              defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool} or to be {REMOVED}?"
-              values={{
-                Batches: spanWithColor(
-                  <FormattedMessage id="modules.shipment.Batches" defaultMessage="Batches" />,
-                  'BATCH'
-                ),
-                BatchesPool: spanWithColor(
-                  <FormattedMessage
-                    id="modules.shipment.BatchesPool"
-                    defaultMessage="Batches Pool"
-                  />,
-                  'BATCH'
-                ),
-                REMOVED: spanWithColor(
-                  <FormattedMessage id="modules.shipment.REMOVED" defaultMessage="REMOVED" />,
-                  'RED'
-                ),
-              }}
-            />
+            {removable ? (
+              <FormattedMessage
+                id="modules.shipment.moveToBatchesPoolOrRemove"
+                defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool} or to be {REMOVED}?"
+                values={{
+                  Batches: spanWithColor(
+                    <FormattedMessage id="modules.shipment.Batches" defaultMessage="Batches" />,
+                    'BATCH'
+                  ),
+                  BatchesPool: spanWithColor(
+                    <FormattedMessage
+                      id="modules.shipment.BatchesPool"
+                      defaultMessage="Batches Pool"
+                    />,
+                    'BATCH'
+                  ),
+                  REMOVED: spanWithColor(
+                    <FormattedMessage id="modules.shipment.REMOVED" defaultMessage="REMOVED" />,
+                    'RED'
+                  ),
+                }}
+              />
+            ) : (
+              <FormattedMessage
+                id="modules.shipment.moveToBatchesPool"
+                defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool}?"
+                values={{
+                  Batches: spanWithColor(
+                    <FormattedMessage id="modules.shipment.Batches" defaultMessage="Batches" />,
+                    'BATCH'
+                  ),
+                  BatchesPool: spanWithColor(
+                    <FormattedMessage
+                      id="modules.shipment.BatchesPool"
+                      defaultMessage="Batches Pool"
+                    />,
+                    'BATCH'
+                  ),
+                }}
+              />
+            )}
           </div>
         </div>
         <div className={ButtonsStyle}>
@@ -90,15 +113,17 @@ function RemoveContainerConfirmDialog({
             hoverBackgroundColor="TEAL_DARK"
             onClick={onToBatchesPool}
           />
-          <BaseButton
-            label={<FormattedMessage id="modules.shipment.remove" defaultMessage="REMOVE" />}
-            icon="CLEAR"
-            textColor="WHITE"
-            hoverTextColor="WHITE"
-            backgroundColor="RED"
-            hoverBackgroundColor="RED_DARK"
-            onClick={onRemove}
-          />
+          {removable && (
+            <BaseButton
+              label={<FormattedMessage id="modules.shipment.remove" defaultMessage="REMOVE" />}
+              icon="CLEAR"
+              textColor="WHITE"
+              hoverTextColor="WHITE"
+              backgroundColor="RED"
+              hoverBackgroundColor="RED_DARK"
+              onClick={onRemove}
+            />
+          )}
         </div>
       </div>
     </Dialog>
