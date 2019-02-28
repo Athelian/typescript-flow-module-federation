@@ -1123,11 +1123,14 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
-                  max={getByPathWithDefault(
-                    0,
-                    `${uiSelectors.targetedBatchId()}.quantity`,
-                    batches
-                  )}
+                  max={
+                    getByPathWithDefault(0, `${uiSelectors.targetedBatchId()}.quantity`, batches) +
+                    getByPathWithDefault(
+                      0,
+                      `${uiSelectors.targetedBatchId()}.totalAdjusted`,
+                      batches
+                    )
+                  }
                   onSplit={async inputData => {
                     const { type, quantity } = inputData;
                     const id = uiSelectors.targetedBatchId();
