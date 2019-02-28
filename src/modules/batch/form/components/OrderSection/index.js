@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { getByPath } from 'utils/fp';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
@@ -25,9 +26,7 @@ function OrderSection() {
       <Subscribe to={[BatchFormContainer]}>
         {({ originalValues, state }) => {
           const values = { ...originalValues, ...state };
-          const {
-            orderItem: { order },
-          } = values;
+          const order = getByPath('orderItem.order', values);
           return (
             <div className={OrderSectionWrapperStyle}>
               <SectionNavBar>
