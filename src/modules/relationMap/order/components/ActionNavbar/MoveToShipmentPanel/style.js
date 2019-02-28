@@ -1,5 +1,79 @@
+// @flow
 import styled, { css } from 'react-emotion';
-import { layout, colors, shadows } from 'styles/common';
+import { presets, layout, colors, shadows, fontSizes } from 'styles/common';
+
+export const MoveToShipmentPanelWrapperStyle: string = css`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 0;
+  background-color: ${colors.TEAL_LIGHT};
+  ${shadows.HEADER};
+  z-index: 1;
+`;
+
+export const MoveToShipmentLabelAndMessageWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  ${shadows.HEADER_RIGHT};
+  height: 100%;
+  flex: 1;
+`;
+
+export const MoveToShipmentLabelWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  color: ${colors.TEAL_DARK};
+  ${fontSizes.SMALL};
+  padding: 0 0 0 20px;
+`;
+
+export const MoveToShipmentMessageWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  color: ${colors.TEAL_DARK};
+  ${fontSizes.SMALL};
+  flex: 1;
+`;
+
+export const MoveToNewShipmentWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  color: ${colors.TEAL_DARK};
+  ${fontSizes.SMALL};
+  ${shadows.HEADER_RIGHT};
+  position: relative;
+  height: 100%;
+  padding: 0 20px;
+`;
+
+export const MoveToShipmentButtonsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  align-items: center;
+  padding: 0 0 0 20px;
+  grid-gap: 10px;
+`;
+
+export const MoveToShipmentSuccessPanelWrapperStyle: string = css`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: ${colors.TEAL};
+  ${shadows.HEADER};
+  z-index: 1;
+`;
+
+export const MoveToShipmentSuccessCloseButtonStyle: string = css`
+  ${presets.BUTTON};
+  ${fontSizes.HUGE};
+  color: ${colors.WHITE};
+  width: 50px;
+  height: 50px;
+  &:hover,
+  :focus {
+    color: ${colors.TEAL_DARK};
+  }
+`;
 
 export const PanelWrapperStyle = css`
   ${layout.LAYOUT};
@@ -10,17 +84,6 @@ export const PanelWrapperStyle = css`
   background: ${colors.GRAY_SUPER_LIGHT};
   position: relative;
   color: ${colors.GRAY_DARK};
-
-  /* &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    ${shadows.HEADER};
-  } */
 `;
 
 export const Panel = styled('div')`
@@ -118,13 +181,6 @@ export const SuccessPanelButtonCloseStyle = css`
   &:hover {
     color: ${colors.TEAL};
   }
-`;
-
-export const CancelPanel = flex => css`
-  flex: ${flex || 1};
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const PanelButtonStyle = css`

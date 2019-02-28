@@ -1,24 +1,24 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, transitions, fontSizes } from 'styles/common';
+import { colors, transitions, fontSizes, presets } from 'styles/common';
 
 export const HighlightBarWrapper: string = css`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   height: 50px;
-  padding: 0 10px;
+  padding: 0 10px 0 0;
   background-color: ${colors.HIGHLIGHT};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   ${transitions.EXPAND};
 `;
+
 export const ActionSection1WrapperStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* width: 100%; */
   height: 50px;
-  padding: 0 10px;
+  padding: 0 10px 0 0;
   background-color: ${colors.TEAL_HALF};
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
@@ -44,7 +44,7 @@ export const ActionsSelectedStyle: string = css`
 `;
 
 export const ActionSelectedLabelStyle: string = css`
-  margin-right: 50px;
+  margin-right: 20px;
   padding: 0;
   color: ${colors.TEAL_VERY_DARK};
   font-weight: bold;
@@ -70,13 +70,13 @@ export const TabItemWrapperStyle = css`
 `;
 
 export const CancelButtonStyle = css`
-  margin-right: 5px;
-
+  ${presets.BUTTON};
   ${fontSizes.HUGE};
-  cursor: pointer;
-  user-select: none;
   color: ${colors.TEAL_QUITE_DARK};
-  &:hover {
+  width: 50px;
+  height: 50px;
+  &:hover,
+  :focus {
     color: ${colors.TEAL};
   }
 `;
@@ -89,12 +89,11 @@ export const HighlightLabelStyle: string = css`
 `;
 
 export const CancelHighlightButton = css`
-  margin-right: 5px;
-
+  ${presets.BUTTON};
   ${fontSizes.HUGE};
-  cursor: pointer;
-  user-select: none;
   color: ${colors.ORDER_ITEM_VERY_DARK};
+  width: 50px;
+  height: 50px;
   &:hover {
     color: ${colors.HIGHLIGHT_DARK};
   }
@@ -118,7 +117,7 @@ export const ItemWrapper = (active: boolean) => css`
 `;
 
 export const IconWrapper = (active: boolean) => css`
-  margin-right: 20px;
+  margin-right: 10px;
   color: ${getItemColor(active)};
 `;
 

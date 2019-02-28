@@ -22,7 +22,7 @@ const defaultProps = {
   align: 'left',
   height: '20px',
   width: '100%',
-  color: '',
+  color: 'GRAY_DARK',
 };
 
 const Label = ({ required, align, height, width, children, className, color }: Props) => (

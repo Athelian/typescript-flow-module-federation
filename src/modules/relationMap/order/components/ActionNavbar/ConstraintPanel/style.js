@@ -1,15 +1,15 @@
+// @flow
 import { css } from 'react-emotion';
-import { colors } from 'styles/common';
+import { colors, shadows } from 'styles/common';
 
-export const ContainerWrapper = css`
+export const ConstraintPanelWrapperStyle: string = css`
+  height: 50px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 50px;
   background-color: ${colors.TEAL_LIGHT};
+  ${shadows.HEADER};
+  z-index: 1;
 `;
 
-export const LabelStyle = css`
-  padding: 3px 0;
-`;
+export default ConstraintPanelWrapperStyle;

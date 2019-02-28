@@ -1,22 +1,21 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Label } from 'components/Form';
 import messages from 'modules/relationMap/messages';
-import { ConfirmMessageContainer, ConfirmActionStyle } from './style';
+import { ConfirmMessageContainer, ConfirmActionStyle, LabelConfirmDeleteStyle } from './style';
 
 const DisconnectConfirmMessage = () => (
   <div className={ConfirmMessageContainer}>
-    <div>
+    <div className={LabelConfirmDeleteStyle}>
       <FormattedMessage {...messages.confirmMessage} />
+      <span className={ConfirmActionStyle}>
+        <FormattedMessage {...messages.disconnect} />
+      </span>
+      <FormattedMessage {...messages.confirmDisconnect} />
     </div>
-    <span className={ConfirmActionStyle}>
-      <FormattedMessage {...messages.disconnect} />
-    </span>
-    <FormattedMessage {...messages.confirmDisconnect} />
-    <Label>
+    <div className={LabelConfirmDeleteStyle}>
       <FormattedMessage {...messages.confirmSubMessage} />
-    </Label>
+    </div>
   </div>
 );
 

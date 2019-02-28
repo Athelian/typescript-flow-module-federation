@@ -15,7 +15,7 @@ export const LabelWrapperStyle = ({ align, height, width, color }: LabelWrapperT
   line-height: ${height};
   ${fontSizes.SMALL};
   ${presets.ELLIPSIS};
-  color: ${colors[color] || colors.GRAY_DARK};
+  color: ${colors[color]};
   letter-spacing: 2px;
   user-select: none;
   padding: 0 5px;

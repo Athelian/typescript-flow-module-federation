@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { Label } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
 import messages from 'modules/relationMap/messages';
 import { ConfirmLabelStyle, CurrencyLabelStyle } from './style';
@@ -24,34 +23,28 @@ const ConfirmMessage = ({
 }: Props) => {
   return (
     <>
-      <div>
-        {hasSelectedOrderItem && !selectAllBatch && (
-          <Label className={ConfirmLabelStyle} align="center">
-            <FormattedMessage {...messages.deleteUnSelectBatch} />
-          </Label>
-        )}
-        {hasDiffCurrency && (
-          <Label className={ConfirmLabelStyle} align="center">
-            <FormattedMessage {...messages.diffCurrency} />
-            <Label className={CurrencyLabelStyle} align="center">
-              {baseCurrency}
-            </Label>
-            {totalDiff === 1 && (
-              <Label align="center">
-                <FormattedMessage {...messages.diffSingleCurrency} />
-                <Label className={CurrencyLabelStyle} align="center">
-                  {diffCurrency}
-                </Label>
-              </Label>
-            )}
-            {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
-            <FormattedMessage {...messages.diffCurrencyAction} />
-          </Label>
-        )}
-      </div>
-      <Label className={ConfirmLabelStyle} align="center">
+      {hasSelectedOrderItem && !selectAllBatch && (
+        <div className={ConfirmLabelStyle}>
+          <FormattedMessage {...messages.deleteUnSelectBatch} />
+        </div>
+      )}
+      {hasDiffCurrency && (
+        <div className={ConfirmLabelStyle}>
+          <FormattedMessage {...messages.diffCurrency} />
+          <div className={CurrencyLabelStyle}>{baseCurrency}</div>
+          {totalDiff === 1 && (
+            <>
+              <FormattedMessage {...messages.diffSingleCurrency} />
+              <div className={CurrencyLabelStyle}>{diffCurrency}</div>
+            </>
+          )}
+          {totalDiff > 1 && <FormattedMessage {...messages.diffMultipleCurrency} />}
+          <FormattedMessage {...messages.diffCurrencyAction} />
+        </div>
+      )}
+      <div className={ConfirmLabelStyle}>
         <FormattedMessage {...messages.areYouSure} />
-      </Label>
+      </div>
     </>
   );
 };

@@ -4,11 +4,16 @@ import { BooleanValue } from 'react-values';
 import { Label } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import { BaseButton } from 'components/Buttons';
+import { CancelButton, YesButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import ConfirmMessage from './ConfirmMessage';
-import { LabelConnectStyle, GroupLabelButtonStyle, Panel, FlatButtonStyle } from './style';
+import {
+  MoveToOrderPanelWrapperStyle,
+  MoveToOrderLabelWrapperStyle,
+  MoveToOrderMessageWrapperStyle,
+  MoveToOrderButtonsWrapperStyle,
+} from './style';
 
 type Props = {
   hasSelectedAllBatches: boolean,
@@ -26,24 +31,28 @@ const ApplyPanel = ({
   currencies,
 }: Props) => {
   return (
-    <Panel>
-      <Label className={LabelConnectStyle}>
-        <FormattedMessage {...messages.connect} />
-        <Icon icon="CONNECT" />
-      </Label>
-      <Label className={GroupLabelButtonStyle}>
-        <FormattedMessage {...messages.askConnectToOrder} />
-        <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={onReset} />
+    <div className={MoveToOrderPanelWrapperStyle}>
+      <div className={MoveToOrderLabelWrapperStyle}>
+        <Icon icon="EXCHANGE" />
+        <Label color="TEAL_DARK">
+          <FormattedMessage {...messages.connect} />
+        </Label>
+        <Icon icon="ORDER" />
+      </div>
+
+      <div className={MoveToOrderMessageWrapperStyle}>
+        <Label color="TEAL_DARK" align="CENTER">
+          <FormattedMessage {...messages.askConnectToOrder} />
+        </Label>
+      </div>
+
+      <div className={MoveToOrderButtonsWrapperStyle}>
+        <CancelButton onClick={onReset} />
+
         <BooleanValue>
           {({ value: isOpen, set: dialogToggle }) => (
             <>
-              <BaseButton
-                icon="CONFIRM"
-                label={
-                  <FormattedMessage id="components.NavBar.filter.apply" defaultMessage="APPLY" />
-                }
-                onClick={() => dialogToggle(true)}
-              />
+              <YesButton onClick={() => dialogToggle(true)} />
               <ConfirmDialog
                 isOpen={isOpen}
                 onRequestClose={() => dialogToggle(false)}
@@ -69,8 +78,8 @@ const ApplyPanel = ({
             </>
           )}
         </BooleanValue>
-      </Label>
-    </Panel>
+      </div>
+    </div>
   );
 };
 
