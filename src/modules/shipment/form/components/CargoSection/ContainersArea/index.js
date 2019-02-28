@@ -5,8 +5,17 @@ import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
-import { CONTAINER_CREATE } from 'modules/permission/constants/container';
+import { SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
+import {
+  CONTAINER_CREATE,
+  CONTAINER_SET_WAREHOUSE,
+  CONTAINER_UPDATE,
+  CONTAINER_SET_NO,
+  CONTAINER_SET_AGREE_ARRIVAL_DATE,
+  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+} from 'modules/permission/constants/container';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -70,7 +79,6 @@ const cleanBatchesContainerByContainerId = (
 function ContainersArea({ selectCardId, setSelected }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
@@ -144,7 +152,38 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                       <>
                                         <ShipmentContainerCard
                                           container={container}
-                                          readOnly={!allowToUpdate}
+                                          editable={{
+                                            no: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_SET_NO,
+                                            ]),
+                                            warehouse: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_SET_WAREHOUSE,
+                                            ]),
+                                            warehouseArrivalAgreedDate: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_SET_AGREE_ARRIVAL_DATE,
+                                            ]),
+                                            warehouseArrivalAgreedDateApprovedBy: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+                                            ]),
+                                            warehouseArrivalActualDate: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+                                            ]),
+                                            warehouseArrivalActualDateApprovedBy: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+                                            ]),
+                                          }}
                                           update={newContainer => {
                                             setDeepFieldValue(
                                               `containers.${position}`,
@@ -153,12 +192,15 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                           }}
                                           onClick={() => toggleContainerForm(true)}
                                           onSelectWarehouse={
-                                            allowToUpdate
+                                            hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              CONTAINER_SET_WAREHOUSE,
+                                            ])
                                               ? () => toggleSelectWarehouse(true)
                                               : () => {}
                                           }
                                           actions={[
-                                            allowToUpdate && (
+                                            hasPermission([SHIPMENT_UPDATE, CONTAINER_UPDATE]) && (
                                               <CardAction
                                                 icon="REMOVE"
                                                 hoverColor="RED"
@@ -184,6 +226,10 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                           isOpen={isOpenDialog}
                                           onRequestClose={() => toggleDialog(false)}
                                           onCancel={() => toggleDialog(false)}
+                                          removable={hasPermission([
+                                            SHIPMENT_UPDATE,
+                                            SHIPMENT_REMOVE_BATCH,
+                                          ])}
                                           onToBatchesPool={() => {
                                             updateBatchesState(
                                               'batches',

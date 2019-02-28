@@ -39,7 +39,7 @@ type OptionalProps = {
   onClick: (container: Object) => void,
   onRemove: (container: Object) => void,
   selectable: boolean,
-  readOnly: boolean,
+  editable: Object,
   actions: Array<React.Node>,
 };
 
@@ -54,7 +54,14 @@ const defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   selectable: false,
-  readOnly: false,
+  editable: {
+    no: false,
+    warehouse: false,
+    warehouseArrivalAgreedDate: false,
+    warehouseArrivalAgreedDateApprovedBy: false,
+    warehouseArrivalActualDate: false,
+    warehouseArrivalActualDateApprovedBy: false,
+  },
   actions: [],
 };
 
@@ -65,7 +72,7 @@ const ShipmentContainerCard = ({
   onSelectWarehouse,
   update,
   selectable,
-  readOnly,
+  editable,
   ...rest
 }: Props) => {
   if (!container) return '';
@@ -137,7 +144,7 @@ const ShipmentContainerCard = ({
                       inputWidth="185px"
                       inputHeight="20px"
                       inputAlign="left"
-                      editable={!readOnly}
+                      editable={editable.no}
                       {...{
                         ...inputHandlers,
                         onBlur: evt => {
@@ -179,23 +186,30 @@ const ShipmentContainerCard = ({
               <div className={DividerStyle} />
 
               <div className={IconInputStyle}>
-                {isNullOrUndefined(warehouse) ? (
-                  <div className={WarehouseIconStyle(false)}>
+                {editable.warehouse &&
+                  (isNullOrUndefined(warehouse) ? (
+                    <div className={WarehouseIconStyle(false)}>
+                      <Icon icon="WAREHOUSE" />
+                    </div>
+                  ) : (
+                    <Link
+                      className={WarehouseIconStyle(true)}
+                      to={`/warehouse/${encodeId(warehouse.id)}`}
+                      onClick={evt => {
+                        evt.stopPropagation();
+                      }}
+                    >
+                      <Icon icon="WAREHOUSE" />
+                    </Link>
+                  ))}
+
+                {!editable.warehouse && (
+                  <div className={WarehouseIconStyle(!isNullOrUndefined(warehouse))}>
                     <Icon icon="WAREHOUSE" />
                   </div>
-                ) : (
-                  <Link
-                    className={WarehouseIconStyle(true)}
-                    to={`/warehouse/${encodeId(warehouse.id)}`}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <Icon icon="WAREHOUSE" />
-                  </Link>
                 )}
 
-                {!readOnly ? (
+                {editable.warehouse ? (
                   <button
                     type="button"
                     onClick={evt => {
@@ -239,7 +253,7 @@ const ShipmentContainerCard = ({
                       inputHeight="20px"
                       inputAlign="left"
                       name={fieldName}
-                      editable={!readOnly}
+                      editable={editable.warehouseArrivalAgreedDate}
                       isNew={false}
                       originalValue={warehouseArrivalAgreedDate}
                       {...{
@@ -261,10 +275,13 @@ const ShipmentContainerCard = ({
                 {warehouseArrivalAgreedDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true, !readOnly)}
+                    className={ApprovalIconStyle(
+                      true,
+                      editable.warehouseArrivalAgreedDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalAgreedDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalAgreedDateApprovedBy: null,
@@ -277,10 +294,13 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false, !readOnly)}
+                    className={ApprovalIconStyle(
+                      false,
+                      editable.warehouseArrivalAgreedDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalAgreedDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalAgreedDateApprovedBy: user,
@@ -317,7 +337,7 @@ const ShipmentContainerCard = ({
                       inputAlign="left"
                       name={fieldName}
                       isNew={false}
-                      editable={!readOnly}
+                      editable={editable.warehouseArrivalActualDate}
                       originalValue={warehouseArrivalActualDate}
                       {...{
                         ...inputHandlers,
@@ -338,10 +358,13 @@ const ShipmentContainerCard = ({
                 {warehouseArrivalActualDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true, !readOnly)}
+                    className={ApprovalIconStyle(
+                      true,
+                      editable.warehouseArrivalActualDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalActualDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalActualDateApprovedBy: null,
@@ -354,10 +377,13 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false, !readOnly)}
+                    className={ApprovalIconStyle(
+                      false,
+                      editable.warehouseArrivalActualDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalActualDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalActualDateApprovedBy: user,
