@@ -3,7 +3,7 @@ import log from 'loglevel';
 import { isAppInProduction } from './env';
 
 if (isAppInProduction) {
-  log.setLevel('warn');
+  log.setLevel('error');
 }
 
 export default log;
