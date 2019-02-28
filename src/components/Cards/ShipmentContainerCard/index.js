@@ -8,7 +8,13 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display, DefaultStyle, TextInputFactory, DateInputFactory } from 'components/Form';
+import {
+  Label,
+  Display,
+  DefaultStyle,
+  TextInputFactory,
+  DateTimeInputFactory,
+} from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import { calculateContainerTotalVolume } from 'modules/container/utils';
@@ -248,7 +254,7 @@ const ShipmentContainerCard = ({
                   initValue={warehouseArrivalAgreedDate}
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
+                    <DateTimeInputFactory
                       inputWidth="165px"
                       inputHeight="20px"
                       inputAlign="left"
@@ -331,7 +337,7 @@ const ShipmentContainerCard = ({
                   initValue={warehouseArrivalActualDate}
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
+                    <DateTimeInputFactory
                       inputWidth="165px"
                       inputHeight="20px"
                       inputAlign="left"
