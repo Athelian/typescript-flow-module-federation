@@ -8,7 +8,7 @@ import {
   MoveToOrderSuccessPanelWrapperStyle,
   MoveToOrderLabelWrapperStyle,
   MoveToOrderMessageWrapperStyle,
-  SuccessPanelButtonCloseStyle,
+  MoveToOrderSuccessCloseButtonStyle,
 } from './style';
 
 type Props = {
@@ -31,7 +31,7 @@ const SuccessPanel = ({ onClick }: Props) => (
       </Label>
     </div>
 
-    <button className={SuccessPanelButtonCloseStyle} type="button" onClick={onClick}>
+    <button className={MoveToOrderSuccessCloseButtonStyle} type="button" onClick={onClick}>
       <Icon icon="CLEAR" />
     </button>
   </div>
