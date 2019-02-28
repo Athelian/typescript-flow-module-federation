@@ -7,7 +7,7 @@ import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import BatchFormContainer from 'modules/batch/form/container';
-import { BATCH_ORDERS_LIST, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import { BATCH_ORDERS_LIST } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 
@@ -16,7 +16,7 @@ import { OrderSectionWrapperStyle, OrderSectionBodyStyle, EmptyMessageStyle } fr
 function OrderSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  if (!hasPermission([BATCH_UPDATE, BATCH_ORDERS_LIST])) return null;
+  if (!hasPermission(BATCH_ORDERS_LIST)) return null;
   return (
     <SectionWrapper id="batch_orderSection">
       <SectionHeader
