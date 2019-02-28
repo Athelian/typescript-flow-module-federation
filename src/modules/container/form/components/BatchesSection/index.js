@@ -35,125 +35,121 @@ import {
 function BatchesSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
+  const allowAddBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_ADD);
+  const allowCreateBatches = allowUpdate || hasPermission(BATCH_CREATE);
+  const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
 
   return (
     <div className={BatchesSectionWrapperStyle}>
       <SectionNavBar>
-        {allowUpdate && (
-          <>
-            {hasPermission(CONTAINER_BATCHES_ADD) && (
-              <BooleanValue>
-                {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
-                  <>
-                    <NewButton
-                      data-testid="selectBatchesButton"
-                      label={
-                        <FormattedMessage
-                          id="modules.Shipments.selectBatches"
-                          defaultMessage="SELECT BATCHES"
-                        />
-                      }
-                      onClick={() => selectBatchesSlideToggle(true)}
+        {allowAddBatches && (
+          <BooleanValue>
+            {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
+              <>
+                <NewButton
+                  data-testid="selectBatchesButton"
+                  label={
+                    <FormattedMessage
+                      id="modules.Shipments.selectBatches"
+                      defaultMessage="SELECT BATCHES"
                     />
-                    <SlideView
-                      isOpen={selectBatchesIsOpen}
-                      onRequestClose={() => selectBatchesSlideToggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {selectBatchesIsOpen && (
-                        <Subscribe to={[ContainerFormContainer]}>
-                          {({ state: { batches }, setFieldValue }) => (
-                            <SelectBatches
-                              selectedBatches={batches}
-                              onSelect={selected => {
-                                const selectedBatches = selected.map(selectedBatch => ({
-                                  ...selectedBatch,
-                                  packageQuantity: calculatePackageQuantity(selectedBatch),
-                                }));
-                                if (batches.length === 0 && selectedBatches.length > 0) {
-                                  setFieldValue('representativeBatch', selectedBatches[0]);
-                                }
-                                setFieldValue('batches', [...batches, ...selectedBatches]);
+                  }
+                  onClick={() => selectBatchesSlideToggle(true)}
+                />
+                <SlideView
+                  isOpen={selectBatchesIsOpen}
+                  onRequestClose={() => selectBatchesSlideToggle(false)}
+                  options={{ width: '1030px' }}
+                >
+                  {selectBatchesIsOpen && (
+                    <Subscribe to={[ContainerFormContainer]}>
+                      {({ state: { batches }, setFieldValue }) => (
+                        <SelectBatches
+                          selectedBatches={batches}
+                          onSelect={selected => {
+                            const selectedBatches = selected.map(selectedBatch => ({
+                              ...selectedBatch,
+                              packageQuantity: calculatePackageQuantity(selectedBatch),
+                            }));
+                            if (batches.length === 0 && selectedBatches.length > 0) {
+                              setFieldValue('representativeBatch', selectedBatches[0]);
+                            }
+                            setFieldValue('batches', [...batches, ...selectedBatches]);
 
-                                selectBatchesSlideToggle(false);
-                              }}
-                              onCancel={() => selectBatchesSlideToggle(false)}
-                            />
-                          )}
-                        </Subscribe>
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-            )}
-
-            {hasPermission(BATCH_CREATE) && (
-              <BooleanValue>
-                {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
-                  <>
-                    <NewButton
-                      label={
-                        <FormattedMessage
-                          id="modules.Shipments.newBatch"
-                          defaultMessage="NEW BATCH"
+                            selectBatchesSlideToggle(false);
+                          }}
+                          onCancel={() => selectBatchesSlideToggle(false)}
                         />
-                      }
-                      onClick={() => createBatchesSlideToggle(true)}
-                    />
-                    <SlideView
-                      isOpen={createBatchesIsOpen}
-                      onRequestClose={() => createBatchesSlideToggle(false)}
-                      options={{ width: '1030px' }}
-                    >
-                      {createBatchesIsOpen && (
-                        <Subscribe to={[ContainerFormContainer]}>
-                          {({ state: { batches }, setFieldValue }) => (
-                            <SelectOrderItems
-                              onSelect={selectedOrderItems => {
-                                const newBatches = selectedOrderItems.map((orderItem, counter) => {
-                                  const {
-                                    productProvider: {
-                                      packageName,
-                                      packageCapacity,
-                                      packageGrossWeight,
-                                      packageVolume,
-                                      packageSize,
-                                    },
-                                  } = orderItem;
-                                  return injectUid({
-                                    orderItem,
-                                    tags: [],
-                                    packageName,
-                                    packageCapacity,
-                                    packageGrossWeight,
-                                    packageVolume,
-                                    packageSize,
-                                    quantity: 0,
-                                    isNew: true,
-                                    batchAdjustments: [],
-                                    no: `batch no ${batches.length + counter + 1}`,
-                                    autoCalculatePackageQuantity: true,
-                                  });
-                                });
-                                if (batches.length === 0 && newBatches.length > 0) {
-                                  setFieldValue('representativeBatch', newBatches[0]);
-                                }
-                                setFieldValue('batches', [...batches, ...newBatches]);
-                                createBatchesSlideToggle(false);
-                              }}
-                              onCancel={() => createBatchesSlideToggle(false)}
-                            />
-                          )}
-                        </Subscribe>
                       )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
+                    </Subscribe>
+                  )}
+                </SlideView>
+              </>
             )}
-          </>
+          </BooleanValue>
+        )}
+        {allowCreateBatches && (
+          <BooleanValue>
+            {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
+              <>
+                <NewButton
+                  label={
+                    <FormattedMessage id="modules.Shipments.newBatch" defaultMessage="NEW BATCH" />
+                  }
+                  onClick={() => createBatchesSlideToggle(true)}
+                />
+                <SlideView
+                  isOpen={createBatchesIsOpen}
+                  onRequestClose={() => createBatchesSlideToggle(false)}
+                  options={{ width: '1030px' }}
+                >
+                  {createBatchesIsOpen && (
+                    <Subscribe to={[ContainerFormContainer]}>
+                      {({ state: { batches }, setFieldValue }) => (
+                        <SelectOrderItems
+                          onSelect={selectedOrderItems => {
+                            const newBatches = selectedOrderItems.map((orderItem, counter) => {
+                              const {
+                                productProvider: {
+                                  packageName,
+                                  packageCapacity,
+                                  packageGrossWeight,
+                                  packageVolume,
+                                  packageSize,
+                                },
+                              } = orderItem;
+                              return injectUid({
+                                orderItem,
+                                tags: [],
+                                packageName,
+                                packageCapacity,
+                                packageGrossWeight,
+                                packageVolume,
+                                packageSize,
+                                quantity: 0,
+                                isNew: true,
+                                batchAdjustments: [],
+                                no: `batch no ${batches.length + counter + 1}`,
+                                autoCalculatePackageQuantity: true,
+                              });
+                            });
+                            if (batches.length === 0 && newBatches.length > 0) {
+                              setFieldValue('representativeBatch', newBatches[0]);
+                            }
+                            setFieldValue('batches', [...batches, ...newBatches]);
+                            createBatchesSlideToggle(false);
+                          }}
+                          onCancel={() => createBatchesSlideToggle(false)}
+                        />
+                      )}
+                    </Subscribe>
+                  )}
+                </SlideView>
+              </>
+            )}
+          </BooleanValue>
         )}
       </SectionNavBar>
       <div className={BatchesSectionBodyStyle}>
@@ -222,7 +218,7 @@ function BatchesSection() {
                               hasPermission(ORDER_FORM) ? () => batchSlideToggle(true) : () => {}
                             }
                             onClear={
-                              hasPermission(CONTAINER_BATCHES_REMOVE)
+                              allowRemoveBatches
                                 ? ({ id }) => {
                                     const newBatches = batches.filter(
                                       ({ id: batchId }) => id !== batchId
@@ -239,7 +235,7 @@ function BatchesSection() {
                                 : null
                             }
                             onClone={
-                              hasPermission(CONTAINER_BATCHES_ADD)
+                              allowCreateBatches
                                 ? ({
                                     id,
                                     deliveredAt,
