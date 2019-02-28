@@ -104,8 +104,8 @@ const findAllCurrencies = ({
     });
     allOrderItemIds.forEach(orderItemId => {
       if (orderItems[orderItemId]) {
-        const { price } = orderItems[orderItemId];
-        if (!result.includes(price.currency)) result.push(price.currency);
+        const { price = {} } = orderItems[orderItemId];
+        if (price.currency && !result.includes(price.currency)) result.push(price.currency);
       }
     });
   }
