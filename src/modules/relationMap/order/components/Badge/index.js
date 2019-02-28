@@ -10,7 +10,7 @@ type Props = {
 
 const Badge = ({ label }: Props) => (
   <div className={style.ContainerWrapper}>
-    <FormattedMessage {...messages[label] || messages.newItem} />
+    <FormattedMessage {...messages[label.toLowerCase()] || messages.newItem} />
   </div>
 );
 
