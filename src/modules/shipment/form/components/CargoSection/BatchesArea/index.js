@@ -68,7 +68,10 @@ function BatchesArea({
   const { hasPermission } = usePermission(isOwner);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
-      {({ state: { batches }, setFieldValue, setFieldArrayValue }, { state: { containers } }) => {
+      {(
+        { state: { batches }, setFieldValue, setFieldArrayValue },
+        { state: { containers }, setFieldValue: setContainersState }
+      ) => {
         const usefulBatches = isSelectedBatchesPool ? getBatchesInPool(batches) : [...batches];
         return (
           <div className={BatchesWrapperStyle}>
@@ -231,6 +234,29 @@ function BatchesArea({
                                       'batches',
                                       batches.filter(({ id: batchId }) => id !== batchId)
                                     );
+                                    const newContainers = containers.map(container => {
+                                      const {
+                                        batches: containerBatches,
+                                        representativeBatch,
+                                        ...rest
+                                      } = container;
+
+                                      const newContainerBatches = containerBatches.filter(
+                                        ({ id: batchId }) => id !== batchId
+                                      );
+
+                                      const newRepresentativeBatch =
+                                        representativeBatch && representativeBatch.id === id
+                                          ? newContainerBatches[0]
+                                          : representativeBatch;
+
+                                      return {
+                                        ...rest,
+                                        batches: newContainerBatches,
+                                        representativeBatch: newRepresentativeBatch,
+                                      };
+                                    });
+                                    setContainersState('containers', newContainers);
                                   }}
                                   onClone={({
                                     id,
