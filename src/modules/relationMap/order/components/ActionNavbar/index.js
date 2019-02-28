@@ -956,7 +956,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               processBatchIds.push(batchId);
                               if (batch) {
                                 const [, orderItem] = (Object.entries(orderItems): any).find(
-                                  ([, { batches: currentBatches }]) => {
+                                  ([, { batches: currentBatches = [] }]) => {
                                     return currentBatches.includes(batch.id);
                                   }
                                 );
@@ -1010,7 +1010,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     ...(needToResetPrice
                                       ? {
                                           price: {
-                                            currency: currencies[0],
+                                            currency: currencies.length > 0 ? currencies[0] : 'USD',
                                             amount: 0,
                                           },
                                         }
