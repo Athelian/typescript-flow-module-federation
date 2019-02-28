@@ -1,8 +1,10 @@
 ## WHAT
 
-<!-- Links to task(s) -->
+_Links to task(s):_
+
+_Link to testing:_
+
 <!-- Links to documentation or slack discussion -->
-<!-- Link to testing -->
 
 ## WHY
 
