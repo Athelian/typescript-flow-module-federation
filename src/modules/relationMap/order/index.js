@@ -157,12 +157,16 @@ const Order = ({ intl }: Props) => {
                     const [, orderId] = item.split('-');
                     return orderId;
                   });
-                  prevResult.orders.nodes
-                    .filter(order => orderIds.includes(order.id))
-                    .forEach(order => {
-                      // insert on the top
-                      order.shipments.push(responseData.data.shipment);
-                    });
+                  if (prevResult && prevResult.orders && prevResult.orders.nodes) {
+                    prevResult.orders.nodes
+                      .filter(order => orderIds.includes(order.id))
+                      .forEach(order => {
+                        // insert on the top
+                        order.shipments.push(responseData.data.shipment);
+                      });
+                  } else {
+                    // TODO: fetch all orders, might need to refactor later
+                  }
                   scrollIntoView({
                     targetId: `shipment-${newShipmentId}`,
                   });
