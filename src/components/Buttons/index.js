@@ -1,5 +1,6 @@
 // @flow
 import ActivateButton from './ActivateButton';
+import ApplyButton from './ApplyButton';
 import ApproveButton from './ApproveButton';
 import ArchiveButton from './ArchiveButton';
 import BaseButton from './BaseButton';
@@ -19,6 +20,7 @@ import SelectTemplateButton from './SelectTemplateButton';
 
 export {
   ActivateButton,
+  ApplyButton,
   ApproveButton,
   ArchiveButton,
   BaseButton,

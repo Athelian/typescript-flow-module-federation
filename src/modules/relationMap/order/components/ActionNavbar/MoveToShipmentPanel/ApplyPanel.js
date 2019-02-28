@@ -3,9 +3,14 @@ import React from 'react';
 import { Label } from 'components/Form';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
-import { BaseButton } from 'components/Buttons';
+import { CancelButton, YesButton } from 'components/Buttons';
 import messages from 'modules/relationMap/messages';
-import { LabelConnectStyle, GroupLabelButtonStyle, Panel, FlatButtonStyle } from './style';
+import {
+  MoveToShipmentPanelWrapperStyle,
+  MoveToShipmentLabelWrapperStyle,
+  MoveToShipmentMessageWrapperStyle,
+  MoveToShipmentButtonsWrapperStyle,
+} from './style';
 
 type Props = {
   onReset: Function,
@@ -14,21 +19,27 @@ type Props = {
 
 const ApplyPanel = ({ onReset, onConfirm }: Props) => {
   return (
-    <Panel>
-      <Label className={LabelConnectStyle}>
-        <FormattedMessage {...messages.connect} />
-        <Icon icon="CONNECT" />
-      </Label>
-      <Label className={GroupLabelButtonStyle}>
-        <FormattedMessage {...messages.askConnectToShipment} />
-        <BaseButton label="CLEAR" className={FlatButtonStyle} onClick={onReset} />
-        <BaseButton
-          icon="CONFIRM"
-          label={<FormattedMessage id="components.NavBar.filter.apply" defaultMessage="APPLY" />}
-          onClick={onConfirm}
-        />
-      </Label>
-    </Panel>
+    <div className={MoveToShipmentPanelWrapperStyle}>
+      <div className={MoveToShipmentLabelWrapperStyle}>
+        <Icon icon="EXCHANGE" />
+        <Label color="TEAL_DARK">
+          <FormattedMessage {...messages.connect} />
+        </Label>
+        <Icon icon="SHIPMENT" />
+      </div>
+
+      <div className={MoveToShipmentMessageWrapperStyle}>
+        <Label color="TEAL_DARK" align="CENTER">
+          <FormattedMessage {...messages.askConnectToShipment} />
+        </Label>
+      </div>
+
+      <div className={MoveToShipmentButtonsWrapperStyle}>
+        <CancelButton onClick={onReset} />
+
+        <YesButton onClick={onConfirm} />
+      </div>
+    </div>
   );
 };
 

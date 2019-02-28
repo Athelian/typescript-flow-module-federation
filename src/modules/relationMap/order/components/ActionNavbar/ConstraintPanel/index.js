@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
 import messages from 'modules/relationMap/messages';
-import * as style from './style';
+import { ConstraintPanelWrapperStyle } from './style';
 
 type Props = {
   disable: {
@@ -14,6 +14,7 @@ type Props = {
     disabledMoveToOrder: boolean,
   },
 };
+
 const ConstraintPanel = ({ disable }: Props) => {
   const {
     disabledSplit,
@@ -25,15 +26,15 @@ const ConstraintPanel = ({ disable }: Props) => {
     return null;
   }
   return (
-    <div className={style.ContainerWrapper}>
+    <div className={ConstraintPanelWrapperStyle}>
       {disabledSplit && (
-        <Label className={style.LabelStyle} align="center">
+        <Label align="center">
           <FormattedMessage {...messages.split} />{' '}
           <FormattedMessage {...messages.actionAvailable} /> 1 <Icon icon="BATCH" />{' '}
         </Label>
       )}
       {disableAutoFillBatch && (
-        <Label className={style.LabelStyle} align="center">
+        <Label align="center">
           <FormattedMessage {...messages.autoFillBatch} />{' '}
           <FormattedMessage
             id="modules.RelationMaps.action.actionAutoFillBatchAvailable"
@@ -43,7 +44,7 @@ const ConstraintPanel = ({ disable }: Props) => {
         </Label>
       )}
       {disabledMoveToOrder && (
-        <Label className={style.LabelStyle} align="center">
+        <Label align="center">
           <FormattedMessage {...messages.moveTo} /> <FormattedMessage {...messages.order} />{' '}
           <FormattedMessage {...messages.actionAvailable} /> <Icon icon="ORDER_ITEM" />{' '}
           <FormattedMessage {...messages.expressionAndOr} /> <Icon icon="BATCH" />{' '}
@@ -51,11 +52,11 @@ const ConstraintPanel = ({ disable }: Props) => {
         </Label>
       )}
       {disabledMoveToShipment && (
-        <Label className={style.LabelStyle} align="center">
+        <Label align="center">
           <FormattedMessage {...messages.moveTo} /> <FormattedMessage {...messages.shipment} />{' '}
           <FormattedMessage {...messages.actionAvailable} />{' '}
-          <FormattedMessage {...messages.atLeast} /> 1 <Icon icon="ORDER_ITEM" />{' '}
-          <FormattedMessage {...messages.expressionAnd} /> 0 <Icon icon="BATCH" />
+          <FormattedMessage {...messages.atLeast} /> 1 <Icon icon="BATCH" />{' '}
+          <FormattedMessage {...messages.expressionAnd} /> 0 <Icon icon="SHIPMENT" />
         </Label>
       )}
     </div>

@@ -172,11 +172,11 @@ export default defineMessages({
   },
   askConnectToOrder: {
     id: 'modules.RelationMaps.label.askConnectToOrder',
-    defaultMessage: 'Do you want to connect to this order',
+    defaultMessage: 'DO YOU WANT TO CONNECT TO THIS ORDER?',
   },
   askConnectToShipment: {
     id: 'modules.RelationMaps.label.askConnectToShipment',
-    defaultMessage: 'Do you want to connect to this shipment',
+    defaultMessage: 'DO YOU WANT TO CONNECT TO THIS SHIPMENT?',
   },
   connectShipmentInfo: {
     id: 'modules.RelationMaps.label.connectShipmentInfo',
@@ -184,19 +184,19 @@ export default defineMessages({
   },
   disconnect: {
     id: 'modules.RelationMaps.label.disconnect',
-    defaultMessage: 'Disconnect',
+    defaultMessage: 'REMOVE',
   },
   delete: {
     id: 'modules.RelationMaps.label.delete',
-    defaultMessage: 'Delete',
+    defaultMessage: 'DELETE',
   },
   newShipment: {
     id: 'modules.RelationMaps.label.newShipment',
-    defaultMessage: 'New Shipment',
+    defaultMessage: 'NEW SHIPMENT',
   },
   newOrder: {
     id: 'modules.RelationMaps.label.newOrder',
-    defaultMessage: 'New Order',
+    defaultMessage: 'NEW ORDER',
   },
   selectedOrder: {
     id: 'modules.RelationMaps.label.selectedOrder',

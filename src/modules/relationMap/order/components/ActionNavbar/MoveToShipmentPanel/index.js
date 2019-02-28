@@ -4,15 +4,20 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
-import { BaseButton } from 'components/Buttons';
+import { BaseButton, NewButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import DisconnectConfirmMessage from './DisconnectConfirmMessage';
 import ApplyPanel from './ApplyPanel';
 import SuccessPanel from './SuccessPanel';
-import * as style from './style';
-
-const { MoveToShipmentPanelWrapper } = style;
+import {
+  MoveToShipmentPanelWrapperStyle,
+  MoveToShipmentLabelAndMessageWrapperStyle,
+  MoveToShipmentLabelWrapperStyle,
+  MoveToShipmentMessageWrapperStyle,
+  MoveToNewShipmentWrapperStyle,
+  MoveToShipmentButtonsWrapperStyle,
+} from './style';
 
 type Props = {
   onMoveToNewShipment: Function,
@@ -34,70 +39,70 @@ const MoveToShipmentPanel = ({
   onClear,
 }: Props) => {
   if (status) return <SuccessPanel onClick={onClear} />;
+
+  if (hasSelectedShipment)
+    return <ApplyPanel onConfirm={onMoveToExistShipment} onReset={onClearSelectShipment} />;
+
   return (
-    <MoveToShipmentPanelWrapper>
-      {(() => {
-        if (hasSelectedShipment)
-          return <ApplyPanel onConfirm={onMoveToExistShipment} onReset={onClearSelectShipment} />;
-        return (
+    <div className={MoveToShipmentPanelWrapperStyle}>
+      <div className={MoveToShipmentLabelAndMessageWrapperStyle}>
+        <div className={MoveToShipmentLabelWrapperStyle}>
+          <Icon icon="EXCHANGE" />
+          <Label color="TEAL_DARK">
+            <FormattedMessage {...messages.moveTo} />
+          </Label>
+          <Icon icon="SHIPMENT" />
+        </div>
+
+        <div className={MoveToShipmentMessageWrapperStyle}>
+          <Label color="TEAL_DARK" align="center">
+            <FormattedMessage {...messages.select} /> <Icon icon="SHIPMENT" />{' '}
+            <FormattedMessage
+              id="modules.RelationMaps.label.moveToShipmentMessage"
+              defaultMessage="SHIPMENT TO MOVE TO ON THE LIST"
+            />
+          </Label>
+        </div>
+      </div>
+
+      <div className={MoveToNewShipmentWrapperStyle}>
+        <Label color="TEAL_DARK">
+          <FormattedMessage {...messages.moveTo} />
+        </Label>
+        <NewButton
+          label={<FormattedMessage {...messages.newShipment} />}
+          onClick={onMoveToNewShipment}
+        />
+      </div>
+
+      <BooleanValue>
+        {({ value: isOpen, set: dialogToggle }) => (
           <>
-            <div className={style.SubPanel}>
-              <Label className={style.LabelConnectStyle}>
-                <FormattedMessage {...messages.connect} />
-                <Icon icon="CONNECT" />
-              </Label>
-              <Label className={style.GroupLabelButtonLeftStyle}>
-                <FormattedMessage {...messages.select} />
-                <Label color="SHIPMENT" className={style.GroupLabelButtonStyle}>
-                  <Icon icon="SHIPMENT" />
-                  <FormattedMessage {...messages.shipmentsTab} />
-                </Label>
-                <FormattedMessage {...messages.toConnectToTheList} />
-              </Label>
+            <div className={MoveToShipmentButtonsWrapperStyle}>
+              <BaseButton
+                icon="CLEAR"
+                label={<FormattedMessage {...messages.disconnect} />}
+                onClick={() => dialogToggle(true)}
+                textColor="WHITE"
+                hoverTextColor="WHITE"
+                backgroundColor="GRAY"
+                hoverBackgroundColor="RED"
+              />
             </div>
-            <div className={style.SubPanel}>
-              <Label className={style.GroupLabelButtonStyle}>
-                <FormattedMessage {...messages.connectTo} />
-                <BaseButton
-                  icon="ADD"
-                  label={
-                    <FormattedMessage
-                      {...messages.newShipment}
-                      className={style.PanelButtonStyle}
-                    />
-                  }
-                  onClick={onMoveToNewShipment}
-                />
-              </Label>
-            </div>
-            <BooleanValue>
-              {({ value: isOpen, set: dialogToggle }) => (
-                <>
-                  <Label className={style.GroupLabelButtonStyle}>
-                    <BaseButton
-                      icon="CLEAR"
-                      label={<FormattedMessage {...messages.disconnect} />}
-                      className={style.PanelButtonStyle}
-                      onClick={() => dialogToggle(true)}
-                    />
-                  </Label>
-                  <ConfirmDialog
-                    onRequestClose={() => dialogToggle(false)}
-                    onCancel={() => dialogToggle(false)}
-                    isOpen={isOpen}
-                    message={<DisconnectConfirmMessage />}
-                    onConfirm={() => {
-                      dialogToggle(false);
-                      onDisconnect();
-                    }}
-                  />
-                </>
-              )}
-            </BooleanValue>
+            <ConfirmDialog
+              onRequestClose={() => dialogToggle(false)}
+              onCancel={() => dialogToggle(false)}
+              isOpen={isOpen}
+              message={<DisconnectConfirmMessage />}
+              onConfirm={() => {
+                dialogToggle(false);
+                onDisconnect();
+              }}
+            />
           </>
-        );
-      })()}
-    </MoveToShipmentPanelWrapper>
+        )}
+      </BooleanValue>
+    </div>
   );
 };
 
