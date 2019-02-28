@@ -164,9 +164,10 @@ const Order = ({ intl }: Props) => {
                         // insert on the top
                         order.shipments.push(responseData.data.shipment);
                       });
-                  } else {
-                    // TODO: fetch all orders, might need to refactor later
+                  } else if (orderIds.length > 0) {
+                    actions.refetchQueryBy('ORDER', orderIds[0]);
                   }
+
                   scrollIntoView({
                     targetId: `shipment-${newShipmentId}`,
                   });
