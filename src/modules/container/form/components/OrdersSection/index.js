@@ -1,8 +1,14 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { CONTAINER_ORDER_LIST } from 'modules/permission/constants/container';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
+import FormattedNumber from 'components/FormattedNumber';
+import { SectionHeader, SectionWrapper } from 'components/Form';
+
 import { OrdersSectionWrapperStyle, OrdersSectionBodyStyle, EmptyMessageStyle } from './style';
 
 type Props = {
@@ -10,24 +16,43 @@ type Props = {
 };
 
 function OrdersSection({ orders }: Props) {
-  return (
-    <div className={OrdersSectionWrapperStyle}>
-      <SectionNavBar>
-        <div id="sortsandfilterswip" />
-      </SectionNavBar>
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
 
-      {orders.length === 0 ? (
-        <div className={EmptyMessageStyle}>
-          <FormattedMessage id="modules.Shipments.noOrderFound" defaultMessage="No orders found" />
-        </div>
-      ) : (
-        <div className={OrdersSectionBodyStyle}>
-          {orders.map(order => (
-            <OrderCard order={order} key={order.id} />
-          ))}
-        </div>
-      )}
-    </div>
+  if (!hasPermission(CONTAINER_ORDER_LIST)) return null;
+
+  return (
+    <SectionWrapper id="container_ordersSection">
+      <SectionHeader
+        icon="ORDER"
+        title={
+          <>
+            <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" /> (
+            <FormattedNumber value={orders.length} />)
+          </>
+        }
+      />
+      <div className={OrdersSectionWrapperStyle}>
+        <SectionNavBar>
+          <div id="sortsandfilterswip" />
+        </SectionNavBar>
+
+        {orders.length === 0 ? (
+          <div className={EmptyMessageStyle}>
+            <FormattedMessage
+              id="modules.Shipments.noOrderFound"
+              defaultMessage="No orders found"
+            />
+          </div>
+        ) : (
+          <div className={OrdersSectionBodyStyle}>
+            {orders.map(order => (
+              <OrderCard order={order} key={order.id} />
+            ))}
+          </div>
+        )}
+      </div>
+    </SectionWrapper>
   );
 }
 
