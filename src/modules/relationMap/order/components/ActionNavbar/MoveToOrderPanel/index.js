@@ -4,15 +4,20 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Label } from 'components/Form';
 import Icon from 'components/Icon';
-import { BaseButton } from 'components/Buttons';
+import { BaseButton, NewButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import DeleteConfirmDialog from './DeleteConfirmDialog';
 import ApplyPanel from './ApplyPanel';
 import SuccessPanel from './SuccessPanel';
-import * as style from './style';
-
-const { MoveToOrderPanelWrapper } = style;
+import {
+  MoveToOrderPanelWrapperStyle,
+  MoveToOrderLabelAndMessageWrapperStyle,
+  MoveToOrderLabelWrapperStyle,
+  MoveToOrderMessageWrapperStyle,
+  MoveToNewOrderWrapperStyle,
+  MoveToOrderButtonsWrapperStyle,
+} from './style';
 
 type Props = {
   onMoveToNewOrder: Function,
@@ -49,75 +54,78 @@ const MoveToOrderPanel = ({
   currencies,
 }: Props) => {
   if (status) return <SuccessPanel onClick={onClear} />;
+
+  if (hasSelectedOrder)
+    return (
+      <ApplyPanel
+        hasSelectedAllBatches={hasSelectedAllBatches}
+        hasSelectedOrderItem={hasSelectedOrderItem}
+        onConfirm={onMoveToExistOrder}
+        onReset={onClearSelectOrder}
+        currencies={currencies}
+      />
+    );
+
   return (
-    <MoveToOrderPanelWrapper>
-      {(() => {
-        if (hasSelectedOrder)
-          return (
-            <ApplyPanel
-              hasSelectedAllBatches={hasSelectedAllBatches}
-              hasSelectedOrderItem={hasSelectedOrderItem}
-              onConfirm={onMoveToExistOrder}
-              onReset={onClearSelectOrder}
-              currencies={currencies}
+    <div className={MoveToOrderPanelWrapperStyle}>
+      <div className={MoveToOrderLabelAndMessageWrapperStyle}>
+        <div className={MoveToOrderLabelWrapperStyle}>
+          <Icon icon="EXCHANGE" />
+          <Label color="TEAL_DARK">
+            <FormattedMessage {...messages.moveTo} />
+          </Label>
+          <Icon icon="ORDER" />
+        </div>
+
+        <div className={MoveToOrderMessageWrapperStyle}>
+          <Label color="TEAL_DARK" align="center">
+            <FormattedMessage {...messages.select} /> <Icon icon="ORDER" />{' '}
+            <FormattedMessage
+              id="modules.RelationMaps.label.moveToOrderMessage"
+              defaultMessage="ORDER TO MOVE TO ON THE LIST"
             />
-          );
-        return (
+          </Label>
+        </div>
+      </div>
+
+      <div className={MoveToNewOrderWrapperStyle}>
+        <Label color="TEAL_DARK">
+          <FormattedMessage {...messages.moveTo} />
+        </Label>
+        <NewButton
+          label={<FormattedMessage {...messages.newOrder} />}
+          onClick={() => onMoveToNewOrder({ currencies })}
+        />
+      </div>
+
+      <BooleanValue>
+        {({ value: isOpen, set: dialogToggle }) => (
           <>
-            <div className={style.SubPanel}>
-              <Label className={style.LabelConnectStyle}>
-                <FormattedMessage {...messages.connect} />
-                <Icon icon="CONNECT" />
-              </Label>
-              <Label className={style.GroupLabelButtonLeftStyle}>
-                <FormattedMessage {...messages.select} />
-                <Label color="ORDER" className={style.GroupLabelButtonStyle}>
-                  <Icon icon="ORDER" />
-                  <FormattedMessage {...messages.ordersTab} />
-                </Label>
-                <FormattedMessage {...messages.toConnectToTheList} />
-              </Label>
+            <div className={MoveToOrderButtonsWrapperStyle}>
+              <BaseButton
+                icon="REMOVE"
+                label={<FormattedMessage {...messages.delete} />}
+                onClick={() => dialogToggle(true)}
+                textColor="WHITE"
+                hoverTextColor="WHITE"
+                backgroundColor="GRAY"
+                hoverBackgroundColor="RED"
+              />
             </div>
-            <div className={style.SubPanel}>
-              <Label className={style.GroupLabelButtonStyle}>
-                <FormattedMessage {...messages.connectTo} />
-                <BaseButton
-                  icon="ADD"
-                  label={
-                    <FormattedMessage {...messages.newOrder} className={style.PanelButtonStyle} />
-                  }
-                  onClick={() => onMoveToNewOrder({ currencies })}
-                />
-              </Label>
-            </div>
-            <BooleanValue>
-              {({ value: isOpen, set: dialogToggle }) => (
-                <>
-                  <Label className={style.GroupLabelButtonStyle}>
-                    <BaseButton
-                      icon="CLEAR"
-                      label={<FormattedMessage {...messages.delete} />}
-                      className={style.PanelButtonStyle}
-                      onClick={() => dialogToggle(true)}
-                    />
-                  </Label>
-                  <ConfirmDialog
-                    onRequestClose={() => dialogToggle(false)}
-                    onCancel={() => dialogToggle(false)}
-                    isOpen={isOpen}
-                    message={<DeleteConfirmDialog />}
-                    onConfirm={() => {
-                      dialogToggle(false);
-                      onDelete();
-                    }}
-                  />
-                </>
-              )}
-            </BooleanValue>
+            <ConfirmDialog
+              onRequestClose={() => dialogToggle(false)}
+              onCancel={() => dialogToggle(false)}
+              isOpen={isOpen}
+              message={<DeleteConfirmDialog />}
+              onConfirm={() => {
+                dialogToggle(false);
+                onDelete();
+              }}
+            />
           </>
-        );
-      })()}
-    </MoveToOrderPanelWrapper>
+        )}
+      </BooleanValue>
+    </div>
   );
 };
 

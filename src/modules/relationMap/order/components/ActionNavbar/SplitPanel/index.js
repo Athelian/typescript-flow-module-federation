@@ -4,14 +4,17 @@ import * as React from 'react';
 import { noop } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { cx } from 'react-emotion';
-import { DefaultStyleWrapperStyle } from 'components/Form/Inputs/Styles/DefaultStyle/style';
 import Tabs from 'components/NavBar/components/Tabs';
-import { CardAction } from 'components/Cards/BaseCard';
-import { NumberInput, Label, FormTooltip } from 'components/Form';
+import { NumberInput, Label, FormTooltip, DefaultStyle, FieldItem } from 'components/Form';
+import { ApplyButton } from 'components/Buttons';
+import Icon from 'components/Icon';
 import messages from 'modules/relationMap/messages';
-import * as style from '../style';
-import * as splitStyle from './style';
+import {
+  SplitPanelWrapperStyle,
+  SplitOptionsWrapperStyle,
+  SplitLabelWrapperStyle,
+  SplitActionWrapperStyle,
+} from './style';
 import validator from './validator';
 
 type Props = {
@@ -35,25 +38,28 @@ function SplitPanel({ intl, onSplit, max }: Props) {
       icon: '',
       key: SIMPLE,
       label: intl.formatMessage(messages.splitSimple),
-      className: style.TabItemWrapperStyle,
       disabled: false,
     },
     {
-      id: 'equalty',
+      id: 'equally',
       icon: '',
       key: EQUALLY,
       label: intl.formatMessage(messages.splitEqually),
-      className: style.TabItemWrapperStyle,
       disabled: false,
     },
   ];
+
   const validation = validator(activeTab + 1, max);
+
   return (
-    <div className={style.ActionSection2WrapperStyle}>
-      <div className={splitStyle.SplitTapWrapperStyle}>
-        <Label width="120px">
-          <FormattedMessage {...messages.splitType} />
-        </Label>
+    <div className={SplitPanelWrapperStyle}>
+      <div className={SplitOptionsWrapperStyle}>
+        <div className={SplitLabelWrapperStyle}>
+          <Icon icon="SPLIT" />
+          <Label color="TEAL_DARK">
+            <FormattedMessage {...messages.splitType} />
+          </Label>
+        </div>
         <Tabs
           tabs={tabs}
           activeIndex={activeTab}
@@ -65,126 +71,111 @@ function SplitPanel({ intl, onSplit, max }: Props) {
           }}
         />
       </div>
-      <div className={splitStyle.SplitTypeWrapperStyle}>
+
+      <div className={SplitActionWrapperStyle}>
         {activeTab === SIMPLE ? (
           <>
-            <Label width="80px">
-              <FormattedMessage {...messages.splitTo} />
-            </Label>
-            <div
-              className={cx(
-                DefaultStyleWrapperStyle({
-                  type: 'number',
-                  forceHoverStyle: true,
-                  transparent: false,
-                  disabled: false,
-                  isFocused: false,
-                  hasError: false,
-                  width: '80px',
-                  height: '20px',
-                }),
-                splitStyle.SplitInputWrapperStyle
-              )}
-            >
-              <NumberInput
-                min={1}
-                max={max}
-                value={quantity}
-                onChange={evt => setQuantity(evt.target.value)}
-              />
-              {!validation.isValidSync({
-                quantity,
-              }) && (
+            <FieldItem
+              label={
+                <Label width="min-content" align="right">
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.splitQuantityLabel"
+                    defaultMessage="QUANTITY TO SPLIT INTO"
+                  />
+                </Label>
+              }
+              input={
+                <DefaultStyle type="number" width="160px">
+                  <NumberInput
+                    min={1}
+                    max={max}
+                    value={quantity}
+                    onChange={evt => setQuantity(evt.target.value)}
+                  />
+                </DefaultStyle>
+              }
+              tooltip={
                 <FormTooltip
                   isNew={false}
                   errorMessage={
-                    <FormattedMessage
-                      id="modules.RelationMap.split.validationError"
-                      defaultMessage="Please enter the number between {min} and {max}"
-                      values={{
-                        min: activeTab + 1,
-                        max,
-                      }}
-                    />
+                    !validation.isValidSync({ quantity }) && (
+                      <FormattedMessage
+                        id="modules.RelationMap.split.validationError"
+                        defaultMessage="Please enter the number between {min} and {max}"
+                        values={{
+                          min: activeTab + 1,
+                          max,
+                        }}
+                      />
+                    )
                   }
                 />
-              )}
-            </div>
-            <div className={splitStyle.SplitInputWrapperStyle}>
-              <CardAction
-                icon="ARROW_RIGHT"
-                onClick={() =>
-                  validation.isValidSync({
-                    quantity,
-                  })
-                    ? onSplit({
-                        type: 'batchSimpleSplit',
-                        quantity,
-                      })
-                    : noop()
-                }
-              />
-            </div>
+              }
+            />
+            <ApplyButton
+              onClick={() =>
+                validation.isValidSync({
+                  quantity,
+                })
+                  ? onSplit({
+                      type: 'batchSimpleSplit',
+                      quantity,
+                    })
+                  : noop()
+              }
+            />
           </>
         ) : (
           <>
-            <Label width="80px">
-              <FormattedMessage {...messages.splitTo} />
-            </Label>
-            <div
-              className={cx(
-                DefaultStyleWrapperStyle({
-                  type: 'number',
-                  forceHoverStyle: true,
-                  transparent: false,
-                  disabled: false,
-                  isFocused: false,
-                  hasError: false,
-                  width: '80px',
-                  height: '20px',
-                }),
-                splitStyle.SplitInputWrapperStyle
-              )}
-            >
-              <NumberInput
-                min={1}
-                max={max}
-                value={quantity}
-                onChange={evt => setQuantity(evt.target.value)}
-              />
-              {!validation.isValidSync({
-                quantity,
-              }) && (
+            <FieldItem
+              label={
+                <Label width="min-content" align="right">
+                  <FormattedMessage
+                    id="modules.RelationMaps.label.splitEquallyLabel"
+                    defaultMessage="NUMBER OF BATCHES"
+                  />
+                </Label>
+              }
+              input={
+                <DefaultStyle type="number" width="160px">
+                  <NumberInput
+                    min={1}
+                    max={max}
+                    value={quantity}
+                    onChange={evt => setQuantity(evt.target.value)}
+                  />
+                </DefaultStyle>
+              }
+              tooltip={
                 <FormTooltip
                   isNew={false}
                   errorMessage={
-                    <FormattedMessage
-                      id="modules.RelationMap.split.validationError"
-                      defaultMessage="Please enter the number between {min} and {max}"
-                      values={{
-                        min: activeTab + 1,
-                        max,
-                      }}
-                    />
+                    !validation.isValidSync({ quantity }) && (
+                      <FormattedMessage
+                        id="modules.RelationMap.split.validationError"
+                        defaultMessage="Please enter the number between {min} and {max}"
+                        values={{
+                          min: activeTab + 1,
+                          max,
+                        }}
+                      />
+                    )
                   }
                 />
-              )}
-            </div>
-            <div className={splitStyle.SplitInputWrapperStyle}>
-              <CardAction
-                icon="ARROW_RIGHT"
-                onClick={() =>
-                  validation.isValidSync({
-                    quantity,
-                  })
-                    ? onSplit({
-                        type: 'batchEqualSplit',
-                        quantity,
-                      })
-                    : noop()
-                }
-              />
-            </div>
+              }
+            />
+            <ApplyButton
+              onClick={() =>
+                validation.isValidSync({
+                  quantity,
+                })
+                  ? onSplit({
+                      type: 'batchEqualSplit',
+                      quantity,
+                    })
+                  : noop()
+              }
+            />
           </>
         )}
       </div>

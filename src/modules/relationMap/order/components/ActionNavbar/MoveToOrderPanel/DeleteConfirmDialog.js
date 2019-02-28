@@ -1,22 +1,21 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Label } from 'components/Form';
 import messages from 'modules/relationMap/messages';
-import * as style from './style';
+import { ConfirmMessageContainer, ConfirmActionStyle, LabelConfirmDeleteStyle } from './style';
 
 const DeleteConfirmDialog = () => (
-  <div className={style.ConfirmMessageContainer}>
-    <div>
+  <div className={ConfirmMessageContainer}>
+    <div className={LabelConfirmDeleteStyle}>
       <FormattedMessage {...messages.confirmMessage} />{' '}
-      <div className={style.ConfirmActionStyle}>
+      <span className={ConfirmActionStyle}>
         <FormattedMessage {...messages.delete} />
-      </div>{' '}
-      <FormattedMessage {...messages.confirmDelete} />
+      </span>{' '}
     </div>
-    <Label className={style.LabelConfirmDeleteStyle}>
+    <FormattedMessage {...messages.confirmDelete} />
+    <div className={LabelConfirmDeleteStyle}>
       <FormattedMessage {...messages.confirmSubMessage} />
-    </Label>
+    </div>
   </div>
 );
 
