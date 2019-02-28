@@ -26,6 +26,7 @@ import {
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
 } from 'modules/shipment/form/containers';
+import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
@@ -162,6 +163,10 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               SHIPMENT_UPDATE,
                                               CONTAINER_UPDATE,
                                               CONTAINER_SET_WAREHOUSE,
+                                            ]),
+                                            viewWarehouse: hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              WAREHOUSE_FORM,
                                             ]),
                                             warehouseArrivalAgreedDate: hasPermission([
                                               SHIPMENT_UPDATE,

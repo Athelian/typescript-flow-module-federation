@@ -63,6 +63,7 @@ const defaultProps = {
   editable: {
     no: false,
     warehouse: false,
+    viewWarehouse: false,
     warehouseArrivalAgreedDate: false,
     warehouseArrivalAgreedDateApprovedBy: false,
     warehouseArrivalActualDate: false,
@@ -193,11 +194,7 @@ const ShipmentContainerCard = ({
 
               <div className={IconInputStyle}>
                 {editable.warehouse &&
-                  (isNullOrUndefined(warehouse) ? (
-                    <div className={WarehouseIconStyle(false)}>
-                      <Icon icon="WAREHOUSE" />
-                    </div>
-                  ) : (
+                  (editable.viewWarehouse ? (
                     <Link
                       className={WarehouseIconStyle(true)}
                       to={`/warehouse/${encodeId(warehouse.id)}`}
@@ -207,6 +204,10 @@ const ShipmentContainerCard = ({
                     >
                       <Icon icon="WAREHOUSE" />
                     </Link>
+                  ) : (
+                    <div className={WarehouseIconStyle(true)}>
+                      <Icon icon="WAREHOUSE" />
+                    </div>
                   ))}
 
                 {!editable.warehouse && (

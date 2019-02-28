@@ -13,6 +13,7 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
+import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { ShipmentContainerCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
@@ -45,6 +46,7 @@ export default function ContainerList({ containers, setDeepFieldValue }: Props) 
                     CONTAINER_UPDATE,
                     CONTAINER_SET_WAREHOUSE,
                   ]),
+                  viewWarehouse: hasPermission([SHIPMENT_UPDATE, WAREHOUSE_FORM]),
                   warehouseArrivalAgreedDate: hasPermission([
                     SHIPMENT_UPDATE,
                     CONTAINER_UPDATE,
