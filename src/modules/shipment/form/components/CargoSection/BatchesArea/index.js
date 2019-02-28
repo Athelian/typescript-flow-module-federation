@@ -5,7 +5,19 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_ADD_BATCH,
+  SHIPMENT_REMOVE_BATCH_IN_CONTAINER,
+  SHIPMENT_ADD_BATCH_IN_CONTAINER,
+} from 'modules/permission/constants/shipment';
+import {
+  BATCH_SET_NO,
+  BATCH_SET_QUANTITY,
+  BATCH_SET_DELIVERY_DATE,
+  BATCH_SET_DESIRED_DATE,
+} from 'modules/permission/constants/batch';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import { calculatePackageQuantity } from 'utils/batch';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -54,7 +66,6 @@ function BatchesArea({
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {({ state: { batches }, setFieldValue, setFieldArrayValue }, { state: { containers } }) => {
@@ -94,7 +105,7 @@ function BatchesArea({
                     </div>
 
                     {isSelectedBatchesPool &&
-                      allowToUpdate &&
+                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH_IN_CONTAINER]) &&
                       usefulBatches.length > 0 &&
                       containers.length > 0 && (
                         <>
@@ -137,7 +148,24 @@ function BatchesArea({
                         {isSelectBatchesMode ? (
                           <ShipmentBatchCard
                             batch={batch}
-                            readOnly={!allowToUpdate}
+                            editable={{
+                              no: hasPermission([SHIPMENT_UPDATE, BATCH_SET_NO]),
+                              quantity: hasPermission([SHIPMENT_UPDATE, BATCH_SET_QUANTITY]),
+                              deliveredAt: hasPermission([
+                                SHIPMENT_UPDATE,
+                                BATCH_SET_DELIVERY_DATE,
+                              ]),
+                              desiredAt: hasPermission([SHIPMENT_UPDATE, BATCH_SET_DESIRED_DATE]),
+                              deleteBatch: hasPermission([
+                                SHIPMENT_UPDATE,
+                                SHIPMENT_REMOVE_BATCH_IN_CONTAINER,
+                              ]),
+                              cloneBatch: hasPermission([
+                                SHIPMENT_UPDATE,
+                                SHIPMENT_ADD_BATCH_IN_CONTAINER,
+                              ]),
+                              viewOrder: hasPermission([ORDER_FORM]),
+                            }}
                             selectable
                             selected={selectedBatches.includes(batch)}
                             onSelect={() => setSelectedBatches(batch)}
@@ -171,7 +199,27 @@ function BatchesArea({
                                 </SlideView>
 
                                 <ShipmentBatchCard
-                                  readOnly={!allowToUpdate}
+                                  editable={{
+                                    no: hasPermission([SHIPMENT_UPDATE, BATCH_SET_NO]),
+                                    quantity: hasPermission([SHIPMENT_UPDATE, BATCH_SET_QUANTITY]),
+                                    deliveredAt: hasPermission([
+                                      SHIPMENT_UPDATE,
+                                      BATCH_SET_DELIVERY_DATE,
+                                    ]),
+                                    desiredAt: hasPermission([
+                                      SHIPMENT_UPDATE,
+                                      BATCH_SET_DESIRED_DATE,
+                                    ]),
+                                    deleteBatch: hasPermission([
+                                      SHIPMENT_UPDATE,
+                                      SHIPMENT_REMOVE_BATCH_IN_CONTAINER,
+                                    ]),
+                                    cloneBatch: hasPermission([
+                                      SHIPMENT_UPDATE,
+                                      SHIPMENT_ADD_BATCH_IN_CONTAINER,
+                                    ]),
+                                    viewOrder: hasPermission([ORDER_FORM]),
+                                  }}
                                   batch={batch}
                                   saveOnBlur={updateBatch => {
                                     const indexOfAllBatches = batches.indexOf(batch);
