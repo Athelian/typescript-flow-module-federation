@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
+import { PRODUCT_PROVIDER_GET } from 'modules/permission/constants/product';
 import {
   BATCH_UPDATE,
   BATCH_SET_PACKAGE_NAME,
@@ -38,14 +39,25 @@ const PackagingSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
+  const allowSyncPackage =
+    hasPermission(PRODUCT_PROVIDER_GET) &&
+    (allowUpdate ||
+      hasPermission([
+        BATCH_SET_PACKAGE_NAME,
+        BATCH_SET_PACKAGE_CAPACITY,
+        BATCH_SET_PACKAGE_QUANTITY,
+        BATCH_SET_PACKAGE_WEIGHT,
+        BATCH_SET_PACKAGE_VOLUME,
+        BATCH_SET_PACKAGE_SIZE,
+      ]));
+
   return (
     <SectionWrapper id="batch_packagingSection">
       <SectionHeader
         icon="PACKAGING"
         title={<FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />}
       >
-        {/* TODO: (a || (sum of && all the fields it sets)) && product.productProviders.get */}
-        {allowUpdate && (
+        {allowSyncPackage && (
           <BooleanValue>
             {({ value: syncDialogIsOpen, set: dialogToggle }) => (
               <>
@@ -173,8 +185,9 @@ const PackagingSection = ({ isNew }: Props) => {
                           defaultMessage="PACKAGE QUANTITY"
                         />
                       }
-                      //* TODO: || set packageQty
-                      showAutoCalculateToggle={allowUpdate}
+                      showAutoCalculateToggle={
+                        allowUpdate || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
+                      }
                       autoCalculateIsToggled={values.autoCalculatePackageQuantity}
                       onToggleAutoCalculate={() => {
                         setFieldValue(
@@ -232,8 +245,7 @@ const PackagingSection = ({ isNew }: Props) => {
                           defaultMessage="PKG VOLUME"
                         />
                       }
-                      // TODO: allowUpdate || set package volume
-                      showCalculator
+                      showCalculator={allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME)}
                       onCalculate={calculatePackageVolume}
                       editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME)}
                     />

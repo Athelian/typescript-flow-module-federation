@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { contains } from 'utils/fp';
@@ -24,17 +24,24 @@ type OptionalProps = {
   onFormReady: () => void,
   onCancel: Function,
   onSave: Function,
+  editable: {
+    values: boolean,
+    mask: boolean,
+  },
 };
-// TODO: editable : { values, mask }
+
 type Props = OptionalProps & {
   entityType: string,
-  editable: boolean,
 };
 
 const defaultProps = {
   onFormReady: () => {},
   onCancel: () => {},
   onSave: () => {},
+  editable: {
+    values: true,
+    mask: true,
+  },
 };
 
 class CustomFieldsForm extends React.Component<Props> {
@@ -105,44 +112,51 @@ class CustomFieldsForm extends React.Component<Props> {
                         </Label>
                       }
                       input={
-                        <BooleanValue>
-                          {({ value: opened, set: slideToggle }) => (
-                            <>
-                              {!mask && editable && (
-                                <DashedPlusButton
-                                  width="195px"
-                                  height="140px"
-                                  onClick={() => slideToggle(true)}
-                                />
-                              )}
-                              {!mask && !editable && <GrayCard width="195px" height="140px" />}
-                              {mask && (
-                                <MaskCard
-                                  mask={mask}
-                                  onClick={editable ? () => slideToggle(true) : () => {}}
-                                />
-                              )}
-
-                              <SlideView
-                                isOpen={opened}
-                                onRequestClose={() => slideToggle(false)}
-                                options={{ width: '980px' }}
-                              >
-                                {opened && (
-                                  <CustomFieldsTemplateSelector
-                                    entityType={entityType}
-                                    selected={mask}
-                                    onCancel={() => slideToggle(false)}
-                                    onSave={item => {
-                                      setFieldValue('mask', item);
-                                      slideToggle(false);
-                                    }}
+                        editable.mask ? (
+                          <BooleanValue>
+                            {({ value: opened, set: slideToggle }) => (
+                              <>
+                                {mask ? (
+                                  <MaskCard
+                                    mask={mask}
+                                    onClick={editable ? () => slideToggle(true) : () => {}}
+                                  />
+                                ) : (
+                                  <DashedPlusButton
+                                    width="195px"
+                                    height="140px"
+                                    onClick={() => slideToggle(true)}
                                   />
                                 )}
-                              </SlideView>
-                            </>
-                          )}
-                        </BooleanValue>
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                  options={{ width: '980px' }}
+                                >
+                                  {opened && (
+                                    <CustomFieldsTemplateSelector
+                                      entityType={entityType}
+                                      selected={mask}
+                                      onCancel={() => slideToggle(false)}
+                                      onSave={item => {
+                                        setFieldValue('mask', item);
+                                        slideToggle(false);
+                                      }}
+                                    />
+                                  )}
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+                        ) : (
+                          <>
+                            {mask ? (
+                              <MaskCard mask={mask} readOnly />
+                            ) : (
+                              <GrayCard width="195px" height="140px" />
+                            )}
+                          </>
+                        )
                       }
                     />
 
@@ -157,7 +171,7 @@ class CustomFieldsForm extends React.Component<Props> {
                               fieldName={fieldDefinition.name}
                               value={value}
                               setFieldValue={setFieldValue}
-                              editable={editable}
+                              editable={editable.values}
                             />
                           ) : null
                         )}

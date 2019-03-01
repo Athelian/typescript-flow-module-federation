@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
+import { ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
 import {
   BATCH_CREATE,
   BATCH_UPDATE,
@@ -20,6 +21,7 @@ import {
   BATCH_SET_TAGS,
   BATCH_SET_MEMO,
   BATCH_SET_ORDER_ITEM,
+  BATCH_SET_CUSTOM_FIELDS_MASK,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -239,20 +241,22 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                         />
                       )}
                     </FormField>
-                    {/* TODO: editable : { values: BATCH_SET_CUSTOM_FIELDS, mask: BATCH_SET_CUSTOM_FIELDS_MASK }.  */}
                     <CustomFieldsFactory
                       entityType="Batch"
                       customFields={values.customFields}
                       setFieldValue={setFieldValue}
-                      editable={allowUpdate || hasPermission(BATCH_SET_CUSTOM_FIELDS)}
+                      editable={{
+                        values: allowUpdate || hasPermission(BATCH_SET_CUSTOM_FIELDS),
+                        mask: allowUpdate || hasPermission(BATCH_SET_CUSTOM_FIELDS_MASK),
+                      }}
                     />
                   </GridColumn>
                   <div className={ItemSectionStyle}>
                     <Label required>
                       <FormattedMessage {...messages.orderItem} />
                     </Label>
-                    {/* TODO: (a || b) && item list */}
-                    {allowUpdate || hasPermission(BATCH_SET_ORDER_ITEM) ? (
+                    {(allowUpdate || hasPermission(BATCH_SET_ORDER_ITEM)) &&
+                    hasPermission(ORDER_ORDERITEMS_LIST) ? (
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
                           <React.Fragment>
