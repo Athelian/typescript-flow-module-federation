@@ -2,7 +2,17 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
-
+import {
+  BATCH_CREATE,
+  BATCH_SET_NO,
+  BATCH_SET_QUANTITY,
+  BATCH_SET_DELIVERY_DATE,
+  BATCH_SET_DESIRED_DATE,
+} from 'modules/permission/constants/batch';
+import {
+  CONTAINER_BATCHES_ADD,
+  CONTAINER_BATCHES_REMOVE,
+} from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { encodeId } from 'utils/id';
@@ -184,8 +194,8 @@ const ContainerBatchCard = ({
               <Icon icon="PRODUCT" />
             </div>
           )}
-
-          {readOnly ? (
+          {readOnly ||
+          !hasPermission([BATCH_CREATE, CONTAINER_BATCHES_ADD, CONTAINER_BATCHES_REMOVE]) ? (
             <div className={RepresentIconStyle(isRepresented)}>
               <Icon icon="STAR" />
             </div>
@@ -223,7 +233,7 @@ const ContainerBatchCard = ({
                     saveOnBlur({ ...batch, no: inputHandlers.value });
                   }}
                   originalValue={no}
-                  editable={!readOnly}
+                  editable={!readOnly && hasPermission(BATCH_SET_NO)}
                   inputWidth="185px"
                   inputHeight="20px"
                   inputAlign="left"
@@ -258,7 +268,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={actualQuantity}
-                  editable={!readOnly}
+                  editable={!readOnly && hasPermission(BATCH_SET_QUANTITY)}
                   inputWidth="90px"
                   inputHeight="20px"
                 />
@@ -287,7 +297,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={deliveredAt}
-                  editable={!readOnly}
+                  editable={!readOnly && hasPermission(BATCH_SET_DELIVERY_DATE)}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -316,7 +326,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={desiredAt}
-                  editable={!readOnly}
+                  editable={!readOnly && hasPermission(BATCH_SET_DESIRED_DATE)}
                   inputWidth="120px"
                   inputHeight="20px"
                 />

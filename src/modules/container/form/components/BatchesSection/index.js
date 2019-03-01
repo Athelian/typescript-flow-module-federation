@@ -214,7 +214,6 @@ function BatchesSection() {
                         </SlideView>
                         <div className={ItemStyle}>
                           <ContainerBatchCard
-                            // TODO: Change to object for each field, send Batch perms not container perms
                             readOnly={!allowUpdate}
                             position={position}
                             batch={batch}
