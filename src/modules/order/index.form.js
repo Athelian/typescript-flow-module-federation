@@ -30,7 +30,7 @@ import {
   createOrderMutation,
   prepareCreateOrderInput,
   updateOrderMutation,
-  prepareUpdateOrderInput,
+  prepareParsedUpdateOrderInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -92,6 +92,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   onSave = async (
+    originalValues: Object,
     formData: Object,
     saveOrder: Function,
     onSuccess: Function = () => {},
@@ -102,7 +103,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
       ? prepareCreateOrderInput(formData)
-      : prepareUpdateOrderInput(formData);
+      : prepareParsedUpdateOrderInput(originalValues, formData);
 
     if (isNewOrClone) {
       const { data } = await saveOrder({ variables: { input } });
@@ -340,6 +341,12 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   isLoading={isLoading}
                                   onClick={() =>
                                     this.onSave(
+                                      {
+                                        ...orderItemState.originalValues,
+                                        ...orderInfoState.originalValues,
+                                        ...orderTagsState.originalValues,
+                                        ...orderFilesState.originalValues,
+                                      },
                                       {
                                         ...orderItemState.state,
                                         ...orderInfoState.state,
