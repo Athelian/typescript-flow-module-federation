@@ -248,7 +248,7 @@ function BatchesSection() {
                                   }
                                 : null
                             }
-                            // switch to allowCloneBatches
+                            // TODO: switch to allowCloneBatches
                             onClone={
                               allowCreateBatches
                                 ? ({
