@@ -27,7 +27,6 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/container';
 import validator from 'modules/batch/form/validator';
 import { FormField, FormContainer } from 'modules/form';
-
 import { OrderItemCard, GrayCard } from 'components/Cards';
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import GridColumn from 'components/GridColumn';
@@ -78,9 +77,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
         {!isNew && (
           <>
             <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
-            {!isClone && hasPermission(BATCH_CREATE) && (
-              <CloneButton onClick={() => navigate(`/batch/clone/${encodeId(batch.id)}`)} />
-            )}
+
             <div className={StatusStyle(batch.archived)}>
               <Icon icon={batch.archived ? 'ARCHIVED' : 'ACTIVE'} />
               <div className={StatusLabelStyle}>
@@ -100,6 +97,10 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                 position="bottom"
               />
             </div>
+
+            {!isClone && hasPermission(BATCH_CREATE) && (
+              <CloneButton onClick={() => navigate(`/batch/clone/${encodeId(batch.id)}`)} />
+            )}
           </>
         )}
       </SectionHeader>
@@ -238,6 +239,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                         />
                       )}
                     </FormField>
+                    {/* TODO: editable : { values: BATCH_SET_CUSTOM_FIELDS, mask: BATCH_SET_CUSTOM_FIELDS_MASK }.  */}
                     <CustomFieldsFactory
                       entityType="Batch"
                       customFields={values.customFields}
@@ -249,6 +251,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                     <Label required>
                       <FormattedMessage {...messages.orderItem} />
                     </Label>
+                    {/* TODO: (a || b) && item list */}
                     {allowUpdate || hasPermission(BATCH_SET_ORDER_ITEM) ? (
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
@@ -313,6 +316,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                     )}
                   </div>
                 </div>
+                {/* TODO: tag.list, if tag list false can only delete */}
                 <FieldItem
                   vertical
                   label={

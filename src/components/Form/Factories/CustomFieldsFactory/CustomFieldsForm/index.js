@@ -25,7 +25,7 @@ type OptionalProps = {
   onCancel: Function,
   onSave: Function,
 };
-
+// TODO: editable : { values, mask }
 type Props = OptionalProps & {
   entityType: string,
   editable: boolean,

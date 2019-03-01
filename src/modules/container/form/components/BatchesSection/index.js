@@ -36,9 +36,18 @@ function BatchesSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
+  // TODO: Check container.batches.list to render this section
+
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
+
+  // TODO: (a || b) && batch list
   const allowAddBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_ADD);
+
+  // TODO: (update || container_batches_add) && batch create && items list
   const allowCreateBatches = hasPermission(BATCH_CREATE);
+
+  // TODO: allowCloneBatches = (update || container_batches_add) && batch create
+
   const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
 
   return (
@@ -201,7 +210,9 @@ function BatchesSection() {
                         </SlideView>
                         <div className={ItemStyle}>
                           <ContainerBatchCard
+                            // TODO: Change to object for each field, send Batch perms not container perms
                             readOnly={!allowUpdate}
+                            // TODO: Add prop for control click product icon, product.products.form
                             position={position}
                             batch={batch}
                             saveOnBlur={updatedBatch => {
@@ -211,9 +222,12 @@ function BatchesSection() {
                               !isNullOrUndefined(representativeBatch) &&
                               representativeBatch.id === batch.id
                             }
+                            // TODO: Add container.update || container.addbatch || container.removebatch
+                            // TODO: Note: container.setRepresntative will be added later in farfarfuture
                             onClickRepresentative={() =>
                               setDeepFieldValue(`representativeBatch`, batch)
                             }
+                            // TODO: change to Batch form
                             onClick={
                               hasPermission(ORDER_FORM) ? () => batchSlideToggle(true) : () => {}
                             }
@@ -234,6 +248,7 @@ function BatchesSection() {
                                   }
                                 : null
                             }
+                            // TODO: switch to allowCloneBatches
                             onClone={
                               allowCreateBatches
                                 ? ({

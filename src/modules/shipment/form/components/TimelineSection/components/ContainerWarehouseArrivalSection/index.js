@@ -37,6 +37,7 @@ const ContainerWarehouseArrivalSection = () => (
       const numOfContainers = containers.length;
       const numOfApprovedAgreed = numAgreedArrivalDateApproved(containers);
       const numOfApprovedActual = numActualArrivalDateApproved(containers);
+
       return (
         <div
           id="containersWarehouseArrival"
@@ -55,6 +56,7 @@ const ContainerWarehouseArrivalSection = () => (
               <BooleanValue>
                 {({ value: isOpen, set: slideToggle }) => (
                   <>
+                    {/* TODO: add perm for see shipment.containers.list */}
                     <EditButton
                       label={
                         <FormattedMessage

@@ -87,6 +87,8 @@ class VoyageInfoSection extends React.PureComponent<Props> {
     const enumType = icon === 'SHIPMENT' ? 'Seaport' : 'Airport';
     const deepField = icon === 'SHIPMENT' ? 'seaport' : 'airport';
 
+    // TODO: Add perms for ports, vesselname, vesselcode
+
     return (
       <div className={VoyageInfoSectionWrapperStyle} {...rest}>
         <GridColumn>

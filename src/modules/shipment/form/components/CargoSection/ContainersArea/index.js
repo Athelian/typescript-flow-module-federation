@@ -80,6 +80,7 @@ const cleanBatchesContainerByContainerId = (
 function ContainersArea({ selectCardId, setSelected }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
@@ -151,6 +152,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                   <BooleanValue>
                                     {({ value: isOpenDialog, set: toggleDialog }) => (
                                       <>
+                                        {/* TODO: check same todo written for ContainersSlideView */}
                                         <ShipmentContainerCard
                                           container={container}
                                           editable={{
@@ -195,6 +197,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               newContainer
                                             );
                                           }}
+                                          // TODO: add perm to check containers.form
                                           onClick={() => toggleContainerForm(true)}
                                           onSelectWarehouse={
                                             hasPermission([
@@ -205,6 +208,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               : () => {}
                                           }
                                           actions={[
+                                            // TODO: (shipment_update || shipment.container.remove ) && container.container.delete
                                             hasPermission([SHIPMENT_UPDATE, CONTAINER_UPDATE]) && (
                                               <CardAction
                                                 icon="REMOVE"
@@ -235,6 +239,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             SHIPMENT_UPDATE,
                                             SHIPMENT_REMOVE_BATCH,
                                           ])}
+                                          // TODO: add prop for To Batches Pool, check shipment.containerBatches.remove
                                           onToBatchesPool={() => {
                                             updateBatchesState(
                                               'batches',
@@ -284,6 +289,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                 </>
                               )}
                             </BooleanValue>
+                            {/* TODO: need container.form to open slideview */}
                             <SlideView
                               isOpen={isOpenContainerForm}
                               onRequestClose={() => toggleContainerForm(false)}
@@ -321,7 +327,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                 })}
               </div>
             </div>
-            {hasPermission([SHIPMENT_UPDATE, CONTAINER_CREATE]) && (
+            {hasPermission([CONTAINER_CREATE]) && (
               <div className={ContainersFooterWrapperStyle}>
                 <NewButton
                   label={

@@ -39,8 +39,10 @@ export default function ContainerList({ containers, setDeepFieldValue }: Props) 
                   setDeepFieldValue(`containers.${index}`, newContainer);
                 }}
                 onSelectWarehouse={() => toggleSelectWarehouse(true)}
+                // TODO: Remove all shipment_updates
                 editable={{
                   no: hasPermission([SHIPMENT_UPDATE, CONTAINER_UPDATE, CONTAINER_SET_NO]),
+                  // TODO: Add && warehouse.list
                   warehouse: hasPermission([
                     SHIPMENT_UPDATE,
                     CONTAINER_UPDATE,

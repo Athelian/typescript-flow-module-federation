@@ -19,7 +19,6 @@ import {
   getBatchesInPool,
 } from 'modules/shipment/helpers';
 import Action from 'modules/shipment/form/components/Action';
-
 import {
   ContainersWrapperStyle,
   ContainersNavbarWrapperStyle,

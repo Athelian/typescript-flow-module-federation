@@ -11,6 +11,7 @@ export const BATCH_SET_DESIRED_DATE = 'batch.batches.setDesiredAt';
 export const BATCH_SET_EXPIRY = 'batch.batches.setExpiredAt';
 export const BATCH_SET_PRODUCTION_DATE = 'batch.batches.setProducedAt';
 export const BATCH_SET_CUSTOM_FIELDS = 'batch.batches.setCustomFields';
+export const BATCH_SET_CUSTOM_FIELDS_MASK = 'batch.batches.setCustomFieldsMask';
 export const BATCH_SET_TAGS = 'batch.batches.setTags';
 export const BATCH_SET_MEMO = 'batch.batches.setMemo';
 export const BATCH_SET_ORDER_ITEM = 'batch.batches.setOrderItem';

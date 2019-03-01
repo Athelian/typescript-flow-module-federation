@@ -270,6 +270,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           {({ name, ...inputHandlers }) => (
                             <EnumSelectInputFactory
                               {...inputHandlers}
+                              // TODO: update || (settransport && setport)
                               editable={hasPermission([
                                 SHIPMENT_UPDATE,
                                 SHIPMENT_SET_TRANSPORT_TYPE,
@@ -361,6 +362,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     entityType="Shipment"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
+                    // TODO: send object of { values, mask }
                     editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CUSTOM_FIELDS])}
                   />
 
@@ -375,6 +377,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         }
                         input={
                           <TagsInput
+                            // TODO: && tag list
                             editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TAGS])}
                             id="tags"
                             name="tags"
@@ -435,6 +438,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         defaultMessage="You can choose up to 5 people in charge."
                       />
                     }
+                    // TODO: && staff.list
                     editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IN_CHARGE])}
                   />
 
@@ -453,6 +457,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         return <PartnerCard partner={importer} readOnly />;
                       }
                       if (isForwarder()) {
+                        // TODO: && partner.list
                         if (isNew && hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])) {
                           return (
                             <BooleanValue>
@@ -526,6 +531,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         {({ value: opened, set: slideToggle }) => (
                           <>
                             <div
+                              // TODO: && partner.list
                               onClick={() =>
                                 isImporter() &&
                                 hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
@@ -534,6 +540,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                               }
                               role="presentation"
                             >
+                              {/* TODO: dont think this part needs any perms */}
                               {renderForwarders(
                                 forwarders,
                                 hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])

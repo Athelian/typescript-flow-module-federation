@@ -44,7 +44,8 @@ const PackagingSection = ({ isNew }: Props) => {
         icon="PACKAGING"
         title={<FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />}
       >
-        {hasPermission(BATCH_UPDATE) && (
+        {/* TODO: (a || (sum of && all the fields it sets)) && product.productProviders.get */}
+        {allowUpdate && (
           <BooleanValue>
             {({ value: syncDialogIsOpen, set: dialogToggle }) => (
               <>
@@ -172,6 +173,7 @@ const PackagingSection = ({ isNew }: Props) => {
                           defaultMessage="PACKAGE QUANTITY"
                         />
                       }
+                      //* TODO: || set packageQty
                       showAutoCalculateToggle={allowUpdate}
                       autoCalculateIsToggled={values.autoCalculatePackageQuantity}
                       onToggleAutoCalculate={() => {
@@ -230,6 +232,7 @@ const PackagingSection = ({ isNew }: Props) => {
                           defaultMessage="PKG VOLUME"
                         />
                       }
+                      // TODO: allowUpdate || set package volume
                       showCalculator
                       onCalculate={calculatePackageVolume}
                       editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME)}

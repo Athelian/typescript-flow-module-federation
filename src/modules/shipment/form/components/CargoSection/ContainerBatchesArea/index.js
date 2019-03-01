@@ -105,6 +105,7 @@ export default function ContainerBatchesArea({
                       </div>
                     </div>
 
+                    {/* TODO: shipment_update || (add_batch_in_cont && remove_batch_in_cont) */}
                     {batchesInContainer.length > 0 &&
                       hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH_IN_CONTAINER]) && (
                         <>
@@ -145,7 +146,6 @@ export default function ContainerBatchesArea({
                       <React.Fragment key={batch.id}>
                         {isSelectBatchesMode ? (
                           <ShipmentContainerBatchCard
-                            readOnly={!allowToUpdate}
                             batch={batch}
                             isRepresented={batch.id === representativeBatchId}
                             selectable
@@ -186,6 +186,10 @@ export default function ContainerBatchesArea({
                                 </SlideView>
                                 <ShipmentContainerBatchCard
                                   batch={batch}
+                                  // TODO: replace readOnly with editable object as in BatchesArea
+                                  // for deleteBatch do the if
+                                  // for cloneBatch do the iff
+                                  // dont need to do container icon link
                                   readOnly={!allowToUpdate}
                                   isRepresented={batch.id === representativeBatchId}
                                   saveOnBlur={updateBatch => {
@@ -262,8 +266,10 @@ export default function ContainerBatchesArea({
               )}
             </div>
             <div className={BatchesFooterWrapperStyle}>
+              {/* TODO: remove the full wrap */}
               {!isSelectBatchesMode && hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) && (
                 <>
+                  {/* TODO: (shipment_update || (shipment_add_batch && shipment.containerBatches.add)) && batch list */}
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                       <>
@@ -311,6 +317,7 @@ export default function ContainerBatchesArea({
                       </>
                     )}
                   </BooleanValue>
+                  {/* TODO: (shipment_update || (shipment_add_batch && shipment.containerBatches.add )) && batch create && items list */}
                   <BooleanValue>
                     {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                       <>

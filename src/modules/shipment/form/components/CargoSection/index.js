@@ -52,6 +52,9 @@ class CargoSection extends React.Component<Props, State> {
 
   render() {
     const { selectCardId, containerIndex, isSelectBatchesMode, selectedBatches } = this.state;
+
+    // TODO: need shipment.container.list && shipment.batches.list && shipment.containerBatches.list to view
+
     return (
       <div className={CargoSectionWrapperStyle}>
         {isSelectBatchesMode ? (
