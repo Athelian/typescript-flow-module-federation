@@ -10,9 +10,10 @@ import {
   CONTAINER_UPDATE,
   CONTAINER_BATCHES_ADD,
   CONTAINER_BATCHES_REMOVE,
+  CONTAINER_BATCHES_LIST,
 } from 'modules/permission/constants/container';
-import { BATCH_CREATE } from 'modules/permission/constants/batch';
-import { ORDER_FORM } from 'modules/permission/constants/order';
+import { BATCH_CREATE, BATCH_LIST, BATCH_FORM } from 'modules/permission/constants/batch';
+import { ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
@@ -36,19 +37,22 @@ function BatchesSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  // TODO: Check container.batches.list to render this section
-
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
 
-  // TODO: (a || b) && batch list
-  const allowAddBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_ADD);
+  const allowAddBatches =
+    hasPermission(BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
 
-  // TODO: (update || container_batches_add) && batch create && items list
-  const allowCreateBatches = hasPermission(BATCH_CREATE);
+  const allowCreateBatches =
+    hasPermission(CONTAINER_BATCHES_ADD) &&
+    hasPermission(ORDER_ORDERITEMS_LIST) &&
+    (allowUpdate || hasPermission(BATCH_CREATE));
 
-  // TODO: allowCloneBatches = (update || container_batches_add) && batch create
+  const allowCloneBatches =
+    hasPermission(BATCH_CREATE) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
 
   const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
+
+  if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
   return (
     <div className={BatchesSectionWrapperStyle}>
@@ -212,7 +216,6 @@ function BatchesSection() {
                           <ContainerBatchCard
                             // TODO: Change to object for each field, send Batch perms not container perms
                             readOnly={!allowUpdate}
-                            // TODO: Add prop for control click product icon, product.products.form
                             position={position}
                             batch={batch}
                             saveOnBlur={updatedBatch => {
@@ -222,14 +225,18 @@ function BatchesSection() {
                               !isNullOrUndefined(representativeBatch) &&
                               representativeBatch.id === batch.id
                             }
-                            // TODO: Add container.update || container.addbatch || container.removebatch
                             // TODO: Note: container.setRepresntative will be added later in farfarfuture
-                            onClickRepresentative={() =>
-                              setDeepFieldValue(`representativeBatch`, batch)
+                            onClickRepresentative={
+                              hasPermission([
+                                CONTAINER_UPDATE,
+                                CONTAINER_BATCHES_ADD,
+                                CONTAINER_BATCHES_REMOVE,
+                              ])
+                                ? () => setDeepFieldValue(`representativeBatch`, batch)
+                                : null
                             }
-                            // TODO: change to Batch form
                             onClick={
-                              hasPermission(ORDER_FORM) ? () => batchSlideToggle(true) : () => {}
+                              hasPermission(BATCH_FORM) ? () => batchSlideToggle(true) : () => {}
                             }
                             onClear={
                               allowRemoveBatches
@@ -248,9 +255,8 @@ function BatchesSection() {
                                   }
                                 : null
                             }
-                            // TODO: switch to allowCloneBatches
                             onClone={
-                              allowCreateBatches
+                              allowCloneBatches
                                 ? ({
                                     id,
                                     deliveredAt,

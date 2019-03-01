@@ -2,6 +2,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
+
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
@@ -17,6 +20,7 @@ import {
   DateInputFactory,
 } from 'components/Form';
 import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -84,6 +88,11 @@ const ContainerBatchCard = ({
   isRepresented,
   ...rest
 }: Props) => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  const allowAccessProductForm = hasPermission(PRODUCT_FORM);
+
   if (!batch) return '';
 
   const actions =
@@ -160,15 +169,22 @@ const ContainerBatchCard = ({
             </div>
           </div>
 
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(product.id)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="PRODUCT" />
-          </Link>
+          {allowAccessProductForm ? (
+            <Link
+              className={ProductIconLinkStyle}
+              to={`/product/${encodeId(product.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="PRODUCT" />
+            </Link>
+          ) : (
+            <div className={ProductIconLinkStyle}>
+              <Icon icon="PRODUCT" />
+            </div>
+          )}
+
           {readOnly ? (
             <div className={RepresentIconStyle(isRepresented)}>
               <Icon icon="STAR" />
