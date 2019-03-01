@@ -18,10 +18,7 @@ import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, CustomFieldsIconStyle } from './style';
 
 type OptionalProps = {
-  editable: {
-    values: boolean,
-    mask: boolean,
-  },
+  editable: Object,
 };
 
 type Props = OptionalProps & {
@@ -35,10 +32,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  editable: {
-    values: true,
-    mask: true,
-  },
+  editable: Object,
 };
 
 const CustomFieldsFactory = ({

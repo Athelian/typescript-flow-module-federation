@@ -39,8 +39,8 @@ const defaultProps = {
   onCancel: () => {},
   onSave: () => {},
   editable: {
-    values: true,
-    mask: true,
+    values: false,
+    mask: false,
   },
 };
 
