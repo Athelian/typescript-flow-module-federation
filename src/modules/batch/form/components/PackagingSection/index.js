@@ -42,14 +42,12 @@ const PackagingSection = ({ isNew }: Props) => {
   const allowSyncPackage =
     hasPermission(PRODUCT_PROVIDER_GET) &&
     (allowUpdate ||
-      hasPermission([
-        BATCH_SET_PACKAGE_NAME,
-        BATCH_SET_PACKAGE_CAPACITY,
-        BATCH_SET_PACKAGE_QUANTITY,
-        BATCH_SET_PACKAGE_WEIGHT,
-        BATCH_SET_PACKAGE_VOLUME,
-        BATCH_SET_PACKAGE_SIZE,
-      ]));
+      (hasPermission(BATCH_SET_PACKAGE_NAME) &&
+        hasPermission(BATCH_SET_PACKAGE_CAPACITY) &&
+        hasPermission(BATCH_SET_PACKAGE_QUANTITY) &&
+        hasPermission(BATCH_SET_PACKAGE_WEIGHT) &&
+        hasPermission(BATCH_SET_PACKAGE_VOLUME) &&
+        hasPermission(BATCH_SET_PACKAGE_SIZE)));
 
   return (
     <SectionWrapper id="batch_packagingSection">

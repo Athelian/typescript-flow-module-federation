@@ -31,10 +31,6 @@ type Props = OptionalProps & {
   setFieldValue: Function,
 };
 
-const defaultProps = {
-  editable: Object,
-};
-
 const CustomFieldsFactory = ({
   entityType,
   customFields,
@@ -146,7 +142,5 @@ const CustomFieldsFactory = ({
     />
   );
 };
-
-CustomFieldsFactory.defaultProps = defaultProps;
 
 export default CustomFieldsFactory;
