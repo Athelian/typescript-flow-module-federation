@@ -1,4 +1,12 @@
-import { parseGenericField, parseEnumField, parseDateField, parseArrayOfIdsField, parseParentIdField } from '../data';
+import { getByPathWithDefault } from 'utils/fp';
+import {
+  parseGenericField,
+  parseEnumField,
+  parseDateField,
+  parseArrayOfIdsField,
+  parseParentIdField,
+  parseArrayOfChildrenField,
+} from '../data';
 
 describe('Functions to parse update mutations', () => {
   it('Test A - Strings', () => {
@@ -137,22 +145,104 @@ describe('Functions to parse update mutations', () => {
   it('Test E - Parent ids', () => {
     // No change
     expect(
-      parseParentIdField('containerId', { id: '1', name: 'Container A' }, { id: '1', name: 'Container A' })
+      parseParentIdField(
+        'containerId',
+        { id: '1', name: 'Container A' },
+        { id: '1', name: 'Container A' }
+      )
     ).toEqual({});
 
     // Change parents
     expect(
-      parseParentIdField('containerId', { id: '1', name: 'Container A' }, { id: '2', name: 'Container B' })
+      parseParentIdField(
+        'containerId',
+        { id: '1', name: 'Container A' },
+        { id: '2', name: 'Container B' }
+      )
     ).toEqual({ containerId: '2' });
 
     // Change from no parent to parent
-    expect(
-      parseParentIdField('containerId', null, { id: '1', name: 'Container A' })
-    ).toEqual({ containerId: '1' });
+    expect(parseParentIdField('containerId', null, { id: '1', name: 'Container A' })).toEqual({
+      containerId: '1',
+    });
 
     // Change from parent to no parent
-    expect(
-      parseParentIdField('containerId', { id: '1', name: 'Container A' }, null)
-    ).toEqual({ containerId: null });
+    expect(parseParentIdField('containerId', { id: '1', name: 'Container A' }, null)).toEqual({
+      containerId: null,
+    });
+  });
+
+  it('Test F - Children entities', () => {
+    const newValues = { currency: 'JPY' };
+    const oldItems = [
+      {
+        id: '1',
+        productProvider: { id: '1' },
+        quantity: 200,
+        price: { amount: 100, currency: 'JPY' },
+      },
+    ];
+    const newItems = [
+      {
+        id: '1',
+        productProvider: { id: '1' },
+        quantity: 200,
+        price: { amount: 100, currency: 'JPY' },
+      },
+    ];
+
+    const parseInside = (oldItem, newItem) => ({
+      ...(!oldItem ? {} : { id: oldItem.id }),
+      ...parseParentIdField(
+        'productProviderId',
+        getByPathWithDefault(null, 'productProvider', oldItem),
+        newItem.productProvider
+      ),
+      ...parseGenericField(
+        'quantity',
+        getByPathWithDefault(null, 'quantity', oldItem),
+        newItem.quantity
+      ),
+      ...parseGenericField('price', getByPathWithDefault(null, 'price', oldItem), {
+        amount: newItem.price.amount,
+        currency: newValues.currency,
+      }),
+    });
+
+    // No change
+    expect(parseArrayOfChildrenField('myItems', oldItems, newItems, parseInside)).toEqual({});
+
+    oldItems.push({
+      id: '2',
+      productProvider: { id: '2' },
+      quantity: 200,
+      price: { amount: 100, currency: 'JPY' },
+    });
+
+    // Removed an item
+    expect(parseArrayOfChildrenField('myItems', oldItems, newItems, parseInside)).toEqual({
+      myItems: [{ id: '1' }],
+    });
+
+    newItems.push({
+      id: '2',
+      productProvider: { id: '2' },
+      quantity: 200,
+      price: { amount: 100, currency: 'JPY' },
+    });
+    newItems.push({
+      productProvider: { id: '3' },
+      quantity: 200,
+      price: { amount: 100, currency: 'JPY' },
+    });
+
+    // Added an item
+    expect(parseArrayOfChildrenField('myItems', oldItems, newItems, parseInside)).toEqual({
+      myItems: [
+        { id: '1' },
+        { id: '2' },
+        { productProviderId: '3', quantity: 200, price: { amount: 100, currency: 'JPY' } },
+      ],
+    });
   });
 });

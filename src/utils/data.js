@@ -157,6 +157,8 @@ export const parseCustomFieldsField = (
     }>,
   }
 ): Object => {
+  if (isEquals(originalCustomFields, newCustomFields)) return {};
+
   const originalMaskId = getByPathWithDefault(null, 'mask.id', originalCustomFields);
   const newMaskId = getByPathWithDefault(null, 'mask.id', newCustomFields);
 
@@ -191,3 +193,34 @@ export const parseCustomFieldsField = (
     };
   return {};
 };
+
+// Have to return id even for new file
+export const parseFilesField = (
+  key: string,
+  originalFiles: Array<{
+    id: string,
+    name: string,
+    type: string,
+    memo: ?string,
+  }>,
+  newFiles: Array<{
+    id: string,
+    name: string,
+    type: string,
+    memo: ?string,
+  }>
+): Object => ({
+  ...parseArrayOfChildrenField(
+    key,
+    originalFiles,
+    newFiles,
+    (oldFile: ?Object, newFile: Object) => {
+      return {
+        id: newFile.id,
+        ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
+        ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
+        ...parseGenericField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+      };
+    }
+  ),
+});

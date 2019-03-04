@@ -33,6 +33,7 @@ import {
   parseParentIdField,
   parseArrayOfChildrenField,
   parseCustomFieldsField,
+  parseFilesField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 import type { OrderForm } from '../type.js.flow';
@@ -254,34 +255,24 @@ export const prepareParsedUpdateOrderInput = (
           newItem.quantity
         ),
         ...parseGenericField('price', getByPathWithDefault(null, 'price', oldItem), {
-          amount: newItem.amount,
+          amount: newItem.price.amount,
           currency: newValues.currency,
         }),
-        ...parseArrayOfChildrenField(
-          'batches',
-          originalValues.batches,
-          newValues.batches,
-          (oldBatch: ?Object, newBatch: Object) => {
-            // TODO: Change to new batch update
-            return {
-              ...prepareUpdateBatchInput(newBatch, false, false),
-            };
-          }
-        ),
+        ...(!oldItem
+          ? { batches: [] }
+          : parseArrayOfChildrenField(
+              'batches',
+              originalValues.batches,
+              newValues.batches,
+              (oldBatch: ?Object, newBatch: Object) => {
+                // TODO: Change to new batch update
+                return {
+                  ...prepareUpdateBatchInput(newBatch, false, false),
+                };
+              }
+            )),
       };
     }
   ),
-  ...parseArrayOfChildrenField(
-    'files',
-    originalValues.files,
-    newValues.files,
-    (oldFile: ?Object, newFile: Object) => {
-      return {
-        ...(!oldFile ? {} : { id: oldFile.id }),
-        ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
-        ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-        ...parseGenericField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
-      };
-    }
-  ),
+  ...parseFilesField('files', originalValues.files, newValues.files),
 });
