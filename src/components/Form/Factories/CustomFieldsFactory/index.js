@@ -18,7 +18,10 @@ import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, CustomFieldsIconStyle } from './style';
 
 type OptionalProps = {
-  editable: Object,
+  editable: {
+    values: boolean,
+    mask: boolean,
+  },
 };
 
 type Props = OptionalProps & {
