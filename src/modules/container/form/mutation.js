@@ -24,8 +24,20 @@ import {
   badRequestFragment,
   ownedByFragment,
 } from 'graphql';
-import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
-import { cleanUpData } from 'utils/data';
+import {
+  prepareUpdateBatchInput,
+  prepareParsedUpdateBatchInput,
+} from 'modules/batch/form/mutation';
+import {
+  cleanUpData,
+  parseGenericField,
+  parseDateField,
+  parseArrayOfIdsField,
+  parseParentIdField,
+  parseArrayOfChildrenField,
+  parseApprovalField,
+  parseRepresentativeBatchIndexField,
+} from 'utils/data';
 import { isNullOrUndefined } from 'utils/fp';
 
 export const updateContainerMutation = gql`
@@ -114,5 +126,87 @@ export const prepareContainer = ({
     ? findIndex(batches, batch => batch.id === representativeBatch.id)
     : null,
 });
+
+export const prepareParsedUpdateContainerInput = (
+  originalValues: Object,
+  newValues: Object,
+  location: {
+    inShipmentForm: boolean,
+    inContainerForm: boolean,
+  }
+): Object => {
+  const { inShipmentForm, inContainerForm } = location;
+
+  return {
+    ...(inContainerForm ? {} : parseParentIdField('id', originalValues, newValues)),
+    ...parseGenericField('no', originalValues.no, newValues.no),
+    ...parseDateField(
+      'warehouseArrivalAgreedDate',
+      originalValues.warehouseArrivalAgreedDate,
+      newValues.warehouseArrivalAgreedDate
+    ),
+    ...parseArrayOfIdsField(
+      'warehouseArrivalAgreedDateAssignedToIds',
+      originalValues.warehouseArrivalAgreedDateAssignedTo,
+      newValues.warehouseArrivalAgreedDateAssignedTo
+    ),
+    ...parseApprovalField(
+      'warehouseArrivalAgreedDateApprovedById',
+      {
+        approvedBy: originalValues.warehouseArrivalAgreedDateApprovedBy,
+        approvedAt: originalValues.warehouseArrivalAgreedDateApprovedAt,
+      },
+      {
+        approvedBy: newValues.warehouseArrivalAgreedDateApprovedBy,
+        approvedAt: newValues.warehouseArrivalAgreedDateApprovedAt,
+      }
+    ),
+    ...parseDateField(
+      'warehouseArrivalActualDate',
+      originalValues.warehouseArrivalActualDate,
+      newValues.warehouseArrivalActualDate
+    ),
+    ...parseArrayOfIdsField(
+      'warehouseArrivalActualDateAssignedToIds',
+      originalValues.warehouseArrivalActualDateAssignedTo,
+      newValues.warehouseArrivalActualDateAssignedTo
+    ),
+    ...parseApprovalField(
+      'warehouseArrivalActualDateApprovedById',
+      {
+        approvedBy: originalValues.warehouseArrivalActualDateApprovedBy,
+        approvedAt: originalValues.warehouseArrivalActualDateApprovedAt,
+      },
+      {
+        approvedBy: newValues.warehouseArrivalActualDateApprovedBy,
+        approvedAt: newValues.warehouseArrivalActualDateApprovedAt,
+      }
+    ),
+    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
+    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...parseParentIdField('warehouseId', originalValues.warehouse, newValues.warehouse),
+    ...parseArrayOfChildrenField(
+      'batches',
+      originalValues.batches,
+      newValues.batches,
+      (oldBatch: ?Object, newBatch: Object) => {
+        return {
+          ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+            inShipmentForm,
+            inOrderForm: false,
+            inContainerForm,
+            inBatchForm: false,
+          }),
+        };
+      }
+    ),
+    ...parseRepresentativeBatchIndexField(
+      'representativeBatchIndex',
+      originalValues.representativeBatch,
+      newValues.representativeBatch,
+      newValues.batches
+    ),
+  };
+};
 
 export default updateContainerMutation;

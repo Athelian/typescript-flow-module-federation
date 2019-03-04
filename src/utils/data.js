@@ -109,8 +109,8 @@ export const parseParentIdField = (
   originalParent: ?Object,
   newParent: ?Object
 ): Object => {
-  const originalParentId = (originalParent && originalParent.id) || null;
-  const newParentId = (newParent && newParent.id) || null;
+  const originalParentId = getByPathWithDefault(null, 'id', originalParent);
+  const newParentId = getByPathWithDefault(null, 'id', newParent);
 
   if (!isEquals(originalParentId, newParentId)) return { [key]: newParentId };
   return {};
@@ -224,3 +224,66 @@ export const parseFilesField = (
     }
   ),
 });
+
+// Return id of approver, not date
+export const parseApprovalField = (
+  key: string,
+  originalApproval: ?{
+    approvedBy: {
+      id: string,
+    },
+    approvedAt: string,
+  },
+  newApproval: ?{
+    approvedBy: {
+      id: string,
+    },
+    approvedAt: string,
+  }
+): Object => {
+  const originalApprovedById = getByPathWithDefault(null, 'approvedBy.id', originalApproval);
+  const newApprovedById = getByPathWithDefault(null, 'approvedBy.id', newApproval);
+
+  const originalApprovedAt = (originalApproval && new Date(originalApproval.approvedAt)) || null;
+  const newApprovedAt = (newApproval && new Date(newApproval.approvedAt)) || null;
+
+  const parsedOriginalApproval = {
+    approvedById: originalApprovedById,
+    approvedAt: originalApprovedAt,
+  };
+  const parsedNewApproval = {
+    approvedById: newApprovedById,
+    approvedAt: newApprovedAt,
+  };
+
+  if (!isEquals(parsedOriginalApproval, parsedNewApproval)) return { [key]: newApprovedById };
+  return {};
+};
+
+// Return index of representative batch
+export const parseRepresentativeBatchIndexField = (
+  key: string,
+  originalRepresentativeBatch: ?{
+    id: string,
+  },
+  newRepresentativeBatch: ?{
+    id: string,
+  },
+  batches: Array<Object>
+): Object => {
+  const originalRepresentativeBatchId = getByPathWithDefault(
+    null,
+    'id',
+    originalRepresentativeBatch
+  );
+  const newRepresentativeBatchId = getByPathWithDefault(null, 'id', newRepresentativeBatch);
+
+  if (isEquals(originalRepresentativeBatchId, newRepresentativeBatchId)) return {};
+
+  let newRepresentativeBatchIndex = batches.findIndex(
+    batch => batch.id === newRepresentativeBatchId
+  );
+  if (newRepresentativeBatchIndex === -1) newRepresentativeBatchIndex = null;
+
+  return { [key]: newRepresentativeBatchIndex };
+};
