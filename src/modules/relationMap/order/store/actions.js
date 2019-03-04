@@ -288,12 +288,12 @@ function actionCreators(dispatch: Function) {
           entity,
         },
       }),
-    refetchQueryBy: (entity: string, id: string) =>
+    refetchQueryBy: (entity: string, ids: Array<string>) =>
       dispatch({
         type: 'REFETCH_BY',
         payload: {
           entity,
-          id,
+          ids,
         },
       }),
     clearConnectMessage: () =>

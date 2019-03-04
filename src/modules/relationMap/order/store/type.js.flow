@@ -19,8 +19,10 @@ export type UIState = {
    * The refetch*** is for reload the new order or shipment when
    * move to order item/batch to new order/shipment
    */
-  refetchOrderId: string,
-  refetchShipmentId: string,
+  refetch: {
+    orderIds: Array<string>,
+    shipmentIds: Array<string>,
+  },
   refetchAll: boolean,
   /**
    * Those for target and highlight
@@ -50,7 +52,6 @@ export type UIState = {
     }>,
   },
   split: {
-    parentOrderIds: Array<string>,
     batches: Object,
   },
   balanceSplit: {
@@ -84,7 +85,6 @@ export type UIState = {
   },
   connectShipment: {
     enableSelectMode: boolean,
-    parentOrderIds: Array<string>,
     status: boolean,
     shipmentId: string,
   },

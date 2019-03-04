@@ -140,9 +140,9 @@ const Order = ({ intl }: Props) => {
               .catch(logger.warn);
           }
 
-          if (state.refetchShipmentId) {
-            const newShipmentId = state.refetchShipmentId;
-            actions.refetchQueryBy('SHIPMENT', '');
+          if (state.refetch.shipmentIds.length > 0) {
+            const [newShipmentId] = state.refetch.shipmentIds;
+            actions.refetchQueryBy('SHIPMENT', []);
             const queryOption: any = {
               query: shipmentDetailQuery,
               variables: {
@@ -153,9 +153,10 @@ const Order = ({ intl }: Props) => {
               .query(queryOption)
               .then(responseData => {
                 updateQuery(prevResult => {
-                  const orderIds = state.connectShipment.parentOrderIds.map(item => {
-                    const [, orderId] = item.split('-');
-                    return orderId;
+                  const orderIds = [];
+                  // TODO: find all order id base on targeting batch Id
+                  console.warn({
+                    orderIds,
                   });
                   if (prevResult && prevResult.orders && prevResult.orders.nodes) {
                     prevResult.orders.nodes
@@ -165,7 +166,7 @@ const Order = ({ intl }: Props) => {
                         order.shipments.push(responseData.data.shipment);
                       });
                   } else if (orderIds.length > 0) {
-                    actions.refetchQueryBy('ORDER', orderIds[0]);
+                    actions.refetchQueryBy('ORDER', orderIds);
                   }
 
                   scrollIntoView({
@@ -178,10 +179,10 @@ const Order = ({ intl }: Props) => {
               .catch(logger.warn);
           }
 
-          if (state.refetchOrderId) {
-            const newOrderId = state.refetchOrderId;
+          if (state.refetch.orderIds.length > 0) {
+            const [newOrderId] = state.refetch.orderIds;
             const { updateOrdersInput = [] } = state.new;
-            actions.refetchQueryBy('ORDER', '');
+            actions.refetchQueryBy('ORDER', []);
             Promise.all(
               updateOrdersInput.map(item =>
                 client.mutate({

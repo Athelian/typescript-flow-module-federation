@@ -20,8 +20,10 @@ export const uiInitState: UIState = {
   loading: false,
   error: false,
   showTag: getInitShowTag(),
-  refetchOrderId: '',
-  refetchShipmentId: '',
+  refetch: {
+    orderIds: [],
+    shipmentIds: [],
+  },
   refetchAll: false,
   expandCards: {
     orders: [],
@@ -50,7 +52,6 @@ export const uiInitState: UIState = {
   shipments: [],
   totalShipment: 0,
   split: {
-    parentOrderIds: [],
     batches: {},
   },
   balanceSplit: {
@@ -159,14 +160,15 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'REFETCH_BY': {
-      const id = getByPathWithDefault('', 'payload.id', action);
+      const ids = getByPathWithDefault([], 'payload.ids', action);
       const entity = getByPathWithDefault('', 'payload.entity', action);
       const updateData = {};
       if (entity === 'ORDER') {
-        updateData.refetchOrderId = id;
+        updateData.orderIds = ids;
       } else {
-        updateData.refetchShipmentId = id;
+        updateData.shipmentIds = ids;
       }
+
       return {
         ...state,
         ...updateData,
@@ -306,9 +308,6 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     }
     case 'SPLIT_BATCH_SUCCESS': {
       const batchId = getByPathWithDefault('', 'payload.batchId', action);
-      const [, orderId] = (
-        state.split.parentOrderIds.find(item => item.includes(`${batchId}-`)) || ''
-      ).split('-');
       const { batches } = state.split;
       return {
         ...state,
@@ -326,9 +325,6 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
                   item => item && item.id !== batchId
                 ),
           },
-          parentOrderIds: getByPathWithDefault([], 'payload.data.batches', action)
-            .filter(item => item && item.id !== batchId)
-            .map(batch => `${batch.id}-${orderId}`),
         },
         targets: getByPathWithDefault([], 'payload.data.batches', action)
           .filter(item => item && item.id !== batchId)
@@ -644,18 +640,6 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           return {
             ...state,
             targets: newTargets,
-            split: {
-              ...state.split,
-              parentOrderIds: (state.split.parentOrderIds.filter(
-                item => item !== `${payload.id}-${payload.parentOrderId}`
-              ): Array<string>),
-            },
-            connectShipment: {
-              ...state.connectShipment,
-              parentOrderIds: (state.connectShipment.parentOrderIds.filter(
-                item => item !== `${payload.id}-${payload.parentOrderId}`
-              ): Array<string>),
-            },
             connectOrder: {
               ...state.connectOrder,
               exporterIds: (state.connectOrder.exporterIds.filter(
@@ -667,21 +651,6 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         const newTargets = [...targets, `${BATCH}-${payload.id}`];
         return {
           ...state,
-          split: {
-            ...state.split,
-            parentOrderIds: state.split.parentOrderIds.includes(
-              `${payload.id}-${payload.parentOrderId}`
-            )
-              ? state.split.parentOrderIds
-              : [...state.split.parentOrderIds, `${payload.id}-${payload.parentOrderId}`],
-          },
-          connectShipment: {
-            ...state.connectShipment,
-            parentOrderIds: [
-              ...state.connectShipment.parentOrderIds,
-              `${payload.id}-${payload.parentOrderId}`,
-            ],
-          },
           connectOrder: {
             ...state.connectOrder,
             exporterIds: [...state.connectOrder.exporterIds, payload.exporterId],
