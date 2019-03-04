@@ -83,8 +83,10 @@ export const parseEnumField = (key: string, originalEnum: ?string, newEnum: ?str
 
 // Back uses Date format, Front uses string format
 export const parseDateField = (key: string, originalDate: ?Date, newDate: ?string): Object => {
-  const parsedOriginalDate = originalDate || null;
+  const parsedOriginalDate = originalDate ? new Date(originalDate) : null;
   const parsedNewDate = newDate ? new Date(newDate) : null;
+
+  console.warn(!isEquals(parsedOriginalDate, parsedNewDate));
 
   if (!isEquals(parsedOriginalDate, parsedNewDate)) return { [key]: parsedNewDate };
   return {};
