@@ -10,6 +10,7 @@ import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
+import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/batch/messages';
 import useListConfig from 'hooks/useListConfig';
@@ -143,7 +144,7 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                       data-testid="saveButtonOnSelectBatches"
                       disabled={selected.length === 0}
                       onClick={() => {
-                        onSelect(selected);
+                        onSelect(removeTypename(selected));
                       }}
                     />
                   </SlideViewNavBar>

@@ -183,7 +183,7 @@ export const prepareUpdateBatchInput = (
 });
 
 export const prepareParsedUpdateBatchInput = (
-  originalValues: Object,
+  originalValues: ?Object,
   newValues: Object,
   location: {
     inShipmentForm: boolean,
@@ -195,28 +195,72 @@ export const prepareParsedUpdateBatchInput = (
   const { inShipmentForm, inOrderForm, inContainerForm, inBatchForm } = location;
 
   return {
-    ...(inBatchForm ? {} : parseParentIdField('id', originalValues, newValues)),
-    ...parseGenericField('no', originalValues.no, newValues.no),
-    ...parseGenericField('quantity', originalValues.quantity, newValues.quantity),
-    ...parseDateField('deliveredAt', originalValues.deliveredAt, newValues.deliveredAt),
-    ...parseDateField('desiredAt', originalValues.desiredAt, newValues.desiredAt),
-    ...parseDateField('expiredAt', originalValues.expiredAt, newValues.expiredAt),
-    ...parseDateField('producedAt', originalValues.producedAt, newValues.producedAt),
-    ...parseCustomFieldsField('customFields', originalValues.customFields, newValues.customFields),
-    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...(!inBatchForm && originalValues ? { id: newValues.id } : {}),
+    ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
+    ...parseGenericField(
+      'quantity',
+      getByPathWithDefault(null, 'quantity', originalValues),
+      newValues.quantity
+    ),
+    ...parseDateField(
+      'deliveredAt',
+      getByPathWithDefault(null, 'deliveredAt', originalValues),
+      newValues.deliveredAt
+    ),
+    ...parseDateField(
+      'desiredAt',
+      getByPathWithDefault(null, 'desiredAt', originalValues),
+      newValues.desiredAt
+    ),
+    ...parseDateField(
+      'expiredAt',
+      getByPathWithDefault(null, 'expiredAt', originalValues),
+      newValues.expiredAt
+    ),
+    ...parseDateField(
+      'producedAt',
+      getByPathWithDefault(null, 'producedAt', originalValues),
+      newValues.producedAt
+    ),
+    ...parseCustomFieldsField(
+      'customFields',
+      getByPathWithDefault(null, 'customFields', originalValues),
+      newValues.customFields
+    ),
+    ...parseArrayOfIdsField(
+      'tagIds',
+      getByPathWithDefault(null, 'tags', originalValues),
+      newValues.tags
+    ),
+    ...parseGenericField(
+      'memo',
+      getByPathWithDefault(null, 'memo', originalValues),
+      newValues.memo
+    ),
     ...(inOrderForm
       ? {}
-      : parseParentIdField('orderItemId', originalValues.orderItem, newValues.orderItem)),
+      : parseParentIdField(
+          'orderItemId',
+          getByPathWithDefault(null, 'orderItem', originalValues),
+          newValues.orderItem
+        )),
     ...(inShipmentForm || inContainerForm
       ? {}
-      : parseParentIdField('shipmentId', originalValues.shipment, newValues.shipment)),
+      : parseParentIdField(
+          'shipmentId',
+          getByPathWithDefault(null, 'shipment', originalValues),
+          newValues.shipment
+        )),
     ...(inShipmentForm || inContainerForm
       ? {}
-      : parseParentIdField('containerId', originalValues.container, newValues.container)),
+      : parseParentIdField(
+          'containerId',
+          getByPathWithDefault(null, 'container', originalValues),
+          newValues.container
+        )),
     ...parseArrayOfChildrenField(
       'batchAdjustments',
-      originalValues.batchAdjustments,
+      getByPathWithDefault(null, 'batchAdjustments', originalValues),
       newValues.batchAdjustments,
       (oldAdjustment: ?Object, newAdjustment: Object) => {
         return {
@@ -239,23 +283,39 @@ export const prepareParsedUpdateBatchInput = (
         };
       }
     ),
-    ...parseGenericField('packageName', originalValues.packageName, newValues.packageName),
+    ...parseGenericField(
+      'packageName',
+      getByPathWithDefault(null, 'packageName', originalValues),
+      newValues.packageName
+    ),
     ...parseGenericField(
       'packageCapacity',
-      originalValues.packageCapacity,
+      getByPathWithDefault(null, 'packageCapacity', originalValues),
       newValues.packageCapacity
     ),
     ...parseGenericField(
       'packageQuantity',
-      originalValues.packageQuantity,
+      getByPathWithDefault(null, 'packageQuantity', originalValues),
       newValues.packageQuantity
     ),
-    ...parseGenericField('packageWeight', originalValues.packageWeight, newValues.packageWeight),
-    ...parseGenericField('packageVolume', originalValues.packageVolume, newValues.packageVolume),
-    ...parseGenericField('packageSize', originalValues.packageSize, newValues.packageSize),
+    ...parseGenericField(
+      'packageWeight',
+      getByPathWithDefault(null, 'packageWeight', originalValues),
+      newValues.packageWeight
+    ),
+    ...parseGenericField(
+      'packageVolume',
+      getByPathWithDefault(null, 'packageVolume', originalValues),
+      newValues.packageVolume
+    ),
+    ...parseGenericField(
+      'packageSize',
+      getByPathWithDefault(null, 'packageSize', originalValues),
+      newValues.packageSize
+    ),
     ...parseGenericField(
       'autoCalculatePackageQuantity',
-      originalValues.autoCalculatePackageQuantity,
+      getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
   };

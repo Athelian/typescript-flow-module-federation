@@ -93,10 +93,10 @@ export const parseDateField = (key: string, originalDate: ?Date, newDate: ?strin
 // Return only ids of the array of objects
 export const parseArrayOfIdsField = (
   key: string,
-  originalArray: Array<Object>,
+  originalArray: ?Array<Object>,
   newArray: Array<Object>
 ): Object => {
-  const originalArrayOfIds = originalArray.map(({ id }) => id);
+  const originalArrayOfIds = (originalArray || []).map(({ id }) => id);
   const newArrayOfIds = newArray.map(({ id }) => id);
 
   if (!isEquals(originalArrayOfIds, newArrayOfIds)) return { [key]: newArrayOfIds };
@@ -119,16 +119,17 @@ export const parseParentIdField = (
 // Return parsed array of children objects
 export const parseArrayOfChildrenField = (
   key: string,
-  originalChildren: Array<Object>,
+  originalChildren: ?Array<Object>,
   newChildren: Array<Object>,
-  parseInside: (oldChild: ?Object, newChild: Object) => Object
+  parseInside: (oldChild: ?Object, newChild: Object) => Object,
+  forceSendIds: boolean = false
 ) => {
-  if (isEquals(originalChildren, newChildren)) return {};
+  if (!forceSendIds && isEquals(originalChildren, newChildren)) return {};
 
   const parsedNewChildren = newChildren.map(
     (newChild: Object): Array<Object> => {
       const oldChild =
-        originalChildren.find(
+        (originalChildren || []).find(
           (originalChild: Object): Object => originalChild.id === newChild.id
         ) || null;
 
@@ -142,7 +143,7 @@ export const parseArrayOfChildrenField = (
 // Have to return all fieldValues if there is at least one change in it
 export const parseCustomFieldsField = (
   key: string,
-  originalCustomFields: {
+  originalCustomFields: ?{
     mask: ?Object,
     fieldValues: Array<{
       value: { string: ?string },
@@ -162,18 +163,24 @@ export const parseCustomFieldsField = (
   const originalMaskId = getByPathWithDefault(null, 'mask.id', originalCustomFields);
   const newMaskId = getByPathWithDefault(null, 'mask.id', newCustomFields);
 
-  const parsedOriginalFieldValues = originalCustomFields.fieldValues.map(fieldValue => {
+  const parsedOriginalFieldValues = getByPathWithDefault(
+    [],
+    'fieldValues',
+    originalCustomFields
+  ).map(fieldValue => {
     const value = { string: getByPathWithDefault(null, 'value.string', fieldValue) };
     const fieldDefinitionId = getByPathWithDefault(null, 'fieldDefinition.id', fieldValue);
 
     return { value, fieldDefinitionId };
   });
-  const parsedNewFieldValues = newCustomFields.fieldValues.map(fieldValue => {
-    const value = { string: getByPathWithDefault(null, 'value.string', fieldValue) };
-    const fieldDefinitionId = getByPathWithDefault(null, 'fieldDefinition.id', fieldValue);
+  const parsedNewFieldValues = getByPathWithDefault([], 'fieldValues', newCustomFields).map(
+    fieldValue => {
+      const value = { string: getByPathWithDefault(null, 'value.string', fieldValue) };
+      const fieldDefinitionId = getByPathWithDefault(null, 'fieldDefinition.id', fieldValue);
 
-    return { value, fieldDefinitionId };
-  });
+      return { value, fieldDefinitionId };
+    }
+  );
 
   const parsedOriginalCustomFields = {
     maskId: originalMaskId,
@@ -197,7 +204,7 @@ export const parseCustomFieldsField = (
 // Have to return id even for new file
 export const parseFilesField = (
   key: string,
-  originalFiles: Array<{
+  originalFiles: ?Array<{
     id: string,
     name: string,
     type: string,

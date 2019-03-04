@@ -38,7 +38,7 @@ import {
   parseApprovalField,
   parseRepresentativeBatchIndexField,
 } from 'utils/data';
-import { isNullOrUndefined } from 'utils/fp';
+import { isNullOrUndefined, isEquals } from 'utils/fp';
 
 export const updateContainerMutation = gql`
   mutation containerUpdate($id: ID!, $input: ContainerUpdateInput!) {
@@ -127,15 +127,30 @@ export const prepareContainer = ({
     : null,
 });
 
-export const prepareParsedUpdateContainerInput = (
+type UpdateContainerInputType = {
   originalValues: Object,
+  cachedBatches: Array<Object>,
   newValues: Object,
   location: {
     inShipmentForm: boolean,
     inContainerForm: boolean,
-  }
-): Object => {
+  },
+};
+
+export const prepareParsedUpdateContainerInput = ({
+  originalValues,
+  cachedBatches,
+  newValues,
+  location,
+}: UpdateContainerInputType): Object => {
   const { inShipmentForm, inContainerForm } = location;
+
+  const originalAndCachedBatches = [
+    ...originalValues.batches,
+    ...cachedBatches.filter(
+      cachedBatch => originalValues.batches.indexOf(batch => batch.id === cachedBatch.id) < 0
+    ),
+  ];
 
   return {
     ...(inContainerForm ? {} : parseParentIdField('id', originalValues, newValues)),
@@ -187,7 +202,7 @@ export const prepareParsedUpdateContainerInput = (
     ...parseParentIdField('warehouseId', originalValues.warehouse, newValues.warehouse),
     ...parseArrayOfChildrenField(
       'batches',
-      originalValues.batches,
+      originalAndCachedBatches,
       newValues.batches,
       (oldBatch: ?Object, newBatch: Object) => {
         return {
@@ -198,7 +213,8 @@ export const prepareParsedUpdateContainerInput = (
             inBatchForm: false,
           }),
         };
-      }
+      },
+      !isEquals(originalValues, cachedBatches)
     ),
     ...parseRepresentativeBatchIndexField(
       'representativeBatchIndex',
