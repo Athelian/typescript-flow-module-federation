@@ -1,6 +1,6 @@
 // @flow
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
-import { isEquals } from './fp';
+import { isEquals, getByPathWithDefault } from './fp';
 
 export const replaceUndefined: Function = when(
   either(is(Array), is(Object)),
@@ -67,11 +67,7 @@ export const cleanUpFiles: Function = pipe(
 );
 
 // Works for string, number, and object in certain situations
-export const parseGenericField = (
-  key: string,
-  originalValue: ?any,
-  newValue: ?any
-): Object => {
+export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) return { [key]: newValue };
   return {};
 };
@@ -161,29 +157,37 @@ export const parseCustomFieldsField = (
     }>,
   }
 ): Object => {
-  const parsedOriginalMask = parseGenericField('id', originalCustomFields.mask.id);
-  const parsedNewMask = newCustomFields.mask.id;
+  const originalMaskId = getByPathWithDefault(null, 'mask.id', originalCustomFields);
+  const newMaskId = getByPathWithDefault(null, 'mask.id', newCustomFields);
 
-  const parsedOriginalFieldValues = originalCustomFields.fieldValues.map(fieldValue => ({
-    value: { string: fieldValue.value.string },
-    fieldDefinitionId: fieldValue.fieldDefinition.id,
-  }));
-  const parsedNewFieldValues = newCustomFields.fieldValues.map(fieldValue => ({
-    value: { string: fieldValue.value.string },
-    fieldDefinitionId: fieldValue.fieldDefinition.id,
-  }));
+  const parsedOriginalFieldValues = originalCustomFields.fieldValues.map(fieldValue => {
+    const value = { string: getByPathWithDefault(null, 'value.string', fieldValue) };
+    const fieldDefinitionId = getByPathWithDefault(null, 'fieldDefinition.id', fieldValue);
 
+    return { value, fieldDefinitionId };
+  });
+  const parsedNewFieldValues = newCustomFields.fieldValues.map(fieldValue => {
+    const value = { string: getByPathWithDefault(null, 'value.string', fieldValue) };
+    const fieldDefinitionId = getByPathWithDefault(null, 'fieldDefinition.id', fieldValue);
+
+    return { value, fieldDefinitionId };
+  });
 
   const parsedOriginalCustomFields = {
-    ...parsedOriginalMask,
-    ...parsedOriginalFieldValues,
+    maskId: originalMaskId,
+    fieldValues: parsedOriginalFieldValues,
   };
   const parsedNewCustomFields = {
-    ...parsedNewMask,
-    ...parsedNewFieldValues,
+    maskId: newMaskId,
+    fieldValues: parsedNewFieldValues,
   };
 
   if (!isEquals(parsedOriginalCustomFields, parsedNewCustomFields))
-    return { [key]: parsedNewCustomFields };
+    return {
+      [key]: {
+        ...parseGenericField('maskId', originalMaskId, newMaskId),
+        ...parseGenericField('fieldValues', parsedOriginalFieldValues, parsedNewFieldValues),
+      },
+    };
   return {};
 };

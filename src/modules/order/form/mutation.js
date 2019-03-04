@@ -242,7 +242,7 @@ export const prepareParsedUpdateOrderInput = (
     newValues.orderItems,
     (oldItem: ?Object, newItem: Object) => {
       return {
-        ...(oldItem ? {} : { id: oldItem.id }),
+        ...(!oldItem ? {} : { id: oldItem.id }),
         ...parseParentIdField(
           'productProviderId',
           getByPathWithDefault(null, 'productProvider', oldItem),
@@ -277,22 +277,10 @@ export const prepareParsedUpdateOrderInput = (
     newValues.files,
     (oldFile: ?Object, newFile: Object) => {
       return {
-        ...(oldFile ? {} : { id: oldFile.id }),
-        ...parseGenericField(
-          'name',
-          getByPathWithDefault(null, 'name', oldFile),
-          newFile.name
-        ),
-        ...parseEnumField(
-          'type',
-          getByPathWithDefault(null, 'type', oldFile),
-          newFile.type
-        ),
-        ...parseGenericField(
-          'memo',
-          getByPathWithDefault(null, 'memo', oldFile),
-          newFile.memo
-        ),
+        ...(!oldFile ? {} : { id: oldFile.id }),
+        ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
+        ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
+        ...parseGenericField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
       };
     }
   ),
