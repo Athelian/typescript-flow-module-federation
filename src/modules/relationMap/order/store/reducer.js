@@ -72,7 +72,6 @@ export const uiInitState: UIState = {
     sourceOrder: {},
   },
   connectShipment: {
-    parentOrderIds: [],
     enableSelectMode: false,
     status: false,
     shipmentId: '',
@@ -171,7 +170,10 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
 
       return {
         ...state,
-        ...updateData,
+        refetch: {
+          ...state.refetch,
+          ...updateData,
+        },
       };
     }
     case 'SPLIT_BATCH':

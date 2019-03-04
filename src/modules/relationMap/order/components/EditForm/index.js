@@ -34,7 +34,7 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
             if (data.orderCreate.id) {
-              actions.refetchQueryBy('ORDER', data.orderCreate.id);
+              actions.refetchQueryBy('ORDER', [data.orderCreate.id]);
               actions.addNew('ORDER', data.orderCreate.id);
             }
             onClose();
@@ -52,7 +52,7 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
             if (data.shipmentCreate.id) {
-              actions.refetchQueryBy('SHIPMENT', data.shipmentCreate.id);
+              actions.refetchQueryBy('SHIPMENT', [data.shipmentCreate.id]);
               actions.addNew('SHIPMENT', data.shipmentCreate.id);
             }
             onClose();

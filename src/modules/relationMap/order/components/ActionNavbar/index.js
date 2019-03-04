@@ -450,7 +450,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
 
                         const refetchShipment = shipmentItems[shipmentItems.length - 1];
                         if (refetchShipment) {
-                          actions.refetchQueryBy('SHIPMENT', refetchShipment.shipment.id);
+                          actions.refetchQueryBy('SHIPMENT', [refetchShipment.shipment.id]);
                         }
 
                         cloneShipments.forEach(item => {
