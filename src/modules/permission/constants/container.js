@@ -20,5 +20,6 @@ export const CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE =
 export const CONTAINER_SET_MEMO = 'container.containers.setMemo';
 export const CONTAINER_SET_TAGS = 'container.containers.setTags';
 export const CONTAINER_ORDER_LIST = 'container.orders.list';
+export const CONTAINER_BATCHES_LIST = 'container.batches.list';
 export const CONTAINER_BATCHES_ADD = 'container.batches.add';
 export const CONTAINER_BATCHES_REMOVE = 'container.batches.remove';

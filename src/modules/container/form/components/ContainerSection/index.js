@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import {
   CONTAINER_UPDATE,
   CONTAINER_SET_WAREHOUSE,
@@ -14,6 +15,7 @@ import {
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_NO,
 } from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -76,8 +78,7 @@ const ContainerSection = () => {
                             defaultMessage="CONTAINER NO"
                           />
                         }
-                        // TODO: || set
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(CONTAINER_SET_NO)}
                       />
                     )}
                   </FormField>
@@ -116,8 +117,6 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalAgreedDateApprovedBy"
                         approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        // TODO: remove editable prop
-                        editable={allowUpdate}
                         assignable={
                           allowUpdate || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
                         }
@@ -161,8 +160,6 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalActualDateApprovedBy"
                         approvedBy={values.warehouseArrivalActualDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        // TODO: remove editable prop
-                        editable={allowUpdate}
                         assignable={
                           allowUpdate || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
                         }
@@ -178,8 +175,8 @@ const ContainerSection = () => {
                   <Label>
                     <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                   </Label>
-                  {/* TODO: (a || b) && warehouse list */}
-                  {allowUpdate || hasPermission(CONTAINER_SET_WAREHOUSE) ? (
+                  {hasPermission(WAREHOUSE_LIST) &&
+                  (allowUpdate || hasPermission(CONTAINER_SET_WAREHOUSE)) ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
