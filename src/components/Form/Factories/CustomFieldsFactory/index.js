@@ -17,9 +17,11 @@ import CustomFieldsForm from './CustomFieldsForm';
 import CustomFieldsContainer from './container';
 import { ShowAllButtonStyle, CustomFieldsIconStyle } from './style';
 
-// TODO: editable : { values, mask }
 type OptionalProps = {
-  editable: boolean,
+  editable: {
+    values: boolean,
+    mask: boolean,
+  },
 };
 
 type Props = OptionalProps & {
@@ -30,10 +32,6 @@ type Props = OptionalProps & {
     fieldDefinitions: Array<Object>,
   },
   setFieldValue: Function,
-};
-
-const defaultProps = {
-  editable: true,
 };
 
 const CustomFieldsFactory = ({
@@ -147,7 +145,5 @@ const CustomFieldsFactory = ({
     />
   );
 };
-
-CustomFieldsFactory.defaultProps = defaultProps;
 
 export default CustomFieldsFactory;
