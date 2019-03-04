@@ -87,11 +87,8 @@ const TimelineInfoSection = (props: Props) => {
           approvedByName={`${sourceName}.approvedBy`}
           approvedBy={timelineDate && timelineDate.approvedBy}
           setFieldValue={setFieldDeepValue}
-          // TODO: remove editable prop
-          editable={hasPermission([SHIPMENT_UPDATE])}
-          // TODO: add update || to the bottom two
-          approvable={hasPermission([SHIPMENT_APPROVE_TIMELINE_DATE])}
-          assignable={hasPermission([SHIPMENT_ASSIGN_TIMELINE_DATE])}
+          approvable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_APPROVE_TIMELINE_DATE])}
+          assignable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_ASSIGN_TIMELINE_DATE])}
         />
         <GridColumn gap="10px" data-testid={`${sourceName}_DateRevisions`}>
           <div className={AddDateButtonWrapperStyle}>

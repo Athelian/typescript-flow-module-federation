@@ -49,7 +49,7 @@ type OptionalProps = {
   onClear: (batch: Object) => void,
   onClickRepresentative: () => void,
   selectable: boolean,
-  readOnly: boolean,
+  editable: Object,
   isRepresented: boolean,
 };
 
@@ -65,7 +65,16 @@ const defaultProps = {
   onClear: () => {},
   onClickRepresentative: () => {},
   selectable: false,
-  readOnly: false,
+  editable: {
+    no: false,
+    quantity: false,
+    deliveredAt: false,
+    desiredAt: false,
+    removeBatch: false,
+    cloneBatch: false,
+    viewOrder: false,
+    setRepresentativeBatch: false,
+  },
   isRepresented: false,
 };
 
@@ -78,19 +87,20 @@ const ShipmentContainerBatchCard = ({
   saveOnBlur,
   currency,
   selectable,
-  readOnly,
+  editable,
   isRepresented,
   ...rest
 }: Props) => {
   if (!batch) return '';
 
-  const actions =
-    selectable || readOnly
-      ? []
-      : [
-          <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
-        ];
+  const actions = selectable
+    ? []
+    : [
+        editable.cloneBatch && <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+        editable.removeBatch && (
+          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />
+        ),
+      ].filter(Boolean);
 
   const {
     id,
@@ -162,18 +172,23 @@ const ShipmentContainerBatchCard = ({
           >
             <Icon icon="PRODUCT" />
           </Link>
-          <button
-            type="button"
-            onClick={evt => {
-              evt.stopPropagation();
-              if (!readOnly) {
+          {editable.setRepresentativeBatch ? (
+            <button
+              type="button"
+              onClick={evt => {
+                evt.stopPropagation();
+
                 onClickRepresentative();
-              }
-            }}
-            className={RepresentIconStyle(isRepresented)}
-          >
-            <Icon icon="STAR" />
-          </button>
+              }}
+              className={RepresentIconStyle(isRepresented)}
+            >
+              <Icon icon="STAR" />
+            </button>
+          ) : (
+            <div className={RepresentIconStyle(isRepresented)}>
+              <Icon icon="STAR" />
+            </div>
+          )}
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div
@@ -192,7 +207,7 @@ const ShipmentContainerBatchCard = ({
                   inputWidth="185px"
                   inputHeight="20px"
                   inputAlign="left"
-                  editable={!readOnly}
+                  editable={editable.no}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -226,7 +241,7 @@ const ShipmentContainerBatchCard = ({
                 <NumberInputFactory
                   inputWidth="90px"
                   inputHeight="20px"
-                  editable={!readOnly}
+                  editable={editable.quantity}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -261,7 +276,7 @@ const ShipmentContainerBatchCard = ({
                   name={fieldName}
                   isNew={false}
                   originalValue={deliveredAt}
-                  editable={!readOnly}
+                  editable={editable.deliveredAt}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -293,7 +308,7 @@ const ShipmentContainerBatchCard = ({
                   name={fieldName}
                   isNew={false}
                   originalValue={desiredAt}
-                  editable={!readOnly}
+                  editable={editable.desiredAt}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -352,15 +367,21 @@ const ShipmentContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            <Link
-              className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="ORDER" />
-            </Link>
+            {editable.viewOrder ? (
+              <Link
+                className={OrderIconStyle}
+                to={`/order/${encodeId(order.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="ORDER" />
+              </Link>
+            ) : (
+              <div className={OrderIconStyle}>
+                <Icon icon="ORDER" />
+              </div>
+            )}
             <Display align="left">{order.poNo}</Display>
           </div>
 

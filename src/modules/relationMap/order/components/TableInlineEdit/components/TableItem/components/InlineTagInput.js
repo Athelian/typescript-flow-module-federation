@@ -14,6 +14,7 @@ type Props = {
 export default function InlineTagInput({ name, tagType, values, id }: Props) {
   const { onChange } = useTagInput(values);
   return (
+    // TODO: add permission
     <TagsInput
       id={`input-${id}`}
       name={name}

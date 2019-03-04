@@ -5,12 +5,18 @@ import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_REMOVE_BATCH,
+  SHIPMENT_CONTAINER_REMOVE,
+} from 'modules/permission/constants/shipment';
+import {
+  CONTAINER_FORM,
   CONTAINER_CREATE,
-  CONTAINER_SET_WAREHOUSE,
+  CONTAINER_DELETE,
   CONTAINER_UPDATE,
   CONTAINER_SET_NO,
+  CONTAINER_SET_WAREHOUSE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
@@ -197,8 +203,11 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               newContainer
                                             );
                                           }}
-                                          // TODO: add perm to check containers.form
-                                          onClick={() => toggleContainerForm(true)}
+                                          onClick={
+                                            hasPermission(CONTAINER_FORM)
+                                              ? () => toggleContainerForm(true)
+                                              : null
+                                          }
                                           onSelectWarehouse={
                                             hasPermission([
                                               SHIPMENT_UPDATE,
@@ -208,27 +217,33 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               : () => {}
                                           }
                                           actions={[
-                                            // TODO: (shipment_update || shipment.container.remove ) && container.container.delete
-                                            hasPermission([SHIPMENT_UPDATE, CONTAINER_UPDATE]) && (
-                                              <CardAction
-                                                icon="REMOVE"
-                                                hoverColor="RED"
-                                                onClick={evt => {
-                                                  evt.stopPropagation();
-                                                  if (
-                                                    container.batches &&
-                                                    container.batches.length > 0
-                                                  ) {
-                                                    toggleDialog(true);
-                                                  } else {
-                                                    setFieldValue(
-                                                      'containers',
-                                                      removeContainerById(containers, container.id)
-                                                    );
-                                                  }
-                                                }}
-                                              />
-                                            ),
+                                            hasPermission([
+                                              SHIPMENT_UPDATE,
+                                              SHIPMENT_CONTAINER_REMOVE,
+                                            ]) &&
+                                              hasPermission(CONTAINER_DELETE) && (
+                                                <CardAction
+                                                  icon="REMOVE"
+                                                  hoverColor="RED"
+                                                  onClick={evt => {
+                                                    evt.stopPropagation();
+                                                    if (
+                                                      container.batches &&
+                                                      container.batches.length > 0
+                                                    ) {
+                                                      toggleDialog(true);
+                                                    } else {
+                                                      setFieldValue(
+                                                        'containers',
+                                                        removeContainerById(
+                                                          containers,
+                                                          container.id
+                                                        )
+                                                      );
+                                                    }
+                                                  }}
+                                                />
+                                              ),
                                           ].filter(Boolean)}
                                         />
                                         <RemoveContainerConfirmDialog
@@ -289,7 +304,6 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                 </>
                               )}
                             </BooleanValue>
-                            {/* TODO: need container.form to open slideview */}
                             <SlideView
                               isOpen={isOpenContainerForm}
                               onRequestClose={() => toggleContainerForm(false)}

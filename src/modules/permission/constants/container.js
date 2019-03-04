@@ -1,9 +1,9 @@
 // @flow
-
 export const CONTAINER_LIST = 'container.containers.list';
 export const CONTAINER_FORM = 'container.containers.form';
 export const CONTAINER_CREATE = 'container.containers.create';
 export const CONTAINER_UPDATE = 'container.containers.update';
+export const CONTAINER_DELETE = 'container.containers.delete';
 export const CONTAINER_SET_WAREHOUSE = 'container.containers.setWarehouse';
 export const CONTAINER_SET_NO = 'container.containers.setNo';
 export const CONTAINER_SET_AGREE_ARRIVAL_DATE = 'container.containers.setAgreeWarehouseArrivalDate';

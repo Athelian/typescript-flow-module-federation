@@ -3,7 +3,6 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { isNullOrUndefined } from 'utils/fp';
 import { calculatePackageQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
@@ -70,9 +69,11 @@ const defaultProps = {
     quantity: false,
     deliveredAt: false,
     desiredAt: false,
-    deleteBatch: false,
+    removeBatch: false,
     cloneBatch: false,
     viewOrder: false,
+    viewProduct: false,
+    viewContainer: false,
   },
 };
 
@@ -92,8 +93,8 @@ const ShipmentBatchCard = ({
   const actions = selectable
     ? []
     : [
-        editable.deleteBatch && <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-        editable.cloneBatch && (
+        editable.cloneBatch && <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+        editable.removeBatch && (
           <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />
         ),
       ].filter(Boolean);
@@ -162,16 +163,21 @@ const ShipmentBatchCard = ({
               {supplier && supplier.name}
             </div>
           </div>
-
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(product.id)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="PRODUCT" />
-          </Link>
+          {editable.viewProduct ? (
+            <Link
+              className={ProductIconLinkStyle}
+              to={`/product/${encodeId(product.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="PRODUCT" />
+            </Link>
+          ) : (
+            <div className={ProductIconLinkStyle}>
+              <Icon icon="PRODUCT" />
+            </div>
+          )}
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div
@@ -378,29 +384,29 @@ const ShipmentBatchCard = ({
           </div>
 
           <div className={ContainerWrapperStyle}>
-            {isNullOrUndefined(container) ? (
-              <div
-                className={ContainerIconStyle(false)}
-                role="presentation"
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <Icon icon="CONTAINER" />
-              </div>
-            ) : (
+            {container ? (
               <>
-                <Link
-                  className={ContainerIconStyle(true)}
-                  to={`/container/${encodeId(container.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="CONTAINER" />
-                </Link>
+                {editable.viewContainer ? (
+                  <Link
+                    className={ContainerIconStyle(true)}
+                    to={`/container/${encodeId(container.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="CONTAINER" />
+                  </Link>
+                ) : (
+                  <div className={ContainerIconStyle(true)}>
+                    <Icon icon="CONTAINER" />
+                  </div>
+                )}
                 <Display align="left">{container.no}</Display>
               </>
+            ) : (
+              <div className={ContainerIconStyle(false)}>
+                <Icon icon="CONTAINER" />
+              </div>
             )}
           </div>
 

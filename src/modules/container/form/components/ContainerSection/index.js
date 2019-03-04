@@ -36,6 +36,7 @@ import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -243,8 +244,12 @@ const ContainerSection = () => {
                     onChange={(field, value) => {
                       setFieldValue(field, value);
                     }}
-                    // TODO: (a || b) && tag list
-                    editable={allowUpdate || hasPermission(CONTAINER_SET_TAGS)}
+                    editable={{
+                      set:
+                        hasPermission(TAG_LIST) &&
+                        hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]),
+                      remove: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]),
+                    }}
                   />
                 }
               />

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import {
   CONTAINER_SET_WAREHOUSE,
   CONTAINER_UPDATE,
@@ -13,7 +12,7 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
-import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
+import { WAREHOUSE_FORM, WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import { ShipmentContainerCard } from 'components/Cards';
 import SlideView from 'components/SlideView';
@@ -39,33 +38,25 @@ export default function ContainerList({ containers, setDeepFieldValue }: Props) 
                   setDeepFieldValue(`containers.${index}`, newContainer);
                 }}
                 onSelectWarehouse={() => toggleSelectWarehouse(true)}
-                // TODO: Remove all shipment_updates
                 editable={{
-                  no: hasPermission([SHIPMENT_UPDATE, CONTAINER_UPDATE, CONTAINER_SET_NO]),
-                  // TODO: Add && warehouse.list
-                  warehouse: hasPermission([
-                    SHIPMENT_UPDATE,
-                    CONTAINER_UPDATE,
-                    CONTAINER_SET_WAREHOUSE,
-                  ]),
-                  viewWarehouse: hasPermission([SHIPMENT_UPDATE, WAREHOUSE_FORM]),
+                  no: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_NO]),
+                  warehouse:
+                    hasPermission(WAREHOUSE_LIST) &&
+                    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]),
+                  viewWarehouse: hasPermission([WAREHOUSE_FORM]),
                   warehouseArrivalAgreedDate: hasPermission([
-                    SHIPMENT_UPDATE,
                     CONTAINER_UPDATE,
                     CONTAINER_SET_AGREE_ARRIVAL_DATE,
                   ]),
                   warehouseArrivalAgreedDateApprovedBy: hasPermission([
-                    SHIPMENT_UPDATE,
                     CONTAINER_UPDATE,
                     CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
                   ]),
                   warehouseArrivalActualDate: hasPermission([
-                    SHIPMENT_UPDATE,
                     CONTAINER_UPDATE,
                     CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
                   ]),
                   warehouseArrivalActualDateApprovedBy: hasPermission([
-                    SHIPMENT_UPDATE,
                     CONTAINER_UPDATE,
                     CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
                   ]),
