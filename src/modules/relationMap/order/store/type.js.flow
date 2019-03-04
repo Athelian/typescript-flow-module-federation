@@ -87,5 +87,6 @@ export type UIState = {
     enableSelectMode: boolean,
     status: boolean,
     shipmentId: string,
+    lastResultId: string,
   },
 };

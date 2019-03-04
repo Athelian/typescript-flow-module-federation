@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import { intersection } from 'lodash';
 import { Query } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -137,7 +138,7 @@ const Order = ({ intl }: Props) => {
           if (state.refetchAll) {
             refetch(queryVariables)
               .then(() => actions.setRefetchAll(false))
-              .catch(logger.warn);
+              .catch(logger.error);
           }
 
           if (state.refetch.shipmentIds.length > 0) {
@@ -153,30 +154,53 @@ const Order = ({ intl }: Props) => {
               .query(queryOption)
               .then(responseData => {
                 updateQuery(prevResult => {
-                  const orderIds = [];
-                  // TODO: find all order id base on targeting batch Id
-                  console.warn({
-                    orderIds,
+                  const { entities } = normalize({
+                    shipments: state.toggleShipmentList ? state.shipments : [],
+                    orders: data && data.orders ? data.orders.nodes : [],
                   });
+                  const { orders, orderItems } = entities;
+
+                  const batchIds = uiSelectors.targetedBatchIds();
+                  const allOrderItemIds = [];
+                  (Object.entries(orderItems || {}): Array<any>).forEach(
+                    ([orderItemId, orderItem]) => {
+                      if (
+                        !allOrderItemIds.includes(orderItemId) &&
+                        intersection(orderItem.batches, batchIds).length > 0
+                      ) {
+                        allOrderItemIds.push(orderItemId);
+                      }
+                    }
+                  );
+                  const allOrderIds = [];
+                  (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                    if (
+                      !allOrderIds.includes(orderId) &&
+                      intersection(order.orderItems, allOrderItemIds).length > 0
+                    ) {
+                      allOrderIds.push(orderId);
+                    }
+                  });
+
                   if (prevResult && prevResult.orders && prevResult.orders.nodes) {
                     prevResult.orders.nodes
-                      .filter(order => orderIds.includes(order.id))
+                      .filter(order => allOrderIds.includes(order.id))
                       .forEach(order => {
                         // insert on the top
                         order.shipments.push(responseData.data.shipment);
                       });
-                  } else if (orderIds.length > 0) {
-                    actions.refetchQueryBy('ORDER', orderIds);
+                    actions.scrollToShipment(newShipmentId);
+                  } else if (allOrderIds.length > 0) {
+                    actions.refetchQueryBy('ORDER', allOrderIds);
                   }
 
                   scrollIntoView({
                     targetId: `shipment-${newShipmentId}`,
                   });
-
                   return prevResult;
                 });
               })
-              .catch(logger.warn);
+              .catch(logger.error);
           }
 
           if (state.refetch.orderIds.length > 0) {
@@ -197,7 +221,7 @@ const Order = ({ intl }: Props) => {
               )
             )
               .then(() => {})
-              .catch(logger.warn);
+              .catch(logger.error);
             const queryOption: any = {
               query: orderDetailQuery,
               variables: {
@@ -251,7 +275,7 @@ const Order = ({ intl }: Props) => {
                   return prevResult;
                 });
               })
-              .catch(logger.warn);
+              .catch(logger.error);
           }
 
           const { entities } = normalize({

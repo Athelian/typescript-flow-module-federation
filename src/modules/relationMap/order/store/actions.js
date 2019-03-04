@@ -329,6 +329,13 @@ function actionCreators(dispatch: Function) {
           isEnable,
         },
       }),
+    scrollToShipment: (id: string) =>
+      dispatch({
+        type: 'SCROLL_TO_SHIPMENT',
+        payload: {
+          id,
+        },
+      }),
   };
 }
 

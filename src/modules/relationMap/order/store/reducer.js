@@ -75,6 +75,7 @@ export const uiInitState: UIState = {
     enableSelectMode: false,
     status: false,
     shipmentId: '',
+    lastResultId: '',
   },
 };
 
@@ -107,12 +108,26 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         },
       };
     }
+    case 'SCROLL_TO_SHIPMENT': {
+      const id = getByPathWithDefault('', 'payload.id', action);
+      return {
+        ...state,
+        connectShipment: {
+          ...state.connectShipment,
+          lastResultId: id,
+        },
+      };
+    }
     case 'NEW_ENTITY': {
       const entity = getByPathWithDefault('', 'payload.entity', action);
       const id = getByPathWithDefault('', 'payload.id', action);
       if (entity === 'ORDER') {
         return {
           ...state,
+          refetch: {
+            ...state.refetch,
+            orderIds: [id],
+          },
           new: {
             ...state.new,
             orders: [...state.new.orders, id],
@@ -122,6 +137,10 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
 
       return {
         ...state,
+        refetch: {
+          ...state.refetch,
+          shipmentIds: [id],
+        },
         new: {
           ...state.new,
           shipments: [...state.new.shipments, id],

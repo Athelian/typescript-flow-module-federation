@@ -7,10 +7,10 @@ import { ConfirmMessageContainer, ConfirmActionStyle, LabelConfirmDeleteStyle } 
 const DisconnectConfirmMessage = () => (
   <div className={ConfirmMessageContainer}>
     <div className={LabelConfirmDeleteStyle}>
-      <FormattedMessage {...messages.confirmMessage} />
+      <FormattedMessage {...messages.confirmMessage} />{' '}
       <span className={ConfirmActionStyle}>
         <FormattedMessage {...messages.disconnect} />
-      </span>
+      </span>{' '}
       <FormattedMessage {...messages.confirmDisconnect} />
     </div>
     <div className={LabelConfirmDeleteStyle}>
