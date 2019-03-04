@@ -86,8 +86,6 @@ export const parseDateField = (key: string, originalDate: ?Date, newDate: ?strin
   const parsedOriginalDate = originalDate ? new Date(originalDate) : null;
   const parsedNewDate = newDate ? new Date(newDate) : null;
 
-  console.warn(!isEquals(parsedOriginalDate, parsedNewDate));
-
   if (!isEquals(parsedOriginalDate, parsedNewDate)) return { [key]: parsedNewDate };
   return {};
 };

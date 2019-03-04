@@ -21,8 +21,7 @@ import {
   createBatchMutation,
   prepareCreateBatchInput,
   updateBatchMutation,
-  prepareUpdateBatchInput,
-  formatBatchInput,
+  prepareParsedUpdateBatchInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -63,6 +62,7 @@ class BatchFormModule extends React.PureComponent<Props> {
   };
 
   onSave = async (
+    originalValues: Object,
     formData: Object,
     saveBatch: Function,
     onSuccess: Function = () => {},
@@ -73,7 +73,12 @@ class BatchFormModule extends React.PureComponent<Props> {
     const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
       ? prepareCreateBatchInput(formData)
-      : prepareUpdateBatchInput(formData);
+      : prepareParsedUpdateBatchInput(originalValues, formData, {
+          inShipmentForm: false,
+          inOrderForm: false,
+          inContainerForm: false,
+          inBatchForm: true,
+        });
 
     if (isNewOrClone) {
       const { data } = await saveBatch({ variables: { input } });
@@ -201,7 +206,8 @@ class BatchFormModule extends React.PureComponent<Props> {
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    formatBatchInput(batchContainer.state),
+                                    batchContainer.originalValues,
+                                    batchContainer.state,
                                     saveBatch,
                                     () => {
                                       batchContainer.onSuccess();

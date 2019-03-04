@@ -23,7 +23,17 @@ import {
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from 'utils/batch';
-import type { BatchCreate, BatchUpdate } from '../type.js.flow';
+import {
+  parseGenericField,
+  parseDateField,
+  parseEnumField,
+  parseArrayOfIdsField,
+  parseParentIdField,
+  parseArrayOfChildrenField,
+  parseCustomFieldsField,
+} from 'utils/data';
+import { getByPathWithDefault } from 'utils/fp';
+import type { BatchCreate, BatchUpdate, BatchQuery } from '../type.js.flow';
 
 export const createBatchMutation = gql`
   mutation batchCreate($input: BatchCreateInput!) {
@@ -171,3 +181,82 @@ export const prepareUpdateBatchInput = (
     })
   ),
 });
+
+export const prepareParsedUpdateBatchInput = (
+  originalValues: Object,
+  newValues: Object,
+  location: {
+    inShipmentForm: boolean,
+    inOrderForm: boolean,
+    inContainerForm: boolean,
+    inBatchForm: boolean,
+  }
+): BatchQuery => {
+  const { inShipmentForm, inOrderForm, inContainerForm, inBatchForm } = location;
+
+  return {
+    ...(inBatchForm ? {} : parseParentIdField('id', originalValues, newValues)),
+    ...parseGenericField('no', originalValues.no, newValues.no),
+    ...parseGenericField('quantity', originalValues.quantity, newValues.quantity),
+    ...parseDateField('deliveredAt', originalValues.deliveredAt, newValues.deliveredAt),
+    ...parseDateField('desiredAt', originalValues.desiredAt, newValues.desiredAt),
+    ...parseDateField('expiredAt', originalValues.expiredAt, newValues.expiredAt),
+    ...parseDateField('producedAt', originalValues.producedAt, newValues.producedAt),
+    ...parseCustomFieldsField('customFields', originalValues.customFields, newValues.customFields),
+    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
+    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...(inOrderForm
+      ? {}
+      : parseParentIdField('orderItemId', originalValues.orderItem, newValues.orderItem)),
+    ...(inShipmentForm || inContainerForm
+      ? {}
+      : parseParentIdField('shipmentId', originalValues.shipment, newValues.shipment)),
+    ...(inShipmentForm || inContainerForm
+      ? {}
+      : parseParentIdField('containerId', originalValues.container, newValues.container)),
+    ...parseArrayOfChildrenField(
+      'batchAdjustments',
+      originalValues.batchAdjustments,
+      newValues.batchAdjustments,
+      (oldAdjustment: ?Object, newAdjustment: Object) => {
+        return {
+          ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
+          ...parseGenericField(
+            'quantity',
+            getByPathWithDefault(null, 'quantity', oldAdjustment),
+            newAdjustment.quantity
+          ),
+          ...parseEnumField(
+            'reason',
+            getByPathWithDefault(null, 'reason', oldAdjustment),
+            newAdjustment.reason
+          ),
+          ...parseGenericField(
+            'memo',
+            getByPathWithDefault(null, 'memo', oldAdjustment),
+            newAdjustment.memo
+          ),
+        };
+      }
+    ),
+    ...parseGenericField('packageName', originalValues.packageName, newValues.packageName),
+    ...parseGenericField(
+      'packageCapacity',
+      originalValues.packageCapacity,
+      newValues.packageCapacity
+    ),
+    ...parseGenericField(
+      'packageQuantity',
+      originalValues.packageQuantity,
+      newValues.packageQuantity
+    ),
+    ...parseGenericField('packageWeight', originalValues.packageWeight, newValues.packageWeight),
+    ...parseGenericField('packageVolume', originalValues.packageVolume, newValues.packageVolume),
+    ...parseGenericField('packageSize', originalValues.packageSize, newValues.packageSize),
+    ...parseGenericField(
+      'autoCalculatePackageQuantity',
+      originalValues.autoCalculatePackageQuantity,
+      newValues.autoCalculatePackageQuantity
+    ),
+  };
+};
