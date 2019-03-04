@@ -36,23 +36,18 @@ import {
 function BatchesSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
-
   const allowAddBatches =
     hasPermission(BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
-
   const allowCreateBatches =
-    hasPermission(CONTAINER_BATCHES_ADD) &&
+    hasPermission(BATCH_CREATE) &&
     hasPermission(ORDER_ORDERITEMS_LIST) &&
-    (allowUpdate || hasPermission(BATCH_CREATE));
-
+    (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
   const allowCloneBatches =
     hasPermission(BATCH_CREATE) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
-
   const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
-
-  if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
   return (
     <div className={BatchesSectionWrapperStyle}>
@@ -224,15 +219,8 @@ function BatchesSection() {
                               !isNullOrUndefined(representativeBatch) &&
                               representativeBatch.id === batch.id
                             }
-                            // TODO: Note: container.setRepresntative will be added later in farfarfuture
-                            onClickRepresentative={
-                              hasPermission([
-                                CONTAINER_UPDATE,
-                                CONTAINER_BATCHES_ADD,
-                                CONTAINER_BATCHES_REMOVE,
-                              ])
-                                ? () => setDeepFieldValue(`representativeBatch`, batch)
-                                : null
+                            onClickRepresentative={() =>
+                              setDeepFieldValue(`representativeBatch`, batch)
                             }
                             onClick={
                               hasPermission(BATCH_FORM) ? () => batchSlideToggle(true) : () => {}
