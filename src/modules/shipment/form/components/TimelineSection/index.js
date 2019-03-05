@@ -23,6 +23,7 @@ import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
 import { ShipmentWarehouseCard, GrayCard } from 'components/Cards';
+import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -115,8 +116,6 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <VoyageInfoSection
                 id="firstVoyage"
-                // TODO: put perms inside
-                readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                 isNew={isNew}
                 icon={getTransportIcon(values.transportType)}
                 title={
@@ -188,7 +187,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="secondVoyage"
-                    readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -253,7 +251,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="thirdVoyage"
-                    readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_PORT])}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -326,49 +323,51 @@ const TimelineSection = ({ isNew }: Props) => {
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                   renderBelowHeader={
-                    // TODO: add && warehouse.list
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          {!warehouse &&
-                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
-                              <DashedPlusButton
-                                width="195px"
-                                height="40px"
-                                onClick={() => slideToggle(true)}
-                              />
-                            ) : (
-                              <GrayCard width="195px" height="40px" />
-                            ))}
-                          {warehouse &&
-                            (hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
+                    hasPermission(WAREHOUSE_LIST) &&
+                    hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) => (
+                          <>
+                            {warehouse ? (
                               <ShipmentWarehouseCard
                                 warehouse={warehouse}
                                 onClick={() => slideToggle(true)}
                               />
                             ) : (
-                              <ShipmentWarehouseCard warehouse={warehouse} readOnly />
-                            ))}
-
-                          <SlideView
-                            isOpen={opened}
-                            onRequestClose={() => slideToggle(false)}
-                            options={{ width: '1030px' }}
-                          >
-                            {opened && (
-                              <SelectWareHouse
-                                selected={warehouse}
-                                onCancel={() => slideToggle(false)}
-                                onSelect={newValue => {
-                                  slideToggle(false);
-                                  setFieldDeepValue('containerGroups.0.warehouse', newValue);
-                                }}
+                              <DashedPlusButton
+                                width="195px"
+                                height="40px"
+                                onClick={() => slideToggle(true)}
                               />
                             )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <SelectWareHouse
+                                  selected={warehouse}
+                                  onCancel={() => slideToggle(false)}
+                                  onSelect={newValue => {
+                                    slideToggle(false);
+                                    setFieldDeepValue('containerGroups.0.warehouse', newValue);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    ) : (
+                      <>
+                        {warehouse ? (
+                          <ShipmentWarehouseCard warehouse={warehouse} readOnly />
+                        ) : (
+                          <GrayCard width="195px" height="40px" />
+                        )}
+                      </>
+                    )
                   }
                 />
               )}

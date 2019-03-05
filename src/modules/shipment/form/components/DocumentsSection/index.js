@@ -8,6 +8,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
+  SHIPMENT_SET_DOCUMENTS,
 } from 'modules/permission/constants/shipment';
 import { DocumentsInput } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
@@ -48,8 +49,7 @@ function DocumentsSection({ intl }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  // TODO: || "shipment.shipments.setDocuments"
-  const allowUpdate = hasPermission(SHIPMENT_UPDATE);
+  const allowUpdate = hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS);
 
   const allowDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
 

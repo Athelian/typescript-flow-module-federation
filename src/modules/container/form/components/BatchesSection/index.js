@@ -49,6 +49,8 @@ function BatchesSection() {
     hasPermission(BATCH_CREATE) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
   const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
 
+  if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
+
   return (
     <div className={BatchesSectionWrapperStyle}>
       <SectionNavBar>

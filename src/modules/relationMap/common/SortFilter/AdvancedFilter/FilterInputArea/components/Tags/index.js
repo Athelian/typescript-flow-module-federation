@@ -23,6 +23,7 @@ export default function Tags({ values, onChange, tagType }: Props) {
           </Label>
         }
         input={
+          // TODO: add permission
           <TagsInput
             isFocused={isFocused}
             tagType={tagType}

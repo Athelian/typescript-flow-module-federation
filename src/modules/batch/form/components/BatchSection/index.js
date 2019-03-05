@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
 import {
   BATCH_CREATE,
@@ -320,7 +321,6 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                     )}
                   </div>
                 </div>
-                {/* TODO: tag.list, if tag list false can only delete */}
                 <FieldItem
                   vertical
                   label={
@@ -337,7 +337,11 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                       onChange={(field, value) => {
                         setFieldValue(field, value);
                       }}
-                      editable={allowUpdate || hasPermission(BATCH_SET_TAGS)}
+                      editable={{
+                        set:
+                          hasPermission(TAG_LIST) && hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
+                        remove: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]),
+                      }}
                     />
                   }
                 />
