@@ -9,6 +9,7 @@ import ShipmentForm from 'modules/shipment/index.form';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { encodeId } from 'utils/id';
+import emitter from 'utils/emitter';
 
 type Props = {
   type: string,
@@ -21,6 +22,11 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
   const context = React.useContext(ActionDispatch);
   const { dispatch } = context;
   const actions = actionCreators(dispatch);
+  React.useEffect(() => {
+    emitter.once('CHANGE_ORDER_STATUS', () => {
+      client.reFetchObservableQueries();
+    });
+  });
   switch (type) {
     default: {
       form = null;

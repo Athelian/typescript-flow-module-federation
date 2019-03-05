@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
+import apolloClient from 'apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
@@ -19,37 +20,41 @@ type Props = {
   perPage: number,
 };
 
-const ProductList = ({ viewType, ...filtersAndSort }: Props) => (
-  <Query
-    query={productListQuery}
-    variables={{
-      page: 1,
-      ...filtersAndSort,
-    }}
-    fetchPolicy="network-only"
-  >
-    {({ loading, data, fetchMore, error, refetch }) => {
-      if (error) {
-        return error.message;
-      }
+const ProductList = ({ viewType, ...filtersAndSort }: Props) => {
+  React.useEffect(() => {
+    emitter.once('CHANGE_PRODUCT_STATUS', () => {
+      apolloClient.reFetchObservableQueries();
+    });
+  });
 
-      const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
-      const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
-      const hasMore = nextPage <= totalPage;
-      emitter.once('CHANGE_PRODUCT_STATUS', () => {
-        // TODO: after the mutation, it's not ready on data yet
-        refetch();
-      });
-      return (
-        <ProductGridView
-          items={getByPathWithDefault([], 'products.nodes', data)}
-          onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'products')}
-          hasMore={hasMore}
-          isLoading={loading}
-        />
-      );
-    }}
-  </Query>
-);
+  return (
+    <Query
+      query={productListQuery}
+      variables={{
+        page: 1,
+        ...filtersAndSort,
+      }}
+      fetchPolicy="network-only"
+    >
+      {({ loading, data, fetchMore, error }) => {
+        if (error) {
+          return error.message;
+        }
+
+        const nextPage = getByPathWithDefault(1, 'products.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'products.totalPage', data);
+        const hasMore = nextPage <= totalPage;
+        return (
+          <ProductGridView
+            items={getByPathWithDefault([], 'products.nodes', data)}
+            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'products')}
+            hasMore={hasMore}
+            isLoading={loading}
+          />
+        );
+      }}
+    </Query>
+  );
+};
 
 export default ProductList;
