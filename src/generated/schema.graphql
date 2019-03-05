@@ -1,5 +1,5 @@
-# source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Feb 27 2019 15:45:48 GMT+0900 (Japan Standard Time)
+# source: http://localhost:8080/graphql
+# timestamp: Tue Mar 05 2019 10:23:43 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27318,7 +27318,7 @@ enum Country {
   """Afghanistan"""
   AFG
 
-  """Antigua & Barbuda"""
+  """Antigua and Barbuda"""
   ATG
 
   """Anguilla"""
@@ -27329,6 +27329,9 @@ enum Country {
 
   """Armenia"""
   ARM
+
+  """Netherlands Antilles"""
+  ANT
 
   """Angola"""
   AGO
@@ -27357,7 +27360,7 @@ enum Country {
   """Azerbaijan"""
   AZE
 
-  """Bosnia & Herzegovina"""
+  """Bosnia and Herzegovina"""
   BIH
 
   """Barbados"""
@@ -27384,7 +27387,7 @@ enum Country {
   """Benin"""
   BEN
 
-  """St. Barthélemy"""
+  """Saint Barthélemy"""
   BLM
 
   """Bermuda"""
@@ -27396,7 +27399,7 @@ enum Country {
   """Bolivia"""
   BOL
 
-  """Caribbean Netherlands"""
+  """Bonaire, Sint Eustatius and Saba"""
   BES
 
   """Brazil"""
@@ -27423,22 +27426,22 @@ enum Country {
   """Canada"""
   CAN
 
-  """Cocos (Keeling) Islands"""
+  """Cocos Islands"""
   CCK
 
-  """Congo - Kinshasa"""
+  """The Democratic Republic Of Congo"""
   COD
 
   """Central African Republic"""
   CAF
 
-  """Congo - Brazzaville"""
+  """Congo"""
   COG
 
   """Switzerland"""
   CHE
 
-  """Côte d’Ivoire"""
+  """Côte d'Ivoire"""
   CIV
 
   """Cook Islands"""
@@ -27474,7 +27477,7 @@ enum Country {
   """Cyprus"""
   CYP
 
-  """Czechia"""
+  """Czech Republic"""
   CZE
 
   """Germany"""
@@ -27576,7 +27579,7 @@ enum Country {
   """Greece"""
   GRC
 
-  """South Georgia & South Sandwich Islands"""
+  """South Georgia And The South Sandwich Islands"""
   SGS
 
   """Guatemala"""
@@ -27591,10 +27594,10 @@ enum Country {
   """Guyana"""
   GUY
 
-  """Hong Kong SAR China"""
+  """Hong Kong"""
   HKG
 
-  """Heard & McDonald Islands"""
+  """Heard Island And McDonald Islands"""
   HMD
 
   """Honduras"""
@@ -27618,7 +27621,7 @@ enum Country {
   """Israel"""
   ISR
 
-  """Isle of Man"""
+  """Isle Of Man"""
   IMN
 
   """India"""
@@ -27666,7 +27669,7 @@ enum Country {
   """Comoros"""
   COM
 
-  """St. Kitts & Nevis"""
+  """Saint Kitts And Nevis"""
   KNA
 
   """North Korea"""
@@ -27690,7 +27693,7 @@ enum Country {
   """Lebanon"""
   LBN
 
-  """St. Lucia"""
+  """Saint Lucia"""
   LCA
 
   """Liechtenstein"""
@@ -27729,7 +27732,7 @@ enum Country {
   """Montenegro"""
   MNE
 
-  """St. Martin"""
+  """Saint Martin"""
   MAF
 
   """Madagascar"""
@@ -27744,13 +27747,13 @@ enum Country {
   """Mali"""
   MLI
 
-  """Myanmar (Burma)"""
+  """Myanmar"""
   MMR
 
   """Mongolia"""
   MNG
 
-  """Macau SAR China"""
+  """Macao"""
   MAC
 
   """Northern Mariana Islands"""
@@ -27846,16 +27849,16 @@ enum Country {
   """Poland"""
   POL
 
-  """St. Pierre & Miquelon"""
+  """Saint Pierre And Miquelon"""
   SPM
 
-  """Pitcairn Islands"""
+  """Pitcairn"""
   PCN
 
   """Puerto Rico"""
   PRI
 
-  """Palestinian Territories"""
+  """Palestine"""
   PSE
 
   """Portugal"""
@@ -27870,7 +27873,7 @@ enum Country {
   """Qatar"""
   QAT
 
-  """Réunion"""
+  """Reunion"""
   REU
 
   """Romania"""
@@ -27903,13 +27906,13 @@ enum Country {
   """Singapore"""
   SGP
 
-  """St. Helena"""
+  """Saint Helena"""
   SHN
 
   """Slovenia"""
   SVN
 
-  """Svalbard & Jan Mayen"""
+  """Svalbard And Jan Mayen"""
   SJM
 
   """Slovakia"""
@@ -27933,13 +27936,13 @@ enum Country {
   """South Sudan"""
   SSD
 
-  """São Tomé & Príncipe"""
+  """Sao Tome And Principe"""
   STP
 
   """El Salvador"""
   SLV
 
-  """Sint Maarten"""
+  """Sint Maarten (Dutch part)"""
   SXM
 
   """Syria"""
@@ -27948,7 +27951,7 @@ enum Country {
   """Swaziland"""
   SWZ
 
-  """Turks & Caicos Islands"""
+  """Turks And Caicos Islands"""
   TCA
 
   """Chad"""
@@ -27984,7 +27987,7 @@ enum Country {
   """Turkey"""
   TUR
 
-  """Trinidad & Tobago"""
+  """Trinidad and Tobago"""
   TTO
 
   """Tuvalu"""
@@ -28002,7 +28005,7 @@ enum Country {
   """Uganda"""
   UGA
 
-  """U.S. Outlying Islands"""
+  """United States Minor Outlying Islands"""
   UMI
 
   """United States"""
@@ -28014,10 +28017,10 @@ enum Country {
   """Uzbekistan"""
   UZB
 
-  """Vatican City"""
+  """Vatican"""
   VAT
 
-  """St. Vincent & Grenadines"""
+  """Saint Vincent And The Grenadines"""
   VCT
 
   """Venezuela"""
@@ -28035,7 +28038,7 @@ enum Country {
   """Vanuatu"""
   VUT
 
-  """Wallis & Futuna"""
+  """Wallis And Futuna"""
   WLF
 
   """Samoa"""
@@ -28617,6 +28620,8 @@ interface Documented {
   files: [FilePayload!]!
 }
 
+union EmptyPayload = BadRequest | Forbidden | NotFound
+
 type EntitiesMany {
   orders: [OrderPayload!]
   shipments: [ShipmentPayload!]
@@ -29116,7 +29121,7 @@ enum Language {
   """Bambara"""
   bm
 
-  """Bangla"""
+  """Bengali"""
   bn
 
   """Tibetan"""
@@ -29206,7 +29211,7 @@ enum Language {
   """French"""
   fr
 
-  """Western Frisian"""
+  """Frisian"""
   fy
 
   """Irish"""
@@ -29215,7 +29220,7 @@ enum Language {
   """Scottish Gaelic"""
   gd
 
-  """Galician"""
+  """Gallegan"""
   gl
 
   """Guarani"""
@@ -29242,7 +29247,7 @@ enum Language {
   """Croatian"""
   hr
 
-  """Haitian Creole"""
+  """Haitian"""
   ht
 
   """Hungarian"""
@@ -29302,13 +29307,13 @@ enum Language {
   """Kikuyu"""
   ki
 
-  """Kuanyama"""
+  """Kwanyama"""
   kj
 
   """Kazakh"""
   kk
 
-  """Kalaallisut"""
+  """Greenlandic"""
   kl
 
   """Khmer"""
@@ -29335,7 +29340,7 @@ enum Language {
   """Cornish"""
   kw
 
-  """Kyrgyz"""
+  """Kirghiz"""
   ky
 
   """Latin"""
@@ -29440,13 +29445,13 @@ enum Language {
   """Oromo"""
   om
 
-  """Odia"""
+  """Oriya"""
   or
 
-  """Ossetic"""
+  """Ossetian"""
   os
 
-  """Punjabi"""
+  """Panjabi"""
   pa
 
   """Pali"""
@@ -29455,7 +29460,7 @@ enum Language {
   """Polish"""
   pl
 
-  """Pashto"""
+  """Pushto"""
   ps
 
   """Portuguese"""
@@ -29464,7 +29469,7 @@ enum Language {
   """Quechua"""
   qu
 
-  """Romansh"""
+  """Raeto-Romance"""
   rm
 
   """Rundi"""
@@ -29494,7 +29499,7 @@ enum Language {
   """Sango"""
   sg
 
-  """Sinhala"""
+  """Sinhalese"""
   si
 
   """Slovak"""
@@ -29557,7 +29562,7 @@ enum Language {
   """Tswana"""
   tn
 
-  """Tongan"""
+  """Tonga"""
   to
 
   """Turkish"""
@@ -29575,7 +29580,7 @@ enum Language {
   """Tahitian"""
   ty
 
-  """Uyghur"""
+  """Uighur"""
   ug
 
   """Ukrainian"""
@@ -29807,20 +29812,20 @@ type Mutation {
   fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
   maskCreate(input: MaskCreateInput!): MaskPayload!
   maskUpdate(id: ID!, input: MaskUpdateInput!): MaskPayload!
-  maskDelete(id: ID!): Boolean!
+  maskDelete(id: ID!): EmptyPayload
   maskEditCreate(input: MaskEditCreateInput!): MaskEditPayload!
   maskEditUpdate(id: ID!, input: MaskEditUpdateInput!): MaskEditPayload!
-  maskEditDelete(id: ID!): Boolean!
+  maskEditDelete(id: ID!): EmptyPayload
   eventCommentCreate(input: EventCommentCreateInput!): Entry!
   eventCommentUpdate(id: ID!, input: EventCommentUpdateInput!): Entry!
-  eventCommentDelete(id: ID!): Boolean!
+  eventCommentDelete(id: ID!): EmptyPayload
   timelineRead(id: ID!): Boolean!
   notificationRead(id: ID!): Boolean!
   notificationReadAll: Boolean!
   notificationSeeAll: Boolean!
   roleCreate(input: RoleCreateInput!): RolePayload!
   roleUpdate(id: ID!, input: RoleUpdateInput!): RolePayload!
-  roleDelete(id: ID!): Boolean!
+  roleDelete(id: ID!): EmptyPayload
 }
 
 type NotFound {
