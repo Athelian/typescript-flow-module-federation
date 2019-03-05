@@ -875,11 +875,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       onMoveToExistOrder={async ({ currencies }) => {
                         const needToResetPrice = currencies.length > 1;
                         const orderItemIds = uiSelectors.targetedOrderItemIds();
+                        const targetOrder = orders[state.connectOrder.orderId];
                         const batchIds = uiSelectors.targetedBatchIds();
                         const allOrderItemIds = [...orderItemIds];
                         (Object.entries(orderItems || {}): Array<any>).forEach(
                           ([orderItemId, orderItem]) => {
                             if (
+                              !targetOrder.orderItems.includes(orderItemId) &&
                               !allOrderItemIds.includes(orderItemId) &&
                               intersection(orderItem.batches, batchIds).length > 0
                             ) {
@@ -896,7 +898,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             orderIds.push(orderId);
                           }
                         });
-                        const targetOrder = orders[state.connectOrder.orderId];
                         const processBatchIds = [];
                         const updateOrdersInput = [];
                         if (targetOrder) {
@@ -914,7 +915,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   ...(needToResetPrice
                                     ? {
                                         price: {
-                                          currency: currencies[0],
+                                          currency: currencies.length > 0 ? currencies[0] : 'USD',
                                           amount: 0,
                                         },
                                       }
@@ -928,7 +929,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   ...(needToResetPrice
                                     ? {
                                         price: {
-                                          currency: currencies[0],
+                                          currency: currencies.length > 0 ? currencies[0] : 'USD',
                                           amount: 0,
                                         },
                                       }
@@ -965,7 +966,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   ...(needToResetPrice
                                     ? {
                                         price: {
-                                          currency: currencies[0],
+                                          currency: currencies.length > 0 ? currencies[0] : 'USD',
                                           amount: 0,
                                         },
                                       }
