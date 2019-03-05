@@ -2,19 +2,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
-import {
-  BATCH_CREATE,
-  BATCH_SET_NO,
-  BATCH_SET_QUANTITY,
-  BATCH_SET_DELIVERY_DATE,
-  BATCH_SET_DESIRED_DATE,
-} from 'modules/permission/constants/batch';
-import {
-  CONTAINER_BATCHES_ADD,
-  CONTAINER_BATCHES_REMOVE,
-} from 'modules/permission/constants/container';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
@@ -30,7 +17,6 @@ import {
   DateInputFactory,
 } from 'components/Form';
 import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
-import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -61,11 +47,22 @@ import {
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
-  onClone?: (batch: Object) => void,
-  onClear?: (batch: Object) => void,
+  onClone: (batch: Object) => void,
+  onClear: (batch: Object) => void,
   onClickRepresentative: () => void,
   selectable: boolean,
-  readOnly: boolean,
+  editable: {
+    no: boolean,
+    quantity: boolean,
+    deliveredAt: boolean,
+    desiredAt: boolean,
+    cloneBatch: boolean,
+    removeBatch: boolean,
+    setRepresentativeBatch: boolean,
+    viewOrder: boolean,
+    viewShipment: boolean,
+    viewProduct: boolean,
+  },
   isRepresented: boolean,
 };
 
@@ -78,9 +75,22 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onClick: () => {},
+  onClone: () => {},
+  onClear: () => {},
   onClickRepresentative: () => {},
   selectable: false,
-  readOnly: false,
+  editable: {
+    no: false,
+    quantity: false,
+    deliveredAt: false,
+    desiredAt: false,
+    cloneBatch: false,
+    removeBatch: false,
+    setRepresentativeBatch: false,
+    viewProduct: false,
+    viewShipment: false,
+    viewOrder: false,
+  },
   isRepresented: false,
 };
 
@@ -94,26 +104,22 @@ const ContainerBatchCard = ({
   saveOnBlur,
   currency,
   selectable,
-  readOnly,
+  editable,
   isRepresented,
   ...rest
 }: Props) => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
-
-  const allowAccessProductForm = hasPermission(PRODUCT_FORM);
-
   if (!batch) return '';
 
-  const actions =
-    selectable || readOnly
-      ? []
-      : [
-          ...(onClone ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />] : []),
-          ...(onClear
-            ? [<CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />]
-            : []),
-        ];
+  const actions = selectable
+    ? []
+    : [
+        ...(editable.cloneBatch
+          ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />]
+          : []),
+        ...(editable.removeBatch
+          ? [<CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />]
+          : []),
+      ];
 
   const {
     no,
@@ -179,7 +185,7 @@ const ContainerBatchCard = ({
             </div>
           </div>
 
-          {allowAccessProductForm ? (
+          {editable.viewProduct ? (
             <Link
               className={ProductIconLinkStyle}
               to={`/product/${encodeId(product.id)}`}
@@ -194,12 +200,7 @@ const ContainerBatchCard = ({
               <Icon icon="PRODUCT" />
             </div>
           )}
-          {readOnly ||
-          !hasPermission([BATCH_CREATE, CONTAINER_BATCHES_ADD, CONTAINER_BATCHES_REMOVE]) ? (
-            <div className={RepresentIconStyle(isRepresented)}>
-              <Icon icon="STAR" />
-            </div>
-          ) : (
+          {editable.setRepresentativeBatch ? (
             <button
               type="button"
               onClick={evt => {
@@ -210,6 +211,10 @@ const ContainerBatchCard = ({
             >
               <Icon icon="STAR" />
             </button>
+          ) : (
+            <div className={RepresentIconStyle(isRepresented)}>
+              <Icon icon="STAR" />
+            </div>
           )}
         </div>
         <div className={BatchInfoWrapperStyle}>
@@ -233,7 +238,7 @@ const ContainerBatchCard = ({
                     saveOnBlur({ ...batch, no: inputHandlers.value });
                   }}
                   originalValue={no}
-                  editable={!readOnly && hasPermission(BATCH_SET_NO)}
+                  editable={editable.no}
                   inputWidth="185px"
                   inputHeight="20px"
                   inputAlign="left"
@@ -268,7 +273,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={actualQuantity}
-                  editable={!readOnly && hasPermission(BATCH_SET_QUANTITY)}
+                  editable={editable.quantity}
                   inputWidth="90px"
                   inputHeight="20px"
                 />
@@ -297,7 +302,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={deliveredAt}
-                  editable={!readOnly && hasPermission(BATCH_SET_DELIVERY_DATE)}
+                  editable={editable.deliveredAt}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -326,7 +331,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={desiredAt}
-                  editable={!readOnly && hasPermission(BATCH_SET_DESIRED_DATE)}
+                  editable={editable.desiredAt}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -375,28 +380,41 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            <Link
-              className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="ORDER" />
-            </Link>
+            {editable.viewOrder ? (
+              <Link
+                className={OrderIconStyle}
+                to={`/order/${encodeId(order.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="ORDER" />
+              </Link>
+            ) : (
+              <div className={OrderIconStyle}>
+                <Icon icon="ORDER" />
+              </div>
+            )}
+
             <Display align="left">{order.poNo}</Display>
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            <Link
-              className={ShipmentIconStyle}
-              to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="SHIPMENT" />
-            </Link>
+            {editable.viewShipment ? (
+              <Link
+                className={ShipmentIconStyle}
+                to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="SHIPMENT" />
+              </Link>
+            ) : (
+              <div className={ShipmentIconStyle}>
+                <Icon icon="SHIPMENT" />
+              </div>
+            )}
             <Display align="left">{shipment ? shipment.no : ''}</Display>
           </div>
 

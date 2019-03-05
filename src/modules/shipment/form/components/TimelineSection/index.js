@@ -13,6 +13,8 @@ import {
   SHIPMENT_APPROVE_TIMELINE_DATE,
   SHIPMENT_ASSIGN_TIMELINE_DATE,
   SHIPMENT_SET_WAREHOUSE,
+  SHIPMENT_SET_VESSEL_NAME,
+  SHIPMENT_SET_VESSEL_CODE,
 } from 'modules/permission/constants/shipment';
 import {
   ShipmentTransportTypeContainer,
@@ -67,16 +69,17 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={TimelineWrapperStyle}>
               <VerticalLayout shipment={values} />
               <VoyageSelector
-                // TODO: change to update || ( rest && and add && vesselname && vesselcode)
-                readOnly={
-                  !hasPermission([
-                    SHIPMENT_UPDATE,
+                editable={
+                  hasPermission(SHIPMENT_UPDATE) ||
+                  [
                     SHIPMENT_SET_PORT,
                     SHIPMENT_SET_TIMELINE_DATE,
                     SHIPMENT_SET_REVISE_TIMELINE_DATE,
                     SHIPMENT_APPROVE_TIMELINE_DATE,
                     SHIPMENT_ASSIGN_TIMELINE_DATE,
-                  ])
+                    SHIPMENT_SET_VESSEL_NAME,
+                    SHIPMENT_SET_VESSEL_CODE,
+                  ].every(hasPermission)
                 }
                 shipment={values}
                 setFieldDeepValue={setFieldDeepValue}

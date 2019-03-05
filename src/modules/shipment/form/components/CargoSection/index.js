@@ -2,6 +2,13 @@
 import * as React from 'react';
 import { isNullOrUndefined } from 'utils/fp';
 import { BATCHES_POOL, isSelectedBatchesPool } from 'modules/shipment/helpers';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import {
+  SHIPMENT_CONTAINER_LIST,
+  SHIPMENT_BATCH_LIST,
+  SHIPMENT_BATCH_LIST_IN_CONTAINER,
+} from 'modules/permission/constants/shipment';
 import { CargoSectionWrapperStyle } from './style';
 import ContainersAreaReadOnly from './ContainersAreaReadOnly';
 import ContainersArea from './ContainersArea';
@@ -53,8 +60,6 @@ class CargoSection extends React.Component<Props, State> {
   render() {
     const { selectCardId, containerIndex, isSelectBatchesMode, selectedBatches } = this.state;
 
-    // TODO: need shipment.container.list && shipment.batches.list && shipment.containerBatches.list to view
-
     return (
       <div className={CargoSectionWrapperStyle}>
         {isSelectBatchesMode ? (
@@ -91,4 +96,17 @@ class CargoSection extends React.Component<Props, State> {
   }
 }
 
-export default CargoSection;
+const CargoSectionPermissionWrapper = () => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  if (
+    !hasPermission(SHIPMENT_CONTAINER_LIST) ||
+    !hasPermission(SHIPMENT_BATCH_LIST) ||
+    !hasPermission(SHIPMENT_BATCH_LIST_IN_CONTAINER)
+  )
+    return null;
+  return <CargoSection />;
+};
+
+export default CargoSectionPermissionWrapper;
