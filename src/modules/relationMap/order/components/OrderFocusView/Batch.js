@@ -50,7 +50,7 @@ export default function Batch({
   no,
   quantity,
   totalAdjusted,
-  packageVolume,
+  totalVolume,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
@@ -77,8 +77,8 @@ export default function Batch({
             <BatchCard
               batch={{
                 no,
-                volumeLabel: packageVolume && packageVolume.value,
-                metric: packageVolume && packageVolume.metric,
+                volumeLabel: totalVolume && totalVolume.value,
+                metric: totalVolume && totalVolume.metric,
                 batchedQuantity: quantity + totalAdjusted,
               }}
             />
