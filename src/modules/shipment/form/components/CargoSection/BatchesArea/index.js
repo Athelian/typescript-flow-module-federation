@@ -8,13 +8,15 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { CONTAINER_FORM } from 'modules/permission/constants/container';
+import {
+  CONTAINER_FORM,
+  CONTAINER_BATCHES_ADD,
+  CONTAINER_BATCHES_REMOVE,
+} from 'modules/permission/constants/container';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_ADD_BATCH,
-  SHIPMENT_ADD_BATCH_IN_CONTAINER,
   SHIPMENT_REMOVE_BATCH,
-  SHIPMENT_REMOVE_BATCH_FROM_CONTAINER,
 } from 'modules/permission/constants/shipment';
 import {
   BATCH_LIST,
@@ -117,7 +119,7 @@ function BatchesArea({
                     </div>
 
                     {isSelectedBatchesPool &&
-                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH_IN_CONTAINER]) &&
+                      hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_ADD]) &&
                       usefulBatches.length > 0 &&
                       containers.length > 0 && (
                         <>
@@ -157,11 +159,11 @@ function BatchesArea({
                   <div className={BatchesGridStyle}>
                     {usefulBatches.map((batch, position) => {
                       const allowRemoveBatch = getByPath('container', batch)
-                        ? hasPermission([SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH_FROM_CONTAINER])
+                        ? hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_REMOVE])
                         : hasPermission([SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH]);
                       const allowCloneBatch = getByPath('container', batch)
                         ? hasPermission(BATCH_CREATE) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH_IN_CONTAINER])
+                          hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_ADD])
                         : hasPermission(BATCH_CREATE) &&
                           hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]);
                       return (

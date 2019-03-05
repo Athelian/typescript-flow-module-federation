@@ -11,18 +11,31 @@ import {
   ButtonsStyle,
 } from 'components/Dialog/ActivateDialog/style';
 
-type Props = {
+type OptionalProps = {
+  permission: {
+    removeContainer: boolean,
+    removeShipmentBatch: boolean,
+  },
+};
+
+type Props = OptionalProps & {
   isOpen: boolean,
-  removable: boolean,
   onRequestClose: Function,
   onCancel: Function,
   onToBatchesPool: Function,
   onRemove: Function,
 };
 
+const defaultProps = {
+  permission: {
+    removeContainer: false,
+    removeShipmentBatch: false,
+  },
+};
+
 function RemoveContainerConfirmDialog({
   isOpen,
-  removable,
+  permission,
   onRequestClose,
   onCancel,
   onToBatchesPool,
@@ -55,7 +68,7 @@ function RemoveContainerConfirmDialog({
             />
           </div>
           <div>
-            {removable ? (
+            {permission.removeContainer && permission.removeShipmentBatch && (
               <FormattedMessage
                 id="modules.shipment.moveToBatchesPoolOrRemove"
                 defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool} or to be {REMOVED}?"
@@ -77,7 +90,8 @@ function RemoveContainerConfirmDialog({
                   ),
                 }}
               />
-            ) : (
+            )}
+            {permission.removeContainer && !permission.removeShipmentBatch && (
               <FormattedMessage
                 id="modules.shipment.moveToBatchesPool"
                 defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool}?"
@@ -99,21 +113,23 @@ function RemoveContainerConfirmDialog({
           </div>
         </div>
         <div className={ButtonsStyle}>
-          <BaseButton
-            label={
-              <FormattedMessage
-                id="modules.shipment.toBatchesPool"
-                defaultMessage="TO BATCHES POOL"
-              />
-            }
-            icon="BATCH"
-            textColor="WHITE"
-            hoverTextColor="WHITE"
-            backgroundColor="TEAL"
-            hoverBackgroundColor="TEAL_DARK"
-            onClick={onToBatchesPool}
-          />
-          {removable && (
+          {permission.removeContainer && (
+            <BaseButton
+              label={
+                <FormattedMessage
+                  id="modules.shipment.toBatchesPool"
+                  defaultMessage="TO BATCHES POOL"
+                />
+              }
+              icon="BATCH"
+              textColor="WHITE"
+              hoverTextColor="WHITE"
+              backgroundColor="TEAL"
+              hoverBackgroundColor="TEAL_DARK"
+              onClick={onToBatchesPool}
+            />
+          )}
+          {permission.removeContainer && permission.removeShipmentBatch && (
             <BaseButton
               label={<FormattedMessage id="modules.shipment.remove" defaultMessage="REMOVE" />}
               icon="CLEAR"
@@ -129,5 +145,7 @@ function RemoveContainerConfirmDialog({
     </Dialog>
   );
 }
+
+RemoveContainerConfirmDialog.defaultProps = defaultProps;
 
 export default RemoveContainerConfirmDialog;

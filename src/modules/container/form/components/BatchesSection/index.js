@@ -12,8 +12,19 @@ import {
   CONTAINER_BATCHES_REMOVE,
   CONTAINER_BATCHES_LIST,
 } from 'modules/permission/constants/container';
-import { BATCH_CREATE, BATCH_LIST, BATCH_FORM } from 'modules/permission/constants/batch';
-import { ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
+import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
+import { ORDER_ORDERITEMS_LIST, ORDER_FORM } from 'modules/permission/constants/order';
+import {
+  BATCH_CREATE,
+  BATCH_LIST,
+  BATCH_FORM,
+  BATCH_UPDATE,
+  BATCH_SET_NO,
+  BATCH_SET_QUANTITY,
+  BATCH_SET_DELIVERY_DATE,
+  BATCH_SET_DESIRED_DATE,
+} from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
@@ -217,7 +228,22 @@ function BatchesSection() {
                         </SlideView>
                         <div className={ItemStyle}>
                           <ContainerBatchCard
-                            readOnly={!allowUpdate}
+                            editable={{
+                              no: hasPermission([BATCH_UPDATE, BATCH_SET_NO]),
+                              quantity: hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY]),
+                              deliveredAt: hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]),
+                              desiredAt: hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]),
+                              removeBatch: allowRemoveBatches,
+                              cloneBatch: allowCloneBatches,
+                              viewOrder: hasPermission(ORDER_FORM),
+                              viewShipment: hasPermission(SHIPMENT_FORM),
+                              viewProduct: hasPermission(PRODUCT_FORM),
+                              setRepresentativeBatch: hasPermission([
+                                CONTAINER_UPDATE,
+                                CONTAINER_BATCHES_ADD,
+                                CONTAINER_BATCHES_REMOVE,
+                              ]),
+                            }}
                             position={position}
                             batch={batch}
                             saveOnBlur={updatedBatch => {
@@ -233,47 +259,39 @@ function BatchesSection() {
                             onClick={
                               hasPermission(BATCH_FORM) ? () => batchSlideToggle(true) : () => {}
                             }
-                            onClear={
-                              allowRemoveBatches
-                                ? ({ id }) => {
-                                    const newBatches = batches.filter(
-                                      ({ id: batchId }) => id !== batchId
-                                    );
-                                    setFieldValue('batches', newBatches);
-                                    removeExistingBatch(id);
-                                    if (id === representativeBatch.id) {
-                                      if (newBatches.length > 0) {
-                                        setDeepFieldValue('representativeBatch', newBatches[0]);
-                                      } else {
-                                        setDeepFieldValue('representativeBatch', null);
-                                      }
-                                    }
-                                  }
-                                : null
-                            }
-                            onClone={
-                              allowCloneBatches
-                                ? ({
-                                    id,
-                                    deliveredAt,
-                                    desired,
-                                    expiredAt,
-                                    producedAt,
-                                    no,
-                                    ...rest
-                                  }) => {
-                                    setFieldValue('batches', [
-                                      ...batches,
-                                      injectUid({
-                                        ...rest,
-                                        isNew: true,
-                                        batchAdjustments: [],
-                                        no: `${no}- clone`,
-                                      }),
-                                    ]);
-                                  }
-                                : null
-                            }
+                            onClear={({ id }) => {
+                              const newBatches = batches.filter(
+                                ({ id: batchId }) => id !== batchId
+                              );
+                              setFieldValue('batches', newBatches);
+                              removeExistingBatch(id);
+                              if (id === representativeBatch.id) {
+                                if (newBatches.length > 0) {
+                                  setDeepFieldValue('representativeBatch', newBatches[0]);
+                                } else {
+                                  setDeepFieldValue('representativeBatch', null);
+                                }
+                              }
+                            }}
+                            onClone={({
+                              id,
+                              deliveredAt,
+                              desired,
+                              expiredAt,
+                              producedAt,
+                              no,
+                              ...rest
+                            }) => {
+                              setFieldValue('batches', [
+                                ...batches,
+                                injectUid({
+                                  ...rest,
+                                  isNew: true,
+                                  batchAdjustments: [],
+                                  no: `${no}- clone`,
+                                }),
+                              ]);
+                            }}
                           />
                         </div>
                       </>
