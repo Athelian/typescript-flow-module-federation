@@ -299,9 +299,9 @@ export const prepareParsedUpdateBatchInput = (
       newValues.packageQuantity
     ),
     ...parseGenericField(
-      'packageWeight',
-      getByPathWithDefault(null, 'packageWeight', originalValues),
-      newValues.packageWeight
+      'packageGrossWeight',
+      getByPathWithDefault(null, 'packageGrossWeight', originalValues),
+      newValues.packageGrossWeight
     ),
     ...parseGenericField(
       'packageVolume',
