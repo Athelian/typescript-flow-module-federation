@@ -73,7 +73,7 @@ function BatchesSection() {
                 >
                   {selectBatchesIsOpen && (
                     <Subscribe to={[ContainerFormContainer]}>
-                      {({ state: { batches }, setFieldValue, addCachedBatches }) => (
+                      {({ state: { batches }, setFieldValue, addExistingBatches }) => (
                         <SelectBatches
                           selectedBatches={batches}
                           onSelect={selected => {
@@ -85,7 +85,7 @@ function BatchesSection() {
                               setFieldValue('representativeBatch', selectedBatches[0]);
                             }
                             setFieldValue('batches', [...batches, ...selectedBatches]);
-                            addCachedBatches(selectedBatches);
+                            addExistingBatches(selectedBatches);
 
                             selectBatchesSlideToggle(false);
                           }}
@@ -167,7 +167,7 @@ function BatchesSection() {
             state: { batches = [], representativeBatch },
             setFieldValue,
             setDeepFieldValue,
-            removeCachedBatch,
+            removeExistingBatch,
           }) => {
             if (batches.length === 0) {
               return (
@@ -238,7 +238,7 @@ function BatchesSection() {
                                       ({ id: batchId }) => id !== batchId
                                     );
                                     setFieldValue('batches', newBatches);
-                                    removeCachedBatch(id);
+                                    removeExistingBatch(id);
                                     if (id === representativeBatch.id) {
                                       if (newBatches.length > 0) {
                                         setDeepFieldValue('representativeBatch', newBatches[0]);

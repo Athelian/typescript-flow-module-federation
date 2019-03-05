@@ -50,7 +50,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
 
   onSave = async (
     originalValues: Object,
-    cachedBatches: Array<Object>,
+    existingBatches: Array<Object>,
     newValues: Object,
     saveContainer: Function,
     onSuccess: Function = () => {},
@@ -60,7 +60,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
 
     const { id, ...input } = prepareParsedUpdateContainerInput({
       originalValues,
-      cachedBatches,
+      existingBatches,
       newValues,
       location: {
         inShipmentForm: false,
@@ -178,7 +178,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                                 onClick={() =>
                                   this.onSave(
                                     containerContainer.originalValues,
-                                    containerContainer.cachedBatches,
+                                    containerContainer.existingBatches,
                                     containerContainer.state,
                                     saveContainer,
                                     () => {

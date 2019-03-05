@@ -129,7 +129,7 @@ export const prepareContainer = ({
 
 type UpdateContainerInputType = {
   originalValues: Object,
-  cachedBatches: Array<Object>,
+  existingBatches: Array<Object>,
   newValues: Object,
   location: {
     inShipmentForm: boolean,
@@ -139,18 +139,22 @@ type UpdateContainerInputType = {
 
 export const prepareParsedUpdateContainerInput = ({
   originalValues,
-  cachedBatches,
+  existingBatches,
   newValues,
   location,
 }: UpdateContainerInputType): Object => {
   const { inShipmentForm, inContainerForm } = location;
 
-  const originalAndCachedBatches = [
+  const originalAndExistingBatches = [
     ...originalValues.batches,
-    ...cachedBatches.filter(
-      cachedBatch => originalValues.batches.indexOf(batch => batch.id === cachedBatch.id) < 0
+    ...existingBatches.filter(
+      existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
     ),
   ];
+
+  const originalBatchIds = originalValues.batches.map(batch => batch.id);
+  const existingBatchIds = existingBatches.map(batch => batch.id);
+  const forceSendBatchIds = !isEquals(originalBatchIds, existingBatchIds);
 
   return {
     ...(inContainerForm ? {} : parseParentIdField('id', originalValues, newValues)),
@@ -202,7 +206,7 @@ export const prepareParsedUpdateContainerInput = ({
     ...parseParentIdField('warehouseId', originalValues.warehouse, newValues.warehouse),
     ...parseArrayOfChildrenField(
       'batches',
-      originalAndCachedBatches,
+      originalAndExistingBatches,
       newValues.batches,
       (oldBatch: ?Object, newBatch: Object) => {
         return {
@@ -214,7 +218,7 @@ export const prepareParsedUpdateContainerInput = ({
           }),
         };
       },
-      !isEquals(originalValues, cachedBatches)
+      forceSendBatchIds
     ),
     ...parseRepresentativeBatchIndexField(
       'representativeBatchIndex',

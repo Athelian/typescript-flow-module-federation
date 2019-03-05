@@ -54,14 +54,14 @@ export default class ContainerFormContainer extends Container<ContainerFormState
 
   originalValues = initValues;
 
-  cachedBatches = initValues.batches;
+  existingBatches = initValues.batches;
 
-  addCachedBatches = (batches: Array<Object>) => {
-    this.cachedBatches = [...this.cachedBatches, ...batches];
+  addExistingBatches = (batches: Array<Object>) => {
+    this.existingBatches = [...this.existingBatches, ...batches];
   };
 
-  removeCachedBatch = (batchId: string) => {
-    this.cachedBatches = [...this.cachedBatches.filter(batch => batch.id !== batchId)];
+  removeExistingBatch = (batchId: string) => {
+    this.existingBatches = [...this.existingBatches.filter(batch => batch.id !== batchId)];
   };
 
   setFieldValue = (name: string, value: any) => {
@@ -89,7 +89,7 @@ export default class ContainerFormContainer extends Container<ContainerFormState
 
   onSuccess = () => {
     this.originalValues = this.state;
-    this.cachedBatches = this.state.batches;
+    this.existingBatches = this.state.batches;
     this.setState(this.originalValues);
   };
 
@@ -98,6 +98,6 @@ export default class ContainerFormContainer extends Container<ContainerFormState
 
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
-    this.cachedBatches = parsedValues.batches;
+    this.existingBatches = parsedValues.batches;
   };
 }
