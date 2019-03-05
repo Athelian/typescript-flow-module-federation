@@ -25,12 +25,23 @@ import {
   badRequestFragment,
   ownedByFragment,
 } from 'graphql';
-
 import { prepareCustomFieldsData } from 'utils/customFields';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
 import { prepareContainer } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
-import { cleanUpData } from 'utils/data';
+import {
+  cleanUpData,
+  parseGenericField,
+  parseDateField,
+  parseArrayOfIdsField,
+  parseParentIdField,
+  parseArrayOfChildrenField,
+  parseApprovalField,
+  parseFilesField,
+  parseEnumField,
+  parseCustomFieldsField,
+} from 'utils/data';
 import type {
   CargoReady,
   ShipmentVoyage,
@@ -273,3 +284,220 @@ export const prepareUpdateShipmentInput = ({
     memo: fileMemo,
   })),
 });
+type DateRevisionType = {
+  id: string,
+  date: string | Date,
+  type: string,
+  memo: ?string,
+};
+
+type TimelineDateType = {
+  date: ?(string | Date),
+  assignedTo: Array<{ id: string }>,
+  approvedBy: ?{ id: string },
+  approvedAt: ?(string | Date),
+  memo: ?string,
+  timelineDateRevisions: Array<DateRevisionType>,
+};
+
+const parseTimelineDateField = (
+  key: string,
+  originalTimelineDate: ?TimelineDateType,
+  newTimelineDate: ?TimelineDateType
+) => {
+  if (isEquals(originalTimelineDate, newTimelineDate)) return {};
+
+  const parsedNewTimelineDate = {
+    ...parseDateField(
+      'date',
+      getByPathWithDefault(null, 'date', originalTimelineDate),
+      getByPathWithDefault(null, 'date', newTimelineDate)
+    ),
+    ...parseArrayOfIdsField(
+      'assignedToIds',
+      getByPathWithDefault([], 'assignedTo', originalTimelineDate),
+      getByPathWithDefault([], 'assignedTo', newTimelineDate)
+    ),
+    ...parseApprovalField(
+      'approvedById',
+      {
+        approvedBy: getByPathWithDefault(null, 'approvedBy', originalTimelineDate),
+        approvedAt: getByPathWithDefault(null, 'approvedAt', originalTimelineDate),
+      },
+      {
+        approvedBy: getByPathWithDefault(null, 'approvedBy', newTimelineDate),
+        approvedAt: getByPathWithDefault(null, 'approvedAt', newTimelineDate),
+      }
+    ),
+    ...parseGenericField(
+      'memo',
+      getByPathWithDefault(null, 'memo', originalTimelineDate),
+      getByPathWithDefault(null, 'memo', newTimelineDate)
+    ),
+    ...parseArrayOfChildrenField(
+      'timelineDateRevisions',
+      getByPathWithDefault([], 'timelineDateRevisions', originalTimelineDate),
+      getByPathWithDefault([], 'timelineDateRevisions', newTimelineDate),
+      (oldDateRevision: ?DateRevisionType, newDateRevision: ?DateRevisionType) => ({
+        ...(!oldDateRevision ? {} : { id: oldDateRevision.id }),
+        ...parseDateField(
+          'date',
+          getByPathWithDefault(null, 'date', oldDateRevision),
+          getByPathWithDefault(null, 'date', newDateRevision)
+        ),
+        ...parseEnumField(
+          'type',
+          getByPathWithDefault(null, 'type', oldDateRevision),
+          getByPathWithDefault(null, 'type', newDateRevision)
+        ),
+        ...parseGenericField(
+          'memo',
+          getByPathWithDefault(null, 'memo', oldDateRevision),
+          getByPathWithDefault(null, 'memo', newDateRevision)
+        ),
+      })
+    ),
+  };
+
+  return { [key]: parsedNewTimelineDate };
+};
+
+type PortType = {
+  seaport: ?string,
+  airport: ?string,
+};
+
+const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType) => {
+  if (isEquals(originalPort, newPort)) return {};
+
+  const parsedNewPort = {
+    ...parseEnumField(
+      'seaport',
+      getByPathWithDefault(null, 'seaport', originalPort),
+      newPort.seaport
+    ),
+    ...parseEnumField(
+      'airport',
+      getByPathWithDefault(null, 'airport', originalPort),
+      newPort.airport
+    ),
+  };
+
+  return { [key]: parsedNewPort };
+};
+
+const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
+  if (numberOfContainers > 0) return null;
+  return warehouse;
+};
+
+type UpdateShipmentInputType = {
+  originalValues: Object,
+  newValues: Object,
+};
+
+export const prepareParsedUpdateShipmentInput = ({
+  originalValues,
+  newValues,
+}: UpdateShipmentInputType): Object => {
+  // const originalAndExistingBatches = [
+  //   ...originalValues.batches,
+  //   ...existingBatches.filter(
+  //     existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
+  //   ),
+  // ];
+
+  // const originalBatchIds = originalValues.batches.map(batch => batch.id);
+  // const existingBatchIds = existingBatches.map(batch => batch.id);
+  // const forceSendBatchIds = !isEquals(originalBatchIds, existingBatchIds);
+
+  return {
+    ...parseGenericField('no', originalValues.no, newValues.no),
+    ...parseGenericField('blNo', originalValues.blNo, newValues.blNo),
+    ...parseDateField('blDate', originalValues.blDate, newValues.blDate),
+    ...parseGenericField('bookingNo', originalValues.bookingNo, newValues.bookingNo),
+    ...parseDateField('bookingDate', originalValues.bookingDate, newValues.bookingDate),
+    ...parseGenericField('invoiceNo', originalValues.invoiceNo, newValues.invoiceNo),
+    ...parseEnumField('transportType', originalValues.transportType, newValues.transportType),
+    ...parseEnumField('loadType', originalValues.loadType, newValues.loadType),
+    ...parseEnumField('incoterm', originalValues.incoterm, newValues.incoterm),
+    ...parseGenericField('carrier', originalValues.carrier, newValues.carrier),
+    ...parseCustomFieldsField(
+      'customFields',
+      getByPathWithDefault(null, 'customFields', originalValues),
+      newValues.customFields
+    ),
+    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
+    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
+    ...parseArrayOfIdsField('forwarderIds', originalValues.forwarders, newValues.forwarders),
+    ...parseTimelineDateField('cargoReady', originalValues.cargoReady, newValues.cargoReady),
+    ...parseArrayOfChildrenField(
+      'containerGroups',
+      originalValues.containerGroups,
+      newValues.containerGroups,
+      (oldContainerGroup: ?Object, newContainerGroup: Object) => ({
+        ...(!oldContainerGroup ? {} : { id: oldContainerGroup.id }),
+        ...parseParentIdField(
+          'warehouseId',
+          getByPathWithDefault(null, 'warehouse', oldContainerGroup),
+          cleanWarehouse(newContainerGroup.warehouse, newValues.containers.length)
+        ),
+        ...parseTimelineDateField(
+          'customClearance',
+          getByPathWithDefault(null, 'customClearance', oldContainerGroup),
+          newContainerGroup.customClearance
+        ),
+        ...parseTimelineDateField(
+          'warehouseArrival',
+          getByPathWithDefault(null, 'warehouseArrival', oldContainerGroup),
+          newContainerGroup.warehouseArrival
+        ),
+        ...parseTimelineDateField(
+          'deliveryReady',
+          getByPathWithDefault(null, 'deliveryReady', oldContainerGroup),
+          newContainerGroup.deliveryReady
+        ),
+      })
+    ),
+    ...parseArrayOfChildrenField(
+      'voyages',
+      originalValues.voyages,
+      newValues.voyages,
+      (oldVoyage: ?Object, newVoyage: Object) => ({
+        ...(!oldVoyage ? {} : { id: oldVoyage.id }),
+        ...parseGenericField(
+          'vesselName',
+          getByPathWithDefault(null, 'vesselName', oldVoyage),
+          newVoyage.vesselName
+        ),
+        ...parseGenericField(
+          'vesselCode',
+          getByPathWithDefault(null, 'vesselCode', oldVoyage),
+          newVoyage.vesselCode
+        ),
+        ...parsePortField(
+          'departurePort',
+          getByPathWithDefault(null, 'departurePort', oldVoyage),
+          newVoyage.departurePort
+        ),
+        ...parsePortField(
+          'arrivalPort',
+          getByPathWithDefault(null, 'arrivalPort', oldVoyage),
+          newVoyage.arrivalPort
+        ),
+        ...parseTimelineDateField(
+          'departure',
+          getByPathWithDefault(null, 'departure', oldVoyage),
+          newVoyage.departure
+        ),
+        ...parseTimelineDateField(
+          'arrival',
+          getByPathWithDefault(null, 'arrival', oldVoyage),
+          newVoyage.arrival
+        ),
+      })
+    ),
+    ...parseFilesField('files', originalValues.files, newValues.files),
+  };
+};

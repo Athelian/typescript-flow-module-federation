@@ -263,26 +263,24 @@ export const prepareParsedUpdateBatchInput = (
       'batchAdjustments',
       getByPathWithDefault(null, 'batchAdjustments', originalValues),
       newValues.batchAdjustments,
-      (oldAdjustment: ?Object, newAdjustment: Object) => {
-        return {
-          ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
-          ...parseGenericField(
-            'quantity',
-            getByPathWithDefault(null, 'quantity', oldAdjustment),
-            newAdjustment.quantity
-          ),
-          ...parseEnumField(
-            'reason',
-            getByPathWithDefault(null, 'reason', oldAdjustment),
-            newAdjustment.reason
-          ),
-          ...parseGenericField(
-            'memo',
-            getByPathWithDefault(null, 'memo', oldAdjustment),
-            newAdjustment.memo
-          ),
-        };
-      }
+      (oldAdjustment: ?Object, newAdjustment: Object) => ({
+        ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
+        ...parseGenericField(
+          'quantity',
+          getByPathWithDefault(null, 'quantity', oldAdjustment),
+          newAdjustment.quantity
+        ),
+        ...parseEnumField(
+          'reason',
+          getByPathWithDefault(null, 'reason', oldAdjustment),
+          newAdjustment.reason
+        ),
+        ...parseGenericField(
+          'memo',
+          getByPathWithDefault(null, 'memo', oldAdjustment),
+          newAdjustment.memo
+        ),
+      })
     ),
     ...parseGenericField(
       'packageName',

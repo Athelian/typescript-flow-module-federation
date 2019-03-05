@@ -36,7 +36,7 @@ import {
   createShipmentMutation,
   prepareCreateShipmentInput,
   updateShipmentMutation,
-  prepareUpdateShipmentInput,
+  prepareParsedUpdateShipmentInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -139,7 +139,8 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   onSave = async (
-    formData: Object,
+    originalValues: Object,
+    newValues: Object,
     saveShipment: Function,
     onSuccess: () => void,
     onErrors: (Array<Object>) => void
@@ -149,8 +150,8 @@ class ShipmentFormModule extends React.Component<Props> {
     const isNewOrClone = this.isNewOrClone();
 
     const input = isNewOrClone
-      ? prepareCreateShipmentInput(formData)
-      : prepareUpdateShipmentInput(formData);
+      ? prepareCreateShipmentInput(newValues)
+      : prepareParsedUpdateShipmentInput({ originalValues, newValues });
 
     if (isNewOrClone) {
       const result = await saveShipment({
@@ -462,6 +463,15 @@ class ShipmentFormModule extends React.Component<Props> {
                               isLoading={isLoading}
                               onClick={() => {
                                 this.onSave(
+                                  {
+                                    ...shipmentBatchesContainer.originalValues,
+                                    ...shipmentContainersContainer.originalValues,
+                                    ...shipmentFilesContainer.originalValues,
+                                    ...shipmentInfoContainer.originalValues,
+                                    ...shipmentTagsContainer.originalValues,
+                                    ...shipmentTimelineContainer.originalValues,
+                                    ...shipmentTransportTypeContainer.originalValues,
+                                  },
                                   {
                                     ...shipmentBatchesContainer.state,
                                     ...shipmentContainersContainer.state,
