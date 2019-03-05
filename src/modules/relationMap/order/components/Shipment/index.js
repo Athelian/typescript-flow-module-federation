@@ -42,7 +42,7 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
             {/* Send empty array for tags for hidden tags on shipment card when hidden tags */}
             <ShipmentCard
-              shipment={showTag ? { ...shipment, no } : { ...shipment, no, tags: [] }}
+              shipment={showTag ? { ...shipment, id, no } : { ...shipment, id, no, tags: [] }}
               actions={[]}
             />
             {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (

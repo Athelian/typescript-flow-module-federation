@@ -54,8 +54,8 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
           return <LoadingIcon />;
         }
 
-        if (state.toggleShipmentList && state.refetchShipmentId) {
-          const newShipmentId = state.refetchShipmentId;
+        if (state.toggleShipmentList && state.refetch.shipmentIds.length > 0) {
+          const [newShipmentId] = state.refetch.shipmentIds;
           const queryOption: any = {
             query: shipmentDetailQuery,
             variables: {

@@ -450,15 +450,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
 
                         const refetchShipment = shipmentItems[shipmentItems.length - 1];
                         if (refetchShipment) {
-                          actions.refetchQueryBy('SHIPMENT', refetchShipment.shipment.id);
+                          actions.refetchQueryBy('SHIPMENT', [refetchShipment.shipment.id]);
                         }
 
-                        cloneShipments.forEach((item, index) => {
+                        cloneShipments.forEach(item => {
                           if (item.data.shipmentClone && item.data.shipmentClone.violations) {
                             toast.error(
-                              `[Clone] for ["${uiSelectors.shipmentNo(
-                                shipmentIds[index]
-                              )}"] error: ${item.data.shipmentClone.violations[0].message}`
+                              `[Clone] error: ${item.data.shipmentClone.violations[0].message}`
                             );
                           }
                         });
@@ -1140,9 +1138,28 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         quantity,
                         batchId: id,
                       });
-                      const [, orderId] = (
-                        state.split.parentOrderIds.find(item => item.includes(`${id}-`)) || ''
-                      ).split('-');
+                      const batchIds = [id];
+                      const allOrderItemIds = [];
+                      (Object.entries(orderItems || {}): Array<any>).forEach(
+                        ([orderItemId, orderItem]) => {
+                          if (
+                            !allOrderItemIds.includes(orderItemId) &&
+                            intersection(orderItem.batches, batchIds).length > 0
+                          ) {
+                            allOrderItemIds.push(orderItemId);
+                          }
+                        }
+                      );
+                      const orderIds = [];
+                      (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                        if (
+                          !orderIds.includes(orderId) &&
+                          intersection(order.orderItems, allOrderItemIds).length > 0
+                        ) {
+                          orderIds.push(orderId);
+                        }
+                      });
+                      const [orderId] = orderIds;
                       if (type === 'batchEqualSplit') {
                         const result: any = await client.mutate({
                           mutation: batchEqualSplitMutation,

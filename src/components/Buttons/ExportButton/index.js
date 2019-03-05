@@ -75,9 +75,7 @@ class ExportButton extends React.Component<Props, State> {
           }
           if (document.body) document.body.removeChild(link);
         })
-        .catch(reason => {
-          logger.error(reason);
-        })
+        .catch(logger.error)
         .finally(() => {
           this.setState({ isLoading: false });
         });

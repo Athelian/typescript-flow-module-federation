@@ -210,6 +210,16 @@ export const shipmentDetailQuery = gql`
         batches {
           ... on Batch {
             id
+            orderItem {
+              ... on OrderItem {
+                id
+                order {
+                  ... on Order {
+                    id
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -288,12 +288,12 @@ function actionCreators(dispatch: Function) {
           entity,
         },
       }),
-    refetchQueryBy: (entity: string, id: string) =>
+    refetchQueryBy: (entity: string, ids: Array<string>) =>
       dispatch({
         type: 'REFETCH_BY',
         payload: {
           entity,
-          id,
+          ids,
         },
       }),
     clearConnectMessage: () =>
@@ -327,6 +327,13 @@ function actionCreators(dispatch: Function) {
         type: 'REFETCH_ALL',
         payload: {
           isEnable,
+        },
+      }),
+    scrollToShipment: (id: string) =>
+      dispatch({
+        type: 'SCROLL_TO_SHIPMENT',
+        payload: {
+          id,
         },
       }),
   };
