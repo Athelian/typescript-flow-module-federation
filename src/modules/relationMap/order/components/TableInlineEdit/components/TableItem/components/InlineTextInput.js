@@ -34,6 +34,7 @@ export default function InlineTextInput({ id, name, value, isRequired, disabled 
         id={`input-${id}`}
         name={name}
         disabled={disabled}
+        {...(disabled ? { placeholder: '' } : {})}
         {...inputHandlers}
         onBlur={() => {
           inputHandlers.onBlur();
