@@ -27,8 +27,14 @@ import {
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
-import { prepareContainer } from 'modules/container/form/mutation';
+import {
+  prepareUpdateBatchInput,
+  prepareParsedUpdateBatchInput,
+} from 'modules/batch/form/mutation';
+import {
+  prepareContainer,
+  // prepareParsedUpdateContainerInput,
+} from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
   cleanUpData,
@@ -393,23 +399,29 @@ const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
 
 type UpdateShipmentInputType = {
   originalValues: Object,
+  existingBatches: Array<Object>,
   newValues: Object,
 };
 
 export const prepareParsedUpdateShipmentInput = ({
   originalValues,
+  existingBatches,
   newValues,
 }: UpdateShipmentInputType): Object => {
-  // const originalAndExistingBatches = [
-  //   ...originalValues.batches,
-  //   ...existingBatches.filter(
-  //     existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
-  //   ),
-  // ];
+  const originalBatchesInPool = getBatchesInPool(originalValues.batches);
+  const existingBatchesInPool = getBatchesInPool(existingBatches);
+  const newBatchesInPool = getBatchesInPool(newValues.batches);
 
-  // const originalBatchIds = originalValues.batches.map(batch => batch.id);
-  // const existingBatchIds = existingBatches.map(batch => batch.id);
-  // const forceSendBatchIds = !isEquals(originalBatchIds, existingBatchIds);
+  const originalAndExistingBatchesInPool = [
+    ...originalBatchesInPool,
+    ...existingBatchesInPool.filter(
+      existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
+    ),
+  ];
+
+  const originalBatchIdsInPool = originalBatchesInPool.map(batch => batch.id);
+  const existingBatchIdsInPool = existingBatchesInPool.map(batch => batch.id);
+  const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
 
   return {
     ...parseGenericField('no', originalValues.no, newValues.no),
@@ -498,6 +510,41 @@ export const prepareParsedUpdateShipmentInput = ({
         ),
       })
     ),
+    ...parseArrayOfChildrenField(
+      'batches',
+      originalAndExistingBatchesInPool,
+      newBatchesInPool,
+      (oldBatch: ?Object, newBatch: Object) => {
+        return {
+          ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+            inShipmentForm: true,
+            inOrderForm: false,
+            inContainerForm: false,
+            inBatchForm: false,
+          }),
+        };
+      },
+      forceSendBatchIdsForPool
+    ),
+    // ...parseArrayOfChildrenField(
+    //   'containers',
+    //   originalAndExistingBatchesInPool,
+    //   newBatchesInPool,
+    //   (oldContainer: ?Object, newContainer: Object) => {
+    //     return {
+    //       ...prepareParsedUpdateContainerInput(
+    //         oldContainer,
+    //         existingBatchesInContainer,
+    //         newContainer,
+    //         {
+    //           inShipmentForm: true,
+    //           inContainerForm: false,
+    //         }
+    //       ),
+    //     };
+    //   },
+    //   forceSendBatchIdsForPool
+    // ),
     ...parseFilesField('files', originalValues.files, newValues.files),
   };
 };

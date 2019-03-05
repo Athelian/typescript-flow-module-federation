@@ -80,7 +80,13 @@ function BatchesArea({
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
-        { state: { batches }, setFieldValue, setFieldArrayValue },
+        {
+          state: { batches },
+          setFieldValue,
+          setFieldArrayValue,
+          addExistingBatches,
+          removeExistingBatch,
+        },
         { state: { containers }, setFieldValue: setContainersState }
       ) => {
         const usefulBatches = isSelectedBatchesPool ? getBatchesInPool(batches) : [...batches];
@@ -232,6 +238,7 @@ function BatchesArea({
                                         'batches',
                                         batches.filter(({ id: batchId }) => id !== batchId)
                                       );
+                                      removeExistingBatch(id);
                                       const newContainers = containers.map(container => {
                                         const {
                                           batches: containerBatches,
@@ -319,6 +326,8 @@ function BatchesArea({
                                       packageQuantity: calculatePackageQuantity(selectedBatch),
                                     }));
                                     setFieldValue('batches', [...batches, ...newSelectBatches]);
+                                    addExistingBatches(newSelectBatches);
+
                                     selectBatchesSlideToggle(false);
                                   }}
                                   onCancel={() => selectBatchesSlideToggle(false)}

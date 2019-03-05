@@ -17,10 +17,21 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
 
   originalValues = initValues;
 
+  existingBatches = initValues.batches;
+
+  addExistingBatches = (batches: Array<Object>) => {
+    this.existingBatches = [...this.existingBatches, ...batches];
+  };
+
+  removeExistingBatch = (batchId: string) => {
+    this.existingBatches = [...this.existingBatches.filter(batch => batch.id !== batchId)];
+  };
+
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
-    this.originalValues = { ...this.state };
+    this.originalValues = this.state;
+    this.existingBatches = this.state.batches;
     this.setState(this.originalValues);
   };
 
@@ -44,7 +55,9 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
 
   initDetailValues = (batches: Array<Object>) => {
     const parsedValues: Array<any> = removeTypename(batches);
+
     this.setState({ batches: parsedValues });
     this.originalValues = { batches: parsedValues };
+    this.existingBatches = parsedValues;
   };
 }
