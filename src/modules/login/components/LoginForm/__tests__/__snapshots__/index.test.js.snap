@@ -74,6 +74,20 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
 .emotion-0 {
   position: absolute;
   left: -20px;
+  height: 20px;
+  width: 20px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .emotion-8 {
@@ -89,16 +103,16 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 5px;
   width: 100%;
 }
 
 .emotion-1 {
   width: 100%;
-  font-size: 14px;
-  min-height: 20px;
+  height: 20px;
   line-height: 20px;
   font-size: 12px;
   white-space: nowrap;
@@ -119,6 +133,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   -ms-flex: 1;
   flex: 1;
   max-width: 100%;
+  text-transform: uppercase;
 }
 
 .emotion-2 {
@@ -228,7 +243,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
             <input
               data-testid="email"
               name="email"
-              placeholder=""
               spellcheck="false"
               style="text-align: left;"
               type="email"
@@ -253,7 +267,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
             <input
               data-testid="password"
               name="password"
-              placeholder=""
               spellcheck="false"
               style="text-align: left;"
               type="password"
@@ -310,13 +323,13 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
         class="css-1xa9w2h"
       >
         <div
-          class="css-p52le"
+          class="css-ldwt5s"
         >
           <div
-            class="css-1n42b97"
+            class="css-4kx44c"
           />
           <div
-            class="css-kmo8zu"
+            class="css-12hroh9"
           >
             EMAIL
           </div>
@@ -326,7 +339,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             <input
               data-testid="email"
               name="email"
-              placeholder=""
               spellcheck="false"
               style="text-align: left;"
               type="email"
@@ -335,13 +347,13 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
           </div>
         </div>
         <div
-          class="css-p52le"
+          class="css-ldwt5s"
         >
           <div
-            class="css-1n42b97"
+            class="css-4kx44c"
           />
           <div
-            class="css-kmo8zu"
+            class="css-12hroh9"
           >
             PASSWORD
           </div>
@@ -351,7 +363,6 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
             <input
               data-testid="password"
               name="password"
-              placeholder=""
               spellcheck="false"
               style="text-align: left;"
               type="password"
@@ -470,6 +481,20 @@ exports[`<LoginForm /> should render without crash 1`] = `
 .emotion-0 {
   position: absolute;
   left: -20px;
+  height: 20px;
+  width: 20px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .emotion-8 {
@@ -485,16 +510,16 @@ exports[`<LoginForm /> should render without crash 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 5px;
   width: 100%;
 }
 
 .emotion-1 {
   width: 100%;
-  font-size: 14px;
-  min-height: 20px;
+  height: 20px;
   line-height: 20px;
   font-size: 12px;
   white-space: nowrap;
@@ -515,6 +540,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   -ms-flex: 1;
   flex: 1;
   max-width: 100%;
+  text-transform: uppercase;
 }
 
 .emotion-2 {
@@ -624,7 +650,6 @@ exports[`<LoginForm /> should render without crash 1`] = `
             <input
               data-testid="email"
               name="email"
-              placeholder=""
               spellcheck="false"
               style="text-align: left;"
               type="email"
@@ -649,7 +674,6 @@ exports[`<LoginForm /> should render without crash 1`] = `
             <input
               data-testid="password"
               name="password"
-              placeholder=""
               spellcheck="false"
               style="text-align: left;"
               type="password"
