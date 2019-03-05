@@ -81,8 +81,14 @@ export default function ContainerBatchesArea({
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
-        { state: { batches }, setFieldValue, setFieldArrayValue },
-        { state, setDeepFieldValue }
+        {
+          state: { batches },
+          setFieldValue,
+          setFieldArrayValue,
+          addExistingBatches,
+          removeExistingBatch,
+        },
+        { state, setDeepFieldValue, addExistingBatchesToContainer, removeExistingBatchInContainer }
       ) => {
         const batchesInContainer = getBatchesByContainerId(batches, containerId);
         const container = getByPath(`containers.${containerIndex}`, state);
@@ -256,6 +262,8 @@ export default function ContainerBatchesArea({
                                         `containers.${containerIndex}.batches`,
                                         newBatchesInContainer
                                       );
+                                      removeExistingBatch(id);
+                                      removeExistingBatchInContainer(container.id, id);
                                       if (batch.id === representativeBatchId) {
                                         setDeepFieldValue(
                                           `containers.${containerIndex}.representativeBatch`,
@@ -345,6 +353,9 @@ export default function ContainerBatchesArea({
                                   ...batchesInContainer,
                                   ...newSelectBatches,
                                 ]);
+                                addExistingBatches(newSelectBatches);
+                                addExistingBatchesToContainer(container.id, newSelectBatches);
+
                                 if (batchesInContainer.length === 0) {
                                   setDeepFieldValue(
                                     `containers.${containerIndex}.representativeBatch`,

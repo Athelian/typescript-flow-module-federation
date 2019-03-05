@@ -141,6 +141,7 @@ class ShipmentFormModule extends React.Component<Props> {
   onSave = async (
     originalValues: Object,
     existingBatches: Array<Object>,
+    existingBatchesInContainers: Array<Object>,
     newValues: Object,
     saveShipment: Function,
     onSuccess: () => void,
@@ -152,7 +153,12 @@ class ShipmentFormModule extends React.Component<Props> {
 
     const input = isNewOrClone
       ? prepareCreateShipmentInput(newValues)
-      : prepareParsedUpdateShipmentInput({ originalValues, existingBatches, newValues });
+      : prepareParsedUpdateShipmentInput({
+          originalValues,
+          existingBatches,
+          existingBatchesInContainers,
+          newValues,
+        });
 
     if (isNewOrClone) {
       const result = await saveShipment({
@@ -474,6 +480,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     ...shipmentTransportTypeContainer.originalValues,
                                   },
                                   shipmentBatchesContainer.existingBatches,
+                                  shipmentContainersContainer.existingBatchesInContainers,
                                   {
                                     ...shipmentBatchesContainer.state,
                                     ...shipmentContainersContainer.state,

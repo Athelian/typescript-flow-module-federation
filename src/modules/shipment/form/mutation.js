@@ -33,7 +33,7 @@ import {
 } from 'modules/batch/form/mutation';
 import {
   prepareContainer,
-  // prepareParsedUpdateContainerInput,
+  prepareParsedUpdateContainerInput,
 } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
@@ -400,12 +400,14 @@ const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
 type UpdateShipmentInputType = {
   originalValues: Object,
   existingBatches: Array<Object>,
+  existingBatchesInContainers: Array<Object>,
   newValues: Object,
 };
 
 export const prepareParsedUpdateShipmentInput = ({
   originalValues,
   existingBatches,
+  existingBatchesInContainers,
   newValues,
 }: UpdateShipmentInputType): Object => {
   const originalBatchesInPool = getBatchesInPool(originalValues.batches);
@@ -514,37 +516,42 @@ export const prepareParsedUpdateShipmentInput = ({
       'batches',
       originalAndExistingBatchesInPool,
       newBatchesInPool,
-      (oldBatch: ?Object, newBatch: Object) => {
-        return {
-          ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
-            inShipmentForm: true,
-            inOrderForm: false,
-            inContainerForm: false,
-            inBatchForm: false,
-          }),
-        };
-      },
+      (oldBatch: ?Object, newBatch: Object) => ({
+        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+          inShipmentForm: true,
+          inOrderForm: false,
+          inContainerForm: false,
+          inBatchForm: false,
+        }),
+      }),
       forceSendBatchIdsForPool
     ),
-    // ...parseArrayOfChildrenField(
-    //   'containers',
-    //   originalAndExistingBatchesInPool,
-    //   newBatchesInPool,
-    //   (oldContainer: ?Object, newContainer: Object) => {
-    //     return {
-    //       ...prepareParsedUpdateContainerInput(
-    //         oldContainer,
-    //         existingBatchesInContainer,
-    //         newContainer,
-    //         {
-    //           inShipmentForm: true,
-    //           inContainerForm: false,
-    //         }
-    //       ),
-    //     };
-    //   },
-    //   forceSendBatchIdsForPool
-    // ),
+    ...parseArrayOfChildrenField(
+      'containers',
+      originalValues.containers,
+      newValues.containers,
+      (oldContainer: ?Object, newContainer: Object) => {
+        const existingBatchesInContainer = getByPathWithDefault(
+          [],
+          'batches',
+          existingBatchesInContainers.find(container => container.id === newContainer.id)
+        );
+
+        console.warn(existingBatchesInContainer);
+
+        return {
+          ...prepareParsedUpdateContainerInput({
+            originalValues: oldContainer,
+            existingBatches: existingBatchesInContainer,
+            newValues: newContainer,
+            location: {
+              inShipmentForm: true,
+              inContainerForm: false,
+            },
+          }),
+        };
+      }
+    ),
     ...parseFilesField('files', originalValues.files, newValues.files),
   };
 };

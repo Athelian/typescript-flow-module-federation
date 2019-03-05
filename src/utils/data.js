@@ -251,8 +251,11 @@ export const parseApprovalField = (
   const originalApprovedById = getByPathWithDefault(null, 'approvedBy.id', originalApproval);
   const newApprovedById = getByPathWithDefault(null, 'approvedBy.id', newApproval);
 
-  const originalApprovedAt = (originalApproval && new Date(originalApproval.approvedAt)) || null;
-  const newApprovedAt = (newApproval && new Date(newApproval.approvedAt)) || null;
+  const originalApprovedAt =
+    (originalApproval && originalApproval.approvedAt && new Date(originalApproval.approvedAt)) ||
+    null;
+  const newApprovedAt =
+    (newApproval && newApproval.approvedAt && new Date(newApproval.approvedAt)) || null;
 
   const parsedOriginalApproval = {
     approvedById: originalApprovedById,

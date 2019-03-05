@@ -38,7 +38,7 @@ import {
   parseApprovalField,
   parseRepresentativeBatchIndexField,
 } from 'utils/data';
-import { isNullOrUndefined, isEquals } from 'utils/fp';
+import { isNullOrUndefined, isEquals, getByPathWithDefault } from 'utils/fp';
 
 export const updateContainerMutation = gql`
   mutation containerUpdate($id: ID!, $input: ContainerUpdateInput!) {
@@ -146,34 +146,49 @@ export const prepareParsedUpdateContainerInput = ({
   const { inShipmentForm, inContainerForm } = location;
 
   const originalAndExistingBatches = [
-    ...originalValues.batches,
+    ...getByPathWithDefault([], 'batches', originalValues),
     ...existingBatches.filter(
-      existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
+      existingBatch =>
+        getByPathWithDefault([], 'batches', originalValues).findIndex(
+          batch => batch.id === existingBatch.id
+        ) < 0
     ),
   ];
 
-  const originalBatchIds = originalValues.batches.map(batch => batch.id);
+  const originalBatchIds = getByPathWithDefault([], 'batches', originalValues).map(
+    batch => batch.id
+  );
   const existingBatchIds = existingBatches.map(batch => batch.id);
   const forceSendBatchIds = !isEquals(originalBatchIds, existingBatchIds);
 
   return {
-    ...(inContainerForm ? {} : parseParentIdField('id', originalValues, newValues)),
-    ...parseGenericField('no', originalValues.no, newValues.no),
+    ...(!inContainerForm && originalValues
+      ? parseParentIdField('id', originalValues, newValues)
+      : {}),
+    ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseDateField(
       'warehouseArrivalAgreedDate',
-      originalValues.warehouseArrivalAgreedDate,
+      getByPathWithDefault(null, 'warehouseArrivalAgreedDate', originalValues),
       newValues.warehouseArrivalAgreedDate
     ),
     ...parseArrayOfIdsField(
       'warehouseArrivalAgreedDateAssignedToIds',
-      originalValues.warehouseArrivalAgreedDateAssignedTo,
+      getByPathWithDefault([], 'warehouseArrivalAgreedDateAssignedTo', originalValues),
       newValues.warehouseArrivalAgreedDateAssignedTo
     ),
     ...parseApprovalField(
       'warehouseArrivalAgreedDateApprovedById',
       {
-        approvedBy: originalValues.warehouseArrivalAgreedDateApprovedBy,
-        approvedAt: originalValues.warehouseArrivalAgreedDateApprovedAt,
+        approvedBy: getByPathWithDefault(
+          null,
+          'warehouseArrivalAgreedDateApprovedBy',
+          originalValues
+        ),
+        approvedAt: getByPathWithDefault(
+          null,
+          'warehouseArrivalAgreedDateApprovedAt',
+          originalValues
+        ),
       },
       {
         approvedBy: newValues.warehouseArrivalAgreedDateApprovedBy,
@@ -182,47 +197,65 @@ export const prepareParsedUpdateContainerInput = ({
     ),
     ...parseDateField(
       'warehouseArrivalActualDate',
-      originalValues.warehouseArrivalActualDate,
+      getByPathWithDefault(null, 'warehouseArrivalActualDate', originalValues),
       newValues.warehouseArrivalActualDate
     ),
     ...parseArrayOfIdsField(
       'warehouseArrivalActualDateAssignedToIds',
-      originalValues.warehouseArrivalActualDateAssignedTo,
+      getByPathWithDefault([], 'warehouseArrivalActualDateAssignedTo', originalValues),
       newValues.warehouseArrivalActualDateAssignedTo
     ),
     ...parseApprovalField(
       'warehouseArrivalActualDateApprovedById',
       {
-        approvedBy: originalValues.warehouseArrivalActualDateApprovedBy,
-        approvedAt: originalValues.warehouseArrivalActualDateApprovedAt,
+        approvedBy: getByPathWithDefault(
+          null,
+          'warehouseArrivalActualDateApprovedBy',
+          originalValues
+        ),
+        approvedAt: getByPathWithDefault(
+          null,
+          'warehouseArrivalActualDateApprovedAt',
+          originalValues
+        ),
       },
       {
         approvedBy: newValues.warehouseArrivalActualDateApprovedBy,
         approvedAt: newValues.warehouseArrivalActualDateApprovedAt,
       }
     ),
-    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-    ...parseGenericField('memo', originalValues.memo, newValues.memo),
-    ...parseParentIdField('warehouseId', originalValues.warehouse, newValues.warehouse),
+    ...parseArrayOfIdsField(
+      'tagIds',
+      getByPathWithDefault([], 'tags', originalValues),
+      newValues.tags
+    ),
+    ...parseGenericField(
+      'memo',
+      getByPathWithDefault(null, 'memo', originalValues),
+      newValues.memo
+    ),
+    ...parseParentIdField(
+      'warehouseId',
+      getByPathWithDefault(null, 'warehouse', originalValues),
+      newValues.warehouse
+    ),
     ...parseArrayOfChildrenField(
       'batches',
       originalAndExistingBatches,
       newValues.batches,
-      (oldBatch: ?Object, newBatch: Object) => {
-        return {
-          ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
-            inShipmentForm,
-            inOrderForm: false,
-            inContainerForm,
-            inBatchForm: false,
-          }),
-        };
-      },
+      (oldBatch: ?Object, newBatch: Object) => ({
+        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+          inShipmentForm,
+          inOrderForm: false,
+          inContainerForm,
+          inBatchForm: false,
+        }),
+      }),
       forceSendBatchIds
     ),
     ...parseRepresentativeBatchIndexField(
       'representativeBatchIndex',
-      originalValues.representativeBatch,
+      getByPathWithDefault(null, 'representativeBatch', originalValues),
       newValues.representativeBatch,
       newValues.batches
     ),

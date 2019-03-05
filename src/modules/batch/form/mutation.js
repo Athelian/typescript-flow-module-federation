@@ -230,7 +230,7 @@ export const prepareParsedUpdateBatchInput = (
     ),
     ...parseArrayOfIdsField(
       'tagIds',
-      getByPathWithDefault(null, 'tags', originalValues),
+      getByPathWithDefault([], 'tags', originalValues),
       newValues.tags
     ),
     ...parseGenericField(
@@ -261,7 +261,7 @@ export const prepareParsedUpdateBatchInput = (
         )),
     ...parseArrayOfChildrenField(
       'batchAdjustments',
-      getByPathWithDefault(null, 'batchAdjustments', originalValues),
+      getByPathWithDefault([], 'batchAdjustments', originalValues),
       newValues.batchAdjustments,
       (oldAdjustment: ?Object, newAdjustment: Object) => ({
         ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
