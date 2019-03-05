@@ -15,7 +15,7 @@ export type BatchProps = {
   quantity: number,
   totalAdjusted: number,
   tags: Array<Object>,
-  packageVolume: ?{
+  totalVolume: ?{
     value: number,
     metric: string,
   },

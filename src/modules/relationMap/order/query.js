@@ -17,7 +17,7 @@ export const batchCardRMFragment = gql`
     tags {
       ...tagFragment
     }
-    packageVolume {
+    totalVolume {
       ...metricFragment
     }
   }

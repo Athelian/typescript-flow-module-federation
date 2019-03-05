@@ -21,6 +21,9 @@ export const batchFormFragment = gql`
     deliveredAt
     desiredAt
     expiredAt
+    totalVolume {
+      ...metricFragment
+    }
     customFields {
       ...customFieldsFragment
     }
