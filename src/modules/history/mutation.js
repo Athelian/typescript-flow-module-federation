@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment } from 'graphql';
+import { badRequestFragment, forbiddenFragment, notFoundFragment } from 'graphql';
 
 export const eventCommentCreateMutation = gql`
   mutation eventCommentCreate($input: EventCommentCreateInput!) {
@@ -11,6 +11,7 @@ export const eventCommentCreateMutation = gql`
       ...badRequestFragment
     }
   }
+
   ${badRequestFragment}
 `;
 
@@ -29,6 +30,14 @@ export const eventCommentUpdateMutation = gql`
 
 export const eventCommentDeleteMutation = gql`
   mutation eventCommentDelete($id: ID!) {
-    eventCommentDelete(id: $id)
+    eventCommentDelete(id: $id) {
+      ...forbiddenFragment
+      ...notFoundFragment
+      ...badRequestFragment
+    }
   }
+
+  ${badRequestFragment}
+  ${forbiddenFragment}
+  ${notFoundFragment}
 `;
