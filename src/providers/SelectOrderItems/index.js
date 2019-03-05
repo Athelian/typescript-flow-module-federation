@@ -12,6 +12,7 @@ import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/
 import { SaveButton, CancelButton } from 'components/Buttons';
 import orderItemsQuery from 'providers/OrderItemsList/query';
 import { getByPathWithDefault } from 'utils/fp';
+import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
@@ -128,7 +129,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                     <CancelButton onClick={onCancel} />
                     <SaveButton
                       disabled={selected.length === 0}
-                      onClick={() => onSelect(selected)}
+                      onClick={() => onSelect(removeTypename(selected))}
                     />
                   </SlideViewNavBar>
                 }

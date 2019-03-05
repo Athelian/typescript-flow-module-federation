@@ -24,9 +24,21 @@ import {
   badRequestFragment,
   ownedByFragment,
 } from 'graphql';
-import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
-import { cleanUpData } from 'utils/data';
-import { isNullOrUndefined } from 'utils/fp';
+import {
+  prepareUpdateBatchInput,
+  prepareParsedUpdateBatchInput,
+} from 'modules/batch/form/mutation';
+import {
+  cleanUpData,
+  parseGenericField,
+  parseDateField,
+  parseArrayOfIdsField,
+  parseParentIdField,
+  parseArrayOfChildrenField,
+  parseApprovalField,
+  parseRepresentativeBatchIndexField,
+} from 'utils/data';
+import { isNullOrUndefined, isEquals } from 'utils/fp';
 
 export const updateContainerMutation = gql`
   mutation containerUpdate($id: ID!, $input: ContainerUpdateInput!) {
@@ -114,5 +126,107 @@ export const prepareContainer = ({
     ? findIndex(batches, batch => batch.id === representativeBatch.id)
     : null,
 });
+
+type UpdateContainerInputType = {
+  originalValues: Object,
+  existingBatches: Array<Object>,
+  newValues: Object,
+  location: {
+    inShipmentForm: boolean,
+    inContainerForm: boolean,
+  },
+};
+
+export const prepareParsedUpdateContainerInput = ({
+  originalValues,
+  existingBatches,
+  newValues,
+  location,
+}: UpdateContainerInputType): Object => {
+  const { inShipmentForm, inContainerForm } = location;
+
+  const originalAndExistingBatches = [
+    ...originalValues.batches,
+    ...existingBatches.filter(
+      existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
+    ),
+  ];
+
+  const originalBatchIds = originalValues.batches.map(batch => batch.id);
+  const existingBatchIds = existingBatches.map(batch => batch.id);
+  const forceSendBatchIds = !isEquals(originalBatchIds, existingBatchIds);
+
+  return {
+    ...(inContainerForm ? {} : parseParentIdField('id', originalValues, newValues)),
+    ...parseGenericField('no', originalValues.no, newValues.no),
+    ...parseDateField(
+      'warehouseArrivalAgreedDate',
+      originalValues.warehouseArrivalAgreedDate,
+      newValues.warehouseArrivalAgreedDate
+    ),
+    ...parseArrayOfIdsField(
+      'warehouseArrivalAgreedDateAssignedToIds',
+      originalValues.warehouseArrivalAgreedDateAssignedTo,
+      newValues.warehouseArrivalAgreedDateAssignedTo
+    ),
+    ...parseApprovalField(
+      'warehouseArrivalAgreedDateApprovedById',
+      {
+        approvedBy: originalValues.warehouseArrivalAgreedDateApprovedBy,
+        approvedAt: originalValues.warehouseArrivalAgreedDateApprovedAt,
+      },
+      {
+        approvedBy: newValues.warehouseArrivalAgreedDateApprovedBy,
+        approvedAt: newValues.warehouseArrivalAgreedDateApprovedAt,
+      }
+    ),
+    ...parseDateField(
+      'warehouseArrivalActualDate',
+      originalValues.warehouseArrivalActualDate,
+      newValues.warehouseArrivalActualDate
+    ),
+    ...parseArrayOfIdsField(
+      'warehouseArrivalActualDateAssignedToIds',
+      originalValues.warehouseArrivalActualDateAssignedTo,
+      newValues.warehouseArrivalActualDateAssignedTo
+    ),
+    ...parseApprovalField(
+      'warehouseArrivalActualDateApprovedById',
+      {
+        approvedBy: originalValues.warehouseArrivalActualDateApprovedBy,
+        approvedAt: originalValues.warehouseArrivalActualDateApprovedAt,
+      },
+      {
+        approvedBy: newValues.warehouseArrivalActualDateApprovedBy,
+        approvedAt: newValues.warehouseArrivalActualDateApprovedAt,
+      }
+    ),
+    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
+    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...parseParentIdField('warehouseId', originalValues.warehouse, newValues.warehouse),
+    ...parseArrayOfChildrenField(
+      'batches',
+      originalAndExistingBatches,
+      newValues.batches,
+      (oldBatch: ?Object, newBatch: Object) => {
+        return {
+          ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+            inShipmentForm,
+            inOrderForm: false,
+            inContainerForm,
+            inBatchForm: false,
+          }),
+        };
+      },
+      forceSendBatchIds
+    ),
+    ...parseRepresentativeBatchIndexField(
+      'representativeBatchIndex',
+      originalValues.representativeBatch,
+      newValues.representativeBatch,
+      newValues.batches
+    ),
+  };
+};
 
 export default updateContainerMutation;

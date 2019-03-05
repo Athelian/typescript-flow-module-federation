@@ -16,7 +16,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
 import { containerFormQuery } from './form/query';
-import { updateContainerMutation, prepareContainer } from './form/mutation';
+import { updateContainerMutation, prepareParsedUpdateContainerInput } from './form/mutation';
 import ContainerFormContainer from './form/container';
 import validator from './form/validator';
 import ContainerForm from './form/index';
@@ -49,14 +49,24 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
   onCancel = () => navigate(`/batch`);
 
   onSave = async (
-    formData: Object,
+    originalValues: Object,
+    existingBatches: Array<Object>,
+    newValues: Object,
     saveContainer: Function,
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
     const { containerId } = this.props;
 
-    const { id, ...input } = prepareContainer(formData);
+    const { id, ...input } = prepareParsedUpdateContainerInput({
+      originalValues,
+      existingBatches,
+      newValues,
+      location: {
+        inShipmentForm: false,
+        inContainerForm: true,
+      },
+    });
 
     const result = await saveContainer({
       variables: { input, id: decodeId(containerId) },
@@ -167,6 +177,8 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                                 isLoading={loading}
                                 onClick={() =>
                                   this.onSave(
+                                    containerContainer.originalValues,
+                                    containerContainer.existingBatches,
                                     containerContainer.state,
                                     saveContainer,
                                     () => {
