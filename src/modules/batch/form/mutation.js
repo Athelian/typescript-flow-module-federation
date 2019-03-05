@@ -149,6 +149,7 @@ export const prepareUpdateBatchInput = (
     tags = [],
     batchAdjustments = [],
     totalAdjusted,
+    totalVolume,
     archived,
     ...rest
   }: Object,
