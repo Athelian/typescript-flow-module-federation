@@ -53,7 +53,7 @@ const getNewSourceContainer = (
   return { ...sourceContainer, batches: newBatches, representativeBatch: newRepresentativeBatch };
 };
 
-function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode }: Props) {
+function ContainersAreaReadOnly({ selectCardId, selectedBatches, setIsSelectBatchesMode }: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
@@ -288,4 +288,4 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
   );
 }
 
-export default ContainersArea;
+export default ContainersAreaReadOnly;

@@ -57,7 +57,7 @@ import {
 
 type Props = {
   selectCardId: ?string,
-  setSelected: ({ cardId: string, containerIndex: number }) => void,
+  setSelected: (cardId: string) => void,
 };
 
 const removeContainerById = (containers: Array<Object>, id: string): Array<Object> =>
@@ -119,7 +119,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                 <div
                   className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPool(selectCardId))}
                   role="presentation"
-                  onClick={() => setSelected({ cardId: BATCHES_POOL, containerIndex: -1 })}
+                  onClick={() => setSelected(BATCHES_POOL)}
                 >
                   <div className={EyeballIconStyle}>
                     <Icon icon={isSelectedBatchesPool(selectCardId) ? 'INVISIBLE' : 'VISIBLE'} />
@@ -141,9 +141,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
-                        onClick={() =>
-                          setSelected({ cardId: container.id, containerIndex: position })
-                        }
+                        onClick={() => setSelected(container.id)}
                       >
                         <div className={EyeballIconStyle}>
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />

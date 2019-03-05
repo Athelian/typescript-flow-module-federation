@@ -19,7 +19,6 @@ type Props = {};
 
 type State = {
   selectCardId: ?string,
-  containerIndex: number,
   isSelectBatchesMode: boolean,
   selectedBatches: Array<Object>,
 };
@@ -27,7 +26,6 @@ type State = {
 class CargoSection extends React.Component<Props, State> {
   state = {
     selectCardId: null, // 'Batches_Pool' = Batches Pool
-    containerIndex: -1,
     isSelectBatchesMode: false,
     selectedBatches: [],
   };
@@ -35,12 +33,12 @@ class CargoSection extends React.Component<Props, State> {
   setIsSelectBatchesMode = (isSelectBatchesMode: boolean) =>
     this.setState({ isSelectBatchesMode, selectedBatches: [] });
 
-  setSelected = ({ cardId, containerIndex }: { cardId: string, containerIndex: number }) => {
+  setSelected = (cardId: string) => {
     const { selectCardId } = this.state;
     if (selectCardId === cardId) {
-      this.setState({ selectCardId: null, containerIndex: -1 });
+      this.setState({ selectCardId: null });
     } else {
-      this.setState({ selectCardId: cardId, containerIndex });
+      this.setState({ selectCardId: cardId });
     }
   };
 
@@ -58,14 +56,13 @@ class CargoSection extends React.Component<Props, State> {
   };
 
   render() {
-    const { selectCardId, containerIndex, isSelectBatchesMode, selectedBatches } = this.state;
+    const { selectCardId, isSelectBatchesMode, selectedBatches } = this.state;
 
     return (
       <div className={CargoSectionWrapperStyle}>
         {isSelectBatchesMode ? (
           <ContainersAreaReadOnly
             selectCardId={selectCardId}
-            setSelected={this.setSelected}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
           />
@@ -84,7 +81,6 @@ class CargoSection extends React.Component<Props, State> {
         ) : (
           <ContainerBatchesArea
             containerId={selectCardId}
-            containerIndex={containerIndex}
             isSelectBatchesMode={isSelectBatchesMode}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}

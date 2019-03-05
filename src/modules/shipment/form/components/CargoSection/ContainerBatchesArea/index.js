@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { findIndex } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { injectUid } from 'utils/id';
@@ -60,7 +61,6 @@ import {
 
 type Props = {
   containerId: string,
-  containerIndex: number,
   isSelectBatchesMode: boolean,
   setIsSelectBatchesMode: Function,
   selectedBatches: Array<Object>,
@@ -69,7 +69,6 @@ type Props = {
 
 export default function ContainerBatchesArea({
   containerId,
-  containerIndex,
   isSelectBatchesMode,
   setIsSelectBatchesMode,
   selectedBatches,
@@ -78,6 +77,7 @@ export default function ContainerBatchesArea({
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
+
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -88,14 +88,12 @@ export default function ContainerBatchesArea({
           addExistingBatches,
           removeExistingBatches,
         },
-        { state, setDeepFieldValue }
+        { state: { containers }, setDeepFieldValue }
       ) => {
         const batchesInContainer = getBatchesByContainerId(batches, containerId);
-        const container = getByPath(`containers.${containerIndex}`, state);
-        const representativeBatchId = getByPath(
-          `containers.${containerIndex}.representativeBatch.id`,
-          state
-        );
+        const containerIndex = findIndex(containers, ({ id }) => id === containerId);
+        const container = containers[containerIndex];
+        const representativeBatchId = getByPath(`representativeBatch.id`, container);
 
         if (batchesInContainer.length > 0 && isNullOrUndefined(representativeBatchId)) {
           setDeepFieldValue(
