@@ -32,6 +32,7 @@ export const prepareUpdateBatchInput = ({
   producedAt,
   tags = [],
   batchAdjustments = [],
+  totalVolume,
   archived,
   ...rest
 }: Object): Object =>
