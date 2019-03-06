@@ -58,7 +58,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
   ) => {
     const { containerId } = this.props;
 
-    const { id, ...input } = prepareParsedUpdateContainerInput({
+    const input = prepareParsedUpdateContainerInput({
       originalValues,
       existingBatches,
       newValues,

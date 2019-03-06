@@ -2,7 +2,8 @@
 import gql from 'graphql-tag';
 import {
   shipmentFormFragment,
-  shipmentContainerCardFragment,
+  containerFormFragment,
+  warehouseCardFragment,
   timelineDateFullFragment,
   batchFormFragment,
   userAvatarFragment,
@@ -25,12 +26,29 @@ import {
   badRequestFragment,
   ownedByFragment,
 } from 'graphql';
-
 import { prepareCustomFieldsData } from 'utils/customFields';
-import { prepareUpdateBatchInput } from 'modules/batch/form/mutation';
-import { prepareContainer } from 'modules/container/form/mutation';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
+import {
+  prepareUpdateBatchInput,
+  prepareParsedUpdateBatchInput,
+} from 'modules/batch/form/mutation';
+import {
+  prepareContainer,
+  prepareParsedUpdateContainerInput,
+} from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
-import { cleanUpData } from 'utils/data';
+import {
+  cleanUpData,
+  parseGenericField,
+  parseDateField,
+  parseArrayOfIdsField,
+  parseParentIdField,
+  parseArrayOfChildrenField,
+  parseApprovalField,
+  parseFilesField,
+  parseEnumField,
+  parseCustomFieldsField,
+} from 'utils/data';
 import type {
   CargoReady,
   ShipmentVoyage,
@@ -109,8 +127,10 @@ export const createShipmentWithReturnDataMutation: Object = gql`
       ...badRequestFragment
     }
   }
-  ${badRequestFragment}
+
   ${shipmentFormFragment}
+  ${containerFormFragment}
+  ${warehouseCardFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}
@@ -126,6 +146,7 @@ export const createShipmentWithReturnDataMutation: Object = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
+  ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -197,7 +218,8 @@ export const updateShipmentMutation: Object = gql`
   }
 
   ${shipmentFormFragment}
-  ${shipmentContainerCardFragment}
+  ${containerFormFragment}
+  ${warehouseCardFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}
@@ -273,3 +295,259 @@ export const prepareUpdateShipmentInput = ({
     memo: fileMemo,
   })),
 });
+type DateRevisionType = {
+  id: string,
+  date: string | Date,
+  type: string,
+  memo: ?string,
+};
+
+type TimelineDateType = {
+  date: ?(string | Date),
+  assignedTo: Array<{ id: string }>,
+  approvedBy: ?{ id: string },
+  approvedAt: ?(string | Date),
+  memo: ?string,
+  timelineDateRevisions: Array<DateRevisionType>,
+};
+
+const parseTimelineDateField = (
+  key: string,
+  originalTimelineDate: ?TimelineDateType,
+  newTimelineDate: ?TimelineDateType
+) => {
+  if (isEquals(originalTimelineDate, newTimelineDate)) return {};
+
+  const parsedNewTimelineDate = {
+    ...parseDateField(
+      'date',
+      getByPathWithDefault(null, 'date', originalTimelineDate),
+      getByPathWithDefault(null, 'date', newTimelineDate)
+    ),
+    ...parseArrayOfIdsField(
+      'assignedToIds',
+      getByPathWithDefault([], 'assignedTo', originalTimelineDate),
+      getByPathWithDefault([], 'assignedTo', newTimelineDate)
+    ),
+    ...parseApprovalField(
+      'approvedById',
+      {
+        approvedBy: getByPathWithDefault(null, 'approvedBy', originalTimelineDate),
+        approvedAt: getByPathWithDefault(null, 'approvedAt', originalTimelineDate),
+      },
+      {
+        approvedBy: getByPathWithDefault(null, 'approvedBy', newTimelineDate),
+        approvedAt: getByPathWithDefault(null, 'approvedAt', newTimelineDate),
+      }
+    ),
+    ...parseGenericField(
+      'memo',
+      getByPathWithDefault(null, 'memo', originalTimelineDate),
+      getByPathWithDefault(null, 'memo', newTimelineDate)
+    ),
+    ...parseArrayOfChildrenField(
+      'timelineDateRevisions',
+      getByPathWithDefault([], 'timelineDateRevisions', originalTimelineDate),
+      getByPathWithDefault([], 'timelineDateRevisions', newTimelineDate),
+      (oldDateRevision: ?DateRevisionType, newDateRevision: ?DateRevisionType) => ({
+        ...(!oldDateRevision ? {} : { id: oldDateRevision.id }),
+        ...parseDateField(
+          'date',
+          getByPathWithDefault(null, 'date', oldDateRevision),
+          getByPathWithDefault(null, 'date', newDateRevision)
+        ),
+        ...parseEnumField(
+          'type',
+          getByPathWithDefault(null, 'type', oldDateRevision),
+          getByPathWithDefault(null, 'type', newDateRevision)
+        ),
+        ...parseGenericField(
+          'memo',
+          getByPathWithDefault(null, 'memo', oldDateRevision),
+          getByPathWithDefault(null, 'memo', newDateRevision)
+        ),
+      })
+    ),
+  };
+
+  return { [key]: parsedNewTimelineDate };
+};
+
+type PortType = {
+  seaport: ?string,
+  airport: ?string,
+};
+
+const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType) => {
+  if (isEquals(originalPort, newPort)) return {};
+
+  const parsedNewPort = {
+    ...parseEnumField(
+      'seaport',
+      getByPathWithDefault(null, 'seaport', originalPort),
+      newPort.seaport
+    ),
+    ...parseEnumField(
+      'airport',
+      getByPathWithDefault(null, 'airport', originalPort),
+      newPort.airport
+    ),
+  };
+
+  return { [key]: parsedNewPort };
+};
+
+const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
+  if (numberOfContainers > 0) return null;
+  return warehouse;
+};
+
+type UpdateShipmentInputType = {
+  originalValues: Object,
+  existingBatches: Array<Object>,
+  newValues: Object,
+};
+
+export const prepareParsedUpdateShipmentInput = ({
+  originalValues,
+  existingBatches,
+  newValues,
+}: UpdateShipmentInputType): Object => {
+  const originalBatchesInPool = getBatchesInPool(originalValues.batches);
+  const existingBatchesInPool = getBatchesInPool(existingBatches);
+  const newBatchesInPool = getBatchesInPool(newValues.batches);
+
+  const originalBatchIdsInPool = originalBatchesInPool.map(batch => batch.id);
+  const existingBatchIdsInPool = existingBatchesInPool.map(batch => batch.id);
+  const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
+
+  console.warn('OLD CONTAINERS', originalValues.containers);
+  console.warn('NEW CONTAINERS', newValues.containers);
+  console.warn('IS EQUALS', isEquals(originalValues.containers, newValues.containers));
+
+  return {
+    ...parseGenericField('no', originalValues.no, newValues.no),
+    ...parseGenericField('blNo', originalValues.blNo, newValues.blNo),
+    ...parseDateField('blDate', originalValues.blDate, newValues.blDate),
+    ...parseGenericField('bookingNo', originalValues.bookingNo, newValues.bookingNo),
+    ...parseDateField('bookingDate', originalValues.bookingDate, newValues.bookingDate),
+    ...parseGenericField('invoiceNo', originalValues.invoiceNo, newValues.invoiceNo),
+    ...parseEnumField('transportType', originalValues.transportType, newValues.transportType),
+    ...parseEnumField('loadType', originalValues.loadType, newValues.loadType),
+    ...parseEnumField('incoterm', originalValues.incoterm, newValues.incoterm),
+    ...parseGenericField('carrier', originalValues.carrier, newValues.carrier),
+    ...parseCustomFieldsField(
+      'customFields',
+      getByPathWithDefault(null, 'customFields', originalValues),
+      newValues.customFields
+    ),
+    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
+    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
+    ...parseArrayOfIdsField('forwarderIds', originalValues.forwarders, newValues.forwarders),
+    ...parseTimelineDateField('cargoReady', originalValues.cargoReady, newValues.cargoReady),
+    ...parseArrayOfChildrenField(
+      'containerGroups',
+      originalValues.containerGroups,
+      newValues.containerGroups,
+      (oldContainerGroup: ?Object, newContainerGroup: Object) => ({
+        ...(!oldContainerGroup ? {} : { id: oldContainerGroup.id }),
+        ...parseParentIdField(
+          'warehouseId',
+          getByPathWithDefault(null, 'warehouse', oldContainerGroup),
+          cleanWarehouse(newContainerGroup.warehouse, newValues.containers.length)
+        ),
+        ...parseTimelineDateField(
+          'customClearance',
+          getByPathWithDefault(null, 'customClearance', oldContainerGroup),
+          newContainerGroup.customClearance
+        ),
+        ...parseTimelineDateField(
+          'warehouseArrival',
+          getByPathWithDefault(null, 'warehouseArrival', oldContainerGroup),
+          newContainerGroup.warehouseArrival
+        ),
+        ...parseTimelineDateField(
+          'deliveryReady',
+          getByPathWithDefault(null, 'deliveryReady', oldContainerGroup),
+          newContainerGroup.deliveryReady
+        ),
+      })
+    ),
+    ...parseArrayOfChildrenField(
+      'voyages',
+      originalValues.voyages,
+      newValues.voyages,
+      (oldVoyage: ?Object, newVoyage: Object) => ({
+        ...(!oldVoyage ? {} : { id: oldVoyage.id }),
+        ...parseGenericField(
+          'vesselName',
+          getByPathWithDefault(null, 'vesselName', oldVoyage),
+          newVoyage.vesselName
+        ),
+        ...parseGenericField(
+          'vesselCode',
+          getByPathWithDefault(null, 'vesselCode', oldVoyage),
+          newVoyage.vesselCode
+        ),
+        ...parsePortField(
+          'departurePort',
+          getByPathWithDefault(null, 'departurePort', oldVoyage),
+          newVoyage.departurePort
+        ),
+        ...parsePortField(
+          'arrivalPort',
+          getByPathWithDefault(null, 'arrivalPort', oldVoyage),
+          newVoyage.arrivalPort
+        ),
+        ...parseTimelineDateField(
+          'departure',
+          getByPathWithDefault(null, 'departure', oldVoyage),
+          newVoyage.departure
+        ),
+        ...parseTimelineDateField(
+          'arrival',
+          getByPathWithDefault(null, 'arrival', oldVoyage),
+          newVoyage.arrival
+        ),
+      })
+    ),
+    ...parseArrayOfChildrenField(
+      'batches',
+      existingBatchesInPool,
+      newBatchesInPool,
+      (oldBatch: ?Object, newBatch: Object) => ({
+        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+          inShipmentForm: true,
+          inOrderForm: false,
+          inContainerForm: false,
+          inBatchForm: false,
+        }),
+      }),
+      forceSendBatchIdsForPool
+    ),
+    ...parseArrayOfChildrenField(
+      'containers',
+      originalValues.containers,
+      newValues.containers,
+      (oldContainer: ?Object, newContainer: Object) => {
+        const existingBatchesInContainer = existingBatches.filter(
+          batch => batch.container === newContainer.id
+        );
+
+        return {
+          ...prepareParsedUpdateContainerInput({
+            originalValues: oldContainer,
+            existingBatches: existingBatchesInContainer,
+            newValues: newContainer,
+            location: {
+              inShipmentForm: true,
+              inContainerForm: false,
+            },
+          }),
+        };
+      }
+    ),
+    ...parseFilesField('files', originalValues.files, newValues.files),
+  };
+};

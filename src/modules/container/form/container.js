@@ -94,10 +94,10 @@ export default class ContainerFormContainer extends Container<ContainerFormState
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues = { ...initValues, ...cleanUpData(values) };
 
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = parsedValues;
     this.existingBatches = parsedValues.batches;
   };
 }

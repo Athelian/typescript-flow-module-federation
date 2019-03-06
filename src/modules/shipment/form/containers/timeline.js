@@ -88,7 +88,8 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: any) => {
-    const parsedValues = cleanUpData(values);
+    const parsedValues = { ...initValues, ...cleanUpData(values) };
+
     this.setState(parsedValues);
     this.originalValues = parsedValues;
   };

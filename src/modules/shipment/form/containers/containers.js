@@ -38,7 +38,9 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
   };
 
   initDetailValues = (values: Object) => {
-    this.setState(cleanUpData(values));
-    this.originalValues = cleanUpData(values);
+    const parsedValues = { ...initValues, ...cleanUpData(values) };
+
+    this.setState(parsedValues);
+    this.originalValues = parsedValues;
   };
 }

@@ -84,7 +84,7 @@ export const shipmentFormFragment = gql`
       }
     }
     containers {
-      ...shipmentContainerCardFragment
+      ...containerFormFragment
     }
     totalVolume {
       ...metricFragment

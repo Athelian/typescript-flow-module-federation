@@ -196,7 +196,7 @@ export const prepareParsedUpdateBatchInput = (
   const { inShipmentForm, inOrderForm, inContainerForm, inBatchForm } = location;
 
   return {
-    ...(!inBatchForm && originalValues ? { id: newValues.id } : {}),
+    ...(!inBatchForm && originalValues ? { id: originalValues.id } : {}),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'quantity',
@@ -230,7 +230,7 @@ export const prepareParsedUpdateBatchInput = (
     ),
     ...parseArrayOfIdsField(
       'tagIds',
-      getByPathWithDefault(null, 'tags', originalValues),
+      getByPathWithDefault([], 'tags', originalValues),
       newValues.tags
     ),
     ...parseGenericField(
@@ -261,28 +261,26 @@ export const prepareParsedUpdateBatchInput = (
         )),
     ...parseArrayOfChildrenField(
       'batchAdjustments',
-      getByPathWithDefault(null, 'batchAdjustments', originalValues),
+      getByPathWithDefault([], 'batchAdjustments', originalValues),
       newValues.batchAdjustments,
-      (oldAdjustment: ?Object, newAdjustment: Object) => {
-        return {
-          ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
-          ...parseGenericField(
-            'quantity',
-            getByPathWithDefault(null, 'quantity', oldAdjustment),
-            newAdjustment.quantity
-          ),
-          ...parseEnumField(
-            'reason',
-            getByPathWithDefault(null, 'reason', oldAdjustment),
-            newAdjustment.reason
-          ),
-          ...parseGenericField(
-            'memo',
-            getByPathWithDefault(null, 'memo', oldAdjustment),
-            newAdjustment.memo
-          ),
-        };
-      }
+      (oldAdjustment: ?Object, newAdjustment: Object) => ({
+        ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
+        ...parseGenericField(
+          'quantity',
+          getByPathWithDefault(null, 'quantity', oldAdjustment),
+          newAdjustment.quantity
+        ),
+        ...parseEnumField(
+          'reason',
+          getByPathWithDefault(null, 'reason', oldAdjustment),
+          newAdjustment.reason
+        ),
+        ...parseGenericField(
+          'memo',
+          getByPathWithDefault(null, 'memo', oldAdjustment),
+          newAdjustment.memo
+        ),
+      })
     ),
     ...parseGenericField(
       'packageName',
