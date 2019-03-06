@@ -7,14 +7,8 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
   SHIPMENT_UPDATE,
-  SHIPMENT_SET_PORT,
-  SHIPMENT_SET_TIMELINE_DATE,
-  SHIPMENT_SET_REVISE_TIMELINE_DATE,
-  SHIPMENT_APPROVE_TIMELINE_DATE,
-  SHIPMENT_ASSIGN_TIMELINE_DATE,
+  SHIPMENT_SET_VOYAGES,
   SHIPMENT_SET_WAREHOUSE,
-  SHIPMENT_SET_VESSEL_NAME,
-  SHIPMENT_SET_VESSEL_CODE,
 } from 'modules/permission/constants/shipment';
 import {
   ShipmentTransportTypeContainer,
@@ -69,18 +63,7 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={TimelineWrapperStyle}>
               <VerticalLayout shipment={values} />
               <VoyageSelector
-                editable={
-                  hasPermission(SHIPMENT_UPDATE) ||
-                  [
-                    SHIPMENT_SET_PORT,
-                    SHIPMENT_SET_TIMELINE_DATE,
-                    SHIPMENT_SET_REVISE_TIMELINE_DATE,
-                    SHIPMENT_APPROVE_TIMELINE_DATE,
-                    SHIPMENT_ASSIGN_TIMELINE_DATE,
-                    SHIPMENT_SET_VESSEL_NAME,
-                    SHIPMENT_SET_VESSEL_CODE,
-                  ].every(hasPermission)
-                }
+                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
                 shipment={values}
                 setFieldDeepValue={setFieldDeepValue}
                 removeArrayItem={removeArrayItem}
