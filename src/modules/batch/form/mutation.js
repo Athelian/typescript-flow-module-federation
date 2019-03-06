@@ -196,7 +196,7 @@ export const prepareParsedUpdateBatchInput = (
   const { inShipmentForm, inOrderForm, inContainerForm, inBatchForm } = location;
 
   return {
-    ...(!inBatchForm && originalValues ? { id: newValues.id } : {}),
+    ...(!inBatchForm && originalValues ? { id: originalValues.id } : {}),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'quantity',

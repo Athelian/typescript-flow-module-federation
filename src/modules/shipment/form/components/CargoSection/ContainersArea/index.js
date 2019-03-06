@@ -96,7 +96,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
           setFieldValue,
           setDeepFieldValue,
         },
-        { state: { batches }, setFieldValue: updateBatchesState }
+        { state: { batches }, setFieldValue: updateBatchesState, removeExistingBatches }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
 
@@ -260,6 +260,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               'containers',
                                               removeContainerById(containers, container.id)
                                             );
+                                            removeExistingBatches(container.batches);
                                           }}
                                         />
                                       </>
@@ -355,6 +356,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                         totalNumberOfUniqueOrderItems: 0,
                         warehouseArrivalActualDateAssignedTo: [],
                         warehouseArrivalAgreedDateAssignedTo: [],
+                        representativeBatch: null,
                       }),
                     ]);
                   }}

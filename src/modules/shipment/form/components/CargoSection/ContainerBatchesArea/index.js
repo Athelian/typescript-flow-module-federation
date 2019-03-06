@@ -86,9 +86,9 @@ export default function ContainerBatchesArea({
           setFieldValue,
           setFieldArrayValue,
           addExistingBatches,
-          removeExistingBatch,
+          removeExistingBatches,
         },
-        { state, setDeepFieldValue, addExistingBatchesToContainer, removeExistingBatchInContainer }
+        { state, setDeepFieldValue }
       ) => {
         const batchesInContainer = getBatchesByContainerId(batches, containerId);
         const container = getByPath(`containers.${containerIndex}`, state);
@@ -250,20 +250,21 @@ export default function ContainerBatchesArea({
                                       );
                                     }}
                                     onClick={() => batchSlideToggle(true)}
-                                    onClear={({ id }) => {
+                                    onClear={clearedBatch => {
                                       setFieldValue(
                                         'batches',
-                                        batches.filter(({ id: batchId }) => id !== batchId)
+                                        batches.filter(
+                                          ({ id: batchId }) => batchId !== clearedBatch.id
+                                        )
                                       );
                                       const newBatchesInContainer = batchesInContainer.filter(
-                                        ({ id: batchId }) => id !== batchId
+                                        ({ id: batchId }) => batchId !== clearedBatch.id
                                       );
                                       setDeepFieldValue(
                                         `containers.${containerIndex}.batches`,
                                         newBatchesInContainer
                                       );
-                                      removeExistingBatch(id);
-                                      removeExistingBatchInContainer(container.id, id);
+                                      removeExistingBatches([clearedBatch]);
                                       if (batch.id === representativeBatchId) {
                                         setDeepFieldValue(
                                           `containers.${containerIndex}.representativeBatch`,
@@ -354,7 +355,6 @@ export default function ContainerBatchesArea({
                                   ...newSelectBatches,
                                 ]);
                                 addExistingBatches(newSelectBatches);
-                                addExistingBatchesToContainer(container.id, newSelectBatches);
 
                                 if (batchesInContainer.length === 0) {
                                   setDeepFieldValue(

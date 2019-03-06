@@ -145,16 +145,6 @@ export const prepareParsedUpdateContainerInput = ({
 }: UpdateContainerInputType): Object => {
   const { inShipmentForm, inContainerForm } = location;
 
-  const originalAndExistingBatches = [
-    ...getByPathWithDefault([], 'batches', originalValues),
-    ...existingBatches.filter(
-      existingBatch =>
-        getByPathWithDefault([], 'batches', originalValues).findIndex(
-          batch => batch.id === existingBatch.id
-        ) < 0
-    ),
-  ];
-
   const originalBatchIds = getByPathWithDefault([], 'batches', originalValues).map(
     batch => batch.id
   );
@@ -162,9 +152,7 @@ export const prepareParsedUpdateContainerInput = ({
   const forceSendBatchIds = !isEquals(originalBatchIds, existingBatchIds);
 
   return {
-    ...(!inContainerForm && originalValues
-      ? parseParentIdField('id', originalValues, newValues)
-      : {}),
+    ...(!inContainerForm && originalValues ? { id: originalValues.id } : {}),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseDateField(
       'warehouseArrivalAgreedDate',
@@ -241,7 +229,7 @@ export const prepareParsedUpdateContainerInput = ({
     ),
     ...parseArrayOfChildrenField(
       'batches',
-      originalAndExistingBatches,
+      existingBatches,
       newValues.batches,
       (oldBatch: ?Object, newBatch: Object) => ({
         ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {

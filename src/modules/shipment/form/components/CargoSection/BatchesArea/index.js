@@ -85,7 +85,7 @@ function BatchesArea({
           setFieldValue,
           setFieldArrayValue,
           addExistingBatches,
-          removeExistingBatch,
+          removeExistingBatches,
         },
         { state: { containers }, setFieldValue: setContainersState }
       ) => {
@@ -233,12 +233,14 @@ function BatchesArea({
                                       setFieldArrayValue(indexOfAllBatches, updateBatch);
                                     }}
                                     onClick={() => batchSlideToggle(true)}
-                                    onClear={({ id }) => {
+                                    onClear={clearedBatch => {
                                       setFieldValue(
                                         'batches',
-                                        batches.filter(({ id: batchId }) => id !== batchId)
+                                        batches.filter(
+                                          ({ id: batchId }) => batchId !== clearedBatch.id
+                                        )
                                       );
-                                      removeExistingBatch(id);
+                                      removeExistingBatches([clearedBatch]);
                                       const newContainers = containers.map(container => {
                                         const {
                                           batches: containerBatches,
@@ -247,18 +249,21 @@ function BatchesArea({
                                         } = container;
 
                                         const newContainerBatches = containerBatches.filter(
-                                          ({ id: batchId }) => id !== batchId
+                                          ({ id: batchId }) => batchId !== clearedBatch.id
                                         );
 
                                         const newRepresentativeBatch =
-                                          representativeBatch && representativeBatch.id === id
+                                          representativeBatch &&
+                                          representativeBatch.id === clearedBatch.id
                                             ? newContainerBatches[0]
                                             : representativeBatch;
 
                                         return {
                                           ...rest,
                                           batches: newContainerBatches,
-                                          representativeBatch: newRepresentativeBatch,
+                                          ...(newRepresentativeBatch
+                                            ? { representativeBatch: newRepresentativeBatch }
+                                            : {}),
                                         };
                                       });
                                       setContainersState('containers', newContainers);
@@ -272,15 +277,14 @@ function BatchesArea({
                                       no,
                                       ...rest
                                     }) => {
-                                      setFieldValue('batches', [
-                                        ...batches,
-                                        injectUid({
-                                          ...rest,
-                                          isNew: true,
-                                          batchAdjustments: [],
-                                          no: `${no}- clone`,
-                                        }),
-                                      ]);
+                                      const clonedBatch = injectUid({
+                                        ...rest,
+                                        isNew: true,
+                                        batchAdjustments: [],
+                                        no: `${no}- clone`,
+                                      });
+
+                                      setFieldValue('batches', [...batches, clonedBatch]);
                                     }}
                                   />
                                 </>

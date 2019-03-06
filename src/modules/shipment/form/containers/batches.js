@@ -23,8 +23,12 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     this.existingBatches = [...this.existingBatches, ...batches];
   };
 
-  removeExistingBatch = (batchId: string) => {
-    this.existingBatches = [...this.existingBatches.filter(batch => batch.id !== batchId)];
+  removeExistingBatches = (batches: Array<Object>) => {
+    this.existingBatches = [
+      ...this.existingBatches.filter(existingBatch =>
+        batches.some(batch => batch.id === existingBatch.id)
+      ),
+    ];
   };
 
   isDirty = () => !isEquals(this.state, this.originalValues);

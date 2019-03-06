@@ -2,7 +2,8 @@
 import gql from 'graphql-tag';
 import {
   shipmentFormFragment,
-  shipmentContainerCardFragment,
+  containerFormFragment,
+  warehouseCardFragment,
   timelineDateFullFragment,
   batchFormFragment,
   userAvatarFragment,
@@ -126,8 +127,10 @@ export const createShipmentWithReturnDataMutation: Object = gql`
       ...badRequestFragment
     }
   }
-  ${badRequestFragment}
+
   ${shipmentFormFragment}
+  ${containerFormFragment}
+  ${warehouseCardFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}
@@ -143,6 +146,7 @@ export const createShipmentWithReturnDataMutation: Object = gql`
   ${portFragment}
   ${documentFragment}
   ${partnerCardFragment}
+  ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -214,7 +218,8 @@ export const updateShipmentMutation: Object = gql`
   }
 
   ${shipmentFormFragment}
-  ${shipmentContainerCardFragment}
+  ${containerFormFragment}
+  ${warehouseCardFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}
@@ -400,30 +405,25 @@ const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
 type UpdateShipmentInputType = {
   originalValues: Object,
   existingBatches: Array<Object>,
-  existingBatchesInContainers: Array<Object>,
   newValues: Object,
 };
 
 export const prepareParsedUpdateShipmentInput = ({
   originalValues,
   existingBatches,
-  existingBatchesInContainers,
   newValues,
 }: UpdateShipmentInputType): Object => {
   const originalBatchesInPool = getBatchesInPool(originalValues.batches);
   const existingBatchesInPool = getBatchesInPool(existingBatches);
   const newBatchesInPool = getBatchesInPool(newValues.batches);
 
-  const originalAndExistingBatchesInPool = [
-    ...originalBatchesInPool,
-    ...existingBatchesInPool.filter(
-      existingBatch => originalValues.batches.findIndex(batch => batch.id === existingBatch.id) < 0
-    ),
-  ];
-
   const originalBatchIdsInPool = originalBatchesInPool.map(batch => batch.id);
   const existingBatchIdsInPool = existingBatchesInPool.map(batch => batch.id);
   const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
+
+  console.warn('OLD CONTAINERS', originalValues.containers);
+  console.warn('NEW CONTAINERS', newValues.containers);
+  console.warn('IS EQUALS', isEquals(originalValues.containers, newValues.containers));
 
   return {
     ...parseGenericField('no', originalValues.no, newValues.no),
@@ -514,7 +514,7 @@ export const prepareParsedUpdateShipmentInput = ({
     ),
     ...parseArrayOfChildrenField(
       'batches',
-      originalAndExistingBatchesInPool,
+      existingBatchesInPool,
       newBatchesInPool,
       (oldBatch: ?Object, newBatch: Object) => ({
         ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
@@ -531,13 +531,9 @@ export const prepareParsedUpdateShipmentInput = ({
       originalValues.containers,
       newValues.containers,
       (oldContainer: ?Object, newContainer: Object) => {
-        const existingBatchesInContainer = getByPathWithDefault(
-          [],
-          'batches',
-          existingBatchesInContainers.find(container => container.id === newContainer.id)
+        const existingBatchesInContainer = existingBatches.filter(
+          batch => batch.container === newContainer.id
         );
-
-        console.warn(existingBatchesInContainer);
 
         return {
           ...prepareParsedUpdateContainerInput({

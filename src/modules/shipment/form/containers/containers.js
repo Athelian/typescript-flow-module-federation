@@ -17,31 +17,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
   originalValues = initValues;
 
-  existingBatchesInContainers = initValues.containers;
-
-  addExistingBatchesToContainer = (containerId: string, batches: Array<Object>) => {
-    const containerIndex = this.existingBatchesInContainers.findIndex(
-      container => container.id === containerId
-    );
-
-    this.existingBatchesInContainers[containerIndex].batches = [
-      ...this.existingBatchesInContainers[containerIndex].batches,
-      ...batches,
-    ];
-  };
-
-  removeExistingBatchFromContainer = (containerId: string, batchId: string) => {
-    const containerIndex = this.existingBatchesInContainers.findIndex(
-      container => container.id === containerId
-    );
-
-    this.existingBatchesInContainers[containerIndex].batches = [
-      ...this.existingBatchesInContainers[containerIndex].batches.filter(
-        batch => batch.id !== batchId
-      ),
-    ];
-  };
-
   setFieldValue = (name: string, value: mixed) => {
     this.setState({
       [name]: value,
@@ -67,9 +42,5 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
 
     this.setState(parsedValues);
     this.originalValues = parsedValues;
-    this.existingBatchesInContainers = parsedValues.containers.map(({ id, batches }) => ({
-      id,
-      batches,
-    }));
   };
 }

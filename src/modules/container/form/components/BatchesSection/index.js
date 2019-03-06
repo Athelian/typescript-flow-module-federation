@@ -180,6 +180,7 @@ function BatchesSection() {
             state: { batches = [], representativeBatch },
             setFieldValue,
             setDeepFieldValue,
+            addExistingBatches,
             removeExistingBatch,
           }) => {
             if (batches.length === 0) {
@@ -282,15 +283,15 @@ function BatchesSection() {
                               no,
                               ...rest
                             }) => {
-                              setFieldValue('batches', [
-                                ...batches,
-                                injectUid({
-                                  ...rest,
-                                  isNew: true,
-                                  batchAdjustments: [],
-                                  no: `${no}- clone`,
-                                }),
-                              ]);
+                              const clonedBatch = injectUid({
+                                ...rest,
+                                isNew: true,
+                                batchAdjustments: [],
+                                no: `${no}- clone`,
+                              });
+
+                              setFieldValue('batches', [...batches, clonedBatch]);
+                              addExistingBatches([clonedBatch]);
                             }}
                           />
                         </div>
