@@ -96,7 +96,11 @@ const findRelateShipment = ({
 
 function manualSortByAction(shipments: Object = {}, state: Object = {}) {
   const sortShipments = [];
-  state.new.shipments.reverse().forEach(shipmentId => {
+  const {
+    new: { shipments: newShipments = [] },
+  } = state;
+
+  newShipments.reverse().forEach(shipmentId => {
     if (shipments[shipmentId]) {
       sortShipments.push(shipments[shipmentId]);
     }
