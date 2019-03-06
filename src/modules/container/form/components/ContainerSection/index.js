@@ -118,12 +118,14 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalAgreedDateApprovedBy"
                         approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        assignable={
-                          allowUpdate || hasPermission(CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE)
-                        }
-                        approvable={
-                          allowUpdate || hasPermission(CONTAINER_APPROVE_AGREE_ARRIVAL_DATE)
-                        }
+                        assignable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
+                        ])}
+                        approvable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+                        ])}
                       />
                     </GridColumn>
 
@@ -161,12 +163,14 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalActualDateApprovedBy"
                         approvedBy={values.warehouseArrivalActualDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        assignable={
-                          allowUpdate || hasPermission(CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE)
-                        }
-                        approvable={
-                          allowUpdate || hasPermission(CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE)
-                        }
+                        assignable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
+                        ])}
+                        approvable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+                        ])}
                       />
                     </GridColumn>
                   </GridColumn>
