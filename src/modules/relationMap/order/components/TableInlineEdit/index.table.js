@@ -597,7 +597,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             <TableEmptyItem
                               fields={orderColumnFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'order')}
-                              columnNo={columnOrderItemNo}
                             />
                           </div>
                           <div>
@@ -625,14 +624,14 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             <TableEmptyItem
                               fields={batchColumnFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'batch')}
-                              columnNo={columnOrderItemNo}
+                              columnNo={columnBatchNo}
                             />
                           </div>
                           <div>
                             <TableEmptyItem
                               fields={batchCustomFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'batchCustom')}
-                              columnNo={columnOrderItemCustomNo}
+                              columnNo={columnBatchCustomNo}
                             />
                           </div>
                           <div>
