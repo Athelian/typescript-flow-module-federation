@@ -14,7 +14,6 @@ type OptionalProps = {
   approvedByName: string,
   approvedBy: ?User,
   setFieldValue: (name: string, value: any) => void,
-  editable: boolean,
   assignable: boolean,
   approvable: boolean,
 };
@@ -29,9 +28,8 @@ const defaultProps = {
   approvedByName: '',
   approvedBy: null,
   setFieldValue: () => {},
-  editable: true,
-  assignable: true,
-  approvable: true,
+  assignable: false,
+  approvable: false,
 };
 
 const AssignmentApprovalFactory = ({
@@ -42,7 +40,6 @@ const AssignmentApprovalFactory = ({
   approvedByName,
   approvedBy,
   setFieldValue,
-  editable,
   assignable,
   approvable,
 }: Props) => {
@@ -60,7 +57,7 @@ const AssignmentApprovalFactory = ({
         {')'}
       </>
     ),
-    editable: assignable || editable,
+    editable: assignable,
   };
 
   const approvalInputConfig = {
@@ -74,7 +71,7 @@ const AssignmentApprovalFactory = ({
       setFieldValue(approvedByName, null);
       setFieldValue(approvedAtName, null);
     },
-    editable: approvable || editable,
+    editable: approvable,
   };
 
   return (
