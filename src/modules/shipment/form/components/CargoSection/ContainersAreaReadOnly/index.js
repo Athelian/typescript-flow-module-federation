@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { findIndex } from 'lodash';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
 import { injectUid } from 'utils/id';
@@ -14,8 +13,8 @@ import {
 import { ShipmentContainerCard, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import {
-  isSelectedBatchesPool,
-  isSelectedContainer,
+  isFocusedBatchesPool,
+  isFocusedContainerCard,
   getBatchesInPool,
 } from 'modules/shipment/helpers';
 import Action from 'modules/shipment/form/components/Action';
@@ -33,7 +32,7 @@ import {
 } from './style';
 
 type Props = {
-  selectCardId: ?string,
+  focusedCardIndex: string | number | null,
   selectedBatches: Array<Object>,
   setIsSelectBatchesMode: Function,
 };
@@ -48,21 +47,29 @@ const getNewSourceContainer = (
   const { batches, representativeBatch } = sourceContainer;
   const newBatches = batches.filter(({ id }) => !includesById(id, selectedBatches));
   const newRepresentativeBatch = includesById(representativeBatch.id, newBatches)
-    ? representativeBatch
-    : newBatches[0];
+    ? { ...representativeBatch }
+    : { ...newBatches[0] };
   return { ...sourceContainer, batches: newBatches, representativeBatch: newRepresentativeBatch };
 };
 
-function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode }: Props) {
+function ContainersAreaReadOnly({
+  focusedCardIndex,
+  selectedBatches,
+  setIsSelectBatchesMode,
+}: Props) {
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
-        { state: { containers }, setFieldValue: setContainers, setDeepFieldValue },
+        {
+          state: { containers },
+          setFieldValue: setContainers,
+          setDeepFieldValue: setContainersByPath,
+        },
         { state: { batches }, setFieldValue: setBatches }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
-        const isSelectedContainerCard = isSelectedContainer(selectCardId);
-        const isSelectedBatchesPoolCard = isSelectedBatchesPool(selectCardId);
+        const isFocusedBatchesPoolCard = isFocusedBatchesPool(focusedCardIndex);
+        const isFocusedContainerCardCard = isFocusedContainerCard(focusedCardIndex);
         return (
           <div className={ContainersWrapperStyle}>
             <div className={ContainersNavbarWrapperStyle} />
@@ -77,7 +84,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                 </div>
               </div>
               <div className={ContainersGridStyle}>
-                <div className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPoolCard)}>
+                <div className={SelectBatchesPoolCardWrapperStyle(isFocusedBatchesPoolCard)}>
                   <BatchesPoolCard
                     totalBatches={batchesInPool.length}
                     product={
@@ -87,7 +94,7 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                     }
                   />
                   {(() => {
-                    if (isSelectedBatchesPoolCard) {
+                    if (isFocusedBatchesPoolCard) {
                       return (
                         <Action
                           disabled
@@ -113,43 +120,45 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                         />
                       );
                     }
-                    return (
-                      <Action
-                        onClick={() => {
-                          const newBatches = batches.map(({ id, container, ...rest }) =>
-                            selectedBatches.map(({ id: batchId }) => batchId).includes(id)
-                              ? {
-                                  id,
-                                  ...rest,
-                                }
-                              : {
-                                  id,
-                                  container,
-                                  ...rest,
-                                }
-                          );
-                          setBatches('batches', newBatches);
 
-                          const sourceContainerIndex = findIndex(
-                            containers,
-                            ({ id }) => id === selectCardId
-                          );
-                          const sourceContainer = containers[sourceContainerIndex];
+                    if (isFocusedContainerCardCard) {
+                      return (
+                        <Action
+                          onClick={() => {
+                            const newBatches = batches.map(({ id, container, ...rest }) =>
+                              selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                                ? {
+                                    id,
+                                    ...rest,
+                                  }
+                                : {
+                                    id,
+                                    container,
+                                    ...rest,
+                                  }
+                            );
+                            setBatches('batches', newBatches);
 
-                          setDeepFieldValue(
-                            `containers.${sourceContainerIndex}`,
-                            getNewSourceContainer(sourceContainer, selectedBatches)
-                          );
-                          setIsSelectBatchesMode(false);
-                        }}
-                        message={
-                          <FormattedMessage
-                            id="modules.Shipments.moveToBatchesPool"
-                            defaultMessage="MOVE TO BATCHES POOL"
-                          />
-                        }
-                      />
-                    );
+                            const sourceContainer = containers[focusedCardIndex];
+
+                            setContainersByPath(
+                              // $FlowFixMe should use is isFocusedContainerCardCard, but flow-typed has a error
+                              `containers.${focusedCardIndex}`,
+                              getNewSourceContainer(sourceContainer, selectedBatches)
+                            );
+
+                            setIsSelectBatchesMode(false);
+                          }}
+                          message={
+                            <FormattedMessage
+                              id="modules.Shipments.moveToBatchesPool"
+                              defaultMessage="MOVE TO BATCHES POOL"
+                            />
+                          }
+                        />
+                      );
+                    }
+                    return null;
                   })()}
                 </div>
 
@@ -159,7 +168,10 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                       <div key={container.id} className={SelectContainerCardWrapperStyle}>
                         <ShipmentContainerCard container={container} />
                         {(() => {
-                          if (isSelectedContainerCard && selectCardId === container.id) {
+                          if (
+                            isFocusedContainerCardCard &&
+                            focusedCardIndex === targetContainerIndex
+                          ) {
                             return (
                               <Action
                                 disabled
@@ -198,8 +210,8 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                   })
                                 );
                                 setBatches('batches', newBatches);
-                                if (isSelectedBatchesPoolCard) {
-                                  setDeepFieldValue(`containers.${targetContainerIndex}`, {
+                                if (isFocusedBatchesPoolCard) {
+                                  setContainersByPath(`containers.${targetContainerIndex}`, {
                                     ...container,
                                     ...(container.batches.length === 0
                                       ? {
@@ -208,18 +220,15 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
                                       : {}),
                                     batches: [...container.batches, ...selectedBatches],
                                   });
-                                } else if (isSelectedContainerCard) {
-                                  const sourceContainerIndex = findIndex(
-                                    containers,
-                                    ({ id }) => id === selectCardId
-                                  );
-                                  const sourceContainer = containers[sourceContainerIndex];
-                                  setDeepFieldValue(
-                                    `containers.${sourceContainerIndex}`,
+                                } else if (isFocusedContainerCardCard) {
+                                  const sourceContainer = containers[focusedCardIndex];
+                                  setContainersByPath(
+                                    // $FlowFixMe
+                                    `containers.${focusedCardIndex}`,
                                     getNewSourceContainer(sourceContainer, selectedBatches)
                                   );
 
-                                  setDeepFieldValue(`containers.${targetContainerIndex}`, {
+                                  setContainersByPath(`containers.${targetContainerIndex}`, {
                                     ...container,
                                     ...(container.batches.length === 0
                                       ? {
@@ -288,4 +297,4 @@ function ContainersArea({ selectCardId, selectedBatches, setIsSelectBatchesMode 
   );
 }
 
-export default ContainersArea;
+export default ContainersAreaReadOnly;

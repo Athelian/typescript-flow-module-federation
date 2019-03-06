@@ -40,9 +40,9 @@ import {
 } from 'modules/shipment/form/containers';
 import BatchFormContainer from 'modules/batch/form/container';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import { getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
+import { getBatchesByContainerId } from 'modules/shipment/helpers';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -59,8 +59,7 @@ import {
 } from './style';
 
 type Props = {
-  containerId: string,
-  containerIndex: number,
+  focusedContainerIndex: number,
   isSelectBatchesMode: boolean,
   setIsSelectBatchesMode: Function,
   selectedBatches: Array<Object>,
@@ -68,8 +67,7 @@ type Props = {
 };
 
 export default function ContainerBatchesArea({
-  containerId,
-  containerIndex,
+  focusedContainerIndex,
   isSelectBatchesMode,
   setIsSelectBatchesMode,
   selectedBatches,
@@ -78,6 +76,7 @@ export default function ContainerBatchesArea({
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
+
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -88,18 +87,16 @@ export default function ContainerBatchesArea({
           addExistingBatches,
           removeExistingBatches,
         },
-        { state, setDeepFieldValue }
+        { state: { containers }, setDeepFieldValue }
       ) => {
+        const containerId = containers[focusedContainerIndex].id;
         const batchesInContainer = getBatchesByContainerId(batches, containerId);
-        const container = getByPath(`containers.${containerIndex}`, state);
-        const representativeBatchId = getByPath(
-          `containers.${containerIndex}.representativeBatch.id`,
-          state
-        );
+        const container = containers[focusedContainerIndex];
+        const representativeBatchId = getByPath(`representativeBatch.id`, container);
 
         if (batchesInContainer.length > 0 && isNullOrUndefined(representativeBatchId)) {
           setDeepFieldValue(
-            `containers.${containerIndex}.representativeBatch`,
+            `containers.${focusedContainerIndex}.representativeBatch`,
             batchesInContainer[0]
           );
         }
@@ -208,7 +205,7 @@ export default function ContainerBatchesArea({
                                               const indexOfAllBatches = batches.indexOf(batch);
                                               setFieldArrayValue(indexOfAllBatches, updatedBatch);
                                               setDeepFieldValue(
-                                                `containers.${containerIndex}.batches.${position}`,
+                                                `containers.${focusedContainerIndex}.batches.${position}`,
                                                 updatedBatch
                                               );
                                             }}
@@ -245,7 +242,7 @@ export default function ContainerBatchesArea({
                                       const indexOfAllBatches = batches.indexOf(batch);
                                       setFieldArrayValue(indexOfAllBatches, updateBatch);
                                       setDeepFieldValue(
-                                        `containers.${containerIndex}.batches.${position}`,
+                                        `containers.${focusedContainerIndex}.batches.${position}`,
                                         updateBatch
                                       );
                                     }}
@@ -261,20 +258,20 @@ export default function ContainerBatchesArea({
                                         ({ id: batchId }) => batchId !== clearedBatch.id
                                       );
                                       setDeepFieldValue(
-                                        `containers.${containerIndex}.batches`,
+                                        `containers.${focusedContainerIndex}.batches`,
                                         newBatchesInContainer
                                       );
                                       removeExistingBatches([clearedBatch]);
                                       if (batch.id === representativeBatchId) {
                                         setDeepFieldValue(
-                                          `containers.${containerIndex}.representativeBatch`,
+                                          `containers.${focusedContainerIndex}.representativeBatch`,
                                           newBatchesInContainer[0]
                                         );
                                       }
                                     }}
                                     onClickRepresentative={() =>
                                       setDeepFieldValue(
-                                        `containers.${containerIndex}.representativeBatch`,
+                                        `containers.${focusedContainerIndex}.representativeBatch`,
                                         batch
                                       )
                                     }
@@ -296,15 +293,18 @@ export default function ContainerBatchesArea({
                                           no: `${no}- clone`,
                                         }),
                                       ]);
-                                      setDeepFieldValue(`containers.${containerIndex}.batches`, [
-                                        ...batchesInContainer,
-                                        injectUid({
-                                          ...rest,
-                                          isNew: true,
-                                          batchAdjustments: [],
-                                          no: `${no}- clone`,
-                                        }),
-                                      ]);
+                                      setDeepFieldValue(
+                                        `containers.${focusedContainerIndex}.batches`,
+                                        [
+                                          ...batchesInContainer,
+                                          injectUid({
+                                            ...rest,
+                                            isNew: true,
+                                            batchAdjustments: [],
+                                            no: `${no}- clone`,
+                                          }),
+                                        ]
+                                      );
                                     }}
                                   />
                                 </>
@@ -350,7 +350,7 @@ export default function ContainerBatchesArea({
                                   packageQuantity: calculatePackageQuantity(selectedBatch),
                                 }));
                                 setFieldValue('batches', [...batches, ...newSelectBatches]);
-                                setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                                setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [
                                   ...batchesInContainer,
                                   ...newSelectBatches,
                                 ]);
@@ -358,7 +358,7 @@ export default function ContainerBatchesArea({
 
                                 if (batchesInContainer.length === 0) {
                                   setDeepFieldValue(
-                                    `containers.${containerIndex}.representativeBatch`,
+                                    `containers.${focusedContainerIndex}.representativeBatch`,
                                     newSelectBatches[0]
                                   );
                                 }
@@ -426,13 +426,13 @@ export default function ContainerBatchesArea({
                                   }
                                 );
                                 setFieldValue('batches', [...batches, ...createdBatches]);
-                                setDeepFieldValue(`containers.${containerIndex}.batches`, [
+                                setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [
                                   ...batchesInContainer,
                                   ...createdBatches,
                                 ]);
                                 if (batchesInContainer.length === 0) {
                                   setDeepFieldValue(
-                                    `containers.${containerIndex}.representativeBatch`,
+                                    `containers.${focusedContainerIndex}.representativeBatch`,
                                     createdBatches[0]
                                   );
                                 }
