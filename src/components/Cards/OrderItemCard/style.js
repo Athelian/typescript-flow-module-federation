@@ -96,6 +96,7 @@ export const BodyWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   padding: 5px 0;
+  width: 195px;
 `;
 
 export const QuantityWrapperStyle: string = css`

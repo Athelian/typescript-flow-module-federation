@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
+import apolloClient from 'apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
@@ -11,43 +12,42 @@ type Props = {
   viewType: string,
 };
 
-class OrderList extends React.PureComponent<Props> {
-  render() {
-    const { viewType, ...filtersAndSort } = this.props;
-    return (
-      <Query
-        query={orderListQuery}
-        variables={{
-          page: 1,
-          ...filtersAndSort,
-        }}
-        fetchPolicy="network-only"
-      >
-        {({ loading, data, fetchMore, error, refetch }) => {
-          if (error) {
-            return error.message;
-          }
+const OrderList = ({ viewType, ...filtersAndSort }: Props) => {
+  React.useEffect(() => {
+    emitter.once('CHANGE_ORDER_STATUS', () => {
+      apolloClient.reFetchObservableQueries();
+    });
+  });
 
-          const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
-          const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
-          const hasMore = nextPage <= totalPage;
-          emitter.once('CHANGE_ORDER_STATUS', () => {
-            // TODO: after the mutation, it's not ready on data yet
-            refetch();
-          });
+  return (
+    <Query
+      query={orderListQuery}
+      variables={{
+        page: 1,
+        ...filtersAndSort,
+      }}
+      fetchPolicy="network-only"
+    >
+      {({ loading, data, fetchMore, error }) => {
+        if (error) {
+          return error.message;
+        }
 
-          return (
-            <OrderGridView
-              items={getByPathWithDefault([], 'orders.nodes', data)}
-              onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orders')}
-              hasMore={hasMore}
-              isLoading={loading}
-            />
-          );
-        }}
-      </Query>
-    );
-  }
-}
+        const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
+        const hasMore = nextPage <= totalPage;
+
+        return (
+          <OrderGridView
+            items={getByPathWithDefault([], 'orders.nodes', data)}
+            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orders')}
+            hasMore={hasMore}
+            isLoading={loading}
+          />
+        );
+      }}
+    </Query>
+  );
+};
 
 export default OrderList;

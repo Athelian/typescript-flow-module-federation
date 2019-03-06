@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { toast } from 'react-toastify';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { isNullOrUndefined } from 'utils/fp';
@@ -35,7 +36,7 @@ import {
   createShipmentMutation,
   prepareCreateShipmentInput,
   updateShipmentMutation,
-  prepareUpdateShipmentInput,
+  prepareParsedUpdateShipmentInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -138,7 +139,9 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   onSave = async (
-    formData: Object,
+    originalValues: Object,
+    existingBatches: Array<Object>,
+    newValues: Object,
     saveShipment: Function,
     onSuccess: () => void,
     onErrors: (Array<Object>) => void
@@ -148,8 +151,12 @@ class ShipmentFormModule extends React.Component<Props> {
     const isNewOrClone = this.isNewOrClone();
 
     const input = isNewOrClone
-      ? prepareCreateShipmentInput(formData)
-      : prepareUpdateShipmentInput(formData);
+      ? prepareCreateShipmentInput(newValues)
+      : prepareParsedUpdateShipmentInput({
+          originalValues,
+          existingBatches,
+          newValues,
+        });
 
     if (isNewOrClone) {
       const result = await saveShipment({
@@ -244,6 +251,11 @@ class ShipmentFormModule extends React.Component<Props> {
   }: ShipmentFormState) => (result: CreateShipmentResponse | UpdateShipmentResponse) => {
     const isNewOrClone = this.isNewOrClone();
     const { redirectAfterSuccess } = this.props;
+
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+      return;
+    }
 
     if (isNewOrClone && result.shipmentCreate) {
       const { shipmentCreate } = result;
@@ -457,6 +469,16 @@ class ShipmentFormModule extends React.Component<Props> {
                               onClick={() => {
                                 this.onSave(
                                   {
+                                    ...shipmentBatchesContainer.originalValues,
+                                    ...shipmentContainersContainer.originalValues,
+                                    ...shipmentFilesContainer.originalValues,
+                                    ...shipmentInfoContainer.originalValues,
+                                    ...shipmentTagsContainer.originalValues,
+                                    ...shipmentTimelineContainer.originalValues,
+                                    ...shipmentTransportTypeContainer.originalValues,
+                                  },
+                                  shipmentBatchesContainer.existingBatches,
+                                  {
                                     ...shipmentBatchesContainer.state,
                                     ...shipmentContainersContainer.state,
                                     ...shipmentFilesContainer.state,
@@ -498,6 +520,7 @@ class ShipmentFormModule extends React.Component<Props> {
                             const { group } = user;
                             const { types = [] } = group;
                             const isImporter = types.includes('Importer');
+                            const isForwarder = types.includes('Forwarder');
                             return (
                               <ShipmentForm
                                 shipment={{}}
@@ -505,6 +528,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                 onFormReady={() => {
                                   shipmentInfoContainer.initDetailValues({
                                     importer: isImporter ? group : {},
+                                    forwarders: isForwarder ? [group] : [],
                                   });
                                 }}
                               />
@@ -516,8 +540,9 @@ class ShipmentFormModule extends React.Component<Props> {
                           query={shipmentFormQuery}
                           entityId={shipmentId}
                           entityType="shipment"
-                          render={shipment => (
+                          render={(shipment, isOwner) => (
                             <ShipmentForm
+                              isOwner={isOwner}
                               isClone={this.isClone()}
                               shipment={shipment}
                               anchor={anchor}

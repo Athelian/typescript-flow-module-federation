@@ -10,6 +10,7 @@ import { ProductFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNewOrClone: boolean,
+  isOwner: boolean,
   onFormReady: () => void,
 };
 
@@ -19,6 +20,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isNewOrClone: false,
+  isOwner: true,
   onFormReady: () => {},
 };
 
@@ -32,9 +34,9 @@ class ProductForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { product } = this.props;
+    const { product, isOwner } = this.props;
 
-    return !isEquals(product, nextProps.product);
+    return !isEquals(product, nextProps.product) || nextProps.isOwner !== isOwner;
   }
 
   componentDidUpdate() {
@@ -44,12 +46,12 @@ class ProductForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNewOrClone, product } = this.props;
+    const { isNewOrClone, isOwner, product } = this.props;
 
     return (
       <div className={ProductFormWrapperStyle}>
         <SectionWrapper id="product_productSection">
-          <ProductSection isNew={isNewOrClone} product={product} />
+          <ProductSection isOwner={isOwner} isNew={isNewOrClone} product={product} />
         </SectionWrapper>
 
         <SectionWrapper id="product_productProvidersSection">
@@ -61,6 +63,7 @@ class ProductForm extends React.Component<Props> {
           />
           <Subscribe to={[FormContainer]}>
             {({ state: { touched, errors } }) => {
+              // TODO: better UI for server side error message
               const errorMessage: ?string | ?Object = errors.productProviders;
               if (errorMessage && touched.productProviders) {
                 if (isDataType(Object, errorMessage)) {
@@ -72,7 +75,7 @@ class ProductForm extends React.Component<Props> {
               return '';
             }}
           </Subscribe>
-          <ProductProvidersSection />
+          <ProductProvidersSection isOwner={isOwner} />
         </SectionWrapper>
       </div>
     );

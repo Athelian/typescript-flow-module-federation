@@ -11,6 +11,9 @@ export const batchFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    ownedBy {
+      ...ownedByFragment
+    }
     memo
     no
     quantity
@@ -18,6 +21,9 @@ export const batchFormFragment = gql`
     deliveredAt
     desiredAt
     expiredAt
+    totalVolume {
+      ...metricFragment
+    }
     customFields {
       ...customFieldsFragment
     }

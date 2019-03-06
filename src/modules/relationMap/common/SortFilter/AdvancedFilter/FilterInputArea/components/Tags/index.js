@@ -24,6 +24,10 @@ export default function Tags({ values, onChange, tagType }: Props) {
         }
         input={
           <TagsInput
+            editable={{
+              set: true,
+              remove: true,
+            }}
             isFocused={isFocused}
             tagType={tagType}
             name={tagType}

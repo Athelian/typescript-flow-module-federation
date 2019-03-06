@@ -13,6 +13,11 @@
       },
       {
         "kind": "UNION",
+        "name": "EmptyPayload",
+        "possibleTypes": [{ "name": "BadRequest" }, { "name": "Forbidden" }, { "name": "NotFound" }]
+      },
+      {
+        "kind": "UNION",
         "name": "FieldDefinitionsPayload",
         "possibleTypes": [
           { "name": "FieldDefinitions" },

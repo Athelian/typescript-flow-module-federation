@@ -20,20 +20,13 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
   query($id: ID!) {
     container(id: $id) {
       ...containerFormFragment
-      ... on Container {
-        ownedBy {
-          ... on Group {
-            id
-            name
-          }
-        }
-      }
     }
   }
 
@@ -56,6 +49,7 @@ export const containerFormQuery = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${ownedByFragment}
 `;
 
 export default containerFormQuery;

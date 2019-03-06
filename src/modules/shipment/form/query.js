@@ -2,7 +2,8 @@
 import gql from 'graphql-tag';
 import {
   shipmentFormFragment,
-  shipmentContainerCardFragment,
+  containerFormFragment,
+  warehouseCardFragment,
   timelineDateFullFragment,
   batchFormFragment,
   userAvatarFragment,
@@ -22,25 +23,19 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
   query($id: ID!) {
     shipment(id: $id) {
       ...shipmentFormFragment
-      ... on Shipment {
-        ownedBy {
-          ... on Group {
-            id
-            name
-          }
-        }
-      }
     }
   }
 
   ${shipmentFormFragment}
-  ${shipmentContainerCardFragment}
+  ${containerFormFragment}
+  ${warehouseCardFragment}
   ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}
@@ -60,6 +55,7 @@ export const shipmentFormQuery = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${ownedByFragment}
 `;
 
 export default shipmentFormQuery;

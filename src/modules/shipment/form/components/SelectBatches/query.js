@@ -18,6 +18,7 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const selectBatchListQuery = gql`
@@ -48,6 +49,7 @@ export const selectBatchListQuery = gql`
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
+  ${ownedByFragment}
 `;
 
 export default selectBatchListQuery;

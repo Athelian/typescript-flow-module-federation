@@ -28,10 +28,11 @@ import {
   UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantitySummary } from 'modules/order/helpers';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import { PartnerCard, GrayCard } from 'components/Cards';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import TotalSummary from './components/TotalSummary';
 import PriceDialog from './components/PriceDialog';
 import {
@@ -363,13 +364,18 @@ const OrderSection = ({ isNew }: Props) => {
                     }
                     input={
                       <TagsInput
-                        editable={allowUpdate}
                         id="tags"
                         name="tags"
                         tagType="Order"
                         values={tags}
                         onChange={(field, value) => {
                           changeTags(field, value);
+                        }}
+                        editable={{
+                          set:
+                            hasPermission(TAG_LIST) &&
+                            hasPermission([ORDER_UPDATE, ORDER_SET_TAGS]),
+                          remove: hasPermission([ORDER_UPDATE, ORDER_SET_TAGS]),
                         }}
                       />
                     }

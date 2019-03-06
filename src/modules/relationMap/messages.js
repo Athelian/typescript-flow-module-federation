@@ -106,7 +106,7 @@ export default defineMessages({
     id: 'modules.RelationMaps.label.split',
     defaultMessage: 'Split',
   },
-  autoFill: {
+  autofill: {
     id: 'modules.RelationMaps.label.autoFill',
     defaultMessage: 'AUTOFILL',
   },

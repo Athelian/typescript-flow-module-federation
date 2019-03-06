@@ -17,7 +17,12 @@ import {
 } from 'modules/product/form/containers';
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
-import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import {
+  PRODUCT_CREATE,
+  PRODUCT_UPDATE,
+  PRODUCT_SET_TAGS,
+} from 'modules/permission/constants/product';
 import {
   SectionHeader,
   LastModified,
@@ -45,6 +50,7 @@ import {
 
 type Props = {
   isNew: boolean,
+  isOwner: boolean,
   product: Object,
 };
 
@@ -57,8 +63,8 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
   return cloneItems;
 };
 
-const ProductSection = ({ isNew, product }: Props) => {
-  const { hasPermission } = usePermission();
+const ProductSection = ({ isNew, isOwner, product }: Props) => {
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(PRODUCT_UPDATE);
   const { updatedAt, updatedBy, archived } = product;
   return (
@@ -312,13 +318,18 @@ const ProductSection = ({ isNew, product }: Props) => {
                         }
                         input={
                           <TagsInput
-                            editable={allowUpdate}
                             id="tags"
                             name="tags"
                             tagType="Product"
                             values={tags}
                             onChange={(field, value) => {
                               changeTags(field, value);
+                            }}
+                            editable={{
+                              set:
+                                hasPermission(TAG_LIST) &&
+                                hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                              remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
                             }}
                           />
                         }

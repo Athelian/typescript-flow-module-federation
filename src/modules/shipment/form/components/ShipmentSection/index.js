@@ -5,11 +5,30 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
+import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
+import { STAFF_LIST } from 'modules/permission/constants/staff';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_IMPORTER,
+  SHIPMENT_SET_IN_CHARGE,
+  SHIPMENT_SET_TAGS,
+  SHIPMENT_SET_CUSTOM_FIELDS,
+  SHIPMENT_SET_CUSTOM_FIELDS_MASK,
+  SHIPMENT_SET_FORWARDERS,
+  SHIPMENT_SET_NO,
+  SHIPMENT_SET_BL_NO,
+  SHIPMENT_SET_BL_DATE,
+  SHIPMENT_SET_BOOKING_NO,
+  SHIPMENT_SET_BOOKING_DATE,
+  SHIPMENT_SET_INVOICE_NO,
+  SHIPMENT_SET_TRANSPORT_TYPE,
+  SHIPMENT_SET_LOAD_TYPE,
+  SHIPMENT_SET_INCOTERM,
+  SHIPMENT_SET_CARRIER,
+  SHIPMENT_SET_MEMO,
+  SHIPMENT_SET_PORT,
 } from 'modules/permission/constants/shipment';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
@@ -21,12 +40,12 @@ import {
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
-import { UserConsumer } from 'modules/user';
 import {
   FieldItem,
   Label,
@@ -43,9 +62,13 @@ import {
   TextAreaInputFactory,
   CustomFieldsFactory,
   UserAssignmentInputFactory,
+  DashedPlusButton,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import SelectImporter from '../SelectImporter';
 import SelectForwarders from '../SelectForwarders';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
@@ -63,10 +86,10 @@ type Props = {
 };
 
 const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { isImporter, isForwarder } = useUser();
+  const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
-  const allowSetImporter = hasPermission(SHIPMENT_SET_IMPORTER);
   return (
     <SectionWrapper id="shipment_shipmentSection">
       <SectionHeader
@@ -82,7 +105,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
-                  readOnly={!allowToUpdate}
+                  readOnly={!hasPermission(SHIPMENT_UPDATE)}
                   archived={archived}
                   openStatusDialog={() => dialogToggle(true)}
                   activateDialog={
@@ -124,7 +147,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_NO])}
                         name={name}
                         isNew={isNew}
                         required
@@ -143,7 +166,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -161,7 +184,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -179,7 +202,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -197,7 +220,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -215,7 +238,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_INVOICE_NO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -252,7 +275,11 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           {({ name, ...inputHandlers }) => (
                             <EnumSelectInputFactory
                               {...inputHandlers}
-                              editable={allowToUpdate}
+                              editable={
+                                hasPermission(SHIPMENT_UPDATE) ||
+                                (hasPermission(SHIPMENT_SET_TRANSPORT_TYPE) &&
+                                  hasPermission(SHIPMENT_SET_PORT))
+                              }
                               enumType="TransportType"
                               name={name}
                               isNew={isNew}
@@ -280,7 +307,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <EnumSelectInputFactory
                         {...inputHandlers}
                         enumType="LoadType"
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_LOAD_TYPE])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -304,7 +331,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <EnumSearchSelectInputFactory
                         {...inputHandlers}
                         enumType="Incoterm"
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_INCOTERM])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -328,7 +355,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <TextInputFactory
                         {...inputHandlers}
                         name={name}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CARRIER])}
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.carrier} />}
@@ -340,7 +367,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     entityType="Shipment"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={allowToUpdate}
+                    editable={{
+                      values: hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CUSTOM_FIELDS]),
+                      mask: hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CUSTOM_FIELDS_MASK]),
+                    }}
                   />
 
                   <Subscribe to={[ShipmentTagsContainer]}>
@@ -354,13 +384,18 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         }
                         input={
                           <TagsInput
-                            editable={allowToUpdate}
                             id="tags"
                             name="tags"
                             tagType="Shipment"
                             values={tags}
                             onChange={(field, value) => {
                               changeTags(field, value);
+                            }}
+                            editable={{
+                              set:
+                                hasPermission(TAG_LIST) &&
+                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TAGS]),
+                              remove: hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TAGS]),
                             }}
                           />
                         }
@@ -378,7 +413,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextAreaInputFactory
                         {...inputHandlers}
-                        editable={allowToUpdate}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_MEMO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
@@ -414,7 +449,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         defaultMessage="You can choose up to 5 people in charge."
                       />
                     }
-                    editable={allowToUpdate}
+                    editable={
+                      hasPermission(STAFF_LIST) &&
+                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IN_CHARGE])
+                    }
                   />
 
                   <FieldItem
@@ -427,24 +465,58 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         />
                       </Label>
                     }
-                    input={
-                      <UserConsumer>
-                        {({ user }) => {
-                          const { group } = user;
-                          const { types = [] } = group;
-                          if (types.includes('Importer')) {
-                            if (isNew) {
-                              return <PartnerCard partner={group} readOnly />;
-                            }
-                            return <PartnerCard partner={importer} readOnly />;
-                          }
-                          if (types.includes('Forwarder') && allowSetImporter) {
-                            return 'Forwarder logic';
-                          }
-                          return 'TODO';
-                        }}
-                      </UserConsumer>
-                    }
+                    input={(() => {
+                      if (isImporter()) {
+                        return <PartnerCard partner={importer} readOnly />;
+                      }
+                      if (isForwarder()) {
+                        if (
+                          isNew &&
+                          hasPermission(PARTNER_LIST) &&
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])
+                        ) {
+                          return (
+                            <BooleanValue>
+                              {({ value: opened, set: slideToggle }) => (
+                                <>
+                                  {importer && importer.id ? (
+                                    <PartnerCard
+                                      partner={importer}
+                                      onClick={() => slideToggle(true)}
+                                    />
+                                  ) : (
+                                    <DashedPlusButton
+                                      width="195px"
+                                      height="215px"
+                                      onClick={() => slideToggle(true)}
+                                    />
+                                  )}
+                                  <SlideView
+                                    isOpen={opened}
+                                    onRequestClose={() => slideToggle(false)}
+                                    options={{ width: '1030px' }}
+                                  >
+                                    {opened && (
+                                      <SelectImporter
+                                        selected={values.importer}
+                                        onCancel={() => slideToggle(false)}
+                                        onSelect={selected => {
+                                          slideToggle(false);
+                                          setFieldValue('importer', selected);
+                                        }}
+                                      />
+                                    )}
+                                  </SlideView>
+                                </>
+                              )}
+                            </BooleanValue>
+                          );
+                        }
+
+                        return <PartnerCard partner={importer} readOnly />;
+                      }
+                      return 'N/A';
+                    })()}
                   />
 
                   <FieldItem
@@ -475,10 +547,19 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         {({ value: opened, set: slideToggle }) => (
                           <>
                             <div
-                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
+                              onClick={() =>
+                                isImporter() &&
+                                hasPermission(PARTNER_LIST) &&
+                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
+                                  ? slideToggle(true)
+                                  : () => {}
+                              }
                               role="presentation"
                             >
-                              {renderForwarders(forwarders, allowToUpdate)}
+                              {renderForwarders(
+                                forwarders,
+                                hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
+                              )}
                             </div>
                             <SlideView
                               isOpen={opened}

@@ -3,7 +3,21 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { CONTAINER_UPDATE } from 'modules/permission/constants/container';
+import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
+import {
+  CONTAINER_UPDATE,
+  CONTAINER_SET_WAREHOUSE,
+  CONTAINER_SET_TAGS,
+  CONTAINER_SET_MEMO,
+  CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
+  CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_SET_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_NO,
+} from 'modules/permission/constants/container';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import {
@@ -22,6 +36,7 @@ import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -32,7 +47,8 @@ import {
 } from './style';
 
 const ContainerSection = () => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
 
   return (
@@ -63,7 +79,7 @@ const ContainerSection = () => {
                             defaultMessage="CONTAINER NO"
                           />
                         }
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(CONTAINER_SET_NO)}
                       />
                     )}
                   </FormField>
@@ -88,7 +104,9 @@ const ContainerSection = () => {
                                 defaultMessage="AGREED ARRIVAL"
                               />
                             }
-                            editable={allowUpdate}
+                            editable={
+                              allowUpdate || hasPermission(CONTAINER_SET_AGREE_ARRIVAL_DATE)
+                            }
                           />
                         )}
                       </FormField>
@@ -100,7 +118,14 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalAgreedDateApprovedBy"
                         approvedBy={values.warehouseArrivalAgreedDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        editable={allowUpdate}
+                        assignable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_ASSIGN_AGREE_ARRIVAL_DATE,
+                        ])}
+                        approvable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+                        ])}
                       />
                     </GridColumn>
 
@@ -123,7 +148,9 @@ const ContainerSection = () => {
                                 defaultMessage="ACTUAL ARRIVAL"
                               />
                             }
-                            editable={allowUpdate}
+                            editable={
+                              allowUpdate || hasPermission(CONTAINER_SET_ACTUAL_ARRIVAL_DATE)
+                            }
                           />
                         )}
                       </FormField>
@@ -136,7 +163,14 @@ const ContainerSection = () => {
                         approvedByName="warehouseArrivalActualDateApprovedBy"
                         approvedBy={values.warehouseArrivalActualDateApprovedBy}
                         setFieldValue={setFieldValue}
-                        editable={allowUpdate}
+                        assignable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_ASSIGN_ACTUAL_ARRIVAL_DATE,
+                        ])}
+                        approvable={hasPermission([
+                          CONTAINER_UPDATE,
+                          CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+                        ])}
                       />
                     </GridColumn>
                   </GridColumn>
@@ -146,7 +180,8 @@ const ContainerSection = () => {
                   <Label>
                     <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                   </Label>
-                  {allowUpdate ? (
+                  {hasPermission(WAREHOUSE_LIST) &&
+                  (allowUpdate || hasPermission(CONTAINER_SET_WAREHOUSE)) ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>
@@ -213,7 +248,12 @@ const ContainerSection = () => {
                     onChange={(field, value) => {
                       setFieldValue(field, value);
                     }}
-                    editable={allowUpdate}
+                    editable={{
+                      set:
+                        hasPermission(TAG_LIST) &&
+                        hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]),
+                      remove: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_TAGS]),
+                    }}
                   />
                 }
               />
@@ -234,7 +274,7 @@ const ContainerSection = () => {
                     vertical
                     inputWidth="680px"
                     inputHeight="65px"
-                    editable={allowUpdate}
+                    editable={allowUpdate || hasPermission(CONTAINER_SET_MEMO)}
                   />
                 )}
               </FormField>

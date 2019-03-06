@@ -4,9 +4,11 @@ import { Subscribe } from 'unstated';
 import { defineMessages, injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_DOWNLOAD_DOCUMENTS,
+  SHIPMENT_SET_DOCUMENTS,
 } from 'modules/permission/constants/shipment';
 import { DocumentsInput } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
@@ -44,8 +46,11 @@ type Props = {
 };
 
 function DocumentsSection({ intl }: Props) {
-  const { hasPermission } = usePermission();
-  const allowUpdate = hasPermission(SHIPMENT_UPDATE);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  const allowUpdate = hasPermission(SHIPMENT_UPDATE) || hasPermission(SHIPMENT_SET_DOCUMENTS);
+
   const allowDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
 
   return (

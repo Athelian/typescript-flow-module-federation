@@ -20,6 +20,9 @@ export const shipmentFormFragment = gql`
     loadType
     transportType
     carrier
+    ownedBy {
+      ...ownedByFragment
+    }
     customFields {
       ...customFieldsFragment
     }
@@ -81,7 +84,7 @@ export const shipmentFormFragment = gql`
       }
     }
     containers {
-      ...shipmentContainerCardFragment
+      ...containerFormFragment
     }
     totalVolume {
       ...metricFragment

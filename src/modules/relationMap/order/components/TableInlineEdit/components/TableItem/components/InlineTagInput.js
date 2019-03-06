@@ -17,6 +17,10 @@ export default function InlineTagInput({ name, tagType, values, id }: Props) {
     <TagsInput
       id={`input-${id}`}
       name={name}
+      editable={{
+        set: true,
+        remove: true,
+      }}
       tagType={tagType}
       values={values}
       onChange={(field, value) => {

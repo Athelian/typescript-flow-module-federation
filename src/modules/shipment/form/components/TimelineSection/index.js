@@ -3,8 +3,13 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_UPDATE,
+  SHIPMENT_SET_VOYAGES,
+  SHIPMENT_SET_WAREHOUSE,
+} from 'modules/permission/constants/shipment';
 import {
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
@@ -13,7 +18,8 @@ import {
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
-import { ShipmentWarehouseCard } from 'components/Cards';
+import { ShipmentWarehouseCard, GrayCard } from 'components/Cards';
+import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
   VerticalLayout,
@@ -29,7 +35,8 @@ type Props = {
 };
 
 const TimelineSection = ({ isNew }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
 
   return (
@@ -56,7 +63,7 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={TimelineWrapperStyle}>
               <VerticalLayout shipment={values} />
               <VoyageSelector
-                readOnly={!allowToUpdate}
+                editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
                 shipment={values}
                 setFieldDeepValue={setFieldDeepValue}
                 removeArrayItem={removeArrayItem}
@@ -65,7 +72,6 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={BodyWrapperStyle} id="timelineInfoSection">
               <TimelineInfoSection
                 id="cargoReady"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="CARGO_READY"
                 title={
@@ -81,7 +87,6 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="loadPortDeparture"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -97,7 +102,6 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <VoyageInfoSection
                 id="firstVoyage"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon={getTransportIcon(values.transportType)}
                 title={
@@ -125,7 +129,6 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="firstTransitPortArrival"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -148,7 +151,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="firstTransitPortDeparture"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -171,7 +173,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="secondVoyage"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -206,7 +207,6 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="secondTransitPortArrival"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -222,7 +222,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="secondTransitPortDeparture"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -238,7 +237,6 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <VoyageInfoSection
                     id="thirdVoyage"
-                    readOnly={!allowToUpdate}
                     isNew={isNew}
                     icon={getTransportIcon(values.transportType)}
                     title={
@@ -265,7 +263,6 @@ const TimelineSection = ({ isNew }: Props) => {
 
               <TimelineInfoSection
                 id="dischargePortArrival"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -281,7 +278,6 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="customClearance"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="CUSTOMS"
                 title={
@@ -299,7 +295,6 @@ const TimelineSection = ({ isNew }: Props) => {
                 <ContainerWarehouseArrivalSection readOnly={!allowToUpdate} />
               ) : (
                 <TimelineInfoSection
-                  readOnly={!allowToUpdate}
                   id="warehouseArrival"
                   isNew={isNew}
                   icon="WAREHOUSE"
@@ -314,48 +309,56 @@ const TimelineSection = ({ isNew }: Props) => {
                   setFieldDeepValue={setFieldDeepValue}
                   removeArrayItem={removeArrayItem}
                   renderBelowHeader={
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          {!warehouse && allowToUpdate && (
-                            <DashedPlusButton
-                              width="195px"
-                              height="40px"
-                              onClick={() => slideToggle(true)}
-                            />
-                          )}
-                          {warehouse && (
-                            <ShipmentWarehouseCard
-                              warehouse={warehouse}
-                              onClick={() => (allowToUpdate ? slideToggle(true) : () => {})}
-                            />
-                          )}
-
-                          <SlideView
-                            isOpen={opened}
-                            onRequestClose={() => slideToggle(false)}
-                            options={{ width: '1030px' }}
-                          >
-                            {opened && (
-                              <SelectWareHouse
-                                selected={warehouse}
-                                onCancel={() => slideToggle(false)}
-                                onSelect={newValue => {
-                                  slideToggle(false);
-                                  setFieldDeepValue('containerGroups.0.warehouse', newValue);
-                                }}
+                    hasPermission(WAREHOUSE_LIST) &&
+                    hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) => (
+                          <>
+                            {warehouse ? (
+                              <ShipmentWarehouseCard
+                                warehouse={warehouse}
+                                onClick={() => slideToggle(true)}
+                              />
+                            ) : (
+                              <DashedPlusButton
+                                width="195px"
+                                height="40px"
+                                onClick={() => slideToggle(true)}
                               />
                             )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <SelectWareHouse
+                                  selected={warehouse}
+                                  onCancel={() => slideToggle(false)}
+                                  onSelect={newValue => {
+                                    slideToggle(false);
+                                    setFieldDeepValue('containerGroups.0.warehouse', newValue);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    ) : (
+                      <>
+                        {warehouse ? (
+                          <ShipmentWarehouseCard warehouse={warehouse} readOnly />
+                        ) : (
+                          <GrayCard width="195px" height="40px" />
+                        )}
+                      </>
+                    )
                   }
                 />
               )}
               <TimelineInfoSection
                 id="deliveryReady"
-                readOnly={!allowToUpdate}
                 isNew={isNew}
                 icon="DELIVERY_READY"
                 title={

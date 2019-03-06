@@ -93,6 +93,7 @@ const DateInputFactory = ({
     onFocus,
     align: inputAlign,
     readOnly: !editable,
+    required,
   };
 
   return (

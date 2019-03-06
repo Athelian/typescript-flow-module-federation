@@ -14,11 +14,11 @@ type Props = {
   query: DocumentNode,
   entityId: string,
   entityType: string,
-  render: Object => React.Node,
+  render: (Object, boolean) => React.Node,
 };
 
 export default function QueryForm({ query, entityId, entityType, render }: Props) {
-  const { isOwner } = useUser();
+  const { isOwnerBy } = useUser();
   return (
     <Query query={query} variables={{ id: decodeId(entityId) }} fetchPolicy="network-only">
       {({ loading, data, error }) => {
@@ -37,13 +37,14 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
           navigate('/404');
         }
 
-        const ownerGroupId = getByPath(`${entityType}.ownedBy.id`, data);
-        if (!isOwner(ownerGroupId)) {
+        const partnerId = getByPath(`${entityType}.ownedBy.partner.id`, data);
+        const isOwner = isOwnerBy(partnerId);
+        if (!isOwner) {
           // query permission for partner
           return (
             <Query
               query={partnerPermissionQuery}
-              variables={{ partnerId: ownerGroupId }}
+              variables={{ partnerId }}
               fetchPolicy="cache-first"
             >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {
@@ -58,7 +59,7 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
                 return (
                   <QueryFormPermissionContext.Provider
                     value={{
-                      ownerGroupId,
+                      isOwner: false,
                       permissions: getByPathWithDefault(
                         [],
                         'viewer.permissionsFromPartner',
@@ -66,14 +67,25 @@ export default function QueryForm({ query, entityId, entityType, render }: Props
                       ),
                     }}
                   >
-                    {render(getByPathWithDefault({}, entityType, data))}
+                    {render(getByPathWithDefault({}, entityType, data), isOwner)}
                   </QueryFormPermissionContext.Provider>
                 );
               }}
             </Query>
           );
         }
-        if (getByPath(entityType, data)) return render(getByPathWithDefault({}, entityType, data));
+        if (getByPath(entityType, data)) {
+          return (
+            <QueryFormPermissionContext.Provider
+              value={{
+                isOwner: true,
+                permissions: [],
+              }}
+            >
+              {render(getByPathWithDefault({}, entityType, data), isOwner)}
+            </QueryFormPermissionContext.Provider>
+          );
+        }
         navigate(`/${entityType}`);
         return <LoadingIcon />;
       }}

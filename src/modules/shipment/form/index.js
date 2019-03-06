@@ -1,14 +1,11 @@
 // @flow
 import React, { lazy, Suspense } from 'react';
-import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
-import { encodeId } from 'utils/id';
 import scrollIntoView from 'utils/scrollIntoView';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { uniqueOrders } from 'modules/container/utils';
 import { ShipmentBatchesContainer } from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
@@ -20,6 +17,7 @@ const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
 
 type OptionalProps = {
   isNew: boolean,
+  isOwner: boolean,
   isClone: boolean,
   onFormReady: () => void,
   anchor: string,
@@ -32,6 +30,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   isNew: false,
   isClone: false,
+  isOwner: true,
   onFormReady: () => {},
   anchor: '',
 };
@@ -50,15 +49,10 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { shipment } = this.props;
+    const { shipment, isOwner } = this.props;
 
-    return !isEquals(shipment, nextProps.shipment);
+    return !isEquals(shipment, nextProps.shipment) || isOwner !== nextProps.isOwner;
   }
-
-  onClone = () => {
-    const { shipment } = this.props;
-    navigate(`/shipment/clone/${encodeId(shipment.id)}`);
-  };
 
   render() {
     const { isNew } = this.props;
@@ -99,27 +93,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <SectionWrapper id="shipment_orderSection">
-            <Subscribe to={[ShipmentBatchesContainer]}>
-              {({ state: { batches } }) => {
-                const orders = uniqueOrders(batches);
-                return (
-                  <>
-                    <SectionHeader
-                      icon="ORDER"
-                      title={
-                        <>
-                          <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
-                          {orders.length})
-                        </>
-                      }
-                    />
-                    <AsyncOrdersSection orders={orders} />
-                  </>
-                );
-              }}
-            </Subscribe>
-          </SectionWrapper>
+          <AsyncOrdersSection />
         </div>
       </Suspense>
     );

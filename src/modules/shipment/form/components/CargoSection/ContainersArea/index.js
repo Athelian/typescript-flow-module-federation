@@ -4,7 +4,20 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
-import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import { SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
+import {
+  CONTAINER_FORM,
+  CONTAINER_CREATE,
+  CONTAINER_DELETE,
+  CONTAINER_UPDATE,
+  CONTAINER_SET_NO,
+  CONTAINER_SET_WAREHOUSE,
+  CONTAINER_SET_AGREE_ARRIVAL_DATE,
+  CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+  CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+  CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+} from 'modules/permission/constants/container';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -15,9 +28,10 @@ import {
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
 } from 'modules/shipment/form/containers';
+import { WAREHOUSE_FORM, WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
-import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
+import { BATCHES_POOL, isFocusedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormInSlide from 'modules/container/index.form.slide';
 import RemoveContainerConfirmDialog from './components/RemoveContainerConfirmDialog';
@@ -38,8 +52,8 @@ import {
 } from './style';
 
 type Props = {
-  selectCardId: ?string,
-  setSelected: ({ cardId: string, containerIndex: number }) => void,
+  focusedCardIndex: string | number | null,
+  setSelected: (cardId: string | number | null) => void,
 };
 
 const removeContainerById = (containers: Array<Object>, id: string): Array<Object> =>
@@ -65,9 +79,10 @@ const cleanBatchesContainerByContainerId = (
       : { ...batch }
   );
 
-function ContainersArea({ selectCardId, setSelected }: Props) {
-  const { hasPermission } = usePermission();
-  const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
+function ContainersArea({ focusedCardIndex, setSelected }: Props) {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
   return (
     <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
       {(
@@ -77,7 +92,12 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
           setFieldValue,
           setDeepFieldValue,
         },
-        { state: { batches }, setFieldValue: updateBatchesState }
+        {
+          state: { batches },
+          setFieldValue: updateBatchesState,
+          removeExistingBatches,
+          cleanExistingBatchesByContainerId,
+        }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
 
@@ -98,12 +118,14 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
               </div>
               <div className={ContainersGridStyle}>
                 <div
-                  className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPool(selectCardId))}
+                  className={SelectBatchesPoolCardWrapperStyle(
+                    isFocusedBatchesPool(focusedCardIndex)
+                  )}
                   role="presentation"
-                  onClick={() => setSelected({ cardId: BATCHES_POOL, containerIndex: -1 })}
+                  onClick={() => setSelected(BATCHES_POOL)}
                 >
                   <div className={EyeballIconStyle}>
-                    <Icon icon={isSelectedBatchesPool(selectCardId) ? 'INVISIBLE' : 'VISIBLE'} />
+                    <Icon icon={isFocusedBatchesPool(focusedCardIndex) ? 'INVISIBLE' : 'VISIBLE'} />
                   </div>
                   <BatchesPoolCard
                     totalBatches={batchesInPool.length}
@@ -114,17 +136,15 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                     }
                   />
                 </div>
-                {containers.map((container, position) => {
-                  const isSelected = selectCardId === container.id;
+                {containers.map((container, index) => {
+                  const isSelected = focusedCardIndex === index;
 
                   return (
                     <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
-                        onClick={() =>
-                          setSelected({ cardId: container.id, containerIndex: position })
-                        }
+                        onClick={() => setSelected(index)}
                       >
                         <div className={EyeballIconStyle}>
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
@@ -141,21 +161,43 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                       <>
                                         <ShipmentContainerCard
                                           container={container}
-                                          readOnly={!allowToUpdate}
-                                          update={newContainer => {
-                                            setDeepFieldValue(
-                                              `containers.${position}`,
-                                              newContainer
-                                            );
+                                          editable={{
+                                            no: hasPermission([CONTAINER_UPDATE, CONTAINER_SET_NO]),
+                                            warehouse:
+                                              hasPermission(WAREHOUSE_LIST) &&
+                                              hasPermission([
+                                                CONTAINER_UPDATE,
+                                                CONTAINER_SET_WAREHOUSE,
+                                              ]),
+                                            viewWarehouse: hasPermission([WAREHOUSE_FORM]),
+                                            warehouseArrivalAgreedDate: hasPermission([
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_SET_AGREE_ARRIVAL_DATE,
+                                            ]),
+                                            warehouseArrivalAgreedDateApprovedBy: hasPermission([
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
+                                            ]),
+                                            warehouseArrivalActualDate: hasPermission([
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
+                                            ]),
+                                            warehouseArrivalActualDateApprovedBy: hasPermission([
+                                              CONTAINER_UPDATE,
+                                              CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
+                                            ]),
                                           }}
-                                          onClick={() => toggleContainerForm(true)}
-                                          onSelectWarehouse={
-                                            allowToUpdate
-                                              ? () => toggleSelectWarehouse(true)
-                                              : () => {}
+                                          update={newContainer => {
+                                            setDeepFieldValue(`containers.${index}`, newContainer);
+                                          }}
+                                          onClick={
+                                            hasPermission(CONTAINER_FORM)
+                                              ? () => toggleContainerForm(true)
+                                              : null
                                           }
+                                          onSelectWarehouse={() => toggleSelectWarehouse(true)}
                                           actions={[
-                                            allowToUpdate && (
+                                            hasPermission(CONTAINER_DELETE) && (
                                               <CardAction
                                                 icon="REMOVE"
                                                 hoverColor="RED"
@@ -171,6 +213,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                                       'containers',
                                                       removeContainerById(containers, container.id)
                                                     );
+                                                    if (isSelected) setSelected(null);
                                                   }
                                                 }}
                                               />
@@ -181,6 +224,12 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                           isOpen={isOpenDialog}
                                           onRequestClose={() => toggleDialog(false)}
                                           onCancel={() => toggleDialog(false)}
+                                          permission={{
+                                            removeContainer: hasPermission(CONTAINER_DELETE),
+                                            removeShipmentBatch:
+                                              hasPermission(CONTAINER_DELETE) &&
+                                              hasPermission(SHIPMENT_REMOVE_BATCH),
+                                          }}
                                           onToBatchesPool={() => {
                                             updateBatchesState(
                                               'batches',
@@ -193,6 +242,8 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               'containers',
                                               removeContainerById(containers, container.id)
                                             );
+                                            cleanExistingBatchesByContainerId(container.id);
+                                            if (isSelected) setSelected(null);
                                           }}
                                           onRemove={() => {
                                             updateBatchesState(
@@ -203,6 +254,8 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                               'containers',
                                               removeContainerById(containers, container.id)
                                             );
+                                            removeExistingBatches(container.batches);
+                                            if (isSelected) setSelected(null);
                                           }}
                                         />
                                       </>
@@ -219,7 +272,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                         onCancel={() => toggleSelectWarehouse(false)}
                                         onSelect={newValue => {
                                           toggleSelectWarehouse(false);
-                                          setDeepFieldValue(`containers.${position}`, {
+                                          setDeepFieldValue(`containers.${index}`, {
                                             ...container,
                                             warehouse: newValue,
                                           });
@@ -250,7 +303,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             container,
                                           })),
                                         ]);
-                                        setDeepFieldValue(`containers.${position}`, newContainer);
+                                        setDeepFieldValue(`containers.${index}`, newContainer);
                                         toggleContainerForm(false);
                                       }}
                                       onFormReady={() => initDetailValues(container)}
@@ -267,7 +320,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                 })}
               </div>
             </div>
-            {allowToUpdate && (
+            {hasPermission([CONTAINER_CREATE]) && (
               <div className={ContainersFooterWrapperStyle}>
                 <NewButton
                   label={
@@ -298,6 +351,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                         totalNumberOfUniqueOrderItems: 0,
                         warehouseArrivalActualDateAssignedTo: [],
                         warehouseArrivalAgreedDateAssignedTo: [],
+                        representativeBatch: null,
                       }),
                     ]);
                   }}

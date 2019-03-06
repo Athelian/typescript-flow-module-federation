@@ -3,9 +3,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { isNullOrUndefined } from 'utils/fp';
+import { calculatePackageQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
-import { calculatePackageQuantity } from 'modules/batch/form/container';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
@@ -51,7 +50,7 @@ type OptionalProps = {
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
   selectable: boolean,
-  readOnly: boolean,
+  editable: Object,
 };
 
 type Props = OptionalProps & {
@@ -65,7 +64,17 @@ const defaultProps = {
   onClone: () => {},
   onClear: () => {},
   selectable: false,
-  readOnly: false,
+  editable: {
+    no: false,
+    quantity: false,
+    deliveredAt: false,
+    desiredAt: false,
+    removeBatch: false,
+    cloneBatch: false,
+    viewOrder: false,
+    viewProduct: false,
+    viewContainer: false,
+  },
 };
 
 const ShipmentBatchCard = ({
@@ -76,18 +85,19 @@ const ShipmentBatchCard = ({
   saveOnBlur,
   currency,
   selectable,
-  readOnly,
+  editable,
   ...rest
 }: Props) => {
   if (!batch) return '';
 
-  const actions =
-    selectable || readOnly
-      ? []
-      : [
-          <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
-        ];
+  const actions = selectable
+    ? []
+    : [
+        editable.cloneBatch && <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+        editable.removeBatch && (
+          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />
+        ),
+      ].filter(Boolean);
 
   const {
     id,
@@ -153,16 +163,21 @@ const ShipmentBatchCard = ({
               {supplier && supplier.name}
             </div>
           </div>
-
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(product.id)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="PRODUCT" />
-          </Link>
+          {editable.viewProduct ? (
+            <Link
+              className={ProductIconLinkStyle}
+              to={`/product/${encodeId(product.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="PRODUCT" />
+            </Link>
+          ) : (
+            <div className={ProductIconLinkStyle}>
+              <Icon icon="PRODUCT" />
+            </div>
+          )}
         </div>
         <div className={BatchInfoWrapperStyle}>
           <div
@@ -185,7 +200,7 @@ const ShipmentBatchCard = ({
                       saveOnBlur({ ...batch, no: inputHandlers.value });
                     },
                   }}
-                  editable={!readOnly}
+                  editable={editable.no}
                   inputWidth="185px"
                   inputHeight="20px"
                   inputAlign="left"
@@ -215,7 +230,7 @@ const ShipmentBatchCard = ({
                 <NumberInputFactory
                   inputWidth="90px"
                   inputHeight="20px"
-                  editable={!readOnly}
+                  editable={editable.quantity}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -259,7 +274,7 @@ const ShipmentBatchCard = ({
                   name={fieldName}
                   isNew={false}
                   originalValue={deliveredAt}
-                  editable={!readOnly}
+                  editable={editable.deliveredAt}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -291,7 +306,7 @@ const ShipmentBatchCard = ({
                   name={fieldName}
                   isNew={false}
                   originalValue={desiredAt}
-                  editable={!readOnly}
+                  editable={editable.desiredAt}
                   {...{
                     ...inputHandlers,
                     onBlur: evt => {
@@ -350,42 +365,48 @@ const ShipmentBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            <Link
-              className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="ORDER" />
-            </Link>
-            <Display align="left">{order.poNo}</Display>
-          </div>
-
-          <div className={ContainerWrapperStyle}>
-            {isNullOrUndefined(container) ? (
-              <div
-                className={ContainerIconStyle(false)}
-                role="presentation"
+            {editable.viewOrder ? (
+              <Link
+                className={OrderIconStyle}
+                to={`/order/${encodeId(order.id)}`}
                 onClick={evt => {
                   evt.stopPropagation();
                 }}
               >
-                <Icon icon="CONTAINER" />
-              </div>
+                <Icon icon="ORDER" />
+              </Link>
             ) : (
+              <div className={OrderIconStyle}>
+                <Icon icon="ORDER" />
+              </div>
+            )}
+            <Display align="left">{order.poNo}</Display>
+          </div>
+
+          <div className={ContainerWrapperStyle}>
+            {container ? (
               <>
-                <Link
-                  className={ContainerIconStyle(true)}
-                  to={`/container/${encodeId(container.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="CONTAINER" />
-                </Link>
+                {editable.viewContainer ? (
+                  <Link
+                    className={ContainerIconStyle(true)}
+                    to={`/container/${encodeId(container.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="CONTAINER" />
+                  </Link>
+                ) : (
+                  <div className={ContainerIconStyle(true)}>
+                    <Icon icon="CONTAINER" />
+                  </div>
+                )}
                 <Display align="left">{container.no}</Display>
               </>
+            ) : (
+              <div className={ContainerIconStyle(false)}>
+                <Icon icon="CONTAINER" />
+              </div>
             )}
           </div>
 

@@ -51,7 +51,18 @@ type OptionalProps = {
   onClear: (batch: Object) => void,
   onClickRepresentative: () => void,
   selectable: boolean,
-  readOnly: boolean,
+  editable: {
+    no: boolean,
+    quantity: boolean,
+    deliveredAt: boolean,
+    desiredAt: boolean,
+    cloneBatch: boolean,
+    removeBatch: boolean,
+    setRepresentativeBatch: boolean,
+    viewOrder: boolean,
+    viewShipment: boolean,
+    viewProduct: boolean,
+  },
   isRepresented: boolean,
 };
 
@@ -68,7 +79,18 @@ const defaultProps = {
   onClear: () => {},
   onClickRepresentative: () => {},
   selectable: false,
-  readOnly: false,
+  editable: {
+    no: false,
+    quantity: false,
+    deliveredAt: false,
+    desiredAt: false,
+    cloneBatch: false,
+    removeBatch: false,
+    setRepresentativeBatch: false,
+    viewProduct: false,
+    viewShipment: false,
+    viewOrder: false,
+  },
   isRepresented: false,
 };
 
@@ -82,19 +104,22 @@ const ContainerBatchCard = ({
   saveOnBlur,
   currency,
   selectable,
-  readOnly,
+  editable,
   isRepresented,
   ...rest
 }: Props) => {
   if (!batch) return '';
 
-  const actions =
-    selectable || readOnly
-      ? []
-      : [
-          <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />,
-        ];
+  const actions = selectable
+    ? []
+    : [
+        ...(editable.cloneBatch
+          ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />]
+          : []),
+        ...(editable.removeBatch
+          ? [<CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />]
+          : []),
+      ];
 
   const {
     no,
@@ -160,20 +185,22 @@ const ContainerBatchCard = ({
             </div>
           </div>
 
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(product.id)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="PRODUCT" />
-          </Link>
-          {readOnly ? (
-            <div className={RepresentIconStyle(isRepresented)}>
-              <Icon icon="STAR" />
-            </div>
+          {editable.viewProduct ? (
+            <Link
+              className={ProductIconLinkStyle}
+              to={`/product/${encodeId(product.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="PRODUCT" />
+            </Link>
           ) : (
+            <div className={ProductIconLinkStyle}>
+              <Icon icon="PRODUCT" />
+            </div>
+          )}
+          {editable.setRepresentativeBatch ? (
             <button
               type="button"
               onClick={evt => {
@@ -184,6 +211,10 @@ const ContainerBatchCard = ({
             >
               <Icon icon="STAR" />
             </button>
+          ) : (
+            <div className={RepresentIconStyle(isRepresented)}>
+              <Icon icon="STAR" />
+            </div>
           )}
         </div>
         <div className={BatchInfoWrapperStyle}>
@@ -207,7 +238,7 @@ const ContainerBatchCard = ({
                     saveOnBlur({ ...batch, no: inputHandlers.value });
                   }}
                   originalValue={no}
-                  editable={!readOnly}
+                  editable={editable.no}
                   inputWidth="185px"
                   inputHeight="20px"
                   inputAlign="left"
@@ -242,7 +273,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={actualQuantity}
-                  editable={!readOnly}
+                  editable={editable.quantity}
                   inputWidth="90px"
                   inputHeight="20px"
                 />
@@ -271,7 +302,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={deliveredAt}
-                  editable={!readOnly}
+                  editable={editable.deliveredAt}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -300,7 +331,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={desiredAt}
-                  editable={!readOnly}
+                  editable={editable.desiredAt}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -349,28 +380,41 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            <Link
-              className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="ORDER" />
-            </Link>
+            {editable.viewOrder ? (
+              <Link
+                className={OrderIconStyle}
+                to={`/order/${encodeId(order.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="ORDER" />
+              </Link>
+            ) : (
+              <div className={OrderIconStyle}>
+                <Icon icon="ORDER" />
+              </div>
+            )}
+
             <Display align="left">{order.poNo}</Display>
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            <Link
-              className={ShipmentIconStyle}
-              to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="SHIPMENT" />
-            </Link>
+            {editable.viewShipment ? (
+              <Link
+                className={ShipmentIconStyle}
+                to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="SHIPMENT" />
+              </Link>
+            ) : (
+              <div className={ShipmentIconStyle}>
+                <Icon icon="SHIPMENT" />
+              </div>
+            )}
             <Display align="left">{shipment ? shipment.no : ''}</Display>
           </div>
 

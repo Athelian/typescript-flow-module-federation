@@ -21,11 +21,17 @@ import {
   SelectedWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  editable: {
+    set: boolean,
+    remove: boolean,
+  },
+};
+
+type Props = OptionalProps & {
   tagType: TagsQueryType,
   name: string,
   id?: string,
-  editable: boolean,
   values: ?Array<TagType>,
   tags: Array<TagType>,
   disabled?: boolean,
@@ -42,7 +48,10 @@ type State = {
 
 const defaultProps = {
   disabled: false,
-  editable: true,
+  editable: {
+    set: false,
+    remove: false,
+  },
 };
 
 export default class TagsInput extends React.Component<Props, State> {
@@ -165,7 +174,7 @@ export default class TagsInput extends React.Component<Props, State> {
                               key={tag.id}
                               tag={tag}
                               suffix={
-                                editable && (
+                                editable.remove && (
                                   <button
                                     type="button"
                                     className={RemoveStyle}
@@ -179,7 +188,7 @@ export default class TagsInput extends React.Component<Props, State> {
                               }
                             />
                           ))}
-                        {editable && (
+                        {editable.set && (
                           <div className={InputStyle(isHover)}>
                             <input
                               type="text"

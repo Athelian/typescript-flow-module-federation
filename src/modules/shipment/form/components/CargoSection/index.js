@@ -1,7 +1,13 @@
 // @flow
 import * as React from 'react';
-import { isNullOrUndefined } from 'utils/fp';
-import { BATCHES_POOL, isSelectedBatchesPool } from 'modules/shipment/helpers';
+import { isFocusedBatchesPool, isFocusedContainerCard } from 'modules/shipment/helpers';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import {
+  SHIPMENT_CONTAINER_LIST,
+  SHIPMENT_BATCH_LIST,
+  SHIPMENT_BATCH_LIST_IN_CONTAINER,
+} from 'modules/permission/constants/shipment';
 import { CargoSectionWrapperStyle } from './style';
 import ContainersAreaReadOnly from './ContainersAreaReadOnly';
 import ContainersArea from './ContainersArea';
@@ -11,16 +17,14 @@ import ContainerBatchesArea from './ContainerBatchesArea';
 type Props = {};
 
 type State = {
-  selectCardId: ?string,
-  containerIndex: number,
+  focusedCardIndex: string | number | null,
   isSelectBatchesMode: boolean,
   selectedBatches: Array<Object>,
 };
 
 class CargoSection extends React.Component<Props, State> {
   state = {
-    selectCardId: null, // 'Batches_Pool' = Batches Pool
-    containerIndex: -1,
+    focusedCardIndex: null, // 'Batches_Pool' = Batches Pool
     isSelectBatchesMode: false,
     selectedBatches: [],
   };
@@ -28,12 +32,12 @@ class CargoSection extends React.Component<Props, State> {
   setIsSelectBatchesMode = (isSelectBatchesMode: boolean) =>
     this.setState({ isSelectBatchesMode, selectedBatches: [] });
 
-  setSelected = ({ cardId, containerIndex }: { cardId: string, containerIndex: number }) => {
-    const { selectCardId } = this.state;
-    if (selectCardId === cardId) {
-      this.setState({ selectCardId: null, containerIndex: -1 });
+  setSelected = (cardIndex: string | number | null) => {
+    const { focusedCardIndex } = this.state;
+    if (focusedCardIndex === cardIndex) {
+      this.setState({ focusedCardIndex: null });
     } else {
-      this.setState({ selectCardId: cardId, containerIndex });
+      this.setState({ focusedCardIndex: cardIndex });
     }
   };
 
@@ -51,32 +55,32 @@ class CargoSection extends React.Component<Props, State> {
   };
 
   render() {
-    const { selectCardId, containerIndex, isSelectBatchesMode, selectedBatches } = this.state;
+    const { focusedCardIndex, isSelectBatchesMode, selectedBatches } = this.state;
+
     return (
       <div className={CargoSectionWrapperStyle}>
         {isSelectBatchesMode ? (
           <ContainersAreaReadOnly
-            selectCardId={selectCardId}
-            setSelected={this.setSelected}
+            focusedCardIndex={focusedCardIndex}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
           />
         ) : (
-          <ContainersArea selectCardId={selectCardId} setSelected={this.setSelected} />
+          <ContainersArea focusedCardIndex={focusedCardIndex} setSelected={this.setSelected} />
         )}
 
-        {isNullOrUndefined(selectCardId) || selectCardId === BATCHES_POOL ? (
-          <BatchesArea
-            isSelectedBatchesPool={isSelectedBatchesPool(selectCardId)}
+        {isFocusedContainerCard(focusedCardIndex) ? (
+          <ContainerBatchesArea
+            // $FlowFixMe
+            focusedContainerIndex={focusedCardIndex}
             isSelectBatchesMode={isSelectBatchesMode}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
             setSelectedBatches={this.setSelectedBatches}
           />
         ) : (
-          <ContainerBatchesArea
-            containerId={selectCardId}
-            containerIndex={containerIndex}
+          <BatchesArea
+            isFocusedBatchesPool={isFocusedBatchesPool(focusedCardIndex)}
             isSelectBatchesMode={isSelectBatchesMode}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
@@ -88,4 +92,17 @@ class CargoSection extends React.Component<Props, State> {
   }
 }
 
-export default CargoSection;
+const CargoSectionPermissionWrapper = () => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  if (
+    !hasPermission(SHIPMENT_CONTAINER_LIST) ||
+    !hasPermission(SHIPMENT_BATCH_LIST) ||
+    !hasPermission(SHIPMENT_BATCH_LIST_IN_CONTAINER)
+  )
+    return null;
+  return <CargoSection />;
+};
+
+export default CargoSectionPermissionWrapper;

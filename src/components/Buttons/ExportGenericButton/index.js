@@ -70,9 +70,7 @@ class ExportGenericButton extends React.Component<Props, State> {
             document.body.removeChild(link);
           }
         })
-        .catch(reason => {
-          logger.error(reason);
-        })
+        .catch(logger.error)
         .finally(() => {
           this.setState({ isLoading: false });
         });

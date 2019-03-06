@@ -33,6 +33,7 @@ export const TimelineWarehouseNameStyle = (vertical: boolean): string => css`
     ${fontSizes.MAIN};
     padding: 0 5px 0 20px;
     text-align: left;
+    width: 100%;
   `
     : `
     ${fontSizes.MEDIUM};

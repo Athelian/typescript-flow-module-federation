@@ -15,7 +15,7 @@ import {
 } from './style';
 
 type Props = {
-  readOnly: boolean,
+  editable: boolean,
   shipment: {
     voyages: Array<{
       arrival?: {
@@ -158,14 +158,14 @@ class VoyageSelector extends React.PureComponent<Props> {
   render() {
     const {
       shipment: { voyages },
-      readOnly,
+      editable,
     } = this.props;
     return (
       <BooleanValue>
         {({ value: isOptionsOpen, set: selectorToggle }) =>
           isOptionsOpen ? (
             <OutsideClickHandler
-              onOutsideClick={() => (!readOnly ? selectorToggle(false) : () => {})}
+              onOutsideClick={() => (editable ? selectorToggle(false) : () => {})}
             >
               <div data-testid="voyageOptions" className={VoyageOptionsWrapperStyle}>
                 {this.renderIcon({
@@ -173,29 +173,29 @@ class VoyageSelector extends React.PureComponent<Props> {
                   isActive: voyages.length === 1,
                   isOptionsOpen,
                   toggle: () => selectorToggle(false),
-                  editable: !readOnly,
+                  editable,
                 })}
                 {this.renderIcon({
                   numOfIcons: 2,
                   isActive: voyages.length === 2,
                   isOptionsOpen,
                   toggle: () => selectorToggle(false),
-                  editable: !readOnly,
+                  editable,
                 })}
                 {this.renderIcon({
                   numOfIcons: 3,
                   isActive: voyages.length === 3,
                   isOptionsOpen,
                   toggle: () => selectorToggle(false),
-                  editable: !readOnly,
+                  editable,
                 })}
               </div>
             </OutsideClickHandler>
           ) : (
             <div
               data-testid="voyageSelector"
-              className={VoyageSelectorWrapperStyle(!readOnly)}
-              onClick={() => (!readOnly ? selectorToggle(true) : () => {})}
+              className={VoyageSelectorWrapperStyle(editable)}
+              onClick={() => (editable ? selectorToggle(true) : () => {})}
               role="presentation"
             >
               <Label align="right">
@@ -205,7 +205,7 @@ class VoyageSelector extends React.PureComponent<Props> {
                 numOfIcons: voyages.length,
                 isActive: true,
                 isOptionsOpen,
-                editable: !readOnly,
+                editable,
               })}
             </div>
           )

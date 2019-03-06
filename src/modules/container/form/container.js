@@ -54,6 +54,16 @@ export default class ContainerFormContainer extends Container<ContainerFormState
 
   originalValues = initValues;
 
+  existingBatches = initValues.batches;
+
+  addExistingBatches = (batches: Array<Object>) => {
+    this.existingBatches = [...this.existingBatches, ...batches];
+  };
+
+  removeExistingBatch = (batchId: string) => {
+    this.existingBatches = [...this.existingBatches.filter(batch => batch.id !== batchId)];
+  };
+
   setFieldValue = (name: string, value: any) => {
     this.setState({
       [name]: value,
@@ -78,13 +88,16 @@ export default class ContainerFormContainer extends Container<ContainerFormState
   isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
 
   onSuccess = () => {
-    this.originalValues = { ...this.state };
+    this.originalValues = this.state;
+    this.existingBatches = this.state.batches;
     this.setState(this.originalValues);
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues = { ...initValues, ...cleanUpData(values) };
+
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = parsedValues;
+    this.existingBatches = parsedValues.batches;
   };
 }

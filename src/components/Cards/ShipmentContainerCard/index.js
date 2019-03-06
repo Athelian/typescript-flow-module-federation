@@ -8,7 +8,13 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display, DefaultStyle, TextInputFactory, DateInputFactory } from 'components/Form';
+import {
+  Label,
+  Display,
+  DefaultStyle,
+  TextInputFactory,
+  DateTimeInputFactory,
+} from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import { calculateContainerTotalVolume } from 'modules/container/utils';
@@ -39,7 +45,7 @@ type OptionalProps = {
   onClick: (container: Object) => void,
   onRemove: (container: Object) => void,
   selectable: boolean,
-  readOnly: boolean,
+  editable: Object,
   actions: Array<React.Node>,
 };
 
@@ -54,7 +60,15 @@ const defaultProps = {
   onClick: () => {},
   onRemove: () => {},
   selectable: false,
-  readOnly: false,
+  editable: {
+    no: false,
+    warehouse: false,
+    viewWarehouse: false,
+    warehouseArrivalAgreedDate: false,
+    warehouseArrivalAgreedDateApprovedBy: false,
+    warehouseArrivalActualDate: false,
+    warehouseArrivalActualDateApprovedBy: false,
+  },
   actions: [],
 };
 
@@ -65,7 +79,7 @@ const ShipmentContainerCard = ({
   onSelectWarehouse,
   update,
   selectable,
-  readOnly,
+  editable,
   ...rest
 }: Props) => {
   if (!container) return '';
@@ -137,7 +151,7 @@ const ShipmentContainerCard = ({
                       inputWidth="185px"
                       inputHeight="20px"
                       inputAlign="left"
-                      editable={!readOnly}
+                      editable={editable.no}
                       {...{
                         ...inputHandlers,
                         onBlur: evt => {
@@ -179,23 +193,31 @@ const ShipmentContainerCard = ({
               <div className={DividerStyle} />
 
               <div className={IconInputStyle}>
-                {isNullOrUndefined(warehouse) ? (
+                {warehouse &&
+                  warehouse.id &&
+                  (editable.viewWarehouse ? (
+                    <Link
+                      className={WarehouseIconStyle(true)}
+                      to={`/warehouse/${encodeId(warehouse.id)}`}
+                      onClick={evt => {
+                        evt.stopPropagation();
+                      }}
+                    >
+                      <Icon icon="WAREHOUSE" />
+                    </Link>
+                  ) : (
+                    <div className={WarehouseIconStyle(true)}>
+                      <Icon icon="WAREHOUSE" />
+                    </div>
+                  ))}
+
+                {!warehouse && (
                   <div className={WarehouseIconStyle(false)}>
                     <Icon icon="WAREHOUSE" />
                   </div>
-                ) : (
-                  <Link
-                    className={WarehouseIconStyle(true)}
-                    to={`/warehouse/${encodeId(warehouse.id)}`}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <Icon icon="WAREHOUSE" />
-                  </Link>
                 )}
 
-                {!readOnly ? (
+                {editable.warehouse ? (
                   <button
                     type="button"
                     onClick={evt => {
@@ -234,12 +256,12 @@ const ShipmentContainerCard = ({
                   initValue={warehouseArrivalAgreedDate}
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
+                    <DateTimeInputFactory
                       inputWidth="165px"
                       inputHeight="20px"
                       inputAlign="left"
                       name={fieldName}
-                      editable={!readOnly}
+                      editable={editable.warehouseArrivalAgreedDate}
                       isNew={false}
                       originalValue={warehouseArrivalAgreedDate}
                       {...{
@@ -261,10 +283,13 @@ const ShipmentContainerCard = ({
                 {warehouseArrivalAgreedDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true, !readOnly)}
+                    className={ApprovalIconStyle(
+                      true,
+                      editable.warehouseArrivalAgreedDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalAgreedDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalAgreedDateApprovedBy: null,
@@ -277,10 +302,13 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false, !readOnly)}
+                    className={ApprovalIconStyle(
+                      false,
+                      editable.warehouseArrivalAgreedDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalAgreedDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalAgreedDateApprovedBy: user,
@@ -311,13 +339,13 @@ const ShipmentContainerCard = ({
                   initValue={warehouseArrivalActualDate}
                 >
                   {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
+                    <DateTimeInputFactory
                       inputWidth="165px"
                       inputHeight="20px"
                       inputAlign="left"
                       name={fieldName}
                       isNew={false}
-                      editable={!readOnly}
+                      editable={editable.warehouseArrivalActualDate}
                       originalValue={warehouseArrivalActualDate}
                       {...{
                         ...inputHandlers,
@@ -338,10 +366,13 @@ const ShipmentContainerCard = ({
                 {warehouseArrivalActualDateApprovedBy ? (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(true, !readOnly)}
+                    className={ApprovalIconStyle(
+                      true,
+                      editable.warehouseArrivalActualDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalActualDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalActualDateApprovedBy: null,
@@ -354,10 +385,13 @@ const ShipmentContainerCard = ({
                 ) : (
                   <button
                     type="button"
-                    className={ApprovalIconStyle(false, !readOnly)}
+                    className={ApprovalIconStyle(
+                      false,
+                      editable.warehouseArrivalActualDateApprovedBy
+                    )}
                     onClick={evt => {
                       evt.stopPropagation();
-                      if (!readOnly) {
+                      if (editable.warehouseArrivalActualDateApprovedBy) {
                         update({
                           ...container,
                           warehouseArrivalActualDateApprovedBy: user,
