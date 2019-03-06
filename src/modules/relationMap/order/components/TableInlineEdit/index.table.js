@@ -400,7 +400,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           entity: 'SHIPMENT',
         });
         const rowCounter = {};
-        const columnOrderCustomNo = orderColumnFields.length;
+        const columnOrderCustomNo = orderColumnFieldsFilter.length;
         const columnOrderItemNo = columnOrderCustomNo + orderCustomFieldsFilter.length;
         const columnOrderItemCustomNo = columnOrderItemNo + orderItemColumnFieldsFilter.length;
         const columnBatchNo = columnOrderItemCustomNo + orderItemCustomFieldsFilter.length;
