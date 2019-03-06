@@ -400,7 +400,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           entity: 'SHIPMENT',
         });
         const rowCounter = {};
-        const columnOrderCustomNo = orderColumnFieldsFilter.length;
+        const columnOrderCustomNo = orderColumnFields.length;
         const columnOrderItemNo = columnOrderCustomNo + orderCustomFieldsFilter.length;
         const columnOrderItemCustomNo = columnOrderItemNo + orderItemColumnFieldsFilter.length;
         const columnBatchNo = columnOrderItemCustomNo + orderItemCustomFieldsFilter.length;
@@ -597,7 +597,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             <TableEmptyItem
                               fields={orderColumnFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'order')}
-                              columnNo={columnOrderItemNo}
                             />
                           </div>
                           <div>
@@ -625,14 +624,14 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                             <TableEmptyItem
                               fields={batchColumnFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'batch')}
-                              columnNo={columnOrderItemNo}
+                              columnNo={columnBatchNo}
                             />
                           </div>
                           <div>
                             <TableEmptyItem
                               fields={batchCustomFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'batchCustom')}
-                              columnNo={columnOrderItemCustomNo}
+                              columnNo={columnBatchCustomNo}
                             />
                           </div>
                           <div>
