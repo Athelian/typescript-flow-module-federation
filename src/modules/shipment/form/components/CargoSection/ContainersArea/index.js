@@ -5,11 +5,7 @@ import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import {
-  SHIPMENT_UPDATE,
-  SHIPMENT_REMOVE_BATCH,
-  SHIPMENT_CONTAINER_REMOVE,
-} from 'modules/permission/constants/shipment';
+import { SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import {
   CONTAINER_FORM,
   CONTAINER_CREATE,
@@ -57,7 +53,7 @@ import {
 
 type Props = {
   focusedCardIndex: string | number | null,
-  setSelected: (cardId: string) => void,
+  setSelected: (cardId: string | number | null) => void,
 };
 
 const removeContainerById = (containers: Array<Object>, id: string): Array<Object> =>
@@ -96,7 +92,12 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
           setFieldValue,
           setDeepFieldValue,
         },
-        { state: { batches }, setFieldValue: updateBatchesState, removeExistingBatches }
+        {
+          state: { batches },
+          setFieldValue: updateBatchesState,
+          removeExistingBatches,
+          cleanExistingBatchesByContainerId,
+        }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
 
@@ -196,33 +197,27 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                           }
                                           onSelectWarehouse={() => toggleSelectWarehouse(true)}
                                           actions={[
-                                            hasPermission([
-                                              SHIPMENT_UPDATE,
-                                              SHIPMENT_CONTAINER_REMOVE,
-                                            ]) &&
-                                              hasPermission(CONTAINER_DELETE) && (
-                                                <CardAction
-                                                  icon="REMOVE"
-                                                  hoverColor="RED"
-                                                  onClick={evt => {
-                                                    evt.stopPropagation();
-                                                    if (
-                                                      container.batches &&
-                                                      container.batches.length > 0
-                                                    ) {
-                                                      toggleDialog(true);
-                                                    } else {
-                                                      setFieldValue(
-                                                        'containers',
-                                                        removeContainerById(
-                                                          containers,
-                                                          container.id
-                                                        )
-                                                      );
-                                                    }
-                                                  }}
-                                                />
-                                              ),
+                                            hasPermission(CONTAINER_DELETE) && (
+                                              <CardAction
+                                                icon="REMOVE"
+                                                hoverColor="RED"
+                                                onClick={evt => {
+                                                  evt.stopPropagation();
+                                                  if (
+                                                    container.batches &&
+                                                    container.batches.length > 0
+                                                  ) {
+                                                    toggleDialog(true);
+                                                  } else {
+                                                    setFieldValue(
+                                                      'containers',
+                                                      removeContainerById(containers, container.id)
+                                                    );
+                                                    if (isSelected) setSelected(null);
+                                                  }
+                                                }}
+                                              />
+                                            ),
                                           ].filter(Boolean)}
                                         />
                                         <RemoveContainerConfirmDialog
@@ -247,6 +242,8 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                               'containers',
                                               removeContainerById(containers, container.id)
                                             );
+                                            cleanExistingBatchesByContainerId(container.id);
+                                            if (isSelected) setSelected(null);
                                           }}
                                           onRemove={() => {
                                             updateBatchesState(
@@ -258,6 +255,7 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                               removeContainerById(containers, container.id)
                                             );
                                             removeExistingBatches(container.batches);
+                                            if (isSelected) setSelected(null);
                                           }}
                                         />
                                       </>

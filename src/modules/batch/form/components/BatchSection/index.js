@@ -8,7 +8,7 @@ import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST } from 'modules/permission/constants/order';
 import {
   BATCH_CREATE,
   BATCH_UPDATE,
@@ -257,7 +257,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                       <FormattedMessage {...messages.orderItem} />
                     </Label>
                     {(allowUpdate || hasPermission(BATCH_SET_ORDER_ITEM)) &&
-                    hasPermission(ORDER_ORDERITEMS_LIST) ? (
+                    hasPermission(ORDER_ITEMS_LIST) ? (
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
                           <React.Fragment>
