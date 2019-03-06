@@ -73,6 +73,7 @@ const defaultProps = {
     removeBatch: false,
     cloneBatch: false,
     viewOrder: false,
+    viewProduct: false,
     setRepresentativeBatch: false,
   },
   isRepresented: false,
@@ -163,15 +164,22 @@ const ShipmentContainerBatchCard = ({
             </div>
           </div>
 
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(product.id)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="PRODUCT" />
-          </Link>
+          {editable.viewProduct ? (
+            <Link
+              className={ProductIconLinkStyle}
+              to={`/product/${encodeId(product.id)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="PRODUCT" />
+            </Link>
+          ) : (
+            <div className={ProductIconLinkStyle}>
+              <Icon icon="PRODUCT" />
+            </div>
+          )}
+
           {editable.setRepresentativeBatch ? (
             <button
               type="button"
