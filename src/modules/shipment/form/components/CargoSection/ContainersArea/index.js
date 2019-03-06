@@ -35,7 +35,7 @@ import {
 import { WAREHOUSE_FORM, WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
-import { BATCHES_POOL, isSelectedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
+import { BATCHES_POOL, isFocusedBatchesPool, getBatchesInPool } from 'modules/shipment/helpers';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormInSlide from 'modules/container/index.form.slide';
 import RemoveContainerConfirmDialog from './components/RemoveContainerConfirmDialog';
@@ -56,7 +56,7 @@ import {
 } from './style';
 
 type Props = {
-  selectCardId: ?string,
+  focusedCardIndex: string | number | null,
   setSelected: (cardId: string) => void,
 };
 
@@ -83,7 +83,7 @@ const cleanBatchesContainerByContainerId = (
       : { ...batch }
   );
 
-function ContainersArea({ selectCardId, setSelected }: Props) {
+function ContainersArea({ focusedCardIndex, setSelected }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -117,12 +117,14 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
               </div>
               <div className={ContainersGridStyle}>
                 <div
-                  className={SelectBatchesPoolCardWrapperStyle(isSelectedBatchesPool(selectCardId))}
+                  className={SelectBatchesPoolCardWrapperStyle(
+                    isFocusedBatchesPool(focusedCardIndex)
+                  )}
                   role="presentation"
                   onClick={() => setSelected(BATCHES_POOL)}
                 >
                   <div className={EyeballIconStyle}>
-                    <Icon icon={isSelectedBatchesPool(selectCardId) ? 'INVISIBLE' : 'VISIBLE'} />
+                    <Icon icon={isFocusedBatchesPool(focusedCardIndex) ? 'INVISIBLE' : 'VISIBLE'} />
                   </div>
                   <BatchesPoolCard
                     totalBatches={batchesInPool.length}
@@ -133,15 +135,15 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                     }
                   />
                 </div>
-                {containers.map((container, position) => {
-                  const isSelected = selectCardId === container.id;
+                {containers.map((container, index) => {
+                  const isSelected = focusedCardIndex === index;
 
                   return (
                     <div key={container.id} className={SelectContainerCardWrapperStyle}>
                       <button
                         className={SelectContainerCardBackgroundStyle(isSelected)}
                         type="button"
-                        onClick={() => setSelected(container.id)}
+                        onClick={() => setSelected(index)}
                       >
                         <div className={EyeballIconStyle}>
                           <Icon icon={isSelected ? 'INVISIBLE' : 'VISIBLE'} />
@@ -185,10 +187,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             ]),
                                           }}
                                           update={newContainer => {
-                                            setDeepFieldValue(
-                                              `containers.${position}`,
-                                              newContainer
-                                            );
+                                            setDeepFieldValue(`containers.${index}`, newContainer);
                                           }}
                                           onClick={
                                             hasPermission(CONTAINER_FORM)
@@ -275,7 +274,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                         onCancel={() => toggleSelectWarehouse(false)}
                                         onSelect={newValue => {
                                           toggleSelectWarehouse(false);
-                                          setDeepFieldValue(`containers.${position}`, {
+                                          setDeepFieldValue(`containers.${index}`, {
                                             ...container,
                                             warehouse: newValue,
                                           });
@@ -306,7 +305,7 @@ function ContainersArea({ selectCardId, setSelected }: Props) {
                                             container,
                                           })),
                                         ]);
-                                        setDeepFieldValue(`containers.${position}`, newContainer);
+                                        setDeepFieldValue(`containers.${index}`, newContainer);
                                         toggleContainerForm(false);
                                       }}
                                       onFormReady={() => initDetailValues(container)}

@@ -1,5 +1,5 @@
 // @flow
-import { isNullOrUndefined } from 'utils/fp';
+import { isNullOrUndefined, isDataType } from 'utils/fp';
 
 export const getShipmentSummary = (shipment: Object) => {
   const totalBatches = shipment.batches ? shipment.batches.length : 0;
@@ -18,13 +18,11 @@ export const getShipmentSummary = (shipment: Object) => {
 
 export const BATCHES_POOL = 'Batches_Pool';
 
-export const isSelectedCard = (selected: ?string): boolean => !isNullOrUndefined(selected);
+export const isFocusedBatchesPool = (selected: string | number | null): boolean =>
+  selected === BATCHES_POOL;
 
-export const isSelectedBatchesPool = (selected: ?string): boolean =>
-  isSelectedCard(selected) && selected === BATCHES_POOL;
-
-export const isSelectedContainer = (selected: ?string): boolean =>
-  isSelectedCard(selected) && selected !== BATCHES_POOL;
+export const isFocusedContainerCard = (selected: string | number | null): boolean =>
+  isDataType(Number, selected);
 
 export const getBatchesByContainerId = (
   batches: Array<Object>,

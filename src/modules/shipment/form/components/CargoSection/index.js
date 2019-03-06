@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
-import { isNullOrUndefined } from 'utils/fp';
-import { BATCHES_POOL, isSelectedBatchesPool } from 'modules/shipment/helpers';
+import { isFocusedBatchesPool, isFocusedContainerCard } from 'modules/shipment/helpers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
@@ -18,14 +17,14 @@ import ContainerBatchesArea from './ContainerBatchesArea';
 type Props = {};
 
 type State = {
-  selectCardId: ?string,
+  focusedCardIndex: string | number | null,
   isSelectBatchesMode: boolean,
   selectedBatches: Array<Object>,
 };
 
 class CargoSection extends React.Component<Props, State> {
   state = {
-    selectCardId: null, // 'Batches_Pool' = Batches Pool
+    focusedCardIndex: null, // 'Batches_Pool' = Batches Pool
     isSelectBatchesMode: false,
     selectedBatches: [],
   };
@@ -33,12 +32,12 @@ class CargoSection extends React.Component<Props, State> {
   setIsSelectBatchesMode = (isSelectBatchesMode: boolean) =>
     this.setState({ isSelectBatchesMode, selectedBatches: [] });
 
-  setSelected = (cardId: string) => {
-    const { selectCardId } = this.state;
-    if (selectCardId === cardId) {
-      this.setState({ selectCardId: null });
+  setSelected = (cardIndex: string | number | null) => {
+    const { focusedCardIndex } = this.state;
+    if (focusedCardIndex === cardIndex) {
+      this.setState({ focusedCardIndex: null });
     } else {
-      this.setState({ selectCardId: cardId });
+      this.setState({ focusedCardIndex: cardIndex });
     }
   };
 
@@ -56,31 +55,32 @@ class CargoSection extends React.Component<Props, State> {
   };
 
   render() {
-    const { selectCardId, isSelectBatchesMode, selectedBatches } = this.state;
+    const { focusedCardIndex, isSelectBatchesMode, selectedBatches } = this.state;
 
     return (
       <div className={CargoSectionWrapperStyle}>
         {isSelectBatchesMode ? (
           <ContainersAreaReadOnly
-            selectCardId={selectCardId}
+            focusedCardIndex={focusedCardIndex}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
           />
         ) : (
-          <ContainersArea selectCardId={selectCardId} setSelected={this.setSelected} />
+          <ContainersArea focusedCardIndex={focusedCardIndex} setSelected={this.setSelected} />
         )}
 
-        {isNullOrUndefined(selectCardId) || selectCardId === BATCHES_POOL ? (
-          <BatchesArea
-            isSelectedBatchesPool={isSelectedBatchesPool(selectCardId)}
+        {isFocusedContainerCard(focusedCardIndex) ? (
+          <ContainerBatchesArea
+            // $FlowFixMe
+            focusedContainerIndex={focusedCardIndex}
             isSelectBatchesMode={isSelectBatchesMode}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}
             setSelectedBatches={this.setSelectedBatches}
           />
         ) : (
-          <ContainerBatchesArea
-            containerId={selectCardId}
+          <BatchesArea
+            isFocusedBatchesPool={isFocusedBatchesPool(focusedCardIndex)}
             isSelectBatchesMode={isSelectBatchesMode}
             setIsSelectBatchesMode={this.setIsSelectBatchesMode}
             selectedBatches={selectedBatches}

@@ -6,7 +6,6 @@ import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import {
   CONTAINER_FORM,
@@ -60,7 +59,7 @@ import {
 } from './style';
 
 type Props = {
-  isSelectedBatchesPool: boolean,
+  isFocusedBatchesPool: boolean,
   isSelectBatchesMode: boolean,
   setIsSelectBatchesMode: Function,
   selectedBatches: Array<Object>,
@@ -68,7 +67,7 @@ type Props = {
 };
 
 function BatchesArea({
-  isSelectedBatchesPool,
+  isFocusedBatchesPool,
   isSelectBatchesMode,
   setIsSelectBatchesMode,
   selectedBatches,
@@ -89,7 +88,7 @@ function BatchesArea({
         },
         { state: { containers }, setFieldValue: setContainersState }
       ) => {
-        const usefulBatches = isSelectedBatchesPool ? getBatchesInPool(batches) : [...batches];
+        const usefulBatches = isFocusedBatchesPool ? getBatchesInPool(batches) : [...batches];
         return (
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle} />
@@ -109,7 +108,7 @@ function BatchesArea({
                         <Icon icon="BATCH" />
                       </div>
                       <div className={TitleStyle}>
-                        {isSelectedBatchesPool ? (
+                        {isFocusedBatchesPool ? (
                           <FormattedMessage
                             id="modules.Shipments.batches"
                             defaultMessage="BATCHES"
@@ -124,7 +123,7 @@ function BatchesArea({
                       </div>
                     </div>
 
-                    {isSelectedBatchesPool &&
+                    {isFocusedBatchesPool &&
                       hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_ADD]) &&
                       usefulBatches.length > 0 &&
                       containers.length > 0 && (
