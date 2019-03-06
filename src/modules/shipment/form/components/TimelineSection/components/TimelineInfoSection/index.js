@@ -104,8 +104,8 @@ const TimelineInfoSection = (props: Props) => {
                     injectUid({
                       isNew: true,
                       type: 'Other',
-                      date: '',
-                      memo: '',
+                      date: (timelineDate && timelineDate.date) || new Date().setHours(0, 0, 0, 0),
+                      memo: null,
                       updatedAt: new Date(),
                       updatedBy: user,
                     })
@@ -148,6 +148,7 @@ const TimelineInfoSection = (props: Props) => {
                             SHIPMENT_UPDATE,
                             SHIPMENT_SET_REVISE_TIMELINE_DATE,
                           ])}
+                          required
                         />
                       )}
                     </FormField>
