@@ -528,7 +528,7 @@ export const prepareParsedUpdateShipmentInput = ({
       newValues.containers,
       (oldContainer: ?Object, newContainer: Object) => {
         const existingBatchesInContainer = existingBatches.filter(
-          batch => batch.container === newContainer.id
+          batch => batch.container && batch.container.id === newContainer.id
         );
 
         return {

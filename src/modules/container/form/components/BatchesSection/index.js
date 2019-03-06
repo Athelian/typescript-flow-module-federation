@@ -14,7 +14,7 @@ import {
 } from 'modules/permission/constants/container';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { ORDER_ORDERITEMS_LIST, ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST, ORDER_FORM } from 'modules/permission/constants/order';
 import {
   BATCH_CREATE,
   BATCH_LIST,
@@ -54,7 +54,7 @@ function BatchesSection() {
     hasPermission(BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
   const allowCreateBatches =
     hasPermission(BATCH_CREATE) &&
-    hasPermission(ORDER_ORDERITEMS_LIST) &&
+    hasPermission(ORDER_ITEMS_LIST) &&
     (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
   const allowCloneBatches =
     hasPermission(BATCH_CREATE) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));

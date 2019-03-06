@@ -26,7 +26,7 @@ import {
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
-import { ORDER_FORM, ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
+import { ORDER_FORM, ORDER_ITEMS_LIST } from 'modules/permission/constants/order';
 import { calculatePackageQuantity } from 'utils/batch';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -343,7 +343,7 @@ function BatchesArea({
                     )}
 
                   {hasPermission(BATCH_CREATE) &&
-                    hasPermission(ORDER_ORDERITEMS_LIST) &&
+                    hasPermission(ORDER_ITEMS_LIST) &&
                     hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]) && (
                       <BooleanValue>
                         {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (

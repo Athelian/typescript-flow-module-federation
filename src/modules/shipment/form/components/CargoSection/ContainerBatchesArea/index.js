@@ -7,7 +7,7 @@ import { injectUid } from 'utils/id';
 import { calculatePackageQuantity } from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { ORDER_FORM, ORDER_ORDERITEMS_LIST } from 'modules/permission/constants/order';
+import { ORDER_FORM, ORDER_ITEMS_LIST } from 'modules/permission/constants/order';
 import {
   BATCH_LIST,
   BATCH_CREATE,
@@ -374,7 +374,7 @@ export default function ContainerBatchesArea({
                 )}
 
               {hasPermission(BATCH_CREATE) &&
-                hasPermission(ORDER_ORDERITEMS_LIST) &&
+                hasPermission(ORDER_ITEMS_LIST) &&
                 (hasPermission(SHIPMENT_UPDATE) ||
                   (hasPermission(SHIPMENT_ADD_BATCH) && hasPermission(CONTAINER_BATCHES_ADD))) && (
                   <BooleanValue>

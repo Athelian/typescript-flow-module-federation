@@ -65,7 +65,12 @@ function ContainersAreaReadOnly({
           setFieldValue: setContainers,
           setDeepFieldValue: setContainersByPath,
         },
-        { state: { batches }, setFieldValue: setBatches }
+        {
+          state: { batches },
+          setFieldValue: setBatches,
+          changeContainerIdToExistingBatches,
+          cleanExistingBatchesContainerId,
+        }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
         const isFocusedBatchesPoolCard = isFocusedBatchesPool(focusedCardIndex);
@@ -148,6 +153,8 @@ function ContainersAreaReadOnly({
                             );
 
                             setIsSelectBatchesMode(false);
+
+                            cleanExistingBatchesContainerId(sourceContainer.id);
                           }}
                           message={
                             <FormattedMessage
@@ -239,6 +246,7 @@ function ContainersAreaReadOnly({
                                   });
                                 }
                                 setIsSelectBatchesMode(false);
+                                changeContainerIdToExistingBatches(selectedBatches, container);
                               }}
                               message={
                                 <FormattedMessage
