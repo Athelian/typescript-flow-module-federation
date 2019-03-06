@@ -421,10 +421,6 @@ export const prepareParsedUpdateShipmentInput = ({
   const existingBatchIdsInPool = existingBatchesInPool.map(batch => batch.id);
   const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
 
-  console.warn('OLD CONTAINERS', originalValues.containers);
-  console.warn('NEW CONTAINERS', newValues.containers);
-  console.warn('IS EQUALS', isEquals(originalValues.containers, newValues.containers));
-
   return {
     ...parseGenericField('no', originalValues.no, newValues.no),
     ...parseGenericField('blNo', originalValues.blNo, newValues.blNo),
