@@ -26,7 +26,7 @@ export const ShipmentInfoWrapperStyle: string = css`
 export const ShipmentLeftWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
-  flex: 1;
+  width: 300px;
 `;
 
 export const ShipmentNoStyle: string = css`
@@ -45,7 +45,7 @@ export const ShipmentBLStyle: string = css`
 export const ShipmentRightWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  flex: 2;
+  width: 520px;
 `;
 
 export const ShipmentHeaderWrapperStyle: string = css`
@@ -60,6 +60,7 @@ export const ShipmentTagsWrapperStyle: string = css`
   grid-gap: 5px;
   overflow: hidden;
   height: 18px;
+  width: 365px;
 `;
 
 export const ShipmentImporterWrapperStyle: string = css`
