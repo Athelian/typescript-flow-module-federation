@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import useUser from 'hooks/useUser';
 import { Subscribe } from 'unstated';
@@ -8,15 +9,18 @@ import FormattedNumber from 'components/FormattedNumber';
 import { encodeId } from 'utils/id';
 import { WAREHOUSE_UPDATE } from 'modules/permission/constants/warehouse';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
 import WarehouseContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
+import SlideView from 'components/SlideView';
 import { FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import {
   FieldItem,
+  FormTooltip,
   Label,
   SectionHeader,
   SectionWrapper,
@@ -29,7 +33,9 @@ import {
   UserAssignmentInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
+import SelectPartners from '../SelectPartners';
 import { WarehouseSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
+import { renderPartners } from './helpers';
 
 type Props = {
   isNew: boolean,
@@ -258,6 +264,65 @@ const WarehouseSection = ({ isNew }: Props) => {
                       </Label>
                     }
                     input={<PartnerCard partner={values.ownedBy || group} readOnly />}
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.Warehouses.allowedToUse"
+                          defaultMessage="AllOWED TO USE"
+                        />
+                        {' ('}
+                        <FormattedNumber value={values.groups.length} />
+                        {')'}
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Warehouses.tooltipPartner"
+                            defaultMessage="You can choose up to 4 Partners. This will allow them to use this Warehouse in their Shipments."
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) => (
+                          <>
+                            <div
+                              onClick={() =>
+                                hasPermission(PARTNER_LIST) && allowUpdate
+                                  ? slideToggle(true)
+                                  : () => {}
+                              }
+                              role="presentation"
+                            >
+                              {renderPartners(values.groups, allowUpdate)}
+                            </div>
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <SelectPartners
+                                  selected={values.groups}
+                                  onCancel={() => slideToggle(false)}
+                                  onSelect={selected => {
+                                    slideToggle(false);
+                                    setFieldValue('groups', selected);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
                   />
                 </GridColumn>
               </div>

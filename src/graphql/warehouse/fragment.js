@@ -15,6 +15,9 @@ export const warehouseFormFragment = gql`
     inCharges {
       ...userAvatarFragment
     }
+    groups {
+      ...partnerCardFragment
+    }
     name
     street
     locality

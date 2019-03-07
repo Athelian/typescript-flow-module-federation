@@ -19,6 +19,7 @@ export type FormState = {
   surface: Metric,
   customFields: Object,
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
+  groups: Array<Object>,
 };
 
 const initValues = {
@@ -32,6 +33,7 @@ const initValues = {
     fieldDefinitions: [],
   },
   inCharges: [],
+  groups: [],
 };
 
 export default class WarehouseContainer extends Container<FormState> {
