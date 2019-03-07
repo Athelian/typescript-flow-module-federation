@@ -62,6 +62,7 @@ type OptionalProps = {
     viewOrder: boolean,
     viewShipment: boolean,
     viewProduct: boolean,
+    getPrice: boolean,
   },
   isRepresented: boolean,
 };
@@ -90,6 +91,7 @@ const defaultProps = {
     viewProduct: false,
     viewShipment: false,
     viewOrder: false,
+    getPrice: false,
   },
   isRepresented: false,
 };
@@ -349,7 +351,7 @@ const ContainerBatchCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display {...(editable.getPrice ? {} : { blackout: true })}>
                   <FormattedNumber
                     value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}

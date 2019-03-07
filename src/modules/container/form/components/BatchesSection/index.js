@@ -14,7 +14,11 @@ import {
 } from 'modules/permission/constants/container';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { ORDER_ITEMS_LIST, ORDER_FORM } from 'modules/permission/constants/order';
+import {
+  ORDER_ITEMS_LIST,
+  ORDER_FORM,
+  ORDER_ITEMS_GET_PRICE,
+} from 'modules/permission/constants/order';
 import {
   BATCH_CREATE,
   BATCH_LIST,
@@ -244,6 +248,7 @@ function BatchesSection() {
                                 CONTAINER_BATCHES_ADD,
                                 CONTAINER_BATCHES_REMOVE,
                               ]),
+                              getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
                             }}
                             position={position}
                             batch={batch}
