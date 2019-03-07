@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { pick } from 'lodash';
 import { Subscribe } from 'unstated';
 import { toast } from 'react-toastify';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { isNullOrUndefined } from 'utils/fp';
+import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
@@ -151,7 +153,10 @@ class ShipmentFormModule extends React.Component<Props> {
     const isNewOrClone = this.isNewOrClone();
 
     const input = isNewOrClone
-      ? prepareCreateShipmentInput(newValues)
+      ? prepareCreateShipmentInput({
+          ...findChangeData(originalValues, newValues),
+          ...pick(newValues, ['importer', 'forwarders', 'voyages', 'containerGroups']),
+        })
       : prepareParsedUpdateShipmentInput({
           originalValues,
           existingBatches,
