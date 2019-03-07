@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { type Warehouse } from 'modules/warehouse/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import BaseCard from '../BaseCard';
@@ -14,8 +13,8 @@ import {
   OwnedByStyle,
 } from './style';
 
-type Props = {
-  warehouse: ?{
+type OptionalProps = {
+  warehouse: {
     id: string,
     name: string,
     ownedBy: {
@@ -24,7 +23,13 @@ type Props = {
     locality: ?string,
     region: ?string,
   },
-  onClick: Warehouse => void,
+  onClick: Function,
+};
+
+type Props = OptionalProps & {};
+
+const defaultProps = {
+  onClick: () => {},
 };
 
 const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
@@ -59,5 +64,7 @@ const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
     </BaseCard>
   );
 };
+
+ShipmentWarehouseCard.defaultProps = defaultProps;
 
 export default ShipmentWarehouseCard;
