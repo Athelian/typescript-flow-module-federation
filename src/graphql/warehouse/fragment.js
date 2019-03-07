@@ -33,6 +33,7 @@ export const warehouseCardFragment = gql`
     name
     ownedBy {
       ... on Group {
+        id
         name
       }
     }

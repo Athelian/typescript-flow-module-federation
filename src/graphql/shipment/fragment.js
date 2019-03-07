@@ -72,6 +72,7 @@ export const shipmentFormFragment = gql`
             name
             ownedBy {
               ... on Group {
+                id
                 name
               }
             }
