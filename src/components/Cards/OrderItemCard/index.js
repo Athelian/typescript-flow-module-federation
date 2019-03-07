@@ -41,7 +41,6 @@ type OptionalProps = {
   selectable: boolean,
   readOnly: boolean,
   viewPrice: boolean,
-  viewTotalPrice: boolean,
 };
 
 type Props = OptionalProps & {
