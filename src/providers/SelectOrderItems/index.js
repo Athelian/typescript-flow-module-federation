@@ -17,6 +17,9 @@ import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
 import useListConfig from 'hooks/useListConfig';
+import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import { ItemWrapperStyle } from './style';
 
 type Props = {
@@ -62,6 +65,8 @@ function onChangeProductQuantity({
 }
 
 function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const fields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
@@ -162,6 +167,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                         </NumberValue>
                       )}
                       <OrderItemCard
+                        viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
                         item={item}
                         selectable
                         selected={selected.includes(item)}

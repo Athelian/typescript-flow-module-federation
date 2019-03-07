@@ -11,6 +11,7 @@ import { WAREHOUSE_UPDATE } from 'modules/permission/constants/warehouse';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import WarehouseContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
 import SlideView from 'components/SlideView';
@@ -42,7 +43,8 @@ type Props = {
 };
 
 const WarehouseSection = ({ isNew }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const { group } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
 

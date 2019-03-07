@@ -10,6 +10,9 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderItemCard } from 'components/Cards';
+import usePermission from 'hooks/usePermission';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 
 type Props = {
   selected?: ?{
@@ -33,54 +36,59 @@ const hasMorePage = (result: Object): boolean => {
   return nextPage <= totalPage;
 };
 
-const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => (
-  <ObjectValue
-    defaultValue={{
-      perPage: 20,
-      page: 1,
-    }}
-  >
-    {({ value: filtersAndSort }) => (
-      <OrderItemsList {...filtersAndSort}>
-        {({ loading, data, fetchMore }) => (
-          <ObjectValue defaultValue={selected}>
-            {({ value, set }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="saveButtonOnSelectOrderItem"
-                      disabled={isEquals(value, selected)}
-                      onClick={() => onSelect({ ...removeTypename(value) })}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
-                <OrderGridView
-                  hasMore={hasMorePage(data)}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
-                  items={getByPathWithDefault([], 'orderItems.nodes', data)}
-                  renderItem={item => (
-                    <OrderItemCard
-                      item={item}
-                      onSelect={() => set(item)}
-                      selectable
-                      selected={item.id === value.id}
-                      key={item.id}
-                    />
-                  )}
-                />
-              </Layout>
-            )}
-          </ObjectValue>
-        )}
-      </OrderItemsList>
-    )}
-  </ObjectValue>
-);
+const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  return (
+    <ObjectValue
+      defaultValue={{
+        perPage: 20,
+        page: 1,
+      }}
+    >
+      {({ value: filtersAndSort }) => (
+        <OrderItemsList {...filtersAndSort}>
+          {({ loading, data, fetchMore }) => (
+            <ObjectValue defaultValue={selected}>
+              {({ value, set }) => (
+                <Layout
+                  navBar={
+                    <SlideViewNavBar>
+                      <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
+                      <CancelButton onClick={onCancel} />
+                      <SaveButton
+                        data-testid="saveButtonOnSelectOrderItem"
+                        disabled={isEquals(value, selected)}
+                        onClick={() => onSelect({ ...removeTypename(value) })}
+                      />
+                    </SlideViewNavBar>
+                  }
+                >
+                  <OrderGridView
+                    hasMore={hasMorePage(data)}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
+                    items={getByPathWithDefault([], 'orderItems.nodes', data)}
+                    renderItem={item => (
+                      <OrderItemCard
+                        item={item}
+                        onSelect={() => set(item)}
+                        selectable
+                        viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
+                        selected={item.id === value.id}
+                        key={item.id}
+                      />
+                    )}
+                  />
+                </Layout>
+              )}
+            </ObjectValue>
+          )}
+        </OrderItemsList>
+      )}
+    </ObjectValue>
+  );
+};
 
 SelectOrderItem.defaultProps = defaultProps;
 

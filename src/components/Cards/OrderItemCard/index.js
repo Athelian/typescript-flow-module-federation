@@ -40,6 +40,7 @@ type OptionalProps = {
   onRemove: (item: Object) => void,
   selectable: boolean,
   readOnly: boolean,
+  viewPrice: boolean,
 };
 
 type Props = OptionalProps & {
@@ -94,6 +95,7 @@ const defaultProps = {
   onClone: () => {},
   selectable: false,
   readOnly: false,
+  viewPrice: true,
 };
 
 const OrderItemCard = ({
@@ -105,6 +107,7 @@ const OrderItemCard = ({
   selectable,
   readOnly,
   currency,
+  viewPrice,
   ...rest
 }: Props) => {
   if (!item) return '';
@@ -261,7 +264,7 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!viewPrice}>
                   <FormattedNumber value={item.price.amount} />{' '}
                   {item.currency || item.price.currency}
                 </Display>
@@ -287,7 +290,7 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!viewPrice}>
                   <FormattedNumber
                     value={item.price.amount * item.quantity}
                     suffix={item.currency || item.price.currency}
