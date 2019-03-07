@@ -42,29 +42,7 @@ export const containerFormFragment = gql`
       ...batchFormFragment
     }
     representativeBatch {
-      ... on Batch {
-        id
-        orderItem {
-          ... on OrderItem {
-            id
-            productProvider {
-              ... on ProductProvider {
-                id
-                product {
-                  ... on Product {
-                    id
-                    files {
-                      ...imageFragment
-                    }
-                    name
-                    serial
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      ...batchFormFragment
     }
   }
 `;
