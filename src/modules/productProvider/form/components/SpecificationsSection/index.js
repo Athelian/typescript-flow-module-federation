@@ -15,6 +15,8 @@ import GridColumn from 'components/GridColumn';
 import {
   PRODUCT_PROVIDER_CREATE,
   PRODUCT_PROVIDER_UPDATE,
+  PRODUCT_PROVIDER_GET_UNIT_TYPE,
+  PRODUCT_PROVIDER_GET_UNIT_PRICE,
 } from 'modules/permission/constants/product';
 import { getByPath } from 'utils/fp';
 import { SpecificationsSectionWrapperStyle } from './style';
@@ -51,6 +53,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                       />
                     }
                     editable={canCreateOrUpdate}
+                    blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_TYPE)}
                   />
                 )}
               </FormField>
@@ -73,6 +76,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                       />
                     }
                     editable={canCreateOrUpdate}
+                    blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE)}
                   />
                 )}
               </FormField>
@@ -96,6 +100,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     }
                     editable={canCreateOrUpdate}
                     enumType="Currency"
+                    blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE)}
                   />
                 )}
               </FormField>
