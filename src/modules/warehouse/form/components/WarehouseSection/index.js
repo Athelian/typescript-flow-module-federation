@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
+import useUser from 'hooks/useUser';
 import { Subscribe } from 'unstated';
 import FormattedNumber from 'components/FormattedNumber';
 import { encodeId } from 'utils/id';
@@ -13,7 +14,10 @@ import validator from 'modules/warehouse/form/validator';
 import { FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import { CloneButton } from 'components/Buttons';
+import { PartnerCard } from 'components/Cards';
 import {
+  FieldItem,
+  Label,
   SectionHeader,
   SectionWrapper,
   LastModified,
@@ -33,6 +37,7 @@ type Props = {
 
 const WarehouseSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
+  const { group } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
 
   return (
@@ -243,6 +248,16 @@ const WarehouseSection = ({ isNew }: Props) => {
                       />
                     }
                     editable={hasPermission(STAFF_LIST) && allowUpdate}
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label required>
+                        <FormattedMessage id="modules.Warehouses.owner" defaultMessage="OWNER" />
+                      </Label>
+                    }
+                    input={<PartnerCard partner={values.ownedBy || group} readOnly />}
                   />
                 </GridColumn>
               </div>
