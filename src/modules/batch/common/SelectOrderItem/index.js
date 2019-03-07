@@ -12,6 +12,7 @@ import OrderGridView from 'modules/order/list/OrderGridView';
 import { OrderItemCard } from 'components/Cards';
 import usePermission from 'hooks/usePermission';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 
 type Props = {
   selected?: ?{
@@ -36,7 +37,8 @@ const hasMorePage = (result: Object): boolean => {
 };
 
 const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   return (
     <ObjectValue
       defaultValue={{

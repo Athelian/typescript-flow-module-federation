@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import BaseCard from 'components/Cards';
 import { OrderItemCard, WrapperCard } from 'components/RelationMap';
@@ -73,7 +74,8 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
   const showCloneBadge = (Object.entries(clone.orderItems || {}): Array<any>).some(([, item]) =>
     item.map(({ id: orderItemId }) => orderItemId).includes(id)
   );
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" wrapperClassName={wrapperClassName}>
       {showCloneBadge && <Badge label="clone" />}
