@@ -351,7 +351,7 @@ const ContainerBatchCard = ({
                 </Label>
               }
               input={
-                <Display {...(editable.getPrice ? {} : { blackout: true })}>
+                <Display blackout={!editable.getPrice}>
                   <FormattedNumber
                     value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}
