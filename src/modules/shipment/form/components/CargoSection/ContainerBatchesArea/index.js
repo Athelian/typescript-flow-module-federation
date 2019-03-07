@@ -185,6 +185,7 @@ export default function ContainerBatchesArea({
                               onSelect={() =>
                                 allowToUpdate ? setSelectedBatches(batch) : () => {}
                               }
+                              editable={{getPrice: hasPermission(ORDER_ITEMS_GET_PRICE)}}
                             />
                           ) : (
                             <BooleanValue>
