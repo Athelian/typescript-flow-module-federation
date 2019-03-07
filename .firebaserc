@@ -8,6 +8,9 @@
         "staging": [
           "zenport-183806-staging"
         ],
+        "staging-hot": [
+          "zenport-183806-staging-hot"
+        ],
         "prod": [
           "zenport-183806-prod"
         ]
