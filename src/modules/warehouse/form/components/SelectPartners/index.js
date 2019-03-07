@@ -77,7 +77,7 @@ const SelectPartners = ({ selected, onCancel, onSelect }: Props) => (
                 hasMore={false}
                 isLoading={loading}
                 onLoadMore={() => {}}
-                items={data.filter(partner => partner.types.includes('Forwarder'))}
+                items={data}
                 renderItem={item => (
                   <PartnerCard
                     partner={item}
