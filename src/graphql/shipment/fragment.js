@@ -70,6 +70,12 @@ export const shipmentFormFragment = gql`
           ... on Warehouse {
             id
             name
+            ownedBy {
+              ... on Group {
+                id
+                name
+              }
+            }
           }
         }
         customClearance {

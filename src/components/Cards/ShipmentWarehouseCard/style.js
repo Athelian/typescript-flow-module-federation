@@ -1,6 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { fontSizesWithHeights, colors, presets, borderRadiuses } from 'styles/common';
+import {
+  fontSizesWithHeights,
+  colors,
+  presets,
+  borderRadiuses,
+  layout,
+  fontSizes,
+} from 'styles/common';
 
 export const ShipmentWarehouseCardWrapperStyle: string = css`
   position: relative;
@@ -20,7 +27,6 @@ export const ShipmentWarehouseInfoWrapperStyle: string = css`
   position: absolute;
   top: 0;
   left: 0;
-  display: flex;
   align-items: center;
   width: 195px;
   height: 40px;
@@ -35,4 +41,27 @@ export const WarehouseNameStyle: string = css`
   ${presets.ELLIPSIS};
   width: 100%;
   padding: 0 20px 0 10px;
+`;
+
+export const OwnedByWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  padding: 0 5px;
+  width: 175px;
+  margin: 0 10px;
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+  height: 18px;
+`;
+
+export const OwnedByIconStyle: string = css`
+  color: ${colors.GRAY_DARK};
+  ${fontSizes.SMALL};
+`;
+
+export const OwnedByStyle: string = css`
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  ${fontSizes.SMALL};
+  width: 145px;
 `;

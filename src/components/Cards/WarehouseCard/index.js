@@ -1,15 +1,18 @@
 // @flow
 import React from 'react';
 import { Link } from '@reach/router';
-import { type Warehouse } from 'modules/warehouse/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import { encodeId } from 'utils/id';
+import Icon from 'components/Icon';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   WarehouseCardWrapperStyle,
   WarehouseCardImageStyle,
   WarehouseInfoWrapperStyle,
   WarehouseNameStyle,
+  OwnedByWrapperStyle,
+  OwnedByIconStyle,
+  OwnedByStyle,
 } from './style';
 
 type OptionalProps = {
@@ -20,7 +23,13 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  warehouse: ?Warehouse,
+  warehouse: ?{
+    id: string,
+    name: string,
+    ownedBy: {
+      name: string,
+    },
+  },
 };
 
 const defaultProps = {
@@ -33,7 +42,7 @@ const defaultProps = {
 const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...rest }: Props) => {
   if (!warehouse) return '';
 
-  const { name } = warehouse;
+  const { name, ownedBy } = warehouse;
 
   const actions = selectable || readOnly ? [] : [<CardAction icon="CLONE" onClick={onClone} />];
 
@@ -54,6 +63,12 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...r
         <img className={WarehouseCardImageStyle} src={FALLBACK_IMAGE} alt="warehouse_image" />
         <div className={WarehouseInfoWrapperStyle}>
           <div className={WarehouseNameStyle}>{name}</div>
+          <div className={OwnedByWrapperStyle}>
+            <div className={OwnedByIconStyle}>
+              <Icon icon="PARTNER" />
+            </div>
+            <div className={OwnedByStyle}>{ownedBy && ownedBy.name}</div>
+          </div>
         </div>
       </Link>
     </BaseCard>
