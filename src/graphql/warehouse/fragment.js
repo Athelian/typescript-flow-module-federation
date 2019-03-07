@@ -31,5 +31,10 @@ export const warehouseCardFragment = gql`
   fragment warehouseCardFragment on Warehouse {
     id
     name
+    ownedBy {
+      ... on Group {
+        name
+      }
+    }
   }
 `;
