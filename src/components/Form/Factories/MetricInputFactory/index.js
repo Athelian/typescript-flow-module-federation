@@ -1,6 +1,13 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, FormTooltip, DefaultStyle, MetricInput } from 'components/Form';
+import {
+  FieldItem,
+  Label,
+  FormTooltip,
+  DefaultStyle,
+  MetricInput,
+  Blackout,
+} from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
@@ -29,7 +36,8 @@ type Props = LabelProps &
     metricType?: 'distance' | 'area' | 'volume' | 'weight',
     showCalculator: boolean,
     onCalculate?: Function,
-    editable?: boolean,
+    editable: boolean,
+    blackout: boolean,
   };
 
 const defaultProps = {
@@ -43,7 +51,8 @@ const defaultProps = {
   showCalculator: false,
   metricSelectWidth: '30px',
   metricOptionWidth: '35px',
-  editable: true,
+  editable: false,
+  blackout: false,
   vertical: false,
 };
 
@@ -78,6 +87,7 @@ const MetricInputFactory = ({
   onFocus,
   inputAlign,
   editable,
+  blackout,
   customMetrics,
   customConvert,
   metricSelectWidth,
@@ -122,25 +132,38 @@ const MetricInputFactory = ({
     metricOptionWidth,
   };
 
+  const blackoutConfig = {
+    width: inputWidth,
+    height: inputHeight,
+  };
+
+  let renderedInput = <Blackout {...blackoutConfig} />;
+
+  if (!blackout) {
+    if (editable) {
+      renderedInput = (
+        <>
+          <InputWrapper {...inputWrapperConfig}>
+            <Input {...inputConfig} />
+          </InputWrapper>
+          {showCalculator && (
+            <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
+          )}
+        </>
+      );
+    } else {
+      renderedInput = (
+        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+      );
+    }
+  }
+
   return (
     <FieldItem
       vertical={vertical}
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
-      input={
-        editable ? (
-          <>
-            <InputWrapper {...inputWrapperConfig}>
-              <Input {...inputConfig} />
-            </InputWrapper>
-            {showCalculator && (
-              <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
-            )}
-          </>
-        ) : (
-          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        )
-      }
+      input={renderedInput}
     />
   );
 };
