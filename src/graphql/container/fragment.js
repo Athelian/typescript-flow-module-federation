@@ -44,6 +44,26 @@ export const containerFormFragment = gql`
     representativeBatch {
       ... on Batch {
         id
+        orderItem {
+          ... on OrderItem {
+            id
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                    files {
+                      ...imageFragment
+                    }
+                    name
+                    serial
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
