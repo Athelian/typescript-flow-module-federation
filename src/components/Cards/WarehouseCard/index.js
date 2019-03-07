@@ -23,7 +23,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  warehouse: {
+  warehouse: ?{
     id: string,
     name: string,
     ownedBy: {
