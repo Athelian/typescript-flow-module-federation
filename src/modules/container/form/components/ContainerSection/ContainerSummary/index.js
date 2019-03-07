@@ -2,7 +2,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import ContainerFormContainer from 'modules/container/form/container';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
@@ -11,6 +14,8 @@ import { isNullOrUndefined } from 'utils/fp';
 import { findSummary } from './helper';
 
 export default function ContainerSummary() {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   return (
     <Subscribe to={[ContainerFormContainer]}>
       {({ originalValues, state }) => {
@@ -113,7 +118,7 @@ export default function ContainerSummary() {
                   </Label>
                 }
                 input={
-                  <Display>
+                  <Display blackout={!hasPermission(ORDER_ITEMS_GET_PRICE)}>
                     {isNullOrUndefined(totalPrice) ? (
                       <Tooltip
                         message={
