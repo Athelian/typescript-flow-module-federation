@@ -4,6 +4,9 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -51,6 +54,9 @@ function onSelectBatch({
 }
 
 function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
   const removedBatches = selectedBatches.reduce(
     (removedBatch, batch) =>
       Object.assign(removedBatch, {
@@ -164,6 +170,9 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                       selected={selected.includes(item)}
                       onSelect={() => onSelectBatch({ selected, item, push, set })}
                       key={item.id}
+                      editable={{
+                        getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                      }}
                     />
                   )}
                 />

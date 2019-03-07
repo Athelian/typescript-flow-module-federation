@@ -50,7 +50,18 @@ type OptionalProps = {
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
   selectable: boolean,
-  editable: Object,
+  editable: {
+    no: boolean,
+    quantity: boolean,
+    deliveredAt: boolean,
+    desiredAt: boolean,
+    removeBatch: boolean,
+    cloneBatch: boolean,
+    viewOrder: boolean,
+    viewProduct: boolean,
+    viewContainer: boolean,
+    getPrice: boolean,
+  },
 };
 
 type Props = OptionalProps & {
@@ -74,6 +85,7 @@ const defaultProps = {
     viewOrder: false,
     viewProduct: false,
     viewContainer: false,
+    getPrice: false,
   },
 };
 
@@ -332,7 +344,7 @@ const ShipmentBatchCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!editable.getPrice}>
                   <FormattedNumber
                     value={
                       (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
