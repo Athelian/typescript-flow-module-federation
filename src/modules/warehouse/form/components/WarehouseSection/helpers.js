@@ -15,23 +15,23 @@ export const renderPartners = (groups: Array<Object>, allowToUpdate: boolean) =>
     return <GrayCard width="195px" height="215px" />;
   }
   if (numOfForwarders === 1) {
-    return <PartnerCard partner={groups[0]} />;
+    return <PartnerCard partner={groups[0]} readOnly={!allowToUpdate} />;
   }
   if (numOfForwarders === 2) {
     return (
       <GridColumn gap="10px">
-        <PartnerCard partner={groups[0]} size="half" />
-        <PartnerCard partner={groups[1]} size="half" />
+        <PartnerCard partner={groups[0]} size="half" readOnly={!allowToUpdate} />
+        <PartnerCard partner={groups[1]} size="half" readOnly={!allowToUpdate} />
       </GridColumn>
     );
   }
   if (numOfForwarders === 3) {
     return (
       <GridColumn gap="10px">
-        <PartnerCard partner={groups[0]} size="half" />
+        <PartnerCard partner={groups[0]} size="half" readOnly={!allowToUpdate} />
         <GridRow gap="10px">
-          <PartnerCard partner={groups[1]} size="quarter" />
-          <PartnerCard partner={groups[2]} size="quarter" />
+          <PartnerCard partner={groups[1]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={groups[2]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
       </GridColumn>
     );
@@ -40,12 +40,12 @@ export const renderPartners = (groups: Array<Object>, allowToUpdate: boolean) =>
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
-          <PartnerCard partner={groups[0]} size="quarter" />
-          <PartnerCard partner={groups[1]} size="quarter" />
+          <PartnerCard partner={groups[0]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={groups[1]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
         <GridRow gap="10px">
-          <PartnerCard partner={groups[2]} size="quarter" />
-          <PartnerCard partner={groups[3]} size="quarter" />
+          <PartnerCard partner={groups[2]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={groups[3]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
       </GridColumn>
     );
