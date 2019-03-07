@@ -11,6 +11,15 @@ export const warehouseFormFragment = gql`
     }
     ownedBy {
       ...ownedByFragment
+      ... on Group {
+        ...partnerCardFragment
+      }
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    groups {
+      ...partnerCardFragment
     }
     name
     street

@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { toast } from 'react-toastify';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { prepareCustomFieldsData } from 'utils/customFields';
+import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
@@ -17,7 +19,7 @@ import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
 import WarehouseContainer from './form/containers';
 import { warehouseFormQuery } from './form/query';
-import { createWarehouseMutation, updateWarehouseMutation } from './form/mutation';
+import { createWarehouseMutation, updateWarehouseMutation, prepareInput } from './form/mutation';
 import validator from './form/validator';
 
 type OptionalProps = {
@@ -51,19 +53,18 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   ) => {
     const { warehouseId } = this.props;
 
-    const { name, street, locality, region, postalCode, country, surface, customFields } = formData;
-    const input = {
-      name,
-      street,
-      country: country && country.length > 0 ? country : null,
-      locality,
-      region,
-      postalCode,
-      surface,
-      customFields: prepareCustomFieldsData(customFields),
-    };
+    const input = prepareInput({
+      ...formData,
+      ...(Object.prototype.hasOwnProperty.call(formData, 'customFields')
+        ? { customFields: prepareCustomFieldsData(formData.customFields) }
+        : {}),
+    });
     if (this.isNewOrClone()) {
-      const { data } = await saveWarehouse({ variables: { input } });
+      const { data } = await saveWarehouse({
+        variables: {
+          input,
+        },
+      });
       const {
         warehouseCreate: { violations },
       } = data;
@@ -73,7 +74,12 @@ class WarehouseFormModule extends React.PureComponent<Props> {
         onSuccess();
       }
     } else if (warehouseId) {
-      const { data } = await saveWarehouse({ variables: { input, id: decodeId(warehouseId) } });
+      const { data } = await saveWarehouse({
+        variables: {
+          input,
+          id: decodeId(warehouseId),
+        },
+      });
       const {
         warehouseUpdate: { violations },
       } = data;
@@ -86,6 +92,11 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+      return;
+    }
+
     if (this.isNewOrClone()) {
       const { warehouseCreate } = result;
       navigate(`/warehouse/${encodeId(warehouseCreate.id)}`);
@@ -158,7 +169,12 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    warehouseContainer.state,
+                                    isNewOrClone
+                                      ? warehouseContainer.state
+                                      : findChangeData(
+                                          warehouseContainer.originalValues,
+                                          warehouseContainer.state
+                                        ),
                                     saveWarehouse,
                                     () => {
                                       warehouseContainer.onSuccess();
