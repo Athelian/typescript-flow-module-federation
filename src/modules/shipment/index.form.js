@@ -432,29 +432,32 @@ class ShipmentFormModule extends React.Component<Props> {
                               )
                             }
                           </BooleanValue>
-
-                          {isDirty && isNewOrClone && (
+                          {isNewOrClone ? (
                             <CancelButton
                               onClick={() => (onCancel ? onCancel() : this.onCancel())}
                             />
+                          ) : (
+                            <>
+                              {isDirty && (
+                                <ResetButton
+                                  onClick={() => {
+                                    this.onReset({
+                                      shipmentInfoContainer,
+                                      shipmentTagsContainer,
+                                      shipmentTransportTypeContainer,
+                                      shipmentTimelineContainer,
+                                      shipmentBatchesContainer,
+                                      shipmentContainersContainer,
+                                      shipmentFilesContainer,
+                                      form,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </>
                           )}
-                          {isDirty && !isNewOrClone && (
-                            <ResetButton
-                              onClick={() => {
-                                this.onReset({
-                                  shipmentInfoContainer,
-                                  shipmentTagsContainer,
-                                  shipmentTransportTypeContainer,
-                                  shipmentTimelineContainer,
-                                  shipmentBatchesContainer,
-                                  shipmentContainersContainer,
-                                  shipmentFilesContainer,
-                                  form,
-                                });
-                              }}
-                            />
-                          )}
-                          {isDirty && (
+
+                          {(isNewOrClone || isDirty) && (
                             <SaveButton
                               disabled={
                                 !form.isReady(
