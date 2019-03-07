@@ -12,12 +12,12 @@ export const PartnerCardStyle = (size: 'full' | 'half' | 'quarter'): string => c
   ${size === 'half' &&
     `
       grid-template-columns: 195px;
-      grid-template-rows: 30px 80px;
+      grid-template-rows: 22.5px 80px;
     `};
   ${size === 'quarter' &&
     `
       grid-template-columns: 92.5px;
-      grid-template-rows: 20px 90px;
+      grid-template-rows: 12.5px 90px;
     `};
 `;
 

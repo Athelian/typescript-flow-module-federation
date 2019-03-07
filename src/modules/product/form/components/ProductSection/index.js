@@ -304,7 +304,10 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   entityType="Product"
                   customFields={values.customFields}
                   setFieldValue={setFieldValue}
-                  editable={allowUpdate}
+                  editable={{
+                    values: allowUpdate,
+                    mask: allowUpdate,
+                  }}
                 />
                 <div className={TagsInputStyle}>
                   <Subscribe to={[ProductTagsContainer]}>

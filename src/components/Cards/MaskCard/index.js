@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import BaseCard from '../BaseCard';

@@ -22,10 +22,7 @@ import {
   CustomFieldsFactory,
   DayInputFactory,
 } from 'components/Form';
-import {
-  PRODUCT_PROVIDER_CREATE,
-  PRODUCT_PROVIDER_UPDATE,
-} from 'modules/permission/constants/product';
+import { PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 
@@ -37,8 +34,6 @@ type Props = {
 
 const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const canCreateOrUpdate =
-    hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
 
   return (
     <Subscribe to={[ProductProviderContainer]}>
@@ -115,7 +110,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       {!values.exporter ? (
                         <GrayCard width="195px" height="215px" />
                       ) : (
-                        <PartnerCard partner={values.exporter} />
+                        <PartnerCard partner={values.exporter} readOnly />
                       )}
                     </>
                   )}
@@ -185,7 +180,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       {!values.supplier ? (
                         <GrayCard width="195px" height="215px" />
                       ) : (
-                        <PartnerCard partner={values.supplier} />
+                        <PartnerCard partner={values.supplier} readOnly />
                       )}
                     </>
                   )}
@@ -211,7 +206,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="COUNTRY OF ORIGIN"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
                     enumType="Country"
                   />
                 )}
@@ -234,7 +229,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="PRODUCTION LEAD TIME"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
                   />
                 )}
               </FormField>
@@ -256,7 +251,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="INSPECTION FEE"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
                   />
                 )}
               </FormField>
@@ -278,7 +273,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="INSPECTION FEE CURRENCY"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
                     enumType="Currency"
                   />
                 )}
@@ -287,7 +282,10 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 entityType="ProductProvider"
                 customFields={values.customFields}
                 setFieldValue={setFieldValue}
-                editable={canCreateOrUpdate}
+                editable={{
+                  values: hasPermission(PRODUCT_PROVIDER_UPDATE),
+                  mask: hasPermission(PRODUCT_PROVIDER_UPDATE),
+                }}
               />
               <div className={DividerStyle} />
             </GridColumn>

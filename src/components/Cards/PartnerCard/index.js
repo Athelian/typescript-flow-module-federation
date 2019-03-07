@@ -32,7 +32,7 @@ const defaultProps = {
   readOnly: false,
 };
 
-const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: Props) => {
+const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => {
   if (!partner) return '';
 
   const { name, types, partner: partnerInfo } = partner;
