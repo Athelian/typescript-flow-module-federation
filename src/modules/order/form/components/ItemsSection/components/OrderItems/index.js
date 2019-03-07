@@ -5,7 +5,7 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import BatchFormContainer from 'modules/batch/form/container';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import { isEquals } from 'utils/fp';
@@ -98,6 +98,7 @@ class OrderItems extends React.Component<Props> {
               {orderItems.map((item, index) => (
                 <div id={`orderItem_${item.id}`} className={ItemStyle} key={item.id}>
                   <OrderItemCard
+                    viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
                     readOnly={!allowUpdate}
                     item={item}
                     currency={currency}

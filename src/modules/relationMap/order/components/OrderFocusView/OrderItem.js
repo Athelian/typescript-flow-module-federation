@@ -11,6 +11,7 @@ import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import type { OrderItemProps } from 'modules/relationMap/order/type.js.flow';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import Badge from '../Badge';
 
 type OptionalProps = {
@@ -80,6 +81,7 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
             <OrderItemCard
+              viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
               orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
             />
             <ActionCard show={hovered}>

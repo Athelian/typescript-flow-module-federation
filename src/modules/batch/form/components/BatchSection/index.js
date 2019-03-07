@@ -8,7 +8,7 @@ import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { ORDER_ITEMS_LIST } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import {
   BATCH_CREATE,
   BATCH_UPDATE,
@@ -69,6 +69,7 @@ type Props = {
 const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { hasPermission: myPermission } = usePermission();
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
@@ -270,6 +271,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                               />
                             ) : (
                               <OrderItemCard
+                                viewPrice={myPermission(ORDER_ITEMS_GET_PRICE)}
                                 selectable
                                 item={values.orderItem}
                                 onSelect={selectable ? () => slideToggle(true) : null}
@@ -312,7 +314,12 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                     ) : (
                       <>
                         {values.orderItem ? (
-                          <OrderItemCard selectable item={values.orderItem} readOnly />
+                          <OrderItemCard
+                            viewPrice={myPermission(ORDER_ITEMS_GET_PRICE)}
+                            selectable
+                            item={values.orderItem}
+                            readOnly
+                          />
                         ) : (
                           <GrayCard width="195px" height="215px" />
                         )}

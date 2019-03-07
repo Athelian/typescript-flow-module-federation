@@ -97,7 +97,6 @@ const defaultProps = {
   selectable: false,
   readOnly: false,
   viewPrice: true,
-  viewTotalPrice: true,
 };
 
 const OrderItemCard = ({
@@ -110,7 +109,6 @@ const OrderItemCard = ({
   readOnly,
   currency,
   viewPrice,
-  viewTotalPrice,
   ...rest
 }: Props) => {
   if (!item) return '';
@@ -293,7 +291,7 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                <Display blackout={!viewTotalPrice}>
+                <Display blackout={!viewPrice}>
                   <FormattedNumber
                     value={item.price.amount * item.quantity}
                     suffix={item.currency || item.price.currency}
