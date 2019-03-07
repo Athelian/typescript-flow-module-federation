@@ -1,13 +1,16 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets } from 'styles/common';
+import { presets, layout } from 'styles/common';
 
 export const WarehouseSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 40px 0;
-  display: flex;
-  justify-content: center;
+  padding: 40px 100px;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
 `;
 
-export default WarehouseSectionWrapperStyle;
+export const MainFieldsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  justify-content: space-between;
+`;

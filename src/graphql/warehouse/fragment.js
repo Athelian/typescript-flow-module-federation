@@ -12,6 +12,9 @@ export const warehouseFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    inCharges {
+      ...userAvatarFragment
+    }
     name
     street
     locality
