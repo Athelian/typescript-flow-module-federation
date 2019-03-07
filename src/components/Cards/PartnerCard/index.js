@@ -59,8 +59,8 @@ const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: 
             <div className={PartnerTypeStyle(types && types.includes('Forwarder'))}>
               <Icon icon="FORWARDER" />
             </div>
-            <div className={PartnerTypeStyle(types && types.includes('Warehouse'))}>
-              <Icon icon="WAREHOUSING" />
+            <div className={PartnerTypeStyle(types && types.includes('Warehouser'))}>
+              <Icon icon="WAREHOUSER" />
             </div>
           </div>
         </div>
