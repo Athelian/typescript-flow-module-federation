@@ -68,26 +68,26 @@ const initFilter = {
 const findRelateShipment = ({
   shipmentId,
   sortShipments,
-  state,
+  clone,
   shipment,
 }: {
   shipmentId: string,
   sortShipments: Array<Object>,
-  state: Object,
+  clone: Object,
   shipment: Object,
 }) => {
   if (!sortShipments.includes(shipment)) {
     sortShipments.push(shipment);
   }
-  if (state.clone.shipments[shipmentId]) {
-    (state.clone.shipments[shipmentId] || []).forEach(item => {
+  if (clone.shipments[shipmentId]) {
+    (clone.shipments[shipmentId] || []).forEach(item => {
       sortShipments.push(item);
-      if (state.clone.shipments[item.id]) {
+      if (clone.shipments[item.id]) {
         findRelateShipment({
           shipmentId: item.id,
           shipment: item,
           sortShipments,
-          state,
+          clone,
         });
       }
     });
@@ -96,17 +96,23 @@ const findRelateShipment = ({
 
 function manualSortByAction(shipments: Object = {}, state: Object = {}) {
   const sortShipments = [];
-  state.new.shipments.reverse().forEach(shipmentId => {
+  const {
+    clone,
+    new: { shipments: newShipments = [] },
+  } = state;
+
+  for (let counter = newShipments.length - 1; counter >= 0; counter -= 1) {
+    const shipmentId = newShipments[counter];
     if (shipments[shipmentId]) {
       sortShipments.push(shipments[shipmentId]);
     }
-  });
+  }
 
   (Object.entries(shipments || {}): Array<any>).forEach(([shipmentId, shipment]) => {
     findRelateShipment({
       shipmentId,
       shipment,
-      state,
+      clone,
       sortShipments,
     });
   });
