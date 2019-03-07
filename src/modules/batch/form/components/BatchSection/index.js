@@ -273,7 +273,6 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                                 selectable
                                 item={values.orderItem}
                                 onSelect={selectable ? () => slideToggle(true) : null}
-                                readOnly
                               />
                             )}
 

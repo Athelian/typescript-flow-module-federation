@@ -71,23 +71,23 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
     return <GrayCard width="195px" height="215px" />;
   }
   if (numOfForwarders === 1) {
-    return <PartnerCard partner={forwarders[0]} />;
+    return <PartnerCard partner={forwarders[0]} readOnly={!allowToUpdate} />;
   }
   if (numOfForwarders === 2) {
     return (
       <GridColumn gap="10px">
-        <PartnerCard partner={forwarders[0]} size="half" />
-        <PartnerCard partner={forwarders[1]} size="half" />
+        <PartnerCard partner={forwarders[0]} size="half" readOnly={!allowToUpdate} />
+        <PartnerCard partner={forwarders[1]} size="half" readOnly={!allowToUpdate} />
       </GridColumn>
     );
   }
   if (numOfForwarders === 3) {
     return (
       <GridColumn gap="10px">
-        <PartnerCard partner={forwarders[0]} size="half" />
+        <PartnerCard partner={forwarders[0]} size="half" readOnly={!allowToUpdate} />
         <GridRow gap="10px">
-          <PartnerCard partner={forwarders[1]} size="quarter" />
-          <PartnerCard partner={forwarders[2]} size="quarter" />
+          <PartnerCard partner={forwarders[1]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={forwarders[2]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
       </GridColumn>
     );
@@ -96,12 +96,12 @@ export const renderForwarders = (forwarders: Array<Object>, allowToUpdate: boole
     return (
       <GridColumn gap="10px">
         <GridRow gap="10px">
-          <PartnerCard partner={forwarders[0]} size="quarter" />
-          <PartnerCard partner={forwarders[1]} size="quarter" />
+          <PartnerCard partner={forwarders[0]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={forwarders[1]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
         <GridRow gap="10px">
-          <PartnerCard partner={forwarders[2]} size="quarter" />
-          <PartnerCard partner={forwarders[3]} size="quarter" />
+          <PartnerCard partner={forwarders[2]} size="quarter" readOnly={!allowToUpdate} />
+          <PartnerCard partner={forwarders[3]} size="quarter" readOnly={!allowToUpdate} />
         </GridRow>
       </GridColumn>
     );
