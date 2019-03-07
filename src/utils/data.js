@@ -1,5 +1,7 @@
 // @flow
+import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
+import logger from 'utils/logger';
 import { isEquals, getByPathWithDefault } from './fp';
 
 export const replaceUndefined: Function = when(
@@ -296,4 +298,17 @@ export const parseRepresentativeBatchIndexField = (
   if (newRepresentativeBatchIndex === -1) newRepresentativeBatchIndex = null;
 
   return { [key]: newRepresentativeBatchIndex };
+};
+
+export const findChangeData = (originalValues: Object, newValues: Object) => {
+  const changedData = diff(originalValues, newValues);
+  logger.warn({
+    changedData,
+  });
+  return Object.keys(changedData).reduce((result, key) => {
+    return {
+      ...result,
+      [key]: newValues[key],
+    };
+  }, {});
 };
