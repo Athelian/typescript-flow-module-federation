@@ -7,7 +7,11 @@ import { injectUid } from 'utils/id';
 import { calculatePackageQuantity } from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { ORDER_FORM, ORDER_ITEMS_LIST } from 'modules/permission/constants/order';
+import {
+  ORDER_FORM,
+  ORDER_ITEMS_LIST,
+  ORDER_ITEMS_GET_PRICE,
+} from 'modules/permission/constants/order';
 import {
   BATCH_LIST,
   BATCH_CREATE,
@@ -236,6 +240,7 @@ export default function ContainerBatchesArea({
                                         CONTAINER_BATCHES_ADD,
                                         CONTAINER_BATCHES_REMOVE,
                                       ]),
+                                      getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
                                     }}
                                     isRepresented={batch.id === representativeBatchId}
                                     saveOnBlur={updateBatch => {
