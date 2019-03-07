@@ -1,6 +1,13 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, FormTooltip, DefaultStyle, NumberInput } from 'components/Form';
+import {
+  FieldItem,
+  Label,
+  FormTooltip,
+  DefaultStyle,
+  NumberInput,
+  Blackout,
+} from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
@@ -27,7 +34,8 @@ type Props = LabelProps &
     showAutoCalculateToggle: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
-    editable?: boolean,
+    editable: boolean,
+    blackout: boolean,
   };
 
 const defaultProps = {
@@ -38,7 +46,8 @@ const defaultProps = {
   isTouched: false,
   InputWrapper: DefaultStyle,
   Input: NumberInput,
-  editable: true,
+  editable: false,
+  blackout: false,
   vertical: false,
   showCalculator: false,
   showAutoCalculateToggle: false,
@@ -78,6 +87,7 @@ const NumberInputFactory = ({
   onFocus,
   inputAlign,
   editable,
+  blackout,
   nullable,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
@@ -115,31 +125,41 @@ const NumberInputFactory = ({
     nullable,
   };
 
+  const blackoutConfig = {
+    width: inputWidth,
+    height: inputHeight,
+  };
+
+  let renderedInput = <Blackout {...blackoutConfig} />;
+
+  if (!blackout) {
+    if (editable) {
+      renderedInput = (
+        <>
+          <InputWrapper {...inputWrapperConfig}>
+            <Input {...inputConfig} />
+          </InputWrapper>
+          {showCalculator && (
+            <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
+          )}
+          {showAutoCalculateToggle && (
+            <AutoCalculateToggle toggled={autoCalculateIsToggled} onClick={onToggleAutoCalculate} />
+          )}
+        </>
+      );
+    } else {
+      renderedInput = (
+        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+      );
+    }
+  }
+
   return (
     <FieldItem
       vertical={vertical}
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
-      input={
-        editable ? (
-          <>
-            <InputWrapper {...inputWrapperConfig}>
-              <Input {...inputConfig} />
-            </InputWrapper>
-            {showCalculator && (
-              <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
-            )}
-            {showAutoCalculateToggle && (
-              <AutoCalculateToggle
-                toggled={autoCalculateIsToggled}
-                onClick={onToggleAutoCalculate}
-              />
-            )}
-          </>
-        ) : (
-          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        )
-      }
+      input={renderedInput}
     />
   );
 };

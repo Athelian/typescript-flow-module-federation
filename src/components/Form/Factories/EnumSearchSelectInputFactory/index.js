@@ -15,6 +15,7 @@ import {
   SearchSelectInput,
   DefaultSearchSelect,
   DefaultOptions,
+  Blackout,
 } from 'components/Form';
 import type {
   LabelProps,
@@ -45,7 +46,8 @@ type Props = LabelProps &
     SearchSelect: () => React.Node,
     Options: () => React.Node,
     enumType: string,
-    editable?: boolean,
+    editable: boolean,
+    blackout: boolean,
   };
 
 const defaultProps = {
@@ -56,7 +58,8 @@ const defaultProps = {
   isTouched: false,
   SearchSelect: DefaultSearchSelect,
   Options: DefaultOptions,
-  editable: true,
+  editable: false,
+  blackout: false,
   vertical: false,
 };
 
@@ -91,6 +94,7 @@ const EnumSearchSelectInputFactory = ({
   onFocus,
   inputAlign,
   editable,
+  blackout,
 }: Props): React.Node => (
   <EnumProvider enumType={enumType}>
     {({ loading, error, data }) => {
@@ -174,26 +178,33 @@ const EnumSearchSelectInputFactory = ({
         readOnlyHeight: inputHeight,
       };
 
+      const blackoutConfig = {
+        width: inputWidth,
+        height: inputHeight,
+      };
+
+      let renderedInput = <Blackout {...blackoutConfig} />;
+
+      if (!blackout) {
+        renderedInput = (
+          <StringValue value={itemToString(selectedItem) || value}>
+            {({ value: query }) => (
+              <SearchSelectInput
+                inputValue={query}
+                items={loading ? [] : filterItems(query, data)}
+                {...selectConfig}
+              />
+            )}
+          </StringValue>
+        );
+      }
+
       return (
         <FieldItem
           vertical={vertical}
           label={label && <Label {...labelConfig}>{label}</Label>}
           tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
-          input={
-            error ? (
-              `Error!: ${error}`
-            ) : (
-              <StringValue value={itemToString(selectedItem) || value}>
-                {({ value: query }) => (
-                  <SearchSelectInput
-                    inputValue={query}
-                    items={loading ? [] : filterItems(query, data)}
-                    {...selectConfig}
-                  />
-                )}
-              </StringValue>
-            )
-          }
+          input={error ? `Error!: ${error}` : renderedInput}
         />
       );
     }}
