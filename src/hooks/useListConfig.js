@@ -14,7 +14,7 @@ const useListConfig = (initFilter: Object, filterName: string) => {
   const onChangeFilter = useCallback(
     (newFilter: Object) => {
       onChange(newFilter);
-      // @TODO need to handle if brower is not support localstorage
+      // TODO: need to handle if browser is not support localstorage
       if (window.localStorage) {
         window.localStorage.setItem(
           filterName,
@@ -25,7 +25,7 @@ const useListConfig = (initFilter: Object, filterName: string) => {
         );
       }
     },
-    [filterAndSort]
+    [onChange, filterAndSort, filterName]
   );
   return { filterAndSort, queryVariables, onChangeFilter };
 };
