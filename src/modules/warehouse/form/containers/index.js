@@ -23,6 +23,12 @@ export type FormState = {
 };
 
 const initValues = {
+  name: '',
+  street: '',
+  locality: '',
+  region: '',
+  postalCode: '',
+  country: null,
   surface: {
     value: 0,
     metric: 'm²',
@@ -62,7 +68,8 @@ export default class WarehouseContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    this.setState(cleanUpData(values));
-    this.originalValues = cleanUpData(values);
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    this.setState(parsedValues);
+    this.originalValues = Object.assign({}, parsedValues);
   };
 }
