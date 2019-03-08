@@ -41,7 +41,6 @@ export const productListQuery = gql`
                 id
                 no
                 quantity
-                deliveredAt
                 shipment {
                   ... on Shipment {
                     id
@@ -54,6 +53,21 @@ export const productListQuery = gql`
                         }
                       }
                     }
+                    containers {
+                      ... on Container {
+                        id
+                      }
+                    }
+                  }
+                }
+                container {
+                  ... on Container {
+                    id
+                    no
+                    warehouseArrivalAgreedDate
+                    warehouseArrivalAgreedDateApprovedAt
+                    warehouseArrivalActualDate
+                    warehouseArrivalActualDateApprovedAt
                   }
                 }
                 batchAdjustments {
@@ -65,7 +79,6 @@ export const productListQuery = gql`
                 orderItem {
                   ... on OrderItem {
                     id
-                    quantity
                     order {
                       ... on Order {
                         id
@@ -95,7 +108,10 @@ export const productListQuery = gql`
           files {
             ... on File {
               id
+              name
+              type
               path
+              memo
             }
           }
         }

@@ -6,6 +6,7 @@ import OrderCard from './OrderCard';
 import OrderItemCard from './OrderItemCard';
 import OrderProductProviderCard from './OrderProductProviderCard';
 import PartnerCard from './PartnerCard';
+import ProductBatchCard from './ProductBatchCard';
 import ProductCard from './ProductCard';
 import ProductProviderCard from './ProductProviderCard';
 import ShipmentCard from './ShipmentCard';
@@ -33,6 +34,7 @@ export {
   OrderItemCard,
   OrderProductProviderCard,
   PartnerCard,
+  ProductBatchCard,
   ProductCard,
   ProductProviderCard,
   ShipmentCard,
