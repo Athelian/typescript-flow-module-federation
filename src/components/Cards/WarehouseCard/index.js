@@ -1,8 +1,6 @@
 // @flow
 import React from 'react';
-import { Link } from '@reach/router';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
-import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -55,11 +53,7 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...r
       selectable={selectable}
       readOnly={readOnly}
     >
-      <Link
-        className={WarehouseCardWrapperStyle}
-        to={!selectable ? `/warehouse/${encodeId(warehouse.id)}` : '.'}
-        onClick={onClick}
-      >
+      <div role="presentation" className={WarehouseCardWrapperStyle} onClick={onClick}>
         <img className={WarehouseCardImageStyle} src={FALLBACK_IMAGE} alt="warehouse_image" />
         <div className={WarehouseInfoWrapperStyle}>
           <div className={WarehouseNameStyle}>{name}</div>
@@ -70,7 +64,7 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...r
             <div className={OwnedByStyle}>{ownedBy && ownedBy.name}</div>
           </div>
         </div>
-      </Link>
+      </div>
     </BaseCard>
   );
 };
