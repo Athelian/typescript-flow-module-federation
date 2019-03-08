@@ -155,7 +155,7 @@ class ShipmentFormModule extends React.Component<Props> {
     const input = isNewOrClone
       ? prepareCreateShipmentInput({
           ...findChangeData(originalValues, newValues),
-          ...pick(newValues, ['importer', 'forwarders', 'voyages', 'containerGroups']),
+          ...pick(newValues, ['batches', 'importer', 'forwarders', 'voyages', 'containerGroups']),
         })
       : prepareParsedUpdateShipmentInput({
           originalValues,

@@ -61,7 +61,7 @@ const DocumentItem = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   const toggleMemo = React.useCallback(() => {
     setIsExpanded(!isExpanded);
-  }, []);
+  }, [isExpanded]);
 
   if (!value.id) return null;
 
