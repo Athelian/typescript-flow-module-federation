@@ -105,10 +105,12 @@ const DocumentItem = ({
         </div>
 
         <div className={BottomWrapperStyle}>
-          <div className={FileNameWrapperStyle}>
-            <div className={FileNameStyle}>{fileName}</div>
-            {`.${fileExtension}`}
-          </div>
+          <Tooltip message={`${fileName}.${fileExtension}`}>
+            <div className={FileNameWrapperStyle}>
+              <div className={FileNameStyle}>{fileName}</div>
+              {`.${fileExtension}`}
+            </div>
+          </Tooltip>
 
           {downloadable ? (
             <button
