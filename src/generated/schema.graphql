@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Mar 07 2019 15:12:22 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Mar 08 2019 14:05:59 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27018,11 +27018,11 @@ input BatchCreateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
+  batchAssignments: [BatchAssignmentCreateInput!]
+  batchAdjustments: [BatchAdjustmentCreateInput!]
   orderItemId: ID!
   shipmentId: ID
   containerId: ID
-  batchAssignments: [BatchAssignmentCreateInput!]
-  batchAdjustments: [BatchAdjustmentCreateInput!]
 }
 
 input BatchEqualSplitInput {
@@ -27094,11 +27094,11 @@ input BatchUpdateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
+  batchAssignments: [BatchAssignmentUpdateInput!]
+  batchAdjustments: [BatchAdjustmentUpdateInput!]
   orderItemId: ID
   shipmentId: ID
   containerId: ID
-  batchAssignments: [BatchAssignmentUpdateInput!]
-  batchAdjustments: [BatchAdjustmentUpdateInput!]
 }
 
 input BatchUpdateWrapperInput {
@@ -27165,20 +27165,6 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   memo: String
 }
 
-input ContainerBatchAdjustmentInput {
-  id: ID
-  reason: BatchAdjustmentReason
-  quantity: Float
-  memo: String
-}
-
-input ContainerBatchAssignmentInput {
-  id: ID
-  userId: ID
-  quantity: Float
-  memo: String
-}
-
 input ContainerBatchInput {
   no: String
   quantity: Float
@@ -27196,10 +27182,10 @@ input ContainerBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
+  batchAssignments: [BatchAssignmentUpdateInput!]
+  batchAdjustments: [BatchAdjustmentUpdateInput!]
   id: ID
   orderItemId: ID
-  batchAssignments: [ContainerBatchAssignmentInput!]
-  batchAdjustments: [ContainerBatchAdjustmentInput!]
 }
 
 input ContainerCreateInput {
@@ -29786,6 +29772,8 @@ type Mutation {
   orderUpdate(id: ID!, input: OrderUpdateInput!): OrderPayload!
   orderUpdateMany(orders: [OrderUpdateWrapperInput!]!): [OrderPayload!]!
   orderClone(id: ID!, input: OrderUpdateInput!): OrderPayload!
+  orderItemCreate(input: OrderItemCreateInput!): OrderItemPayload!
+  orderItemUpdate(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
   orderItemClone(id: ID!, input: OrderItemUpdateInput!): OrderItemPayload!
   batchCreate(input: BatchCreateInput!): BatchPayload!
   batchUpdate(id: ID!, input: BatchUpdateInput!): BatchPayload!
@@ -30019,7 +30007,7 @@ input OrderCreateInput {
   deliveryPlace: String
   tagIds: [ID!]
   inChargeIds: [ID!]
-  orderItems: [OrderItemCreateInput!]
+  orderItems: [OrderOrderItemCreateInput!]
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
@@ -30104,32 +30092,6 @@ type OrderItem implements Model & Owned & Sortable & Customizable {
   customFields: CustomFields!
 }
 
-input OrderItemBatchAdjustmentCreateInput {
-  reason: BatchAdjustmentReason!
-  quantity: Float!
-  memo: String
-}
-
-input OrderItemBatchAdjustmentUpdateInput {
-  id: ID
-  reason: BatchAdjustmentReason
-  quantity: Float
-  memo: String
-}
-
-input OrderItemBatchAssignmentCreateInput {
-  userId: ID!
-  quantity: Float!
-  memo: String
-}
-
-input OrderItemBatchAssignmentUpdateInput {
-  id: ID
-  userId: ID
-  quantity: Float
-  memo: String
-}
-
 input OrderItemBatchCreateInput {
   no: String!
   quantity: Float!
@@ -30147,10 +30109,10 @@ input OrderItemBatchCreateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
+  batchAssignments: [BatchAssignmentCreateInput!]
+  batchAdjustments: [BatchAdjustmentCreateInput!]
   shipmentId: ID
   containerId: ID
-  batchAssignments: [OrderItemBatchAssignmentCreateInput!]
-  batchAdjustments: [OrderItemBatchAdjustmentCreateInput!]
 }
 
 input OrderItemBatchUpdateInput {
@@ -30170,11 +30132,11 @@ input OrderItemBatchUpdateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
+  batchAssignments: [BatchAssignmentUpdateInput!]
+  batchAdjustments: [BatchAdjustmentUpdateInput!]
   id: ID
   shipmentId: ID
   containerId: ID
-  batchAssignments: [OrderItemBatchAssignmentUpdateInput!]
-  batchAdjustments: [OrderItemBatchAdjustmentUpdateInput!]
 }
 
 input OrderItemCreateInput {
@@ -30183,6 +30145,7 @@ input OrderItemCreateInput {
   quantity: Float!
   batches: [OrderItemBatchCreateInput!]
   customFields: CustomFieldsInput
+  orderId: ID!
 }
 
 input OrderItemFilterInput {
@@ -30211,6 +30174,24 @@ input OrderItemSortInput {
 }
 
 input OrderItemUpdateInput {
+  id: ID
+  productProviderId: ID
+  price: PriceInput
+  quantity: Float
+  batches: [OrderItemBatchUpdateInput!]
+  customFields: CustomFieldsInput
+  orderId: ID
+}
+
+input OrderOrderItemCreateInput {
+  productProviderId: ID!
+  price: PriceInput!
+  quantity: Float!
+  batches: [OrderItemBatchCreateInput!]
+  customFields: CustomFieldsInput
+}
+
+input OrderOrderItemUpdateInput {
   id: ID
   productProviderId: ID
   price: PriceInput
@@ -30253,7 +30234,7 @@ input OrderUpdateInput {
   deliveryPlace: String
   tagIds: [ID!]
   inChargeIds: [ID!]
-  orderItems: [OrderItemUpdateInput!]
+  orderItems: [OrderOrderItemUpdateInput!]
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
@@ -35637,20 +35618,6 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   memo: String
 }
 
-input ShipmentBatchAdjustmentInput {
-  id: ID
-  reason: BatchAdjustmentReason
-  quantity: Float
-  memo: String
-}
-
-input ShipmentBatchAssignmentInput {
-  id: ID
-  userId: ID
-  quantity: Float
-  memo: String
-}
-
 input ShipmentBatchInput {
   no: String
   quantity: Float
@@ -35668,10 +35635,10 @@ input ShipmentBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
+  batchAssignments: [BatchAssignmentUpdateInput!]
+  batchAdjustments: [BatchAdjustmentUpdateInput!]
   id: ID
   orderItemId: ID
-  batchAssignments: [ShipmentBatchAssignmentInput!]
-  batchAdjustments: [ShipmentBatchAdjustmentInput!]
 }
 
 input ShipmentContainerCreateInput {
