@@ -2,7 +2,8 @@
 import React from 'react';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
-import BaseCard from '../BaseCard';
+import BaseCard from 'components/Cards';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
   ShipmentWarehouseCardWrapperStyle,
   ShipmentWarehouseCardImageStyle,
@@ -33,8 +34,6 @@ const defaultProps = {
 };
 
 const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
-  if (!warehouse) return '';
-
   const { name, ownedBy } = warehouse;
 
   const actions = [];
@@ -67,4 +66,9 @@ const ShipmentWarehouseCard = ({ warehouse, onClick, ...rest }: Props) => {
 
 ShipmentWarehouseCard.defaultProps = defaultProps;
 
-export default ShipmentWarehouseCard;
+export default withForbiddenCard(ShipmentWarehouseCard, 'warehouse', {
+  width: '195px',
+  height: '40px',
+  entityIcon: 'WAREHOUSE',
+  entityColor: 'WAREHOUSE',
+});

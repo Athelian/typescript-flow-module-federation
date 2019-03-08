@@ -68,6 +68,13 @@ export const cleanUpFiles: Function = pipe(
   removeEmpty
 );
 
+export const isForbidden = (data: ?Object): boolean => {
+  if (!data) return false;
+  console.warn(data);
+  console.warn(getByPathWithDefault(null, '__typename', data));
+  return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
+};
+
 // Works for string, number, and object in certain situations
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) return { [key]: newValue };
