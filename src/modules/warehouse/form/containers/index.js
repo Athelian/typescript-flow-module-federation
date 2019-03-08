@@ -28,6 +28,7 @@ const initValues = {
   locality: '',
   region: '',
   postalCode: '',
+  country: null,
   surface: {
     value: 0,
     metric: 'm²',
