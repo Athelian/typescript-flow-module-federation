@@ -55,9 +55,9 @@ const TaskAssignmentInput = ({
         return (
           <div className={TaskAssignmentStyle} key={id}>
             <button
-              className={UserStyle(isActiveUser, canActivateUser)}
+              className={UserStyle(isActiveUser, editable && canActivateUser)}
               onClick={() => {
-                if (canActivateUser) {
+                if (editable && canActivateUser) {
                   onActivateUser(id);
                 }
               }}
