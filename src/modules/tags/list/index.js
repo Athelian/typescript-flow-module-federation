@@ -7,14 +7,13 @@ import TagGridView from './TagGridView';
 import { tagsQuery } from './query';
 
 type Props = {
-  viewType: string,
   perPage: number,
   page: number,
 };
 
 class TagList extends React.Component<Props> {
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { ...filtersAndSort } = this.props;
 
     return (
       <Query

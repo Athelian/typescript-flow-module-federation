@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import { BATCH_CREATE } from 'modules/permission/constants/batch';
 import usePermission from 'hooks/usePermission';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
@@ -18,23 +18,8 @@ type Props = {
   intl: IntlShape,
 };
 
-type State = {
-  viewType: string,
-  filter: {
-    query: string,
-    archived: boolean,
-  },
-  sort: {
-    field: string,
-    direction: string,
-  },
-  perPage: number,
-  page: number,
-};
-
 const getInitFilter = () => {
-  const state: State = {
-    viewType: 'grid',
+  const state = {
     filter: {
       query: '',
       archived: false,
@@ -80,7 +65,7 @@ const BatchListModule = (props: Props) => {
       value: 'createdAt',
     },
   ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
     'filterBatch'
   );

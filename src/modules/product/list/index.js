@@ -9,7 +9,6 @@ import ProductGridView from './ProductGridView';
 import { productListQuery } from './query';
 
 type Props = {
-  viewType: string,
   filterBy: {
     query: string,
     archived: boolean,
@@ -20,7 +19,7 @@ type Props = {
   perPage: number,
 };
 
-const ProductList = ({ viewType, ...filtersAndSort }: Props) => {
+const ProductList = ({ ...filtersAndSort }: Props) => {
   React.useEffect(() => {
     emitter.once('CHANGE_PRODUCT_STATUS', () => {
       apolloClient.reFetchObservableQueries();

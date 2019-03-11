@@ -9,7 +9,6 @@ import ShipmentGridView from './ShipmentGridView';
 import { shipmentListQuery } from './query';
 
 type Props = {
-  viewType: string,
   filterBy: {
     query: string,
     archived: boolean,
@@ -20,7 +19,7 @@ type Props = {
   perPage: number,
 };
 
-const ShipmentList = ({ viewType, ...filtersAndSort }: Props) => {
+const ShipmentList = ({ ...filtersAndSort }: Props) => {
   React.useEffect(() => {
     emitter.once('CHANGE_SHIPMENT_STATUS', () => {
       apolloClient.reFetchObservableQueries();

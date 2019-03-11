@@ -7,7 +7,6 @@ import WarehouseGridView from './WarehouseGridView';
 import { warehouseListQuery } from './query';
 
 type Props = {
-  viewType: string,
   sortBy: {
     [field: string]: string,
   },
@@ -16,7 +15,7 @@ type Props = {
 
 class WarehouseList extends React.Component<Props> {
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { ...filtersAndSort } = this.props;
     return (
       <Query
         query={warehouseListQuery}
