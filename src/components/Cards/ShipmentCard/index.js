@@ -8,6 +8,7 @@ import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import BaseCard from '../BaseCard';
 import {
@@ -35,7 +36,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  shipment: ?Object,
+  shipment: Object,
 };
 
 const defaultProps = {
@@ -43,8 +44,6 @@ const defaultProps = {
 };
 
 const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
-  if (!shipment) return '';
-
   const {
     id,
     no,
@@ -145,4 +144,9 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
 
 ShipmentCard.defaultProps = defaultProps;
 
-export default ShipmentCard;
+export default withForbiddenCard(ShipmentCard, 'shipment', {
+  width: '860px',
+  height: '149px',
+  entityIcon: 'SHIPMENT',
+  entityColor: 'SHIPMENT',
+});

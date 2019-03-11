@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 
 import {
@@ -24,7 +25,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  mask: ?Mask,
+  mask: Mask,
 };
 
 const defaultProps = {
@@ -33,8 +34,6 @@ const defaultProps = {
 };
 
 const MaskCard = ({ mask, onClick, actions, ...rest }: Props) => {
-  if (!mask) return '';
-
   const { name, memo, fieldDefinitions } = mask;
 
   return (
@@ -53,4 +52,9 @@ const MaskCard = ({ mask, onClick, actions, ...rest }: Props) => {
 
 MaskCard.defaultProps = defaultProps;
 
-export default MaskCard;
+export default withForbiddenCard(MaskCard, 'mask', {
+  width: '240px',
+  height: '140px',
+  entityIcon: 'TEMPLATE',
+  entityColor: 'TEMPLATE',
+});

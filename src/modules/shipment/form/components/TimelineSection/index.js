@@ -18,7 +18,7 @@ import {
 import { DashedPlusButton } from 'components/Form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import SlideView from 'components/SlideView';
-import { ShipmentWarehouseCard, GrayCard } from 'components/Cards';
+import { ShipmentWarehouseCard } from 'components/Cards';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import { getTransportIcon } from './components/Timeline/helpers';
 import {
@@ -346,13 +346,7 @@ const TimelineSection = ({ isNew }: Props) => {
                         )}
                       </BooleanValue>
                     ) : (
-                      <>
-                        {warehouse ? (
-                          <ShipmentWarehouseCard warehouse={warehouse} readOnly />
-                        ) : (
-                          <GrayCard width="195px" height="40px" />
-                        )}
-                      </>
+                      <ShipmentWarehouseCard warehouse={warehouse} readOnly />
                     )
                   }
                 />

@@ -11,7 +11,7 @@ import {
 
 export const TableTemplateCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
-  grid-template-columns: 190px;
+  grid-template-columns: 195px;
   grid-gap: 10px;
   padding: 10px 0;
 `;

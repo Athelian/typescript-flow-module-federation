@@ -3,6 +3,7 @@ import React from 'react';
 import { type Partner } from 'modules/partner/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   PartnerCardStyle,
@@ -22,7 +23,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  partner: ?Partner,
+  partner: Partner,
 };
 
 const defaultProps = {
@@ -33,8 +34,6 @@ const defaultProps = {
 };
 
 const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => {
-  if (!partner) return '';
-
   const { name, types, partner: partnerInfo } = partner;
 
   const actions = selectable ? [] : [];
@@ -71,4 +70,9 @@ const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => 
 
 PartnerCard.defaultProps = defaultProps;
 
-export default PartnerCard;
+export default withForbiddenCard(PartnerCard, 'partner', {
+  width: '195px',
+  height: '215px',
+  entityIcon: 'PARTNER',
+  entityColor: 'PARTNER',
+});

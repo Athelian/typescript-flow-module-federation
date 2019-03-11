@@ -6,6 +6,7 @@ import { Label, Display, FormTooltip } from 'components/Form';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   ProductProviderCardWrapperStyle,
@@ -32,7 +33,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  productProvider: ?Object,
+  productProvider: Object,
 };
 
 type State = {
@@ -68,8 +69,6 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
   render() {
     const { productProvider, onClick, selectable, orderCurrency, ...rest } = this.props;
     const { activeImage } = this.state;
-
-    if (!productProvider) return '';
 
     const actions = [];
 
@@ -172,4 +171,9 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
   }
 }
 
-export default OrderProductProviderCard;
+export default withForbiddenCard(OrderProductProviderCard, 'productProvider', {
+  width: '195px',
+  height: '222px',
+  entityIcon: 'PROVIDER',
+  entityColor: 'PROVIDER',
+});

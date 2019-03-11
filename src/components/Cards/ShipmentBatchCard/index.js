@@ -9,6 +9,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
   FieldItem,
   Label,
@@ -65,7 +66,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -100,8 +101,6 @@ const ShipmentBatchCard = ({
   editable,
   ...rest
 }: Props) => {
-  if (!batch) return '';
-
   const actions = selectable
     ? []
     : [
@@ -452,4 +451,9 @@ const ShipmentBatchCard = ({
 
 ShipmentBatchCard.defaultProps = defaultProps;
 
-export default ShipmentBatchCard;
+export default withForbiddenCard(ShipmentBatchCard, 'batch', {
+  width: '195px',
+  height: '379px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});

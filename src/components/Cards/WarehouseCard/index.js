@@ -2,6 +2,7 @@
 import React from 'react';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   WarehouseCardWrapperStyle,
@@ -21,7 +22,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  warehouse: ?{
+  warehouse: {
     id: string,
     name: string,
     ownedBy: {
@@ -38,8 +39,6 @@ const defaultProps = {
 };
 
 const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...rest }: Props) => {
-  if (!warehouse) return '';
-
   const { name, ownedBy } = warehouse;
 
   const actions = selectable || readOnly ? [] : [<CardAction icon="CLONE" onClick={onClone} />];
@@ -71,4 +70,9 @@ const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...r
 
 WarehouseCard.defaultProps = defaultProps;
 
-export default WarehouseCard;
+export default withForbiddenCard(WarehouseCard, 'warehouse', {
+  width: '195px',
+  height: '215px',
+  entityIcon: 'WAREHOUSE',
+  entityColor: 'WAREHOUSE',
+});

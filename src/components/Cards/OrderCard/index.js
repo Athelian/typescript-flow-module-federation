@@ -10,6 +10,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import { Label, Display, FieldItem } from 'components/Form';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   OrderCardWrapperStyle,
@@ -27,7 +28,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  order: ?Object,
+  order: Object,
 };
 
 const defaultProps = {
@@ -35,8 +36,6 @@ const defaultProps = {
 };
 
 const OrderCard = ({ order, actions, ...rest }: Props) => {
-  if (!order) return '';
-
   const {
     id,
     poNo,
@@ -133,4 +132,9 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
 
 OrderCard.defaultProps = defaultProps;
 
-export default OrderCard;
+export default withForbiddenCard(OrderCard, 'order', {
+  width: '195px',
+  height: '253px',
+  entityIcon: 'ORDER',
+  entityColor: 'ORDER',
+});

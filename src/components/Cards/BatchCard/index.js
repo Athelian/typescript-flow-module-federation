@@ -9,6 +9,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FieldItem, Label, Display } from 'components/Form';
 import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   BatchCardWrapperStyle,
@@ -36,7 +37,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
 };
 
 const defaultProps = {
@@ -44,8 +45,6 @@ const defaultProps = {
 };
 
 const BatchCard = ({ batch, actions, ...rest }: Props) => {
-  if (!batch) return '';
-
   const {
     id,
     no,
@@ -248,4 +247,9 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
 
 BatchCard.defaultProps = defaultProps;
 
-export default BatchCard;
+export default withForbiddenCard(BatchCard, 'batch', {
+  width: '195px',
+  height: '359px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});
