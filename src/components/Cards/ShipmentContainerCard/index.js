@@ -8,6 +8,7 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
   Label,
   Display,
@@ -82,8 +83,6 @@ const ShipmentContainerCard = ({
   editable,
   ...rest
 }: Props) => {
-  if (!container) return '';
-
   const {
     representativeBatch,
     id,
@@ -417,4 +416,9 @@ const ShipmentContainerCard = ({
 
 ShipmentContainerCard.defaultProps = defaultProps;
 
-export default ShipmentContainerCard;
+export default withForbiddenCard(ShipmentContainerCard, 'container', {
+  width: '195px',
+  height: '319px',
+  entityIcon: 'CONTAINER',
+  entityColor: 'CONTAINER',
+});

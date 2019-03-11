@@ -14,6 +14,7 @@ import Tag from 'components/Tag';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { totalAdjustQuantity } from 'components/Cards/utils';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -37,7 +38,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
   currency: string,
   price: ?{
     amount: number,
@@ -64,8 +65,6 @@ const OrderBatchCard = ({
   readOnly,
   ...rest
 }: Props) => {
-  if (!batch) return '';
-
   const actions = readOnly
     ? []
     : [
@@ -482,4 +481,9 @@ const OrderBatchCard = ({
 
 OrderBatchCard.defaultProps = defaultProps;
 
-export default OrderBatchCard;
+export default withForbiddenCard(OrderBatchCard, 'batch', {
+  width: '195px',
+  height: '234px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});

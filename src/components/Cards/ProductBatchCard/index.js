@@ -11,6 +11,7 @@ import { FieldItem, Label, Display } from 'components/Form';
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import { getByPathWithDefault } from 'utils/fp';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   ProductBatchCardWrapperStyle,
@@ -34,7 +35,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
 };
 
 const defaultProps = {
@@ -42,8 +43,6 @@ const defaultProps = {
 };
 
 const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
-  if (!batch) return '';
-
   const { no, quantity, orderItem, shipment, batchAdjustments, container } = batch;
   const { order } = orderItem;
 
@@ -199,4 +198,9 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
 
 ProductBatchCard.defaultProps = defaultProps;
 
-export default ProductBatchCard;
+export default withForbiddenCard(ProductBatchCard, 'batch', {
+  width: '195px',
+  height: '209px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});

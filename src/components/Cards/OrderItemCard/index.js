@@ -13,6 +13,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { Label, Display, FieldItem } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -44,7 +45,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  item: ?Object,
+  item: Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -110,8 +111,6 @@ const OrderItemCard = ({
   viewPrice,
   ...rest
 }: Props) => {
-  if (!item) return '';
-
   const actions =
     selectable || readOnly
       ? []
@@ -510,4 +509,9 @@ const OrderItemCard = ({
 
 OrderItemCard.defaultProps = defaultProps;
 
-export default OrderItemCard;
+export default withForbiddenCard(OrderItemCard, 'item', {
+  width: '195px',
+  height: '217px',
+  entityIcon: 'ORDER_ITEM',
+  entityColor: 'ORDER_ITEM',
+});

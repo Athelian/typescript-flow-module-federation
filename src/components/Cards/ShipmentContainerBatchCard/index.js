@@ -8,6 +8,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
   FieldItem,
   Label,
@@ -104,8 +105,6 @@ const ShipmentContainerBatchCard = ({
   isRepresented,
   ...rest
 }: Props) => {
-  if (!batch) return '';
-
   const actions = selectable
     ? []
     : [
@@ -435,4 +434,9 @@ const ShipmentContainerBatchCard = ({
 
 ShipmentContainerBatchCard.defaultProps = defaultProps;
 
-export default ShipmentContainerBatchCard;
+export default withForbiddenCard(ShipmentContainerBatchCard, 'batch', {
+  width: '195px',
+  height: '354px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});

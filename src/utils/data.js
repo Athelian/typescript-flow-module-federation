@@ -70,8 +70,6 @@ export const cleanUpFiles: Function = pipe(
 
 export const isForbidden = (data: ?Object): boolean => {
   if (!data) return false;
-  console.warn(data);
-  console.warn(getByPathWithDefault(null, '__typename', data));
   return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
 };
 
