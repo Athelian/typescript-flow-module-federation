@@ -96,7 +96,7 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
           state: { batches },
           setFieldValue: updateBatchesState,
           removeExistingBatches,
-          cleanExistingBatchesByContainerId,
+          changeContainerIdToExistingBatches,
         }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
@@ -242,7 +242,7 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                               'containers',
                                               removeContainerById(containers, container.id)
                                             );
-                                            cleanExistingBatchesByContainerId(container.id);
+                                            changeContainerIdToExistingBatches(batches, null);
                                             if (isSelected) setSelected(null);
                                           }}
                                           onRemove={() => {

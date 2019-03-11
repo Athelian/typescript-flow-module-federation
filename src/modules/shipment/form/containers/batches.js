@@ -31,20 +31,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
     ];
   };
 
-  cleanExistingBatchesByContainerId = (containerId: string) => {
-    this.existingBatches = [
-      ...this.existingBatches.map(existingBatch =>
-        existingBatch.container && existingBatch.container.id === containerId
-          ? {
-              ...existingBatch,
-              container: null,
-            }
-          : { ...existingBatch }
-      ),
-    ];
-  };
-
-  changeContainerIdToExistingBatches = (batches: Array<Object>, container: Object) => {
+  changeContainerIdToExistingBatches = (batches: Array<Object>, container: ?Object) => {
     this.existingBatches = [
       ...this.existingBatches.map(existingBatch =>
         batches.some(batch => batch.id === existingBatch.id)

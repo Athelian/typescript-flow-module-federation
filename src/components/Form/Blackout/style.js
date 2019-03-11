@@ -13,7 +13,7 @@ export const BlackoutWrapperStyle = ({ width, height }: BlackoutWrapperType): st
   justify-content: center;
   ${fontSizes.MAIN};
   color: rgba(0, 0, 0, 0.1);
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.1);
   ${borderRadiuses.MAIN};
   min-width: 0;
   width: ${width};
