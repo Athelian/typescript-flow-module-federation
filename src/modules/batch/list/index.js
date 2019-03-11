@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
+import { usePrevious } from 'modules/form/hooks';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import logger from 'utils/logger';
 import BatchGridView from './BatchGridView';
 import { batchListQuery } from './query';
 
@@ -15,18 +17,24 @@ type Props = {
     [field: string]: string,
   },
   perPage: number,
+  page: number,
 };
 
 const BatchList = ({ ...filtersAndSort }: Props) => {
+  const lastFilter = usePrevious(filtersAndSort);
+  const [isReady, setIsReady] = React.useState(false);
+  React.useEffect(() => {
+    if (!isEquals(lastFilter, filtersAndSort)) {
+      logger.warn('re-render');
+      if (isReady) {
+        setIsReady(false);
+      }
+    } else if (!isReady) {
+      setIsReady(true);
+    }
+  });
   return (
-    <Query
-      query={batchListQuery}
-      variables={{
-        page: 1,
-        ...filtersAndSort,
-      }}
-      fetchPolicy="network-only"
-    >
+    <Query query={batchListQuery} variables={filtersAndSort} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;

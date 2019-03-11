@@ -6,16 +6,28 @@ import apolloClient from 'apollo';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import emitter from 'utils/emitter';
+import logger from 'utils/logger';
 import OrderGridView from './OrderGridView';
 import { orderListQuery } from './query';
 
-type Props = {};
+type Props = {
+  filterBy: {
+    query: string,
+    archived: boolean,
+  },
+  sortBy: {
+    [field: string]: string,
+  },
+  perPage: number,
+  page: number,
+};
 
 const OrderList = ({ ...filtersAndSort }: Props) => {
   const lastFilter = usePrevious(filtersAndSort);
   const [isReady, setIsReady] = React.useState(false);
   React.useEffect(() => {
     if (!isEquals(lastFilter, filtersAndSort)) {
+      logger.warn('re-render');
       if (isReady) {
         setIsReady(false);
       }
