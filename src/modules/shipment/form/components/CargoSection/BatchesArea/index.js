@@ -90,7 +90,7 @@ function BatchesArea({
           addExistingBatches,
           removeExistingBatches,
         },
-        { state: { containers }, setFieldValue: setContainersState }
+        { state: { containers }, setFieldValue: setContainersState, setDeepFieldValue }
       ) => {
         const usefulBatches = isFocusedBatchesPool ? getBatchesInPool(batches) : [...batches];
         return (
@@ -236,6 +236,24 @@ function BatchesArea({
                                     saveOnBlur={updateBatch => {
                                       const indexOfAllBatches = batches.indexOf(batch);
                                       setFieldArrayValue(indexOfAllBatches, updateBatch);
+                                      if (batch.container) {
+                                        const indexOfContainer = containers.findIndex(
+                                          container => container.id === batch.container.id
+                                        );
+                                        if (indexOfContainer >= 0) {
+                                          const indexOfBatch = containers[
+                                            indexOfContainer
+                                          ].batches.findIndex(
+                                            containersBatch => containersBatch.id === batch.id
+                                          );
+                                          if (indexOfBatch >= 0) {
+                                            setDeepFieldValue(
+                                              `containers.${indexOfContainer}.batches.${indexOfBatch}`,
+                                              updateBatch
+                                            );
+                                          }
+                                        }
+                                      }
                                     }}
                                     onClick={() => batchSlideToggle(true)}
                                     onClear={clearedBatch => {
