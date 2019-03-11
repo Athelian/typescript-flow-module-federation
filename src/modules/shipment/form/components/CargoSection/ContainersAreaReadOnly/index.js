@@ -69,7 +69,7 @@ function ContainersAreaReadOnly({
           state: { batches },
           setFieldValue: setBatches,
           changeContainerIdToExistingBatches,
-          cleanExistingBatchesContainerId,
+          cleanExistingBatchesByContainerId,
         }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
@@ -154,7 +154,7 @@ function ContainersAreaReadOnly({
 
                             setIsSelectBatchesMode(false);
 
-                            cleanExistingBatchesContainerId(sourceContainer.id);
+                            cleanExistingBatchesByContainerId(sourceContainer.id);
                           }}
                           message={
                             <FormattedMessage
