@@ -22,7 +22,7 @@ type Props = {
 
 const BatchList = ({ ...filtersAndSort }: Props) => {
   const lastFilter = usePrevious(filtersAndSort);
-  const [isReady, setIsReady] = React.useState(false);
+  const [isReady, setIsReady] = React.useState(true);
   React.useEffect(() => {
     if (!isEquals(lastFilter, filtersAndSort)) {
       logger.warn('re-render');
