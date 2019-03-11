@@ -9,14 +9,14 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import StaffGridView from 'modules/staff/list/StaffGridView';
 import { StaffCard } from 'components/Cards';
-import { type User } from '..';
+import { type UserAvatarType } from 'types';
 
 type OptionalProps = {
-  selected: Array<User>,
+  selected: Array<UserAvatarType>,
 };
 
 type Props = OptionalProps & {
-  onSelect: (values: Array<User>) => void,
+  onSelect: (values: Array<UserAvatarType>) => void,
   onCancel: () => void,
 };
 
@@ -32,16 +32,8 @@ function onAssignUsers({
   push,
   set,
 }: {
-  selected: Array<{
-    id: string,
-    firstName: string,
-    lastName: string,
-  }>,
-  item: {
-    id: string,
-    firstName: string,
-    lastName: string,
-  },
+  selected: Array<UserAvatarType>,
+  item: UserAvatarType,
   push: Function,
   set: Function,
 }) {
