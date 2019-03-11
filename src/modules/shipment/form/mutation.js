@@ -479,11 +479,6 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType)
   return { [key]: parsedNewPort };
 };
 
-const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
-  if (numberOfContainers > 0) return null;
-  return warehouse;
-};
-
 type UpdateShipmentInputType = {
   originalValues: Object,
   existingBatches: Array<Object>,
@@ -533,7 +528,7 @@ export const prepareParsedUpdateShipmentInput = ({
         ...parseParentIdField(
           'warehouseId',
           getByPathWithDefault(null, 'warehouse', oldContainerGroup),
-          cleanWarehouse(newContainerGroup.warehouse, newValues.containers.length)
+          newContainerGroup.warehouse
         ),
         ...parseTimelineDateField(
           'customClearance',
