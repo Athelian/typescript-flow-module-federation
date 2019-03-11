@@ -45,6 +45,7 @@ import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
 import NumberRangeInput from './NumberRangeInput';
 import UserAssignmentInput from './UserAssignmentInput';
+import TaskAssignmentInput from './UserAssignmentInput/TaskAssignmentInput';
 import {
   AssignmentApprovalFactory,
   CustomFieldsFactory,
@@ -106,6 +107,7 @@ export {
   ImagesUploadInput,
   NumberRangeInput,
   UserAssignmentInput,
+  TaskAssignmentInput,
   AssignmentApprovalFactory,
   CustomFieldsFactory,
   DateInputFactory,

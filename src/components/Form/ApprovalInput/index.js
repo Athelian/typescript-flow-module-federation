@@ -6,7 +6,7 @@ import UserAvatar from 'components/UserAvatar';
 import FormattedName from 'components/FormattedName';
 import FormattedDate from 'components/FormattedDate';
 import { ApproveButton } from 'components/Buttons';
-import { type User } from 'components/Form/UserAssignmentInput';
+import { type UserAvatarType } from 'types';
 import {
   ApprovalWrapperStyle,
   ApprovedByWrapperStyle,
@@ -17,7 +17,7 @@ import {
 
 type OptionalProps = {
   approvedAt: ?(string | Date),
-  approvedBy: ?User,
+  approvedBy: ?UserAvatarType,
   onApprove: Object => void,
   onUnapprove: () => void,
   editable: boolean,
