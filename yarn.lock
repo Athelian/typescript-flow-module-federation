@@ -5155,10 +5155,10 @@ dotenv@6.2.0, dotenv@^6.0.0, dotenv@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
 
-downshift@^3.2.6:
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-3.2.6.tgz#dee518a17dfe28ab9ab38fc8261d06ee87cd4589"
-  integrity sha512-g9K3W7D5yS9gnJhPFzfGcABs/Fb01+TON+Eks4gJf3Q+3CnJNzWl+oJeJOiKzB8EnHhttZSy3RhTRgKRzG/Tqg==
+downshift@^3.2.7:
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-3.2.7.tgz#0c40d78d1cbc24753c7a622cfc664df1c9480b4a"
+  integrity sha512-mbUO9ZFhMGtksIeVWRFFjNOPN237VsUqZSEYi0VS0Wj38XNLzpgOBTUcUjdjFeB8KVgmrcRa6GGFkTbACpG6FA==
   dependencies:
     "@babel/runtime" "^7.1.2"
     compute-scroll-into-view "^1.0.9"
@@ -11434,10 +11434,10 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
-react-svg@^7.2.7:
-  version "7.2.7"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-7.2.7.tgz#9d263357a676810521d4cca96d767ede9ee5e7dc"
-  integrity sha512-WMPjg/AlTsKmpVUVxBc6tJ01q4qVoAC45AHMXDgfUhaXP/t81TTlwxCq5AUzWDULtTa4AkM+l0Z8IVuFlM32uw==
+react-svg@^7.2.9:
+  version "7.2.9"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-7.2.9.tgz#b81421407cf2ffa767cfc138c2cc2b0cc5262235"
+  integrity sha512-kb//sNHDf7TgEhQ660jmkniX2qckAVSVdy6zQymr4WGT9LbIfQxMBLg/JHwPwaE/tXdswjHCQRwU5HBrra1b+g==
   dependencies:
     "@babel/runtime" "^7.3.1"
     "@tanem/svg-injector" "^2.1.4"

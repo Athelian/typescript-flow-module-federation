@@ -9,7 +9,6 @@ import TableTemplateGridView from './TableTemplateGridView';
 import { tableTemplateQuery } from './query';
 
 type Props = {
-  viewType: string,
   filterBy: {
     type: string,
   },
@@ -20,7 +19,7 @@ type Props = {
   page: number,
 };
 
-const TableTemplateList = ({ viewType, ...filtersAndSort }: Props) => {
+const TableTemplateList = ({ ...filtersAndSort }: Props) => {
   React.useEffect(() => {
     emitter.once('RELOAD_TEMPLATE', () => {
       apolloClient.reFetchObservableQueries();

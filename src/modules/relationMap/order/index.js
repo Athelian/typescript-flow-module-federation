@@ -12,7 +12,7 @@ import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import scrollIntoView from 'utils/scrollIntoView';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
@@ -121,7 +121,7 @@ function manualSortByAction(shipments: Object = {}, state: Object = {}) {
 }
 
 const Order = ({ intl }: Props) => {
-  const { queryVariables, filterAndSort, onChangeFilter: onChange } = useListConfig(
+  const { queryVariables, filterAndSort, onChangeFilter: onChange } = useFilter(
     initFilter,
     'filterRelationMap'
   );

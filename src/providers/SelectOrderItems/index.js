@@ -16,7 +16,7 @@ import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
@@ -71,7 +71,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useListConfig(
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     {
       perPage: 20,
       page: 1,

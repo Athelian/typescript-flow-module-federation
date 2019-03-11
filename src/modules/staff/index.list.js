@@ -6,7 +6,7 @@ import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import StaffList from './list';
 import messages from './messages';
 
@@ -37,7 +37,7 @@ const getInitFilter = (): State => ({
 });
 
 const StaffModule = (props: Props) => {
-  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
     'filterStaff'
   );

@@ -16,7 +16,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/batch/messages';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import { selectBatchListQuery } from './query';
 
 type Props = {
@@ -92,7 +92,7 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
       value: 'createdAt',
     },
   ];
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useListConfig(
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     getInitFilter(),
     'filterSelectBatches'
   );
