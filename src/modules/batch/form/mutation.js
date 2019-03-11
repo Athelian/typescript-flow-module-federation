@@ -74,6 +74,7 @@ export const prepareCreateBatchInput = (
     customFields,
     producedAt,
     ownedBy,
+    totalVolume,
     ...rest
   }: Object,
   inShipmentOrBatchForm: boolean = true
