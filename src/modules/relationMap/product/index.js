@@ -39,7 +39,18 @@ function Product(props: Props) {
     'productFocusFilter'
   );
   return (
-    <Query query={query} variables={queryVariables} fetchPolicy="network-only">
+    <Query
+      query={query}
+      variables={{
+        batchPage: 1,
+        batchPerPage: 100,
+        batchSort: {
+          deliveredAt: 'DESCENDING',
+        },
+        ...queryVariables,
+      }}
+      fetchPolicy="network-only"
+    >
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
