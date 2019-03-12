@@ -35,7 +35,7 @@ const defaultProps = {
   },
   showActiveUser: false,
   onClickUser: () => {},
-  status: 'InProgress',
+  status: IN_PROGRESS,
   onClick: () => {},
   editable: false,
 };
@@ -49,7 +49,7 @@ const TaskStatusInput = ({
   onClick,
   editable,
 }: Props) => {
-  const isInProgress = status === 'InProgress';
+  const isInProgress = status === IN_PROGRESS;
 
   return (
     <BooleanValue>
