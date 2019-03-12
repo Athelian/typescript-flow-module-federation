@@ -35,6 +35,7 @@ import {
   faGripVertical as DRAG_HANDLE,
   faEdit as METADATA,
   faFileSpreadsheet as TEMPLATE,
+  faClipboardCheck as TASK,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -174,6 +175,7 @@ export default {
   DRAG_HANDLE,
   METADATA,
   TEMPLATE,
+  TASK, 
   STAR,
 
   RELATION_MAP,
