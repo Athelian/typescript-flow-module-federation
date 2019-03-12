@@ -71,7 +71,10 @@ export const DeactivateButtonStyle: string = css`
 `;
 
 export const TaskStatusInputLabelStyle: string = css`
-  flex: 1;
+  ${presets.ELLIPSIS};
+`;
+
+export const StatusLabelStyle: string = css`
   ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
   letter-spacing: 2px;

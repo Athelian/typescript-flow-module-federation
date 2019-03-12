@@ -4,10 +4,10 @@ import { layout, presets, borderRadiuses, fontSizes, colors, shadows } from 'sty
 
 export const TaskAssignmentWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
-  grid-gap: 10px;
-  padding: 0 5px;
+  grid-gap: 6.333px;
+  padding: 5px 0;
   width: 200px;
-  height: 30px;
+  height: 40px;
 `;
 
 export const TaskAssignmentStyle: string = css`
