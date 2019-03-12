@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { toast } from 'react-toastify';
-import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
@@ -11,14 +10,12 @@ import { UIConsumer } from 'modules/ui';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import SlideView from 'components/SlideView';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
-import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
+import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
-import { ShipmentEventsList } from 'modules/history';
 import { shipmentExportQuery } from './query';
 import {
   ShipmentBatchesContainer,
@@ -399,7 +396,7 @@ class ShipmentFormModule extends React.Component<Props> {
                               icon="ORDER"
                             />
                           </JumpToSection>
-                          <BooleanValue>
+                          {/* <BooleanValue>
                             {({ value: opened, set: slideToggle }) =>
                               !isNewOrClone && (
                                 <>
@@ -426,7 +423,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                 </>
                               )
                             }
-                          </BooleanValue>
+                          </BooleanValue> */}
                           {isNewOrClone ? (
                             <CancelButton
                               onClick={() => (onCancel ? onCancel() : this.onCancel())}

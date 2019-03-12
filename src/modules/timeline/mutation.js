@@ -1,35 +1,34 @@
 // @flow
 import gql from 'graphql-tag';
 import { badRequestFragment, forbiddenFragment, notFoundFragment } from 'graphql';
+import { commentFragment } from './query';
 
-export const eventCommentCreateMutation = gql`
-  mutation eventCommentCreate($input: CommentCreateInput!) {
+export const commentCreateMutation = gql`
+  mutation commentCreate($input: CommentCreateInput!) {
     commentCreate(input: $input) {
-      ... on Comment {
-        id
-      }
+      ...commentFragment
       ...badRequestFragment
     }
   }
 
+  ${commentFragment}
   ${badRequestFragment}
 `;
 
-export const eventCommentUpdateMutation = gql`
-  mutation eventCommentUpdate($id: ID!, $input: CommentUpdateInput!) {
+export const commentUpdateMutation = gql`
+  mutation commentUpdate($id: ID!, $input: CommentUpdateInput!) {
     commentUpdate(id: $id, input: $input) {
-      ... on Comment {
-        id
-      }
+      ...commentFragment
       ...badRequestFragment
     }
   }
 
+  ${commentFragment}
   ${badRequestFragment}
 `;
 
-export const eventCommentDeleteMutation = gql`
-  mutation eventCommentDelete($id: ID!) {
+export const commentDeleteMutation = gql`
+  mutation commentDelete($id: ID!) {
     commentDelete(id: $id) {
       ...forbiddenFragment
       ...notFoundFragment
