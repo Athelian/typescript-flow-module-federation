@@ -166,7 +166,7 @@ function BatchesArea({
                   </div>
 
                   <div className={BatchesGridStyle}>
-                    {usefulBatches.map((batch, position) => {
+                    {usefulBatches.map(batch => {
                       const allowRemoveBatch = getByPath('container', batch)
                         ? hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_REMOVE])
                         : hasPermission([SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH]);
@@ -205,7 +205,28 @@ function BatchesArea({
                                             onCancel={() => batchSlideToggle(false)}
                                             onSave={updatedBatch => {
                                               batchSlideToggle(false);
-                                              setFieldArrayValue(position, updatedBatch);
+
+                                              const indexOfAllBatches = batches.indexOf(batch);
+                                              setFieldArrayValue(indexOfAllBatches, updatedBatch);
+                                              if (batch.container) {
+                                                const indexOfContainer = containers.findIndex(
+                                                  container => container.id === batch.container.id
+                                                );
+                                                if (indexOfContainer >= 0) {
+                                                  const indexOfBatch = containers[
+                                                    indexOfContainer
+                                                  ].batches.findIndex(
+                                                    containersBatch =>
+                                                      containersBatch.id === batch.id
+                                                  );
+                                                  if (indexOfBatch >= 0) {
+                                                    setDeepFieldValue(
+                                                      `containers.${indexOfContainer}.batches.${indexOfBatch}`,
+                                                      updatedBatch
+                                                    );
+                                                  }
+                                                }
+                                              }
                                             }}
                                           />
                                         )}
@@ -233,9 +254,9 @@ function BatchesArea({
                                       getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
                                     }}
                                     batch={batch}
-                                    saveOnBlur={updateBatch => {
+                                    saveOnBlur={updatedBatch => {
                                       const indexOfAllBatches = batches.indexOf(batch);
-                                      setFieldArrayValue(indexOfAllBatches, updateBatch);
+                                      setFieldArrayValue(indexOfAllBatches, updatedBatch);
                                       if (batch.container) {
                                         const indexOfContainer = containers.findIndex(
                                           container => container.id === batch.container.id
@@ -249,7 +270,7 @@ function BatchesArea({
                                           if (indexOfBatch >= 0) {
                                             setDeepFieldValue(
                                               `containers.${indexOfContainer}.batches.${indexOfBatch}`,
-                                              updateBatch
+                                              updatedBatch
                                             );
                                           }
                                         }
