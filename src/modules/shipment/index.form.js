@@ -393,6 +393,16 @@ class ShipmentFormModule extends React.Component<Props> {
                               icon="DOCUMENT"
                             />
                             <SectionTabs
+                              link="shipment_taskSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.task"
+                                  defaultMessage="TASKS"
+                                />
+                              }
+                              icon="TASK"
+                            />
+                            <SectionTabs
                               link="shipment_orderSection"
                               label={
                                 <FormattedMessage

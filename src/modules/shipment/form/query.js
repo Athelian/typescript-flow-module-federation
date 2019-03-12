@@ -24,6 +24,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  taskCardFragment,
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
@@ -56,6 +57,7 @@ export const shipmentFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskCardFragment}
 `;
 
 export default shipmentFormQuery;
