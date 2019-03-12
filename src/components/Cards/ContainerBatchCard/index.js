@@ -8,6 +8,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
   FieldItem,
   Label,
@@ -62,6 +63,7 @@ type OptionalProps = {
     viewOrder: boolean,
     viewShipment: boolean,
     viewProduct: boolean,
+    getPrice: boolean,
   },
   isRepresented: boolean,
 };
@@ -90,6 +92,7 @@ const defaultProps = {
     viewProduct: false,
     viewShipment: false,
     viewOrder: false,
+    getPrice: false,
   },
   isRepresented: false,
 };
@@ -108,8 +111,6 @@ const ContainerBatchCard = ({
   isRepresented,
   ...rest
 }: Props) => {
-  if (!batch) return '';
-
   const actions = selectable
     ? []
     : [
@@ -349,7 +350,7 @@ const ContainerBatchCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!editable.getPrice}>
                   <FormattedNumber
                     value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}
@@ -448,4 +449,9 @@ const ContainerBatchCard = ({
 
 ContainerBatchCard.defaultProps = defaultProps;
 
-export default ContainerBatchCard;
+export default withForbiddenCard(ContainerBatchCard, 'batch', {
+  width: '195px',
+  height: '372px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});

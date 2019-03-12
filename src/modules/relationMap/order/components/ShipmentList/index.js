@@ -8,11 +8,11 @@ import { getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import { Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
+import useFilter from 'hooks/useFilter';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { ShipmentListBodyStyle, ItemWrapperStyle } from 'modules/relationMap/order/style';
 import { shipmentListQuery, shipmentDetailQuery } from 'modules/relationMap/order/query';
 import { hasMoreItems } from 'modules/relationMap/order/helpers';
-import { useFilter } from 'modules/relationMap/hooks';
 import { SHIPMENT } from 'modules/relationMap/constants';
 import { selectors } from 'modules/relationMap/order/store';
 import Shipment from '../Shipment';
@@ -27,17 +27,20 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
   const { state } = context;
   const { highlight } = state;
   const uiSelectors = selectors(state);
-  const { queryVariables } = useFilter({
-    page: 1,
-    perPage: 10,
-    filter: {
-      archived: false,
+  const { queryVariables } = useFilter(
+    {
+      page: 1,
+      perPage: 10,
+      filter: {
+        archived: false,
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
     },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-  });
+    'allShipmentFilter'
+  );
   return (
     <Query
       query={shipmentListQuery}

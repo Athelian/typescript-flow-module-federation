@@ -3,7 +3,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { useFilter } from 'modules/relationMap/hooks';
+import useFilter from 'hooks/useFilter';
 import SortFilter from 'modules/relationMap/common/SortFilter';
 import messages from 'modules/relationMap/messages';
 import LoadingIcon from 'components/LoadingIcon';
@@ -19,24 +19,38 @@ type Props = {
 
 function Product(props: Props) {
   const { intl } = props;
-  const { queryVariables, filterAndSort, onChange } = useFilter({
-    page: 1,
-    perPage: 10,
-    batchPage: 1,
-    batchPerPage: 100,
-    batchSort: {
-      deliveredAt: 'DESCENDING',
+  const { queryVariables, filterAndSort, onChangeFilter } = useFilter(
+    {
+      page: 1,
+      perPage: 10,
+      batchPage: 1,
+      batchPerPage: 100,
+      batchSort: {
+        deliveredAt: 'DESCENDING',
+      },
+      filter: {
+        archived: false,
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
     },
-    filter: {
-      archived: false,
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-  });
+    'productFocusFilter'
+  );
   return (
-    <Query query={query} variables={queryVariables} fetchPolicy="network-only">
+    <Query
+      query={query}
+      variables={{
+        batchPage: 1,
+        batchPerPage: 100,
+        batchSort: {
+          deliveredAt: 'DESCENDING',
+        },
+        ...queryVariables,
+      }}
+      fetchPolicy="network-only"
+    >
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
@@ -64,7 +78,7 @@ function Product(props: Props) {
                 },
               ]}
               filter={filterAndSort.filter}
-              onChange={onChange}
+              onChange={onChangeFilter}
               showTags={false}
             />
             {loading ? (

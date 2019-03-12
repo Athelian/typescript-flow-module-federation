@@ -7,7 +7,6 @@ import StaffGridView from './StaffGridView';
 import { staffListQuery } from './query';
 
 type Props = {
-  viewType: string,
   filterBy: {},
   sortBy: {
     [field: string]: string,
@@ -15,7 +14,7 @@ type Props = {
   perPage: number,
 };
 
-const StaffList = ({ viewType, ...filtersAndSort }: Props) => (
+const StaffList = ({ ...filtersAndSort }: Props) => (
   <Query
     query={staffListQuery}
     variables={{

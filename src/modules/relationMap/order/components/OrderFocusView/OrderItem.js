@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import BaseCard from 'components/Cards';
 import { OrderItemCard, WrapperCard } from 'components/RelationMap';
@@ -11,6 +12,7 @@ import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import type { OrderItemProps } from 'modules/relationMap/order/type.js.flow';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import Badge from '../Badge';
 
 type OptionalProps = {
@@ -72,7 +74,8 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
   const showCloneBadge = (Object.entries(clone.orderItems || {}): Array<any>).some(([, item]) =>
     item.map(({ id: orderItemId }) => orderItemId).includes(id)
   );
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   return (
     <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" wrapperClassName={wrapperClassName}>
       {showCloneBadge && <Badge label="clone" />}
@@ -80,6 +83,7 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
         {({ value: hovered, set: setToggle }) => (
           <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
             <OrderItemCard
+              viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
               orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
             />
             <ActionCard show={hovered}>

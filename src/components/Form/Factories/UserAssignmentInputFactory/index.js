@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FieldItem, Label, FormTooltip, UserAssignmentInput } from 'components/Form';
-import { type User } from 'components/Form/UserAssignmentInput';
+import { type UserAvatarType } from 'types';
 import type { LabelProps } from 'components/Form/Factories/type';
 
 type TooltipProps = {
@@ -12,7 +12,7 @@ type TooltipProps = {
 type InputProps = {
   onChange: Function,
   name: string,
-  values: Array<User>,
+  values: Array<UserAvatarType>,
   editable?: boolean,
 };
 
@@ -50,7 +50,7 @@ const UserAssignmentInputFactory = ({
   };
 
   const inputConfig = {
-    values,
+    users: values,
     name,
     onChange,
     editable,

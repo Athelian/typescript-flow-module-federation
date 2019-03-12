@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Icon from 'components/Icon';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard, { CardAction } from '../BaseCard';
 import { ProductProviderCardWrapperStyle, ExporterStyle, SupplierStyle } from './style';
 
@@ -14,7 +15,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  productProvider: ?Object,
+  productProvider: Object,
 };
 
 const defaultProps = {
@@ -35,7 +36,6 @@ const ProductProviderCard = ({
   selectable,
   ...rest
 }: Props) => {
-  if (!productProvider) return '';
   const { exporter, supplier, referenced } = productProvider;
 
   const actions = selectable
@@ -71,4 +71,9 @@ const ProductProviderCard = ({
 
 ProductProviderCard.defaultProps = defaultProps;
 
-export default ProductProviderCard;
+export default withForbiddenCard(ProductProviderCard, 'productProvider', {
+  width: '195px',
+  height: '100px',
+  entityIcon: 'PROVIDER',
+  entityColor: 'PROVIDER',
+});

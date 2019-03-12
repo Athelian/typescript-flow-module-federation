@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
@@ -59,7 +59,7 @@ const ProductListModule = (props: Props) => {
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
     'filterProduct'
   );

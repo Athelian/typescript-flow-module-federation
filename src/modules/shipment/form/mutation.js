@@ -1,5 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
+import { findIndex } from 'lodash';
 import {
   shipmentFormFragment,
   containerFormFragment,
@@ -57,23 +58,94 @@ import type {
   ShipmentUpdate,
 } from '../type.js.flow';
 
+const prepareNewContainer = ({
+  updatedAt,
+  updatedBy,
+  archived,
+  totalBatchPackages,
+  totalBatchQuantity,
+  totalNumberOfUniqueOrderItems,
+  totalVolume,
+  totalWeight,
+  totalPrice,
+  shipment,
+  tags,
+  warehouse,
+  warehouseArrivalAgreedDate,
+  warehouseArrivalActualDate,
+  warehouseArrivalAgreedDateApprovedAt,
+  warehouseArrivalActualDateApprovedAt,
+  warehouseArrivalAgreedDateApprovedBy,
+  warehouseArrivalActualDateApprovedBy,
+  warehouseArrivalAgreedDateAssignedTo,
+  warehouseArrivalActualDateAssignedTo,
+  totalAdjusted,
+  batches,
+  representativeBatch,
+  ownedBy,
+  isNew,
+  id,
+  ...rest
+}: Object) => ({
+  ...rest,
+  ...(isNew ? {} : { id }),
+  warehouseId: warehouse && warehouse.id,
+  warehouseArrivalAgreedDate: warehouseArrivalAgreedDate
+    ? new Date(warehouseArrivalAgreedDate)
+    : null,
+  warehouseArrivalActualDate: warehouseArrivalActualDate
+    ? new Date(warehouseArrivalActualDate)
+    : null,
+  warehouseArrivalAgreedDateApprovedById:
+    warehouseArrivalAgreedDateApprovedBy && warehouseArrivalAgreedDateApprovedBy.id,
+  warehouseArrivalActualDateApprovedById:
+    warehouseArrivalActualDateApprovedBy && warehouseArrivalActualDateApprovedBy.id,
+  ...(Array.isArray(warehouseArrivalAgreedDateAssignedTo) &&
+  warehouseArrivalAgreedDateAssignedTo.length > 0
+    ? {
+        warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
+          item => item.id
+        ),
+      }
+    : {}),
+  ...(Array.isArray(warehouseArrivalActualDateAssignedTo) &&
+  warehouseArrivalActualDateAssignedTo.length > 0
+    ? {
+        warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
+          item => item.id
+        ),
+      }
+    : {}),
+  ...(Array.isArray(batches) && batches.length > 0
+    ? { batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)) }
+    : {}),
+  ...(Array.isArray(tags) && tags.length > 0 ? { tagIds: tags.map(item => item.id) } : {}),
+  representativeBatchIndex: representativeBatch
+    ? findIndex(batches, batch => batch.id === representativeBatch.id)
+    : null,
+});
+
 export const formatTimeline = (timeline: Object): ?CargoReady => {
   if (!timeline) return null;
 
-  const { assignedTo = [], memo, approvedBy, date, timelineDateRevisions = [] } = timeline;
+  const { assignedTo, memo, approvedBy, date, timelineDateRevisions } = timeline;
 
   return {
     memo,
     date: date ? new Date(date) : null,
-    assignedToIds: assignedTo.map(({ id }) => id),
-    timelineDateRevisions: timelineDateRevisions
-      .filter(item => item && (item.date || item.memo))
-      .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
-        id: id && id.includes('-') ? null : id,
-        type,
-        memo: memoRevision,
-        date: dateRevision ? new Date(dateRevision) : null,
-      })),
+    ...(Array.isArray(assignedTo) ? { assignedToIds: assignedTo.map(({ id }) => id) } : {}),
+    ...(Array.isArray(timelineDateRevisions)
+      ? {
+          timelineDateRevisions: timelineDateRevisions
+            .filter(item => item && (item.date || item.memo))
+            .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
+              id: id && id.includes('-') ? null : id,
+              type,
+              memo: memoRevision,
+              date: dateRevision ? new Date(dateRevision) : null,
+            })),
+        }
+      : {}),
     approvedById: approvedBy && approvedBy.id,
   };
 };
@@ -168,45 +240,55 @@ export const prepareCreateShipmentInput = ({
   customFields,
   memo,
   cargoReady,
-  voyages = [],
-  containerGroups = [],
-  tags = [],
-  batches = [],
+  voyages,
+  containerGroups,
+  tags,
+  batches,
   importer,
-  forwarders = [],
-  inCharges = [],
-  files = [],
-  containers = [],
+  forwarders,
+  inCharges,
+  files,
+  containers,
 }: Object): ShipmentCreate => ({
   no,
   blNo,
-  blDate: blDate ? new Date(blDate) : null,
   bookingNo,
-  bookingDate: bookingDate ? new Date(bookingDate) : null,
   invoiceNo,
   memo,
-  loadType: loadType && loadType.length > 0 ? loadType : null,
-  transportType: transportType && transportType.length > 0 ? transportType : null,
-  incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
+  loadType,
+  transportType,
+  incoterm,
   carrier,
-  customFields: prepareCustomFieldsData(customFields),
-  cargoReady: formatTimeline(cargoReady),
-  tagIds: tags.map(({ id }) => id),
+  blDate: blDate ? new Date(blDate) : null,
+  bookingDate: bookingDate ? new Date(bookingDate) : null,
   importerId: importer && importer.id,
-  forwarderIds: forwarders.map(({ id }) => id),
-  inChargeIds: inCharges.map(({ id }) => id),
-  voyages: formatVoyages(voyages),
-  batches: getBatchesInPool(batches).map(batch =>
-    prepareUpdateBatchInput(cleanUpData(batch), true, false)
-  ),
-  containers: containers.map(prepareContainer),
-  containerGroups: formatContainerGroups(containerGroups),
-  files: files.map(({ id, name, type, memo: fileMemo }) => ({
-    id,
-    name,
-    type,
-    memo: fileMemo,
-  })),
+  ...(customFields ? { customFields: prepareCustomFieldsData(customFields) } : {}),
+  ...(cargoReady ? { cargoReady: formatTimeline(cargoReady) } : {}),
+  ...(Array.isArray(tags) ? { tagIds: tags.map(({ id }) => id) } : {}),
+  ...(Array.isArray(forwarders) ? { forwarderIds: forwarders.map(({ id }) => id) } : {}),
+  ...(Array.isArray(inCharges) ? { inChargeIds: inCharges.map(({ id }) => id) } : {}),
+  ...(Array.isArray(batches)
+    ? {
+        batches: getBatchesInPool(batches).map(batch =>
+          prepareUpdateBatchInput(cleanUpData(batch), true, false)
+        ),
+      }
+    : {}),
+  ...(Array.isArray(containers) ? { containers: containers.map(prepareNewContainer) } : {}),
+  ...(Array.isArray(voyages) ? { voyages: formatVoyages(voyages) } : {}),
+  ...(Array.isArray(containerGroups)
+    ? { containerGroups: formatContainerGroups(containerGroups) }
+    : {}),
+  ...(Array.isArray(files)
+    ? {
+        files: files.map(({ id, name, type, memo: fileMemo }) => ({
+          id,
+          name,
+          type,
+          memo: fileMemo,
+        })),
+      }
+    : {}),
 });
 
 export const updateShipmentMutation: Object = gql`
@@ -397,11 +479,6 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType)
   return { [key]: parsedNewPort };
 };
 
-const cleanWarehouse = (warehouse: ?Object, numberOfContainers: number) => {
-  if (numberOfContainers > 0) return null;
-  return warehouse;
-};
-
 type UpdateShipmentInputType = {
   originalValues: Object,
   existingBatches: Array<Object>,
@@ -451,7 +528,7 @@ export const prepareParsedUpdateShipmentInput = ({
         ...parseParentIdField(
           'warehouseId',
           getByPathWithDefault(null, 'warehouse', oldContainerGroup),
-          cleanWarehouse(newContainerGroup.warehouse, newValues.containers.length)
+          newContainerGroup.warehouse
         ),
         ...parseTimelineDateField(
           'customClearance',

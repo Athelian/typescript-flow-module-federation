@@ -17,7 +17,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
@@ -85,7 +85,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
   ];
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useListConfig(
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     {
       perPage: 20,
       page: 1,

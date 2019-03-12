@@ -25,11 +25,11 @@ import {
   DefaultSelect,
 } from './Inputs';
 import ApprovalInput from './ApprovalInput';
+import Blackout from './Blackout';
 import CheckboxInput from './CheckboxInput';
 import ColorInput from './ColorInput';
 import RadioInput from './RadioInput';
 import RadioInputFilterForm from './RadioInputFilterForm';
-import ToggleInput from './ToggleInput';
 import TagsInput from './TagsInput';
 import DocumentsInput from './DocumentsInput';
 import ImagesUploadInput from './ImagesUploadInput';
@@ -43,7 +43,10 @@ import LastModified from './SectionHeader/LastModified';
 import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
 import NumberRangeInput from './NumberRangeInput';
+import TaskStatusInput from './TaskStatusInput';
+import ToggleInput from './ToggleInput';
 import UserAssignmentInput from './UserAssignmentInput';
+import TaskAssignmentInput from './UserAssignmentInput/TaskAssignmentInput';
 import {
   AssignmentApprovalFactory,
   CustomFieldsFactory,
@@ -90,11 +93,11 @@ export {
   Display,
   DashedPlusButton,
   ApprovalInput,
+  Blackout,
   CheckboxInput,
   ColorInput,
   RadioInput,
   RadioInputFilterForm,
-  ToggleInput,
   TagsInput,
   DocumentsInput,
   SectionHeader,
@@ -103,7 +106,10 @@ export {
   SectionWrapper,
   ImagesUploadInput,
   NumberRangeInput,
+  TaskStatusInput,
+  ToggleInput,
   UserAssignmentInput,
+  TaskAssignmentInput,
   AssignmentApprovalFactory,
   CustomFieldsFactory,
   DateInputFactory,

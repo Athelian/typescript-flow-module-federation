@@ -3,16 +3,16 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label, ApprovalInput, FieldItem, UserAssignmentInputFactory } from 'components/Form';
-import { type User } from 'components/Form/UserAssignmentInput';
+import { type UserAvatarType } from 'types';
 import { AssignedAndApprovalWrapperStyle } from './style';
 
 type OptionalProps = {
   assignmentsName: string,
-  assignments: Array<User>,
+  assignments: Array<UserAvatarType>,
   approvedAtName: string,
   approvedAt: ?(string | Date),
   approvedByName: string,
-  approvedBy: ?User,
+  approvedBy: ?UserAvatarType,
   setFieldValue: (name: string, value: any) => void,
   assignable: boolean,
   approvable: boolean,
@@ -63,7 +63,7 @@ const AssignmentApprovalFactory = ({
   const approvalInputConfig = {
     approvedAt,
     approvedBy,
-    onApprove: (user: User) => {
+    onApprove: (user: UserAvatarType) => {
       setFieldValue(approvedByName, user);
       setFieldValue(approvedAtName, new Date());
     },

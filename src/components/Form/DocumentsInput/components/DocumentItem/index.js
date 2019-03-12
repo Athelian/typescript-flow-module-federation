@@ -61,7 +61,7 @@ const DocumentItem = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   const toggleMemo = React.useCallback(() => {
     setIsExpanded(!isExpanded);
-  }, []);
+  }, [isExpanded]);
 
   if (!value.id) return null;
 
@@ -105,10 +105,12 @@ const DocumentItem = ({
         </div>
 
         <div className={BottomWrapperStyle}>
-          <div className={FileNameWrapperStyle}>
-            <div className={FileNameStyle}>{fileName}</div>
-            {`.${fileExtension}`}
-          </div>
+          <Tooltip message={`${fileName}.${fileExtension}`}>
+            <div className={FileNameWrapperStyle}>
+              <div className={FileNameStyle}>{fileName}</div>
+              {`.${fileExtension}`}
+            </div>
+          </Tooltip>
 
           {downloadable ? (
             <button

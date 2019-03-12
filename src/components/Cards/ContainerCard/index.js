@@ -10,6 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
@@ -47,7 +48,6 @@ const defaultProps = {
 };
 
 const ContainerCard = ({ container, ...rest }: Props) => {
-  if (!container) return '';
   const {
     representativeBatch,
     shipment,
@@ -206,4 +206,9 @@ const ContainerCard = ({ container, ...rest }: Props) => {
 
 ContainerCard.defaultProps = defaultProps;
 
-export default ContainerCard;
+export default withForbiddenCard(ContainerCard, 'container', {
+  width: '195px',
+  height: '373px',
+  entityIcon: 'CONTAINER',
+  entityColor: 'CONTAINER',
+});

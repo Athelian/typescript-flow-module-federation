@@ -9,6 +9,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  partnerCardFragment,
 } from 'graphql';
 
 export const warehouseFormQuery = gql`
@@ -26,6 +27,7 @@ export const warehouseFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${partnerCardFragment}
 `;
 
 export default warehouseFormQuery;

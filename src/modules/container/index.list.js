@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import ContainerList from './list';
@@ -14,23 +14,8 @@ type Props = {
   intl: IntlShape,
 };
 
-type State = {
-  viewType: string,
-  filter: {
-    query: string,
-    archived: boolean,
-  },
-  sort: {
-    field: string,
-    direction: string,
-  },
-  perPage: number,
-  page: number,
-};
-
 const getInitFilter = () => {
-  const state: State = {
-    viewType: 'grid',
+  const state = {
     filter: {
       query: '',
       archived: false,
@@ -44,6 +29,7 @@ const getInitFilter = () => {
   };
   return state;
 };
+
 function OrderModule(props: Props) {
   const { intl } = props;
 
@@ -56,7 +42,7 @@ function OrderModule(props: Props) {
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
     'filterContainer'
   );

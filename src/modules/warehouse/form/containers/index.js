@@ -18,9 +18,17 @@ export type FormState = {
   country?: string,
   surface: Metric,
   customFields: Object,
+  inCharges: Array<{ id: string, firstName: string, lastName: string }>,
+  groups: Array<Object>,
 };
 
 const initValues = {
+  name: '',
+  street: '',
+  locality: '',
+  region: '',
+  postalCode: '',
+  country: null,
   surface: {
     value: 0,
     metric: 'm²',
@@ -30,6 +38,8 @@ const initValues = {
     fieldValues: [],
     fieldDefinitions: [],
   },
+  inCharges: [],
+  groups: [],
 };
 
 export default class WarehouseContainer extends Container<FormState> {
@@ -58,7 +68,8 @@ export default class WarehouseContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    this.setState(cleanUpData(values));
-    this.originalValues = cleanUpData(values);
+    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    this.setState(parsedValues);
+    this.originalValues = Object.assign({}, parsedValues);
   };
 }

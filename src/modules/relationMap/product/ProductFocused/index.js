@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
+import { ProductBatchCard } from 'components/Cards';
 import ProductCard from 'components/RelationMap/ProductElement/ProductCard';
-import BatchCard from 'components/RelationMap/ProductElement/BatchCard';
 import WrapperCard from 'components/RelationMap/OrderElement/WrapperCard';
 import { RM_PRODUCT_BATCH_FORM } from 'modules/permission/constants/relationMap';
 import usePermission from 'hooks/usePermission';
@@ -57,8 +57,9 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => {
                     {batches.map(batch => (
                       <ToggleSlide key={batch.id}>
                         {({ assign: setSlide }) => (
-                          <WrapperCard
-                            onDoubleClick={() =>
+                          <ProductBatchCard
+                            batch={batch}
+                            onClick={() =>
                               hasPermission(RM_PRODUCT_BATCH_FORM)
                                 ? setSlide({
                                     show: true,
@@ -67,9 +68,7 @@ const ProductFocused = ({ items, hasMore, loadMore }: Props) => {
                                   })
                                 : () => {}
                             }
-                          >
-                            <BatchCard batch={batch} product={item} />
-                          </WrapperCard>
+                          />
                         )}
                       </ToggleSlide>
                     ))}

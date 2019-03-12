@@ -7,7 +7,7 @@ import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import usePermission from 'hooks/usePermission';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
@@ -19,36 +19,6 @@ type Props = {
   intl: IntlShape,
 };
 
-type State = {
-  viewType: string,
-  filter: {
-    query: string,
-    archived: boolean,
-  },
-  sort: {
-    field: string,
-    direction: string,
-  },
-  perPage: number,
-  page: number,
-};
-
-const getInitFilter = () => {
-  const state: State = {
-    viewType: 'grid',
-    filter: {
-      query: '',
-      archived: false,
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
-};
 function OrderModule(props: Props) {
   const { intl } = props;
 
@@ -57,8 +27,19 @@ function OrderModule(props: Props) {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
-    getInitFilter(),
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    {
+      filter: {
+        query: '',
+        archived: false,
+      },
+      sort: {
+        field: 'updatedAt',
+        direction: 'DESCENDING',
+      },
+      perPage: 10,
+      page: 1,
+    },
     'filterOrder'
   );
 

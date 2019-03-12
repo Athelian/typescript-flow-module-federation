@@ -16,15 +16,12 @@ type Props = {
   renderItem?: Function,
 };
 
-function onClone(warehouseId: string) {
-  navigate(`/warehouse/clone/${encodeId(warehouseId)}`);
-}
-
 const defaultRenderItem = (item: Object, allowCreate: boolean) => (
   <WarehouseCard
     key={item.id}
     warehouse={item}
-    onClone={() => onClone(item.id)}
+    onClick={() => navigate(`/warehouse/${encodeId(item.id)}`)}
+    onClone={() => navigate(`/warehouse/clone/${encodeId(item.id)}`)}
     showActionsOnHover
     readOnly={!allowCreate}
   />

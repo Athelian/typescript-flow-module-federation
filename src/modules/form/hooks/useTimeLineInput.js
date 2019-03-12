@@ -81,35 +81,41 @@ function useTimeLineInput(
     setFocus(false);
   }, []);
 
-  const handleApprove = useCallback((user, cb) => {
-    setInfo({
-      ...info,
-      approvedAt: new Date(),
-      approvedBy: user,
-    });
-    if (cb) {
-      cb({
+  const handleApprove = useCallback(
+    (user, cb) => {
+      setInfo({
         ...info,
         approvedAt: new Date(),
         approvedBy: user,
       });
-    }
-  }, []);
+      if (cb) {
+        cb({
+          ...info,
+          approvedAt: new Date(),
+          approvedBy: user,
+        });
+      }
+    },
+    [info]
+  );
 
-  const handleUnapprove = useCallback(cb => {
-    setInfo({
-      ...info,
-      approvedAt: null,
-      approvedBy: null,
-    });
-    if (cb) {
-      cb({
+  const handleUnapprove = useCallback(
+    cb => {
+      setInfo({
         ...info,
         approvedAt: null,
         approvedBy: null,
       });
-    }
-  }, []);
+      if (cb) {
+        cb({
+          ...info,
+          approvedAt: null,
+          approvedBy: null,
+        });
+      }
+    },
+    [info]
+  );
 
   const getTimeLine = date => ({
     ...info,
