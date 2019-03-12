@@ -281,7 +281,16 @@ const TaskCard = ({
                   editable={editable}
                 />
               ) : (
-                <TaskAssignmentInput users={assignedTo} editable={editable} />
+                <TaskAssignmentInput
+                  onChange={newAssignedTo =>
+                    saveOnBlur({
+                      ...task,
+                      assignedTo: newAssignedTo,
+                    })
+                  }
+                  users={assignedTo}
+                  editable={editable}
+                />
               )}
             </div>
 

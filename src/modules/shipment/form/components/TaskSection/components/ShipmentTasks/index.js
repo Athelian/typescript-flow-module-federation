@@ -6,7 +6,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import scrollIntoView from 'utils/scrollIntoView';
 import { injectUid } from 'utils/id';
-import { TaskCard } from 'components/Cards';
+import { TaskCard, CardAction } from 'components/Cards';
 import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
 type Props = {
@@ -59,7 +59,7 @@ const ShipmentTasks = ({ tasks, onRemove, onSave }: Props) => {
                 boundaryId: 'tasksSection',
               });
             }}
-            onRemove={onRemove}
+            actions={[<CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />]}
           />
         </div>
       ))}
