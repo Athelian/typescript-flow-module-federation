@@ -94,7 +94,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <AsyncTaskSection />
+          <AsyncTaskSection type="Shipment" />
           <AsyncOrdersSection />
         </div>
       </Suspense>

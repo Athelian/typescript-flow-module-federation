@@ -94,6 +94,8 @@ const TaskCard = ({
   position,
   onClick,
   saveOnBlur,
+  onActivateUser,
+  onDeactivateUser,
   editable,
   viewPermissions,
   actions,
@@ -279,6 +281,22 @@ const TaskCard = ({
                   showCompletedDate
                   completedDate={completedAt}
                   editable={editable}
+                  onClick={() =>
+                    saveOnBlur({ ...task, completedBy: inProgressBy, completedAt: new Date() })
+                  }
+                  onClickUser={() =>
+                    completedBy
+                      ? saveOnBlur({
+                          ...task,
+                          completedBy: null,
+                          completedAt: '',
+                        })
+                      : saveOnBlur({
+                          ...task,
+                          inProgressBy: null,
+                          inProgressAt: '',
+                        })
+                  }
                 />
               ) : (
                 <TaskAssignmentInput
@@ -289,6 +307,9 @@ const TaskCard = ({
                     })
                   }
                   users={assignedTo}
+                  onActivateUser={userId =>
+                    saveOnBlur({ ...task, inProgressBy: userId, inProgressAt: new Date() })
+                  }
                   editable={editable}
                 />
               )}

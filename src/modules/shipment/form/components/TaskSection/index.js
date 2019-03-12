@@ -15,9 +15,10 @@ import ShipmentTasks from './components/ShipmentTasks';
 
 type Props = {
   intl: IntlShape,
+  type: string,
 };
 
-function TaskSection({ intl }: Props) {
+function TaskSection({ intl, type }: Props) {
   return (
     <Subscribe to={[ShipmentInfoContainer, ShipmentTasksContainer, FormContainer]}>
       {(
@@ -47,7 +48,7 @@ function TaskSection({ intl }: Props) {
                       isNew: true,
                       name: `task - ${tasks.length + 1}`,
                       entity: {
-                        __typename: 'Shipment',
+                        __typename: type,
                         no,
                       },
                       tags: [],
