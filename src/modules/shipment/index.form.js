@@ -336,7 +336,8 @@ class ShipmentFormModule extends React.Component<Props> {
                     shipmentTimelineContainer.isDirty() ||
                     shipmentBatchesContainer.isDirty() ||
                     shipmentContainersContainer.isDirty() ||
-                    shipmentFilesContainer.isDirty();
+                    shipmentFilesContainer.isDirty() ||
+                    shipmentTasksContainer.isDirty();
                   return (
                     <Layout
                       {...(isSlideView ? {} : uiState)}

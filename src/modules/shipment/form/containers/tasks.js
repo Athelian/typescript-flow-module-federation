@@ -27,6 +27,13 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
+  setFieldArrayValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
+    });
+  };
+
   initDetailValues = (tasks: Array<Object>) => {
     const parsedValues: Array<Object> = tasks;
     this.setState({ tasks: parsedValues });

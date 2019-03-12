@@ -65,7 +65,7 @@ function TaskSection({ intl }: Props) {
                   setFieldTouched(`tasks.${id}`);
                 }}
                 onSave={(index, newValue) => {
-                  setFieldArrayValue(index, newValue);
+                  setFieldArrayValue(`tasks.${index}`, newValue);
                   setFieldTouched(`tasks.${index}`);
                 }}
               />
