@@ -35,6 +35,7 @@ import {
   faGripVertical as DRAG_HANDLE,
   faEdit as METADATA,
   faFileSpreadsheet as TEMPLATE,
+  faClipboardCheck as TASK,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -81,6 +82,7 @@ import {
   faEye as VISIBLE,
   faEyeSlash as INVISIBLE,
   faRedo as RELOAD,
+  faClock as CLOCK,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -113,7 +115,7 @@ import {
   // Components
   faIndustryAlt as IMPORTER,
   faIndustry as SUPPLIER,
-  faWarehouse as WAREHOUSING,
+  faWarehouse as WAREHOUSER,
   faCube as PROVIDER,
   // Common UI
   faThList as TABLE,
@@ -162,7 +164,7 @@ export default {
   SUPPLIER,
   USER,
   MANAGER,
-  WAREHOUSING,
+  WAREHOUSER,
   CARGO,
   PACKAGING,
   QUANTITY_ADJUSTMENTS,
@@ -174,6 +176,7 @@ export default {
   DRAG_HANDLE,
   METADATA,
   TEMPLATE,
+  TASK, 
   STAR,
 
   RELATION_MAP,
@@ -233,6 +236,7 @@ export default {
   VISIBLE,
   INVISIBLE,
   RELOAD,
+  CLOCK,
 
   TIMELINE,
   CARGO_READY,

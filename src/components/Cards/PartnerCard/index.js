@@ -3,6 +3,7 @@ import React from 'react';
 import { type Partner } from 'modules/partner/type.js.flow';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   PartnerCardStyle,
@@ -22,7 +23,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  partner: ?Partner,
+  partner: Partner,
 };
 
 const defaultProps = {
@@ -32,9 +33,7 @@ const defaultProps = {
   readOnly: false,
 };
 
-const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: Props) => {
-  if (!partner) return '';
-
+const PartnerCard = ({ partner, onClick, size, selectable, ...rest }: Props) => {
   const { name, types, partner: partnerInfo } = partner;
 
   const actions = selectable ? [] : [];
@@ -59,8 +58,8 @@ const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: 
             <div className={PartnerTypeStyle(types && types.includes('Forwarder'))}>
               <Icon icon="FORWARDER" />
             </div>
-            <div className={PartnerTypeStyle(types && types.includes('Warehouse'))}>
-              <Icon icon="WAREHOUSING" />
+            <div className={PartnerTypeStyle(types && types.includes('Warehouser'))}>
+              <Icon icon="WAREHOUSER" />
             </div>
           </div>
         </div>
@@ -71,4 +70,9 @@ const PartnerCard = ({ partner, onClick, size, selectable, readOnly, ...rest }: 
 
 PartnerCard.defaultProps = defaultProps;
 
-export default PartnerCard;
+export default withForbiddenCard(PartnerCard, 'partner', {
+  width: '195px',
+  height: '215px',
+  entityIcon: 'PARTNER',
+  entityColor: 'PARTNER',
+});

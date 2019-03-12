@@ -6,6 +6,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
+import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import {
   TimelineDateWrapperStyle,
   PrefixIconStyle,
@@ -42,16 +43,7 @@ const TimelineDate = ({ timelineDate, prefixIcon, vertical }: Props) => {
   const timelineDateRevisions = compact(rawRevisions);
   const hasMultipleDates = timelineDateRevisions && timelineDateRevisions.length > 0;
 
-  let shownDate = date;
-  if (hasMultipleDates && timelineDateRevisions) {
-    for (let index = timelineDateRevisions.length - 1; index >= 0; index -= 1) {
-      const { date: lastDate } = timelineDateRevisions[index] || {};
-      if (lastDate) {
-        shownDate = lastDate;
-        break;
-      }
-    }
-  }
+  const shownDate = getLatestDate(timelineDate);
 
   let delayAmount = 0;
   if (date && shownDate && hasMultipleDates) {

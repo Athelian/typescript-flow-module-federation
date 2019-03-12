@@ -6,6 +6,7 @@ import Tag from 'components/Tag';
 import Icon from 'components/Icon';
 import FormattedName from 'components/FormattedName';
 import UserAvatar from 'components/UserAvatar';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   StaffCardWrapperStyle,
@@ -21,7 +22,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  staff: ?Staff,
+  staff: Staff,
 };
 
 const defaultProps = {
@@ -30,8 +31,6 @@ const defaultProps = {
 };
 
 const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
-  if (!staff) return '';
-
   const { firstName, lastName, role: deprecatedRole, roles, email, tags } = staff;
 
   let userRoleIcon = 'USER';
@@ -80,4 +79,9 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
 
 StaffCard.defaultProps = defaultProps;
 
-export default StaffCard;
+export default withForbiddenCard(StaffCard, 'staff', {
+  width: '195px',
+  height: '215px',
+  entityIcon: 'STAFF',
+  entityColor: 'STAFF',
+});

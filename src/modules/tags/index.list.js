@@ -10,7 +10,7 @@ import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SortInput } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import { currentSort } from 'components/common/FilterToolBar';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import TagsList from './list';
 import messages from './messages';
 
@@ -18,17 +18,8 @@ type Props = {
   intl: IntlShape,
 };
 
-type State = {
-  viewType: string,
-  filter: {
-    entityTypes: Array<string>,
-  },
-  perPage: number,
-  page: number,
-};
 const getInitFilter = () => {
-  const filter: State = {
-    viewType: 'grid',
+  const filter = {
     filter: {
       entityTypes: ['Product', 'Order', 'Batch', 'Shipment', 'User'],
     },
@@ -49,10 +40,7 @@ const TagListModule = (props: Props) => {
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
-  const { filterAndSort, queryVariables, onChangeFilter } = useListConfig(
-    getInitFilter(),
-    'filterTag'
-  );
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(getInitFilter(), 'filterTag');
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(TAG_CREATE);
   return (

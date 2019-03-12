@@ -17,7 +17,8 @@ const usePermission = (isOwner: boolean = true) => {
         return intersection(permissions, checkPermission).length > 0;
       }
       return permissions.includes(checkPermission);
-    }
+    },
+    []
   );
   const { permissions } = useContext(PermissionContext);
   const { permissions: partnerPermissions } = useContext(QueryFormPermissionContext);

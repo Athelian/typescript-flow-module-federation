@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, FormTooltip, DefaultStyle, TextInput } from 'components/Form';
+import { FieldItem, Label, FormTooltip, DefaultStyle, TextInput, Blackout } from 'components/Form';
 import type {
   LabelProps,
   TooltipProps,
@@ -21,7 +21,8 @@ type Props = LabelProps &
     label?: React.Node,
     InputWrapper: () => React.Node,
     Input: () => React.Node,
-    editable?: boolean,
+    editable: boolean,
+    blackout: boolean,
   };
 
 const defaultProps = {
@@ -32,7 +33,8 @@ const defaultProps = {
   isTouched: false,
   InputWrapper: DefaultStyle,
   Input: TextInput,
-  editable: true,
+  editable: false,
+  blackout: false,
   vertical: false,
 };
 
@@ -65,6 +67,7 @@ const TextInputFactory = ({
   onBlur,
   onFocus,
   editable,
+  blackout,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth };
 
@@ -100,20 +103,33 @@ const TextInputFactory = ({
     readOnly: !editable,
   };
 
+  const blackoutConfig = {
+    width: inputWidth,
+    height: inputHeight,
+  };
+
+  let renderedInput = <Blackout {...blackoutConfig} />;
+
+  if (!blackout) {
+    if (editable) {
+      renderedInput = (
+        <InputWrapper {...inputWrapperConfig}>
+          <Input {...inputConfig} />
+        </InputWrapper>
+      );
+    } else {
+      renderedInput = (
+        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+      );
+    }
+  }
+
   return (
     <FieldItem
       vertical={vertical}
       label={label && <Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
-      input={
-        editable ? (
-          <InputWrapper {...inputWrapperConfig}>
-            <Input {...inputConfig} />
-          </InputWrapper>
-        ) : (
-          <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-        )
-      }
+      input={renderedInput}
     />
   );
 };

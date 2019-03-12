@@ -1,17 +1,28 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
-import { encodeId } from 'utils/id';
+import useUser from 'hooks/useUser';
 import { Subscribe } from 'unstated';
-import { WAREHOUSE_CREATE, WAREHOUSE_UPDATE } from 'modules/permission/constants/warehouse';
+import FormattedNumber from 'components/FormattedNumber';
+import { encodeId } from 'utils/id';
+import { WAREHOUSE_UPDATE } from 'modules/permission/constants/warehouse';
+import { STAFF_LIST } from 'modules/permission/constants/staff';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import WarehouseContainer from 'modules/warehouse/form/containers';
 import validator from 'modules/warehouse/form/validator';
+import SlideView from 'components/SlideView';
 import { FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import { CloneButton } from 'components/Buttons';
+import { PartnerCard } from 'components/Cards';
 import {
+  FieldItem,
+  FormTooltip,
+  Label,
   SectionHeader,
   SectionWrapper,
   LastModified,
@@ -20,19 +31,22 @@ import {
   EnumSearchSelectInputFactory,
   DefaultSurfaceStyle,
   CustomFieldsFactory,
+  UserAssignmentInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
-import { WarehouseSectionWrapperStyle } from './style';
+import SelectPartners from '../SelectPartners';
+import { WarehouseSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
+import { renderPartners } from './helpers';
 
 type Props = {
   isNew: boolean,
 };
 
 const WarehouseSection = ({ isNew }: Props) => {
-  const { hasPermission } = usePermission();
-  const allowCreate = hasPermission(WAREHOUSE_CREATE);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  const { group } = useUser();
   const allowUpdate = hasPermission(WAREHOUSE_UPDATE);
-  const allowCreateOrUpdate = allowCreate || allowUpdate;
 
   return (
     <Subscribe to={[WarehouseContainer]}>
@@ -60,155 +74,260 @@ const WarehouseSection = ({ isNew }: Props) => {
               )}
             </SectionHeader>
             <div className={WarehouseSectionWrapperStyle}>
-              <GridColumn>
-                <FormField
-                  name="name"
-                  initValue={values.name}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      required
-                      originalValue={originalValues[name]}
-                      label={
-                        <FormattedMessage id="modules.WareHouses.name" defaultMessage="NAME" />
-                      }
-                      editable={allowCreateOrUpdate}
-                    />
-                  )}
-                </FormField>
+              <div className={MainFieldsWrapperStyle}>
+                <GridColumn>
+                  <FormField
+                    name="name"
+                    initValue={values.name}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage id="modules.WareHouses.name" defaultMessage="NAME" />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
 
-                <FormField name="street" initValue={values.street} setFieldValue={setFieldValue}>
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={originalValues[name]}
-                      label={
+                  <FormField name="street" initValue={values.street} setFieldValue={setFieldValue}>
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.WareHouses.streetAddress"
+                            defaultMessage="STREET ADDRESS"
+                          />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="locality"
+                    initValue={values.locality}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.WareHouses.locality"
+                            defaultMessage="LOCALITY"
+                          />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField name="region" initValue={values.region} setFieldValue={setFieldValue}>
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.WareHouses.region"
+                            defaultMessage="REGION"
+                          />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="postalCode"
+                    initValue={values.postalCode}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.WareHouses.postalCode"
+                            defaultMessage="POSTAL CODE"
+                          />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="country"
+                    initValue={values.country}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <EnumSearchSelectInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={originalValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.WareHouses.country"
+                            defaultMessage="COUNTRY"
+                          />
+                        }
+                        editable={allowUpdate}
+                        enumType="Country"
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="surface"
+                    initValue={getByPath('surface.value', values)}
+                    setFieldValue={(field, value) =>
+                      setFieldArrayValue('surface', { value, metric: 'm²' })
+                    }
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <NumberInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={getByPath('surface.value', originalValues)}
+                        label={
+                          <FormattedMessage
+                            id="modules.WareHouses.surfaceArea"
+                            defaultMessage="SURFACE AREA"
+                          />
+                        }
+                        WrapperComponent={DefaultSurfaceStyle}
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <CustomFieldsFactory
+                    entityType="Warehouse"
+                    customFields={values.customFields}
+                    setFieldValue={setFieldValue}
+                    editable={allowUpdate}
+                  />
+                </GridColumn>
+                <GridColumn>
+                  <UserAssignmentInputFactory
+                    name="inCharges"
+                    values={values.inCharges}
+                    onChange={(name: string, assignments: Array<Object>) =>
+                      setFieldValue(name, assignments)
+                    }
+                    label={
+                      <>
                         <FormattedMessage
-                          id="modules.WareHouses.streetAddress"
-                          defaultMessage="STREET ADDRESS"
+                          id="modules.Warehouses.inCharge"
+                          defaultMessage="IN CHARGE"
                         />
-                      }
-                      editable={allowCreateOrUpdate}
-                    />
-                  )}
-                </FormField>
+                        {' ('}
+                        <FormattedNumber value={values.inCharges.length} />
+                        {')'}
+                      </>
+                    }
+                    infoMessage={
+                      <FormattedMessage
+                        id="modules.Warehouses.tooltipInCharge"
+                        defaultMessage="You can choose up to 5 people in charge."
+                      />
+                    }
+                    editable={hasPermission(STAFF_LIST) && allowUpdate}
+                  />
 
-                <FormField
-                  name="locality"
-                  initValue={values.locality}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={originalValues[name]}
-                      label={
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label required>
+                        <FormattedMessage id="modules.Warehouses.owner" defaultMessage="OWNER" />
+                      </Label>
+                    }
+                    input={<PartnerCard partner={values.ownedBy || group} readOnly />}
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
                         <FormattedMessage
-                          id="modules.WareHouses.locality"
-                          defaultMessage="LOCALITY"
+                          id="modules.Warehouses.allowedToUse"
+                          defaultMessage="AllOWED TO USE"
                         />
-                      }
-                      editable={allowCreateOrUpdate}
-                    />
-                  )}
-                </FormField>
-
-                <FormField name="region" initValue={values.region} setFieldValue={setFieldValue}>
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={originalValues[name]}
-                      label={
-                        <FormattedMessage id="modules.WareHouses.region" defaultMessage="REGION" />
-                      }
-                      editable={allowCreateOrUpdate}
-                    />
-                  )}
-                </FormField>
-
-                <FormField
-                  name="postalCode"
-                  initValue={values.postalCode}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={originalValues[name]}
-                      label={
-                        <FormattedMessage
-                          id="modules.WareHouses.postalCode"
-                          defaultMessage="POSTAL CODE"
-                        />
-                      }
-                      editable={allowCreateOrUpdate}
-                    />
-                  )}
-                </FormField>
-
-                <FormField name="country" initValue={values.country} setFieldValue={setFieldValue}>
-                  {({ name, ...inputHandlers }) => (
-                    <EnumSearchSelectInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={originalValues[name]}
-                      label={
-                        <FormattedMessage
-                          id="modules.WareHouses.country"
-                          defaultMessage="COUNTRY"
-                        />
-                      }
-                      editable={allowCreateOrUpdate}
-                      enumType="Country"
-                    />
-                  )}
-                </FormField>
-
-                <FormField
-                  name="surface"
-                  initValue={getByPath('surface.value', values)}
-                  setFieldValue={(field, value) =>
-                    setFieldArrayValue('surface', { value, metric: 'm²' })
-                  }
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <NumberInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={getByPath('surface.value', originalValues)}
-                      label={
-                        <FormattedMessage
-                          id="modules.WareHouses.surfaceArea"
-                          defaultMessage="SURFACE AREA"
-                        />
-                      }
-                      WrapperComponent={DefaultSurfaceStyle}
-                      editable={allowCreateOrUpdate}
-                    />
-                  )}
-                </FormField>
-                <CustomFieldsFactory
-                  entityType="Warehouse"
-                  customFields={values.customFields}
-                  setFieldValue={setFieldValue}
-                  editable={allowCreateOrUpdate}
-                />
-              </GridColumn>
+                        {' ('}
+                        <FormattedNumber value={values.groups.length} />
+                        {')'}
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Warehouses.tooltipPartner"
+                            defaultMessage="You can choose up to 4 Partners. This will allow them to use this Warehouse in their Shipments."
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <BooleanValue>
+                        {({ value: opened, set: slideToggle }) => (
+                          <>
+                            <div
+                              onClick={() =>
+                                hasPermission(PARTNER_LIST) && allowUpdate
+                                  ? slideToggle(true)
+                                  : () => {}
+                              }
+                              role="presentation"
+                            >
+                              {renderPartners(values.groups, allowUpdate)}
+                            </div>
+                            <SlideView
+                              isOpen={opened}
+                              onRequestClose={() => slideToggle(false)}
+                              options={{ width: '1030px' }}
+                            >
+                              {opened && (
+                                <SelectPartners
+                                  selected={values.groups}
+                                  onCancel={() => slideToggle(false)}
+                                  onSelect={selected => {
+                                    slideToggle(false);
+                                    setFieldValue('groups', selected);
+                                  }}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    }
+                  />
+                </GridColumn>
+              </div>
             </div>
           </SectionWrapper>
         );

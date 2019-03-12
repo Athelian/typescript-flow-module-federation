@@ -466,56 +466,50 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       </Label>
                     }
                     input={(() => {
-                      if (isImporter()) {
-                        return <PartnerCard partner={importer} readOnly />;
-                      }
-                      if (isForwarder()) {
-                        if (
-                          isNew &&
+                      if (
+                        isForwarder() &&
+                        (isNew &&
                           hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])
-                        ) {
-                          return (
-                            <BooleanValue>
-                              {({ value: opened, set: slideToggle }) => (
-                                <>
-                                  {importer && importer.id ? (
-                                    <PartnerCard
-                                      partner={importer}
-                                      onClick={() => slideToggle(true)}
-                                    />
-                                  ) : (
-                                    <DashedPlusButton
-                                      width="195px"
-                                      height="215px"
-                                      onClick={() => slideToggle(true)}
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]))
+                      ) {
+                        return (
+                          <BooleanValue>
+                            {({ value: opened, set: slideToggle }) => (
+                              <>
+                                {importer && importer.id ? (
+                                  <PartnerCard
+                                    partner={importer}
+                                    onClick={() => slideToggle(true)}
+                                  />
+                                ) : (
+                                  <DashedPlusButton
+                                    width="195px"
+                                    height="215px"
+                                    onClick={() => slideToggle(true)}
+                                  />
+                                )}
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                  options={{ width: '1030px' }}
+                                >
+                                  {opened && (
+                                    <SelectImporter
+                                      selected={values.importer}
+                                      onCancel={() => slideToggle(false)}
+                                      onSelect={selected => {
+                                        slideToggle(false);
+                                        setFieldValue('importer', selected);
+                                      }}
                                     />
                                   )}
-                                  <SlideView
-                                    isOpen={opened}
-                                    onRequestClose={() => slideToggle(false)}
-                                    options={{ width: '1030px' }}
-                                  >
-                                    {opened && (
-                                      <SelectImporter
-                                        selected={values.importer}
-                                        onCancel={() => slideToggle(false)}
-                                        onSelect={selected => {
-                                          slideToggle(false);
-                                          setFieldValue('importer', selected);
-                                        }}
-                                      />
-                                    )}
-                                  </SlideView>
-                                </>
-                              )}
-                            </BooleanValue>
-                          );
-                        }
-
-                        return <PartnerCard partner={importer} readOnly />;
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+                        );
                       }
-                      return 'N/A';
+                      return <PartnerCard partner={importer} readOnly />;
                     })()}
                   />
 

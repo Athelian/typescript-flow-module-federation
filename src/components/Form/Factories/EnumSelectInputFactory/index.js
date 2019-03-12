@@ -12,6 +12,7 @@ import {
   SelectInput,
   DefaultSelect,
   DefaultOptions,
+  Blackout,
 } from 'components/Form';
 import type {
   LabelProps,
@@ -34,7 +35,8 @@ type Props = LabelProps &
     Select: () => React.Node,
     Options: () => React.Node,
     enumType: string,
-    editable?: boolean,
+    editable: boolean,
+    blackout: boolean,
   };
 
 const defaultProps = {
@@ -45,7 +47,8 @@ const defaultProps = {
   isTouched: false,
   Select: DefaultSelect,
   Options: DefaultOptions,
-  editable: true,
+  editable: false,
+  blackout: false,
   vertical: false,
 };
 
@@ -79,6 +82,7 @@ const EnumSelectInputFactory = ({
   onFocus,
   inputAlign,
   editable,
+  blackout,
 }: Props): React.Node => (
   <EnumProvider enumType={enumType}>
     {({ loading, error, data }) => {
@@ -136,18 +140,23 @@ const EnumSelectInputFactory = ({
         readOnlyHeight: inputHeight,
       };
 
+      const blackoutConfig = {
+        width: inputWidth,
+        height: inputHeight,
+      };
+
+      let renderedInput = <Blackout {...blackoutConfig} />;
+
+      if (!blackout) {
+        renderedInput = <SelectInput items={loading ? [] : data} {...selectConfig} />;
+      }
+
       return (
         <FieldItem
           vertical={vertical}
           label={label && <Label {...labelConfig}>{label}</Label>}
           tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
-          input={
-            error ? (
-              `Error!: ${error}`
-            ) : (
-              <SelectInput items={loading ? [] : data} {...selectConfig} />
-            )
-          }
+          input={error ? `Error!: ${error}` : renderedInput}
         />
       );
     }}

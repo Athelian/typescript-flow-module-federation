@@ -5,6 +5,7 @@ import { type Tag as TagType } from 'modules/tags/type.js.flow';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import Icon from 'components/Icon';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   TagCardWrapperStyle,
@@ -20,7 +21,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  tag: ?TagType,
+  tag: TagType,
 };
 
 const defaultProps = {
@@ -39,8 +40,6 @@ const getEntityType = (entityType: ?string) => {
 };
 
 const TagCard = ({ tag, actions, ...rest }: Props) => {
-  if (!tag) return '';
-
   const { description, entityTypes } = tag;
 
   return (
@@ -97,4 +96,9 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
 
 TagCard.defaultProps = defaultProps;
 
-export default TagCard;
+export default withForbiddenCard(TagCard, 'tag', {
+  width: '195px',
+  height: '118px',
+  entityIcon: 'TAG',
+  entityColor: 'TAG',
+});

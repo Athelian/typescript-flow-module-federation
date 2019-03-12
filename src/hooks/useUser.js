@@ -8,6 +8,7 @@ const useUser = () => {
 
   return {
     user,
+    group,
     isOwnerBy: (ownerId: string) => !ownerId || ownerId === group.id,
     isImporter: (): boolean => {
       const { types = [] } = group;

@@ -14,7 +14,7 @@ import Icon from 'components/Icon';
 import FilterToolBar from 'components/common/FilterToolBar';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
-import useListConfig from 'hooks/useListConfig';
+import useFilter from 'hooks/useFilter';
 import TableTemplateList from './list';
 import messages from './messages';
 import { HeaderIconStyle } from './style';
@@ -53,7 +53,7 @@ const getInitFilter = () => {
 };
 
 const TableTemplateModule = (props: Props) => {
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useListConfig(
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
     'filterTableTemplate'
   );

@@ -7,6 +7,7 @@ export const TagCardWrapperStyle: string = css`
   grid-template-columns: 195px;
   grid-gap: 5px;
   padding: 5px 0;
+  height: 118px;
 `;
 
 export const TagWrapperStyle: string = css`

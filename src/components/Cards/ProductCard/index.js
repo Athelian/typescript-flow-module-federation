@@ -6,6 +6,7 @@ import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
 import {
   ProductCardWrapperStyle,
@@ -29,7 +30,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  product: ?Object,
+  product: Object,
 };
 
 type State = {
@@ -63,9 +64,6 @@ class ProductCard extends React.PureComponent<Props, State> {
   render() {
     const { product, actions, ...rest } = this.props;
     const { activeImage } = this.state;
-
-    if (!product) return '';
-
     const { id, name, serial, tags, files, productProviders } = product;
 
     const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
@@ -141,4 +139,9 @@ class ProductCard extends React.PureComponent<Props, State> {
   }
 }
 
-export default ProductCard;
+export default withForbiddenCard(ProductCard, 'product', {
+  width: '195px',
+  height: '202px',
+  entityIcon: 'PRODUCT',
+  entityColor: 'PRODUCT',
+});

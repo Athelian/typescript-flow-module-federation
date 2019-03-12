@@ -6,6 +6,7 @@ import OrderCard from './OrderCard';
 import OrderItemCard from './OrderItemCard';
 import OrderProductProviderCard from './OrderProductProviderCard';
 import PartnerCard from './PartnerCard';
+import ProductBatchCard from './ProductBatchCard';
 import ProductCard from './ProductCard';
 import ProductProviderCard from './ProductProviderCard';
 import ShipmentCard from './ShipmentCard';
@@ -17,6 +18,7 @@ import ShipmentContainerBatchCard from './ShipmentContainerBatchCard';
 import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
+import TaskCard from './TaskCard';
 import WarehouseCard from './WarehouseCard';
 import MaskCard from './MaskCard';
 import GrayCard from './GrayCard';
@@ -33,6 +35,7 @@ export {
   OrderItemCard,
   OrderProductProviderCard,
   PartnerCard,
+  ProductBatchCard,
   ProductCard,
   ProductProviderCard,
   ShipmentCard,
@@ -42,6 +45,7 @@ export {
   ShipmentContainerBatchCard,
   StaffCard,
   TagCard,
+  TaskCard,
   WarehouseCard,
   MaskCard,
   GrayCard,

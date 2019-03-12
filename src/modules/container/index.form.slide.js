@@ -26,6 +26,7 @@ const defaultProps = {
   onSave: () => {},
 };
 
+const formContainer = new FormContainer();
 export default class ContainerFormInSlide extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
@@ -44,7 +45,7 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
     const { container, onSave } = this.props;
 
     return (
-      <Provider>
+      <Provider inject={[formContainer]}>
         <Layout
           navBar={
             <NavBar>

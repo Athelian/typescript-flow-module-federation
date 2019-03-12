@@ -188,7 +188,6 @@ const ContainerSection = () => {
                           {values.warehouse ? (
                             <WarehouseCard
                               warehouse={values.warehouse}
-                              selectable
                               readOnly
                               onSelect={() => slideToggle(true)}
                             />
@@ -223,7 +222,7 @@ const ContainerSection = () => {
                   ) : (
                     <>
                       {values.warehouse ? (
-                        <WarehouseCard warehouse={values.warehouse} selectable readOnly />
+                        <WarehouseCard warehouse={values.warehouse} readOnly />
                       ) : (
                         <GrayCard width="195px" height="215px" />
                       )}

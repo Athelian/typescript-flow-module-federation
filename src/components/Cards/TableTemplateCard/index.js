@@ -1,10 +1,9 @@
 // @flow
 import * as React from 'react';
-
 import Icon from 'components/Icon';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
-
 import {
   TableTemplateCardWrapperStyle,
   TableTemplateNameStyle,
@@ -25,7 +24,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  template: ?TableTemplate,
+  template: TableTemplate,
 };
 
 const defaultProps = {
@@ -34,8 +33,6 @@ const defaultProps = {
 };
 
 const TableTemplateCard = ({ template, onClick, actions, ...rest }: Props) => {
-  if (!template) return '';
-
   const { name, memo, fields } = template;
 
   return (
@@ -54,4 +51,9 @@ const TableTemplateCard = ({ template, onClick, actions, ...rest }: Props) => {
 
 TableTemplateCard.defaultProps = defaultProps;
 
-export default TableTemplateCard;
+export default withForbiddenCard(TableTemplateCard, 'template', {
+  width: '195px',
+  height: '140px',
+  entityIcon: 'METADATA',
+  entityColor: 'TEMPLATE',
+});

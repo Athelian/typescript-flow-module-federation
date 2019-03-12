@@ -28,7 +28,7 @@ import {
   UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantitySummary } from 'modules/order/helpers';
-import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
+import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import { PartnerCard, GrayCard } from 'components/Cards';
@@ -265,7 +265,10 @@ const OrderSection = ({ isNew }: Props) => {
                     entityType="Order"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={allowUpdate}
+                    editable={{
+                      values: allowUpdate,
+                      mask: allowUpdate,
+                    }}
                   />
                 </GridColumn>
 
@@ -344,7 +347,7 @@ const OrderSection = ({ isNew }: Props) => {
                   ) : (
                     <>
                       {values.exporter ? (
-                        <PartnerCard partner={values.exporter} />
+                        <PartnerCard partner={values.exporter} readOnly />
                       ) : (
                         <GrayCard width="195px" height="215px" />
                       )}
@@ -372,10 +375,8 @@ const OrderSection = ({ isNew }: Props) => {
                           changeTags(field, value);
                         }}
                         editable={{
-                          set:
-                            hasPermission(TAG_LIST) &&
-                            hasPermission([ORDER_UPDATE, ORDER_SET_TAGS]),
-                          remove: hasPermission([ORDER_UPDATE, ORDER_SET_TAGS]),
+                          set: hasPermission(TAG_LIST) && hasPermission(ORDER_UPDATE),
+                          remove: hasPermission(ORDER_UPDATE),
                         }}
                       />
                     }

@@ -9,6 +9,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
   FieldItem,
   Label,
@@ -50,11 +51,22 @@ type OptionalProps = {
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
   selectable: boolean,
-  editable: Object,
+  editable: {
+    no: boolean,
+    quantity: boolean,
+    deliveredAt: boolean,
+    desiredAt: boolean,
+    removeBatch: boolean,
+    cloneBatch: boolean,
+    viewOrder: boolean,
+    viewProduct: boolean,
+    viewContainer: boolean,
+    getPrice: boolean,
+  },
 };
 
 type Props = OptionalProps & {
-  batch: ?Object,
+  batch: Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -74,6 +86,7 @@ const defaultProps = {
     viewOrder: false,
     viewProduct: false,
     viewContainer: false,
+    getPrice: false,
   },
 };
 
@@ -88,8 +101,6 @@ const ShipmentBatchCard = ({
   editable,
   ...rest
 }: Props) => {
-  if (!batch) return '';
-
   const actions = selectable
     ? []
     : [
@@ -332,7 +343,7 @@ const ShipmentBatchCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!editable.getPrice}>
                   <FormattedNumber
                     value={
                       (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
@@ -440,4 +451,9 @@ const ShipmentBatchCard = ({
 
 ShipmentBatchCard.defaultProps = defaultProps;
 
-export default ShipmentBatchCard;
+export default withForbiddenCard(ShipmentBatchCard, 'batch', {
+  width: '195px',
+  height: '379px',
+  entityIcon: 'BATCH',
+  entityColor: 'BATCH',
+});

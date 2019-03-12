@@ -7,7 +7,6 @@ import PartnerGridView from './PartnerGridView';
 import { partnerListQuery } from './query';
 
 type Props = {
-  viewType: string,
   filterBy: {},
   sortBy: {
     [field: string]: string,
@@ -28,7 +27,7 @@ class PartnerList extends React.Component<Props> {
     const totalPage = getByPathWithDefault(1, `${this.partnerPath}.totalPage`, data);
     if (nextPage > totalPage) return;
 
-    const { viewType, ...filtersAndSort } = this.props;
+    const { ...filtersAndSort } = this.props;
 
     fetchMore({
       variables: {
@@ -71,7 +70,7 @@ class PartnerList extends React.Component<Props> {
   partnerPath: string;
 
   render() {
-    const { viewType, ...filtersAndSort } = this.props;
+    const { ...filtersAndSort } = this.props;
     return (
       <Query
         query={partnerListQuery}

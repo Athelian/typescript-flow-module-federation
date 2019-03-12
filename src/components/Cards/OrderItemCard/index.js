@@ -13,6 +13,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { Label, Display, FieldItem } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -40,10 +41,11 @@ type OptionalProps = {
   onRemove: (item: Object) => void,
   selectable: boolean,
   readOnly: boolean,
+  viewPrice: boolean,
 };
 
 type Props = OptionalProps & {
-  item: ?Object,
+  item: Object,
   currency: string,
   saveOnBlur: Function,
 };
@@ -94,6 +96,7 @@ const defaultProps = {
   onClone: () => {},
   selectable: false,
   readOnly: false,
+  viewPrice: true,
 };
 
 const OrderItemCard = ({
@@ -105,10 +108,9 @@ const OrderItemCard = ({
   selectable,
   readOnly,
   currency,
+  viewPrice,
   ...rest
 }: Props) => {
-  if (!item) return '';
-
   const actions =
     selectable || readOnly
       ? []
@@ -190,6 +192,7 @@ const OrderItemCard = ({
       selectable={selectable}
       showActionsOnHover
       actions={actions}
+      readOnly={readOnly}
       {...rest}
     >
       <div
@@ -260,7 +263,7 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!viewPrice}>
                   <FormattedNumber value={item.price.amount} />{' '}
                   {item.currency || item.price.currency}
                 </Display>
@@ -286,7 +289,7 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                <Display>
+                <Display blackout={!viewPrice}>
                   <FormattedNumber
                     value={item.price.amount * item.quantity}
                     suffix={item.currency || item.price.currency}
@@ -506,4 +509,9 @@ const OrderItemCard = ({
 
 OrderItemCard.defaultProps = defaultProps;
 
-export default OrderItemCard;
+export default withForbiddenCard(OrderItemCard, 'item', {
+  width: '195px',
+  height: '217px',
+  entityIcon: 'ORDER_ITEM',
+  entityColor: 'ORDER_ITEM',
+});

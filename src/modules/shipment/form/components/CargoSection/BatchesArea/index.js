@@ -26,7 +26,11 @@ import {
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
 } from 'modules/permission/constants/batch';
-import { ORDER_FORM, ORDER_ITEMS_LIST } from 'modules/permission/constants/order';
+import {
+  ORDER_FORM,
+  ORDER_ITEMS_LIST,
+  ORDER_ITEMS_GET_PRICE,
+} from 'modules/permission/constants/order';
 import { calculatePackageQuantity } from 'utils/batch';
 import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -86,7 +90,7 @@ function BatchesArea({
           addExistingBatches,
           removeExistingBatches,
         },
-        { state: { containers }, setFieldValue: setContainersState }
+        { state: { containers }, setFieldValue: setContainersState, setDeepFieldValue }
       ) => {
         const usefulBatches = isFocusedBatchesPool ? getBatchesInPool(batches) : [...batches];
         return (
@@ -179,6 +183,7 @@ function BatchesArea({
                               selectable
                               selected={selectedBatches.includes(batch)}
                               onSelect={() => setSelectedBatches(batch)}
+                              editable={{ getPrice: hasPermission(ORDER_ITEMS_GET_PRICE) }}
                             />
                           ) : (
                             <BooleanValue>
@@ -225,11 +230,30 @@ function BatchesArea({
                                       viewOrder: hasPermission(ORDER_FORM),
                                       viewProduct: hasPermission(PRODUCT_FORM),
                                       viewContainer: hasPermission(CONTAINER_FORM),
+                                      getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
                                     }}
                                     batch={batch}
                                     saveOnBlur={updateBatch => {
                                       const indexOfAllBatches = batches.indexOf(batch);
                                       setFieldArrayValue(indexOfAllBatches, updateBatch);
+                                      if (batch.container) {
+                                        const indexOfContainer = containers.findIndex(
+                                          container => container.id === batch.container.id
+                                        );
+                                        if (indexOfContainer >= 0) {
+                                          const indexOfBatch = containers[
+                                            indexOfContainer
+                                          ].batches.findIndex(
+                                            containersBatch => containersBatch.id === batch.id
+                                          );
+                                          if (indexOfBatch >= 0) {
+                                            setDeepFieldValue(
+                                              `containers.${indexOfContainer}.batches.${indexOfBatch}`,
+                                              updateBatch
+                                            );
+                                          }
+                                        }
+                                      }
                                     }}
                                     onClick={() => batchSlideToggle(true)}
                                     onClear={clearedBatch => {
