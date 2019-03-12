@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Provider } from 'unstated';
 import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
@@ -12,12 +13,14 @@ const TaskFormModuleCreationWrapper = withForbidden(TaskFormModuleWrapper, TASK_
 const TaskModuleListWrapper = withForbidden(TaskListModule, TASK_LIST);
 
 const TaskApp = () => (
-  <Router>
-    <TaskModuleListWrapper path="/" />
-    <TaskFormModuleCreationWrapper path="new" />
-    <TaskFormModuleCreationWrapper path="clone/:taskId" />
-    <TaskFormModuleWrapper path=":taskId" />
-  </Router>
+  <Provider>
+    <Router>
+      <TaskModuleListWrapper path="/" />
+      <TaskFormModuleCreationWrapper path="new" />
+      <TaskFormModuleCreationWrapper path="clone/:taskId" />
+      <TaskFormModuleWrapper path=":taskId" />
+    </Router>
+  </Provider>
 );
 
 export default TaskApp;
