@@ -5,7 +5,7 @@ import { Provider } from 'unstated';
 import { IntlProvider } from 'react-intl';
 import { ObjectValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
-import { ToggleInput, Label } from 'components/Form';
+import { Label } from 'components/Form';
 import { TaskCard } from 'components/Cards';
 
 storiesOf('Card', module).add('Task Card', () => (
@@ -24,17 +24,42 @@ storiesOf('Card', module).add('Task Card', () => (
               name: 'Task name',
               dueDate: null,
               startDate: null,
-              tags: [],
+              assignedTo: [
+                { id: '3', firstName: 'Kevin', lastName: 'Nguyen' },
+                { id: '4', firstName: 'Kevin', lastName: 'Nguyen' },
+                { id: '5', firstName: 'Kevin', lastName: 'Nguyen' },
+                { id: '6', firstName: 'Kevin', lastName: 'Nguyen' },
+              ],
+              tags: [{ id: '7', name: 'tag', color: '#cccccc' }],
             },
-            editable: true,
           }}
         >
-          {({ value: { task, editable }, set }) => (
+          {({ value: { task } }) => (
             <>
-              <TaskCard task={task} editable={editable} position={1} />
-              <ToggleInput toggled={editable} onToggle={() => set('editable', !editable)}>
-                <Label>EDITABLE</Label>
-              </ToggleInput>
+              <Label>EDITABLE DEFAULT</Label>
+              <TaskCard task={task} editable position={1} />
+              <Label>EDITABLE IN PROGRESS</Label>
+              <TaskCard
+                task={{
+                  ...task,
+                  inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
+                }}
+                editable
+                position={1}
+              />
+              <Label>EDITABLE COMPLETE</Label>
+              <TaskCard
+                task={{
+                  ...task,
+                  inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
+                  completedBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
+                  completedAt: '2019-01-01',
+                }}
+                editable
+                position={1}
+              />
+              <Label>READ ONLY</Label>
+              <TaskCard task={task} editable={false} position={1} />
             </>
           )}
         </ObjectValue>

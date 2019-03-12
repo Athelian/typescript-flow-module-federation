@@ -4,9 +4,10 @@ import { layout, colors, presets, borderRadiuses, fontSizes } from 'styles/commo
 
 export const TaskCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
+  grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: 195px;
+  height: 184px;
   padding: 5px 0 10px 0;
 `;
 
@@ -49,6 +50,19 @@ export const TaskPositionWrapperStyle: string = css`
   font-weight: bold;
 `;
 
+export const DragButtonWrapperStyle: string = css`
+  ${presets.BUTTON};
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: ${colors.GRAY_LIGHT};
+  ${fontSizes.SMALL};
+  &:hover,
+  :focus {
+    color: ${colors.BLUE};
+  }
+`;
+
 export const DateInputWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 65px 120px;
@@ -60,6 +74,12 @@ export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
   margin: 0 10px;
+`;
+
+export const TaskStatusWrapperStyle: string = css`
+  height: 40px;
+  width: 195px;
+  padding: 0 10px;
 `;
 
 export const TaskTagsWrapperStyle: string = css`

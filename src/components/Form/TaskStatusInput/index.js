@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
+import FormattedDate from 'components/FormattedDate';
 import { type UserAvatarType } from 'types';
 import { IN_PROGRESS, COMPLETED } from './constants';
 import {
@@ -11,6 +12,7 @@ import {
   UserAvatarWrapperStyle,
   DeactivateButtonStyle,
   TaskStatusInputLabelStyle,
+  StatusLabelStyle,
 } from './style';
 
 export type TaskStatusType = typeof IN_PROGRESS | typeof COMPLETED;
@@ -22,6 +24,8 @@ type OptionalProps = {
   onClickUser: () => void,
   status: TaskStatusType,
   onClick: () => void,
+  showCompletedDate: boolean,
+  completedDate: ?string,
   editable: boolean,
 };
 
@@ -37,6 +41,7 @@ const defaultProps = {
   onClickUser: () => {},
   status: IN_PROGRESS,
   onClick: () => {},
+  showCompletedDate: false,
   editable: false,
 };
 
@@ -47,52 +52,54 @@ const TaskStatusInput = ({
   onClickUser,
   status,
   onClick,
+  showCompletedDate,
+  completedDate,
   editable,
 }: Props) => {
   const isInProgress = status === IN_PROGRESS;
 
   return (
     <BooleanValue>
-      {({ value: isHovered, set: changeHoverState }) => {
-        return (
-          <button
-            className={TaskStatusInputWrapperStyle({ status, editable, width })}
-            onMouseEnter={() => {
-              if (editable) {
-                changeHoverState(true);
-              }
-            }}
-            onMouseLeave={() => {
-              if (editable) {
-                changeHoverState(false);
-              }
-            }}
-            onClick={() => {
-              if (editable) {
-                onClick();
-              }
-            }}
-            type="button"
-          >
-            {showActiveUser && (
-              <div className={UserAvatarWrapperStyle}>
-                <UserAvatar firstName={firstName} lastName={lastName} />
-                {editable && (
-                  <button
-                    className={DeactivateButtonStyle}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                      onClickUser();
-                    }}
-                    type="button"
-                  >
-                    <Icon icon="CLEAR" />
-                  </button>
-                )}
-              </div>
-            )}
+      {({ value: isHovered, set: changeHoverState }) => (
+        <button
+          className={TaskStatusInputWrapperStyle({ status, editable, width })}
+          onMouseEnter={() => {
+            if (editable) {
+              changeHoverState(true);
+            }
+          }}
+          onMouseLeave={() => {
+            if (editable) {
+              changeHoverState(false);
+            }
+          }}
+          onClick={() => {
+            if (editable) {
+              onClick();
+            }
+          }}
+          type="button"
+        >
+          {showActiveUser && (
+            <div className={UserAvatarWrapperStyle}>
+              <UserAvatar firstName={firstName} lastName={lastName} />
+              {editable && (
+                <button
+                  className={DeactivateButtonStyle}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                    onClickUser();
+                  }}
+                  type="button"
+                >
+                  <Icon icon="CLEAR" />
+                </button>
+              )}
+            </div>
+          )}
 
-            <div className={TaskStatusInputLabelStyle}>
+          <div className={TaskStatusInputLabelStyle}>
+            <div className={StatusLabelStyle}>
               {isInProgress ? (
                 <>
                   {isHovered ? (
@@ -109,10 +116,16 @@ const TaskStatusInput = ({
               )}
             </div>
 
-            <Icon icon={isInProgress ? 'CLOCK' : 'CHECKED'} />
-          </button>
-        );
-      }}
+            {!isInProgress && showCompletedDate && (
+              <div className={StatusLabelStyle}>
+                <FormattedDate value={completedDate} />
+              </div>
+            )}
+          </div>
+
+          <Icon icon={isInProgress ? 'CLOCK' : 'CHECKED'} />
+        </button>
+      )}
     </BooleanValue>
   );
 };

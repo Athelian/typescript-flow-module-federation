@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
@@ -8,7 +9,15 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
-import { Label, Display, TextInputFactory, DateInputFactory } from 'components/Form';
+import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
+import {
+  Label,
+  Display,
+  TextInputFactory,
+  DateInputFactory,
+  TaskAssignmentInput,
+  TaskStatusInput,
+} from 'components/Form';
 import BaseCard from '../BaseCard';
 import validator from './validator';
 import {
@@ -17,8 +26,10 @@ import {
   TaskParentIconStyle,
   TaskNameWrapperStyle,
   TaskPositionWrapperStyle,
+  DragButtonWrapperStyle,
   DateInputWrapperStyle,
   DividerStyle,
+  TaskStatusWrapperStyle,
   TaskTagsWrapperStyle,
 } from './style';
 
@@ -85,7 +96,18 @@ const TaskCard = ({
   actions,
   ...rest
 }: Props) => {
-  const { id, entity: parent, name, dueDate, startDate, tags } = task;
+  const {
+    id,
+    entity: parent,
+    name,
+    dueDate,
+    startDate,
+    assignedTo,
+    inProgressBy,
+    completedBy,
+    completedAt,
+    tags,
+  } = task;
 
   const validation = validator({
     name: `task.${id}.name`,
@@ -106,107 +128,148 @@ const TaskCard = ({
       readOnly={!editable}
       {...rest}
     >
-      <div className={TaskCardWrapperStyle} onClick={onClick} role="presentation">
-        <div className={TaskParentWrapperStyle}>
-          {viewPermissions[parentType] ? (
-            <Link
-              className={TaskParentIconStyle}
-              to={`/${parentType}/${encodeId(parent.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon={parentIcon} />
-            </Link>
-          ) : (
-            <div className={TaskParentIconStyle}>
-              <Icon icon={parentIcon} />
-            </div>
-          )}
-          <Display align="left">{parentData}</Display>
-        </div>
-
-        <div
-          className={TaskNameWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
-          <div className={TaskPositionWrapperStyle}>
-            <FormattedNumber value={position} />
-          </div>
-          <FormField
-            name={`task.${id}.name`}
-            initValue={name}
-            validator={validation}
-            values={values}
+      <BooleanValue>
+        {({ value: isHovered, set: changeHoverState }) => (
+          <div
+            className={TaskCardWrapperStyle}
+            onClick={onClick}
+            onMouseEnter={() => {
+              if (editable) {
+                changeHoverState(true);
+              }
+            }}
+            onMouseLeave={() => {
+              if (editable) {
+                changeHoverState(false);
+              }
+            }}
+            role="presentation"
           >
-            {({ name: fieldName, ...inputHandlers }) => (
-              <TextInputFactory
-                {...inputHandlers}
-                editable={editable}
-                inputWidth="185px"
-                inputHeight="20px"
-                inputAlign="left"
-                name={fieldName}
-                isNew={false}
-                originalValue={name}
-              />
-            )}
-          </FormField>
-        </div>
+            <div className={TaskParentWrapperStyle}>
+              {viewPermissions[parentType] ? (
+                <Link
+                  className={TaskParentIconStyle}
+                  to={`/${parentType}/${encodeId(parent.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon={parentIcon} />
+                </Link>
+              ) : (
+                <div className={TaskParentIconStyle}>
+                  <Icon icon={parentIcon} />
+                </div>
+              )}
+              <Display align="left">{parentData}</Display>
+            </div>
 
-        <div
-          className={DateInputWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
-          <Label>
-            <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
-          </Label>
-          <FormField name={`task.${id}.dueDate`} initValue={dueDate}>
-            {({ name: fieldName, ...inputHandlers }) => (
-              <DateInputFactory
-                {...inputHandlers}
-                editable={editable}
-                inputWidth="120px"
-                inputHeight="20px"
-                name={fieldName}
-                isNew={false}
-                originalValue={dueDate}
-              />
-            )}
-          </FormField>
-        </div>
+            <div
+              className={TaskNameWrapperStyle}
+              onClick={evt => evt.stopPropagation()}
+              role="presentation"
+            >
+              {editable && isHovered ? (
+                <button className={DragButtonWrapperStyle} type="button">
+                  <Icon icon="DRAG_HANDLE" />
+                </button>
+              ) : (
+                <div className={TaskPositionWrapperStyle}>
+                  <FormattedNumber value={position} />
+                </div>
+              )}
 
-        <div
-          className={DateInputWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
-          <Label>
-            <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
-          </Label>
-          <FormField name={`task.${id}.startDate`} initValue={startDate}>
-            {({ name: fieldName, ...inputHandlers }) => (
-              <DateInputFactory
-                {...inputHandlers}
-                editable={editable}
-                inputWidth="120px"
-                inputHeight="20px"
-                name={fieldName}
-                isNew={false}
-                originalValue={startDate}
-              />
-            )}
-          </FormField>
-        </div>
+              <FormField
+                name={`task.${id}.name`}
+                initValue={name}
+                validator={validation}
+                values={values}
+              >
+                {({ name: fieldName, ...inputHandlers }) => (
+                  <TextInputFactory
+                    {...inputHandlers}
+                    editable={editable}
+                    inputWidth="185px"
+                    inputHeight="20px"
+                    inputAlign="left"
+                    name={fieldName}
+                    isNew={false}
+                    originalValue={name}
+                  />
+                )}
+              </FormField>
+            </div>
 
-        <div className={DividerStyle} />
+            <div
+              className={DateInputWrapperStyle}
+              onClick={evt => evt.stopPropagation()}
+              role="presentation"
+            >
+              <Label>
+                <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
+              </Label>
+              <FormField name={`task.${id}.dueDate`} initValue={dueDate}>
+                {({ name: fieldName, ...inputHandlers }) => (
+                  <DateInputFactory
+                    {...inputHandlers}
+                    editable={editable}
+                    inputWidth="120px"
+                    inputHeight="20px"
+                    name={fieldName}
+                    isNew={false}
+                    originalValue={dueDate}
+                  />
+                )}
+              </FormField>
+            </div>
 
-        <div className={TaskTagsWrapperStyle}>
-          {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-        </div>
-      </div>
+            <div
+              className={DateInputWrapperStyle}
+              onClick={evt => evt.stopPropagation()}
+              role="presentation"
+            >
+              <Label>
+                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
+              </Label>
+              <FormField name={`task.${id}.startDate`} initValue={startDate}>
+                {({ name: fieldName, ...inputHandlers }) => (
+                  <DateInputFactory
+                    {...inputHandlers}
+                    editable={editable}
+                    inputWidth="120px"
+                    inputHeight="20px"
+                    name={fieldName}
+                    isNew={false}
+                    originalValue={startDate}
+                  />
+                )}
+              </FormField>
+            </div>
+
+            <div className={DividerStyle} />
+
+            <div className={TaskStatusWrapperStyle}>
+              {inProgressBy || completedBy ? (
+                <TaskStatusInput
+                  width="175px"
+                  activeUser={inProgressBy}
+                  showActiveUser
+                  status={completedBy ? COMPLETED : IN_PROGRESS}
+                  showCompletedDate
+                  completedDate={completedAt}
+                  editable={editable}
+                />
+              ) : (
+                <TaskAssignmentInput users={assignedTo} editable={editable} />
+              )}
+            </div>
+
+            <div className={TaskTagsWrapperStyle}>
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+          </div>
+        )}
+      </BooleanValue>
     </BaseCard>
   );
 };
@@ -215,7 +278,7 @@ TaskCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TaskCard, 'task', {
   width: '195px',
-  height: '195px',
+  height: '184px',
   entityIcon: 'TASK',
   entityColor: 'TASK',
 });
