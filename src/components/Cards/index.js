@@ -23,7 +23,6 @@ import WarehouseCard from './WarehouseCard';
 import MaskCard from './MaskCard';
 import GrayCard from './GrayCard';
 import TableTemplateCard from './TableTemplateCard';
-import TaskCard from './TaskCard';
 
 export default BaseCard;
 
@@ -53,5 +52,4 @@ export {
   TableTemplateCard,
   ContainerBatchCard,
   ContainerCard,
-  TaskCard,
 };

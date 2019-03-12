@@ -314,6 +314,10 @@ export default defineMessages({
     id: 'modules.Shipments.newBatch',
     defaultMessage: 'NEW BATCH',
   },
+  newTask: {
+    id: 'modules.Shipments.newTask',
+    defaultMessage: 'NEW TASK',
+  },
   insurance: {
     id: 'modules.Shipments.insurance',
     defaultMessage: 'INSURANCE',
