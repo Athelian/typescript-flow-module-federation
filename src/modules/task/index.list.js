@@ -1,16 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { TASK_CREATE } from 'modules/permission/constants/task';
-import usePermission from 'hooks/usePermission';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
 import TaskList from './list';
 import messages from './messages';
 
@@ -45,8 +41,6 @@ const TaskModule = (props: Props) => {
     getInitFilter(),
     'filterTask'
   );
-  const { hasPermission } = usePermission();
-  const allowCreate = hasPermission(TASK_CREATE);
   return (
     <UIConsumer>
       {uiState => (
@@ -60,11 +54,6 @@ const TaskModule = (props: Props) => {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
-              {allowCreate && (
-                <Link to="new">
-                  <NewButton />
-                </Link>
-              )}
             </NavBar>
           }
         >
