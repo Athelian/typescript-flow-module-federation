@@ -102,7 +102,6 @@ import {
   faFilePdf as PDF,
   faFilePowerpoint as POWER_POINT,
   faFileWord as WORD,
-  faClipboardCheck as ORDER_SELECT,
   faLink as CONNECT,
   faBezierCurve as SPLIT,
   faBezierCurve as ENTITY,
@@ -141,7 +140,7 @@ import {
 
 export default {
   ORDER,
-  ORDER_SELECT,
+  TASK,
   BATCH,
   SHIPMENT,
   CONTAINER,

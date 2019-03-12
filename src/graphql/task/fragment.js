@@ -1,12 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const taskFormFragment = gql`
-  fragment taskFormFragment on Task {
-    id
-  }
-`;
-
 export const taskCardFragment = gql`
   fragment taskCardFragment on Task {
     id
@@ -40,6 +34,44 @@ export const taskCardFragment = gql`
     completedAt
     tags {
       ...tagFragment
+    }
+  }
+`;
+export const taskFormFragment = gql`
+  fragment taskFormFragment on Task {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    name
+    dueDate
+    startDate
+    inProgressAt
+    inProgressBy {
+      ...userAvatarFragment
+    }
+    completedAt
+    completedBy {
+      ...userAvatarFragment
+    }
+    assignedTo {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    memo
+    entity {
+      ... on Order {
+        ...orderCardFragment
+      }
+      ... on Batch {
+        ...batchCardFragment
+      }
+      ... on Shipment {
+        ...shipmentCardFragment
+      }
     }
   }
 `;

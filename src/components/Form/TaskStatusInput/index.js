@@ -25,11 +25,11 @@ type OptionalProps = {
   status: TaskStatusType,
   onClick: () => void,
   showCompletedDate: boolean,
-  completedDate: ?string,
+  completedDate?: string,
   editable: boolean,
 };
 
-type Props = OptionalProps;
+type Props = OptionalProps & {};
 
 const defaultProps = {
   width: '200px',
