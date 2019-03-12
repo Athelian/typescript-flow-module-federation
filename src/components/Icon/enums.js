@@ -81,6 +81,7 @@ import {
   faEye as VISIBLE,
   faEyeSlash as INVISIBLE,
   faRedo as RELOAD,
+  faClock as CLOCK,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -233,6 +234,7 @@ export default {
   VISIBLE,
   INVISIBLE,
   RELOAD,
+  CLOCK,
 
   TIMELINE,
   CARGO_READY,
