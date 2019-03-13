@@ -32,8 +32,6 @@ type OptionalProps = {
 type Props = OptionalProps & {};
 
 export default class TaskFormModule extends React.Component<Props> {
-  some = () => {};
-
   isNew = () => {
     const { path } = this.props;
     return path.startsWith('new');
@@ -77,13 +75,7 @@ export default class TaskFormModule extends React.Component<Props> {
         onSuccess();
       }
     } else if (taskId) {
-      // const { data } = await saveTask({ variables: { input, id: decodeId(taskId) } })
-      const { data } = await saveTask({
-        variables: {
-          input,
-          id: 'bi2uumovsbn1ria9rigg',
-        },
-      });
+      const { data } = await saveTask({ variables: { input, id: decodeId(taskId) } });
       const {
         taskUpdate: { violations },
       } = data;
@@ -177,7 +169,7 @@ export default class TaskFormModule extends React.Component<Props> {
                         {taskId ? (
                           <QueryForm
                             query={taskFormQuery}
-                            entityId={encodeId('bi2uumovsbn1ria9rigg')}
+                            entityId={taskId}
                             entityType="task"
                             render={task => (
                               <TaskForm task={task} onFormReady={() => initDetailValues(task)} />
