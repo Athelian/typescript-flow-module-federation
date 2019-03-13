@@ -18,12 +18,9 @@ type FormState = {
 };
 
 const initValues = {
-  name: '',
   dueDate: '',
   startDate: '',
-  // description: '',
   tags: [],
-  memo: '',
   assignedTo: [],
 };
 
