@@ -17,7 +17,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SyncButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import { FormField, FormContainer } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import {

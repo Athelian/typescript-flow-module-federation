@@ -43,7 +43,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';

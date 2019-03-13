@@ -7,18 +7,19 @@ import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader } from 'components/Form';
+import { SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
 import { ShipmentTasksContainer, ShipmentInfoContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
-import messages from 'modules/shipment/messages';
+import messages from 'modules/task/messages';
 import { TasksSectionWrapperStyle, TasksSectionBodyStyle } from './style';
-import ShipmentTasks from './components/ShipmentTasks';
+import Tasks from './components/Tasks';
 
 type Props = {
   intl: IntlShape,
-  type: string,
 };
 
-function TaskSection({ intl, type }: Props) {
+function ShipmentTaskSection({ intl }: Props) {
+  const type = 'Shipment';
   return (
     <Subscribe to={[ShipmentInfoContainer, ShipmentTasksContainer, FormContainer]}>
       {(
@@ -26,13 +27,12 @@ function TaskSection({ intl, type }: Props) {
         { state: { tasks }, setFieldValue, setFieldArrayValue },
         { setFieldTouched }
       ) => (
-        <SectionWrapper id="shipment_taskSection">
+        <SectionWrapper id={`${type.toLowerCase()}_taskSection`}>
           <SectionHeader
             icon="TASK"
             title={
               <>
-                <FormattedMessage id="modules.Shipments.task" defaultMessage="TASK" /> (
-                {tasks.length})
+                <FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" /> ({tasks.length})
               </>
             }
           />
@@ -59,7 +59,8 @@ function TaskSection({ intl, type }: Props) {
               />
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
-              <ShipmentTasks
+              <Tasks
+                checkPermission={SHIPMENT_UPDATE}
                 tasks={tasks}
                 onRemove={({ id }) => {
                   setFieldValue('tasks', tasks.filter(({ id: itemId }) => id !== itemId));
@@ -78,4 +79,4 @@ function TaskSection({ intl, type }: Props) {
   );
 }
 
-export default injectIntl(TaskSection);
+export default injectIntl(ShipmentTaskSection);

@@ -26,4 +26,8 @@ export default defineMessages({
     id: 'modules.Tasks.noTasks',
     defaultMessage: 'No tasks found.',
   },
+  newTask: {
+    id: 'modules.Tasks.newTask',
+    defaultMessage: 'NEW TASK',
+  },
 });

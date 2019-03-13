@@ -39,7 +39,7 @@ import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,

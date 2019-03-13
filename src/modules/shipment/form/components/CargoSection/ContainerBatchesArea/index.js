@@ -42,7 +42,7 @@ import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
