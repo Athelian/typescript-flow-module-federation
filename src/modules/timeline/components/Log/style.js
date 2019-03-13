@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, layout, fontSizes } from 'styles/common';
+import { colors, layout, fontSizes, fontSizesWithHeights } from 'styles/common';
 
 export const LogWrapperStyle = css`
   ${layout.HORIZONTAL};
@@ -17,7 +17,8 @@ export const TimeStyle = css`
 `;
 
 export const LogStyle = css`
-  ${fontSizes.MAIN};
+  ${fontSizesWithHeights.MAIN};
   font-weight: 600;
-  color: ${colors.BLACK};
+  color: ${colors.GRAY_DARK};
+  flex: 1;
 `;

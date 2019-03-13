@@ -38,6 +38,11 @@ export const commentFragment = gql`
 export const eventFragment = gql`
   fragment eventFragment on Event {
     id
+    entity {
+      ... on Model {
+        id
+      }
+    }
     createdBy {
       ... on User {
         id

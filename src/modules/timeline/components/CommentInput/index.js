@@ -2,10 +2,12 @@
 import * as React from 'react';
 import { StringValue } from 'react-values';
 import { Mutation } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import Icon from 'components/Icon';
 import { commentCreateMutation } from '../../mutation';
-import { ButtonStyle, InputWrapperStyle } from './style';
+import messages from '../../messages';
+import { ButtonStyle, HeaderWrapperStyle, InputWrapperStyle, TitleStyle } from './style';
 
 type Props = {
   entity: Object,
@@ -25,6 +27,33 @@ const CommentInput = ({ entity }: Props) => {
         >
           {(addComment, { loading }) => (
             <div className={InputWrapperStyle}>
+              <div className={HeaderWrapperStyle}>
+                <span className={TitleStyle}>
+                  <FormattedMessage {...messages.message} />
+                </span>
+                <button
+                  className={ButtonStyle}
+                  type="button"
+                  disabled={loading}
+                  onClick={() => {
+                    const content = value.trim();
+                    if (content === '') {
+                      return;
+                    }
+
+                    addComment({
+                      variables: {
+                        input: {
+                          content,
+                          entity,
+                        },
+                      },
+                    });
+                  }}
+                >
+                  <Icon icon="PAPER_PLANE" />
+                </button>
+              </div>
               <DefaultStyle type="textarea" isFocused={focused} forceHoverStyle height="90px">
                 <TextAreaInput
                   align="left"
@@ -35,28 +64,6 @@ const CommentInput = ({ entity }: Props) => {
                   onBlur={() => setFocused(false)}
                 />
               </DefaultStyle>
-              <button
-                className={ButtonStyle}
-                type="button"
-                disabled={loading}
-                onClick={() => {
-                  const content = value.trim();
-                  if (content === '') {
-                    return;
-                  }
-
-                  addComment({
-                    variables: {
-                      input: {
-                        content,
-                        entity,
-                      },
-                    },
-                  });
-                }}
-              >
-                <Icon icon="ARROW_RIGHT" />
-              </button>
             </div>
           )}
         </Mutation>

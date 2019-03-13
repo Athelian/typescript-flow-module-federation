@@ -1,41 +1,43 @@
-/* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this,no-underscore-dangle */
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import pluralize from 'pluralize';
 import { camelCase } from 'lodash/fp';
 import User from './components/User';
-import { UPDATE_FIELD } from './contants';
-import { NewValueStyle, OldValueStyle } from './style';
+import type { LogItem } from './components/Log';
+import { ARCHIVED, UNARCHIVED, UPDATE_FIELD } from './contants';
+import { FieldStyle, ValueStyle } from './style';
 import messages from './messages';
 
 export interface LogFormatter {
-  format(
-    translationKey: string,
-    parameters: { [key: string]: any },
-    entity: Object,
-    user: Object
-  ): any;
+  format(log: LogItem): any;
   support(translationKey: string): boolean;
 }
 
 export class DefaultUpdateFormatter implements LogFormatter {
-  format(translationKey: string, parameters: { [p: string]: * }, entity: Object, user: Object): * {
+  format(log: LogItem): * {
     const module =
-      parameters.entity_type.charAt(0).toUpperCase() + pluralize(parameters.entity_type).slice(1);
-    const fieldName = camelCase(parameters.field);
+      log.parameters.entity_type.charAt(0).toUpperCase() +
+      pluralize(log.parameters.entity_type).slice(1);
+    const fieldName = camelCase(log.parameters.field);
 
-    if (parameters.old !== null) {
+    if (log.parameters.old !== null) {
       return (
         <FormattedMessage
           {...messages.updateField}
           values={{
-            user: <User user={user} />,
+            user: <User user={log.createdBy} />,
             field: (
-              <FormattedMessage id={`modules.${module}.${fieldName}`} defaultMessage={fieldName} />
+              <span className={FieldStyle}>
+                <FormattedMessage
+                  id={`modules.${module}.${fieldName}`}
+                  defaultMessage={fieldName}
+                />
+              </span>
             ),
-            oldValue: <span className={OldValueStyle}>{parameters.old}</span>,
-            newValue: <span className={NewValueStyle}>{parameters.new}</span>,
+            oldValue: <span className={ValueStyle}>{log.parameters.old}</span>,
+            newValue: <span className={ValueStyle}>{log.parameters.new}</span>,
           }}
         />
       );
@@ -45,11 +47,13 @@ export class DefaultUpdateFormatter implements LogFormatter {
       <FormattedMessage
         {...messages.setField}
         values={{
-          user: <User user={user} />,
+          user: <User user={log.createdBy} />,
           field: (
-            <FormattedMessage id={`modules.${module}.${fieldName}`} defaultMessage={fieldName} />
+            <span className={FieldStyle}>
+              <FormattedMessage id={`modules.${module}.${fieldName}`} defaultMessage={fieldName} />
+            </span>
           ),
-          value: <span className={NewValueStyle}>{parameters.new}</span>,
+          value: <span className={ValueStyle}>{log.parameters.new}</span>,
         }}
       />
     );
@@ -60,6 +64,52 @@ export class DefaultUpdateFormatter implements LogFormatter {
   }
 }
 
-const DefaultFormatters = [new DefaultUpdateFormatter()];
+export class DefaultArchivedFormatter implements LogFormatter {
+  format(log: LogItem): * {
+    const entityType =
+      log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
+
+    return (
+      <FormattedMessage
+        {...messages.archived}
+        values={{
+          user: <User user={log.createdBy} />,
+          entityType: <FormattedMessage {...messages[entityType]} />,
+        }}
+      />
+    );
+  }
+
+  support(translationKey: string): boolean {
+    return translationKey === ARCHIVED;
+  }
+}
+
+export class DefaultUnarchivedFormatter implements LogFormatter {
+  format(log: LogItem): * {
+    const entityType =
+      log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
+
+    return (
+      <FormattedMessage
+        {...messages.unarchived}
+        values={{
+          user: <User user={log.createdBy} />,
+          entityType: <FormattedMessage {...messages[entityType]} />,
+        }}
+      />
+    );
+  }
+
+  support(translationKey: string): boolean {
+    return translationKey === UNARCHIVED;
+  }
+}
+
+const DefaultFormatters = [
+  new DefaultUpdateFormatter(),
+  new DefaultArchivedFormatter(),
+  new DefaultUnarchivedFormatter(),
+];
 
 export default DefaultFormatters;

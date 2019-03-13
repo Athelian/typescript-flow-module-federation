@@ -12,6 +12,11 @@ export type LogItem = {
     [key: string]: any,
   },
   entity: {
+    __typename: string,
+    id: string,
+  },
+  parentEntity: {
+    __typename: string,
     id: string,
   },
   createdAt: Date,
@@ -34,11 +39,7 @@ const Log = ({ log, formatters }: Props) => {
         <FormattedTime value={log.createdAt} />
       </span>
 
-      <span className={LogStyle}>
-        {formatter
-          ? formatter.format(log.translationKey, log.parameters, log.entity, log.createdBy)
-          : log.translationKey}
-      </span>
+      <span className={LogStyle}>{formatter ? formatter.format(log) : log.translationKey}</span>
     </div>
   );
 };

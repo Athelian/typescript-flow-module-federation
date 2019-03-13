@@ -1,5 +1,6 @@
 // @flow
 import isSameDay from 'date-fns/isSameDay';
+import { uuid } from 'utils/id';
 import type { LogItem } from '../Log';
 import type { CommentItem } from '../Comment';
 import type { DateItem } from '../DateSeparator';
@@ -56,6 +57,7 @@ export const normalizeEntries = (entries: Array<Object>): Array<Entry> =>
         normalizedEntries.push(
           ...entry.logs.map(({ parameters, ...log }) => ({
             ...log,
+            parentEntity: entry.entity,
             parameters: normalizeParameters(parameters),
             createdAt: new Date(entry.createdAt),
             createdBy: entry.createdBy,
@@ -87,6 +89,7 @@ export const decorateEntries = (entries: Array<Entry>): Array<DecorateEntry> =>
       if (index === 0 || (index > 0 && !isSameDay(entry.createdAt, array[index - 1].createdAt))) {
         items.push({
           __typename: 'DateSeparator',
+          id: uuid(),
           date: entry.createdAt,
         });
       }
