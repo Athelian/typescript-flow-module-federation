@@ -1,9 +1,13 @@
 // @flow
 import * as React from 'react';
+import { Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import scrollIntoView from 'utils/scrollIntoView';
+import SlideView from 'components/SlideView';
+import TaskFormWrapper from 'modules/task/common/TaskFormWrapper';
+import TaskContainer from 'modules/task/form/container';
 import { TaskCard, CardAction } from 'components/Cards';
 import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
@@ -22,20 +26,44 @@ const Tasks = ({ tasks, onRemove, onSave, checkPermission }: Props) => {
     <div className={ItemGridStyle}>
       {tasks.map((task, index) => (
         <div id={`task_${task.id}`} className={ItemStyle} key={task.id}>
-          <TaskCard
-            editable={allowUpdate}
-            task={task}
-            position={index + 1}
-            saveOnBlur={newValue => onSave(index, newValue)}
-            onClick={() => {
-              // TODO: migrate to task form later
-              scrollIntoView({
-                targetId: `shipmentTask_${task.id}`,
-                boundaryId: 'tasksSection',
-              });
-            }}
-            actions={[<CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />]}
-          />
+          <BooleanValue>
+            {({ value: opened, set: selectTaskSlideToggle }) => (
+              <>
+                <TaskCard
+                  editable={allowUpdate}
+                  task={task}
+                  position={index + 1}
+                  saveOnBlur={newValue => onSave(index, newValue)}
+                  onClick={() => selectTaskSlideToggle(true)}
+                  actions={[
+                    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />,
+                  ]}
+                />
+                <SlideView
+                  isOpen={opened}
+                  onRequestClose={() => selectTaskSlideToggle(false)}
+                  options={{ width: '1030px' }}
+                >
+                  {opened && (
+                    <Subscribe to={[TaskContainer]}>
+                      {({ initDetailValues }) => (
+                        <TaskFormWrapper
+                          initDetailValues={initDetailValues}
+                          task={task}
+                          isNew={!!task.isNew}
+                          onCancel={() => selectTaskSlideToggle(false)}
+                          onSave={newValue => {
+                            selectTaskSlideToggle(false);
+                            onSave(index, newValue);
+                          }}
+                        />
+                      )}
+                    </Subscribe>
+                  )}
+                </SlideView>
+              </>
+            )}
+          </BooleanValue>
         </div>
       ))}
     </div>
