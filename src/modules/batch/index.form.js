@@ -20,7 +20,6 @@ import validator from './form/validator';
 import { batchFormQuery } from './form/query';
 import {
   createBatchMutation,
-  prepareCreateBatchInput,
   updateBatchMutation,
   prepareParsedUpdateBatchInput,
 } from './form/mutation';
@@ -81,14 +80,12 @@ class BatchFormModule extends React.PureComponent<Props> {
     const { batchId } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
-    const input = isNewOrClone
-      ? prepareCreateBatchInput(formData)
-      : prepareParsedUpdateBatchInput(originalValues, formData, {
-          inShipmentForm: false,
-          inOrderForm: false,
-          inContainerForm: false,
-          inBatchForm: true,
-        });
+    const input = prepareParsedUpdateBatchInput(originalValues, formData, {
+      inShipmentForm: false,
+      inOrderForm: false,
+      inContainerForm: false,
+      inBatchForm: true,
+    });
 
     if (isNewOrClone) {
       const { data } = await saveBatch({ variables: { input } });

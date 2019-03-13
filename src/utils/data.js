@@ -379,6 +379,11 @@ export const parseTasksField = (
             ),
             ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldTask), newTask.memo),
             // ...parseMemoField('description', getByPathWithDefault(null, 'description', oldTask), newTask.description),
+            ...parseArrayOfIdsField(
+              'tagIds',
+              getByPathWithDefault(null, 'tags', oldTask),
+              newTask.tags
+            ),
           };
         }
       ),
