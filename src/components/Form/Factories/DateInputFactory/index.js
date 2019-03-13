@@ -54,6 +54,7 @@ const DateInputFactory = ({
   forceHoverStyle,
   inputWidth,
   inputHeight,
+  color,
   value,
   name,
   placeholder,
@@ -97,6 +98,11 @@ const DateInputFactory = ({
     align: inputAlign,
     readOnly: !editable,
     required,
+    ...(color
+      ? {
+          color,
+        }
+      : {}),
   };
 
   const blackoutConfig = {

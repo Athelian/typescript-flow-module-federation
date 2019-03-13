@@ -20,6 +20,7 @@ const DateInput = ({
   readOnlyWidth,
   readOnlyHeight,
   placeholder,
+  color,
   ...rest
 }: Props) => {
   return readOnly ? (
@@ -29,7 +30,7 @@ const DateInput = ({
   ) : (
     <input
       value={value ? formatToDateInput(value) : ''}
-      style={{ textAlign: align }}
+      style={{ textAlign: align, color }}
       placeholder={
         isNullOrUndefined(placeholder)
           ? intl.formatMessage(messages.defaultPlaceholder)

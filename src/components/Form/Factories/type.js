@@ -33,4 +33,5 @@ export type InputProps = {
   onFocus?: ?Function,
   inputAlign?: 'left' | 'right' | 'center',
   readOnly?: boolean,
+  color?: string,
 };

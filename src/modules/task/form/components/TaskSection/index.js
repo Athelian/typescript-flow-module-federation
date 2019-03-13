@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { isBefore } from 'date-fns';
 import { getByPath } from 'utils/fp';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
 import {
@@ -149,6 +150,11 @@ const TaskSection = ({ task }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         name={name}
+                        inputColor={
+                          isBefore(new Date(values.dueDate), new Date()) && status !== COMPLETED
+                            ? 'red'
+                            : null
+                        }
                         {...inputHandlers}
                         originalValue={originalValues[name]}
                         label={
