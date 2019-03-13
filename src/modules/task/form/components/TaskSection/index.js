@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
@@ -19,11 +18,9 @@ import {
   DefaultStyle,
   TaskAssignmentInput,
 } from 'components/Form';
-import { CloneButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
 import TaskStatusInput from 'components/Form/TaskStatusInput';
 import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
-import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
@@ -68,7 +65,7 @@ const getUserById = (users: Array<Object> = [], userId: string) => {
   return users.filter(({ id }) => id === userId)[0];
 };
 
-const TaskSection = ({ isNew, task }: Props) => {
+const TaskSection = ({ task }: Props) => {
   return (
     <div className={FormContentWrapperStyle}>
       <SectionWrapper id="task_taskSection">
@@ -76,12 +73,7 @@ const TaskSection = ({ isNew, task }: Props) => {
           icon="TASK"
           title={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
         >
-          {!isNew && (
-            <>
-              <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />
-              <CloneButton onClick={() => navigate(`/task/clone/${encodeId(task.id)}`)} />
-            </>
-          )}
+          <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />
         </SectionHeader>
         <Subscribe to={[TaskContainer]}>
           {({ originalValues, state, setFieldValue }) => {
@@ -143,7 +135,6 @@ const TaskSection = ({ isNew, task }: Props) => {
                       <TextInputFactory
                         name={name}
                         label={<FormattedMessage id="modules.Tags.name" defaultMessage="NAME" />}
-                        isNew={isNew}
                         required
                         {...inputHandlers}
                         originalValue={originalValues[name]}
@@ -162,7 +153,6 @@ const TaskSection = ({ isNew, task }: Props) => {
                       <DateInputFactory
                         name={name}
                         {...inputHandlers}
-                        isNew={isNew}
                         originalValue={originalValues[name]}
                         label={
                           <FormattedMessage id="modules.task.dueDate" defaultMessage="DUE DATE" />
@@ -182,7 +172,6 @@ const TaskSection = ({ isNew, task }: Props) => {
                       <DateInputFactory
                         name={name}
                         {...inputHandlers}
-                        isNew={isNew}
                         originalValue={originalValues[name]}
                         label={
                           <FormattedMessage
@@ -260,7 +249,6 @@ const TaskSection = ({ isNew, task }: Props) => {
                       <TextAreaInputFactory
                         name={name}
                         {...inputHandlers}
-                        isNew={isNew}
                         originalValue={originalValues[name]}
                         label={<FormattedMessage id="modules.task.memo" defaultMessage="MEMO" />}
                         vertical

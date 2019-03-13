@@ -10,8 +10,6 @@ const TaskApp = () => (
   <Provider>
     <Router>
       <TaskListModule path="/" />
-      <TaskFormModule path="new" />
-      <TaskFormModule path="clone/:taskId" />
       <TaskFormModule path=":taskId" />
     </Router>
   </Provider>
