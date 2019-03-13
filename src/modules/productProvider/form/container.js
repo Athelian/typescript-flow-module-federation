@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsy, cleanUpData, cleanUpFiles } from 'utils/data';
-import { calculateVolume } from 'modules/batch/form/container';
+import { convertVolume } from 'modules/batch/form/helper';
 
 type Price = {
   amount: number,
@@ -164,7 +164,7 @@ export default class ProductProviderContainer extends Container<FormState> {
       const newState = set(
         cloneDeep(prevState),
         'unitVolume.value',
-        calculateVolume(
+        convertVolume(
           prevState.unitVolume.metric,
           prevState.unitSize.height,
           prevState.unitSize.width,
@@ -179,7 +179,7 @@ export default class ProductProviderContainer extends Container<FormState> {
     this.setState(prevState => ({
       packageVolume: {
         metric: prevState.packageVolume.metric,
-        value: calculateVolume(
+        value: convertVolume(
           prevState.packageVolume.metric,
           prevState.packageSize.height,
           prevState.packageSize.width,

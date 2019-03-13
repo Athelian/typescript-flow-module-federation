@@ -8,7 +8,7 @@ import validator from 'modules/batch/form/validator';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
-import type { BatchFormState } from 'modules/batch/form/container';
+import type { BatchFormState } from 'modules/batch/form/container/type.js.flow';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
