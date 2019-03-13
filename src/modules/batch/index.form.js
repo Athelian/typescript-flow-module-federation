@@ -58,15 +58,15 @@ class BatchFormModule extends React.PureComponent<Props> {
   onCancel = () => navigate(`/batch`);
 
   onReset = ({
-    batchContainer,
+    batchInfoContainer,
     batchTasksContainer,
     form,
   }: {
-    batchContainer: Object,
+    batchInfoContainer: Object,
     batchTasksContainer: Object,
     form: Object,
   }) => {
-    resetFormState(batchContainer);
+    resetFormState(batchInfoContainer);
     resetFormState(batchTasksContainer, 'tasks');
     form.onReset();
   };
@@ -215,9 +215,9 @@ class BatchFormModule extends React.PureComponent<Props> {
                       </JumpToSection>
 
                       <Subscribe to={[BatchInfoContainer, BatchTasksContainer, FormContainer]}>
-                        {(batchContainer, batchTasksContainer, form) =>
+                        {(batchInfoContainer, batchTasksContainer, form) =>
                           (isNewOrClone ||
-                            batchContainer.isDirty() ||
+                            batchInfoContainer.isDirty() ||
                             batchTasksContainer.isDirty()) && (
                             <>
                               {this.isNewOrClone() ? (
@@ -225,14 +225,14 @@ class BatchFormModule extends React.PureComponent<Props> {
                               ) : (
                                 <ResetButton
                                   onClick={() =>
-                                    this.onReset({ batchContainer, batchTasksContainer, form })
+                                    this.onReset({ batchInfoContainer, batchTasksContainer, form })
                                   }
                                 />
                               )}
                               <SaveButton
                                 disabled={
                                   !form.isReady(
-                                    { ...batchContainer.state, ...batchTasksContainer.state },
+                                    { ...batchInfoContainer.state, ...batchTasksContainer.state },
                                     validator
                                   )
                                 }
@@ -240,13 +240,13 @@ class BatchFormModule extends React.PureComponent<Props> {
                                 onClick={() =>
                                   this.onSave(
                                     {
-                                      ...batchContainer.originalValues,
+                                      ...batchInfoContainer.originalValues,
                                       ...batchTasksContainer.originalValues,
                                     },
-                                    { ...batchContainer.state, ...batchTasksContainer.state },
+                                    { ...batchInfoContainer.state, ...batchTasksContainer.state },
                                     saveBatch,
                                     () => {
-                                      batchContainer.onSuccess();
+                                      batchInfoContainer.onSuccess();
                                       batchTasksContainer.onSuccess();
                                       form.onReset();
                                     },
@@ -271,7 +271,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                       entityType="batch"
                       render={batch => (
                         <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
-                          {(batchContainer, batchTaskContainer) => (
+                          {(batchInfoContainer, batchTaskContainer) => (
                             <BatchForm
                               isClone={this.isClone()}
                               batch={batch}
@@ -288,7 +288,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                     todo,
                                     ...batchClone
                                   } = batch;
-                                  batchContainer.initDetailValues({
+                                  batchInfoContainer.initDetailValues({
                                     ...batchClone,
                                     autoCalculatePackageQuantity: true,
                                     no: `[cloned] ${no}`,
@@ -297,7 +297,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                   batchTaskContainer.initDetailValues(todo.tasks || []);
                                 } else {
                                   const { todo, ...rest } = batch;
-                                  batchContainer.initDetailValues(rest);
+                                  batchInfoContainer.initDetailValues(rest);
                                   batchTaskContainer.initDetailValues(todo.tasks || []);
                                 }
                               }}

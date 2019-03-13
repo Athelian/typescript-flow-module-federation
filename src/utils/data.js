@@ -2,6 +2,7 @@
 import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
+import { type UserAvatarType } from 'types';
 import { isEquals, getByPathWithDefault } from './fp';
 
 export const replaceUndefined: Function = when(
@@ -156,23 +157,19 @@ export const parseArrayOfChildrenField = (
   return { [key]: parsedNewChildren };
 };
 
+type CustomFieldsType = {
+  mask: ?Object,
+  fieldValues: Array<{
+    value: { string: ?string },
+    fieldDefinition: Object,
+  }>,
+};
+
 // Use for Custom Fields. If there is at least one change in fieldValues, we need to send all fieldValues.
 export const parseCustomFieldsField = (
   key: string,
-  originalCustomFields: ?{
-    mask: ?Object,
-    fieldValues: Array<{
-      value: { string: ?string },
-      fieldDefinition: Object,
-    }>,
-  },
-  newCustomFields: {
-    mask: ?Object,
-    fieldValues: Array<{
-      value: { string: ?string },
-      fieldDefinition: Object,
-    }>,
-  }
+  originalCustomFields: ?CustomFieldsType,
+  newCustomFields: CustomFieldsType
 ): Object => {
   if (isEquals(originalCustomFields, newCustomFields)) return {};
 
@@ -217,21 +214,18 @@ export const parseCustomFieldsField = (
   return {};
 };
 
+type FilesType = {
+  id: string,
+  name: string,
+  type: string,
+  memo: ?string,
+};
+
 // Use for Documents fields. Need to send ids even for new files.
 export const parseFilesField = (
   key: string,
-  originalFiles: ?Array<{
-    id: string,
-    name: string,
-    type: string,
-    memo: ?string,
-  }>,
-  newFiles: Array<{
-    id: string,
-    name: string,
-    type: string,
-    memo: ?string,
-  }>
+  originalFiles: ?Array<FilesType>,
+  newFiles: Array<FilesType>
 ): Object => ({
   ...parseArrayOfChildrenField(
     key,
@@ -248,21 +242,18 @@ export const parseFilesField = (
   ),
 });
 
+type ApprovalType = {
+  approvedBy: {
+    id: string,
+  },
+  approvedAt: string,
+};
+
 // Use for Approval fields. Need to send only approvedBy, not approvedAt.
 export const parseApprovalField = (
   key: string,
-  originalApproval: ?{
-    approvedBy: {
-      id: string,
-    },
-    approvedAt: string,
-  },
-  newApproval: ?{
-    approvedBy: {
-      id: string,
-    },
-    approvedAt: string,
-  }
+  originalApproval: ?ApprovalType,
+  newApproval: ?ApprovalType
 ): Object => {
   const originalApprovedById = getByPathWithDefault(null, 'approvedBy.id', originalApproval);
   const newApprovedById = getByPathWithDefault(null, 'approvedBy.id', newApproval);
@@ -312,6 +303,85 @@ export const parseRepresentativeBatchIndexField = (
   if (newRepresentativeBatchIndex === -1) newRepresentativeBatchIndex = null;
 
   return { [key]: newRepresentativeBatchIndex };
+};
+type TaskType = {
+  id: ?string,
+  name: ?string,
+  startDate: ?string,
+  dueDate: ?string,
+  assignedTo: Array<UserAvatarType>,
+  inProgressBy: ?UserAvatarType,
+  inProgressAt: ?string,
+  completedBy: ?UserAvatarType,
+  completedAt: ?string,
+  memo: ?string,
+  // description: ?string,
+};
+
+// Use for Todo (Tasks) field. Make sure to send 'todo' which contains 'tasks'.
+export const parseTasksField = (
+  key: string,
+  originalTasks: ?{
+    tasks: Array<TaskType>,
+  },
+  newTasks: {
+    tasks: Array<TaskType>,
+  }
+): Object => {
+  if (isEquals(originalTasks, newTasks)) return {};
+
+  return {
+    [key]: {
+      ...parseArrayOfChildrenField(
+        'tasks',
+        originalTasks,
+        newTasks,
+        (oldTask: ?Object, newTask: Object) => {
+          return {
+            ...(oldTask ? { id: oldTask.id } : {}),
+            ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
+            ...parseDateField(
+              'startDate',
+              getByPathWithDefault(null, 'startDate', oldTask),
+              newTask.startDate
+            ),
+            ...parseDateField(
+              'dueDate',
+              getByPathWithDefault(null, 'dueDate', oldTask),
+              newTask.dueDate
+            ),
+            ...parseArrayOfIdsField(
+              'assignedToIds',
+              getByPathWithDefault(null, 'assignedTo', oldTask),
+              newTask.assignedTo
+            ),
+            ...parseParentIdField(
+              'inProgressById',
+              getByPathWithDefault(null, 'inProgressBy', oldTask),
+              newTask.inProgressBy
+            ),
+            ...parseDateField(
+              'inProgressAt',
+              getByPathWithDefault(null, 'inProgressAt', oldTask),
+              newTask.inProgressAt
+            ),
+            ...parseParentIdField(
+              'completedById',
+              getByPathWithDefault(null, 'completedBy', oldTask),
+              newTask.completedBy
+            ),
+            ...parseDateField(
+              'completedAt',
+              getByPathWithDefault(null, 'completedAt', oldTask),
+              newTask.completedAt
+            ),
+            ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldTask), newTask.memo),
+            // ...parseMemoField('description', getByPathWithDefault(null, 'description', oldTask), newTask.description),
+          };
+        }
+      ),
+    },
+  };
 };
 
 export const findChangeData = (originalValues: Object, newValues: Object) => {

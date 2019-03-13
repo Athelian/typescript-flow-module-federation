@@ -33,9 +33,10 @@ import {
   parseParentIdField,
   parseArrayOfChildrenField,
   parseCustomFieldsField,
+  parseTasksField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
-import type { BatchCreate, BatchUpdate, BatchQuery } from '../type.js.flow';
+import type { BatchCreate, BatchUpdate } from '../type.js.flow';
 
 export const createBatchMutation = gql`
   mutation batchCreate($input: BatchCreateInput!) {
@@ -196,7 +197,7 @@ export const prepareParsedUpdateBatchInput = (
     inContainerForm: boolean,
     inBatchForm: boolean,
   }
-): BatchQuery => {
+): Object => {
   const { inShipmentForm, inOrderForm, inContainerForm, inBatchForm } = location;
 
   return {
@@ -317,5 +318,6 @@ export const prepareParsedUpdateBatchInput = (
       getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
+    ...parseTasksField('todo', getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
   };
 };
