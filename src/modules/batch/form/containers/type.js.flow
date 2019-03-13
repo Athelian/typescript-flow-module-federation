@@ -40,4 +40,7 @@ export type BatchFormState = {
   orderItem?: Object,
   tags?: Array<Object>,
   memo?: string,
+  todo: {
+    tasks: Array<Object>,
+  },
 };

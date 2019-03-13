@@ -64,6 +64,7 @@ function BatchTaskSection({ intl }: Props) {
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
+                type={type}
                 checkPermission={BATCH_UPDATE}
                 tasks={tasks}
                 onRemove={({ id }) => {

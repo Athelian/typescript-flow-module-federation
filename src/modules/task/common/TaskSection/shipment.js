@@ -64,6 +64,7 @@ function ShipmentTaskSection({ intl }: Props) {
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
+                type={type}
                 checkPermission={SHIPMENT_UPDATE}
                 tasks={tasks}
                 onRemove={({ id }) => {
