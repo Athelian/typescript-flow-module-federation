@@ -5,9 +5,9 @@ import { layout, colors, presets, borderRadiuses } from 'styles/common';
 export const OrderBatchCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  padding: 5px 0;
+  padding: 5px 0 10px 0;
   width: 195px;
-  height: 234px;
+  height: 241px;
 `;
 
 export const BatchNoWrapperStyle: string = css`
@@ -91,9 +91,18 @@ export const WarehouseArrivalIconStyle = (warehouseArrivalApproved: boolean): st
   font-size: 11px;
 `;
 
+export const TagsAndTaskWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 160px 20px;
+  grid-gap: 5px;
+  align-items: center;
+`;
+
 export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  padding: 0 10px;
+  width: 160px;
+  padding: 0 0 0 10px;
   overflow: hidden;
 `;

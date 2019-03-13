@@ -14,7 +14,7 @@ export const ShipmentBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 379px;
+  height: 381px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -90,7 +90,7 @@ export const BatchInfoWrapperStyle: string = css`
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  padding: 5px 0;
+  padding: 5px 0 10px 0;
 `;
 
 export const BatchNoWrapperStyle: string = css`
@@ -189,11 +189,18 @@ export const InChargeWrapperStyle: string = css`
   height: 30px;
 `;
 
+export const TagsAndTaskWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 160px 20px;
+  grid-gap: 5px;
+  align-items: center;
+`;
+
 export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  width: 175px;
-  margin: 0 10px;
+  width: 160px;
+  padding: 0 0 0 10px;
   overflow: hidden;
 `;

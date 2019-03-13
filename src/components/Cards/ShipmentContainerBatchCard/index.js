@@ -7,6 +7,7 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
+import TasksNumber from 'components/TasksNumber';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
@@ -40,6 +41,7 @@ import {
   OrderIconStyle,
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
+  TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   RepresentIconStyle,
 } from './style';
@@ -129,6 +131,7 @@ const ShipmentContainerBatchCard = ({
       productProvider: { product, supplier, exporter },
       order,
     },
+    todo,
   } = batch;
   const productImage = getProductImage(product);
   const totalAdjustment = totalAdjustQuantity(batchAdjustments);
@@ -422,9 +425,11 @@ const ShipmentContainerBatchCard = ({
                 ))}
             </div>
           </div>
-
-          <div className={BatchTagsWrapperStyle}>
-            {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={TagsAndTaskWrapperStyle}>
+            <div className={BatchTagsWrapperStyle}>
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <TasksNumber {...todo} />
           </div>
         </div>
       </div>
@@ -436,7 +441,7 @@ ShipmentContainerBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentContainerBatchCard, 'batch', {
   width: '195px',
-  height: '354px',
+  height: '356px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

@@ -130,7 +130,12 @@ export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  width: 175px;
+  width: 155px;
   margin: 0 5px;
   overflow: hidden;
+`;
+
+export const TagsLineStyle: string = css`
+  display: grid;
+  grid-template-columns: 165px 20px;
 `;
