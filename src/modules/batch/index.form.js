@@ -79,9 +79,6 @@ class BatchFormModule extends React.PureComponent<Props> {
   ) => {
     const { batchId } = this.props;
 
-    console.warn('ORIGINAL', originalValues);
-    console.warn('NEW', formData);
-
     const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedUpdateBatchInput(originalValues, formData, {
       inShipmentForm: false,
