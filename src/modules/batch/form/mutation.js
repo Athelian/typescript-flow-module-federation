@@ -318,6 +318,10 @@ export const prepareParsedUpdateBatchInput = (
       getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
-    ...parseTasksField('todo', getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
+    ...parseTasksField(
+      'tasks',
+      getByPathWithDefault(null, 'tasks', originalValues),
+      newValues.tasks
+    ),
   };
 };

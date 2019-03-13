@@ -44,12 +44,12 @@ function ShipmentTaskSection({ intl }: Props) {
                   setFieldValue('tasks', [
                     ...tasks,
                     injectUid({
-                      isNew: true,
                       name: `task - ${tasks.length + 1}`,
                       entity: {
                         __typename: type,
                         no,
                       },
+                      assignedTo: [],
                       tags: [],
                     }),
                   ]);
