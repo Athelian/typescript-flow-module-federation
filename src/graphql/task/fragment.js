@@ -38,6 +38,7 @@ export const taskCardFragment = gql`
     }
   }
 `;
+
 export const taskFormFragment = gql`
   fragment taskFormFragment on Task {
     id
@@ -74,5 +75,13 @@ export const taskFormFragment = gql`
         ...shipmentCardFragment
       }
     }
+  }
+`;
+
+export const todoFragment = gql`
+  fragment todoFragment on Todo {
+    completedCount
+    inProgressCount
+    remainingCount
   }
 `;

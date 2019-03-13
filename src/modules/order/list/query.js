@@ -5,6 +5,7 @@ import {
   tagFragment,
   priceFragment,
   userAvatarFragment,
+  todoFragment,
 } from 'graphql';
 
 export const orderListQuery = gql`
@@ -23,6 +24,7 @@ export const orderListQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${userAvatarFragment}
+  ${todoFragment}
 `;
 
 export default orderListQuery;

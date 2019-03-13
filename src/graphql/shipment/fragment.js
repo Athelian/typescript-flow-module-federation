@@ -44,9 +44,7 @@ export const shipmentFormFragment = gql`
       ...tagFragment
     }
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      ...todoFragment
     }
     files {
       ...documentFragment
@@ -136,9 +134,7 @@ export const shipmentCardFragment = gql`
       ...tagFragment
     }
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      ...todoFragment
     }
     inCharges {
       ...userAvatarFragment

@@ -9,9 +9,7 @@ export const batchFormFragment = gql`
     autoCalculatePackageQuantity
     updatedAt
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      ...todoFragment
     }
     updatedBy {
       ...userAvatarFragment
@@ -213,9 +211,7 @@ export const batchCardFragment = gql`
     deliveredAt
     desiredAt
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      ...todoFragment
     }
     packageVolume {
       ...metricFragment

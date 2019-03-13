@@ -23,6 +23,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   taskCardFragment,
+  todoFragment,
 } from 'graphql';
 import {
   prepareUpdateBatchInput,
@@ -55,37 +56,6 @@ export const createOrderMutation = gql`
     }
   }
   ${badRequestFragment}
-`;
-
-export const createOrderWithReturnDataMutation = gql`
-  mutation orderCreate($input: OrderCreateInput!) {
-    orderCreate(input: $input) {
-      ...orderFormFragment
-      ...badRequestFragment
-    }
-  }
-  ${badRequestFragment}
-  ${orderFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
-  ${partnerCardFragment}
-  ${documentFragment}
-  ${shipmentCardFragment}
-  ${priceFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${batchFormFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${orderCardFragment}
-  ${badRequestFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
 `;
 
 export const prepareCreateOrderInput = ({
@@ -160,6 +130,7 @@ export const updateOrderMutation = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskCardFragment}
+  ${todoFragment}
 `;
 
 export const updateOrderItemMutation = gql`
