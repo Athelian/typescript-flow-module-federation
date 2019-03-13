@@ -52,11 +52,9 @@ const Tasks = ({ tasks, onRemove, onSave, checkPermission }: Props) => {
                           task={task}
                           isNew={!!task.isNew}
                           onCancel={() => selectTaskSlideToggle(false)}
-                          onSave={updatedTask => {
+                          onSave={newValue => {
                             selectTaskSlideToggle(false);
-                            console.warn({
-                              updatedTask,
-                            });
+                            onSave(index, newValue);
                           }}
                         />
                       )}
