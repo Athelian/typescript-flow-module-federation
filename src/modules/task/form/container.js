@@ -22,6 +22,8 @@ const initValues = {
   startDate: '',
   tags: [],
   assignedTo: [],
+  completedBy: null,
+  inProgressBy: null,
 };
 
 export default class TaskContainer extends Container<FormState> {
