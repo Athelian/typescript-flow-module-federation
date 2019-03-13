@@ -5,6 +5,7 @@ export const taskCardFragment = gql`
   fragment taskCardFragment on Task {
     id
     name
+    sort
     entity {
       ... on Model {
         id
