@@ -8,8 +8,13 @@ import type { BatchFormState, ProductProvider } from './type.js.flow';
 import { convertVolume } from '../helper';
 
 const initValues = {
-  memo: '',
-  packageName: '',
+  quantity: 0,
+  customFields: {
+    fieldValues: [],
+    fieldDefinitions: [],
+  },
+  tags: [],
+  batchAdjustments: [],
   packageCapacity: 0,
   packageQuantity: 0,
   packageGrossWeight: { value: 0, metric: 'kg' },
@@ -31,17 +36,6 @@ const initValues = {
       value: 0,
     },
   },
-  quantity: 0,
-  deliveredAt: '',
-  desiredAt: '',
-  expiredAt: '',
-  customFields: {
-    mask: null,
-    fieldValues: [],
-    fieldDefinitions: [],
-  },
-  producedAt: '',
-  batchAdjustments: [],
   autoCalculatePackageQuantity: true,
 };
 
@@ -87,7 +81,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
   syncProductProvider = (productProvider: ProductProvider) => {
     const { quantity, batchAdjustments } = this.state;
     const {
-      packageName = '',
+      packageName,
       packageCapacity = 0,
       packageGrossWeight = { value: 0, metric: 'kg' },
       packageVolume = { value: 0, metric: 'm³' },
