@@ -58,11 +58,13 @@ export default class TaskFormModule extends React.Component<Props> {
     onErrors: Function = () => {}
   ) => {
     const { taskId } = this.props;
-
+    console.log(formData);
     const isNewOrClone = this.isNewOrClone();
     const input = isNewOrClone
       ? prepareTaskCreateDate(formData.state)
       : prepareTaskUpdateData(formData.originalValues, formData.state);
+
+    console.log(input);
 
     if (isNewOrClone) {
       const { data } = await saveTask({ variables: { input } });

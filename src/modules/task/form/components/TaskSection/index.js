@@ -17,12 +17,12 @@ import {
   TagsInput,
   DateInput,
   DefaultStyle,
-  UserAssignmentInputFactory,
+  TaskAssignmentInput,
 } from 'components/Form';
 import { CloneButton } from 'components/Buttons';
 import GridColumn from 'components/GridColumn';
 import TaskStatusInput from 'components/Form/TaskStatusInput';
-import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
+import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
@@ -39,14 +39,42 @@ type Props = {
   task: Object,
 };
 
+const getStatusState = ({
+  inProgressBy,
+  completedBy,
+}: {
+  inProgressAt: string,
+  completedAt: string,
+  inProgressBy: Object,
+  completedBy: Object,
+}) => {
+  if (completedBy)
+    return {
+      status: COMPLETED,
+      activeUser: completedBy,
+    };
+  if (inProgressBy)
+    return {
+      status: IN_PROGRESS,
+      activeUser: inProgressBy,
+    };
+  return {
+    status: '',
+    activeUser: null,
+  };
+};
+
+const getUserById = (users: Array<Object> = [], userId: string) => {
+  return users.filter(({ id }) => id === userId)[0];
+};
+
 const TaskSection = ({ isNew, task }: Props) => {
-  console.log(task);
   return (
     <div className={FormContentWrapperStyle}>
       <SectionWrapper id="task_taskSection">
         <SectionHeader
           icon="TASK"
-          label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
+          title={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
         >
           {!isNew && (
             <>
@@ -58,6 +86,7 @@ const TaskSection = ({ isNew, task }: Props) => {
         <Subscribe to={[TaskContainer]}>
           {({ originalValues, state, setFieldValue }) => {
             const values = { ...originalValues, ...state };
+            const { status, activeUser } = getStatusState(values);
             return (
               <div className={CommonSectionWrapperStyle}>
                 <GridColumn>
@@ -253,10 +282,10 @@ const TaskSection = ({ isNew, task }: Props) => {
                         </Label>
                       }
                       input={
-                        values.completedAt ? (
+                        status === COMPLETED ? (
                           <DefaultStyle type="date" forceHoverStyle>
                             <DateInput
-                              onChange={(field, value) => setFieldValue(field, value)}
+                              onChange={e => setFieldValue('completedAt', e.target.value)}
                               value={values.completedAt}
                             />
                           </DefaultStyle>
@@ -265,35 +294,51 @@ const TaskSection = ({ isNew, task }: Props) => {
                             <FormattedMessage
                               id="modules.task.notCompleted"
                               defaultMessage="Not completed yet"
-                            />{' '}
+                            />
                           </Label>
                         )
                       }
                     />
-
                     <div className={AssignedToStyle}>
                       <GridColumn>
-                        <UserAssignmentInputFactory
-                          name="assignedTo"
-                          required
-                          values={values.assignedTo}
-                          onChange={(name: string, assignments: Array<Object>) =>
-                            setFieldValue(name, assignments)
-                          }
+                        <FieldItem
+                          vertical
                           label={
-                            <FormattedMessage
-                              id="modules.task.assignedTo"
-                              defaultMessage="ASSIGNED TO"
+                            <Label>
+                              <FormattedMessage
+                                id="modules.task.assignedTo"
+                                defaultMessage="ASSIGNED TO"
+                              />
+                            </Label>
+                          }
+                          input={
+                            <TaskAssignmentInput
+                              users={values.assignedTo}
+                              onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
+                              activeUserId={activeUser && activeUser.id}
+                              onActivateUser={id => {
+                                setFieldValue('inProgressBy', getUserById(values.assignedTo, id));
+                                setFieldValue('inProgressAt', new Date());
+                              }}
+                              onDeactivateUser={() => {
+                                setFieldValue('inProgressBy', null);
+                                setFieldValue('inProgressAt', null);
+                                setFieldValue('completedBy', null);
+                                setFieldValue('completedAt', null);
+                              }}
+                              editable
                             />
                           }
-                          editable
                         />
                       </GridColumn>
                       <GridColumn>
-                        {values.inProgressAt ? (
+                        {activeUser ? (
                           <TaskStatusInput
-                            activeUser={values.inProgressBy}
-                            status={values.completedAt ? COMPLETED : IN_PROGRESS}
+                            activeUser={activeUser}
+                            status={status}
+                            onClick={() => {
+                              setFieldValue('completedBy', activeUser);
+                            }}
                             editable
                           />
                         ) : (

@@ -11,6 +11,10 @@ type FormState = {
   tags?: Array<Object>,
   memo?: string,
   assignedTo?: Array<Object>,
+  inProgressBy?: Object,
+  inProgressAt?: string,
+  completedBy?: Object,
+  completedAt?: string,
 };
 
 const initValues = {
