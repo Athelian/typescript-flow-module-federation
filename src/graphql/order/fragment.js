@@ -29,6 +29,11 @@ export const orderFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    todo {
+      tasks {
+        ...taskCardFragment
+      }
+    }
     exporter {
       ...partnerCardFragment
     }

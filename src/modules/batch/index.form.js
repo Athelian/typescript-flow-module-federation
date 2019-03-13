@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
@@ -113,6 +114,11 @@ class BatchFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+      return;
+    }
+
     const isNewOrClone = this.isNewOrClone();
     if (isNewOrClone) {
       const { batchCreate } = result;

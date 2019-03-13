@@ -22,6 +22,7 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
+  taskCardFragment,
 } from 'graphql';
 import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
 import { prepareCustomFieldsData } from 'utils/customFields';
@@ -152,6 +153,7 @@ export const updateOrderMutation = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskCardFragment}
 `;
 
 export const updateOrderItemMutation = gql`
