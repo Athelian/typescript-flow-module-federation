@@ -14,7 +14,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import BatchForm from './form';
-import BatchFormContainer from './form/container';
+import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
 import {
@@ -56,8 +56,17 @@ class BatchFormModule extends React.PureComponent<Props> {
 
   onCancel = () => navigate(`/batch`);
 
-  onReset = (batchContainer: Object, form: Object) => {
+  onReset = ({
+    batchContainer,
+    batchTasksContainer,
+    form,
+  }: {
+    batchContainer: Object,
+    batchTasksContainer: Object,
+    form: Object,
+  }) => {
     resetFormState(batchContainer);
+    resetFormState(batchTasksContainer, 'tasks');
     form.onReset();
   };
 
@@ -164,6 +173,13 @@ class BatchFormModule extends React.PureComponent<Props> {
                           icon="PACKAGING"
                         />
                         <SectionTabs
+                          link="batch_taskSection"
+                          label={
+                            <FormattedMessage id="modules.Batches.task" defaultMessage="TASK" />
+                          }
+                          icon="TASK"
+                        />
+                        <SectionTabs
                           link="batch_shipmentSection"
                           label={
                             <FormattedMessage
@@ -192,25 +208,40 @@ class BatchFormModule extends React.PureComponent<Props> {
                         />
                       </JumpToSection>
 
-                      <Subscribe to={[BatchFormContainer, FormContainer]}>
-                        {(batchContainer, form) =>
-                          (isNewOrClone || batchContainer.isDirty()) && (
+                      <Subscribe to={[BatchInfoContainer, BatchTasksContainer, FormContainer]}>
+                        {(batchContainer, batchTasksContainer, form) =>
+                          (isNewOrClone ||
+                            batchContainer.isDirty() ||
+                            batchTasksContainer.isDirty()) && (
                             <>
                               {this.isNewOrClone() ? (
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
-                                <ResetButton onClick={() => this.onReset(batchContainer, form)} />
+                                <ResetButton
+                                  onClick={() =>
+                                    this.onReset({ batchContainer, batchTasksContainer, form })
+                                  }
+                                />
                               )}
                               <SaveButton
-                                disabled={!form.isReady(batchContainer.state, validator)}
+                                disabled={
+                                  !form.isReady(
+                                    { ...batchContainer.state, ...batchTasksContainer.state },
+                                    validator
+                                  )
+                                }
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
-                                    batchContainer.originalValues,
-                                    batchContainer.state,
+                                    {
+                                      ...batchContainer.originalValues,
+                                      ...batchTasksContainer.originalValues,
+                                    },
+                                    { ...batchContainer.state, ...batchTasksContainer.state },
                                     saveBatch,
                                     () => {
                                       batchContainer.onSuccess();
+                                      batchTasksContainer.onSuccess();
                                       form.onReset();
                                     },
                                     form.onErrors
@@ -233,8 +264,8 @@ class BatchFormModule extends React.PureComponent<Props> {
                       entityId={batchId}
                       entityType="batch"
                       render={batch => (
-                        <Subscribe to={[BatchFormContainer]}>
-                          {({ initDetailValues }) => (
+                        <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                          {(batchContainer, batchTaskContainer) => (
                             <BatchForm
                               isClone={this.isClone()}
                               batch={batch}
@@ -248,16 +279,20 @@ class BatchFormModule extends React.PureComponent<Props> {
                                     expiredAt,
                                     producedAt,
                                     no,
+                                    todo,
                                     ...batchClone
                                   } = batch;
-                                  initDetailValues({
+                                  batchContainer.initDetailValues({
                                     ...batchClone,
                                     autoCalculatePackageQuantity: true,
                                     no: `[cloned] ${no}`,
                                     batchAdjustments: [],
                                   });
+                                  batchTaskContainer.initDetailValues(todo.tasks || []);
                                 } else {
-                                  initDetailValues(batch);
+                                  const { todo, ...rest } = batch;
+                                  batchContainer.initDetailValues(rest);
+                                  batchTaskContainer.initDetailValues(todo.tasks || []);
                                 }
                               }}
                             />

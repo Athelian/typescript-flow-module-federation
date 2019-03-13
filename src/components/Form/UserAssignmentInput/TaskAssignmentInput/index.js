@@ -20,7 +20,7 @@ type OptionalProps = {
   users: Array<UserAvatarType>,
   activeUserId: ?string,
   onChange: (values: Array<UserAvatarType>) => void,
-  onActivateUser: string => void,
+  onActivateUser: UserAvatarType => void,
   onDeactivateUser: () => void,
   editable: boolean,
 };
@@ -45,7 +45,8 @@ const TaskAssignmentInput = ({
 }: Props) => {
   return (
     <div className={TaskAssignmentWrapperStyle}>
-      {users.map(({ id, firstName, lastName }) => {
+      {users.map(user => {
+        const { id, firstName, lastName } = user;
         const isActiveUser = id === activeUserId;
         const canActivateUser = !activeUserId;
 
@@ -55,7 +56,7 @@ const TaskAssignmentInput = ({
               className={UserStyle(isActiveUser, editable && canActivateUser)}
               onClick={() => {
                 if (editable && canActivateUser) {
-                  onActivateUser(id);
+                  onActivateUser(user);
                 }
               }}
               type="button"

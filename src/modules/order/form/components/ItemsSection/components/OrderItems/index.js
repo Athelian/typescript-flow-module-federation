@@ -8,7 +8,7 @@ import usePermission from 'hooks/usePermission';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';

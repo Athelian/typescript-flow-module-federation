@@ -19,6 +19,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  taskCardFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
@@ -46,6 +47,7 @@ export const batchFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskCardFragment}
 `;
 
 export default batchFormQuery;

@@ -1,0 +1,43 @@
+// @flow
+
+export type Metric = {
+  value: number,
+  metric: string,
+};
+
+export type ProductProvider = {
+  packageName: string,
+  packageCapacity: number,
+  packageGrossWeight: Metric,
+  packageVolume: Metric,
+  packageSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
+};
+
+export type BatchFormState = {
+  id?: ?string,
+  no?: ?string,
+  quantity: number,
+  batchAdjustments: Array<any>,
+  packageName?: ?string,
+  packageCapacity: number,
+  packageQuantity: number,
+  packageGrossWeight: Metric,
+  packageVolume: Metric,
+  packageSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
+  deliveredAt?: ?Date | string,
+  desiredAt?: ?Date | string,
+  expiredAt?: ?Date | string,
+  customFields: ?Object,
+  producedAt?: ?Date | string,
+  orderItem?: Object,
+  tags?: Array<Object>,
+  memo?: string,
+};

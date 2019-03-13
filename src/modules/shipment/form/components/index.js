@@ -8,7 +8,6 @@ import SelectBatches from './SelectBatches';
 import SelectForwarders from './SelectForwarders';
 import ShipmentSection from './ShipmentSection';
 import TimelineSection from './TimelineSection';
-import TaskSection from './TaskSection';
 
 export {
   CargoSection,
@@ -21,5 +20,4 @@ export {
   SelectForwarders,
   ShipmentSection,
   TimelineSection,
-  TaskSection,
 };

@@ -11434,10 +11434,10 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
-react-svg@^7.2.9:
-  version "7.2.9"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-7.2.9.tgz#b81421407cf2ffa767cfc138c2cc2b0cc5262235"
-  integrity sha512-kb//sNHDf7TgEhQ660jmkniX2qckAVSVdy6zQymr4WGT9LbIfQxMBLg/JHwPwaE/tXdswjHCQRwU5HBrra1b+g==
+react-svg@^7.2.12:
+  version "7.2.12"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-7.2.12.tgz#e7b08af2b23ce39c8ad77f234643f9c40e62cef1"
+  integrity sha512-9Ik3siTJ60pxRa3lqRkz7P6W75+f1FqK8LBF1TdXC36Af5zkYBEIA74hd5oFn7UKO9KdsuaEWvD35YyoESoYtw==
   dependencies:
     "@babel/runtime" "^7.3.1"
     "@tanem/svg-injector" "^2.1.4"
@@ -13224,10 +13224,10 @@ tippy.js@^4.0.3:
   dependencies:
     popper.js "^1.14.7"
 
-tippy.js@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.0.4.tgz#1cfd83fc6cfd1c459bb7e08b5ad9bc97008f61bb"
-  integrity sha512-VXwJ2PXUvSTqV0RA5n5jzAdXsXnhMNX/aBYhC2j2YLg1/gekFWqVffbUQMVvwrqT4zmpm4Bp7tO8MVkvaaZ5Pg==
+tippy.js@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.1.0.tgz#aea4f7d983d6714e0521975798e216eac8dbfa51"
+  integrity sha512-dNtBNbv40SXw9oUUOfSRUev9Ljj/xRcxr6LlwnF96SGH7SouEIMYIx4q8nO2ZfJBN+WTd9P2EBmS6vMxMr43Bw==
   dependencies:
     popper.js "^1.14.7"
 

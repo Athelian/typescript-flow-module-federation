@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import { BATCH_UPDATE, BATCH_SET_QUANTITY_ADJUSTMENTS } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import FormattedNumber from 'components/FormattedNumber';
 import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';

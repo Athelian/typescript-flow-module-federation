@@ -4,62 +4,8 @@ import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
 import { calculatePackageQuantity } from 'utils/batch';
-
-type Metric = {
-  value: number,
-  metric: string,
-};
-
-type ProductProvider = {
-  packageName: string,
-  packageCapacity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
-};
-
-export function calculateVolume(
-  volumeMetric: string,
-  height: Metric,
-  width: Metric,
-  length: Metric
-): number {
-  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
-  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
-  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
-  const volumeValue = heightValue * widthValue * lengthValue;
-
-  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
-}
-
-export type BatchFormState = {
-  id?: ?string,
-  no?: ?string,
-  quantity: number,
-  batchAdjustments: Array<any>,
-  packageName?: ?string,
-  packageCapacity: number,
-  packageQuantity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
-  deliveredAt?: ?Date | string,
-  desiredAt?: ?Date | string,
-  expiredAt?: ?Date | string,
-  customFields: ?Object,
-  producedAt?: ?Date | string,
-  orderItem?: Object,
-  tags?: Array<Object>,
-  memo?: string,
-};
+import type { BatchFormState, ProductProvider } from './type.js.flow';
+import { convertVolume } from '../helper';
 
 const initValues = {
   memo: '',
@@ -99,7 +45,7 @@ const initValues = {
   autoCalculatePackageQuantity: true,
 };
 
-export default class BatchFormContainer extends Container<BatchFormState> {
+export default class BatchInfoContainer extends Container<BatchFormState> {
   state = initValues;
 
   originalValues = initValues;
@@ -194,7 +140,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     this.setState(prevState => ({
       packageVolume: {
         metric: prevState.packageVolume.metric,
-        value: calculateVolume(
+        value: convertVolume(
           prevState.packageVolume.metric,
           prevState.packageSize.height,
           prevState.packageSize.width,

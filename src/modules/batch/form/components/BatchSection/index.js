@@ -27,7 +27,7 @@ import {
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
-import BatchFormContainer from 'modules/batch/form/container';
+import BatchFormContainer from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField, FormContainer } from 'modules/form';
 import { OrderItemCard, GrayCard } from 'components/Cards';
