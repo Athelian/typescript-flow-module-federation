@@ -24,7 +24,12 @@ function BatchTaskSection({ intl }: Props) {
     <Subscribe to={[BatchInfoContainer, BatchTasksContainer, FormContainer]}>
       {(
         { state: { no } },
-        { state: { tasks }, setFieldValue, setFieldArrayValue },
+        {
+          state: {
+            todo: { tasks },
+          },
+          setFieldValue,
+        },
         { setFieldTouched }
       ) => (
         <SectionWrapper id={`${type.toLowerCase()}_taskSection`}>
@@ -41,7 +46,7 @@ function BatchTaskSection({ intl }: Props) {
               <NewButton
                 label={intl.formatMessage(messages.newTask)}
                 onClick={() => {
-                  setFieldValue('tasks', [
+                  setFieldValue('todo.tasks', [
                     ...tasks,
                     injectUid({
                       name: `task - ${tasks.length + 1}`,
@@ -62,11 +67,11 @@ function BatchTaskSection({ intl }: Props) {
                 checkPermission={BATCH_UPDATE}
                 tasks={tasks}
                 onRemove={({ id }) => {
-                  setFieldValue('tasks', tasks.filter(({ id: itemId }) => id !== itemId));
+                  setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
                   setFieldTouched(`tasks.${id}`);
                 }}
                 onSave={(index, newValue) => {
-                  setFieldArrayValue(`tasks.${index}`, newValue);
+                  setFieldValue(`todo.tasks.${index}`, newValue);
                   setFieldTouched(`tasks.${index}`);
                 }}
               />

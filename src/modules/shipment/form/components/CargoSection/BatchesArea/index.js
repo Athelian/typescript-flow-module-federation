@@ -433,6 +433,9 @@ function BatchesArea({
                                         batchAdjustments: [],
                                         no: `batch no ${batches.length + counter + 1}`,
                                         autoCalculatePackageQuantity: true,
+                                        todo: {
+                                          tasks: [],
+                                        },
                                       });
                                     });
                                     setFieldValue('batches', [...batches, ...result]);

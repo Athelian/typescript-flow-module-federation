@@ -14,7 +14,6 @@ import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import BatchForm from './form';
 import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
@@ -299,9 +298,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                   const { todo, ...rest } = batch;
                                   batchInfoContainer.initDetailValues(rest);
                                 }
-                                batchTaskContainer.initDetailValues(
-                                  getByPathWithDefault([], 'todo.tasks', batch)
-                                );
+                                batchTaskContainer.initDetailValues(batch.todo);
                               }}
                             />
                           )}

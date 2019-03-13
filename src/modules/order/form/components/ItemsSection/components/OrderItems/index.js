@@ -64,6 +64,9 @@ export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
     batchAdjustments: [],
     no: `batch no ${batches.length + 1}`,
     autoCalculatePackageQuantity: true,
+    todo: {
+      tasks: [],
+    },
   });
 }
 

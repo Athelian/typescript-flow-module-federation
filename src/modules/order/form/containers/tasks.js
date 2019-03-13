@@ -4,11 +4,15 @@ import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
 
 type FormState = {
-  tasks?: Array<Object>,
+  todo: {
+    tasks?: Array<Object>,
+  },
 };
 
 const initValues = {
-  tasks: [],
+  todo: {
+    tasks: [],
+  },
 };
 
 export default class OrderTasksContainer extends Container<FormState> {
@@ -27,16 +31,8 @@ export default class OrderTasksContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  setFieldArrayValue = (path: string, value: any) => {
-    this.setState(prevState => {
-      const newState = set(cloneDeep(prevState), path, value);
-      return newState;
-    });
-  };
-
-  initDetailValues = (tasks: Array<Object>) => {
-    const parsedValues: Array<Object> = tasks;
-    this.setState({ tasks: parsedValues });
-    this.originalValues = { tasks: parsedValues };
+  initDetailValues = (todo: { tasks: Array<Object> }) => {
+    this.setState({ todo });
+    this.originalValues = { todo };
   };
 }
