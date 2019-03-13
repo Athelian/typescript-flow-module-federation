@@ -40,6 +40,7 @@ export const taskCardFragment = gql`
 `;
 export const taskFormFragment = gql`
   fragment taskFormFragment on Task {
+    sort
     id
     updatedAt
     updatedBy {

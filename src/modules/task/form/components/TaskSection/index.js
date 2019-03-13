@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { isBefore } from 'date-fns';
 import { getByPath } from 'utils/fp';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
 import {
@@ -17,6 +18,7 @@ import {
   DateInput,
   DefaultStyle,
   TaskAssignmentInput,
+  Display,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import TaskStatusInput from 'components/Form/TaskStatusInput';
@@ -59,10 +61,6 @@ const getStatusState = ({
     status: '',
     activeUser: null,
   };
-};
-
-const getUserById = (users: Array<Object> = [], userId: string) => {
-  return users.filter(({ id }) => id === userId)[0];
 };
 
 const TaskSection = ({ task }: Props) => {
@@ -122,7 +120,7 @@ const TaskSection = ({ task }: Props) => {
                         <FormattedMessage id="modules.task.taskNo" defaultMessage="TASK No." />
                       </Label>
                     }
-                    input={<div>{task.id}</div>}
+                    input={<Display>{task.sort + 1}</Display>}
                   />
                   <FormField
                     name="name"
@@ -152,6 +150,11 @@ const TaskSection = ({ task }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         name={name}
+                        inputColor={
+                          isBefore(new Date(values.dueDate), new Date()) && status !== COMPLETED
+                            ? 'red'
+                            : null
+                        }
                         {...inputHandlers}
                         originalValue={originalValues[name]}
                         label={
@@ -304,15 +307,17 @@ const TaskSection = ({ task }: Props) => {
                               users={values.assignedTo}
                               onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
                               activeUserId={activeUser && activeUser.id}
-                              onActivateUser={id => {
-                                setFieldValue('inProgressBy', getUserById(values.assignedTo, id));
+                              onActivateUser={user => {
+                                setFieldValue('inProgressBy', user);
                                 setFieldValue('inProgressAt', new Date());
                               }}
                               onDeactivateUser={() => {
-                                setFieldValue('inProgressBy', null);
-                                setFieldValue('inProgressAt', null);
-                                setFieldValue('completedBy', null);
-                                setFieldValue('completedAt', null);
+                                if (status === COMPLETED) {
+                                  setFieldValue('completedBy', null);
+                                } else if (status === IN_PROGRESS) {
+                                  setFieldValue('inProgressBy', null);
+                                  setFieldValue('inProgressAt', null);
+                                }
                               }}
                               editable
                             />
