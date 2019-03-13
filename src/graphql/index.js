@@ -15,6 +15,7 @@ import { shipmentFormFragment, shipmentCardFragment } from './shipment/fragment'
 import { staffFormFragment, staffCardFragment } from './staff/fragment';
 import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
+import { taskCardFragment } from './task/fragment';
 import { tableTemplateCardFragment } from './tableTemplate/fragment';
 import { badRequestFragment, notFoundFragment, forbiddenFragment } from './errors/fragment';
 import {
@@ -79,4 +80,5 @@ export {
   notFoundFragment,
   forbiddenFragment,
   ownedByFragment,
+  taskCardFragment,
 };

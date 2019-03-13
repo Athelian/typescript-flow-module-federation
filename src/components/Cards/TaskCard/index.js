@@ -37,6 +37,7 @@ type OptionalProps = {
   task: Object,
   position: number,
   onClick: Function,
+  saveOnBlur: Function,
   editable: boolean,
   viewPermissions: {
     order: boolean,
@@ -51,6 +52,7 @@ type Props = OptionalProps;
 const defaultProps = {
   position: 0,
   onClick: () => {},
+  saveOnBlur: () => {},
   editable: false,
   viewPermissions: {
     order: false,
@@ -91,6 +93,9 @@ const TaskCard = ({
   task,
   position,
   onClick,
+  saveOnBlur,
+  onActivateUser,
+  onDeactivateUser,
   editable,
   viewPermissions,
   actions,
@@ -188,6 +193,10 @@ const TaskCard = ({
                 {({ name: fieldName, ...inputHandlers }) => (
                   <TextInputFactory
                     {...inputHandlers}
+                    onBlur={evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({ ...task, name: inputHandlers.value });
+                    }}
                     editable={editable}
                     inputWidth="185px"
                     inputHeight="20px"
@@ -212,6 +221,13 @@ const TaskCard = ({
                 {({ name: fieldName, ...inputHandlers }) => (
                   <DateInputFactory
                     {...inputHandlers}
+                    onBlur={evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...task,
+                        dueDate: inputHandlers.value ? inputHandlers.value : null,
+                      });
+                    }}
                     editable={editable}
                     inputWidth="120px"
                     inputHeight="20px"
@@ -235,6 +251,13 @@ const TaskCard = ({
                 {({ name: fieldName, ...inputHandlers }) => (
                   <DateInputFactory
                     {...inputHandlers}
+                    onBlur={evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...task,
+                        startDate: inputHandlers.value ? inputHandlers.value : null,
+                      });
+                    }}
                     editable={editable}
                     inputWidth="120px"
                     inputHeight="20px"
@@ -258,9 +281,37 @@ const TaskCard = ({
                   showCompletedDate
                   completedDate={completedAt}
                   editable={editable}
+                  onClick={() =>
+                    saveOnBlur({ ...task, completedBy: inProgressBy, completedAt: new Date() })
+                  }
+                  onClickUser={() =>
+                    completedBy
+                      ? saveOnBlur({
+                          ...task,
+                          completedBy: null,
+                          completedAt: '',
+                        })
+                      : saveOnBlur({
+                          ...task,
+                          inProgressBy: null,
+                          inProgressAt: '',
+                        })
+                  }
                 />
               ) : (
-                <TaskAssignmentInput users={assignedTo} editable={editable} />
+                <TaskAssignmentInput
+                  onChange={newAssignedTo =>
+                    saveOnBlur({
+                      ...task,
+                      assignedTo: newAssignedTo,
+                    })
+                  }
+                  users={assignedTo}
+                  onActivateUser={userId =>
+                    saveOnBlur({ ...task, inProgressBy: userId, inProgressAt: new Date() })
+                  }
+                  editable={editable}
+                />
               )}
             </div>
 

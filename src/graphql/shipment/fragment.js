@@ -23,6 +23,11 @@ export const shipmentFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    todo {
+      tasks {
+        ...taskCardFragment
+      }
+    }
     customFields {
       ...customFieldsFragment
     }

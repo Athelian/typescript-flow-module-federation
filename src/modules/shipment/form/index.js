@@ -14,6 +14,7 @@ const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
+const AsyncTaskSection = lazy(() => import('./components/TaskSection'));
 
 type OptionalProps = {
   isNew: boolean,
@@ -93,6 +94,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
+          <AsyncTaskSection type="Shipment" />
           <AsyncOrdersSection />
         </div>
       </Suspense>

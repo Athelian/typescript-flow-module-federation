@@ -26,6 +26,7 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
+  taskCardFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
@@ -224,6 +225,7 @@ export const createShipmentWithReturnDataMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskCardFragment}
 `;
 
 export const prepareCreateShipmentInput = ({
@@ -323,6 +325,7 @@ export const updateShipmentMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskCardFragment}
 `;
 
 export const prepareUpdateShipmentInput = ({

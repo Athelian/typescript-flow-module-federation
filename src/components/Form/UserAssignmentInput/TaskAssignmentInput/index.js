@@ -19,8 +19,7 @@ import {
 type OptionalProps = {
   users: Array<UserAvatarType>,
   activeUserId: ?string,
-  name: string,
-  onChange: (name: string, values: Array<UserAvatarType>) => void,
+  onChange: (values: Array<UserAvatarType>) => void,
   onActivateUser: string => void,
   onDeactivateUser: () => void,
   editable: boolean,
@@ -30,7 +29,6 @@ type Props = OptionalProps;
 
 const defaultProps = {
   users: [],
-  name: '',
   onChange: () => {},
   onActivateUser: () => {},
   onDeactivateUser: () => {},
@@ -40,7 +38,6 @@ const defaultProps = {
 const TaskAssignmentInput = ({
   users,
   activeUserId,
-  name,
   onChange,
   onActivateUser,
   onDeactivateUser,
@@ -73,7 +70,7 @@ const TaskAssignmentInput = ({
             {editable && !isActiveUser && (
               <button
                 className={RemoveAssignmentButtonStyle}
-                onClick={() => onChange(name, users.filter(({ id: userId }) => id !== userId))}
+                onClick={() => onChange(users.filter(({ id: userId }) => id !== userId))}
                 type="button"
               >
                 <Icon icon="REMOVE" />
@@ -104,7 +101,7 @@ const TaskAssignmentInput = ({
                     selected={users}
                     onSelect={selected => {
                       slideToggle(false);
-                      onChange(name, selected);
+                      onChange(selected);
                     }}
                     onCancel={() => slideToggle(false)}
                   />

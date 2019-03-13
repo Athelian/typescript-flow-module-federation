@@ -74,7 +74,7 @@ const TaskStatusInput = ({
             }
           }}
           onClick={() => {
-            if (editable) {
+            if (editable && isInProgress) {
               onClick();
             }
           }}
@@ -103,16 +103,16 @@ const TaskStatusInput = ({
               {isInProgress ? (
                 <>
                   {isHovered ? (
-                    <FormattedMessage id="components.inputs.complete" defaultValue="COMPLETE" />
+                    <FormattedMessage id="components.inputs.complete" defaultMessage="COMPLETE" />
                   ) : (
                     <FormattedMessage
                       id="components.inputs.inProgress"
-                      defaultValue="IN PROGRESS"
+                      defaultMessage="IN PROGRESS"
                     />
                   )}
                 </>
               ) : (
-                <FormattedMessage id="components.inputs.completed" defaultValue="COMPLETED" />
+                <FormattedMessage id="components.inputs.completed" defaultMessage="COMPLETED" />
               )}
             </div>
 
