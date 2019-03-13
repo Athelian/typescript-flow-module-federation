@@ -24,6 +24,11 @@ export const batchFormFragment = gql`
     totalVolume {
       ...metricFragment
     }
+    todo {
+      tasks {
+        ...taskCardFragment
+      }
+    }
     customFields {
       ...customFieldsFragment
     }
