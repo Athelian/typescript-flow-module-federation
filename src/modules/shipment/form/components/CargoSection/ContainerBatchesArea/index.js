@@ -425,6 +425,9 @@ export default function ContainerBatchesArea({
                                       no: `batch no ${batches.length + counter + 1}`,
                                       autoCalculatePackageQuantity: true,
                                       container,
+                                      todo: {
+                                        tasks: [],
+                                      },
                                     });
                                   }
                                 );

@@ -561,10 +561,6 @@ export const prepareParsedUpdateShipmentInput = ({
       }
     ),
     ...parseFilesField('files', originalValues.files, newValues.files),
-    ...parseTasksField(
-      'tasks',
-      getByPathWithDefault(null, 'tasks', originalValues),
-      newValues.tasks
-    ),
+    ...parseTasksField(getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
   };
 };

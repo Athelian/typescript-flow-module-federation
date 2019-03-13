@@ -19,7 +19,6 @@ import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavB
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
 import { ShipmentEventsList } from 'modules/history';
 import { shipmentExportQuery } from './query';
 import {
@@ -231,7 +230,7 @@ class ShipmentFormModule extends React.Component<Props> {
       shipmentFilesContainer.initDetailValues(files);
     }
     shipmentTagsContainer.initDetailValues(tags);
-    shipmentTasksContainer.initDetailValues(getByPathWithDefault([], 'tasks', todo));
+    shipmentTasksContainer.initDetailValues(todo);
     shipmentTransportTypeContainer.initDetailValues(transportType);
   };
 

@@ -24,10 +24,15 @@ import {
   ownedByFragment,
   taskCardFragment,
 } from 'graphql';
-import { prepareUpdateBatchInput, prepareCreateBatchInput } from 'modules/batch/form/mutation';
+import {
+  prepareUpdateBatchInput,
+  prepareCreateBatchInput,
+  prepareParsedUpdateBatchInput,
+} from 'modules/batch/form/mutation';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import {
   parseGenericField,
+  parseMemoField,
   parseDateField,
   parseEnumField,
   parseArrayOfIdsField,
@@ -35,6 +40,7 @@ import {
   parseArrayOfChildrenField,
   parseCustomFieldsField,
   parseFilesField,
+  parseTasksField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 import type { OrderForm } from '../type.js.flow';
@@ -236,45 +242,45 @@ export const prepareParsedUpdateOrderInput = (
   ...parseGenericField('deliveryPlace', originalValues.deliveryPlace, newValues.deliveryPlace),
   ...parseCustomFieldsField('customFields', originalValues.customFields, newValues.customFields),
   ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-  ...parseGenericField('memo', originalValues.memo, newValues.memo),
+  ...parseMemoField('memo', originalValues.memo, newValues.memo),
   ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
   ...parseParentIdField('exporterId', originalValues.exporter, newValues.exporter),
   ...parseArrayOfChildrenField(
     'orderItems',
     originalValues.orderItems,
     newValues.orderItems,
-    (oldItem: ?Object, newItem: Object) => {
-      return {
-        ...(!oldItem ? {} : { id: oldItem.id }),
-        ...parseParentIdField(
-          'productProviderId',
-          getByPathWithDefault(null, 'productProvider', oldItem),
-          newItem.productProvider
-        ),
-        ...parseGenericField(
-          'quantity',
-          getByPathWithDefault(null, 'quantity', oldItem),
-          newItem.quantity
-        ),
-        ...parseGenericField('price', getByPathWithDefault(null, 'price', oldItem), {
-          amount: newItem.price.amount,
-          currency: newValues.currency,
-        }),
-        ...(!oldItem
-          ? { batches: [] }
-          : parseArrayOfChildrenField(
-              'batches',
-              originalValues.batches,
-              newValues.batches,
-              (oldBatch: ?Object, newBatch: Object) => {
-                // TODO: Change to new batch update
-                return {
-                  ...prepareUpdateBatchInput(newBatch, false, false),
-                };
-              }
-            )),
-      };
-    }
+    (oldItem: ?Object, newItem: Object) => ({
+      ...(!oldItem ? {} : { id: oldItem.id }),
+      ...parseParentIdField(
+        'productProviderId',
+        getByPathWithDefault(null, 'productProvider', oldItem),
+        newItem.productProvider
+      ),
+      ...parseGenericField(
+        'quantity',
+        getByPathWithDefault(null, 'quantity', oldItem),
+        newItem.quantity
+      ),
+      ...parseGenericField('price', getByPathWithDefault(null, 'price', oldItem), {
+        amount: newItem.price.amount,
+        currency: newValues.currency,
+      }),
+      ...(!oldItem
+        ? { batches: [] }
+        : parseArrayOfChildrenField(
+            'batches',
+            getByPathWithDefault(null, 'batches', oldItem),
+            newItem.batches,
+            (oldBatch: ?Object, newBatch: Object) =>
+              prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+                inOrderForm: true,
+                inBatchForm: false,
+                inContainerForm: false,
+                inShipmentForm: false,
+              })
+          )),
+    })
   ),
   ...parseFilesField('files', originalValues.files, newValues.files),
+  ...parseTasksField(getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
 });

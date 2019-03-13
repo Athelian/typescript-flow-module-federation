@@ -320,16 +320,22 @@ type TaskType = {
 
 // Use for Todo (Tasks) field. Make sure to send 'todo' which contains 'tasks'.
 export const parseTasksField = (
-  key: string,
-  originalTasks: ?Array<TaskType>,
-  newTasks: Array<TaskType>
+  originalTodo: ?{
+    tasks: Array<TaskType>,
+  },
+  newTodo: {
+    tasks: Array<TaskType>,
+  }
 ): Object => {
-  if (isEquals(originalTasks, newTasks)) return {};
+  if (isEquals(originalTodo, newTodo)) return {};
+
+  const originalTasks = getByPathWithDefault(null, 'tasks', originalTodo);
+  const newTasks = newTodo.tasks;
 
   return {
     todo: {
       ...parseArrayOfChildrenField(
-        key,
+        'tasks',
         originalTasks,
         newTasks,
         (oldTask: ?Object, newTask: Object) => {
