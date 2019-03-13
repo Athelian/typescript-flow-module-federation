@@ -97,6 +97,11 @@ class BatchFormWrapper extends React.Component<Props> {
                         icon="PACKAGING"
                       />
                       <SectionTabs
+                        link="batch_taskSection"
+                        label={<FormattedMessage id="modules.Batches.task" defaultMessage="TASK" />}
+                        icon="TASK"
+                      />
+                      <SectionTabs
                         link="batch_shipmentSection"
                         label={
                           <FormattedMessage
