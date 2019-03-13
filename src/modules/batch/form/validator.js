@@ -5,9 +5,11 @@ export default Yup.object().shape({
   no: Yup.string().required(),
   orderItem: Yup.string().required(),
   quantity: Yup.number().required(),
-  tasks: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required(),
-    })
-  ),
+  todo: Yup.object().shape({
+    tasks: Yup.array().of(
+      Yup.object().shape({
+        name: Yup.string().required(),
+      })
+    ),
+  }),
 });

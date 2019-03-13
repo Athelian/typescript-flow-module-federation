@@ -15,11 +15,13 @@ const validator = Yup.object().shape({
       ),
     })
   ),
-  tasks: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required(),
-    })
-  ),
+  todo: Yup.object().shape({
+    tasks: Yup.array().of(
+      Yup.object().shape({
+        name: Yup.string().required(),
+      })
+    ),
+  }),
 });
 
 export default validator;
