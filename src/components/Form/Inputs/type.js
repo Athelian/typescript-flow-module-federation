@@ -12,7 +12,6 @@ type OptionalProps = {
   readOnly: boolean,
   readOnlyWidth: string,
   readOnlyHeight: string,
-  color: string,
 };
 
 export type InputProps = OptionalProps;

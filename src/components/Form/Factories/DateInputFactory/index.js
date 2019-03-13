@@ -19,6 +19,7 @@ type Props = LabelProps &
     Input: () => React.Node,
     editable: boolean,
     blackout: boolean,
+    color?: string,
   };
 
 const defaultProps = {

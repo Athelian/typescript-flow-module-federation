@@ -120,7 +120,7 @@ const TaskSection = ({ task }: Props) => {
                         <FormattedMessage id="modules.task.taskNo" defaultMessage="TASK No." />
                       </Label>
                     }
-                    input={<Display>{parseInt(task.sort, 10) + 1}</Display>}
+                    input={<Display>{task.sort + 1}</Display>}
                   />
                   <FormField
                     name="name"
@@ -314,7 +314,6 @@ const TaskSection = ({ task }: Props) => {
                               onDeactivateUser={() => {
                                 if (status === COMPLETED) {
                                   setFieldValue('completedBy', null);
-                                  setFieldValue('completedAt', null);
                                 } else if (status === IN_PROGRESS) {
                                   setFieldValue('inProgressBy', null);
                                   setFieldValue('inProgressAt', null);

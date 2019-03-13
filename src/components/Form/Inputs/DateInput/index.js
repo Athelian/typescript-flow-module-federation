@@ -10,6 +10,7 @@ import messages from 'components/Form/Inputs/messages';
 
 type Props = InputProps & {
   intl: IntlShape,
+  color?: string,
 };
 
 const DateInput = ({
