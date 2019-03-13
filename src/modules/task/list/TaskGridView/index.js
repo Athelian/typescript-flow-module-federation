@@ -19,6 +19,7 @@ type Props = {
 const defaultRenderItem = (item: Object, allowCreate: boolean) => (
   <TaskCard
     key={item.id}
+    position={item.sort + 1}
     task={item}
     onClick={() => navigate(`/task/${encodeId(item.id)}`)}
     onClone={() => navigate(`/task/clone/${encodeId(item.id)}`)}
