@@ -38,7 +38,6 @@ function BatchTaskSection({ intl }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              <div id="sortsandfilterswip" />
               <NewButton
                 label={intl.formatMessage(messages.newTask)}
                 onClick={() => {

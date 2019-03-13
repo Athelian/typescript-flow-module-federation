@@ -307,8 +307,8 @@ const TaskCard = ({
                     })
                   }
                   users={assignedTo}
-                  onActivateUser={userId =>
-                    saveOnBlur({ ...task, inProgressBy: userId, inProgressAt: new Date() })
+                  onActivateUser={user =>
+                    saveOnBlur({ ...task, inProgressBy: user, inProgressAt: new Date() })
                   }
                   editable={editable}
                 />

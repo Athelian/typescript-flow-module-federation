@@ -25,6 +25,7 @@ const Tasks = ({ tasks, onRemove, onSave, checkPermission }: Props) => {
           <TaskCard
             editable={allowUpdate}
             task={task}
+            position={index + 1}
             saveOnBlur={newValue => onSave(index, newValue)}
             onClick={() => {
               // TODO: migrate to task form later
