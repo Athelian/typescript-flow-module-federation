@@ -20,6 +20,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  taskCardFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from 'utils/batch';
@@ -130,6 +131,7 @@ export const updateBatchMutation = gql`
   ${fieldDefinitionFragment}
   ${badRequestFragment}
   ${ownedByFragment}
+  ${taskCardFragment}
 `;
 
 export const prepareUpdateBatchInput = (

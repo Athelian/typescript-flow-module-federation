@@ -18,9 +18,8 @@ import OrderFormWrapperStyle from './style';
 import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
 
 const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
-
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
-
+const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection/order'));
 const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
 
 type OptionalProps = {
@@ -144,6 +143,7 @@ export default class OrderForm extends React.Component<Props> {
                   </Subscribe>
                   <AsyncDocumentsSection />
                 </SectionWrapper>
+                <AsyncTaskSection />
                 <SectionWrapper id="order_shipmentsSection">
                   <Subscribe to={[OrderInfoContainer]}>
                     {({ state: { shipments } }) => (

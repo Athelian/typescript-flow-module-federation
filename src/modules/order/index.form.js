@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
@@ -24,6 +25,7 @@ import {
   OrderInfoContainer,
   OrderTagsContainer,
   OrderFilesContainer,
+  OrderTasksContainer,
 } from './form/containers';
 import { orderFormQuery } from './form/query';
 import {
@@ -58,6 +60,7 @@ type OrderFormState = {
   orderItemState: Object,
   orderTagsState: Object,
   orderFilesState: Object,
+  orderTasksState: Object,
 };
 
 class OrderFormModule extends React.PureComponent<Props> {
@@ -82,12 +85,14 @@ class OrderFormModule extends React.PureComponent<Props> {
     orderItemState,
     orderTagsState,
     orderFilesState,
+    orderTasksState,
     form,
   }: OrderFormState & { form: Object }) => {
     resetFormState(orderInfoState);
     resetFormState(orderItemState, 'orderItems');
     resetFormState(orderTagsState, 'tags');
     resetFormState(orderFilesState, 'files');
+    resetFormState(orderTasksState, 'tasks');
     form.onReset();
   };
 
@@ -138,13 +143,15 @@ class OrderFormModule extends React.PureComponent<Props> {
     orderInfoState,
     orderTagsState,
     orderFilesState,
+    orderTasksState,
   }: {
     orderItemState: Object,
     orderInfoState: Object,
     orderTagsState: Object,
     orderFilesState: Object,
+    orderTasksState: Object,
   }) => (order: Object) => {
-    const { orderItems, tags, files, ...info } = order;
+    const { orderItems, tags, files, todo, ...info } = order;
     const { currency } = info;
     orderInfoState.initDetailValues({ currency });
     if (this.isClone()) {
@@ -162,6 +169,7 @@ class OrderFormModule extends React.PureComponent<Props> {
       orderFilesState.initDetailValues(files);
     }
     orderTagsState.initDetailValues(tags);
+    orderTasksState.initDetailValues(todo.tasks || []);
   };
 
   onMutationCompleted = ({
@@ -169,13 +177,20 @@ class OrderFormModule extends React.PureComponent<Props> {
     orderInfoState,
     orderTagsState,
     orderFilesState,
+    orderTasksState,
   }: {
     orderItemState: Object,
     orderInfoState: Object,
     orderTagsState: Object,
     orderFilesState: Object,
+    orderTasksState: Object,
   }) => (result: Object) => {
     const { redirectAfterSuccess } = this.props;
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+      return;
+    }
+
     if (this.isNewOrClone()) {
       const { orderCreate } = result;
       if (redirectAfterSuccess) {
@@ -188,6 +203,7 @@ class OrderFormModule extends React.PureComponent<Props> {
         orderInfoState,
         orderTagsState,
         orderFilesState,
+        orderTasksState,
       })(orderUpdate);
     }
   };
@@ -211,10 +227,18 @@ class OrderFormModule extends React.PureComponent<Props> {
                 OrderInfoContainer,
                 OrderTagsContainer,
                 OrderFilesContainer,
+                OrderTasksContainer,
                 FormContainer,
               ]}
             >
-              {(orderItemState, orderInfoState, orderTagsState, orderFilesState, form) => (
+              {(
+                orderItemState,
+                orderInfoState,
+                orderTagsState,
+                orderFilesState,
+                orderTasksState,
+                form
+              ) => (
                 <Mutation
                   mutation={isNewOrClone ? createOrderMutation : updateOrder}
                   onCompleted={this.onMutationCompleted({
@@ -222,6 +246,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                     orderInfoState,
                     orderTagsState,
                     orderFilesState,
+                    orderTasksState,
                   })}
                   {...mutationKey}
                 >
@@ -261,6 +286,13 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 />
                               }
                               icon="DOCUMENT"
+                            />
+                            <SectionTabs
+                              link="order_taskSection"
+                              label={
+                                <FormattedMessage id="modules.Orders.task" defaultMessage="TASK" />
+                              }
+                              icon="TASK"
                             />
                             <SectionTabs
                               link="order_shipmentsSection"
@@ -305,7 +337,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                               orderItemState.isDirty() ||
                               orderInfoState.isDirty() ||
                               orderTagsState.isDirty() ||
-                              orderFilesState.isDirty()) && (
+                              orderFilesState.isDirty() ||
+                              orderTasksState.isDirty()) && (
                               <>
                                 {this.isNewOrClone() ? (
                                   <CancelButton
@@ -319,6 +352,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                         orderInfoState,
                                         orderTagsState,
                                         orderFilesState,
+                                        orderTasksState,
                                         form,
                                       })
                                     }
@@ -333,6 +367,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                         ...orderInfoState.state,
                                         ...orderTagsState.state,
                                         ...orderFilesState.state,
+                                        ...orderTasksState.state,
                                       },
                                       validator
                                     )
@@ -345,6 +380,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                         ...orderInfoState.state,
                                         ...orderTagsState.state,
                                         ...orderFilesState.state,
+                                        ...orderTasksState.state,
                                       },
                                       saveOrder,
                                       () => {
@@ -352,6 +388,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                         orderInfoState.onSuccess();
                                         orderTagsState.onSuccess();
                                         orderFilesState.onSuccess();
+                                        orderTasksState.onSuccess();
                                         form.onReset();
                                       },
                                       form.onErrors
@@ -365,7 +402,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                               !orderItemState.isDirty() &&
                               !orderInfoState.isDirty() &&
                               !orderTagsState.isDirty() &&
-                              !orderFilesState.isDirty() && (
+                              !orderFilesState.isDirty() &&
+                              !orderTasksState.isDirty() && (
                                 <ExportButton
                                   type="Order"
                                   exportQuery={orderExportQuery}
@@ -394,6 +432,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                   orderInfoState,
                                   orderTagsState,
                                   orderFilesState,
+                                  orderTasksState,
                                 })(order);
                               }}
                             />
