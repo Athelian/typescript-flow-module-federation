@@ -73,13 +73,22 @@ export const isForbidden = (data: ?Object): boolean => {
   return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
 };
 
-// Works for string, number, and object in certain situations
+// For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) return { [key]: newValue };
   return {};
 };
 
-// Cannot have empty string as a value
+// Use for Textarea fields. The native input cannot take null, so it will hard-code empty string. We should treat that data as null though.
+export const parseMemoField = (key: string, originalMemo: ?string, newMemo: ?string): Object => {
+  const parsedOriginalMemo = originalMemo === '' ? null : originalMemo;
+  const parsedNewMemo = newMemo === '' ? null : newMemo;
+
+  if (!isEquals(parsedOriginalMemo, parsedNewMemo)) return { [key]: parsedNewMemo };
+  return {};
+};
+
+// Use for Enum fields. Cannot have empty string as value.
 export const parseEnumField = (key: string, originalEnum: ?string, newEnum: ?string): Object => {
   const parsedOriginalEnum = originalEnum || null;
   const parsedNewEnum = newEnum || null;
@@ -88,7 +97,7 @@ export const parseEnumField = (key: string, originalEnum: ?string, newEnum: ?str
   return {};
 };
 
-// Back uses Date format, Front uses string format
+// Use for Date fields. Need to parse into Date object.
 export const parseDateField = (key: string, originalDate: ?Date, newDate: ?string): Object => {
   const parsedOriginalDate = originalDate ? new Date(originalDate) : null;
   const parsedNewDate = newDate ? new Date(newDate) : null;
@@ -97,7 +106,7 @@ export const parseDateField = (key: string, originalDate: ?Date, newDate: ?strin
   return {};
 };
 
-// Return only ids of the array of objects
+// Use for Array of Ids.
 export const parseArrayOfIdsField = (
   key: string,
   originalArray: ?Array<Object>,
@@ -110,7 +119,7 @@ export const parseArrayOfIdsField = (
   return {};
 };
 
-// Return id
+// Use for Single Id.
 export const parseParentIdField = (
   key: string,
   originalParent: ?Object,
@@ -123,7 +132,7 @@ export const parseParentIdField = (
   return {};
 };
 
-// Return parsed array of children objects
+// Use to apply nested logic to child entities. Look at existing uses to understand more how to use it.
 export const parseArrayOfChildrenField = (
   key: string,
   originalChildren: ?Array<Object>,
@@ -147,7 +156,7 @@ export const parseArrayOfChildrenField = (
   return { [key]: parsedNewChildren };
 };
 
-// Have to return all fieldValues if there is at least one change in it
+// Use for Custom Fields. If there is at least one change in fieldValues, we need to send all fieldValues.
 export const parseCustomFieldsField = (
   key: string,
   originalCustomFields: ?{
@@ -208,7 +217,7 @@ export const parseCustomFieldsField = (
   return {};
 };
 
-// Have to return id even for new file
+// Use for Documents fields. Need to send ids even for new files.
 export const parseFilesField = (
   key: string,
   originalFiles: ?Array<{
@@ -233,13 +242,13 @@ export const parseFilesField = (
         id: newFile.id,
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
         ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-        ...parseGenericField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+        ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
       };
     }
   ),
 });
 
-// Return id of approver, not date
+// Use for Approval fields. Need to send only approvedBy, not approvedAt.
 export const parseApprovalField = (
   key: string,
   originalApproval: ?{
@@ -277,7 +286,7 @@ export const parseApprovalField = (
   return {};
 };
 
-// Return index of representative batch
+// Use for Representative Batch. Send index, not id.
 export const parseRepresentativeBatchIndexField = (
   key: string,
   originalRepresentativeBatch: ?{

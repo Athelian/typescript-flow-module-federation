@@ -34,14 +34,12 @@ import {
   prepareUpdateBatchInput,
   prepareParsedUpdateBatchInput,
 } from 'modules/batch/form/mutation';
-import {
-  prepareContainer,
-  prepareParsedUpdateContainerInput,
-} from 'modules/container/form/mutation';
+import { prepareParsedUpdateContainerInput } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
   cleanUpData,
   parseGenericField,
+  parseMemoField,
   parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
@@ -51,13 +49,7 @@ import {
   parseEnumField,
   parseCustomFieldsField,
 } from 'utils/data';
-import type {
-  CargoReady,
-  ShipmentVoyage,
-  ShipmentGroups,
-  ShipmentCreate,
-  ShipmentUpdate,
-} from '../type.js.flow';
+import type { CargoReady, ShipmentVoyage, ShipmentGroups, ShipmentCreate } from '../type.js.flow';
 
 const prepareNewContainer = ({
   updatedAt,
@@ -328,58 +320,6 @@ export const updateShipmentMutation: Object = gql`
   ${taskCardFragment}
 `;
 
-export const prepareUpdateShipmentInput = ({
-  no,
-  blNo,
-  blDate,
-  bookingNo,
-  bookingDate,
-  invoiceNo,
-  memo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  customFields,
-  cargoReady,
-  voyages = [],
-  containerGroups = [],
-  tags = [],
-  batches = [],
-  forwarders = [],
-  inCharges = [],
-  files = [],
-  containers = [],
-}: Object): ShipmentUpdate => ({
-  no,
-  blNo,
-  blDate: blDate ? new Date(blDate) : null,
-  bookingNo,
-  bookingDate: bookingDate ? new Date(bookingDate) : null,
-  invoiceNo,
-  memo,
-  loadType: loadType && loadType.length > 0 ? loadType : null,
-  transportType: transportType && transportType.length > 0 ? transportType : null,
-  incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
-  carrier,
-  customFields: prepareCustomFieldsData(customFields),
-  cargoReady: formatTimeline(cargoReady),
-  tagIds: tags.map(({ id }) => id),
-  forwarderIds: forwarders.map(({ id }) => id),
-  inChargeIds: inCharges.map(({ id }) => id),
-  batches: getBatchesInPool(batches).map(batch =>
-    prepareUpdateBatchInput(cleanUpData(batch), true, false)
-  ),
-  containers: containers.map(prepareContainer),
-  voyages: formatVoyages(voyages),
-  containerGroups: formatContainerGroups(containerGroups),
-  files: files.map(({ id, name, type, memo: fileMemo }) => ({
-    id,
-    name,
-    type,
-    memo: fileMemo,
-  })),
-});
 type DateRevisionType = {
   id: string,
   date: string | Date,
@@ -425,11 +365,6 @@ const parseTimelineDateField = (
         approvedAt: getByPathWithDefault(null, 'approvedAt', newTimelineDate),
       }
     ),
-    ...parseGenericField(
-      'memo',
-      getByPathWithDefault(null, 'memo', originalTimelineDate),
-      getByPathWithDefault(null, 'memo', newTimelineDate)
-    ),
     ...parseArrayOfChildrenField(
       'timelineDateRevisions',
       getByPathWithDefault([], 'timelineDateRevisions', originalTimelineDate),
@@ -446,7 +381,7 @@ const parseTimelineDateField = (
           getByPathWithDefault(null, 'type', oldDateRevision),
           getByPathWithDefault(null, 'type', newDateRevision)
         ),
-        ...parseGenericField(
+        ...parseMemoField(
           'memo',
           getByPathWithDefault(null, 'memo', oldDateRevision),
           getByPathWithDefault(null, 'memo', newDateRevision)
@@ -518,7 +453,7 @@ export const prepareParsedUpdateShipmentInput = ({
       newValues.customFields
     ),
     ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-    ...parseGenericField('memo', originalValues.memo, newValues.memo),
+    ...parseMemoField('memo', originalValues.memo, newValues.memo),
     ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
     ...parseArrayOfIdsField('forwarderIds', originalValues.forwarders, newValues.forwarders),
     ...parseTimelineDateField('cargoReady', originalValues.cargoReady, newValues.cargoReady),

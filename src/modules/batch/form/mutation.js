@@ -25,6 +25,7 @@ import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from 'utils/batch';
 import {
   parseGenericField,
+  parseMemoField,
   parseDateField,
   parseEnumField,
   parseArrayOfIdsField,
@@ -234,11 +235,7 @@ export const prepareParsedUpdateBatchInput = (
       getByPathWithDefault([], 'tags', originalValues),
       newValues.tags
     ),
-    ...parseGenericField(
-      'memo',
-      getByPathWithDefault(null, 'memo', originalValues),
-      newValues.memo
-    ),
+    ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
     ...(inOrderForm
       ? {}
       : parseParentIdField(
@@ -276,7 +273,7 @@ export const prepareParsedUpdateBatchInput = (
           getByPathWithDefault(null, 'reason', oldAdjustment),
           newAdjustment.reason
         ),
-        ...parseGenericField(
+        ...parseMemoField(
           'memo',
           getByPathWithDefault(null, 'memo', oldAdjustment),
           newAdjustment.memo
