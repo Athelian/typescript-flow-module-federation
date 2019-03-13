@@ -176,7 +176,7 @@ export default {
   DRAG_HANDLE,
   METADATA,
   TEMPLATE,
-  TASK, 
+  TASK,
   STAR,
 
   RELATION_MAP,

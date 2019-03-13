@@ -11,6 +11,7 @@ import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import TasksNumber from 'components/TasksNumber';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { totalAdjustQuantity } from 'components/Cards/utils';
@@ -29,6 +30,7 @@ import {
   ShipmentIconStyle,
   WarehouseArrivalWrapperStyle,
   WarehouseArrivalIconStyle,
+  TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
@@ -123,6 +125,7 @@ const OrderBatchCard = ({
     batchAdjustments,
     shipment,
     autoCalculatePackageQuantity,
+    todo,
   } = batch;
 
   const warehouseArrivalApproved = !!(
@@ -260,8 +263,11 @@ const OrderBatchCard = ({
           </Display>
         </div>
 
-        <div className={BatchTagsWrapperStyle}>
-          {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+        <div className={TagsAndTaskWrapperStyle}>
+          <div className={BatchTagsWrapperStyle}>
+            {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          </div>
+          <TasksNumber {...todo} />
         </div>
       </div>
     </BaseCard>
@@ -470,9 +476,11 @@ const OrderBatchCard = ({
             />
           </Display>
         </div>
-
-        <div className={BatchTagsWrapperStyle}>
-          {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+        <div className={TagsAndTaskWrapperStyle}>
+          <div className={BatchTagsWrapperStyle}>
+            {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          </div>
+          <TasksNumber {...todo} />
         </div>
       </div>
     </BaseCard>
@@ -483,7 +491,7 @@ OrderBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderBatchCard, 'batch', {
   width: '195px',
-  height: '234px',
+  height: '241px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

@@ -8,6 +8,7 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
+import TasksNumber from 'components/TasksNumber';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
@@ -39,11 +40,12 @@ import {
   VolumeWrapperStyle,
   OrderWrapperStyle,
   OrderIconStyle,
-  OrderInChargeWrapperStyle,
-  InChargeWrapperStyle,
-  BatchTagsWrapperStyle,
   ContainerWrapperStyle,
   ContainerIconStyle,
+  OrderInChargeWrapperStyle,
+  InChargeWrapperStyle,
+  TagsAndTaskWrapperStyle,
+  BatchTagsWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -127,6 +129,7 @@ const ShipmentBatchCard = ({
       productProvider: { product, supplier, exporter },
       order,
     },
+    todo,
   } = batch;
 
   const totalAdjustment = totalAdjustQuantity(batchAdjustments);
@@ -440,8 +443,11 @@ const ShipmentBatchCard = ({
             </div>
           </div>
 
-          <div className={BatchTagsWrapperStyle}>
-            {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={TagsAndTaskWrapperStyle}>
+            <div className={BatchTagsWrapperStyle}>
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <TasksNumber {...todo} />
           </div>
         </div>
       </div>
@@ -453,7 +459,7 @@ ShipmentBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentBatchCard, 'batch', {
   width: '195px',
-  height: '379px',
+  height: '381px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

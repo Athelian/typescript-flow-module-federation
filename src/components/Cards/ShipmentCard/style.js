@@ -20,7 +20,7 @@ export const ShipmentCardWrapperStyle: string = css`
 export const ShipmentInfoWrapperStyle: string = css`
   display: flex;
   width: 100%;
-  padding: 5px 30px 5px 10px;
+  padding: 5px 10px;
 `;
 
 export const ShipmentLeftWrapperStyle: string = css`
@@ -45,13 +45,14 @@ export const ShipmentBLStyle: string = css`
 export const ShipmentRightWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  width: 520px;
+  width: 540px;
 `;
 
 export const ShipmentHeaderWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   justify-content: end;
   grid-gap: 5px;
+  padding: 0 20px 0 0;
 `;
 
 export const ShipmentTagsWrapperStyle: string = css`
