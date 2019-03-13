@@ -48,6 +48,7 @@ import {
   parseFilesField,
   parseEnumField,
   parseCustomFieldsField,
+  parseTasksField,
 } from 'utils/data';
 import type { CargoReady, ShipmentVoyage, ShipmentGroups, ShipmentCreate } from '../type.js.flow';
 
@@ -560,5 +561,10 @@ export const prepareParsedUpdateShipmentInput = ({
       }
     ),
     ...parseFilesField('files', originalValues.files, newValues.files),
+    ...parseTasksField(
+      'tasks',
+      getByPathWithDefault(null, 'tasks', originalValues),
+      newValues.tasks
+    ),
   };
 };
