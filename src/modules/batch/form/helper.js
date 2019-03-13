@@ -1,5 +1,5 @@
 // @flow
-import type { Metric } from './container/type.js.flow';
+import type { Metric } from './containers/type.js.flow';
 
 export function convertVolume(
   volumeMetric: string,
