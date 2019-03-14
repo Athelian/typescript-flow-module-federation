@@ -26,12 +26,11 @@ import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constant
 import { FormField } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
-import {
-  FormContentWrapperStyle,
-  CommonSectionWrapperStyle,
-  // DescriptionLabelWrapperStyle,
-  AssignedToStyle,
-} from './style';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import { TASK_UPDATE } from 'modules/permission/constants/task';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import { FormContentWrapperStyle, CommonSectionWrapperStyle, AssignedToStyle } from './style';
 
 type Props = {
   isNew?: boolean,
@@ -64,6 +63,9 @@ const getStatusState = ({
 };
 
 const TaskSection = ({ task }: Props) => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  const editable = hasPermission(TASK_UPDATE);
   return (
     <div className={FormContentWrapperStyle}>
       <SectionWrapper id="task_taskSection">
@@ -136,7 +138,7 @@ const TaskSection = ({ task }: Props) => {
                         required
                         {...inputHandlers}
                         originalValue={originalValues[name]}
-                        editable
+                        editable={editable}
                       />
                     )}
                   </FormField>
@@ -160,7 +162,7 @@ const TaskSection = ({ task }: Props) => {
                         label={
                           <FormattedMessage id="modules.task.dueDate" defaultMessage="DUE DATE" />
                         }
-                        editable
+                        editable={editable}
                       />
                     )}
                   </FormField>
@@ -182,40 +184,10 @@ const TaskSection = ({ task }: Props) => {
                             defaultMessage="START DATE"
                           />
                         }
-                        editable
+                        editable={editable}
                       />
                     )}
                   </FormField>
-
-                  {/* <FormField
-                    name="description"
-                    initValue={values.description}
-                    values={values}
-                    validator={validator}
-                    setFieldValue={setFieldValue}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <TextAreaInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        isNew={isNew}
-                        originalValue={originalValues[name]}
-                        label={
-                          <div className={DescriptionLabelWrapperStyle}>
-                            <FormattedMessage
-                              id="modules.Tags.description"
-                              defaultMessage="DESCRIPTION"
-                            />
-                          </div>
-                        }
-                        inputHeight="100px"
-                        inputWidth="200px"
-                        inputAlign="right"
-                        vertical={false}
-                        editable
-                      />
-                    )}
-                  </FormField> */}
 
                   <FieldItem
                     vertical
@@ -234,8 +206,8 @@ const TaskSection = ({ task }: Props) => {
                           setFieldValue(field, value);
                         }}
                         editable={{
-                          set: true,
-                          remove: true,
+                          set: hasPermission(TAG_LIST) && editable,
+                          remove: editable,
                         }}
                       />
                     }
@@ -257,7 +229,7 @@ const TaskSection = ({ task }: Props) => {
                         vertical
                         inputWidth="680px"
                         inputHeight="65px"
-                        editable
+                        editable={editable}
                       />
                     )}
                   </FormField>
@@ -278,6 +250,7 @@ const TaskSection = ({ task }: Props) => {
                             <DateInput
                               onChange={e => setFieldValue('completedAt', e.target.value)}
                               value={values.completedAt}
+                              readOnly={!editable}
                             />
                           </DefaultStyle>
                         ) : (
@@ -319,7 +292,7 @@ const TaskSection = ({ task }: Props) => {
                                   setFieldValue('inProgressAt', null);
                                 }
                               }}
-                              editable
+                              editable={editable}
                             />
                           }
                         />
@@ -332,7 +305,7 @@ const TaskSection = ({ task }: Props) => {
                             onClick={() => {
                               setFieldValue('completedBy', activeUser);
                             }}
-                            editable
+                            editable={editable}
                           />
                         ) : (
                           <Label>
