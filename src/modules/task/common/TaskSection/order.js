@@ -64,6 +64,7 @@ function OrderTaskSection({ intl }: Props) {
                         },
                         assignedTo: [],
                         tags: [],
+                        memo: '',
                       }),
                     ]);
                     setFieldTouched('tasks');

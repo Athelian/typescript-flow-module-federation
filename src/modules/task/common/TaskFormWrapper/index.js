@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
-import TaskFormContainer from 'modules/task/form/container';
+import TaskFormContainer, { initValues } from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -29,7 +29,9 @@ class TaskFormWrapper extends React.Component<Props> {
   }
 
   componentWillUnmount() {
+    const { initDetailValues } = this.props;
     formContainer.onReset();
+    initDetailValues(initValues);
   }
 
   render() {

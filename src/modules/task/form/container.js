@@ -17,9 +17,11 @@ type FormState = {
   completedAt?: string,
 };
 
-const initValues = {
+export const initValues = {
   dueDate: '',
   startDate: '',
+  name: '',
+  memo: '',
   tags: [],
   assignedTo: [],
   completedBy: null,

@@ -64,6 +64,7 @@ function ShipmentTaskSection({ intl }: Props) {
                         },
                         assignedTo: [],
                         tags: [],
+                        memo: '',
                       }),
                     ]);
                     setFieldTouched('tasks');
