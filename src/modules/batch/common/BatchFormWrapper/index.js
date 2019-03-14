@@ -7,6 +7,8 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
 import type { BatchFormState } from 'modules/batch/form/containers/type.js.flow';
+import { initValues as infoInitValues } from 'modules/batch/form/containers/info';
+import { initValues as taskInitValues } from 'modules/batch/form/containers/tasks';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -43,40 +45,9 @@ class BatchFormWrapper extends React.Component<Props> {
   componentWillUnmount() {
     const { initDetailValues } = this.props;
     formContainer.onReset();
-    // TODO: use init state from batch container
     initDetailValues({
-      quantity: 0,
-      customFields: {
-        fieldValues: [],
-        fieldDefinitions: [],
-      },
-      tags: [],
-      batchAdjustments: [],
-      packageCapacity: 0,
-      packageQuantity: 0,
-      packageGrossWeight: { value: 0, metric: 'kg' },
-      packageVolume: {
-        metric: 'm³',
-        value: 0,
-      },
-      packageSize: {
-        width: {
-          metric: 'cm',
-          value: 0,
-        },
-        height: {
-          metric: 'cm',
-          value: 0,
-        },
-        length: {
-          metric: 'cm',
-          value: 0,
-        },
-      },
-      autoCalculatePackageQuantity: true,
-      todo: {
-        tasks: [],
-      },
+      ...infoInitValues,
+      ...taskInitValues,
     });
   }
 

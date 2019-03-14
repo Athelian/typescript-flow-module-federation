@@ -7,7 +7,7 @@ import { calculatePackageQuantity } from 'utils/batch';
 import type { BatchFormState, ProductProvider } from './type.js.flow';
 import { convertVolume } from '../helper';
 
-const initValues = {
+export const initValues = {
   quantity: 0,
   customFields: {
     fieldValues: [],
