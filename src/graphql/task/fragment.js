@@ -50,6 +50,7 @@ export const taskFormFragment = gql`
     name
     dueDate
     startDate
+    description
     inProgressAt
     inProgressBy {
       ...userAvatarFragment

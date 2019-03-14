@@ -52,7 +52,7 @@ export const prepareTaskUpdateData = (originalValues: Object, values: Object) =>
     getByPathWithDefault(null, 'completedBy.id', values)
   ),
   ...parseDateField('completedAt', originalValues.completedAt, values.completedAt),
-  // ...parseGenericField('description', originalValues.description, values.description),
+  ...parseGenericField('description', originalValues.description, values.description),
   ...parseGenericField('memo', originalValues.memo, values.memo),
   ...parseArrayOfIdsField('tagIds', originalValues.tags, values.tags),
 });
