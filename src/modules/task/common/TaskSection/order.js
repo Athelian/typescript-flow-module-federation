@@ -7,7 +7,15 @@ import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import {
+  TASK_CREATE,
+  TASK_UPDATE,
+  TASK_DELETE,
+  ORDER_TASK_FORM,
+  ORDER_TASK_LIST,
+} from 'modules/permission/constants/task';
 import { OrderTasksContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
@@ -20,6 +28,10 @@ type Props = {
 
 function OrderTaskSection({ intl }: Props) {
   const type = 'Order';
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  if (!hasPermission(ORDER_TASK_LIST)) return null;
+
   return (
     <Subscribe to={[OrderInfoContainer, OrderTasksContainer, FormContainer]}>
       {(
@@ -43,29 +55,33 @@ function OrderTaskSection({ intl }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              <NewButton
-                label={intl.formatMessage(messages.newTask)}
-                onClick={() => {
-                  setFieldValue('todo.tasks', [
-                    ...tasks,
-                    injectUid({
-                      name: `task - ${tasks.length + 1}`,
-                      entity: {
-                        __typename: type,
-                        poNo,
-                      },
-                      assignedTo: [],
-                      tags: [],
-                    }),
-                  ]);
-                  setFieldTouched('tasks');
-                }}
-              />
+              {hasPermission(TASK_CREATE) && (
+                <NewButton
+                  label={intl.formatMessage(messages.newTask)}
+                  onClick={() => {
+                    setFieldValue('todo.tasks', [
+                      ...tasks,
+                      injectUid({
+                        name: `task - ${tasks.length + 1}`,
+                        entity: {
+                          __typename: type,
+                          poNo,
+                        },
+                        assignedTo: [],
+                        tags: [],
+                      }),
+                    ]);
+                    setFieldTouched('tasks');
+                  }}
+                />
+              )}
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
                 type={type}
-                checkPermission={ORDER_UPDATE}
+                editable={hasPermission(TASK_UPDATE)}
+                viewForm={hasPermission(ORDER_TASK_FORM)}
+                removable={hasPermission(TASK_DELETE)}
                 tasks={tasks}
                 onRemove={({ id }) => {
                   setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));

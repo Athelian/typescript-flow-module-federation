@@ -7,7 +7,15 @@ import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { BATCH_UPDATE } from 'modules/permission/constants/batch';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import {
+  TASK_CREATE,
+  TASK_UPDATE,
+  BATCH_TASK_FORM,
+  BATCH_TASK_LIST,
+  TASK_DELETE,
+} from 'modules/permission/constants/task';
 import { BatchTasksContainer, BatchInfoContainer } from 'modules/batch/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
@@ -20,6 +28,10 @@ type Props = {
 
 function BatchTaskSection({ intl }: Props) {
   const type = 'Batch';
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  if (!hasPermission(BATCH_TASK_LIST)) return null;
+
   return (
     <Subscribe to={[BatchInfoContainer, BatchTasksContainer, FormContainer]}>
       {(
@@ -43,29 +55,33 @@ function BatchTaskSection({ intl }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              <NewButton
-                label={intl.formatMessage(messages.newTask)}
-                onClick={() => {
-                  setFieldValue('todo.tasks', [
-                    ...tasks,
-                    injectUid({
-                      name: `task - ${tasks.length + 1}`,
-                      entity: {
-                        __typename: type,
-                        no,
-                      },
-                      assignedTo: [],
-                      tags: [],
-                    }),
-                  ]);
-                  setFieldTouched('tasks');
-                }}
-              />
+              {hasPermission(TASK_CREATE) && (
+                <NewButton
+                  label={intl.formatMessage(messages.newTask)}
+                  onClick={() => {
+                    setFieldValue('todo.tasks', [
+                      ...tasks,
+                      injectUid({
+                        name: `task - ${tasks.length + 1}`,
+                        entity: {
+                          __typename: type,
+                          no,
+                        },
+                        assignedTo: [],
+                        tags: [],
+                      }),
+                    ]);
+                    setFieldTouched('tasks');
+                  }}
+                />
+              )}
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
                 type={type}
-                checkPermission={BATCH_UPDATE}
+                editable={hasPermission(TASK_UPDATE)}
+                viewForm={hasPermission(BATCH_TASK_FORM)}
+                removable={hasPermission(TASK_DELETE)}
                 tasks={tasks}
                 onRemove={({ id }) => {
                   setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));

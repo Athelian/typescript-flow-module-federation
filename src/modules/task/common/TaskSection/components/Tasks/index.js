@@ -3,8 +3,6 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import TaskFormWrapper from 'modules/task/common/TaskFormWrapper';
 import TaskContainer from 'modules/task/form/container';
@@ -15,14 +13,13 @@ type Props = {
   tasks: Array<Object>,
   onRemove: Function,
   onSave: Function,
-  checkPermission: string,
+  editable: boolean,
+  removable: boolean,
+  viewForm: boolean,
   type: string,
 };
 
-const Tasks = ({ tasks, onRemove, onSave, checkPermission, type }: Props) => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(checkPermission);
+const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
   return tasks.length > 0 ? (
     <div className={ItemGridStyle}>
       {tasks.map((task, index) => (
@@ -31,7 +28,7 @@ const Tasks = ({ tasks, onRemove, onSave, checkPermission, type }: Props) => {
             {({ value: opened, set: selectTaskSlideToggle }) => (
               <>
                 <TaskCard
-                  editable={allowUpdate}
+                  editable={editable}
                   task={{
                     ...task,
                     entity: {
@@ -41,10 +38,12 @@ const Tasks = ({ tasks, onRemove, onSave, checkPermission, type }: Props) => {
                   }}
                   position={index + 1}
                   saveOnBlur={newValue => onSave(index, newValue)}
-                  onClick={() => selectTaskSlideToggle(true)}
+                  onClick={viewForm ? () => selectTaskSlideToggle(true) : () => {}}
                   actions={[
-                    <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />,
-                  ]}
+                    removable && (
+                      <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />
+                    ),
+                  ].filter(Boolean)}
                 />
                 <SlideView
                   isOpen={opened}
