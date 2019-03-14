@@ -2,13 +2,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import pluralize from 'pluralize';
-import { camelCase } from 'lodash/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import User from './components/User';
-import type { LogItem } from './components/Log';
 import { ARCHIVED, UNARCHIVED, UPDATE_FIELD } from './contants';
-import { FieldStyle, ValueStyle } from './style';
+import type { LogItem } from './types';
 import messages from './messages';
+import Value from './components/Value';
+import Field from './components/Field';
 
 export interface LogFormatter {
   format(log: LogItem): any;
@@ -17,11 +17,6 @@ export interface LogFormatter {
 
 export class DefaultUpdateFormatter implements LogFormatter {
   format(log: LogItem): * {
-    const module =
-      log.parameters.entity_type.charAt(0).toUpperCase() +
-      pluralize(log.parameters.entity_type).slice(1);
-    const fieldName = camelCase(log.parameters.field);
-
     if (log.parameters.old !== null) {
       return (
         <FormattedMessage
@@ -29,15 +24,13 @@ export class DefaultUpdateFormatter implements LogFormatter {
           values={{
             user: <User user={log.createdBy} />,
             field: (
-              <span className={FieldStyle}>
-                <FormattedMessage
-                  id={`modules.${module}.${fieldName}`}
-                  defaultMessage={fieldName}
-                />
-              </span>
+              <Field
+                field={log.parameters.field.string}
+                entityType={log.parameters.entity_type.string}
+              />
             ),
-            oldValue: <span className={ValueStyle}>{log.parameters.old}</span>,
-            newValue: <span className={ValueStyle}>{log.parameters.new}</span>,
+            oldValue: <Value value={log.parameters.old} />,
+            newValue: <Value value={log.parameters.new} />,
           }}
         />
       );
@@ -49,11 +42,12 @@ export class DefaultUpdateFormatter implements LogFormatter {
         values={{
           user: <User user={log.createdBy} />,
           field: (
-            <span className={FieldStyle}>
-              <FormattedMessage id={`modules.${module}.${fieldName}`} defaultMessage={fieldName} />
-            </span>
+            <Field
+              field={getByPathWithDefault('', 'parameters.field.string', log)}
+              entityType={getByPathWithDefault('', 'parameters.entity_type.string', log)}
+            />
           ),
-          value: <span className={ValueStyle}>{log.parameters.new}</span>,
+          value: <Value value={log.parameters.new} />,
         }}
       />
     );

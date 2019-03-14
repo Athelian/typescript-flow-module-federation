@@ -1,11 +1,8 @@
 // @flow
 import * as React from 'react';
 import FormattedDate from 'components/FormattedDate';
+import type { DateItem } from 'modules/timeline/types';
 import { DateStyle, DaySeparatorWrapperStyle, SeparatorStyle } from './style';
-
-export type DateItem = {
-  date: Date,
-};
 
 type Props = {
   date: DateItem,

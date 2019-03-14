@@ -1,27 +1,9 @@
 // @flow
 import * as React from 'react';
 import { FormattedTime } from 'react-intl';
-import type { LogFormatter } from '../../formatters';
-import type { UserInfo } from '../User';
+import type { LogFormatter } from 'modules/timeline/formatters';
+import type { LogItem } from 'modules/timeline/types';
 import { LogStyle, LogWrapperStyle, TimeStyle } from './style';
-
-export type LogItem = {
-  id: string,
-  translationKey: string,
-  parameters: {
-    [key: string]: any,
-  },
-  entity: {
-    __typename: string,
-    id: string,
-  },
-  parentEntity: {
-    __typename: string,
-    id: string,
-  },
-  createdAt: Date,
-  createdBy: UserInfo,
-};
 
 type Props = {
   log: LogItem,

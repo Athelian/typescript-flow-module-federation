@@ -6,8 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import type { DocumentNode } from 'graphql/language/ast';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import Icon from 'components/Icon';
-import { commentCreateMutation } from '../../mutation';
-import messages from '../../messages';
+import { commentCreateMutation } from 'modules/timeline/mutation';
+import messages from 'modules/timeline/messages';
 import { ButtonStyle, HeaderWrapperStyle, InputWrapperStyle, TitleStyle } from './style';
 
 type Props = {

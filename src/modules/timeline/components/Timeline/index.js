@@ -5,11 +5,11 @@ import type { DocumentNode } from 'graphql/language/ast';
 import GridView from 'components/GridView';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
+import DefaultFormatters, { type LogFormatter } from 'modules/timeline/formatters';
 import Log from '../Log';
 import Comment from '../Comment';
 import CommentInput from '../CommentInput';
 import DateSeparator from '../DateSeparator';
-import DefaultFormatters, { type LogFormatter } from '../../formatters';
 import { CommentInputWrapperStyle, ListWrapperStyle, TimelineWrapperStyle } from './style';
 import { decorateEntries, normalizeEntries } from './helper';
 

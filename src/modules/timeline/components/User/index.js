@@ -5,6 +5,7 @@ import FormattedName from 'components/FormattedName';
 import Tooltip from 'components/Tooltip';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
+import type { UserInfo } from 'modules/timeline/types';
 import {
   AvatarWrapperStyle,
   ContentWrapperStyle,
@@ -16,24 +17,6 @@ import {
   RolesStyle,
   UserWrapperStyle,
 } from './style';
-
-export type UserInfo = {
-  id: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  avatar: ?{
-    path: string,
-  },
-  group: {
-    id: string,
-    name: string,
-  },
-  roles: Array<{
-    id: string,
-    name: string,
-  }>,
-};
 
 type Props = {
   user: UserInfo,

@@ -1,42 +1,10 @@
 // @flow
 import isSameDay from 'date-fns/isSameDay';
 import { uuid } from 'utils/id';
-import type { LogItem } from '../Log';
-import type { CommentItem } from '../Comment';
-import type { DateItem } from '../DateSeparator';
+import type { CommentItem, DateItem, LogItem } from 'modules/timeline/types';
 
 type Entry = LogItem | CommentItem;
 type DecorateEntry = Entry | DateItem;
-
-const normalizeValue = (value: any): any => {
-  if (!value) {
-    return null;
-  }
-
-  // eslint-disable-next-line no-underscore-dangle
-  switch (value.__typename) {
-    case 'StringValue':
-      return value.string;
-    case 'IntValue':
-      return value.int;
-    case 'FloatValue':
-      return value.float;
-    case 'BooleanValue':
-      return value.boolean;
-    case 'DateTimeValue':
-      return value.datetime;
-    case 'MetricValueValue':
-      return value.metricValue;
-    case 'SizeValue':
-      return value.size;
-    case 'EntityValue':
-      return value.entity;
-    case 'Values':
-      return value.values.map(normalizeValue);
-    default:
-      return null;
-  }
-};
 
 const normalizeParameters = (
   parameters: Array<{ key: string, value: any }>
@@ -44,7 +12,7 @@ const normalizeParameters = (
   parameters.reduce(
     (normalizedParameters, param) => ({
       ...normalizedParameters,
-      [param.key]: normalizeValue(param.value),
+      [param.key]: param.value,
     }),
     {}
   );

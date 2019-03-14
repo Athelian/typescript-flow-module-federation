@@ -8,9 +8,9 @@ import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
-import type { UserInfo } from '../User';
-import { commentDeleteMutation, commentUpdateMutation } from '../../mutation';
-import messages from '../../messages';
+import { commentDeleteMutation, commentUpdateMutation } from 'modules/timeline/mutation';
+import type { CommentItem } from 'modules/timeline/types';
+import messages from 'modules/timeline/messages';
 import {
   ContentStyle,
   CommentWrapperStyle,
@@ -20,14 +20,6 @@ import {
   DeleteButtonStyle,
   ContentWrapperStyle,
 } from './style';
-
-export type CommentItem = {
-  id: string,
-  createdAt: Date,
-  updatedAt: Date,
-  createdBy: UserInfo,
-  content: string,
-};
 
 type Props = {
   comment: CommentItem,
