@@ -8,7 +8,7 @@ import usePermission from 'hooks/usePermission';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
-import BatchFormContainer from 'modules/batch/form/containers';
+import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
@@ -160,13 +160,23 @@ const OrderItems = ({
                                 options={{ width: '1030px' }}
                               >
                                 {opened && (
-                                  <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
-                                    {({ initDetailValues }, { state }) => (
+                                  <Subscribe
+                                    to={[
+                                      BatchInfoContainer,
+                                      BatchTasksContainer,
+                                      OrderItemsContainer,
+                                    ]}
+                                  >
+                                    {(batchInfoContainer, batchTasksContainer, { state }) => (
                                       <BatchFormWrapper
                                         batch={state.orderItems[index].batches[position]}
                                         isNew={!!batch.isNew}
                                         orderItem={item}
-                                        initDetailValues={initDetailValues}
+                                        initDetailValues={initValues => {
+                                          const { todo, ...info } = initValues;
+                                          batchInfoContainer.initDetailValues(info);
+                                          batchTasksContainer.initDetailValues(todo);
+                                        }}
                                         onCancel={() => slideToggle(false)}
                                         onSave={updatedBatch => {
                                           slideToggle(false);

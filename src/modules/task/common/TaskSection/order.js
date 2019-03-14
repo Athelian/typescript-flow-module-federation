@@ -64,6 +64,7 @@ function OrderTaskSection({ intl }: Props) {
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
+                type={type}
                 checkPermission={ORDER_UPDATE}
                 tasks={tasks}
                 onRemove={({ id }) => {

@@ -39,7 +39,7 @@ import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import BatchFormContainer from 'modules/batch/form/containers';
+import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -214,10 +214,14 @@ function BatchesSection() {
                           options={{ width: '1030px' }}
                         >
                           {opened && (
-                            <Subscribe to={[BatchFormContainer]}>
-                              {({ initDetailValues }) => (
+                            <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                              {(batchInfoContainer, batchTasksContainer) => (
                                 <BatchFormWrapper
-                                  initDetailValues={initDetailValues}
+                                  initDetailValues={initValues => {
+                                    const { todo, ...info } = initValues;
+                                    batchInfoContainer.initDetailValues(info);
+                                    batchTasksContainer.initDetailValues(todo);
+                                  }}
                                   batch={batch}
                                   isNew={!!batch.isNew}
                                   orderItem={batch.orderItem}

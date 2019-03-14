@@ -21,6 +21,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   taskCardFragment,
+  todoFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { calculatePackageQuantity } from 'utils/batch';
@@ -133,6 +134,7 @@ export const updateBatchMutation = gql`
   ${badRequestFragment}
   ${ownedByFragment}
   ${taskCardFragment}
+  ${todoFragment}
 `;
 
 export const prepareUpdateBatchInput = (

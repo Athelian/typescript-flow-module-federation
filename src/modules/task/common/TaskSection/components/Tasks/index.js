@@ -16,9 +16,10 @@ type Props = {
   onRemove: Function,
   onSave: Function,
   checkPermission: string,
+  type: string,
 };
 
-const Tasks = ({ tasks, onRemove, onSave, checkPermission }: Props) => {
+const Tasks = ({ tasks, onRemove, onSave, checkPermission, type }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(checkPermission);
@@ -31,7 +32,13 @@ const Tasks = ({ tasks, onRemove, onSave, checkPermission }: Props) => {
               <>
                 <TaskCard
                   editable={allowUpdate}
-                  task={task}
+                  task={{
+                    ...task,
+                    entity: {
+                      ...task.entity,
+                      __typename: type,
+                    },
+                  }}
                   position={index + 1}
                   saveOnBlur={newValue => onSave(index, newValue)}
                   onClick={() => selectTaskSlideToggle(true)}

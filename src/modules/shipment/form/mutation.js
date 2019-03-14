@@ -27,6 +27,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   taskCardFragment,
+  todoFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
@@ -186,41 +187,6 @@ export const createShipmentMutation: Object = gql`
   ${badRequestFragment}
 `;
 
-export const createShipmentWithReturnDataMutation: Object = gql`
-  mutation shipmentCreate($input: ShipmentCreateInput!) {
-    shipmentCreate(input: $input) {
-      ...shipmentFormFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${shipmentFormFragment}
-  ${containerFormFragment}
-  ${warehouseCardFragment}
-  ${timelineDateFullFragment}
-  ${batchFormFragment}
-  ${userAvatarFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${tagFragment}
-  ${priceFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${shipmentCardFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${documentFragment}
-  ${partnerCardFragment}
-  ${badRequestFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
-  ${taskCardFragment}
-`;
-
 export const prepareCreateShipmentInput = ({
   no,
   blNo,
@@ -319,6 +285,7 @@ export const updateShipmentMutation: Object = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskCardFragment}
+  ${todoFragment}
 `;
 
 type DateRevisionType = {
