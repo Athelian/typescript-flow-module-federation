@@ -13,6 +13,7 @@ import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
 import { isAppInProduction } from './utils/env';
+import logger from './utils/logger';
 import errorReport from './errorReport';
 import './styles/reset.css';
 import * as serviceWorker from './serviceWorker';
@@ -63,4 +64,15 @@ if (container.hasChildNodes()) {
   renderApp(Routes, render);
 }
 
-serviceWorker.register();
+serviceWorker.register({
+  onUpdate: registration => {
+    // TODO: notify our client with toastr
+    logger.warn(
+      'New content is available and will be used when all tabs for this page are closed',
+      registration
+    );
+  },
+  onSuccess: registration => {
+    logger.warn('Content is cached for offline use.', registration);
+  },
+});
