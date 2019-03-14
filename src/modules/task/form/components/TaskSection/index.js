@@ -30,7 +30,12 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { FormContentWrapperStyle, CommonSectionWrapperStyle, AssignedToStyle } from './style';
+import {
+  FormContentWrapperStyle,
+  CommonSectionWrapperStyle,
+  DescriptionLabelWrapperStyle,
+  AssignedToStyle,
+} from './style';
 
 type Props = {
   isNew?: boolean,
@@ -184,6 +189,35 @@ const TaskSection = ({ task }: Props) => {
                             defaultMessage="START DATE"
                           />
                         }
+                        editable={editable}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="description"
+                    initValue={values.description}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextAreaInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        label={
+                          <div className={DescriptionLabelWrapperStyle}>
+                            <FormattedMessage
+                              id="modules.Tags.description"
+                              defaultMessage="DESCRIPTION"
+                            />
+                          </div>
+                        }
+                        inputHeight="100px"
+                        inputWidth="200px"
+                        inputAlign="right"
+                        vertical={false}
                         editable={editable}
                       />
                     )}

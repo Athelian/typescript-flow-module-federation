@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Mar 12 2019 10:22:42 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Mar 14 2019 16:50:58 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -28642,6 +28642,7 @@ input EntityTaskInput {
   completedById: ID
   completedAt: DateTime
   memo: String
+  description: String
   tagIds: [ID!]
   id: ID
 }
@@ -29910,6 +29911,18 @@ enum NotificationType {
   """ShipmentApprovedDate"""
   ShipmentApprovedDate
 
+  """ShipmentUpdateDateForForwarderWarehouser"""
+  ShipmentUpdateDateForForwarderWarehouser
+
+  """ShipmentUpdateDateForImporterInCharge"""
+  ShipmentUpdateDateForImporterInCharge
+
+  """ShipmentAddPartnerWarehouse"""
+  ShipmentAddPartnerWarehouse
+
+  """ShipmentAddForwarder"""
+  ShipmentAddForwarder
+
   """ProductCreate"""
   ProductCreate
 
@@ -29996,6 +30009,9 @@ enum NotificationType {
 
   """CommentCreate"""
   CommentCreate
+
+  """ContainerCreate"""
+  ContainerCreate
 }
 
 type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
@@ -35975,6 +35991,7 @@ input TagUpdateInput {
 
 type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   name: String!
+  description: String
   entity: EntityPayload!
   assignedTo: [UserPayload!]!
   startDate: DateTime
@@ -36007,6 +36024,7 @@ input TaskCreateInput {
   completedById: ID
   completedAt: DateTime
   memo: String
+  description: String
   tagIds: [ID!]
 }
 
@@ -36046,6 +36064,7 @@ input TaskUpdateInput {
   completedById: ID
   completedAt: DateTime
   memo: String
+  description: String
   tagIds: [ID!]
   entity: EntityInput
 }

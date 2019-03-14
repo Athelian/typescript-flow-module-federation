@@ -20,6 +20,7 @@ type FormState = {
 export const initValues = {
   dueDate: '',
   startDate: '',
+  description: '',
   name: '',
   memo: '',
   tags: [],
