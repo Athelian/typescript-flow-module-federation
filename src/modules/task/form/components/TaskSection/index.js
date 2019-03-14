@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { getByPath } from 'utils/fp';
+import { formatToGraphql, startOfToday } from 'utils/date';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
 import {
   SectionWrapper,
@@ -15,15 +16,13 @@ import {
   FieldItem,
   Label,
   TagsInput,
-  DateInput,
-  DefaultStyle,
   TaskAssignmentInput,
   Display,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import TaskStatusInput from 'components/Form/TaskStatusInput';
 import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
-import { FormField } from 'modules/form';
+import { FormField, FormContainer } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -80,8 +79,8 @@ const TaskSection = ({ task }: Props) => {
         >
           <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />
         </SectionHeader>
-        <Subscribe to={[TaskContainer]}>
-          {({ originalValues, state, setFieldValue }) => {
+        <Subscribe to={[TaskContainer, FormContainer]}>
+          {({ originalValues, state, setFieldValue }, { setFieldTouched }) => {
             const values = { ...originalValues, ...state };
             const { status, activeUser } = getStatusState(values);
             return (
@@ -269,34 +268,50 @@ const TaskSection = ({ task }: Props) => {
                   </FormField>
 
                   <div>
-                    <FieldItem
-                      label={
-                        <Label>
-                          <FormattedMessage
-                            id="modules.task.completedAt"
-                            defaultMessage="COMPLETE DATE"
+                    {status === COMPLETED ? (
+                      <FormField
+                        name="completedAt"
+                        initValue={values.completedAt}
+                        values={values}
+                        validator={validator}
+                        setFieldValue={setFieldValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            originalValue={originalValues[name]}
+                            label={
+                              <FormattedMessage
+                                id="modules.task.completedAt"
+                                defaultMessage="COMPLETE DATE"
+                              />
+                            }
+                            editable={editable}
                           />
-                        </Label>
-                      }
-                      input={
-                        status === COMPLETED ? (
-                          <DefaultStyle type="date" forceHoverStyle>
-                            <DateInput
-                              onChange={e => setFieldValue('completedAt', e.target.value)}
-                              value={values.completedAt}
-                              readOnly={!editable}
+                        )}
+                      </FormField>
+                    ) : (
+                      <FieldItem
+                        label={
+                          <Label>
+                            <FormattedMessage
+                              id="modules.task.completedAt"
+                              defaultMessage="COMPLETE DATE"
                             />
-                          </DefaultStyle>
-                        ) : (
+                          </Label>
+                        }
+                        input={
                           <Label>
                             <FormattedMessage
                               id="modules.task.notCompleted"
                               defaultMessage="Not completed yet"
                             />
                           </Label>
-                        )
-                      }
-                    />
+                        }
+                      />
+                    )}
+
                     <div className={AssignedToStyle}>
                       <GridColumn>
                         <FieldItem
@@ -317,14 +332,20 @@ const TaskSection = ({ task }: Props) => {
                               onActivateUser={user => {
                                 setFieldValue('inProgressBy', user);
                                 setFieldValue('inProgressAt', new Date());
+                                setFieldTouched('inProgressBy');
+                                setFieldTouched('inProgressAt');
                               }}
                               onDeactivateUser={() => {
                                 if (status === COMPLETED) {
                                   setFieldValue('completedBy', null);
                                   setFieldValue('completedAt', null);
+                                  setFieldTouched('completedBy');
+                                  setFieldTouched('completedBy');
                                 } else if (status === IN_PROGRESS) {
                                   setFieldValue('inProgressBy', null);
                                   setFieldValue('inProgressAt', null);
+                                  setFieldTouched('inProgressBy');
+                                  setFieldTouched('inProgressAt');
                                 }
                               }}
                               editable={editable}
@@ -339,7 +360,9 @@ const TaskSection = ({ task }: Props) => {
                             status={status}
                             onClick={() => {
                               setFieldValue('completedBy', activeUser);
-                              setFieldValue('completedAt', new Date());
+                              setFieldValue('completedAt', formatToGraphql(startOfToday()));
+                              setFieldTouched('completedBy');
+                              setFieldTouched('completedAt');
                             }}
                             editable={editable}
                           />
