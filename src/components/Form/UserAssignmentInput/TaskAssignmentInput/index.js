@@ -54,8 +54,9 @@ const TaskAssignmentInput = ({
           <div className={TaskAssignmentStyle} key={id}>
             <button
               className={UserStyle(isActiveUser, editable && canActivateUser)}
-              onClick={() => {
+              onClick={evt => {
                 if (editable && canActivateUser) {
+                  evt.stopPropagation();
                   onActivateUser(user);
                 }
               }}
@@ -64,14 +65,24 @@ const TaskAssignmentInput = ({
               <UserAvatar firstName={firstName} lastName={lastName} />
             </button>
             {editable && isActiveUser && (
-              <button className={DeactivateButtonStyle} onClick={onDeactivateUser} type="button">
+              <button
+                className={DeactivateButtonStyle}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  onDeactivateUser();
+                }}
+                type="button"
+              >
                 <Icon icon="CLEAR" />
               </button>
             )}
             {editable && !isActiveUser && (
               <button
                 className={RemoveAssignmentButtonStyle}
-                onClick={() => onChange(users.filter(({ id: userId }) => id !== userId))}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  onChange(users.filter(({ id: userId }) => id !== userId));
+                }}
                 type="button"
               >
                 <Icon icon="REMOVE" />
@@ -88,7 +99,10 @@ const TaskAssignmentInput = ({
                 data-testid="addAssignerButton"
                 className={AddAssignmentButtonStyle}
                 type="button"
-                onClick={() => slideToggle(true)}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  slideToggle(true);
+                }}
               >
                 <Icon icon="ADD" />
               </button>

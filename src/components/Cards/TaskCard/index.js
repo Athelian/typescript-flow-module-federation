@@ -10,6 +10,11 @@ import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import { BATCH_FORM } from 'modules/permission/constants/batch';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import {
   Label,
   Display,
@@ -36,14 +41,10 @@ import {
 type OptionalProps = {
   task: Object,
   position: number,
+  hideParentInfo: boolean,
   onClick: Function,
   saveOnBlur: Function,
   editable: boolean,
-  viewPermissions: {
-    order: boolean,
-    batch: boolean,
-    shipment: boolean,
-  },
   actions: Array<React.Node>,
 };
 
@@ -51,14 +52,10 @@ type Props = OptionalProps;
 
 const defaultProps = {
   position: 0,
+  hideParentInfo: false,
   onClick: () => {},
   saveOnBlur: () => {},
   editable: false,
-  viewPermissions: {
-    order: false,
-    batch: false,
-    shipment: false,
-  },
   actions: [],
 };
 
@@ -89,15 +86,17 @@ const getParentInfo = (parent: Object) => {
   return {};
 };
 
+let hideParentInfoForHoc = false;
+
 const TaskCard = ({
   task,
   position,
+  hideParentInfo,
   onClick,
   saveOnBlur,
   onActivateUser,
   onDeactivateUser,
   editable,
-  viewPermissions,
   actions,
   ...rest
 }: Props) => {
@@ -124,6 +123,17 @@ const TaskCard = ({
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
 
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  const viewPermissions = {
+    order: hasPermission(ORDER_FORM),
+    batch: hasPermission(BATCH_FORM),
+    shipment: hasPermission(SHIPMENT_FORM),
+  };
+
+  hideParentInfoForHoc = hideParentInfo;
+
   return (
     <BaseCard
       icon="TASK"
@@ -136,7 +146,7 @@ const TaskCard = ({
       <BooleanValue>
         {({ value: isHovered, set: changeHoverState }) => (
           <div
-            className={TaskCardWrapperStyle}
+            className={TaskCardWrapperStyle(hideParentInfo)}
             onClick={onClick}
             onMouseEnter={() => {
               if (editable) {
@@ -150,28 +160,34 @@ const TaskCard = ({
             }}
             role="presentation"
           >
-            <div className={TaskParentWrapperStyle}>
-              {viewPermissions[parentType] ? (
-                <Link
-                  className={TaskParentIconStyle}
-                  to={`/${parentType}/${encodeId(parent.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon={parentIcon} />
-                </Link>
-              ) : (
-                <div className={TaskParentIconStyle}>
-                  <Icon icon={parentIcon} />
-                </div>
-              )}
-              <Display align="left">{parentData}</Display>
-            </div>
+            {!hideParentInfo && (
+              <div className={TaskParentWrapperStyle}>
+                {viewPermissions[parentType] ? (
+                  <Link
+                    className={TaskParentIconStyle}
+                    to={`/${parentType}/${encodeId(parent.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon={parentIcon} />
+                  </Link>
+                ) : (
+                  <div className={TaskParentIconStyle}>
+                    <Icon icon={parentIcon} />
+                  </div>
+                )}
+                <Display align="left">{parentData}</Display>
+              </div>
+            )}
 
             <div
               className={TaskNameWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
               role="presentation"
             >
               {editable && isHovered ? (
@@ -198,7 +214,7 @@ const TaskCard = ({
                       saveOnBlur({ ...task, name: inputHandlers.value });
                     }}
                     editable={editable}
-                    inputWidth="185px"
+                    inputWidth={hideParentInfo ? '140px' : '160px'}
                     inputHeight="20px"
                     inputAlign="left"
                     name={fieldName}
@@ -211,7 +227,11 @@ const TaskCard = ({
 
             <div
               className={DateInputWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
               role="presentation"
             >
               <Label>
@@ -241,7 +261,11 @@ const TaskCard = ({
 
             <div
               className={DateInputWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
               role="presentation"
             >
               <Label>
@@ -329,7 +353,7 @@ TaskCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TaskCard, 'task', {
   width: '195px',
-  height: '184px',
+  height: hideParentInfoForHoc ? '159px' : '184px',
   entityIcon: 'TASK',
   entityColor: 'TASK',
 });
