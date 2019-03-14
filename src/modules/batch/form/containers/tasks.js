@@ -32,7 +32,7 @@ export default class BatchTasksContainer extends Container<FormState> {
   };
 
   initDetailValues = (todo: { tasks: Array<Object> }) => {
-    this.setState({ todo });
-    this.originalValues = { todo };
+    this.setState(todo);
+    this.originalValues = todo;
   };
 }

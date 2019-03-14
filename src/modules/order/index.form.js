@@ -92,7 +92,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     resetFormState(orderItemState, 'orderItems');
     resetFormState(orderTagsState, 'tags');
     resetFormState(orderFilesState, 'files');
-    resetFormState(orderTasksState, 'tasks');
+    resetFormState(orderTasksState);
     form.onReset();
   };
 

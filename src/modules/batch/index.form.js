@@ -24,6 +24,11 @@ import {
   prepareParsedUpdateBatchInput,
 } from './form/mutation';
 
+type BatchFormState = {
+  batchInfoContainer: Object,
+  batchTasksContainer: Object,
+};
+
 type OptionalProps = {
   path: string,
   isSlideView: boolean,
@@ -66,7 +71,7 @@ class BatchFormModule extends React.PureComponent<Props> {
     form: Object,
   }) => {
     resetFormState(batchInfoContainer);
-    resetFormState(batchTasksContainer, 'tasks');
+    resetFormState(batchTasksContainer);
     form.onReset();
   };
 
@@ -108,6 +113,34 @@ class BatchFormModule extends React.PureComponent<Props> {
         onSuccess();
       }
     }
+  };
+
+  onFormReady = ({ batchInfoContainer, batchTasksContainer }: BatchFormState) => (
+    batch: Object
+  ) => {
+    if (this.isClone()) {
+      const {
+        archived,
+        updatedBy,
+        updatedAt,
+        deliveredAt,
+        expiredAt,
+        producedAt,
+        no,
+        todo,
+        ...batchClone
+      } = batch;
+      batchInfoContainer.initDetailValues({
+        ...batchClone,
+        autoCalculatePackageQuantity: true,
+        no: `[cloned] ${no}`,
+        batchAdjustments: [],
+      });
+    } else {
+      const { todo, ...rest } = batch;
+      batchInfoContainer.initDetailValues(rest);
+    }
+    batchTasksContainer.initDetailValues(batch.todo);
   };
 
   onMutationCompleted = (result: Object) => {
@@ -268,34 +301,15 @@ class BatchFormModule extends React.PureComponent<Props> {
                       entityType="batch"
                       render={batch => (
                         <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
-                          {(batchInfoContainer, batchTaskContainer) => (
+                          {(batchInfoContainer, batchTasksContainer) => (
                             <BatchForm
                               isClone={this.isClone()}
                               batch={batch}
                               onFormReady={() => {
-                                if (this.isClone()) {
-                                  const {
-                                    archived,
-                                    updatedBy,
-                                    updatedAt,
-                                    deliveredAt,
-                                    expiredAt,
-                                    producedAt,
-                                    no,
-                                    todo,
-                                    ...batchClone
-                                  } = batch;
-                                  batchInfoContainer.initDetailValues({
-                                    ...batchClone,
-                                    autoCalculatePackageQuantity: true,
-                                    no: `[cloned] ${no}`,
-                                    batchAdjustments: [],
-                                  });
-                                } else {
-                                  const { todo, ...rest } = batch;
-                                  batchInfoContainer.initDetailValues(rest);
-                                }
-                                batchTaskContainer.initDetailValues(batch.todo);
+                                this.onFormReady({
+                                  batchInfoContainer,
+                                  batchTasksContainer,
+                                })(batch);
                               }}
                             />
                           )}
