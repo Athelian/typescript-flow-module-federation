@@ -50,7 +50,7 @@ const renderApp = (Component, renderFn) => {
           </LanguageProvider>
         </AuthenticationProvider>
       </ApolloProvider>
-      
+
       <ToastContainer />
     </div>,
     container
@@ -63,4 +63,4 @@ if (container.hasChildNodes()) {
   renderApp(Routes, render);
 }
 
-serviceWorker.unregister();
+serviceWorker.register();
