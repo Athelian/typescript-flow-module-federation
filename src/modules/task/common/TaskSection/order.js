@@ -9,13 +9,8 @@ import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import {
-  TASK_CREATE,
-  TASK_UPDATE,
-  TASK_DELETE,
-  ORDER_TASK_FORM,
-  ORDER_TASK_LIST,
-} from 'modules/permission/constants/task';
+import { TASK_CREATE, TASK_UPDATE, TASK_DELETE } from 'modules/permission/constants/task';
+import { ORDER_TASK_FORM, ORDER_TASK_LIST } from 'modules/permission/constants/order';
 import { OrderTasksContainer, OrderInfoContainer } from 'modules/order/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';

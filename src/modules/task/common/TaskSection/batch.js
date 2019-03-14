@@ -9,13 +9,8 @@ import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import {
-  TASK_CREATE,
-  TASK_UPDATE,
-  BATCH_TASK_FORM,
-  BATCH_TASK_LIST,
-  TASK_DELETE,
-} from 'modules/permission/constants/task';
+import { TASK_CREATE, TASK_UPDATE, TASK_DELETE } from 'modules/permission/constants/task';
+import { BATCH_TASK_FORM, BATCH_TASK_LIST } from 'modules/permission/constants/batch';
 import { BatchTasksContainer, BatchInfoContainer } from 'modules/batch/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
