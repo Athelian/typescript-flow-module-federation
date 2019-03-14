@@ -5,7 +5,6 @@ import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { getByPath } from 'utils/fp';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
-import { colors } from 'styles/common';
 import {
   SectionWrapper,
   SectionHeader,
@@ -155,7 +154,7 @@ const TaskSection = ({ task }: Props) => {
                         name={name}
                         inputColor={
                           isBefore(new Date(values.dueDate), new Date()) && status !== COMPLETED
-                            ? colors.RED
+                            ? 'RED'
                             : null
                         }
                         {...inputHandlers}
