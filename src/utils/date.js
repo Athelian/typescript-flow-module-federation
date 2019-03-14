@@ -17,3 +17,5 @@ export const formatFromDate = (date: string): Date =>
   zonedTimeToUtc(startOfDay(new Date(date)), utcTimeZone);
 export const formatEndDate = (date: string): Date =>
   zonedTimeToUtc(endOfDay(new Date(date)), utcTimeZone);
+
+export const startOfToday = (): Date => zonedTimeToUtc(startOfDay(new Date()), utcTimeZone);

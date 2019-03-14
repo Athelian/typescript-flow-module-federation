@@ -15,6 +15,7 @@ import GridColumn from 'components/GridColumn';
 import { injectUid } from 'utils/id';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
+import { startOfToday } from 'utils/date';
 import {
   SectionHeader,
   DefaultAdjustmentStyle,
@@ -104,7 +105,7 @@ const TimelineInfoSection = (props: Props) => {
                     injectUid({
                       isNew: true,
                       type: 'Other',
-                      date: (timelineDate && timelineDate.date) || new Date().setHours(0, 0, 0, 0),
+                      date: (timelineDate && timelineDate.date) || startOfToday(),
                       memo: null,
                       updatedAt: new Date(),
                       updatedBy: user,
