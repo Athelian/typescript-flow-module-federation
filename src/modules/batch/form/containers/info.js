@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+import { removeNulls, cleanFalsy } from 'utils/data';
 import { calculatePackageQuantity } from 'utils/batch';
 import type { BatchFormState, ProductProvider } from './type.js.flow';
 import { convertVolume } from '../helper';
@@ -52,9 +52,9 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = parsedValues;
   };
 
   setFieldValue = (name: string, value: mixed) => {

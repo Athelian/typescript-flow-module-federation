@@ -23,7 +23,7 @@ export default class BatchTasksContainer extends Container<FormState> {
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
-    this.originalValues = { ...this.state };
+    this.originalValues = this.state;
     this.setState(this.originalValues);
   };
 
@@ -32,7 +32,8 @@ export default class BatchTasksContainer extends Container<FormState> {
   };
 
   initDetailValues = (todo: { tasks: Array<Object> }) => {
-    this.setState({ todo });
-    this.originalValues = { todo };
+    const parsedValues: Object = { ...initValues, todo };
+    this.setState(parsedValues);
+    this.originalValues = parsedValues;
   };
 }

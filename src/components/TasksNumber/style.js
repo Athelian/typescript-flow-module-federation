@@ -26,7 +26,7 @@ export const NumberStyle: string = css`
 export const TaskInfoStyle: string = css`
   display: grid;
   grid-template-columns: 20px 80px 20px;
-  align-items: left;
+  align-items: center;
 `;
 
 export const TooltipStyle: string = css`

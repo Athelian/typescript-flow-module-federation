@@ -39,7 +39,7 @@ const TooltipMessage = ({ completedCount, inProgressCount, remainingCount }: Pro
       <div>{inProgressCount}</div>
     </div>
     <div className={TaskInfoStyle}>
-      <Icon icon="ORDER_SELECT" />
+      <Icon icon="TASK" />
       <FormattedMessage id="components.tasksNumber.remain" defaultMessage="Remain" />
       <div>{remainingCount}</div>
     </div>

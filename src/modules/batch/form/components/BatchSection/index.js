@@ -23,6 +23,11 @@ import {
   BATCH_SET_MEMO,
   BATCH_SET_ORDER_ITEM,
   BATCH_SET_CUSTOM_FIELDS_MASK,
+  BATCH_SET_PACKAGE_NAME,
+  BATCH_SET_PACKAGE_CAPACITY,
+  BATCH_SET_PACKAGE_WEIGHT,
+  BATCH_SET_PACKAGE_VOLUME,
+  BATCH_SET_PACKAGE_SIZE,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -69,7 +74,6 @@ type Props = {
 const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
     <SectionWrapper id="batch_batchSection">
@@ -133,7 +137,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                           required
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.batchNo} />}
-                          editable={allowUpdate || hasPermission(BATCH_SET_NO)}
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_NO])}
                         />
                       )}
                     </FormField>
@@ -160,7 +164,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                               required
                               originalValue={initialValues[name] + totalAdjustment}
                               label={<FormattedMessage {...messages.quantity} />}
-                              editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY)}
+                              editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
                             />
                           )}
                         </Subscribe>
@@ -181,7 +185,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.deliveredAt} />}
-                          editable={allowUpdate || hasPermission(BATCH_SET_DELIVERY_DATE)}
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE])}
                         />
                       )}
                     </FormField>
@@ -200,7 +204,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.desiredAt} />}
-                          editable={allowUpdate || hasPermission(BATCH_SET_DESIRED_DATE)}
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE])}
                         />
                       )}
                     </FormField>
@@ -219,7 +223,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.expiredAt} />}
-                          editable={allowUpdate || hasPermission(BATCH_SET_EXPIRY)}
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_EXPIRY])}
                         />
                       )}
                     </FormField>
@@ -238,7 +242,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.producedAt} />}
-                          editable={allowUpdate || hasPermission(BATCH_SET_PRODUCTION_DATE)}
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_PRODUCTION_DATE])}
                         />
                       )}
                     </FormField>
@@ -247,8 +251,8 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                       customFields={values.customFields}
                       setFieldValue={setFieldValue}
                       editable={{
-                        values: allowUpdate || hasPermission(BATCH_SET_CUSTOM_FIELDS),
-                        mask: allowUpdate || hasPermission(BATCH_SET_CUSTOM_FIELDS_MASK),
+                        values: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS]),
+                        mask: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS_MASK]),
                       }}
                     />
                   </GridColumn>
@@ -256,7 +260,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                     <Label required>
                       <FormattedMessage {...messages.orderItem} />
                     </Label>
-                    {(allowUpdate || hasPermission(BATCH_SET_ORDER_ITEM)) &&
+                    {hasPermission([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]) &&
                     hasPermission(ORDER_ITEMS_LIST) ? (
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
@@ -289,20 +293,31 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                                   onSelect={newValue => {
                                     slideToggle(false);
                                     setFieldValue('orderItem', newValue);
-                                    const {
-                                      productProvider: {
-                                        packageName,
-                                        packageCapacity,
-                                        packageGrossWeight,
-                                        packageVolume,
-                                        packageSize,
-                                      },
-                                    } = newValue;
-                                    setFieldValue('packageName', packageName);
-                                    setFieldValue('packageCapacity', packageCapacity);
-                                    setFieldValue('packageGrossWeight', packageGrossWeight);
-                                    setFieldValue('packageVolume', packageVolume);
-                                    setFieldValue('packageSize', packageSize);
+                                    if (
+                                      hasPermission(BATCH_UPDATE) ||
+                                      [
+                                        BATCH_SET_PACKAGE_NAME,
+                                        BATCH_SET_PACKAGE_CAPACITY,
+                                        BATCH_SET_PACKAGE_WEIGHT,
+                                        BATCH_SET_PACKAGE_VOLUME,
+                                        BATCH_SET_PACKAGE_SIZE,
+                                      ].every(hasPermission)
+                                    ) {
+                                      const {
+                                        productProvider: {
+                                          packageName,
+                                          packageCapacity,
+                                          packageGrossWeight,
+                                          packageVolume,
+                                          packageSize,
+                                        },
+                                      } = newValue;
+                                      setFieldValue('packageName', packageName);
+                                      setFieldValue('packageCapacity', packageCapacity);
+                                      setFieldValue('packageGrossWeight', packageGrossWeight);
+                                      setFieldValue('packageVolume', packageVolume);
+                                      setFieldValue('packageSize', packageSize);
+                                    }
                                   }}
                                 />
                               )}
@@ -365,7 +380,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                       isNew={isNew}
                       originalValue={initialValues[name]}
                       label={<FormattedMessage {...messages.memo} />}
-                      editable={allowUpdate || hasPermission(BATCH_SET_MEMO)}
+                      editable={hasPermission([BATCH_UPDATE, BATCH_SET_MEMO])}
                       vertical
                       inputWidth="680px"
                       inputHeight="65px"
