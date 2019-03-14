@@ -19,7 +19,7 @@ type Props = LabelProps &
     Input: () => React.Node,
     editable: boolean,
     blackout: boolean,
-    color?: string,
+    inputColor?: string,
   };
 
 const defaultProps = {
@@ -55,7 +55,7 @@ const DateInputFactory = ({
   forceHoverStyle,
   inputWidth,
   inputHeight,
-  color,
+  inputColor,
   value,
   name,
   placeholder,
@@ -99,9 +99,9 @@ const DateInputFactory = ({
     align: inputAlign,
     readOnly: !editable,
     required,
-    ...(color
+    ...(inputColor
       ? {
-          color,
+          color: inputColor,
         }
       : {}),
   };

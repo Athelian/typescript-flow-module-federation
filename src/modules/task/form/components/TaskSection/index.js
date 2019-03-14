@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { getByPath } from 'utils/fp';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
+import { colors } from 'styles/common';
 import {
   SectionWrapper,
   SectionHeader,
@@ -154,7 +155,7 @@ const TaskSection = ({ task }: Props) => {
                         name={name}
                         inputColor={
                           isBefore(new Date(values.dueDate), new Date()) && status !== COMPLETED
-                            ? 'red'
+                            ? colors.RED
                             : null
                         }
                         {...inputHandlers}
@@ -287,6 +288,7 @@ const TaskSection = ({ task }: Props) => {
                               onDeactivateUser={() => {
                                 if (status === COMPLETED) {
                                   setFieldValue('completedBy', null);
+                                  setFieldValue('completedAt', null);
                                 } else if (status === IN_PROGRESS) {
                                   setFieldValue('inProgressBy', null);
                                   setFieldValue('inProgressAt', null);
@@ -304,6 +306,7 @@ const TaskSection = ({ task }: Props) => {
                             status={status}
                             onClick={() => {
                               setFieldValue('completedBy', activeUser);
+                              setFieldValue('completedAt', new Date());
                             }}
                             editable={editable}
                           />
