@@ -315,7 +315,7 @@ type TaskType = {
   completedBy: ?UserAvatarType,
   completedAt: ?string,
   memo: ?string,
-  // description: ?string,
+  description: ?string,
 };
 
 // Use for Todo (Tasks) field. Make sure to send 'todo' which contains 'tasks'.
@@ -378,7 +378,11 @@ export const parseTasksField = (
               newTask.completedAt
             ),
             ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldTask), newTask.memo),
-            // ...parseMemoField('description', getByPathWithDefault(null, 'description', oldTask), newTask.description),
+            ...parseMemoField(
+              'description',
+              getByPathWithDefault(null, 'description', oldTask),
+              newTask.description
+            ),
             ...parseArrayOfIdsField(
               'tagIds',
               getByPathWithDefault(null, 'tags', oldTask),
