@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { Provider, Subscribe } from 'unstated';
@@ -52,6 +53,12 @@ export default class TaskFormModule extends React.Component<Props> {
     }
   };
 
+  onMutationCompleted = (result: Object) => {
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+    }
+  };
+
   render() {
     const { taskId } = this.props;
 
@@ -64,7 +71,11 @@ export default class TaskFormModule extends React.Component<Props> {
       <Provider>
         <UIConsumer>
           {uiState => (
-            <Mutation mutation={updateTaskMutation} {...mutationKey}>
+            <Mutation
+              mutation={updateTaskMutation}
+              onCompleted={this.onMutationCompleted}
+              {...mutationKey}
+            >
               {(saveTask, { loading, error }) => (
                 <Subscribe to={[TaskContainer, FormContainer]}>
                   {({ initDetailValues, originalValues, state, isDirty, onSuccess }, form) => {

@@ -22,6 +22,7 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
+  todoFragment,
 } from 'graphql';
 import { prepareParsedUpdateBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -65,6 +66,7 @@ export const updateContainerMutation = gql`
   ${fieldDefinitionFragment}
   ${badRequestFragment}
   ${ownedByFragment}
+  ${todoFragment}
 `;
 
 type UpdateContainerInputType = {
