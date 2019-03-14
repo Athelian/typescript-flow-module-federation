@@ -37,6 +37,7 @@ const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }:
                     },
                   }}
                   position={index + 1}
+                  hideParentInfo
                   saveOnBlur={newValue => onSave(index, newValue)}
                   onClick={viewForm ? () => selectTaskSlideToggle(true) : () => {}}
                   actions={[

@@ -73,8 +73,9 @@ const TaskStatusInput = ({
               changeHoverState(false);
             }
           }}
-          onClick={() => {
+          onClick={evt => {
             if (editable && isInProgress) {
+              evt.stopPropagation();
               onClick();
             }
           }}
