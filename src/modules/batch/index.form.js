@@ -71,7 +71,7 @@ class BatchFormModule extends React.PureComponent<Props> {
     form: Object,
   }) => {
     resetFormState(batchInfoContainer);
-    resetFormState(batchTasksContainer);
+    resetFormState(batchTasksContainer, 'todo');
     form.onReset();
   };
 
