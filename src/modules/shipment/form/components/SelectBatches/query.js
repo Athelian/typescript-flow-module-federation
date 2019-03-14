@@ -20,6 +20,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   taskCardFragment,
+  todoFragment,
 } from 'graphql';
 
 export const selectBatchListQuery = gql`
@@ -52,6 +53,7 @@ export const selectBatchListQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskCardFragment}
+  ${todoFragment}
 `;
 
 export default selectBatchListQuery;

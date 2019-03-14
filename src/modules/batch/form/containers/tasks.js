@@ -9,7 +9,7 @@ type FormState = {
   },
 };
 
-const initValues = {
+export const initValues = {
   todo: {
     tasks: [],
   },

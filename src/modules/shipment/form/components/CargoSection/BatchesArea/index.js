@@ -39,6 +39,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import validator from 'modules/batch/form/validator';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
@@ -207,7 +208,22 @@ function BatchesArea({
                                             isNew={!!batch.isNew}
                                             orderItem={batch.orderItem}
                                             onCancel={() => batchSlideToggle(false)}
-                                            onSave={updatedBatch => {
+                                            isReady={formContainer =>
+                                              (formContainer.isReady(
+                                                {
+                                                  ...batchInfoContainer.state,
+                                                  ...batchTasksContainer.state,
+                                                },
+                                                validator
+                                              ) &&
+                                                batchInfoContainer.isDirty()) ||
+                                              batchTasksContainer.isDirty()
+                                            }
+                                            onSave={() => {
+                                              const updatedBatch = {
+                                                ...batchInfoContainer.state,
+                                                ...batchTasksContainer.state,
+                                              };
                                               batchSlideToggle(false);
 
                                               const indexOfAllBatches = batches.indexOf(batch);
