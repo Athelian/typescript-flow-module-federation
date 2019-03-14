@@ -9,7 +9,7 @@ export default defineMessages({
   },
   updateField: {
     id: 'modules.timeline.updateField',
-    defaultMessage: '{user} has set {field} from {oldValue} to {newValue}',
+    defaultMessage: '{user} has changed {field} from {oldValue} to {newValue}',
   },
   archived: {
     id: 'modules.timeline.archived',
