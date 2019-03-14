@@ -24,6 +24,7 @@ import {
   ProductTagsContainer,
   ProductFilesContainer,
 } from './form/containers';
+import ProductForm from './form';
 import validator from './form/validator';
 import { productFormQuery } from './form/query';
 import {
@@ -31,7 +32,6 @@ import {
   updateProductMutation,
   prepareParsedProductInput,
 } from './form/mutation';
-import ProductForm from './form';
 import { productTimelineQuery } from './query';
 
 type OptionalProps = {

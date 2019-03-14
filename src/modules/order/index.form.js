@@ -296,43 +296,41 @@ class OrderFormModule extends React.PureComponent<Props> {
                             icon="SHIPMENT"
                           />
                         </JumpToSection>
-                        {
-                          <BooleanValue>
-                            {({ value: opened, set: slideToggle }) =>
-                              !isNewOrClone && (
-                                <>
-                                  <LogsButton onClick={() => slideToggle(true)} />
-                                  <SlideView
-                                    isOpen={opened}
-                                    onRequestClose={() => slideToggle(false)}
-                                    options={{ width: '1030px' }}
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) =>
+                            !isNewOrClone && (
+                              <>
+                                <LogsButton onClick={() => slideToggle(true)} />
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                  options={{ width: '1030px' }}
+                                >
+                                  <Layout
+                                    navBar={
+                                      <SlideViewNavBar>
+                                        <EntityIcon icon="LOGS" color="LOGS" />
+                                      </SlideViewNavBar>
+                                    }
                                   >
-                                    <Layout
-                                      navBar={
-                                        <SlideViewNavBar>
-                                          <EntityIcon icon="LOGS" color="LOGS" />
-                                        </SlideViewNavBar>
-                                      }
-                                    >
-                                      {orderId && opened ? (
-                                        <Timeline
-                                          query={orderTimelineQuery}
-                                          queryField="order"
-                                          variables={{
-                                            id: decodeId(orderId),
-                                          }}
-                                          entity={{
-                                            orderId: decodeId(orderId),
-                                          }}
-                                        />
-                                      ) : null}
-                                    </Layout>
-                                  </SlideView>
-                                </>
-                              )
-                            }
-                          </BooleanValue>
-                        }
+                                    {orderId && opened ? (
+                                      <Timeline
+                                        query={orderTimelineQuery}
+                                        queryField="order"
+                                        variables={{
+                                          id: decodeId(orderId),
+                                        }}
+                                        entity={{
+                                          orderId: decodeId(orderId),
+                                        }}
+                                      />
+                                    ) : null}
+                                  </Layout>
+                                </SlideView>
+                              </>
+                            )
+                          }
+                        </BooleanValue>
                         <>
                           {(isNewOrClone ||
                             orderItemState.isDirty() ||
