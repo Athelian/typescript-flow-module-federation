@@ -16,6 +16,7 @@ import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import validator from 'modules/batch/form/validator';
 import {
   ItemGridStyle,
   ItemStyle,
@@ -178,7 +179,22 @@ const OrderItems = ({
                                           batchTasksContainer.initDetailValues(todo);
                                         }}
                                         onCancel={() => slideToggle(false)}
-                                        onSave={updatedBatch => {
+                                        isReady={formContainer =>
+                                          (formContainer.isReady(
+                                            {
+                                              ...batchInfoContainer.state,
+                                              ...batchTasksContainer.state,
+                                            },
+                                            validator
+                                          ) &&
+                                            batchInfoContainer.isDirty()) ||
+                                          batchTasksContainer.isDirty()
+                                        }
+                                        onSave={() => {
+                                          const updatedBatch = {
+                                            ...batchInfoContainer.state,
+                                            ...batchTasksContainer.state,
+                                          };
                                           slideToggle(false);
                                           changeBatch(position, 1, updatedBatch);
                                         }}
