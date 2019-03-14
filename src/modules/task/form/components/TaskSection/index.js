@@ -154,7 +154,7 @@ const TaskSection = ({ task }: Props) => {
                         name={name}
                         inputColor={
                           isBefore(new Date(values.dueDate), new Date()) && status !== COMPLETED
-                            ? 'red'
+                            ? 'RED'
                             : null
                         }
                         {...inputHandlers}
@@ -287,6 +287,7 @@ const TaskSection = ({ task }: Props) => {
                               onDeactivateUser={() => {
                                 if (status === COMPLETED) {
                                   setFieldValue('completedBy', null);
+                                  setFieldValue('completedAt', null);
                                 } else if (status === IN_PROGRESS) {
                                   setFieldValue('inProgressBy', null);
                                   setFieldValue('inProgressAt', null);
@@ -304,6 +305,7 @@ const TaskSection = ({ task }: Props) => {
                             status={status}
                             onClick={() => {
                               setFieldValue('completedBy', activeUser);
+                              setFieldValue('completedAt', new Date());
                             }}
                             editable={editable}
                           />

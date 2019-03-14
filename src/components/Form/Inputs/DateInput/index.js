@@ -25,7 +25,7 @@ const DateInput = ({
   ...rest
 }: Props) => {
   return readOnly ? (
-    <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
+    <Display align={align} width={readOnlyWidth} height={readOnlyHeight} color={color}>
       <FormattedDate value={value} />
     </Display>
   ) : (
