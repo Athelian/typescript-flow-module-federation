@@ -1,11 +1,21 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, layout, shadows, fontSizesWithHeights, borderRadiuses } from 'styles/common';
+import {
+  colors,
+  layout,
+  shadows,
+  fontSizesWithHeights,
+  borderRadiuses,
+  transitions,
+} from 'styles/common';
 
 export const MainNameStyle = css`
+  ${borderRadiuses.MAIN};
   padding: 0 2px;
+  background-color: ${colors.WHITE};
+  cursor: default;
   &:hover {
-    ${borderRadiuses.MAIN};
+    ${transitions.MAIN};
     color: ${colors.WHITE};
     background-color: rgba(17, 209, 166, 0.4);
   }

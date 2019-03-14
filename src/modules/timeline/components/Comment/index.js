@@ -75,6 +75,8 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
                           onBlur={() => {
                             const content = value.trim();
                             if (content === '' || comment.content === content) {
+                              setEditing(false);
+                              setFocused(false);
                               return;
                             }
 

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, layout, fontSizes } from 'styles/common';
+import { colors, layout, fontSizes, presets } from 'styles/common';
 
 export const CommentWrapperStyle = css`
   ${layout.HORIZONTAL};
@@ -38,6 +38,7 @@ export const EditedStyle = css`
 `;
 
 export const DeleteButtonStyle = css`
+  ${presets.BUTTON};
   position: absolute;
   right: -25px;
   bottom: 5px;

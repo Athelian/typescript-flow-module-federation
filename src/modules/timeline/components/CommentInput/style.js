@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes, layout } from 'styles/common';
+import { colors, fontSizes, layout, presets } from 'styles/common';
 
 export const InputWrapperStyle = css`
   ${layout.VERTICAL};
@@ -20,6 +20,7 @@ export const TitleStyle = css`
 `;
 
 export const ButtonStyle = css`
+  ${presets.BUTTON};
   ${fontSizes.SMALL};
   color: ${colors.GRAY_LIGHT};
   &:not([disabled]) {

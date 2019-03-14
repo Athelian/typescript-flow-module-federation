@@ -35,6 +35,55 @@ export const commentFragment = gql`
   }
 `;
 
+const valueFragment = gql`
+  fragment valueFragment on Value {
+    ... on StringValue {
+      string
+    }
+    ... on IntValue {
+      int
+    }
+    ... on FloatValue {
+      float
+    }
+    ... on BooleanValue {
+      boolean
+    }
+    ... on DateTimeValue {
+      datetime
+    }
+    ... on MetricValueValue {
+      metricValue {
+        value
+        metric
+      }
+    }
+    ... on SizeValue {
+      size {
+        height {
+          value
+          metric
+        }
+        length {
+          value
+          metric
+        }
+        width {
+          value
+          metric
+        }
+      }
+    }
+    ... on EntityValue {
+      entity {
+        ... on Model {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const eventFragment = gql`
   fragment eventFragment on Event {
     id
@@ -80,52 +129,16 @@ export const eventFragment = gql`
       parameters {
         key
         value {
-          ... on StringValue {
-            string
-          }
-          ... on IntValue {
-            int
-          }
-          ... on FloatValue {
-            float
-          }
-          ... on BooleanValue {
-            boolean
-          }
-          ... on DateTimeValue {
-            datetime
-          }
-          ... on MetricValueValue {
-            metricValue {
-              value
-              metric
-            }
-          }
-          ... on SizeValue {
-            size {
-              height {
-                value
-                metric
-              }
-              length {
-                value
-                metric
-              }
-              width {
-                value
-                metric
-              }
-            }
-          }
-          ... on EntityValue {
-            entity {
-              ... on Model {
-                id
-              }
+          ...valueFragment
+          ... on Values {
+            values {
+              ...valueFragment
             }
           }
         }
       }
     }
   }
+
+  ${valueFragment}
 `;

@@ -26,7 +26,7 @@ const FormattedValue = ({ value }: Props) => {
     case 'BooleanValue':
       return value.boolean;
     case 'DateTimeValue':
-      return <FormattedDate value={value.datetime} />;
+      return <FormattedDate value={new Date(value.datetime)} />;
     case 'MetricValue':
       return `${value.metricValue.value} ${value.metricValue.metric}`;
     case 'SizeValue':
