@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StringValue } from 'react-values';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
+import type { DocumentNode } from 'graphql/language/ast';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import Icon from 'components/Icon';
 import { commentCreateMutation } from '../../mutation';
@@ -11,9 +12,12 @@ import { ButtonStyle, HeaderWrapperStyle, InputWrapperStyle, TitleStyle } from '
 
 type Props = {
   entity: Object,
+  query: DocumentNode,
+  queryField: string,
+  variables: Object,
 };
 
-const CommentInput = ({ entity }: Props) => {
+const CommentInput = ({ entity, query, queryField, variables }: Props) => {
   const [focused, setFocused] = React.useState(false);
 
   return (
@@ -25,7 +29,7 @@ const CommentInput = ({ entity }: Props) => {
             set('');
           }}
         >
-          {(addComment, { loading }) => (
+          {(commentCreate, { loading }) => (
             <div className={InputWrapperStyle}>
               <div className={HeaderWrapperStyle}>
                 <span className={TitleStyle}>
@@ -41,12 +45,22 @@ const CommentInput = ({ entity }: Props) => {
                       return;
                     }
 
-                    addComment({
+                    commentCreate({
                       variables: {
                         input: {
                           content,
                           entity,
                         },
+                      },
+                      update: (store, result) => {
+                        const createdComment = result && result.data && result.data.commentCreate;
+                        const data = store.readQuery({ query, variables });
+
+                        if (data && data[queryField]) {
+                          data[queryField].timeline.entries.nodes.unshift(createdComment);
+                        }
+
+                        store.writeQuery({ query, data, variables });
                       },
                     });
                   }}

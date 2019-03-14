@@ -13,7 +13,7 @@ export const TimeStyle = css`
   font-weight: 600;
   letter-spacing: 0.1em;
   color: ${colors.GRAY_DARK};
-  padding-right: 25px;
+  width: 80px;
 `;
 
 export const LogStyle = css`

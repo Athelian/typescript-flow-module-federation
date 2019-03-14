@@ -24,6 +24,10 @@ export default defineMessages({
     id: 'modules.timeline.message',
     defaultMessage: 'MESSAGE',
   },
+  commentEdited: {
+    id: 'modules.timeline.commentEdited',
+    defaultMessage: '{date} {time} edited',
+  },
   order: {
     id: 'modules.timeline.order',
     defaultMessage: 'order',

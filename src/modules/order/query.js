@@ -13,6 +13,7 @@ export const orderTimelineQuery = gql`
               ...commentFragment
               ...eventFragment
             }
+            page
             totalPage
           }
         }
