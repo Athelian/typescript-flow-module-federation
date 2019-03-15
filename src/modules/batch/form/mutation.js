@@ -190,7 +190,7 @@ export const prepareUpdateBatchInput = (
   ),
 });
 
-export const prepareParsedUpdateBatchInput = (
+export const prepareParsedBatchInput = (
   originalValues: ?Object,
   newValues: Object,
   location: {
@@ -320,6 +320,6 @@ export const prepareParsedUpdateBatchInput = (
       getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
-    ...parseTasksField(getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
+    ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
   };
 };

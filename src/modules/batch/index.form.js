@@ -19,11 +19,7 @@ import BatchForm from './form';
 import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
-import {
-  createBatchMutation,
-  updateBatchMutation,
-  prepareParsedUpdateBatchInput,
-} from './form/mutation';
+import { createBatchMutation, updateBatchMutation, prepareParsedBatchInput } from './form/mutation';
 
 type BatchFormState = {
   batchInfoContainer: Object,
@@ -86,7 +82,7 @@ class BatchFormModule extends React.PureComponent<Props> {
     const { batchId } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
-    const input = prepareParsedUpdateBatchInput(
+    const input = prepareParsedBatchInput(
       isNewOrClone ? null : removeTypename(originalValues),
       removeTypename(formData),
       {

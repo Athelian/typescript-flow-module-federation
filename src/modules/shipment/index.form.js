@@ -136,26 +136,7 @@ class ShipmentFormModule extends React.Component<Props> {
     const isNewOrClone = this.isNewOrClone();
 
     const input = prepareParsedShipmentInput({
-      originalValues: isNewOrClone
-        ? {
-            blNo: '',
-            bookingNo: '',
-            invoiceNo: '',
-            carrier: '',
-            forwarders: [],
-            importer: {},
-            inCharges: [],
-            batches: [],
-            containers: [],
-            files: [],
-            tags: [],
-            containerGroups: [{}],
-            voyages: [{}],
-            todo: {
-              tasks: [],
-            },
-          }
-        : originalValues,
+      originalValues: isNewOrClone ? null : originalValues,
       existingBatches,
       newValues,
     });

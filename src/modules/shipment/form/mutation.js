@@ -29,8 +29,8 @@ import {
   todoFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import { prepareParsedUpdateBatchInput } from 'modules/batch/form/mutation';
-import { prepareParsedUpdateContainerInput } from 'modules/container/form/mutation';
+import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
+import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
   parseGenericField,
@@ -192,7 +192,7 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType)
 };
 
 type ShipmentInputType = {
-  originalValues: Object,
+  originalValues: ?Object,
   existingBatches: Array<Object>,
   newValues: Object,
 };
@@ -202,7 +202,9 @@ export const prepareParsedShipmentInput = ({
   existingBatches,
   newValues,
 }: ShipmentInputType): Object => {
-  const originalBatchesInPool = getBatchesInPool(originalValues.batches);
+  const originalBatchesInPool = getBatchesInPool(
+    getByPathWithDefault([], 'batches', originalValues)
+  );
   const existingBatchesInPool = getBatchesInPool(existingBatches);
   const newBatchesInPool = getBatchesInPool(newValues.batches);
 
@@ -211,30 +213,86 @@ export const prepareParsedShipmentInput = ({
   const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
 
   return {
-    ...parseParentIdField('importerId', originalValues.importer, newValues.importer),
-    ...parseGenericField('no', originalValues.no, newValues.no),
-    ...parseGenericField('blNo', originalValues.blNo, newValues.blNo),
-    ...parseDateField('blDate', originalValues.blDate, newValues.blDate),
-    ...parseGenericField('bookingNo', originalValues.bookingNo, newValues.bookingNo),
-    ...parseDateField('bookingDate', originalValues.bookingDate, newValues.bookingDate),
-    ...parseGenericField('invoiceNo', originalValues.invoiceNo, newValues.invoiceNo),
-    ...parseEnumField('transportType', originalValues.transportType, newValues.transportType),
-    ...parseEnumField('loadType', originalValues.loadType, newValues.loadType),
-    ...parseEnumField('incoterm', originalValues.incoterm, newValues.incoterm),
-    ...parseGenericField('carrier', originalValues.carrier, newValues.carrier),
+    ...parseParentIdField(
+      'importerId',
+      getByPathWithDefault(null, 'importer', originalValues),
+      newValues.importer
+    ),
+    ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
+    ...parseGenericField(
+      'blNo',
+      getByPathWithDefault(null, 'blNo', originalValues),
+      newValues.blNo
+    ),
+    ...parseDateField(
+      'blDate',
+      getByPathWithDefault(null, 'blDate', originalValues),
+      newValues.blDate
+    ),
+    ...parseGenericField(
+      'bookingNo',
+      getByPathWithDefault(null, 'bookingNo', originalValues),
+      newValues.bookingNo
+    ),
+    ...parseDateField(
+      'bookingDate',
+      getByPathWithDefault(null, 'bookingDate', originalValues),
+      newValues.bookingDate
+    ),
+    ...parseGenericField(
+      'invoiceNo',
+      getByPathWithDefault(null, 'invoiceNo', originalValues),
+      newValues.invoiceNo
+    ),
+    ...parseEnumField(
+      'transportType',
+      getByPathWithDefault(null, 'transportType', originalValues),
+      newValues.transportType
+    ),
+    ...parseEnumField(
+      'loadType',
+      getByPathWithDefault(null, 'loadType', originalValues),
+      newValues.loadType
+    ),
+    ...parseEnumField(
+      'incoterm',
+      getByPathWithDefault(null, 'incoterm', originalValues),
+      newValues.incoterm
+    ),
+    ...parseGenericField(
+      'carrier',
+      getByPathWithDefault(null, 'carrier', originalValues),
+      newValues.carrier
+    ),
     ...parseCustomFieldsField(
       'customFields',
       getByPathWithDefault(null, 'customFields', originalValues),
       newValues.customFields
     ),
-    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-    ...parseMemoField('memo', originalValues.memo, newValues.memo),
-    ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
-    ...parseArrayOfIdsField('forwarderIds', originalValues.forwarders, newValues.forwarders),
-    ...parseTimelineDateField('cargoReady', originalValues.cargoReady, newValues.cargoReady),
+    ...parseArrayOfIdsField(
+      'tagIds',
+      getByPathWithDefault([], 'tags', originalValues),
+      newValues.tags
+    ),
+    ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
+    ...parseArrayOfIdsField(
+      'inChargeIds',
+      getByPathWithDefault([], 'inCharges', originalValues),
+      newValues.inCharges
+    ),
+    ...parseArrayOfIdsField(
+      'forwarderIds',
+      getByPathWithDefault([], 'forwarders', originalValues),
+      newValues.forwarders
+    ),
+    ...parseTimelineDateField(
+      'cargoReady',
+      getByPathWithDefault(null, 'cargoReady', originalValues),
+      newValues.cargoReady
+    ),
     ...parseArrayOfChildrenField(
       'containerGroups',
-      originalValues.containerGroups,
+      getByPathWithDefault([{}], 'containerGroups', originalValues),
       newValues.containerGroups,
       (oldContainerGroup: ?Object, newContainerGroup: Object) => ({
         ...(!oldContainerGroup ? {} : { id: oldContainerGroup.id }),
@@ -262,7 +320,7 @@ export const prepareParsedShipmentInput = ({
     ),
     ...parseArrayOfChildrenField(
       'voyages',
-      originalValues.voyages,
+      getByPathWithDefault([{}], 'voyages', originalValues),
       newValues.voyages,
       (oldVoyage: ?Object, newVoyage: Object) => ({
         ...(!oldVoyage ? {} : { id: oldVoyage.id }),
@@ -303,7 +361,7 @@ export const prepareParsedShipmentInput = ({
       existingBatchesInPool,
       newBatchesInPool,
       (oldBatch: ?Object, newBatch: Object) => ({
-        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+        ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm: true,
           inOrderForm: false,
           inContainerForm: false,
@@ -314,7 +372,7 @@ export const prepareParsedShipmentInput = ({
     ),
     ...parseArrayOfChildrenField(
       'containers',
-      originalValues.containers,
+      getByPathWithDefault([], 'containers', originalValues),
       newValues.containers,
       (oldContainer: ?Object, newContainer: Object) => {
         const existingBatchesInContainer = existingBatches.filter(
@@ -322,7 +380,7 @@ export const prepareParsedShipmentInput = ({
         );
 
         return {
-          ...prepareParsedUpdateContainerInput({
+          ...prepareParsedContainerInput({
             originalValues: oldContainer,
             existingBatches: existingBatchesInContainer,
             newValues: newContainer,
@@ -334,7 +392,7 @@ export const prepareParsedShipmentInput = ({
         };
       }
     ),
-    ...parseFilesField('files', originalValues.files, newValues.files),
-    ...parseTasksField(getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
+    ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
+    ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
   };
 };

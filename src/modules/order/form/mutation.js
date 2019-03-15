@@ -28,7 +28,7 @@ import {
 import {
   prepareUpdateBatchInput,
   prepareCreateBatchInput,
-  prepareParsedUpdateBatchInput,
+  prepareParsedBatchInput,
 } from 'modules/batch/form/mutation';
 import { prepareCustomFieldsData } from 'utils/customFields';
 import {
@@ -201,24 +201,53 @@ export const prepareUpdateOrderInput = ({
   })),
 });
 
-export const prepareParsedUpdateOrderInput = (
-  originalValues: Object,
-  newValues: Object
-): OrderForm => ({
-  ...parseGenericField('poNo', originalValues.poNo, newValues.poNo),
-  ...parseGenericField('piNo', originalValues.piNo, newValues.piNo),
-  ...parseDateField('issuedAt', originalValues.issuedAt, newValues.issuedAt),
-  ...parseEnumField('currency', originalValues.currency, newValues.currency),
-  ...parseEnumField('incoterm', originalValues.incoterm, newValues.incoterm),
-  ...parseGenericField('deliveryPlace', originalValues.deliveryPlace, newValues.deliveryPlace),
-  ...parseCustomFieldsField('customFields', originalValues.customFields, newValues.customFields),
-  ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-  ...parseMemoField('memo', originalValues.memo, newValues.memo),
-  ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
-  ...parseParentIdField('exporterId', originalValues.exporter, newValues.exporter),
+export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({
+  ...parseGenericField('poNo', getByPathWithDefault(null, 'poNo', originalValues), newValues.poNo),
+  ...parseGenericField('piNo', getByPathWithDefault(null, 'piNo', originalValues), newValues.piNo),
+  ...parseDateField(
+    'issuedAt',
+    getByPathWithDefault(null, 'issuedAt', originalValues),
+    newValues.issuedAt
+  ),
+  ...parseEnumField(
+    'currency',
+    getByPathWithDefault(null, 'currency', originalValues),
+    newValues.currency
+  ),
+  ...parseEnumField(
+    'incoterm',
+    getByPathWithDefault(null, 'incoterm', originalValues),
+    newValues.incoterm
+  ),
+  ...parseGenericField(
+    'deliveryPlace',
+    getByPathWithDefault(null, 'deliveryPlace', originalValues),
+    newValues.deliveryPlace
+  ),
+  ...parseCustomFieldsField(
+    'customFields',
+    getByPathWithDefault(null, 'customFields', originalValues),
+    newValues.customFields
+  ),
+  ...parseArrayOfIdsField(
+    'tagIds',
+    getByPathWithDefault([], 'tags', originalValues),
+    newValues.tags
+  ),
+  ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
+  ...parseArrayOfIdsField(
+    'inChargeIds',
+    getByPathWithDefault([], 'inCharges', originalValues),
+    newValues.inCharges
+  ),
+  ...parseParentIdField(
+    'exporterId',
+    getByPathWithDefault(null, 'exporter', originalValues),
+    newValues.exporter
+  ),
   ...parseArrayOfChildrenField(
     'orderItems',
-    originalValues.orderItems,
+    getByPathWithDefault([], 'orderItems', originalValues),
     newValues.orderItems,
     (oldItem: ?Object, newItem: Object) => ({
       ...(!oldItem ? {} : { id: oldItem.id }),
@@ -240,10 +269,10 @@ export const prepareParsedUpdateOrderInput = (
         ? { batches: [] }
         : parseArrayOfChildrenField(
             'batches',
-            getByPathWithDefault(null, 'batches', oldItem),
+            getByPathWithDefault([], 'batches', oldItem),
             newItem.batches,
             (oldBatch: ?Object, newBatch: Object) =>
-              prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+              prepareParsedBatchInput(oldBatch, newBatch, {
                 inOrderForm: true,
                 inBatchForm: false,
                 inContainerForm: false,
@@ -252,6 +281,6 @@ export const prepareParsedUpdateOrderInput = (
           )),
     })
   ),
-  ...parseFilesField('files', originalValues.files, newValues.files),
-  ...parseTasksField(getByPathWithDefault(null, 'todo', originalValues), newValues.todo),
+  ...parseFilesField('files', getByPathWithDefault(null, 'files', originalValues), newValues.files),
+  ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
 });
