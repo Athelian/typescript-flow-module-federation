@@ -140,7 +140,7 @@ class BatchFormModule extends React.PureComponent<Props> {
     } else {
       const { todo, ...rest } = batch;
       batchInfoContainer.initDetailValues(rest);
-      batchTasksContainer.initDetailValues(batch.todo);
+      batchTasksContainer.initDetailValues(todo);
     }
   };
 

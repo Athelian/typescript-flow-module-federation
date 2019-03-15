@@ -57,6 +57,7 @@ function BatchTaskSection({ intl }: Props) {
                     setFieldValue('todo.tasks', [
                       ...tasks,
                       injectUid({
+                        isNew: true,
                         name: `task - ${tasks.length + 1}`,
                         entity: {
                           __typename: type,

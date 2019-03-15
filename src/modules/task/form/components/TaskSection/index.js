@@ -39,7 +39,6 @@ import {
 } from './style';
 
 type Props = {
-  isNew?: boolean,
   task: Object,
 };
 
@@ -72,13 +71,16 @@ const TaskSection = ({ task }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
+
+  const { isNew } = task;
+
   return (
     <SectionWrapper id="task_taskSection">
       <SectionHeader
         icon="TASK"
         title={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
       >
-        <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />
+        {!isNew && <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />}
       </SectionHeader>
       <Subscribe to={[TaskContainer, FormContainer]}>
         {({ originalValues, state, setFieldValue }, { setFieldTouched }) => {
