@@ -229,9 +229,9 @@ class ShipmentFormModule extends React.Component<Props> {
         containerGroups,
       });
       shipmentFilesContainer.initDetailValues(files);
+      shipmentTasksContainer.initDetailValues(todo);
     }
     shipmentTagsContainer.initDetailValues(tags);
-    shipmentTasksContainer.initDetailValues(todo);
     shipmentTransportTypeContainer.initDetailValues(transportType);
   };
 

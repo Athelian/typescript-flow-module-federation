@@ -220,6 +220,7 @@ const OrderItems = ({
                                   expiredAt,
                                   producedAt,
                                   no,
+                                  todo,
                                   ...rest
                                 }) => {
                                   changeBatch(

@@ -17,7 +17,7 @@ export const TasksSectionBodyStyle: string = css`
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   max-height: 672px;
-  min-height: 244px;
+  min-height: 219px;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};

@@ -56,7 +56,7 @@ const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }:
                       {({ initDetailValues }) => (
                         <TaskFormWrapper
                           initDetailValues={initDetailValues}
-                          task={task}
+                          task={{ ...task, sort: index }}
                           isNew={!!task.isNew}
                           onCancel={() => selectTaskSlideToggle(false)}
                           onSave={newValue => {
