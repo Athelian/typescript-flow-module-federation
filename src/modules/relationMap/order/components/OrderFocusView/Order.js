@@ -26,6 +26,8 @@ export default function Order({
   totalOrdered,
   totalBatched,
   totalShipped,
+  batchCount,
+  shipmentCount,
   tags,
   id,
   orderItems,
@@ -53,6 +55,8 @@ export default function Order({
                 orderedQuantity: totalOrdered,
                 batchedQuantity: totalBatched,
                 shippedQuantity: totalShipped,
+                shipped: shipmentCount,
+                batched: batchCount,
               }}
             />
             {uiSelectors.isAllowToConnectOrder() && state.connectOrder.enableSelectMode ? (
