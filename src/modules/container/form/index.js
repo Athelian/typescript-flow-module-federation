@@ -38,6 +38,8 @@ export default class containerForm extends React.Component<Props> {
 
   render() {
     const { container, inShipmentForm } = this.props;
+    const { isNew } = container;
+
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={FormWrapperStyle}>
@@ -48,29 +50,34 @@ export default class containerForm extends React.Component<Props> {
                 <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />
               }
             >
-              <>
-                <LastModified updatedAt={container.updatedAt} updatedBy={container.updatedBy} />
+              {!isNew && (
+                <>
+                  <LastModified updatedAt={container.updatedAt} updatedBy={container.updatedBy} />
 
-                <div className={StatusStyle(container.archived)}>
-                  <Icon icon={container.archived ? 'ARCHIVED' : 'ACTIVE'} />
-                  <div className={StatusLabelStyle}>
-                    {container.archived ? (
-                      <FormattedMessage id="modules.container.archived" defaultMessage="Archived" />
-                    ) : (
-                      <FormattedMessage id="modules.container.active" defaultMessage="Active" />
-                    )}
+                  <div className={StatusStyle(container.archived)}>
+                    <Icon icon={container.archived ? 'ARCHIVED' : 'ACTIVE'} />
+                    <div className={StatusLabelStyle}>
+                      {container.archived ? (
+                        <FormattedMessage
+                          id="modules.container.archived"
+                          defaultMessage="Archived"
+                        />
+                      ) : (
+                        <FormattedMessage id="modules.container.active" defaultMessage="Active" />
+                      )}
+                    </div>
+                    <FormTooltip
+                      infoMessage={
+                        <FormattedMessage
+                          id="modules.container.archived.tooltip.infoMessage"
+                          defaultMessage="The status is the same as the Shipment's status"
+                        />
+                      }
+                      position="bottom"
+                    />
                   </div>
-                  <FormTooltip
-                    infoMessage={
-                      <FormattedMessage
-                        id="modules.container.archived.tooltip.infoMessage"
-                        defaultMessage="The status is the same as the Shipment's status"
-                      />
-                    }
-                    position="bottom"
-                  />
-                </div>
-              </>
+                </>
+              )}
             </SectionHeader>
             <ContainerSection />
           </SectionWrapper>
