@@ -22,8 +22,6 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    InputWrapper: () => React.Node,
-    Input: () => React.Node,
     editable: boolean,
     blackout: boolean,
   };
@@ -31,10 +29,9 @@ type Props = LabelProps &
 const defaultProps = {
   inputWidth: '680px',
   inputHeight: '65px',
+  labelHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  InputWrapper: DefaultStyle,
-  Input: TextAreaInput,
   editable: false,
   blackout: false,
   vertical: true,
@@ -45,11 +42,10 @@ const TextAreaInputFactory = ({
   vertical,
   isTouched,
   label,
-  InputWrapper,
-  Input,
   required,
   labelAlign,
   labelWidth,
+  labelHeight,
   hideTooltip,
   isNew,
   errorMessage,
@@ -71,7 +67,7 @@ const TextAreaInputFactory = ({
   editable,
   blackout,
 }: Props): React.Node => {
-  const labelConfig = { required, align: labelAlign, width: labelWidth };
+  const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
   const tooltipConfig = {
     isNew,
@@ -115,13 +111,13 @@ const TextAreaInputFactory = ({
   if (!blackout) {
     if (editable) {
       renderedInput = (
-        <InputWrapper {...inputWrapperConfig}>
-          <Input {...inputConfig} />
-        </InputWrapper>
+        <DefaultStyle {...inputWrapperConfig}>
+          <TextAreaInput {...inputConfig} />
+        </DefaultStyle>
       );
     } else {
       renderedInput = (
-        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <TextAreaInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
       );
     }
   }

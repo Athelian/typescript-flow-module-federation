@@ -18,9 +18,10 @@ import {
   TagsInput,
   TaskAssignmentInput,
   Display,
+  TaskStatusInput,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import TaskStatusInput from 'components/Form/TaskStatusInput';
+import FormattedNumber from 'components/FormattedNumber';
 import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
 import { FormField, FormContainer } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
@@ -30,9 +31,10 @@ import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import {
-  FormContentWrapperStyle,
-  CommonSectionWrapperStyle,
-  DescriptionLabelWrapperStyle,
+  TaskSectionWrapperStyle,
+  MainFieldsWrapperStyle,
+  MemoWrapperStyle,
+  TaskStatusWrapperStyle,
   AssignedToStyle,
 } from './style';
 
@@ -71,63 +73,47 @@ const TaskSection = ({ task }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
   return (
-    <div className={FormContentWrapperStyle}>
-      <SectionWrapper id="task_taskSection">
-        <SectionHeader
-          icon="TASK"
-          title={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
-        >
-          <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />
-        </SectionHeader>
-        <Subscribe to={[TaskContainer, FormContainer]}>
-          {({ originalValues, state, setFieldValue }, { setFieldTouched }) => {
-            const values = { ...originalValues, ...state };
-            const { status, activeUser } = getStatusState(values);
-            return (
-              <div className={CommonSectionWrapperStyle}>
-                <GridColumn>
-                  {getByPath('entity.__typename', task) === 'Order' && (
-                    <FieldItem
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.task.order" defaultMessage="ORDER" />
-                        </Label>
-                      }
-                      vertical
-                      input={<OrderCard order={task.entity} />}
-                    />
-                  )}
-                  {getByPath('entity.__typename', task) === 'Batch' && (
-                    <FieldItem
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.task.batch" defaultMessage="BATCH" />
-                        </Label>
-                      }
-                      vertical
-                      input={<BatchCard batch={task.entity} />}
-                    />
-                  )}
-                  {getByPath('entity.__typename', task) === 'Shipment' && (
-                    <FieldItem
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.task.shipment" defaultMessage="SHIPMENT" />
-                        </Label>
-                      }
-                      vertical
-                      input={<ShipmentCard shipment={task.entity} />}
-                    />
-                  )}
+    <SectionWrapper id="task_taskSection">
+      <SectionHeader
+        icon="TASK"
+        title={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
+      >
+        <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />
+      </SectionHeader>
+      <Subscribe to={[TaskContainer, FormContainer]}>
+        {({ originalValues, state, setFieldValue }, { setFieldTouched }) => {
+          const values = { ...originalValues, ...state };
+          const { status, activeUser } = getStatusState(values);
 
+          return (
+            <div className={TaskSectionWrapperStyle}>
+              {getByPath('entity.__typename', task) === 'Shipment' && (
+                <FieldItem
+                  label={
+                    <Label>
+                      <FormattedMessage id="modules.task.shipment" defaultMessage="SHIPMENT" />
+                    </Label>
+                  }
+                  vertical
+                  input={<ShipmentCard shipment={task.entity} />}
+                />
+              )}
+
+              <div className={MainFieldsWrapperStyle}>
+                <GridColumn>
                   <FieldItem
                     label={
-                      <Label>
+                      <Label height="30px">
                         <FormattedMessage id="modules.task.taskNo" defaultMessage="TASK No." />
                       </Label>
                     }
-                    input={<Display>{task.sort + 1}</Display>}
+                    input={
+                      <Display height="30px">
+                        <FormattedNumber value={task.sort + 1} />
+                      </Display>
+                    }
                   />
+
                   <FormField
                     name="name"
                     initValue={values.name}
@@ -138,7 +124,7 @@ const TaskSection = ({ task }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
                         name={name}
-                        label={<FormattedMessage id="modules.Tags.name" defaultMessage="NAME" />}
+                        label={<FormattedMessage id="modules.Tasks.name" defaultMessage="NAME" />}
                         required
                         {...inputHandlers}
                         originalValue={originalValues[name]}
@@ -146,6 +132,7 @@ const TaskSection = ({ task }: Props) => {
                       />
                     )}
                   </FormField>
+
                   <FormField
                     name="dueDate"
                     initValue={values.dueDate}
@@ -164,12 +151,13 @@ const TaskSection = ({ task }: Props) => {
                         {...inputHandlers}
                         originalValue={originalValues[name]}
                         label={
-                          <FormattedMessage id="modules.task.dueDate" defaultMessage="DUE DATE" />
+                          <FormattedMessage id="modules.Tasks.dueDate" defaultMessage="DUE DATE" />
                         }
                         editable={editable}
                       />
                     )}
                   </FormField>
+
                   <FormField
                     name="startDate"
                     initValue={values.startDate}
@@ -184,7 +172,7 @@ const TaskSection = ({ task }: Props) => {
                         originalValue={originalValues[name]}
                         label={
                           <FormattedMessage
-                            id="modules.task.startDate"
+                            id="modules.Tasks.startDate"
                             defaultMessage="START DATE"
                           />
                         }
@@ -206,12 +194,10 @@ const TaskSection = ({ task }: Props) => {
                         {...inputHandlers}
                         originalValue={originalValues[name]}
                         label={
-                          <div className={DescriptionLabelWrapperStyle}>
-                            <FormattedMessage
-                              id="modules.Tags.description"
-                              defaultMessage="DESCRIPTION"
-                            />
-                          </div>
+                          <FormattedMessage
+                            id="modules.Tasks.description"
+                            defaultMessage="DESCRIPTION"
+                          />
                         }
                         inputHeight="100px"
                         inputWidth="200px"
@@ -225,7 +211,7 @@ const TaskSection = ({ task }: Props) => {
                   <FieldItem
                     vertical
                     label={
-                      <Label>
+                      <Label height="30px">
                         <FormattedMessage id="modules.task.tags" defaultMessage="TAGS" />
                       </Label>
                     }
@@ -245,145 +231,161 @@ const TaskSection = ({ task }: Props) => {
                       />
                     }
                   />
+                </GridColumn>
 
+                <GridColumn>
+                  {getByPath('entity.__typename', task) === 'Order' && (
+                    <FieldItem
+                      label={
+                        <Label>
+                          <FormattedMessage id="modules.task.order" defaultMessage="ORDER" />
+                        </Label>
+                      }
+                      vertical
+                      input={<OrderCard order={task.entity} />}
+                    />
+                  )}
+
+                  {getByPath('entity.__typename', task) === 'Batch' && (
+                    <FieldItem
+                      label={
+                        <Label>
+                          <FormattedMessage id="modules.task.batch" defaultMessage="BATCH" />
+                        </Label>
+                      }
+                      vertical
+                      input={<BatchCard batch={task.entity} />}
+                    />
+                  )}
+                </GridColumn>
+              </div>
+
+              <div className={MemoWrapperStyle}>
+                <FormField
+                  name="memo"
+                  initValue={values.memo}
+                  values={values}
+                  validator={validator}
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextAreaInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      originalValue={originalValues[name]}
+                      label={<FormattedMessage id="modules.task.memo" defaultMessage="MEMO" />}
+                      vertical
+                      inputWidth="680px"
+                      inputHeight="65px"
+                      editable={editable}
+                    />
+                  )}
+                </FormField>
+              </div>
+
+              <div className={TaskStatusWrapperStyle}>
+                <div className={AssignedToStyle}>
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label height="30px">
+                        <FormattedMessage
+                          id="modules.task.assignedTo"
+                          defaultMessage="ASSIGNED TO"
+                        />
+                      </Label>
+                    }
+                    input={
+                      <TaskAssignmentInput
+                        users={values.assignedTo}
+                        onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
+                        activeUserId={activeUser && activeUser.id}
+                        onActivateUser={user => {
+                          setFieldValue('inProgressBy', user);
+                          setFieldValue('inProgressAt', new Date());
+                          setFieldTouched('inProgressBy');
+                          setFieldTouched('inProgressAt');
+                        }}
+                        onDeactivateUser={() => {
+                          if (status === COMPLETED) {
+                            setFieldValue('completedBy', null);
+                            setFieldValue('completedAt', null);
+                            setFieldTouched('completedBy');
+                            setFieldTouched('completedBy');
+                          } else if (status === IN_PROGRESS) {
+                            setFieldValue('inProgressBy', null);
+                            setFieldValue('inProgressAt', null);
+                            setFieldTouched('inProgressBy');
+                            setFieldTouched('inProgressAt');
+                          }
+                        }}
+                        editable={editable}
+                      />
+                    }
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label height="30px" align="right">
+                        <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
+                      </Label>
+                    }
+                    input={
+                      activeUser ? (
+                        <TaskStatusInput
+                          activeUser={activeUser}
+                          status={status}
+                          onClick={() => {
+                            setFieldValue('completedBy', activeUser);
+                            setFieldValue('completedAt', formatToGraphql(startOfToday()));
+                            setFieldTouched('completedBy');
+                            setFieldTouched('completedAt');
+                          }}
+                          editable={editable}
+                        />
+                      ) : (
+                        <Display color="GRAY_DARK">
+                          <FormattedMessage
+                            id="modules.Tasks.chooseUser"
+                            defaultMessage="Please choose a user to start the task"
+                          />
+                        </Display>
+                      )
+                    }
+                  />
+                </div>
+
+                {status === COMPLETED && (
                   <FormField
-                    name="memo"
-                    initValue={values.memo}
+                    name="completedAt"
+                    initValue={values.completedAt}
                     values={values}
                     validator={validator}
                     setFieldValue={setFieldValue}
                   >
                     {({ name, ...inputHandlers }) => (
-                      <TextAreaInputFactory
+                      <DateInputFactory
                         name={name}
                         {...inputHandlers}
                         originalValue={originalValues[name]}
-                        label={<FormattedMessage id="modules.task.memo" defaultMessage="MEMO" />}
-                        vertical
-                        inputWidth="680px"
-                        inputHeight="65px"
+                        label={
+                          <FormattedMessage
+                            id="modules.Tasks.completedAt"
+                            defaultMessage="DATE COMPLETED"
+                          />
+                        }
                         editable={editable}
                       />
                     )}
                   </FormField>
-
-                  <div>
-                    {status === COMPLETED ? (
-                      <FormField
-                        name="completedAt"
-                        initValue={values.completedAt}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            originalValue={originalValues[name]}
-                            label={
-                              <FormattedMessage
-                                id="modules.task.completedAt"
-                                defaultMessage="COMPLETE DATE"
-                              />
-                            }
-                            editable={editable}
-                          />
-                        )}
-                      </FormField>
-                    ) : (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage
-                              id="modules.task.completedAt"
-                              defaultMessage="COMPLETE DATE"
-                            />
-                          </Label>
-                        }
-                        input={
-                          <Label>
-                            <FormattedMessage
-                              id="modules.task.notCompleted"
-                              defaultMessage="Not completed yet"
-                            />
-                          </Label>
-                        }
-                      />
-                    )}
-
-                    <div className={AssignedToStyle}>
-                      <GridColumn>
-                        <FieldItem
-                          vertical
-                          label={
-                            <Label>
-                              <FormattedMessage
-                                id="modules.task.assignedTo"
-                                defaultMessage="ASSIGNED TO"
-                              />
-                            </Label>
-                          }
-                          input={
-                            <TaskAssignmentInput
-                              users={values.assignedTo}
-                              onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
-                              activeUserId={activeUser && activeUser.id}
-                              onActivateUser={user => {
-                                setFieldValue('inProgressBy', user);
-                                setFieldValue('inProgressAt', new Date());
-                                setFieldTouched('inProgressBy');
-                                setFieldTouched('inProgressAt');
-                              }}
-                              onDeactivateUser={() => {
-                                if (status === COMPLETED) {
-                                  setFieldValue('completedBy', null);
-                                  setFieldValue('completedAt', null);
-                                  setFieldTouched('completedBy');
-                                  setFieldTouched('completedBy');
-                                } else if (status === IN_PROGRESS) {
-                                  setFieldValue('inProgressBy', null);
-                                  setFieldValue('inProgressAt', null);
-                                  setFieldTouched('inProgressBy');
-                                  setFieldTouched('inProgressAt');
-                                }
-                              }}
-                              editable={editable}
-                            />
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                        {activeUser ? (
-                          <TaskStatusInput
-                            activeUser={activeUser}
-                            status={status}
-                            onClick={() => {
-                              setFieldValue('completedBy', activeUser);
-                              setFieldValue('completedAt', formatToGraphql(startOfToday()));
-                              setFieldTouched('completedBy');
-                              setFieldTouched('completedAt');
-                            }}
-                            editable={editable}
-                          />
-                        ) : (
-                          <Label>
-                            <FormattedMessage
-                              id="modules.task.chooseUser"
-                              defaultMessage="Please choose a user to start the task"
-                            />
-                          </Label>
-                        )}
-                      </GridColumn>
-                    </div>
-                  </div>
-                </GridColumn>
+                )}
               </div>
-            );
-          }}
-        </Subscribe>
-      </SectionWrapper>
-    </div>
+            </div>
+          );
+        }}
+      </Subscribe>
+    </SectionWrapper>
   );
 };
 export default TaskSection;

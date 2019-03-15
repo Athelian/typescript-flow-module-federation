@@ -1,8 +1,8 @@
 // @flow
 import React from 'react';
 import { isEquals } from 'utils/fp';
-
 import TaskSection from './components/TaskSection';
+import { TaskFormWrapperStyle } from './style';
 
 type OptionalProps = {
   task?: Object,
@@ -21,16 +21,22 @@ export default class TaskForm extends React.Component<Props> {
 
   componentDidMount() {
     const { onFormReady } = this.props;
+
     if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProp: Props) {
     const { task } = this.props;
+
     return !isEquals(task, nextProp.task);
   }
 
   render() {
     const { task } = this.props;
-    return <TaskSection task={task} />;
+    return (
+      <div className={TaskFormWrapperStyle}>
+        <TaskSection task={task} />
+      </div>
+    );
   }
 }

@@ -234,7 +234,7 @@ const ContainerSection = () => {
               <FieldItem
                 vertical
                 label={
-                  <Label>
+                  <Label height="30px">
                     <FormattedMessage id="modules.container.tags" defaultMessage="TAGS" />
                   </Label>
                 }

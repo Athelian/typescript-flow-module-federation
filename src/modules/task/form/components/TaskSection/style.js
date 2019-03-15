@@ -1,23 +1,33 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets } from 'styles/common';
+import { layout, presets, borderRadiuses, colors } from 'styles/common';
 
-export const FormContentWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 40px;
-  padding: 50px 0;
-`;
-
-export const CommonSectionWrapperStyle: string = css`
+export const TaskSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 40px 0;
-  display: flex;
-  justify-content: center;
+  padding: 40px 10px;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
 `;
 
-export const DescriptionLabelWrapperStyle: string = css`
-  height: 90px;
+export const MainFieldsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  justify-content: space-between;
+  padding: 0 90px;
+`;
+
+export const MemoWrapperStyle: string = css`
+  margin: 0 90px;
+`;
+
+export const TaskStatusWrapperStyle: string = css`
+  ${borderRadiuses.MAIN};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  width: 680px;
+  margin: 0 90px;
+  padding: 20px;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
 `;
 
 export const AssignedToStyle: string = css`

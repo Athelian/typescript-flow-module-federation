@@ -5,6 +5,7 @@ export type LabelProps = {
   required?: boolean,
   labelAlign?: 'left' | 'right' | 'center',
   labelWidth?: string,
+  labelHeight?: string,
 };
 
 export type TooltipProps = {

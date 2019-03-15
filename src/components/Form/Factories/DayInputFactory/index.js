@@ -19,20 +19,17 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    InputWrapper: () => React.Node,
-    Input: () => React.Node,
     editable: boolean,
     blackout: boolean,
   };
 
 const defaultProps = {
   labelWidth: '200px',
+  labelHeight: '30px',
   inputWidth: '200px',
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  InputWrapper: DefaultStyle,
-  Input: DayInput,
   editable: false,
   blackout: false,
   vertical: false,
@@ -42,11 +39,10 @@ const DayInputFactory = ({
   vertical,
   isTouched,
   label,
-  InputWrapper,
-  Input,
   required,
   labelAlign,
   labelWidth,
+  labelHeight,
   hideTooltip,
   isNew,
   errorMessage,
@@ -69,7 +65,7 @@ const DayInputFactory = ({
   blackout,
   nullable,
 }: Props): React.Node => {
-  const labelConfig = { required, align: labelAlign, width: labelWidth };
+  const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
   const tooltipConfig = {
     isNew,
@@ -114,13 +110,13 @@ const DayInputFactory = ({
   if (!blackout) {
     if (editable) {
       renderedInput = (
-        <InputWrapper {...inputWrapperConfig}>
-          <Input {...inputConfig} />
-        </InputWrapper>
+        <DefaultStyle {...inputWrapperConfig}>
+          <DayInput {...inputConfig} />
+        </DefaultStyle>
       );
     } else {
       renderedInput = (
-        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <DayInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
       );
     }
   }

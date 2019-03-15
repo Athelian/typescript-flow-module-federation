@@ -18,7 +18,7 @@ export default function Tags({ values, onChange, tagType }: Props) {
       <FieldItem
         vertical
         label={
-          <Label>
+          <Label height="30px">
             <FormattedMessage {...messages.tags} />
           </Label>
         }

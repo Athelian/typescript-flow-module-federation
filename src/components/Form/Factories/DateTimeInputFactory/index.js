@@ -22,20 +22,17 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    InputWrapper: () => React.Node,
-    Input: () => React.Node,
     editable: boolean,
     blackout: boolean,
   };
 
 const defaultProps = {
   labelWidth: '200px',
+  labelHeight: '30px',
   inputWidth: '200px',
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  InputWrapper: DefaultStyle,
-  Input: DateTimeInput,
   editable: false,
   blackout: false,
   vertical: false,
@@ -45,11 +42,10 @@ const DateTimeInputFactory = ({
   vertical,
   isTouched,
   label,
-  InputWrapper,
-  Input,
   required,
   labelAlign,
   labelWidth,
+  labelHeight,
   hideTooltip,
   isNew,
   errorMessage,
@@ -71,7 +67,7 @@ const DateTimeInputFactory = ({
   editable,
   blackout,
 }: Props): React.Node => {
-  const labelConfig = { required, align: labelAlign, width: labelWidth };
+  const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
   const tooltipConfig = {
     isNew,
@@ -115,13 +111,13 @@ const DateTimeInputFactory = ({
   if (!blackout) {
     if (editable) {
       renderedInput = (
-        <InputWrapper {...inputWrapperConfig}>
-          <Input {...inputConfig} />
-        </InputWrapper>
+        <DefaultStyle {...inputWrapperConfig}>
+          <DateTimeInput {...inputConfig} />
+        </DefaultStyle>
       );
     } else {
       renderedInput = (
-        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <DateTimeInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
       );
     }
   }
