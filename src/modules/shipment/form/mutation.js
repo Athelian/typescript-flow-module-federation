@@ -25,7 +25,7 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
-  taskCardFragment,
+  taskFormInSlideViewFragment,
   todoFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
@@ -90,7 +90,7 @@ export const updateShipmentMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
-  ${taskCardFragment}
+  ${taskFormInSlideViewFragment}
   ${todoFragment}
 `;
 

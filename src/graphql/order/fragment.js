@@ -31,7 +31,7 @@ export const orderFormFragment = gql`
     }
     todo {
       tasks {
-        ...taskCardFragment
+        ...taskFormInSlideViewFragment
       }
     }
     exporter {

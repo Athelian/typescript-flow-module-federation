@@ -19,7 +19,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
-  taskCardFragment,
+  taskFormInSlideViewFragment,
   todoFragment,
 } from 'graphql';
 
@@ -52,7 +52,7 @@ export const selectBatchListQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
-  ${taskCardFragment}
+  ${taskFormInSlideViewFragment}
   ${todoFragment}
 `;
 

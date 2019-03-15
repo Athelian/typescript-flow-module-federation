@@ -25,7 +25,7 @@ export const shipmentFormFragment = gql`
     }
     todo {
       tasks {
-        ...taskCardFragment
+        ...taskFormInSlideViewFragment
       }
     }
     customFields {

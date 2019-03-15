@@ -20,7 +20,7 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
-  taskCardFragment,
+  taskFormInSlideViewFragment,
   todoFragment,
 } from 'graphql';
 import { prepareCustomFieldsData } from 'utils/customFields';
@@ -133,7 +133,7 @@ export const updateBatchMutation = gql`
   ${fieldDefinitionFragment}
   ${badRequestFragment}
   ${ownedByFragment}
-  ${taskCardFragment}
+  ${taskFormInSlideViewFragment}
   ${todoFragment}
 `;
 
