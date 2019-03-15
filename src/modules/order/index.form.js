@@ -161,9 +161,9 @@ class OrderFormModule extends React.PureComponent<Props> {
       orderItemState.initDetailValues(orderItems);
       orderInfoState.initDetailValues(info);
       orderFilesState.initDetailValues(files);
+      orderTasksState.initDetailValues(todo);
     }
     orderTagsState.initDetailValues(tags);
-    orderTasksState.initDetailValues(todo);
   };
 
   onMutationCompleted = ({

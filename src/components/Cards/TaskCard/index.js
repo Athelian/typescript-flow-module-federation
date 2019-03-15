@@ -135,6 +135,8 @@ const TaskCard = ({
 
   hideParentInfoForHoc = hideParentInfo;
 
+  const IS_DND_DEVELOPED = false;
+
   return (
     <BaseCard
       icon="TASK"
@@ -191,7 +193,7 @@ const TaskCard = ({
               }}
               role="presentation"
             >
-              {editable && isHovered ? (
+              {editable && isHovered && IS_DND_DEVELOPED ? (
                 <button className={DragButtonWrapperStyle} type="button">
                   <Icon icon="DRAG_HANDLE" />
                 </button>
