@@ -32,8 +32,6 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    Select: () => React.Node,
-    Options: () => React.Node,
     enumType: string,
     editable: boolean,
     blackout: boolean,
@@ -41,12 +39,11 @@ type Props = LabelProps &
 
 const defaultProps = {
   labelWidth: '200px',
+  labelHeight: '30px',
   inputWidth: '200px',
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  Select: DefaultSelect,
-  Options: DefaultOptions,
   editable: false,
   blackout: false,
   vertical: false,
@@ -56,12 +53,11 @@ const EnumSelectInputFactory = ({
   vertical,
   isTouched,
   label,
-  Select,
-  Options,
   enumType,
   required,
   labelAlign,
   labelWidth,
+  labelHeight,
   hideTooltip,
   isNew,
   errorMessage,
@@ -91,7 +87,7 @@ const EnumSelectInputFactory = ({
       const itemToString = parseEnumDescriptionOrValue;
       const itemToValue = item => (item ? item.name : '');
 
-      const labelConfig = { required, align: labelAlign, width: labelWidth };
+      const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
       const tooltipConfig = {
         isNew,
@@ -134,8 +130,8 @@ const EnumSelectInputFactory = ({
         readOnly: !editable,
         itemToString,
         itemToValue,
-        renderSelect: ({ ...rest }) => <Select {...rest} {...inputConfig} />,
-        renderOptions: ({ ...rest }) => <Options {...rest} {...optionsConfig} />,
+        renderSelect: ({ ...rest }) => <DefaultSelect {...rest} {...inputConfig} />,
+        renderOptions: ({ ...rest }) => <DefaultOptions {...rest} {...optionsConfig} />,
         readOnlyWidth: inputWidth,
         readOnlyHeight: inputHeight,
       };

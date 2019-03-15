@@ -315,7 +315,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                       <FieldItem
                         vertical
                         label={
-                          <Label>
+                          <Label height="30px">
                             <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
                           </Label>
                         }
