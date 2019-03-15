@@ -6,11 +6,61 @@ import { getByPathWithDefault, compose } from 'utils/fp';
 import { formatToDateLabel } from 'utils/date';
 import logger from 'utils/logger';
 import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
-import {
-  formatTimeline,
-  formatContainerGroups,
-  formatVoyages,
-} from 'modules/shipment/form/mutation';
+
+const formatTimeline = (timeline: Object) => {
+  if (!timeline) return null;
+
+  const { assignedTo, memo, approvedBy, date, timelineDateRevisions } = timeline;
+
+  return {
+    memo,
+    date: date ? new Date(date) : null,
+    ...(Array.isArray(assignedTo) ? { assignedToIds: assignedTo.map(({ id }) => id) } : {}),
+    ...(Array.isArray(timelineDateRevisions)
+      ? {
+          timelineDateRevisions: timelineDateRevisions
+            .filter(item => item && (item.date || item.memo))
+            .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
+              id: id && id.includes('-') ? null : id,
+              type,
+              memo: memoRevision,
+              date: dateRevision ? new Date(dateRevision) : null,
+            })),
+        }
+      : {}),
+    approvedById: approvedBy && approvedBy.id,
+  };
+};
+
+const formatVoyages = (voyages: Array<Object>): Array<Object> =>
+  voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
+    ...(id && id.includes('-') ? {} : { id }),
+    vesselCode,
+    vesselName,
+    departurePort: !departurePort
+      ? null
+      : {
+          airport: departurePort && departurePort.airport ? departurePort.airport : null,
+          seaport: departurePort && departurePort.seaport ? departurePort.seaport : null,
+        },
+    departure: !departure ? null : formatTimeline(departure),
+    arrivalPort: !arrivalPort
+      ? null
+      : {
+          airport: arrivalPort && arrivalPort.airport ? arrivalPort.airport : null,
+          seaport: arrivalPort && arrivalPort.seaport ? arrivalPort.seaport : null,
+        },
+    arrival: !arrival ? null : formatTimeline(arrival),
+  }));
+
+const formatContainerGroups = (voyages: Array<Object>): Array<Object> =>
+  voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
+    ...(id && id.includes('-') ? {} : { id }),
+    warehouseId: warehouse && warehouse.id,
+    customClearance: !customClearance ? null : formatTimeline(customClearance),
+    warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
+    deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
+  }));
 
 export const findAllPossibleIds = (
   targets: Object,

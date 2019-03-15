@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import { findIndex } from 'lodash';
 import {
   shipmentFormFragment,
   containerFormFragment,
@@ -29,16 +28,11 @@ import {
   taskCardFragment,
   todoFragment,
 } from 'graphql';
-import { prepareCustomFieldsData } from 'utils/customFields';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import {
-  prepareUpdateBatchInput,
-  prepareParsedUpdateBatchInput,
-} from 'modules/batch/form/mutation';
+import { prepareParsedUpdateBatchInput } from 'modules/batch/form/mutation';
 import { prepareParsedUpdateContainerInput } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
-  cleanUpData,
   parseGenericField,
   parseMemoField,
   parseDateField,
@@ -51,129 +45,6 @@ import {
   parseCustomFieldsField,
   parseTasksField,
 } from 'utils/data';
-import type { CargoReady, ShipmentVoyage, ShipmentGroups, ShipmentCreate } from '../type.js.flow';
-
-const prepareNewContainer = ({
-  updatedAt,
-  updatedBy,
-  archived,
-  totalBatchPackages,
-  totalBatchQuantity,
-  totalNumberOfUniqueOrderItems,
-  totalVolume,
-  totalWeight,
-  totalPrice,
-  shipment,
-  tags,
-  warehouse,
-  warehouseArrivalAgreedDate,
-  warehouseArrivalActualDate,
-  warehouseArrivalAgreedDateApprovedAt,
-  warehouseArrivalActualDateApprovedAt,
-  warehouseArrivalAgreedDateApprovedBy,
-  warehouseArrivalActualDateApprovedBy,
-  warehouseArrivalAgreedDateAssignedTo,
-  warehouseArrivalActualDateAssignedTo,
-  totalAdjusted,
-  batches,
-  representativeBatch,
-  ownedBy,
-  isNew,
-  id,
-  ...rest
-}: Object) => ({
-  ...rest,
-  ...(isNew ? {} : { id }),
-  warehouseId: warehouse && warehouse.id,
-  warehouseArrivalAgreedDate: warehouseArrivalAgreedDate
-    ? new Date(warehouseArrivalAgreedDate)
-    : null,
-  warehouseArrivalActualDate: warehouseArrivalActualDate
-    ? new Date(warehouseArrivalActualDate)
-    : null,
-  warehouseArrivalAgreedDateApprovedById:
-    warehouseArrivalAgreedDateApprovedBy && warehouseArrivalAgreedDateApprovedBy.id,
-  warehouseArrivalActualDateApprovedById:
-    warehouseArrivalActualDateApprovedBy && warehouseArrivalActualDateApprovedBy.id,
-  ...(Array.isArray(warehouseArrivalAgreedDateAssignedTo) &&
-  warehouseArrivalAgreedDateAssignedTo.length > 0
-    ? {
-        warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
-          item => item.id
-        ),
-      }
-    : {}),
-  ...(Array.isArray(warehouseArrivalActualDateAssignedTo) &&
-  warehouseArrivalActualDateAssignedTo.length > 0
-    ? {
-        warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
-          item => item.id
-        ),
-      }
-    : {}),
-  ...(Array.isArray(batches) && batches.length > 0
-    ? { batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)) }
-    : {}),
-  ...(Array.isArray(tags) && tags.length > 0 ? { tagIds: tags.map(item => item.id) } : {}),
-  representativeBatchIndex: representativeBatch
-    ? findIndex(batches, batch => batch.id === representativeBatch.id)
-    : null,
-});
-
-export const formatTimeline = (timeline: Object): ?CargoReady => {
-  if (!timeline) return null;
-
-  const { assignedTo, memo, approvedBy, date, timelineDateRevisions } = timeline;
-
-  return {
-    memo,
-    date: date ? new Date(date) : null,
-    ...(Array.isArray(assignedTo) ? { assignedToIds: assignedTo.map(({ id }) => id) } : {}),
-    ...(Array.isArray(timelineDateRevisions)
-      ? {
-          timelineDateRevisions: timelineDateRevisions
-            .filter(item => item && (item.date || item.memo))
-            .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
-              id: id && id.includes('-') ? null : id,
-              type,
-              memo: memoRevision,
-              date: dateRevision ? new Date(dateRevision) : null,
-            })),
-        }
-      : {}),
-    approvedById: approvedBy && approvedBy.id,
-  };
-};
-
-export const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
-  voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
-    ...(id && id.includes('-') ? {} : { id }),
-    vesselCode,
-    vesselName,
-    departurePort: !departurePort
-      ? null
-      : {
-          airport: departurePort && departurePort.airport ? departurePort.airport : null,
-          seaport: departurePort && departurePort.seaport ? departurePort.seaport : null,
-        },
-    departure: !departure ? null : formatTimeline(departure),
-    arrivalPort: !arrivalPort
-      ? null
-      : {
-          airport: arrivalPort && arrivalPort.airport ? arrivalPort.airport : null,
-          seaport: arrivalPort && arrivalPort.seaport ? arrivalPort.seaport : null,
-        },
-    arrival: !arrival ? null : formatTimeline(arrival),
-  }));
-
-export const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
-  voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
-    ...(id && id.includes('-') ? {} : { id }),
-    warehouseId: warehouse && warehouse.id,
-    customClearance: !customClearance ? null : formatTimeline(customClearance),
-    warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
-    deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
-  }));
 
 export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
@@ -186,71 +57,6 @@ export const createShipmentMutation: Object = gql`
   }
   ${badRequestFragment}
 `;
-
-export const prepareCreateShipmentInput = ({
-  no,
-  blNo,
-  blDate,
-  bookingNo,
-  bookingDate,
-  invoiceNo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  customFields,
-  memo,
-  cargoReady,
-  voyages,
-  containerGroups,
-  tags,
-  batches,
-  importer,
-  forwarders,
-  inCharges,
-  files,
-  containers,
-}: Object): ShipmentCreate => ({
-  no,
-  blNo,
-  bookingNo,
-  invoiceNo,
-  memo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  blDate: blDate ? new Date(blDate) : null,
-  bookingDate: bookingDate ? new Date(bookingDate) : null,
-  importerId: importer && importer.id,
-  ...(customFields ? { customFields: prepareCustomFieldsData(customFields) } : {}),
-  ...(cargoReady ? { cargoReady: formatTimeline(cargoReady) } : {}),
-  ...(Array.isArray(tags) ? { tagIds: tags.map(({ id }) => id) } : {}),
-  ...(Array.isArray(forwarders) ? { forwarderIds: forwarders.map(({ id }) => id) } : {}),
-  ...(Array.isArray(inCharges) ? { inChargeIds: inCharges.map(({ id }) => id) } : {}),
-  ...(Array.isArray(batches)
-    ? {
-        batches: getBatchesInPool(batches).map(batch =>
-          prepareUpdateBatchInput(cleanUpData(batch), true, false)
-        ),
-      }
-    : {}),
-  ...(Array.isArray(containers) ? { containers: containers.map(prepareNewContainer) } : {}),
-  ...(Array.isArray(voyages) ? { voyages: formatVoyages(voyages) } : {}),
-  ...(Array.isArray(containerGroups)
-    ? { containerGroups: formatContainerGroups(containerGroups) }
-    : {}),
-  ...(Array.isArray(files)
-    ? {
-        files: files.map(({ id, name, type, memo: fileMemo }) => ({
-          id,
-          name,
-          type,
-          memo: fileMemo,
-        })),
-      }
-    : {}),
-});
 
 export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
@@ -385,17 +191,17 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType)
   return { [key]: parsedNewPort };
 };
 
-type UpdateShipmentInputType = {
+type ShipmentInputType = {
   originalValues: Object,
   existingBatches: Array<Object>,
   newValues: Object,
 };
 
-export const prepareParsedUpdateShipmentInput = ({
+export const prepareParsedShipmentInput = ({
   originalValues,
   existingBatches,
   newValues,
-}: UpdateShipmentInputType): Object => {
+}: ShipmentInputType): Object => {
   const originalBatchesInPool = getBatchesInPool(originalValues.batches);
   const existingBatchesInPool = getBatchesInPool(existingBatches);
   const newBatchesInPool = getBatchesInPool(newValues.batches);
@@ -405,6 +211,7 @@ export const prepareParsedUpdateShipmentInput = ({
   const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
 
   return {
+    ...parseParentIdField('importerId', originalValues.importer, newValues.importer),
     ...parseGenericField('no', originalValues.no, newValues.no),
     ...parseGenericField('blNo', originalValues.blNo, newValues.blNo),
     ...parseDateField('blDate', originalValues.blDate, newValues.blDate),

@@ -1,12 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { pick } from 'lodash';
 import { Subscribe } from 'unstated';
 import { toast } from 'react-toastify';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
-import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
@@ -36,9 +34,8 @@ import validator from './form/validator';
 import { shipmentFormQuery } from './form/query';
 import {
   createShipmentMutation,
-  prepareCreateShipmentInput,
   updateShipmentMutation,
-  prepareParsedUpdateShipmentInput,
+  prepareParsedShipmentInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -138,18 +135,41 @@ class ShipmentFormModule extends React.Component<Props> {
 
     const isNewOrClone = this.isNewOrClone();
 
-    const input = isNewOrClone
-      ? prepareCreateShipmentInput({
-          ...findChangeData(originalValues, newValues),
-          ...pick(newValues, ['batches', 'importer', 'forwarders', 'voyages', 'containerGroups']),
-        })
-      : prepareParsedUpdateShipmentInput({
-          originalValues,
-          existingBatches,
-          newValues,
-        });
+    const input = prepareParsedShipmentInput({
+      originalValues: isNewOrClone
+        ? {
+            blNo: '',
+            bookingNo: '',
+            invoiceNo: '',
+            carrier: '',
+            forwarders: [],
+            importer: {},
+            inCharges: [],
+            batches: [],
+            containers: [],
+            files: [],
+            tags: [],
+            containerGroups: [{}],
+            voyages: [{}],
+            todo: {
+              tasks: [],
+            },
+          }
+        : originalValues,
+      existingBatches,
+      newValues,
+    });
 
     if (isNewOrClone) {
+      // NOTE: this is a workaround because API need to send
+      // voyages and container in the new mutation even user doesn't
+      if (!input.voyages) {
+        input.voyages = [{}];
+      }
+      if (!input.containerGroups) {
+        input.containerGroups = [{}];
+      }
+
       const result = await saveShipment({
         variables: { input },
       });
