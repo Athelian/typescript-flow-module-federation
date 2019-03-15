@@ -39,6 +39,36 @@ export const taskCardFragment = gql`
   }
 `;
 
+export const taskFormInSlideViewFragment = gql`
+  fragment taskFormInSlideViewFragment on Task {
+    sort
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    name
+    dueDate
+    startDate
+    description
+    inProgressAt
+    inProgressBy {
+      ...userAvatarFragment
+    }
+    completedAt
+    completedBy {
+      ...userAvatarFragment
+    }
+    assignedTo {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    memo
+  }
+`;
+
 export const taskFormFragment = gql`
   fragment taskFormFragment on Task {
     sort

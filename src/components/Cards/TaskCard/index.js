@@ -5,6 +5,7 @@ import { BooleanValue } from 'react-values';
 import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import { encodeId } from 'utils/id';
+import { formatToGraphql, startOfToday } from 'utils/date';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -248,7 +249,7 @@ const TaskCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({
                         ...task,
-                        dueDate: inputHandlers.value ? inputHandlers.value : null,
+                        dueDate: inputHandlers.value || null,
                       });
                     }}
                     editable={editable}
@@ -258,7 +259,9 @@ const TaskCard = ({
                     isNew={false}
                     originalValue={dueDate}
                     inputColor={
-                      isBefore(new Date(dueDate), new Date()) && !completedBy ? 'RED' : null
+                      dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
+                        ? 'RED'
+                        : null
                     }
                   />
                 )}
@@ -312,19 +315,23 @@ const TaskCard = ({
                   completedDate={completedAt}
                   editable={editable}
                   onClick={() =>
-                    saveOnBlur({ ...task, completedBy: inProgressBy, completedAt: new Date() })
+                    saveOnBlur({
+                      ...task,
+                      completedBy: inProgressBy,
+                      completedAt: formatToGraphql(startOfToday()),
+                    })
                   }
                   onClickUser={() =>
                     completedBy
                       ? saveOnBlur({
                           ...task,
                           completedBy: null,
-                          completedAt: '',
+                          completedAt: null,
                         })
                       : saveOnBlur({
                           ...task,
                           inProgressBy: null,
-                          inProgressAt: '',
+                          inProgressAt: null,
                         })
                   }
                 />
@@ -338,7 +345,11 @@ const TaskCard = ({
                   }
                   users={assignedTo}
                   onActivateUser={user =>
-                    saveOnBlur({ ...task, inProgressBy: user, inProgressAt: new Date() })
+                    saveOnBlur({
+                      ...task,
+                      inProgressBy: user,
+                      inProgressAt: formatToGraphql(startOfToday()),
+                    })
                   }
                   editable={editable}
                 />

@@ -65,7 +65,6 @@ function BatchTaskSection({ intl }: Props) {
                         },
                         assignedTo: [],
                         tags: [],
-                        memo: '',
                       }),
                     ]);
                     setFieldTouched('tasks');

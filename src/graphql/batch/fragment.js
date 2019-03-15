@@ -29,7 +29,7 @@ export const batchFormFragment = gql`
     }
     todo {
       tasks {
-        ...taskCardFragment
+        ...taskFormInSlideViewFragment
       }
     }
     customFields {
