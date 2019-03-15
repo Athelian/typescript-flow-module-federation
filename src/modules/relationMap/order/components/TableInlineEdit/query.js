@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  timelineDateMinimalFragment,
+  timelineDateFullFragment,
   tagFragment,
   portFragment,
   userAvatarFragment,
@@ -128,6 +128,7 @@ export const shipmentTableFragment = gql`
     id
     no
     blNo
+    blDate
     transportType
     totalVolume {
       ...metricFragment
@@ -151,7 +152,7 @@ export const shipmentTableFragment = gql`
       ...tagFragment
     }
     cargoReady {
-      ...timelineDateMinimalFragment
+      ...timelineDateFullFragment
     }
     voyages {
       ... on Voyage {
@@ -163,10 +164,10 @@ export const shipmentTableFragment = gql`
           ...portFragment
         }
         departure {
-          ...timelineDateMinimalFragment
+          ...timelineDateFullFragment
         }
         arrival {
-          ...timelineDateMinimalFragment
+          ...timelineDateFullFragment
         }
       }
     }
@@ -174,13 +175,13 @@ export const shipmentTableFragment = gql`
       ... on ContainerGroup {
         id
         customClearance {
-          ...timelineDateMinimalFragment
+          ...timelineDateFullFragment
         }
         warehouseArrival {
-          ...timelineDateMinimalFragment
+          ...timelineDateFullFragment
         }
         deliveryReady {
-          ...timelineDateMinimalFragment
+          ...timelineDateFullFragment
         }
         warehouse {
           ... on Warehouse {
@@ -296,7 +297,7 @@ export const editTableViewQuery = gql`
   ${orderItemTableFragment}
   ${batchTableFragment}
   ${shipmentTableFragment}
-  ${timelineDateMinimalFragment}
+  ${timelineDateFullFragment}
   ${tagFragment}
   ${portFragment}
   ${userAvatarFragment}

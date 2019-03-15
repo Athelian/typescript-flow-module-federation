@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
-import { range, set, isEqual } from 'lodash';
+import { range, set, isEqual, cloneDeep } from 'lodash';
 import { usePrevious } from 'modules/form/hooks';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -274,11 +274,12 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
       const listener = emitter.once('INLINE_CHANGE', newData => {
+        logger.warn({ newData });
         setErrorMessage('');
 
         const { name, value, hasError } = newData;
 
-        let newEditData = { ...editData };
+        let newEditData = cloneDeep(editData);
         const [entityType, id, field] = name.split('.');
         if (entityType === 'orders' && field === 'currency') {
           const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
