@@ -18,6 +18,7 @@ type Props = {
 
 export default class DeployNotifier extends React.Component<Props> {
   componentDidMount() {
+    // TODO: remove revision and try to use localStorage for tracking latest version which they already have on their PC
     const { revision, revisionKey } = this.props;
 
     const docRef = firebase.database().ref(`/${revisionKey}`);
