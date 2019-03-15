@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Link } from '@reach/router';
+import { isBefore } from 'date-fns';
 import { encodeId } from 'utils/id';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
@@ -254,6 +255,9 @@ const TaskCard = ({
                     name={fieldName}
                     isNew={false}
                     originalValue={dueDate}
+                    inputColor={
+                      isBefore(new Date(dueDate), new Date()) && !completedBy ? 'RED' : null
+                    }
                   />
                 )}
               </FormField>
