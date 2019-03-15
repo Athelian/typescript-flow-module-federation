@@ -19,17 +19,10 @@ type FormState = {
 };
 
 const initValues = {
-  poNo: '',
-  piNo: '',
   currency: 'USD',
-  deliveryPlace: '',
-  incoterm: '',
-  issuedAt: '',
-  memo: '',
   shipments: [],
   inCharges: [],
   customFields: {
-    mask: null,
     fieldValues: [],
     fieldDefinitions: [],
   },

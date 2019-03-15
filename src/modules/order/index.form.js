@@ -28,12 +28,7 @@ import {
   OrderTasksContainer,
 } from './form/containers';
 import { orderFormQuery } from './form/query';
-import {
-  createOrderMutation,
-  prepareCreateOrderInput,
-  updateOrderMutation,
-  prepareParsedUpdateOrderInput,
-} from './form/mutation';
+import { createOrderMutation, updateOrderMutation, prepareParsedOrderInput } from './form/mutation';
 
 type OptionalProps = {
   path: string,
@@ -106,9 +101,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     const { orderId, onSuccessCallback } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
-    const input = isNewOrClone
-      ? prepareCreateOrderInput(formData)
-      : prepareParsedUpdateOrderInput(originalValues, formData);
+    const input = prepareParsedOrderInput(isNewOrClone ? null : originalValues, formData);
 
     if (isNewOrClone) {
       const { data } = await saveOrder({ variables: { input } });

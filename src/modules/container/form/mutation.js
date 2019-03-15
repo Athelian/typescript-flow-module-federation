@@ -24,7 +24,7 @@ import {
   ownedByFragment,
   todoFragment,
 } from 'graphql';
-import { prepareParsedUpdateBatchInput } from 'modules/batch/form/mutation';
+import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
   parseGenericField,
   parseMemoField,
@@ -79,7 +79,7 @@ type UpdateContainerInputType = {
   },
 };
 
-export const prepareParsedUpdateContainerInput = ({
+export const prepareParsedContainerInput = ({
   originalValues,
   existingBatches,
   newValues,
@@ -170,7 +170,7 @@ export const prepareParsedUpdateContainerInput = ({
       existingBatches,
       newValues.batches,
       (oldBatch: ?Object, newBatch: Object) => ({
-        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+        ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm,
           inOrderForm: false,
           inContainerForm,
