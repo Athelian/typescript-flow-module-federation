@@ -41,6 +41,7 @@ import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import validator from 'modules/batch/form/validator';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -299,21 +300,8 @@ function BatchesSection() {
                                 }
                               }
                             }}
-                            onClone={({
-                              id,
-                              deliveredAt,
-                              desired,
-                              expiredAt,
-                              producedAt,
-                              no,
-                              ...rest
-                            }) => {
-                              const clonedBatch = injectUid({
-                                ...rest,
-                                isNew: true,
-                                batchAdjustments: [],
-                                no: `${no}- clone`,
-                              });
+                            onClone={value => {
+                              const clonedBatch = prepareBatchObjectForClone(value);
 
                               setFieldValue('batches', [...batches, clonedBatch]);
                               addExistingBatches([clonedBatch]);

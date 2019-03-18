@@ -48,6 +48,7 @@ import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/cont
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -332,21 +333,8 @@ function BatchesArea({
                                       });
                                       setContainersState('containers', newContainers);
                                     }}
-                                    onClone={({
-                                      id,
-                                      deliveredAt,
-                                      desired,
-                                      expiredAt,
-                                      producedAt,
-                                      no,
-                                      ...rest
-                                    }) => {
-                                      const clonedBatch = injectUid({
-                                        ...rest,
-                                        isNew: true,
-                                        batchAdjustments: [],
-                                        no: `${no}- clone`,
-                                      });
+                                    onClone={value => {
+                                      const clonedBatch = prepareBatchObjectForClone(value);
 
                                       setFieldValue('batches', [...batches, clonedBatch]);
                                     }}

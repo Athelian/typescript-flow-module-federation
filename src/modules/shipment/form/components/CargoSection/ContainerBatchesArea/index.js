@@ -48,6 +48,7 @@ import SelectOrderItems from 'providers/SelectOrderItems';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { getBatchesByContainerId } from 'modules/shipment/helpers';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -299,35 +300,14 @@ export default function ContainerBatchesArea({
                                         batch
                                       )
                                     }
-                                    onClone={({
-                                      id,
-                                      deliveredAt,
-                                      desired,
-                                      expiredAt,
-                                      producedAt,
-                                      no,
-                                      ...rest
-                                    }) => {
+                                    onClone={value => {
                                       setFieldValue('batches', [
                                         ...batches,
-                                        injectUid({
-                                          ...rest,
-                                          isNew: true,
-                                          batchAdjustments: [],
-                                          no: `${no}- clone`,
-                                        }),
+                                        prepareBatchObjectForClone(value),
                                       ]);
                                       setDeepFieldValue(
                                         `containers.${focusedContainerIndex}.batches`,
-                                        [
-                                          ...batchesInContainer,
-                                          injectUid({
-                                            ...rest,
-                                            isNew: true,
-                                            batchAdjustments: [],
-                                            no: `${no}- clone`,
-                                          }),
-                                        ]
+                                        [...batchesInContainer, prepareBatchObjectForClone(value)]
                                       );
                                     }}
                                   />

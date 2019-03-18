@@ -10,13 +10,13 @@ import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import { getBatchByFillBatch, generateBatchItem } from 'modules/order/helpers';
-import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import validator from 'modules/batch/form/validator';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   ItemGridStyle,
   ItemStyle,
@@ -184,26 +184,8 @@ const OrderItems = ({
                                   changeBatch(position, 1, updatedBatch);
                                 }}
                                 onRemove={() => filter(({ id }) => id !== batch.id)}
-                                onClone={({
-                                  id,
-                                  deliveredAt,
-                                  desiredAt,
-                                  expiredAt,
-                                  producedAt,
-                                  no,
-                                  todo,
-                                  ...rest
-                                }) => {
-                                  changeBatch(
-                                    batches.length,
-                                    1,
-                                    injectUid({
-                                      ...rest,
-                                      batchAdjustments: [],
-                                      no: `${no}- clone`,
-                                      isNew: true,
-                                    })
-                                  );
+                                onClone={value => {
+                                  changeBatch(batches.length, 1, prepareBatchObjectForClone(value));
                                 }}
                               />
                             </>
