@@ -15,6 +15,8 @@ type FormState = {
   inProgressAt?: string,
   completedBy?: Object,
   completedAt?: string,
+  updatedAt?: string,
+  updatedBy?: Object,
 };
 
 export const initValues = {
@@ -25,8 +27,11 @@ export const initValues = {
   memo: '',
   tags: [],
   assignedTo: [],
-  completedBy: null,
   inProgressBy: null,
+  completedAt: null,
+  completedBy: null,
+  updatedAt: null,
+  updatedBy: null,
 };
 
 export default class TaskContainer extends Container<FormState> {

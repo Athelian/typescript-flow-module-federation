@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import TaskFormWrapper from 'modules/task/common/TaskFormWrapper';
 import TaskContainer from 'modules/task/form/container';
+import validator from 'modules/task/form/validator';
 import { TaskCard, CardAction } from 'components/Cards';
 import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
@@ -53,15 +55,18 @@ const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }:
                 >
                   {opened && (
                     <Subscribe to={[TaskContainer]}>
-                      {({ initDetailValues }) => (
+                      {({ state, isDirty, initDetailValues }) => (
                         <TaskFormWrapper
                           initDetailValues={initDetailValues}
-                          task={{ ...task, sort: index }}
+                          task={{ ...omit(task, ['isNew', 'entity']), sort: index }}
                           isNew={!!task.isNew}
+                          isReady={formContainer =>
+                            formContainer.isReady(state, validator) && isDirty()
+                          }
                           onCancel={() => selectTaskSlideToggle(false)}
-                          onSave={newValue => {
+                          onSave={() => {
                             selectTaskSlideToggle(false);
-                            onSave(index, newValue);
+                            onSave(index, state);
                           }}
                         />
                       )}

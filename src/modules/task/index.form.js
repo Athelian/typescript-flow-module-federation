@@ -16,6 +16,7 @@ import { QueryForm } from 'components/common';
 import { taskFormQuery } from './form/query';
 import TaskForm from './form';
 import TaskContainer from './form/container';
+import validator from './form/validator';
 import { updateTaskMutation, prepareTaskUpdateData } from './form/mutation';
 
 type OptionalProps = {
@@ -76,7 +77,7 @@ export default class TaskFormModule extends React.Component<Props> {
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
-              {(saveTask, { loading, error }) => (
+              {(saveTask, { loading: isLoading, error }) => (
                 <Subscribe to={[TaskContainer, FormContainer]}>
                   {({ initDetailValues, originalValues, state, isDirty, onSuccess }, form) => {
                     return (
@@ -108,8 +109,8 @@ export default class TaskFormModule extends React.Component<Props> {
                                   }
                                 />
                                 <SaveButton
-                                  disabled={!isDirty()}
-                                  loading={loading}
+                                  disabled={!form.isReady(state, validator)}
+                                  isLoading={isLoading}
                                   onClick={() =>
                                     this.onSave(
                                       { originalValues, state },
