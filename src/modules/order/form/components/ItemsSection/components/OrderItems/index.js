@@ -9,7 +9,7 @@ import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
-import { getBatchByFillBatch } from 'modules/order/helpers';
+import { getBatchByFillBatch, generateBatchItem } from 'modules/order/helpers';
 import { injectUid } from 'utils/id';
 import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
@@ -41,35 +41,6 @@ type Props = {
   onRemove: Function,
   onSave: Function,
 };
-
-export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
-  const {
-    productProvider: {
-      packageName,
-      packageCapacity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    },
-  } = orderItem;
-  return injectUid({
-    orderItem,
-    tags: [],
-    packageName,
-    packageCapacity,
-    packageGrossWeight,
-    packageVolume,
-    packageSize,
-    quantity: 0,
-    isNew: true,
-    batchAdjustments: [],
-    no: `batch no ${batches.length + 1}`,
-    autoCalculatePackageQuantity: true,
-    todo: {
-      tasks: [],
-    },
-  });
-}
 
 const OrderItems = ({
   selected,
