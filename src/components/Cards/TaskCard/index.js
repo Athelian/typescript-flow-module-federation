@@ -121,6 +121,7 @@ const TaskCard = ({
 
   const values = {
     [`task.${id}.name`]: name,
+    [`task.${id}.completedBy`]: completedBy,
   };
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
@@ -241,7 +242,7 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
-              <FormField name={`task.${id}.dueDate`} initValue={dueDate}>
+              <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
                 {({ name: fieldName, ...inputHandlers }) => (
                   <DateInputFactory
                     {...inputHandlers}
