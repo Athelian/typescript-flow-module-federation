@@ -81,6 +81,35 @@ export const getQuantitySummary = (orderItems: Array<Object>) => {
 
 export const sumBatchQuantity = (total: number, batch: Object) => total + findBatchQuantity(batch);
 
+export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
+  const {
+    productProvider: {
+      packageName,
+      packageCapacity,
+      packageGrossWeight,
+      packageVolume,
+      packageSize,
+    },
+  } = orderItem;
+  return injectUid({
+    orderItem,
+    tags: [],
+    packageName,
+    packageCapacity,
+    packageGrossWeight,
+    packageVolume,
+    packageSize,
+    quantity: 0,
+    isNew: true,
+    batchAdjustments: [],
+    no: `batch no ${batches.length + 1}`,
+    autoCalculatePackageQuantity: true,
+    todo: {
+      tasks: [],
+    },
+  });
+}
+
 export const getBatchByFillBatch = (orderItem: Object): Object => {
   const { batches = [] } = orderItem;
   const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
@@ -114,6 +143,9 @@ export const getBatchByFillBatch = (orderItem: Object): Object => {
         packageCapacity,
         quantity: wantingBatchQuantity,
       }),
+      todo: {
+        tasks: [],
+      },
     });
   }
   return null;
