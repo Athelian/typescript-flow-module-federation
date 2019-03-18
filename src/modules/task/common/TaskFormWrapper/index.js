@@ -45,7 +45,7 @@ class TaskFormWrapper extends React.Component<Props> {
               <JumpToSection>
                 <SectionTabs
                   link="task_taskSection"
-                  label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
+                  label={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
                   icon="TASK"
                 />
               </JumpToSection>
