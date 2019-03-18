@@ -94,7 +94,7 @@ const TaskAssignmentInput = ({
       {editable && !activeUserId && users.length < MAX_USERS_ALLOWED && (
         <BooleanValue>
           {({ value: isOpen, set: slideToggle }) => (
-            <>
+            <div role="presentation" onClick={evt => evt.stopPropagation()}>
               <button
                 data-testid="addAssignerButton"
                 className={AddAssignmentButtonStyle}
@@ -122,7 +122,7 @@ const TaskAssignmentInput = ({
                   />
                 )}
               </SlideView>
-            </>
+            </div>
           )}
         </BooleanValue>
       )}

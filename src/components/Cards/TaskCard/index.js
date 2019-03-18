@@ -305,15 +305,7 @@ const TaskCard = ({
 
             <div className={DividerStyle} />
 
-            <div
-              onClick={evt => {
-                if (editable) {
-                  evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-              className={TaskStatusWrapperStyle}
-            >
+            <div className={TaskStatusWrapperStyle}>
               {inProgressBy || completedBy ? (
                 <TaskStatusInput
                   width="175px"
