@@ -202,6 +202,9 @@ const OrderItems = ({
                                       batchAdjustments: [],
                                       no: `${no}- clone`,
                                       isNew: true,
+                                      todo: {
+                                        tasks: [],
+                                      },
                                     })
                                   );
                                 }}

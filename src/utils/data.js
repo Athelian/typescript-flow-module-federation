@@ -3,7 +3,7 @@ import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
 import { type UserAvatarType } from 'types';
-import { isEquals, getByPathWithDefault, isNullOrUndefined } from './fp';
+import { isEquals, getByPathWithDefault } from './fp';
 
 export const replaceUndefined: Function = when(
   either(is(Array), is(Object)),
@@ -323,11 +323,11 @@ export const parseTasksField = (
   originalTodo: ?{
     tasks: Array<TaskType>,
   },
-  newTodo?: {
-    tasks: Array<TaskType>[],
+  newTodo: {
+    tasks: Array<TaskType>,
   }
 ): Object => {
-  if (isEquals(originalTodo, newTodo) || isNullOrUndefined(newTodo)) return {};
+  if (isEquals(originalTodo, newTodo)) return {};
 
   const originalTasks = getByPathWithDefault(null, 'tasks', originalTodo);
   const newTasks = newTodo.tasks;
