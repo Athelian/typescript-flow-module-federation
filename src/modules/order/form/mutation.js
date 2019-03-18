@@ -266,7 +266,7 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         currency: newValues.currency,
       }),
       ...(!oldItem
-        ? { batches: [] }
+        ? { batches: newItem.batches.map(batch => prepareCreateBatchInput(batch, false)) }
         : parseArrayOfChildrenField(
             'batches',
             getByPathWithDefault([], 'batches', oldItem),
