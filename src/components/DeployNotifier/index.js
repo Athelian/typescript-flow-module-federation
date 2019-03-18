@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import firebase from 'firebase';
 import { toast } from 'react-toastify';
 import Icon from 'components/Icon';
+import * as serviceWorker from 'serviceWorker';
 import {
   ToastWrapperStyle,
   ToastBodyStyle,
@@ -29,11 +30,16 @@ export default class DeployNotifier extends React.Component<Props> {
       }
 
       const currentRevision = snapshot.val();
-      if (revision !== currentRevision) {
+      const currentVersion = window.localStorage.getItem('version');
+      if (revision !== currentRevision && (!currentVersion || currentVersion !== currentRevision)) {
+        window.localStorage.setItem('version', currentRevision);
         toast(
           <button
             className={ToastButtonWrapperStyle}
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              serviceWorker.unregister();
+              window.location.reload();
+            }}
             type="button"
           >
             <FormattedMessage
