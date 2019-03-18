@@ -1,9 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Provider, Subscribe } from 'unstated';
-import TaskFormContainer, { initValues } from 'modules/task/form/container';
-import validator from 'modules/task/form/validator';
+import { Provider } from 'unstated';
+import { initValues } from 'modules/task/form/container';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import TaskForm from 'modules/task/form';
@@ -18,6 +17,7 @@ type Props = {
   initDetailValues: Object => void,
   onSave: Function,
   onCancel: Function,
+  isReady: (formContainer: Object) => boolean,
 };
 
 const formContainer = new FormContainer();
@@ -25,7 +25,7 @@ const formContainer = new FormContainer();
 class TaskFormWrapper extends React.Component<Props> {
   componentDidMount() {
     const { task, initDetailValues } = this.props;
-    initDetailValues(task);
+    initDetailValues({ ...initValues, ...task });
   }
 
   componentWillUnmount() {
@@ -35,37 +35,27 @@ class TaskFormWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, onSave, onCancel } = this.props;
+    const { isNew, isReady, onSave, task, onCancel } = this.props;
     return (
       <Provider inject={[formContainer]}>
-        <Subscribe to={[TaskFormContainer]}>
-          {({ originalValues, state, isDirty }) => {
-            const values = { ...originalValues, ...state };
-            return (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <EntityIcon icon="TASK" color="TASK" />
-                    <JumpToSection>
-                      <SectionTabs
-                        link="task_taskSection"
-                        label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
-                        icon="TASK"
-                      />
-                    </JumpToSection>
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      disabled={!isDirty() || !formContainer.isReady(values, validator)}
-                      onClick={() => onSave(values)}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
-                <TaskForm task={values} isNew={isNew} />
-              </Layout>
-            );
-          }}
-        </Subscribe>
+        <Layout
+          navBar={
+            <SlideViewNavBar>
+              <EntityIcon icon="TASK" color="TASK" />
+              <JumpToSection>
+                <SectionTabs
+                  link="task_taskSection"
+                  label={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
+                  icon="TASK"
+                />
+              </JumpToSection>
+              <CancelButton onClick={onCancel} />
+              <SaveButton disabled={!isReady(formContainer)} onClick={onSave} />
+            </SlideViewNavBar>
+          }
+        >
+          <TaskForm task={{ ...task, isNew }} />
+        </Layout>
       </Provider>
     );
   }
