@@ -71,6 +71,13 @@ export const orderCardRMFragment = gql`
         }
         batches {
           ...batchCardRMFragment
+          ... on Batch {
+            shipment {
+              ... on Shipment {
+                id
+              }
+            }
+          }
         }
       }
     }

@@ -661,31 +661,38 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       }}
                       onMoveToNewShipment={() => {
                         const batchIds = uiSelectors.targetedBatchIds();
-                        const initBatches = batchIds.map(batchId => {
-                          const [orderItemId, orderItem] =
-                            (Object.entries(orderItems || {}): Array<any>).find(
-                              ([, item]) => item.batches && item.batches.includes(batchId)
-                            ) || [];
-                          const [, order] =
-                            (Object.entries(orders || {}): Array<any>).find(
-                              ([, item]) => item.orderItems && item.orderItems.includes(orderItemId)
-                            ) || [];
-                          const { totalAdjusted, ...batch } = batches[batchId];
-                          return {
-                            ...batch,
-                            orderItem: {
-                              ...orderItem,
-                              productProvider: {
-                                ...orderItem.productProvider,
-                                exporter: exporters[orderItem.productProvider.exporter],
+                        const initBatches = batchIds
+                          .map(batchId => {
+                            const [orderItemId, orderItem] =
+                              (Object.entries(orderItems || {}): Array<any>).find(
+                                ([, item]) => item.batches && item.batches.includes(batchId)
+                              ) || [];
+                            const [, order] =
+                              (Object.entries(orders || {}): Array<any>).find(
+                                ([, item]) =>
+                                  item.orderItems && item.orderItems.includes(orderItemId)
+                              ) || [];
+
+                            if (!batches[batchId]) {
+                              return false;
+                            }
+                            const { totalAdjusted, ...batch } = batches[batchId];
+                            return {
+                              ...batch,
+                              orderItem: {
+                                ...orderItem,
+                                productProvider: {
+                                  ...orderItem.productProvider,
+                                  exporter: exporters[orderItem.productProvider.exporter],
+                                },
+                                order: {
+                                  ...order,
+                                  exporter: exporters[order.exporter],
+                                },
                               },
-                              order: {
-                                ...order,
-                                exporter: exporters[order.exporter],
-                              },
-                            },
-                          };
-                        });
+                            };
+                          })
+                          .filter(Boolean);
                         shipmentBatchesContainer.initDetailValues(initBatches);
                         shipmentContainersContainer.initDetailValues({
                           containers: [],

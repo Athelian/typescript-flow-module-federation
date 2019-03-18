@@ -14,7 +14,6 @@ import {
 import { CardWrapperStyle, CardVisualizeStyle, CardTitleStyle } from '../style';
 import Number from '../Card/Number';
 import Badge from '../Card/Badge';
-// import messages from './messages';
 
 type Props = {
   order: {
