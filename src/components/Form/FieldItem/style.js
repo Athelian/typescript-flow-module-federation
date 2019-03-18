@@ -17,6 +17,11 @@ export const FieldItemWrapperStyle = (vertical: boolean, verticalGap: string): s
   width: 100%;
 `;
 
+export const LabelTooltipWrapperStyle: string = css`
+  position: relative;
+  height: min-content;
+`;
+
 export const TooltipAbsoluteWrapperStyle: string = css`
   position: absolute;
   left: -20px;
