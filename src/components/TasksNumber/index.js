@@ -27,8 +27,14 @@ const defaultProps = {
   blackout: false,
 };
 
-const percent = ({ completedCount, inProgressCount, remainingCount }: DataProps) =>
-  (completedCount * 100) / (completedCount + inProgressCount + remainingCount);
+const percent = ({ completedCount, inProgressCount, remainingCount }: DataProps) => {
+  const total = (completedCount + inProgressCount + remainingCount);
+  
+  if (total > 0) {
+    return completedCount * 100 / total;
+  }
+  return 0;
+};
 
 const TooltipMessage = ({ completedCount, inProgressCount, remainingCount }: DataProps) => (
   <div>
