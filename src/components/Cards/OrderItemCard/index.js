@@ -50,6 +50,7 @@ type Props = OptionalProps & {
   saveOnBlur: Function,
 };
 
+// TODO: use calculate fields from graphql
 function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;
