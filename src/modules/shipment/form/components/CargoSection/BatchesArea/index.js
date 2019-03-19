@@ -25,6 +25,7 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
+  BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
 import {
   ORDER_FORM,
@@ -185,7 +186,10 @@ function BatchesArea({
                               selectable
                               selected={selectedBatches.includes(batch)}
                               onSelect={() => setSelectedBatches(batch)}
-                              editable={{ getPrice: hasPermission(ORDER_ITEMS_GET_PRICE) }}
+                              read={{
+                                price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                tasks: hasPermission(BATCH_TASK_LIST),
+                              }}
                             />
                           ) : (
                             <BooleanValue>
@@ -269,10 +273,15 @@ function BatchesArea({
                                       ]),
                                       removeBatch: allowRemoveBatch,
                                       cloneBatch: allowCloneBatch,
-                                      viewOrder: hasPermission(ORDER_FORM),
-                                      viewProduct: hasPermission(PRODUCT_FORM),
-                                      viewContainer: hasPermission(CONTAINER_FORM),
-                                      getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                    }}
+                                    navigate={{
+                                      order: hasPermission(ORDER_FORM),
+                                      product: hasPermission(PRODUCT_FORM),
+                                      container: hasPermission(CONTAINER_FORM),
+                                    }}
+                                    read={{
+                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                      tasks: hasPermission(BATCH_TASK_LIST),
                                     }}
                                     batch={batch}
                                     saveOnBlur={updatedBatch => {

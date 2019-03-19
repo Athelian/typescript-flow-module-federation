@@ -11,6 +11,7 @@ import Tag from 'components/Tag';
 import TasksNumber from 'components/TasksNumber';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { getByPathWithDefault } from 'utils/fp';
 import {
   FieldItem,
   Label,
@@ -60,10 +61,15 @@ type OptionalProps = {
     desiredAt: boolean,
     removeBatch: boolean,
     cloneBatch: boolean,
-    viewOrder: boolean,
-    viewProduct: boolean,
-    viewContainer: boolean,
-    getPrice: boolean,
+  },
+  navigate: {
+    product: boolean,
+    order: boolean,
+    container: boolean,
+  },
+  read: {
+    price: boolean,
+    tasks: boolean,
   },
 };
 
@@ -85,10 +91,15 @@ const defaultProps = {
     desiredAt: false,
     removeBatch: false,
     cloneBatch: false,
-    viewOrder: false,
-    viewProduct: false,
-    viewContainer: false,
-    getPrice: false,
+  },
+  navigate: {
+    product: false,
+    order: false,
+    container: false,
+  },
+  read: {
+    price: false,
+    tasks: false,
   },
 };
 
@@ -101,6 +112,8 @@ const ShipmentBatchCard = ({
   currency,
   selectable,
   editable,
+  navigate,
+  read,
   ...rest
 }: Props) => {
   const actions = selectable
@@ -177,7 +190,7 @@ const ShipmentBatchCard = ({
               {supplier && supplier.name}
             </div>
           </div>
-          {editable.viewProduct ? (
+          {navigate.product ? (
             <Link
               className={ProductIconLinkStyle}
               to={`/product/${encodeId(product.id)}`}
@@ -346,7 +359,7 @@ const ShipmentBatchCard = ({
                 </Label>
               }
               input={
-                <Display blackout={!editable.getPrice}>
+                <Display blackout={!read.price}>
                   <FormattedNumber
                     value={
                       (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
@@ -379,7 +392,7 @@ const ShipmentBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            {editable.viewOrder ? (
+            {navigate.order ? (
               <Link
                 className={OrderIconStyle}
                 to={`/order/${encodeId(order.id)}`}
@@ -398,30 +411,22 @@ const ShipmentBatchCard = ({
           </div>
 
           <div className={ContainerWrapperStyle}>
-            {container ? (
-              <>
-                {editable.viewContainer ? (
-                  <Link
-                    className={ContainerIconStyle(true)}
-                    to={`/container/${encodeId(container.id)}`}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <Icon icon="CONTAINER" />
-                  </Link>
-                ) : (
-                  <div className={ContainerIconStyle(true)}>
-                    <Icon icon="CONTAINER" />
-                  </div>
-                )}
-                <Display align="left">{container.no}</Display>
-              </>
+            {navigate.container && container ? (
+              <Link
+                className={ContainerIconStyle(true)}
+                to={`/container/${encodeId(container.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="CONTAINER" />
+              </Link>
             ) : (
-              <div className={ContainerIconStyle(false)}>
+              <div className={ContainerIconStyle(!!container)}>
                 <Icon icon="CONTAINER" />
               </div>
             )}
+            <Display align="left">{getByPathWithDefault(null, 'no', container)}</Display>
           </div>
 
           <div className={OrderInChargeWrapperStyle}>
@@ -447,7 +452,7 @@ const ShipmentBatchCard = ({
             <div className={BatchTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TasksNumber {...todo} />
+            <TasksNumber {...todo} blackout={!read.tasks} />
           </div>
         </div>
       </div>

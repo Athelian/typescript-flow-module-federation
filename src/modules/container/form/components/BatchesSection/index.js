@@ -28,6 +28,7 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
+  BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -258,17 +259,22 @@ function BatchesSection() {
                               quantity: hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY]),
                               deliveredAt: hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]),
                               desiredAt: hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]),
-                              removeBatch: allowRemoveBatches,
-                              cloneBatch: allowCloneBatches,
-                              viewOrder: hasPermission(ORDER_FORM),
-                              viewShipment: hasPermission(SHIPMENT_FORM),
-                              viewProduct: hasPermission(PRODUCT_FORM),
-                              setRepresentativeBatch: hasPermission([
+                              representativeBatch: hasPermission([
                                 CONTAINER_UPDATE,
                                 CONTAINER_BATCHES_ADD,
                                 CONTAINER_BATCHES_REMOVE,
                               ]),
-                              getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                              removeBatch: allowRemoveBatches,
+                              cloneBatch: allowCloneBatches,
+                            }}
+                            navigate={{
+                              product: hasPermission(PRODUCT_FORM),
+                              order: hasPermission(ORDER_FORM),
+                              shipment: hasPermission(SHIPMENT_FORM),
+                            }}
+                            read={{
+                              price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                              tasks: hasPermission(BATCH_TASK_LIST),
                             }}
                             position={position}
                             batch={batch}

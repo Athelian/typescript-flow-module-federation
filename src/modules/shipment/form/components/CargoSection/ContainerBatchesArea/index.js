@@ -20,6 +20,7 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
+  BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
 import {
   CONTAINER_BATCHES_ADD,
@@ -184,7 +185,10 @@ export default function ContainerBatchesArea({
                               onSelect={() =>
                                 allowMoveBatches ? setSelectedBatches(batch) : () => {}
                               }
-                              editable={{ getPrice: hasPermission(ORDER_ITEMS_GET_PRICE) }}
+                              read={{
+                                price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                tasks: hasPermission(BATCH_TASK_LIST),
+                              }}
                             />
                           ) : (
                             <BooleanValue>
@@ -253,14 +257,19 @@ export default function ContainerBatchesArea({
                                       ]),
                                       removeBatch: allowRemoveBatch,
                                       cloneBatch: allowCloneBatch,
-                                      viewOrder: hasPermission(ORDER_FORM),
-                                      viewProduct: hasPermission(PRODUCT_FORM),
-                                      setRepresentativeBatch: hasPermission([
+                                      representativeBatch: hasPermission([
                                         CONTAINER_UPDATE,
                                         CONTAINER_BATCHES_ADD,
                                         CONTAINER_BATCHES_REMOVE,
                                       ]),
-                                      getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                    }}
+                                    navigate={{
+                                      product: hasPermission(PRODUCT_FORM),
+                                      order: hasPermission(ORDER_FORM),
+                                    }}
+                                    read={{
+                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                      tasks: hasPermission(BATCH_TASK_LIST),
                                     }}
                                     isRepresented={batch.id === representativeBatchId}
                                     saveOnBlur={updateBatch => {
