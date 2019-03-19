@@ -142,15 +142,6 @@ class ShipmentFormModule extends React.Component<Props> {
     });
 
     if (isNewOrClone) {
-      // NOTE: this is a workaround because API need to send
-      // voyages and container in the new mutation even user doesn't
-      if (!input.voyages) {
-        input.voyages = [{}];
-      }
-      if (!input.containerGroups) {
-        input.containerGroups = [{}];
-      }
-
       const result = await saveShipment({
         variables: { input },
       });
