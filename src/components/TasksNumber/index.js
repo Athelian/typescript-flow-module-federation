@@ -2,31 +2,35 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
+import { Blackout } from 'components/Form';
 import Ring from 'components/Ring';
 import Tooltip from 'components/Tooltip';
 import Icon from 'components/Icon';
 import { TasksNumberStyle, NumberStyle, TooltipStyle, TaskInfoStyle } from './style';
 
-type OptionalProps = {
+type DataProps = {
   completedCount: number,
   inProgressCount: number,
   remainingCount: number,
 };
 
-type Props = OptionalProps & {};
+type OptionalProps = DataProps & {
+  blackout: boolean,
+};
+
+type Props = OptionalProps;
 
 const defaultProps = {
   completedCount: 0,
   inProgressCount: 0,
   remainingCount: 0,
+  blackout: false,
 };
 
-const percent = ({ completedCount, inProgressCount, remainingCount }: Props) =>
+const percent = ({ completedCount, inProgressCount, remainingCount }: DataProps) =>
   (completedCount * 100) / (completedCount + inProgressCount + remainingCount);
 
-percent.defaultProps = defaultProps;
-
-const TooltipMessage = ({ completedCount, inProgressCount, remainingCount }: Props) => (
+const TooltipMessage = ({ completedCount, inProgressCount, remainingCount }: DataProps) => (
   <div>
     <div className={TaskInfoStyle}>
       <Icon icon="CONFIRM" />
@@ -46,29 +50,32 @@ const TooltipMessage = ({ completedCount, inProgressCount, remainingCount }: Pro
   </div>
 );
 
-const TasksNumber = ({ completedCount, inProgressCount, remainingCount }: Props) => (
-  <Tooltip
-    className={TooltipStyle}
-    message={
-      <TooltipMessage
-        completedCount={completedCount}
-        inProgressCount={inProgressCount}
-        remainingCount={remainingCount}
-      />
-    }
-  >
-    <div className={TasksNumberStyle}>
-      <Ring
-        percent={percent({ completedCount, inProgressCount, remainingCount })}
-        size={20}
-        color="TEAL"
-      />
-      <div className={NumberStyle}>
-        <FormattedNumber value={completedCount + inProgressCount + remainingCount} />
+const TasksNumber = ({ completedCount, inProgressCount, remainingCount, blackout }: Props) =>
+  blackout ? (
+    <Blackout width="20px" height="20px" />
+  ) : (
+    <Tooltip
+      className={TooltipStyle}
+      message={
+        <TooltipMessage
+          completedCount={completedCount}
+          inProgressCount={inProgressCount}
+          remainingCount={remainingCount}
+        />
+      }
+    >
+      <div className={TasksNumberStyle}>
+        <Ring
+          percent={percent({ completedCount, inProgressCount, remainingCount })}
+          size={20}
+          color="TEAL"
+        />
+        <div className={NumberStyle}>
+          <FormattedNumber value={completedCount + inProgressCount + remainingCount} />
+        </div>
       </div>
-    </div>
-  </Tooltip>
-);
+    </Tooltip>
+  );
 
 TasksNumber.defaultProps = defaultProps;
 

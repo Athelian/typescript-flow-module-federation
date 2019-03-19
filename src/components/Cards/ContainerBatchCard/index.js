@@ -10,6 +10,7 @@ import Tag from 'components/Tag';
 import TasksNumber from 'components/TasksNumber';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { getByPathWithDefault } from 'utils/fp';
 import {
   FieldItem,
   Label,
@@ -59,13 +60,18 @@ type OptionalProps = {
     quantity: boolean,
     deliveredAt: boolean,
     desiredAt: boolean,
+    representativeBatch: boolean,
     cloneBatch: boolean,
     removeBatch: boolean,
-    setRepresentativeBatch: boolean,
-    viewOrder: boolean,
-    viewShipment: boolean,
-    viewProduct: boolean,
-    getPrice: boolean,
+  },
+  navigate: {
+    product: boolean,
+    order: boolean,
+    shipment: boolean,
+  },
+  read: {
+    price: boolean,
+    tasks: boolean,
   },
   isRepresented: boolean,
 };
@@ -88,13 +94,18 @@ const defaultProps = {
     quantity: false,
     deliveredAt: false,
     desiredAt: false,
+    representativeBatch: false,
     cloneBatch: false,
     removeBatch: false,
-    setRepresentativeBatch: false,
-    viewProduct: false,
-    viewShipment: false,
-    viewOrder: false,
-    getPrice: false,
+  },
+  navigate: {
+    product: false,
+    order: false,
+    shipment: false,
+  },
+  read: {
+    price: false,
+    tasks: false,
   },
   isRepresented: false,
 };
@@ -110,6 +121,8 @@ const ContainerBatchCard = ({
   currency,
   selectable,
   editable,
+  navigate,
+  read,
   isRepresented,
   ...rest
 }: Props) => {
@@ -189,7 +202,7 @@ const ContainerBatchCard = ({
             </div>
           </div>
 
-          {editable.viewProduct ? (
+          {navigate.product ? (
             <Link
               className={ProductIconLinkStyle}
               to={`/product/${encodeId(product.id)}`}
@@ -204,7 +217,7 @@ const ContainerBatchCard = ({
               <Icon icon="PRODUCT" />
             </div>
           )}
-          {editable.setRepresentativeBatch ? (
+          {editable.representativeBatch ? (
             <button
               type="button"
               onClick={evt => {
@@ -353,7 +366,7 @@ const ContainerBatchCard = ({
                 </Label>
               }
               input={
-                <Display blackout={!editable.getPrice}>
+                <Display blackout={!read.price}>
                   <FormattedNumber
                     value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}
@@ -384,7 +397,7 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            {editable.viewOrder ? (
+            {navigate.order ? (
               <Link
                 className={OrderIconStyle}
                 to={`/order/${encodeId(order.id)}`}
@@ -404,7 +417,7 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            {editable.viewShipment ? (
+            {navigate.shipment ? (
               <Link
                 className={ShipmentIconStyle}
                 to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
@@ -419,7 +432,7 @@ const ContainerBatchCard = ({
                 <Icon icon="SHIPMENT" />
               </div>
             )}
-            <Display align="left">{shipment ? shipment.no : ''}</Display>
+            <Display align="left">{getByPathWithDefault(null, 'no', shipment)}</Display>
           </div>
 
           <div className={OrderInChargeWrapperStyle}>
@@ -445,7 +458,7 @@ const ContainerBatchCard = ({
             <div className={BatchTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TasksNumber {...todo} />
+            <TasksNumber {...todo} blackout={!read.tasks} />
           </div>
         </div>
       </div>
