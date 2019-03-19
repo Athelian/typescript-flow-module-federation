@@ -90,7 +90,7 @@ export default class TaskFormModule extends React.Component<Props> {
                               <SectionTabs
                                 link="task_taskSection"
                                 label={
-                                  <FormattedMessage id="modules.task.task" defaultMessage="TASK" />
+                                  <FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />
                                 }
                                 icon="TASK"
                               />

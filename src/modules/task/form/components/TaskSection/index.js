@@ -78,7 +78,7 @@ const TaskSection = ({ task }: Props) => {
     <SectionWrapper id="task_taskSection">
       <SectionHeader
         icon="TASK"
-        title={<FormattedMessage id="modules.task.task" defaultMessage="TASK" />}
+        title={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
       >
         {!isNew && <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />}
       </SectionHeader>
@@ -93,7 +93,7 @@ const TaskSection = ({ task }: Props) => {
                 <FieldItem
                   label={
                     <Label>
-                      <FormattedMessage id="modules.task.shipment" defaultMessage="SHIPMENT" />
+                      <FormattedMessage id="modules.Tasks.shipment" defaultMessage="SHIPMENT" />
                     </Label>
                   }
                   vertical
@@ -106,7 +106,7 @@ const TaskSection = ({ task }: Props) => {
                   <FieldItem
                     label={
                       <Label height="30px">
-                        <FormattedMessage id="modules.task.taskNo" defaultMessage="TASK No." />
+                        <FormattedMessage id="modules.Tasks.taskNo" defaultMessage="TASK No." />
                       </Label>
                     }
                     input={
@@ -214,7 +214,7 @@ const TaskSection = ({ task }: Props) => {
                     vertical
                     label={
                       <Label height="30px">
-                        <FormattedMessage id="modules.task.tags" defaultMessage="TAGS" />
+                        <FormattedMessage id="modules.Tasks.tags" defaultMessage="TAGS" />
                       </Label>
                     }
                     input={
@@ -240,7 +240,7 @@ const TaskSection = ({ task }: Props) => {
                     <FieldItem
                       label={
                         <Label>
-                          <FormattedMessage id="modules.task.order" defaultMessage="ORDER" />
+                          <FormattedMessage id="modules.Tasks.order" defaultMessage="ORDER" />
                         </Label>
                       }
                       vertical
@@ -252,7 +252,7 @@ const TaskSection = ({ task }: Props) => {
                     <FieldItem
                       label={
                         <Label>
-                          <FormattedMessage id="modules.task.batch" defaultMessage="BATCH" />
+                          <FormattedMessage id="modules.Tasks.batch" defaultMessage="BATCH" />
                         </Label>
                       }
                       vertical
@@ -275,7 +275,7 @@ const TaskSection = ({ task }: Props) => {
                       name={name}
                       {...inputHandlers}
                       originalValue={originalValues[name]}
-                      label={<FormattedMessage id="modules.task.memo" defaultMessage="MEMO" />}
+                      label={<FormattedMessage id="modules.Tasks.memo" defaultMessage="MEMO" />}
                       vertical
                       inputWidth="680px"
                       inputHeight="65px"
@@ -292,7 +292,7 @@ const TaskSection = ({ task }: Props) => {
                     label={
                       <Label height="30px">
                         <FormattedMessage
-                          id="modules.task.assignedTo"
+                          id="modules.Tasks.assignedTo"
                           defaultMessage="ASSIGNED TO"
                         />
                       </Label>
