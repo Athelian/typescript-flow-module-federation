@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, colors, fontSizes } from 'styles/common';
 
-export const TasksNumberStyle: string = css`
+export const TaskRingStyle: string = css`
   position: relative;
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
@@ -21,12 +21,6 @@ export const NumberStyle: string = css`
   height: 16px;
   line-height: 16px;
   text-align: center;
-`;
-
-export const TaskInfoStyle: string = css`
-  display: grid;
-  grid-template-columns: 20px 80px 20px;
-  align-items: center;
 `;
 
 export const TooltipStyle: string = css`

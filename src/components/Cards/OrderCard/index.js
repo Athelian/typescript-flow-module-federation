@@ -9,7 +9,7 @@ import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
-import TasksNumber from 'components/TasksNumber';
+import TaskRing from 'components/TaskRing';
 import { Label, Display, FieldItem } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
@@ -128,7 +128,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             <div className={TagsWrapperStyle}>
               {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TasksNumber {...todo} />
+            <TaskRing {...todo} />
           </div>
         </div>
       </Link>
