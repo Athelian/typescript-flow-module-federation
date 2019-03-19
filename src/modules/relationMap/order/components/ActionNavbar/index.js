@@ -660,6 +660,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         }
                       }}
                       onMoveToNewShipment={() => {
+                        const defaultBatchInput = {
+                          batchAdjustments: [],
+                          todo: {
+                            tasks: [],
+                          },
+                        };
                         const batchIds = uiSelectors.targetedBatchIds();
                         const initBatches = batchIds
                           .map(batchId => {
@@ -678,6 +684,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             }
                             const { totalAdjusted, ...batch } = batches[batchId];
                             return {
+                              ...defaultBatchInput,
                               ...batch,
                               orderItem: {
                                 ...orderItem,
@@ -708,6 +715,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           incoterm: '',
                           carrier: '',
                           forwarders: [],
+                          importer: {},
                           inCharges: [],
                           customFields: {
                             mask: null,
@@ -720,7 +728,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           containerGroups: [{}],
                           voyages: [{}],
                         });
-                        shipmentTransportTypeContainer.initDetailValues({});
                         shipmentFilesContainer.initDetailValues([]);
                         actions.showEditForm('NEW_SHIPMENT', 'new');
                       }}
@@ -763,6 +770,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         });
                         const processBatchIds = [];
                         const moveOrderItems = [];
+                        const defaultBatchInput = {
+                          batchAdjustments: [],
+                          isNew: true,
+                          todo: {
+                            tasks: [],
+                          },
+                        };
                         orderItemIds.forEach(orderItemId => {
                           const orderItem = orderItems[orderItemId];
                           if (orderItem) {
@@ -798,7 +812,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   .filter(batchId => batchIds.includes(batchId))
                                   .map(batchId => {
                                     const { totalAdjusted, ...inputBatchFields } = batches[batchId];
-                                    return { isNew: true, ...inputBatchFields };
+                                    return {
+                                      ...defaultBatchInput,
+                                      ...inputBatchFields,
+                                    };
                                   }),
                                 isNew: true,
                               });
@@ -829,7 +846,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                batches: [{ ...inputBatchFields, isNew: true }],
+                                batches: [{ ...defaultBatchInput, ...inputBatchFields }],
                               });
                             }
                           }
