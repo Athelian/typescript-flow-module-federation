@@ -67,53 +67,51 @@ const OrderBatchCard = ({
   readOnly,
   ...rest
 }: Props) => {
-  const actions = readOnly
-    ? []
-    : [
-        <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-        <BooleanValue>
-          {({ value: isOpen, set: dialogToggle }) => (
-            <>
-              <RemoveDialog
-                isOpen={isOpen}
-                onRequestClose={() => dialogToggle(false)}
-                onCancel={() => dialogToggle(false)}
-                onRemove={() => {
-                  onRemove(batch);
-                  dialogToggle(false);
-                }}
-                message={
-                  <div>
-                    <div>
-                      <FormattedMessage
-                        id="components.cards.deleteBatchItem"
-                        defaultMessage="Are you sure you want to delete this Batch?"
-                      />
-                    </div>
-                    <div>
-                      <FormattedMessage
-                        id="components.cards.deleteBatchItemShipment"
-                        defaultMessage="It is being used in a Shipment"
-                      />
-                    </div>
-                  </div>
-                }
-              />
-              <CardAction
-                icon="REMOVE"
-                hoverColor="RED"
-                onClick={() => {
-                  if (batch.shipment) {
-                    dialogToggle(true);
-                  } else {
-                    onRemove(batch);
-                  }
-                }}
-              />
-            </>
-          )}
-        </BooleanValue>,
-      ];
+  const actions = [
+    <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+    <BooleanValue>
+      {({ value: isOpen, set: dialogToggle }) => (
+        <>
+          <RemoveDialog
+            isOpen={isOpen}
+            onRequestClose={() => dialogToggle(false)}
+            onCancel={() => dialogToggle(false)}
+            onRemove={() => {
+              onRemove(batch);
+              dialogToggle(false);
+            }}
+            message={
+              <div>
+                <div>
+                  <FormattedMessage
+                    id="components.cards.deleteBatchItem"
+                    defaultMessage="Are you sure you want to delete this Batch?"
+                  />
+                </div>
+                <div>
+                  <FormattedMessage
+                    id="components.cards.deleteBatchItemShipment"
+                    defaultMessage="It is being used in a Shipment"
+                  />
+                </div>
+              </div>
+            }
+          />
+          <CardAction
+            icon="REMOVE"
+            hoverColor="RED"
+            onClick={() => {
+              if (batch.shipment) {
+                dialogToggle(true);
+              } else {
+                onRemove(batch);
+              }
+            }}
+          />
+        </>
+      )}
+    </BooleanValue>,
+  ];
 
   const {
     no,
@@ -149,25 +147,17 @@ const OrderBatchCard = ({
   };
 
   return readOnly ? (
-    <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
+    <BaseCard icon="BATCH" color="BATCH" {...rest}>
       <div
         className={OrderBatchCardWrapperStyle}
-        onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
+        onClick={() => onClick(batch)}
         role="presentation"
       >
-        <div
-          className={BatchNoWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
+        <div className={BatchNoWrapperStyle}>
           <FieldItem input={<Display align="left">{no}</Display>} />
         </div>
 
-        <div
-          className={QuantityWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
+        <div className={QuantityWrapperStyle}>
           <Label required>
             <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
           </Label>
@@ -176,11 +166,7 @@ const OrderBatchCard = ({
           </Display>
         </div>
 
-        <div
-          className={DateInputWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
+        <div className={DateInputWrapperStyle}>
           <Label>
             <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
           </Label>
@@ -189,11 +175,7 @@ const OrderBatchCard = ({
           </Display>
         </div>
 
-        <div
-          className={DateInputWrapperStyle}
-          onClick={evt => evt.stopPropagation()}
-          role="presentation"
-        >
+        <div className={DateInputWrapperStyle}>
           <Label>
             <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
           </Label>

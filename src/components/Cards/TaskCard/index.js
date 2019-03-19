@@ -55,7 +55,7 @@ type Props = OptionalProps;
 const defaultProps = {
   position: 0,
   hideParentInfo: false,
-  onClick: () => {},
+  onClick: null,
   saveOnBlur: () => {},
   editable: false,
   actions: [],
@@ -145,7 +145,7 @@ const TaskCard = ({
       color="TASK"
       showActionsOnHover
       actions={actions}
-      readOnly={!editable}
+      readOnly={!editable && !onClick}
       {...rest}
     >
       <BooleanValue>
