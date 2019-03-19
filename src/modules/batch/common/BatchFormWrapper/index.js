@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
-import { isDataType } from 'utils/fp';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
@@ -28,17 +27,14 @@ const formContainer = new FormContainer();
 class BatchFormWrapper extends React.Component<Props> {
   componentDidMount() {
     const { batch, orderItem, initDetailValues } = this.props;
-    const { deliveredAt, expiredAt, producedAt, ...rest } = batch;
     initDetailValues({
-      ...rest,
-      orderItem,
-      deliveredAt: isDataType(String, deliveredAt)
-        ? deliveredAt
-        : deliveredAt && deliveredAt.toISOString(),
-      expiredAt: isDataType(String, expiredAt) ? expiredAt : expiredAt && expiredAt.toISOString(),
-      producedAt: isDataType(String, producedAt)
-        ? producedAt
-        : producedAt && producedAt.toISOString(),
+      ...infoInitValues,
+      ...taskInitValues,
+      ...batch,
+      orderItem: {
+        ...orderItem,
+        batches: [],
+      },
     });
   }
 

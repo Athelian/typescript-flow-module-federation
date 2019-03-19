@@ -151,15 +151,15 @@ const OrderItems = ({
                                         }}
                                         onCancel={() => slideToggle(false)}
                                         isReady={formContainer =>
-                                          (formContainer.isReady(
+                                          formContainer.isReady(
                                             {
                                               ...batchInfoContainer.state,
                                               ...batchTasksContainer.state,
                                             },
                                             validator
                                           ) &&
-                                            batchInfoContainer.isDirty()) ||
-                                          batchTasksContainer.isDirty()
+                                          (batchInfoContainer.isDirty() ||
+                                            batchTasksContainer.isDirty())
                                         }
                                         onSave={() => {
                                           const updatedBatch = {

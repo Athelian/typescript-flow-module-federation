@@ -23,7 +23,7 @@ export type BatchFormState = {
   quantity: number,
   batchAdjustments: Array<any>,
   packageName?: ?string,
-  packageCapacity: number,
+  packageCapacity?: number,
   packageQuantity: number,
   packageGrossWeight: Metric,
   packageVolume: Metric,

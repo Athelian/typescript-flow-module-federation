@@ -209,15 +209,15 @@ export default function ContainerBatchesArea({
                                             orderItem={batch.orderItem}
                                             onCancel={() => batchSlideToggle(false)}
                                             isReady={formContainer =>
-                                              (formContainer.isReady(
+                                              formContainer.isReady(
                                                 {
                                                   ...batchInfoContainer.state,
                                                   ...batchTasksContainer.state,
                                                 },
                                                 validator
                                               ) &&
-                                                batchInfoContainer.isDirty()) ||
-                                              batchTasksContainer.isDirty()
+                                              (batchInfoContainer.isDirty() ||
+                                                batchTasksContainer.isDirty())
                                             }
                                             onSave={() => {
                                               const updatedBatch = {

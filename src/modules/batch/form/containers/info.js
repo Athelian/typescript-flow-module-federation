@@ -15,7 +15,6 @@ export const initValues = {
   },
   tags: [],
   batchAdjustments: [],
-  packageCapacity: 0,
   packageQuantity: 0,
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
@@ -37,6 +36,15 @@ export const initValues = {
     },
   },
   autoCalculatePackageQuantity: true,
+  // reset values for batch form
+  archived: false,
+  updatedAt: null,
+  updatedBy: null,
+  ownedBy: null,
+  totalVolume: null,
+  totalAdjusted: 0,
+  orderItem: {},
+  isNew: false,
 };
 
 export default class BatchInfoContainer extends Container<BatchFormState> {
