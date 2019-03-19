@@ -86,29 +86,6 @@ export const updateOrderMutation = gql`
   ${todoFragment}
 `;
 
-export const updateOrderItemMutation = gql`
-  mutation orderUpdate($id: ID!, $input: OrderUpdateInput!) {
-    orderUpdate(id: $id, input: $input) {
-      ... on Order {
-        id
-        orderItems {
-          ... on OrderItem {
-            id
-            batches {
-              ... on Batch {
-                id
-              }
-            }
-          }
-        }
-      }
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
-`;
-
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({
   ...parseGenericField('poNo', getByPathWithDefault(null, 'poNo', originalValues), newValues.poNo),
   ...parseGenericField('piNo', getByPathWithDefault(null, 'piNo', originalValues), newValues.piNo),
