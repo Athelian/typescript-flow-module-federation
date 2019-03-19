@@ -135,7 +135,7 @@ const ContainerSection = () => {
                         initValue={values.warehouseArrivalActualDate}
                         setFieldValue={setDeepFieldValue}
                         validator={validator}
-                        values={values.warehouseArrivalActualDate}
+                        values={values}
                       >
                         {({ name, ...inputHandlers }) => (
                           <DateTimeInputFactory
