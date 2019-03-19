@@ -14,6 +14,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 type Props = {
   task: Object,
   isNew: boolean,
+  editable: boolean,
   initDetailValues: Object => void,
   onSave: Function,
   onCancel: Function,
@@ -35,7 +36,7 @@ class TaskFormWrapper extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, isReady, onSave, task, onCancel } = this.props;
+    const { isNew, editable, isReady, onSave, task, onCancel } = this.props;
     return (
       <Provider inject={[formContainer]}>
         <Layout
@@ -49,8 +50,12 @@ class TaskFormWrapper extends React.Component<Props> {
                   icon="TASK"
                 />
               </JumpToSection>
-              <CancelButton onClick={onCancel} />
-              <SaveButton disabled={!isReady(formContainer)} onClick={onSave} />
+              {editable && (
+                <>
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton disabled={!isReady(formContainer)} onClick={onSave} />
+                </>
+              )}
             </SlideViewNavBar>
           }
         >

@@ -5,10 +5,13 @@ import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import TaskFormWrapper from 'modules/task/common/TaskFormWrapper';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import { TaskCard, CardAction } from 'components/Cards';
+import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
 type Props = {
@@ -22,6 +25,8 @@ type Props = {
 };
 
 const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   return tasks.length > 0 ? (
     <div className={ItemGridStyle}>
       {tasks.map((task, index) => (
@@ -57,6 +62,7 @@ const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }:
                     <Subscribe to={[TaskContainer]}>
                       {({ state, isDirty, initDetailValues }) => (
                         <TaskFormWrapper
+                          editable={hasPermission(TASK_UPDATE)}
                           initDetailValues={initDetailValues}
                           task={{ ...omit(task, ['isNew', 'entity']), sort: index }}
                           isNew={!!task.isNew}
