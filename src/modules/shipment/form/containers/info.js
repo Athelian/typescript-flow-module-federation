@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { cleanUpData, cleanFalsy } from 'utils/data';
+import { cleanFalsy } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -20,20 +20,10 @@ type FormState = {
 };
 
 const initValues = {
-  no: '',
-  blNo: '',
-  blDate: '',
-  bookingNo: '',
-  bookingDate: '',
-  invoiceNo: '',
-  loadType: '',
-  incoterm: '',
-  carrier: '',
   forwarders: [],
   importer: {},
   inCharges: [],
   customFields: {
-    mask: null,
     fieldValues: [],
     fieldDefinitions: [],
   },
@@ -58,7 +48,7 @@ export default class ShipmentInfoContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };

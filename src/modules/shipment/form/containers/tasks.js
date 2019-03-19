@@ -34,6 +34,6 @@ export default class ShipmentTasksContainer extends Container<FormState> {
   initDetailValues = (todo: { tasks: Array<Object> }) => {
     const parsedValues: Object = { ...initValues, todo };
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.originalValues = { ...parsedValues };
   };
 }

@@ -12,7 +12,7 @@ import {
   CONTAINER_BATCHES_REMOVE,
   CONTAINER_BATCHES_LIST,
 } from 'modules/permission/constants/container';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import {
   ORDER_ITEMS_LIST,
@@ -57,15 +57,21 @@ function BatchesSection() {
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
+
   const allowAddBatches =
     hasPermission(BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
+
   const allowCreateBatches =
     hasPermission(BATCH_CREATE) &&
     hasPermission(ORDER_ITEMS_LIST) &&
     (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
+
   const allowCloneBatches =
     hasPermission(BATCH_CREATE) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
-  const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
+
+  const allowRemoveBatches =
+    allowUpdate ||
+    (hasPermission(CONTAINER_BATCHES_REMOVE) && hasPermission(SHIPMENT_REMOVE_BATCH));
 
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 

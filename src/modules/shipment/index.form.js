@@ -17,6 +17,7 @@ import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavB
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
+import { removeTypename } from 'utils/data';
 import { ShipmentEventsList } from 'modules/history';
 import { shipmentExportQuery } from './query';
 import {
@@ -117,7 +118,7 @@ class ShipmentFormModule extends React.Component<Props> {
     resetFormState(shipmentTransportTypeContainer, 'transportType');
     resetFormState(shipmentTimelineContainer);
     resetFormState(shipmentBatchesContainer, 'batches');
-    resetFormState(shipmentContainersContainer);
+    resetFormState(shipmentContainersContainer, 'containers');
     resetFormState(shipmentFilesContainer, 'files');
     resetFormState(shipmentTasksContainer, 'todo');
     form.onReset();
@@ -136,9 +137,9 @@ class ShipmentFormModule extends React.Component<Props> {
     const isNewOrClone = this.isNewOrClone();
 
     const input = prepareParsedShipmentInput({
-      originalValues: isNewOrClone ? null : originalValues,
-      existingBatches,
-      newValues,
+      originalValues: isNewOrClone ? null : removeTypename(originalValues),
+      existingBatches: removeTypename(existingBatches),
+      newValues: removeTypename(newValues),
     });
 
     if (isNewOrClone) {
@@ -213,7 +214,7 @@ class ShipmentFormModule extends React.Component<Props> {
     } else {
       shipmentInfoContainer.initDetailValues(info);
       shipmentBatchesContainer.initDetailValues(batches);
-      shipmentContainersContainer.initDetailValues({ containers });
+      shipmentContainersContainer.initDetailValues(containers);
       shipmentTimelineContainer.initDetailValues({
         cargoReady,
         voyages,

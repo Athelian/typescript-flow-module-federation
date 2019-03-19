@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { cleanUpData, cleanFalsy } from 'utils/data';
+import { cleanFalsy } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -47,7 +47,7 @@ export default class OrderInfoContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
