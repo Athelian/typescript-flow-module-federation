@@ -1,6 +1,5 @@
 // @flow
 import { Container } from 'unstated';
-import { cleanUpFiles } from 'utils/data';
 import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
 import type { Document } from 'components/Form/DocumentsInput/type.js.flow';
@@ -30,8 +29,7 @@ export default class ShipmentFilesContainer extends Container<FormState> {
   };
 
   initDetailValues = (files: Array<Document>) => {
-    const parsedValues: Array<Document> = cleanUpFiles(files);
-    this.setState({ files: parsedValues });
-    this.originalValues = { files: parsedValues };
+    this.setState({ files });
+    this.originalValues = { files };
   };
 }

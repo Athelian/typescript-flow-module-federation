@@ -2,7 +2,6 @@
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
-import { removeTypename } from 'utils/data';
 
 type BatchFormState = {
   batches: Array<Object>,
@@ -68,10 +67,8 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
   };
 
   initDetailValues = (batches: Array<Object>) => {
-    const parsedValues: Array<any> = removeTypename(batches);
-
-    this.setState({ batches: parsedValues });
-    this.originalValues = { batches: parsedValues };
-    this.existingBatches = parsedValues;
+    this.setState({ batches });
+    this.originalValues = { batches };
+    this.existingBatches = batches;
   };
 }

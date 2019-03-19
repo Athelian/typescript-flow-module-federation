@@ -285,9 +285,10 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault([], 'forwarders', originalValues),
       newValues.forwarders
     ),
+    // TODO: Change to null default, and adjust ui components to handle null object
     ...parseTimelineDateField(
       'cargoReady',
-      getByPathWithDefault(null, 'cargoReady', originalValues),
+      getByPathWithDefault({}, 'cargoReady', originalValues),
       newValues.cargoReady
     ),
     ...parseArrayOfChildrenField(

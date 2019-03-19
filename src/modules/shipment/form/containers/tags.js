@@ -1,6 +1,5 @@
 // @flow
 import { Container } from 'unstated';
-import { removeTypename } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -34,8 +33,7 @@ export default class ShipmentTagsContainer extends Container<FormState> {
   };
 
   initDetailValues = (tags: Array<Object>) => {
-    const parsedValues = removeTypename(tags);
-    this.setState({ tags: parsedValues });
-    this.originalValues = { tags: parsedValues };
+    this.setState({ tags });
+    this.originalValues = { tags };
   };
 }

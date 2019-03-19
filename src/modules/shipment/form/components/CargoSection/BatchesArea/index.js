@@ -171,7 +171,9 @@ function BatchesArea({
                   <div className={BatchesGridStyle}>
                     {usefulBatches.map(batch => {
                       const allowRemoveBatch = getByPath('container', batch)
-                        ? hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_REMOVE])
+                        ? hasPermission(SHIPMENT_UPDATE) ||
+                          (hasPermission(CONTAINER_BATCHES_REMOVE) &&
+                            hasPermission(SHIPMENT_REMOVE_BATCH))
                         : hasPermission([SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH]);
                       const allowCloneBatch = getByPath('container', batch)
                         ? hasPermission(BATCH_CREATE) &&

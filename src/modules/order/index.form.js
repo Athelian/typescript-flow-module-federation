@@ -16,6 +16,7 @@ import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
+import { removeTypename } from 'utils/data';
 import { OrderEventsList } from 'modules/history';
 import { orderExportQuery } from './query';
 import OrderForm from './form';
@@ -101,7 +102,10 @@ class OrderFormModule extends React.PureComponent<Props> {
     const { orderId, onSuccessCallback } = this.props;
 
     const isNewOrClone = this.isNewOrClone();
-    const input = prepareParsedOrderInput(isNewOrClone ? null : originalValues, formData);
+    const input = prepareParsedOrderInput(
+      isNewOrClone ? null : removeTypename(originalValues),
+      removeTypename(formData)
+    );
 
     if (isNewOrClone) {
       const { data } = await saveOrder({ variables: { input } });
