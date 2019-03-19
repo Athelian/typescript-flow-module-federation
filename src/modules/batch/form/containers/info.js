@@ -43,7 +43,7 @@ export const initValues = {
   ownedBy: null,
   totalVolume: null,
   totalAdjusted: 0,
-  orderItem: {},
+  orderItem: null,
   isNew: false,
 };
 

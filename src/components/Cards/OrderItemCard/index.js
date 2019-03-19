@@ -50,7 +50,7 @@ type Props = OptionalProps & {
   saveOnBlur: Function,
 };
 
-// TODO: use calculated fields from graphql
+// TODO: use calculate fields from graphql
 function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;
@@ -180,7 +180,9 @@ const OrderItemCard = ({
         ];
 
   const chartDetail = getQuantitySummary(item);
-  const { productProvider: { product, supplier, unitPrice } = {} } = item;
+  const {
+    productProvider: { product, supplier, unitPrice },
+  } = item;
 
   const productImage = getProductImage(product);
 
@@ -203,15 +205,14 @@ const OrderItemCard = ({
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{product && product.name}</div>
-            <div className={ProductSerialStyle}>{product && product.serial}</div>
+            <div className={ProductNameStyle}>{product.name}</div>
+            <div className={ProductSerialStyle}>{product.serial}</div>
             <div className={ProductSupplierStyle}>
               <Icon icon="SUPPLIER" />
               {supplier && supplier.name}
             </div>
             <div className={ProductTagsWrapperStyle}>
-              {product &&
-                product.tags &&
+              {product.tags &&
                 product.tags.length > 0 &&
                 product.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
@@ -220,17 +221,15 @@ const OrderItemCard = ({
           <button className={ProductIconLinkStyle} type="button">
             <Icon icon="PRODUCT" />
           </button>
-          {product && product.id && (
-            <Link
-              className={ProductIconLinkStyle}
-              to={`/product/${encodeId(product.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="PRODUCT" />
-            </Link>
-          )}
+          <Link
+            className={ProductIconLinkStyle}
+            to={`/product/${encodeId(product.id)}`}
+            onClick={evt => {
+              evt.stopPropagation();
+            }}
+          >
+            <Icon icon="PRODUCT" />
+          </Link>
         </div>
 
         <div className={BodyWrapperStyle}>
@@ -242,11 +241,9 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                item && (
-                  <Display>
-                    <FormattedNumber value={item.quantity} />
-                  </Display>
-                )
+                <Display>
+                  <FormattedNumber value={item.quantity} />
+                </Display>
               }
             />
           </div>
@@ -259,13 +256,10 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                item &&
-                item.price && (
-                  <Display blackout={!viewPrice}>
-                    <FormattedNumber value={item.price.amount} />{' '}
-                    {item.currency || item.price.currency}
-                  </Display>
-                )
+                <Display blackout={!viewPrice}>
+                  <FormattedNumber value={item.price.amount} />{' '}
+                  {item.currency || item.price.currency}
+                </Display>
               }
             />
           </div>
@@ -288,14 +282,12 @@ const OrderItemCard = ({
                 </Label>
               }
               input={
-                item && (
-                  <Display blackout={!viewPrice}>
-                    <FormattedNumber
-                      value={item.price.amount * item.quantity}
-                      suffix={item.currency || item.price.currency}
-                    />
-                  </Display>
-                )
+                <Display blackout={!viewPrice}>
+                  <FormattedNumber
+                    value={item.price.amount * item.quantity}
+                    suffix={item.currency || item.price.currency}
+                  />
+                </Display>
               }
             />
           </div>
@@ -327,15 +319,14 @@ const OrderItemCard = ({
               <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
               <div className={ProductInfoWrapperStyle}>
-                <div className={ProductNameStyle}>{product && product.name}</div>
-                <div className={ProductSerialStyle}>{product && product.serial}</div>
+                <div className={ProductNameStyle}>{product.name}</div>
+                <div className={ProductSerialStyle}>{product.serial}</div>
                 <div className={ProductSupplierStyle}>
                   <Icon icon="SUPPLIER" />
                   {supplier && supplier.name}
                 </div>
                 <div className={ProductTagsWrapperStyle}>
-                  {product &&
-                    product.tags &&
+                  {product.tags &&
                     product.tags.length > 0 &&
                     product.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
                 </div>
@@ -344,17 +335,15 @@ const OrderItemCard = ({
               <button className={ProductIconLinkStyle} type="button">
                 <Icon icon="PRODUCT" />
               </button>
-              {product && product.id && (
-                <Link
-                  className={ProductIconLinkStyle}
-                  to={`/product/${encodeId(product.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="PRODUCT" />
-                </Link>
-              )}
+              <Link
+                className={ProductIconLinkStyle}
+                to={`/product/${encodeId(product.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="PRODUCT" />
+              </Link>
             </div>
 
             <div className={BodyWrapperStyle}>
@@ -417,12 +406,9 @@ const OrderItemCard = ({
                       </Label>
                     }
                     input={
-                      price &&
-                      price.amount && (
-                        <Display>
-                          <FormattedNumber value={price.amount} /> {currency || price.currency}
-                        </Display>
-                      )
+                      <Display>
+                        <FormattedNumber value={price.amount} /> {currency || price.currency}
+                      </Display>
                     }
                   />
                 ) : (
@@ -497,15 +483,12 @@ const OrderItemCard = ({
                     </Label>
                   }
                   input={
-                    price &&
-                    price.amount && (
-                      <Display width="90px">
-                        <FormattedNumber
-                          value={price.amount * quantity}
-                          suffix={currency || price.currency}
-                        />
-                      </Display>
-                    )
+                    <Display width="90px">
+                      <FormattedNumber
+                        value={price.amount * quantity}
+                        suffix={currency || price.currency}
+                      />
+                    </Display>
                   }
                 />
               </div>

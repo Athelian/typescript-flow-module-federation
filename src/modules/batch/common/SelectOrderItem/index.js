@@ -75,7 +75,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                         onSelect={() => set(item)}
                         selectable
                         viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                        selected={item.id === value.id}
+                        selected={value && item.id === value.id}
                         key={item.id}
                       />
                     )}
