@@ -11,6 +11,7 @@ import {
   TaskStatusInputWrapperStyle,
   UserAvatarWrapperStyle,
   DeactivateButtonStyle,
+  TaskStatusButtonStyle,
   TaskStatusInputLabelStyle,
   StatusLabelStyle,
 } from './style';
@@ -61,7 +62,7 @@ const TaskStatusInput = ({
   return (
     <BooleanValue>
       {({ value: isHovered, set: changeHoverState }) => (
-        <button
+        <div
           className={TaskStatusInputWrapperStyle({ status, editable, width })}
           onMouseEnter={() => {
             if (editable) {
@@ -73,13 +74,6 @@ const TaskStatusInput = ({
               changeHoverState(false);
             }
           }}
-          onClick={evt => {
-            if (editable && isInProgress) {
-              evt.stopPropagation();
-              onClick();
-            }
-          }}
-          type="button"
         >
           {showActiveUser && (
             <div className={UserAvatarWrapperStyle}>
@@ -99,33 +93,44 @@ const TaskStatusInput = ({
             </div>
           )}
 
-          <div className={TaskStatusInputLabelStyle}>
-            <div className={StatusLabelStyle}>
-              {isInProgress ? (
-                <>
-                  {isHovered ? (
-                    <FormattedMessage id="components.inputs.complete" defaultMessage="COMPLETE" />
-                  ) : (
-                    <FormattedMessage
-                      id="components.inputs.inProgress"
-                      defaultMessage="IN PROGRESS"
-                    />
-                  )}
-                </>
-              ) : (
-                <FormattedMessage id="components.inputs.completed" defaultMessage="COMPLETED" />
+          <button
+            className={TaskStatusButtonStyle}
+            onClick={evt => {
+              if (editable && isInProgress) {
+                evt.stopPropagation();
+                onClick();
+              }
+            }}
+            type="button"
+          >
+            <div className={TaskStatusInputLabelStyle}>
+              <div className={StatusLabelStyle}>
+                {isInProgress ? (
+                  <>
+                    {isHovered ? (
+                      <FormattedMessage id="components.inputs.complete" defaultMessage="COMPLETE" />
+                    ) : (
+                      <FormattedMessage
+                        id="components.inputs.inProgress"
+                        defaultMessage="IN PROGRESS"
+                      />
+                    )}
+                  </>
+                ) : (
+                  <FormattedMessage id="components.inputs.completed" defaultMessage="COMPLETED" />
+                )}
+              </div>
+
+              {!isInProgress && showCompletedDate && (
+                <div className={StatusLabelStyle}>
+                  <FormattedDate value={completedDate} />
+                </div>
               )}
             </div>
 
-            {!isInProgress && showCompletedDate && (
-              <div className={StatusLabelStyle}>
-                <FormattedDate value={completedDate} />
-              </div>
-            )}
-          </div>
-
-          <Icon icon={isInProgress ? 'CLOCK' : 'CHECKED'} />
-        </button>
+            <Icon icon={isInProgress ? 'CLOCK' : 'CHECKED'} />
+          </button>
+        </div>
       )}
     </BooleanValue>
   );
