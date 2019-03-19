@@ -4,10 +4,10 @@ import { IntlProvider } from 'react-intl';
 import { storiesOf } from '@storybook/react';
 // action
 
-import TasksNumber from './index';
+import TaskRing from './index';
 
-storiesOf('TasksNumber', module).add('default', () => (
+storiesOf('TaskRing', module).add('default', () => (
   <IntlProvider>
-    <TasksNumber completedCount={9} remainingCount={6} />
+    <TaskRing completedCount={9} remainingCount={6} />
   </IntlProvider>
 ));

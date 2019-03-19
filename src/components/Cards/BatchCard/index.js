@@ -5,7 +5,7 @@ import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import TasksNumber from 'components/TasksNumber';
+import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -242,7 +242,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             <div className={BatchTagsWrapperStyle}>
               {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TasksNumber {...todo} />
+            <TaskRing {...todo} />
           </div>
         </div>
       </div>

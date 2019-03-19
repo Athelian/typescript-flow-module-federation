@@ -6,7 +6,7 @@ import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
-import TasksNumber from 'components/TasksNumber';
+import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
@@ -134,7 +134,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                   <FormattedNumber value={batchCount} />
                 </div>
               </div>
-              <TasksNumber {...todo} />
+              <TaskRing {...todo} />
             </div>
           </div>
         </div>

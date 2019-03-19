@@ -5,7 +5,7 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import TasksNumber from 'components/TasksNumber';
+import TaskRing from 'components/TaskRing';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -192,7 +192,7 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
                 batch.tags.length > 0 &&
                 batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TasksNumber {...todo} />
+            <TaskRing {...todo} />
           </div>
         </div>
       </div>

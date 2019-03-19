@@ -7,7 +7,7 @@ import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
-import TasksNumber from 'components/TasksNumber';
+import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getByPathWithDefault } from 'utils/fp';
@@ -458,7 +458,7 @@ const ContainerBatchCard = ({
             <div className={BatchTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TasksNumber {...todo} blackout={!read.tasks} />
+            <TaskRing {...todo} blackout={!read.tasks} />
           </div>
         </div>
       </div>
