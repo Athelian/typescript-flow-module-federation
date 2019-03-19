@@ -18,12 +18,12 @@ export default function withForbiddenCard(
   { width, height, entityIcon, entityColor }: OptionsType
 ) {
   return function ParsedForbiddenCard(props: any) {
-    const { [dataField]: data, onClick, ...rest } = props;
+    const { [dataField]: data, onClick, selectable, ...rest } = props;
 
     if (!data) return <GrayCard width={width} height={height} />;
 
     // TODO Change to use isForbidden from utils/data instead of id later
-    if (isNullOrUndefined(data.id))
+    if (isNullOrUndefined(data.id) && !selectable)
       return (
         <BaseCard icon={entityIcon} color={entityColor} {...rest}>
           <Blackout width={width} height={height} />
