@@ -67,7 +67,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                   updatedBy={originalValues.updatedBy}
                 />
               )}
-              {!isNew && allowUpdate && (
+              {!isNew && allowUpdate && isOwner && (
                 <CloneButton
                   onClick={() => navigate(`/warehouse/clone/${encodeId(originalValues.id)}`)}
                 />
