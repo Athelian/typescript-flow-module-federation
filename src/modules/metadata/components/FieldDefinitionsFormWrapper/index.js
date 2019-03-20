@@ -52,7 +52,10 @@ class FieldDefinitionsFormWrapper extends React.PureComponent<Props> {
     const { entityType } = this.props;
     return (
       <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
-        {({ state, initDetailValues, isDirty, onSuccess, ...fieldHelpers }, form) => (
+        {(
+          { state, originalValues, initDetailValues, isDirty, onSuccess, ...fieldHelpers },
+          form
+        ) => (
           <Query
             query={fieldDefinitionsQuery}
             variables={{ entityType }}
@@ -63,7 +66,7 @@ class FieldDefinitionsFormWrapper extends React.PureComponent<Props> {
                   getByPathWithDefault([], 'fieldDefinitions', data),
                   state.fieldDefinitions
                 ) &&
-                state.fieldDefinitions.length === 0
+                originalValues.fieldDefinitions.length === 0
               ) {
                 initDetailValues({
                   fieldDefinitions: getByPathWithDefault([], 'fieldDefinitions', data),
