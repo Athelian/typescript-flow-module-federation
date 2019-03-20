@@ -150,6 +150,7 @@ const TimelineInfoSection = (props: Props) => {
                             SHIPMENT_SET_REVISE_TIMELINE_DATE,
                           ])}
                           required
+                          hideTooltip
                         />
                       )}
                     </FormField>
@@ -175,6 +176,7 @@ const TimelineInfoSection = (props: Props) => {
                     defaultMessage="INITIAL DATE"
                   />
                 }
+                hideTooltip
               />
             )}
           </FormField>
