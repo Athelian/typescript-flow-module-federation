@@ -173,7 +173,7 @@ const SideBar = () => {
                       )}
                       {hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) && (
                         <MenuItem
-                          path="/metadata"
+                          path="/metadata/order"
                           isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
                           icon="METADATA"
                           label={<FormattedMessage {...messages.metadata} />}
