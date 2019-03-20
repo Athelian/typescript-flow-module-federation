@@ -16,6 +16,7 @@ import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
 type Props = {
   tasks: Array<Object>,
+  onSwap: Function,
   onRemove: Function,
   onSave: Function,
   editable: boolean,
@@ -24,7 +25,7 @@ type Props = {
   type: string,
 };
 
-const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
+const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   return tasks.length > 0 ? (
@@ -48,6 +49,20 @@ const Tasks = ({ tasks, onRemove, onSave, editable, viewForm, removable, type }:
                   saveOnBlur={newValue => onSave(index, newValue)}
                   onClick={viewForm ? () => selectTaskSlideToggle(true) : () => {}}
                   actions={[
+                    editable && index - 1 > -1 && (
+                      <CardAction
+                        icon="CHEVRON_DOUBLE_LEFT"
+                        hoverColor="BLUE"
+                        onClick={() => onSwap(index, 'left')}
+                      />
+                    ),
+                    editable && index + 1 < tasks.length && (
+                      <CardAction
+                        icon="CHEVRON_DOUBLE_RIGHT"
+                        hoverColor="BLUE"
+                        onClick={() => onSwap(index, 'right')}
+                      />
+                    ),
                     removable && (
                       <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(task)} />
                     ),
