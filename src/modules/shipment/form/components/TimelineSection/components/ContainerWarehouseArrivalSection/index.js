@@ -83,7 +83,7 @@ const ContainerWarehouseArrivalSection = () => {
                                 <ContainersSlideView
                                   containers={containers}
                                   onFormReady={() => {
-                                    initDetailValues({ containers });
+                                    initDetailValues(containers);
                                   }}
                                   onSave={newContainers => {
                                     slideToggle(false);

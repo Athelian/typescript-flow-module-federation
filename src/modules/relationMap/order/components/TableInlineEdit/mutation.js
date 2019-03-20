@@ -5,7 +5,7 @@ import {
   tagFragment,
   priceFragment,
   partnerNameFragment,
-  timelineDateMinimalFragment,
+  timelineDateFullFragment,
   portFragment,
   metricFragment,
   sizeFragment,
@@ -62,7 +62,7 @@ export const entitiesUpdateManyMutation = gql`
   ${tagFragment}
   ${priceFragment}
   ${partnerNameFragment}
-  ${timelineDateMinimalFragment}
+  ${timelineDateFullFragment}
   ${portFragment}
   ${batchTableFragment}
   ${metricFragment}

@@ -135,7 +135,7 @@ const ContainerSection = () => {
                         initValue={values.warehouseArrivalActualDate}
                         setFieldValue={setDeepFieldValue}
                         validator={validator}
-                        values={values.warehouseArrivalActualDate}
+                        values={values}
                       >
                         {({ name, ...inputHandlers }) => (
                           <DateTimeInputFactory
@@ -234,7 +234,7 @@ const ContainerSection = () => {
               <FieldItem
                 vertical
                 label={
-                  <Label>
+                  <Label height="30px">
                     <FormattedMessage id="modules.container.tags" defaultMessage="TAGS" />
                   </Label>
                 }

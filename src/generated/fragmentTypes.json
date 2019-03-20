@@ -142,6 +142,7 @@
           { "name": "Group" },
           { "name": "Partnership" },
           { "name": "File" },
+          { "name": "Task" },
           { "name": "BadRequest" },
           { "name": "Forbidden" },
           { "name": "NotFound" }
@@ -294,6 +295,7 @@
           { "name": "ProductProvider" },
           { "name": "Role" },
           { "name": "Shipment" },
+          { "name": "Task" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
           { "name": "User" }
@@ -330,6 +332,7 @@
           { "name": "Role" },
           { "name": "Shipment" },
           { "name": "Tag" },
+          { "name": "Task" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
           { "name": "User" },
@@ -393,6 +396,7 @@
           { "name": "ProductProvider" },
           { "name": "Shipment" },
           { "name": "Tag" },
+          { "name": "Task" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
           { "name": "Voyage" },
@@ -475,6 +479,7 @@
           { "name": "FieldDefinition" },
           { "name": "OrderItem" },
           { "name": "ProductProvider" },
+          { "name": "Task" },
           { "name": "TimelineDateRevision" },
           { "name": "Voyage" }
         ]
@@ -503,7 +508,18 @@
           { "name": "Order" },
           { "name": "Product" },
           { "name": "Shipment" },
+          { "name": "Task" },
           { "name": "User" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TaskPayload",
+        "possibleTypes": [
+          { "name": "Task" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
         ]
       },
       {

@@ -24,6 +24,7 @@ type Props = LabelProps &
   };
 
 const defaultProps = {
+  labelHeight: '30px',
   labelWidth: '200px',
   hideTooltip: false,
   editable: true,
@@ -35,6 +36,7 @@ const UserAssignmentInputFactory = ({
   label,
   required,
   labelAlign,
+  labelHeight,
   labelWidth,
   hideTooltip,
   infoMessage,
@@ -43,7 +45,7 @@ const UserAssignmentInputFactory = ({
   onChange,
   editable,
 }: Props): React.Node => {
-  const labelConfig = { required, align: labelAlign, width: labelWidth };
+  const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
   const tooltipConfig = {
     infoMessage,

@@ -31,8 +31,6 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    InputWrapper: () => React.Node,
-    Input: () => React.Node,
     metricType?: 'distance' | 'area' | 'volume' | 'weight',
     showCalculator: boolean,
     onCalculate?: Function,
@@ -42,12 +40,11 @@ type Props = LabelProps &
 
 const defaultProps = {
   labelWidth: '200px',
+  labelHeight: '30px',
   inputWidth: '200px',
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  InputWrapper: DefaultStyle,
-  Input: MetricInput,
   showCalculator: false,
   metricSelectWidth: '30px',
   metricOptionWidth: '35px',
@@ -60,14 +57,13 @@ const MetricInputFactory = ({
   vertical,
   isTouched,
   label,
-  InputWrapper,
-  Input,
   metricType,
   showCalculator,
   onCalculate,
   required,
   labelAlign,
   labelWidth,
+  labelHeight,
   hideTooltip,
   isNew,
   errorMessage,
@@ -93,7 +89,7 @@ const MetricInputFactory = ({
   metricSelectWidth,
   metricOptionWidth,
 }: Props): React.Node => {
-  const labelConfig = { required, align: labelAlign, width: labelWidth };
+  const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
   const tooltipConfig = {
     isNew,
@@ -143,9 +139,9 @@ const MetricInputFactory = ({
     if (editable) {
       renderedInput = (
         <>
-          <InputWrapper {...inputWrapperConfig}>
-            <Input {...inputConfig} />
-          </InputWrapper>
+          <DefaultStyle {...inputWrapperConfig}>
+            <MetricInput {...inputConfig} />
+          </DefaultStyle>
           {showCalculator && (
             <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
           )}
@@ -153,7 +149,7 @@ const MetricInputFactory = ({
       );
     } else {
       renderedInput = (
-        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
       );
     }
   }

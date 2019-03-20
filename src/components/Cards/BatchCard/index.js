@@ -5,6 +5,7 @@ import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -29,6 +30,7 @@ import {
   ShipmentIconStyle,
   ContainerWrapperStyle,
   ContainerIconStyle,
+  TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
@@ -57,6 +59,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     shipment,
     batchAdjustments,
     container,
+    todo,
   } = batch;
   const {
     productProvider: { product, supplier, exporter },
@@ -235,9 +238,11 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             </Link>
             <Display align="left">{container && container.no}</Display>
           </div>
-
-          <div className={BatchTagsWrapperStyle}>
-            {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={TagsAndTaskWrapperStyle}>
+            <div className={BatchTagsWrapperStyle}>
+              {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <TaskRing {...todo} />
           </div>
         </div>
       </div>
@@ -249,7 +254,7 @@ BatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(BatchCard, 'batch', {
   width: '195px',
-  height: '359px',
+  height: '366px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

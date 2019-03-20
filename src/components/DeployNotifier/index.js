@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import firebase from 'firebase';
 import { toast } from 'react-toastify';
 import Icon from 'components/Icon';
+import * as serviceWorker from 'serviceWorker';
 import {
   ToastWrapperStyle,
   ToastBodyStyle,
@@ -18,6 +19,7 @@ type Props = {
 
 export default class DeployNotifier extends React.Component<Props> {
   componentDidMount() {
+    // TODO: remove revision and try to use localStorage for tracking latest version which they already have on their PC
     const { revision, revisionKey } = this.props;
 
     const docRef = firebase.database().ref(`/${revisionKey}`);
@@ -28,11 +30,16 @@ export default class DeployNotifier extends React.Component<Props> {
       }
 
       const currentRevision = snapshot.val();
-      if (revision !== currentRevision) {
+      const currentVersion = window.localStorage.getItem('version');
+      if (revision !== currentRevision && (!currentVersion || currentVersion !== currentRevision)) {
+        window.localStorage.setItem('version', currentRevision);
         toast(
           <button
             className={ToastButtonWrapperStyle}
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              serviceWorker.unregister();
+              window.location.reload();
+            }}
             type="button"
           >
             <FormattedMessage

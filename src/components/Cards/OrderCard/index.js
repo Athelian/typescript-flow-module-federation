@@ -9,6 +9,7 @@ import FormattedDate from 'components/FormattedDate';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
+import TaskRing from 'components/TaskRing';
 import { Label, Display, FieldItem } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
@@ -20,6 +21,7 @@ import {
   DividerStyle,
   ChartWrapperStyle,
   InChargeWrapperStyle,
+  TagsAndTaskWrapperStyle,
   TagsWrapperStyle,
 } from './style';
 
@@ -49,6 +51,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
     orderItemCount,
     exporter,
     inCharges,
+    todo,
   } = order;
 
   return (
@@ -121,8 +124,11 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
                 />
               ))}
           </div>
-          <div className={TagsWrapperStyle}>
-            {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={TagsAndTaskWrapperStyle}>
+            <div className={TagsWrapperStyle}>
+              {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <TaskRing {...todo} />
           </div>
         </div>
       </Link>
@@ -134,7 +140,7 @@ OrderCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderCard, 'order', {
   width: '195px',
-  height: '253px',
+  height: '255px',
   entityIcon: 'ORDER',
   entityColor: 'ORDER',
 });

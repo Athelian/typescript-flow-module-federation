@@ -29,6 +29,11 @@ export const orderFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+    }
     exporter {
       ...partnerCardFragment
     }
@@ -37,6 +42,9 @@ export const orderFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
     }
     files {
       ...documentFragment
@@ -122,6 +130,9 @@ export const orderBasicFragment = gql`
     tags {
       ...tagFragment
     }
+    todo {
+      ...todoFragment
+    }
     files {
       ...documentFragment
     }
@@ -188,6 +199,9 @@ export const orderCardFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
     }
     inCharges {
       ...userAvatarFragment

@@ -43,7 +43,7 @@ const CustomFieldsFactory = ({
   return (
     <FieldItem
       label={
-        <Label>
+        <Label height="30px">
           <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
           {' ('}
           <FormattedNumber value={customFields.fieldValues ? customFields.fieldValues.length : 0} />

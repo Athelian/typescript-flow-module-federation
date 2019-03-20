@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
-import { cleanFalsy, cleanUpData } from 'utils/data';
+import { cleanFalsy } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -37,8 +37,8 @@ export default class ContainersContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (values: Object) => {
-    this.setState(cleanUpData(values));
-    this.originalValues = cleanUpData(values);
+  initDetailValues = (containers: Array<Object>) => {
+    this.setState({ containers });
+    this.originalValues = { containers };
   };
 }

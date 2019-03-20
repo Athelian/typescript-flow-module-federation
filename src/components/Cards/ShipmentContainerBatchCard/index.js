@@ -3,10 +3,12 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { calculatePackageQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
+import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import {
@@ -40,6 +42,7 @@ import {
   OrderIconStyle,
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
+  TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   RepresentIconStyle,
 } from './style';
@@ -55,12 +58,17 @@ type OptionalProps = {
     quantity: boolean,
     deliveredAt: boolean,
     desiredAt: boolean,
+    representativeBatch: boolean,
     removeBatch: boolean,
     cloneBatch: boolean,
-    viewOrder: boolean,
-    viewProduct: boolean,
-    setRepresentativeBatch: boolean,
-    getPrice: boolean,
+  },
+  navigate: {
+    product: boolean,
+    order: boolean,
+  },
+  read: {
+    price: boolean,
+    tasks: boolean,
   },
   isRepresented: boolean,
 };
@@ -82,12 +90,17 @@ const defaultProps = {
     quantity: false,
     deliveredAt: false,
     desiredAt: false,
+    representativeBatch: false,
     removeBatch: false,
     cloneBatch: false,
-    viewOrder: false,
-    viewProduct: false,
-    setRepresentativeBatch: false,
-    getPrice: false,
+  },
+  navigate: {
+    product: false,
+    order: false,
+  },
+  read: {
+    price: false,
+    tasks: false,
   },
   isRepresented: false,
 };
@@ -102,6 +115,8 @@ const ShipmentContainerBatchCard = ({
   currency,
   selectable,
   editable,
+  navigate,
+  read,
   isRepresented,
   ...rest
 }: Props) => {
@@ -129,6 +144,8 @@ const ShipmentContainerBatchCard = ({
       productProvider: { product, supplier, exporter },
       order,
     },
+    todo,
+    autoCalculatePackageQuantity,
   } = batch;
   const productImage = getProductImage(product);
   const totalAdjustment = totalAdjustQuantity(batchAdjustments);
@@ -175,7 +192,7 @@ const ShipmentContainerBatchCard = ({
             </div>
           </div>
 
-          {editable.viewProduct ? (
+          {navigate.product ? (
             <Link
               className={ProductIconLinkStyle}
               to={`/product/${encodeId(product.id)}`}
@@ -191,7 +208,7 @@ const ShipmentContainerBatchCard = ({
             </div>
           )}
 
-          {editable.setRepresentativeBatch ? (
+          {editable.representativeBatch ? (
             <button
               type="button"
               onClick={evt => {
@@ -265,9 +282,18 @@ const ShipmentContainerBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
+                      const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
                       saveOnBlur({
                         ...batch,
-                        quantity: inputHandlers.value - totalAdjustment,
+                        quantity: baseQuantity,
+                        ...(autoCalculatePackageQuantity
+                          ? {
+                              packageQuantity: calculatePackageQuantity({
+                                ...batch,
+                                quantity: baseQuantity,
+                              }),
+                            }
+                          : {}),
                       });
                     },
                   }}
@@ -353,7 +379,7 @@ const ShipmentContainerBatchCard = ({
                 </Label>
               }
               input={
-                <Display blackout={!editable.getPrice}>
+                <Display blackout={!read.price}>
                   <FormattedNumber
                     value={
                       (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
@@ -386,7 +412,7 @@ const ShipmentContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            {editable.viewOrder ? (
+            {navigate.order ? (
               <Link
                 className={OrderIconStyle}
                 to={`/order/${encodeId(order.id)}`}
@@ -422,9 +448,11 @@ const ShipmentContainerBatchCard = ({
                 ))}
             </div>
           </div>
-
-          <div className={BatchTagsWrapperStyle}>
-            {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={TagsAndTaskWrapperStyle}>
+            <div className={BatchTagsWrapperStyle}>
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <TaskRing {...todo} blackout={!read.tasks} />
           </div>
         </div>
       </div>
@@ -436,7 +464,7 @@ ShipmentContainerBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentContainerBatchCard, 'batch', {
   width: '195px',
-  height: '354px',
+  height: '356px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

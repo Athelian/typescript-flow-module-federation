@@ -21,6 +21,8 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  taskFormInSlideViewFragment,
+  todoFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
@@ -50,6 +52,8 @@ export const containerFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskFormInSlideViewFragment}
+  ${todoFragment}
 `;
 
 export default containerFormQuery;

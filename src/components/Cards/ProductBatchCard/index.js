@@ -5,6 +5,7 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import TaskRing from 'components/TaskRing';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -28,6 +29,7 @@ import {
   WarehouseArrivalIconStyle,
   ApprovalIconStyle,
   BatchTagsWrapperStyle,
+  TagsLineStyle,
 } from './style';
 
 type OptionalProps = {
@@ -43,7 +45,7 @@ const defaultProps = {
 };
 
 const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
-  const { no, quantity, orderItem, shipment, batchAdjustments, container } = batch;
+  const { no, quantity, orderItem, shipment, batchAdjustments, container, todo } = batch;
   const { order } = orderItem;
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
@@ -184,11 +186,13 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
               </div>
             </div>
           )}
-
-          <div className={BatchTagsWrapperStyle}>
-            {batch.tags &&
-              batch.tags.length > 0 &&
-              batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+          <div className={TagsLineStyle}>
+            <div className={BatchTagsWrapperStyle}>
+              {batch.tags &&
+                batch.tags.length > 0 &&
+                batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            </div>
+            <TaskRing {...todo} />
           </div>
         </div>
       </div>

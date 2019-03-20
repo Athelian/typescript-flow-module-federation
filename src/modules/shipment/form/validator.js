@@ -14,4 +14,11 @@ export default Yup.object().shape({
       quantity: Yup.number(),
     })
   ),
+  todo: Yup.object().shape({
+    tasks: Yup.array().of(
+      Yup.object().shape({
+        name: Yup.string().required(),
+      })
+    ),
+  }),
 });

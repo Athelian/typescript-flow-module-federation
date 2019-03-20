@@ -1,13 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { pick } from 'lodash';
 import { Subscribe } from 'unstated';
 import { toast } from 'react-toastify';
 import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
-import { isNullOrUndefined } from 'utils/fp';
-import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
@@ -20,6 +17,7 @@ import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavB
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
+import { removeTypename } from 'utils/data';
 import { ShipmentEventsList } from 'modules/history';
 import { shipmentExportQuery } from './query';
 import {
@@ -30,15 +28,15 @@ import {
   ShipmentTagsContainer,
   ShipmentTimelineContainer,
   ShipmentTransportTypeContainer,
+  ShipmentTasksContainer,
 } from './form/containers';
 import ShipmentForm from './form';
 import validator from './form/validator';
 import { shipmentFormQuery } from './form/query';
 import {
   createShipmentMutation,
-  prepareCreateShipmentInput,
   updateShipmentMutation,
-  prepareParsedUpdateShipmentInput,
+  prepareParsedShipmentInput,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -84,24 +82,8 @@ type ShipmentFormState = {
   shipmentBatchesContainer: Object,
   shipmentContainersContainer: Object,
   shipmentFilesContainer: Object,
+  shipmentTasksContainer: Object,
 };
-
-const shipmentFormIsDirty = ({
-  shipmentInfoContainer,
-  shipmentTagsContainer,
-  shipmentTransportTypeContainer,
-  shipmentTimelineContainer,
-  shipmentBatchesContainer,
-  shipmentContainersContainer,
-  shipmentFilesContainer,
-}: ShipmentFormState): boolean =>
-  shipmentInfoContainer.isDirty() ||
-  shipmentTagsContainer.isDirty() ||
-  shipmentTransportTypeContainer.isDirty() ||
-  shipmentTimelineContainer.isDirty() ||
-  shipmentBatchesContainer.isDirty() ||
-  shipmentContainersContainer.isDirty() ||
-  shipmentFilesContainer.isDirty();
 
 class ShipmentFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -128,6 +110,7 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentBatchesContainer,
     shipmentContainersContainer,
     shipmentFilesContainer,
+    shipmentTasksContainer,
     form,
   }: ShipmentFormState & { form: Object }) => {
     resetFormState(shipmentInfoContainer);
@@ -135,8 +118,9 @@ class ShipmentFormModule extends React.Component<Props> {
     resetFormState(shipmentTransportTypeContainer, 'transportType');
     resetFormState(shipmentTimelineContainer);
     resetFormState(shipmentBatchesContainer, 'batches');
-    resetFormState(shipmentContainersContainer);
+    resetFormState(shipmentContainersContainer, 'containers');
     resetFormState(shipmentFilesContainer, 'files');
+    resetFormState(shipmentTasksContainer, 'todo');
     form.onReset();
   };
 
@@ -152,16 +136,11 @@ class ShipmentFormModule extends React.Component<Props> {
 
     const isNewOrClone = this.isNewOrClone();
 
-    const input = isNewOrClone
-      ? prepareCreateShipmentInput({
-          ...findChangeData(originalValues, newValues),
-          ...pick(newValues, ['batches', 'importer', 'forwarders', 'voyages', 'containerGroups']),
-        })
-      : prepareParsedUpdateShipmentInput({
-          originalValues,
-          existingBatches,
-          newValues,
-        });
+    const input = prepareParsedShipmentInput({
+      originalValues: isNewOrClone ? null : removeTypename(originalValues),
+      existingBatches: removeTypename(existingBatches),
+      newValues: removeTypename(newValues),
+    });
 
     if (isNewOrClone) {
       const result = await saveShipment({
@@ -211,6 +190,7 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentBatchesContainer,
     shipmentContainersContainer,
     shipmentFilesContainer,
+    shipmentTasksContainer,
   }: ShipmentFormState) => (shipment: Object) => {
     const {
       batches,
@@ -221,6 +201,7 @@ class ShipmentFormModule extends React.Component<Props> {
       voyages,
       containerGroups,
       files,
+      todo,
       ...info
     }: Object = shipment;
     if (this.isClone()) {
@@ -233,13 +214,14 @@ class ShipmentFormModule extends React.Component<Props> {
     } else {
       shipmentInfoContainer.initDetailValues(info);
       shipmentBatchesContainer.initDetailValues(batches);
-      shipmentContainersContainer.initDetailValues({ containers });
+      shipmentContainersContainer.initDetailValues(containers);
       shipmentTimelineContainer.initDetailValues({
         cargoReady,
         voyages,
         containerGroups,
       });
       shipmentFilesContainer.initDetailValues(files);
+      shipmentTasksContainer.initDetailValues(todo);
     }
     shipmentTagsContainer.initDetailValues(tags);
     shipmentTransportTypeContainer.initDetailValues(transportType);
@@ -253,8 +235,8 @@ class ShipmentFormModule extends React.Component<Props> {
     shipmentBatchesContainer,
     shipmentContainersContainer,
     shipmentFilesContainer,
+    shipmentTasksContainer,
   }: ShipmentFormState) => (result: CreateShipmentResponse | UpdateShipmentResponse) => {
-    const isNewOrClone = this.isNewOrClone();
     const { redirectAfterSuccess } = this.props;
 
     if (!result) {
@@ -262,7 +244,7 @@ class ShipmentFormModule extends React.Component<Props> {
       return;
     }
 
-    if (isNewOrClone && result.shipmentCreate) {
+    if (result.shipmentCreate) {
       const { shipmentCreate } = result;
 
       if (!shipmentCreate.violations) {
@@ -271,10 +253,10 @@ class ShipmentFormModule extends React.Component<Props> {
         }
       }
     }
-    if (!isNewOrClone && result.shipmentUpdate) {
+
+    if (result.shipmentUpdate) {
       const { shipmentUpdate } = result;
-      const { violations } = shipmentUpdate;
-      if (isNullOrUndefined(violations)) {
+      if (!shipmentUpdate.violations) {
         this.onFormReady({
           shipmentInfoContainer,
           shipmentTagsContainer,
@@ -283,6 +265,7 @@ class ShipmentFormModule extends React.Component<Props> {
           shipmentBatchesContainer,
           shipmentContainersContainer,
           shipmentFilesContainer,
+          shipmentTasksContainer,
         })(shipmentUpdate);
       }
     }
@@ -309,6 +292,7 @@ class ShipmentFormModule extends React.Component<Props> {
               ShipmentBatchesContainer,
               ShipmentContainersContainer,
               ShipmentFilesContainer,
+              ShipmentTasksContainer,
               FormContainer,
             ]}
           >
@@ -320,6 +304,7 @@ class ShipmentFormModule extends React.Component<Props> {
               shipmentBatchesContainer,
               shipmentContainersContainer,
               shipmentFilesContainer,
+              shipmentTasksContainer,
               form
             ) => (
               <Mutation
@@ -332,19 +317,20 @@ class ShipmentFormModule extends React.Component<Props> {
                   shipmentBatchesContainer,
                   shipmentContainersContainer,
                   shipmentFilesContainer,
+                  shipmentTasksContainer,
                 })}
                 {...mutationKey}
               >
                 {(saveShipment, { loading: isLoading, error: apiError }) => {
-                  const isDirty = shipmentFormIsDirty({
-                    shipmentInfoContainer,
-                    shipmentTagsContainer,
-                    shipmentTransportTypeContainer,
-                    shipmentTimelineContainer,
-                    shipmentBatchesContainer,
-                    shipmentContainersContainer,
-                    shipmentFilesContainer,
-                  });
+                  const isDirty =
+                    shipmentInfoContainer.isDirty() ||
+                    shipmentTagsContainer.isDirty() ||
+                    shipmentTransportTypeContainer.isDirty() ||
+                    shipmentTimelineContainer.isDirty() ||
+                    shipmentBatchesContainer.isDirty() ||
+                    shipmentContainersContainer.isDirty() ||
+                    shipmentFilesContainer.isDirty() ||
+                    shipmentTasksContainer.isDirty();
                   return (
                     <Layout
                       {...(isSlideView ? {} : uiState)}
@@ -391,6 +377,16 @@ class ShipmentFormModule extends React.Component<Props> {
                                 />
                               }
                               icon="DOCUMENT"
+                            />
+                            <SectionTabs
+                              link="shipment_taskSection"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.task"
+                                  defaultMessage="TASKS"
+                                />
+                              }
+                              icon="TASK"
                             />
                             <SectionTabs
                               link="shipment_orderSection"
@@ -449,6 +445,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       shipmentBatchesContainer,
                                       shipmentContainersContainer,
                                       shipmentFilesContainer,
+                                      shipmentTasksContainer,
                                       form,
                                     });
                                   }}
@@ -469,6 +466,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     ...shipmentTagsContainer.state,
                                     ...shipmentTimelineContainer.state,
                                     ...shipmentTransportTypeContainer.state,
+                                    ...shipmentTasksContainer.state,
                                   },
                                   validator
                                 )
@@ -484,6 +482,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     ...shipmentTagsContainer.originalValues,
                                     ...shipmentTimelineContainer.originalValues,
                                     ...shipmentTransportTypeContainer.originalValues,
+                                    ...shipmentTasksContainer.originalValues,
                                   },
                                   shipmentBatchesContainer.existingBatches,
                                   {
@@ -494,6 +493,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     ...shipmentTagsContainer.state,
                                     ...shipmentTimelineContainer.state,
                                     ...shipmentTransportTypeContainer.state,
+                                    ...shipmentTasksContainer.state,
                                   },
                                   saveShipment,
                                   () => {
@@ -504,6 +504,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     shipmentTagsContainer.onSuccess();
                                     shipmentTimelineContainer.onSuccess();
                                     shipmentTransportTypeContainer.onSuccess();
+                                    shipmentTasksContainer.onSuccess();
                                     form.onReset();
                                   },
                                   form.onErrors
@@ -563,6 +564,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                   shipmentBatchesContainer,
                                   shipmentContainersContainer,
                                   shipmentFilesContainer,
+                                  shipmentTasksContainer,
                                 })(shipment);
                               }}
                             />

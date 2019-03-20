@@ -32,7 +32,9 @@ type Props = OptionalProps & {};
 const defaultProps = {
   prefixIcon: '',
   timelineDate: {
+    date: null,
     timelineDateRevisions: [],
+    approvedAt: null,
   },
   vertical: false,
 };

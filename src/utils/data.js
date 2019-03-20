@@ -2,7 +2,9 @@
 import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
+import { type UserAvatarType } from 'types';
 import { isEquals, getByPathWithDefault } from './fp';
+import { injectUid } from './id';
 
 export const replaceUndefined: Function = when(
   either(is(Array), is(Object)),
@@ -73,13 +75,22 @@ export const isForbidden = (data: ?Object): boolean => {
   return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
 };
 
-// Works for string, number, and object in certain situations
+// For String and Number fields. Can be used for Object in certain situations.
 export const parseGenericField = (key: string, originalValue: ?any, newValue: ?any): Object => {
   if (!isEquals(originalValue, newValue)) return { [key]: newValue };
   return {};
 };
 
-// Cannot have empty string as a value
+// Use for Textarea fields. The native input cannot take null, so it will hard-code empty string. We should treat that data as null though.
+export const parseMemoField = (key: string, originalMemo: ?string, newMemo: ?string): Object => {
+  const parsedOriginalMemo = originalMemo === '' ? null : originalMemo;
+  const parsedNewMemo = newMemo === '' ? null : newMemo;
+
+  if (!isEquals(parsedOriginalMemo, parsedNewMemo)) return { [key]: parsedNewMemo };
+  return {};
+};
+
+// Use for Enum fields. Cannot have empty string as value.
 export const parseEnumField = (key: string, originalEnum: ?string, newEnum: ?string): Object => {
   const parsedOriginalEnum = originalEnum || null;
   const parsedNewEnum = newEnum || null;
@@ -88,7 +99,7 @@ export const parseEnumField = (key: string, originalEnum: ?string, newEnum: ?str
   return {};
 };
 
-// Back uses Date format, Front uses string format
+// Use for Date fields. Need to parse into Date object.
 export const parseDateField = (key: string, originalDate: ?Date, newDate: ?string): Object => {
   const parsedOriginalDate = originalDate ? new Date(originalDate) : null;
   const parsedNewDate = newDate ? new Date(newDate) : null;
@@ -97,7 +108,7 @@ export const parseDateField = (key: string, originalDate: ?Date, newDate: ?strin
   return {};
 };
 
-// Return only ids of the array of objects
+// Use for Array of Ids.
 export const parseArrayOfIdsField = (
   key: string,
   originalArray: ?Array<Object>,
@@ -110,7 +121,7 @@ export const parseArrayOfIdsField = (
   return {};
 };
 
-// Return id
+// Use for Single Id.
 export const parseParentIdField = (
   key: string,
   originalParent: ?Object,
@@ -123,7 +134,7 @@ export const parseParentIdField = (
   return {};
 };
 
-// Return parsed array of children objects
+// Use to apply nested logic to child entities. Look at existing uses to understand more how to use it.
 export const parseArrayOfChildrenField = (
   key: string,
   originalChildren: ?Array<Object>,
@@ -147,23 +158,19 @@ export const parseArrayOfChildrenField = (
   return { [key]: parsedNewChildren };
 };
 
-// Have to return all fieldValues if there is at least one change in it
+type CustomFieldsType = {
+  mask: ?Object,
+  fieldValues: Array<{
+    value: { string: ?string },
+    fieldDefinition: Object,
+  }>,
+};
+
+// Use for Custom Fields. If there is at least one change in fieldValues, we need to send all fieldValues.
 export const parseCustomFieldsField = (
   key: string,
-  originalCustomFields: ?{
-    mask: ?Object,
-    fieldValues: Array<{
-      value: { string: ?string },
-      fieldDefinition: Object,
-    }>,
-  },
-  newCustomFields: {
-    mask: ?Object,
-    fieldValues: Array<{
-      value: { string: ?string },
-      fieldDefinition: Object,
-    }>,
-  }
+  originalCustomFields: ?CustomFieldsType,
+  newCustomFields: CustomFieldsType
 ): Object => {
   if (isEquals(originalCustomFields, newCustomFields)) return {};
 
@@ -208,21 +215,18 @@ export const parseCustomFieldsField = (
   return {};
 };
 
-// Have to return id even for new file
+type FilesType = {
+  id: string,
+  name: string,
+  type: string,
+  memo: ?string,
+};
+
+// Use for Documents fields. Need to send ids even for new files.
 export const parseFilesField = (
   key: string,
-  originalFiles: ?Array<{
-    id: string,
-    name: string,
-    type: string,
-    memo: ?string,
-  }>,
-  newFiles: Array<{
-    id: string,
-    name: string,
-    type: string,
-    memo: ?string,
-  }>
+  originalFiles: ?Array<FilesType>,
+  newFiles: Array<FilesType>
 ): Object => ({
   ...parseArrayOfChildrenField(
     key,
@@ -233,27 +237,24 @@ export const parseFilesField = (
         id: newFile.id,
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldFile), newFile.name),
         ...parseEnumField('type', getByPathWithDefault(null, 'type', oldFile), newFile.type),
-        ...parseGenericField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
+        ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldFile), newFile.memo),
       };
     }
   ),
 });
 
-// Return id of approver, not date
+type ApprovalType = {
+  approvedBy: {
+    id: string,
+  },
+  approvedAt: string,
+};
+
+// Use for Approval fields. Need to send only approvedBy, not approvedAt.
 export const parseApprovalField = (
   key: string,
-  originalApproval: ?{
-    approvedBy: {
-      id: string,
-    },
-    approvedAt: string,
-  },
-  newApproval: ?{
-    approvedBy: {
-      id: string,
-    },
-    approvedAt: string,
-  }
+  originalApproval: ?ApprovalType,
+  newApproval: ?ApprovalType
 ): Object => {
   const originalApprovedById = getByPathWithDefault(null, 'approvedBy.id', originalApproval);
   const newApprovedById = getByPathWithDefault(null, 'approvedBy.id', newApproval);
@@ -277,7 +278,7 @@ export const parseApprovalField = (
   return {};
 };
 
-// Return index of representative batch
+// Use for Representative Batch. Send index, not id.
 export const parseRepresentativeBatchIndexField = (
   key: string,
   originalRepresentativeBatch: ?{
@@ -304,6 +305,96 @@ export const parseRepresentativeBatchIndexField = (
 
   return { [key]: newRepresentativeBatchIndex };
 };
+type TaskType = {
+  id: ?string,
+  name: ?string,
+  startDate: ?string,
+  dueDate: ?string,
+  assignedTo: Array<UserAvatarType>,
+  inProgressBy: ?UserAvatarType,
+  inProgressAt: ?string,
+  completedBy: ?UserAvatarType,
+  completedAt: ?string,
+  memo: ?string,
+  description: ?string,
+};
+
+// Use for Todo (Tasks) field. Make sure to send 'todo' which contains 'tasks'.
+export const parseTasksField = (
+  originalTodo: ?{
+    tasks: Array<TaskType>,
+  },
+  newTodo: {
+    tasks: Array<TaskType>,
+  }
+): Object => {
+  if (isEquals(originalTodo, newTodo)) return {};
+
+  const originalTasks = getByPathWithDefault(null, 'tasks', originalTodo);
+  const newTasks = newTodo.tasks;
+
+  return {
+    todo: {
+      ...parseArrayOfChildrenField(
+        'tasks',
+        originalTasks,
+        newTasks,
+        (oldTask: ?Object, newTask: Object) => {
+          return {
+            ...(oldTask ? { id: oldTask.id } : {}),
+            ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
+            ...parseDateField(
+              'startDate',
+              getByPathWithDefault(null, 'startDate', oldTask),
+              newTask.startDate
+            ),
+            ...parseDateField(
+              'dueDate',
+              getByPathWithDefault(null, 'dueDate', oldTask),
+              newTask.dueDate
+            ),
+            ...parseArrayOfIdsField(
+              'assignedToIds',
+              getByPathWithDefault(null, 'assignedTo', oldTask),
+              newTask.assignedTo
+            ),
+            ...parseParentIdField(
+              'inProgressById',
+              getByPathWithDefault(null, 'inProgressBy', oldTask),
+              newTask.inProgressBy
+            ),
+            ...parseDateField(
+              'inProgressAt',
+              getByPathWithDefault(null, 'inProgressAt', oldTask),
+              newTask.inProgressAt
+            ),
+            ...parseParentIdField(
+              'completedById',
+              getByPathWithDefault(null, 'completedBy', oldTask),
+              newTask.completedBy
+            ),
+            ...parseDateField(
+              'completedAt',
+              getByPathWithDefault(null, 'completedAt', oldTask),
+              newTask.completedAt
+            ),
+            ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldTask), newTask.memo),
+            ...parseMemoField(
+              'description',
+              getByPathWithDefault(null, 'description', oldTask),
+              newTask.description
+            ),
+            ...parseArrayOfIdsField(
+              'tagIds',
+              getByPathWithDefault(null, 'tags', oldTask),
+              newTask.tags
+            ),
+          };
+        }
+      ),
+    },
+  };
+};
 
 export const findChangeData = (originalValues: Object, newValues: Object) => {
   const changedData = diff(originalValues, newValues);
@@ -317,3 +408,22 @@ export const findChangeData = (originalValues: Object, newValues: Object) => {
     };
   }, {});
 };
+
+export const prepareBatchObjectForClone = ({
+  id,
+  deliveredAt,
+  desired,
+  expiredAt,
+  producedAt,
+  no,
+  ...rest
+}: Object) =>
+  injectUid({
+    ...rest,
+    isNew: true,
+    no: `${no}- clone`,
+    batchAdjustments: [],
+    todo: {
+      tasks: [],
+    },
+  });

@@ -19,6 +19,8 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  taskFormInSlideViewFragment,
+  todoFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
@@ -46,6 +48,8 @@ export const batchFormQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskFormInSlideViewFragment}
+  ${todoFragment}
 `;
 
 export default batchFormQuery;

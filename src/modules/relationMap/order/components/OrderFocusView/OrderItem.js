@@ -31,6 +31,7 @@ function getQuantitySummary(item: Object) {
   let shippedQuantity = 0;
   let batched = 0;
   let shipped = 0;
+  const shipments = [];
 
   orderedQuantity += item.quantity ? item.quantity : 0;
 
@@ -50,10 +51,13 @@ function getQuantitySummary(item: Object) {
 
       if (batch.shipment) {
         shippedQuantity += currentQuantity;
-        shipped += 1;
+        if (!shipments.includes(batch.shipment)) {
+          shipments.push(batch.shipment);
+        }
       }
     });
   }
+  shipped = shipments.length;
 
   return {
     orderedQuantity,

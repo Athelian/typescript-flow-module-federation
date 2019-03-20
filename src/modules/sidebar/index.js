@@ -16,6 +16,7 @@ import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/cust
 import { TEMPLATE_LIST } from 'modules/permission/constants/template';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
+import { TASK_LIST } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
@@ -106,6 +107,15 @@ const SideBar = () => {
                       onClick={() => setExpandedSubMenu(null)}
                     />
                   )}
+                  {hasPermission(TASK_LIST) && (
+                    <MenuItem
+                      path="/task"
+                      isActive={`/${location.pathname.split('/')[1]}` === '/task'}
+                      icon="TASK"
+                      label={<FormattedMessage {...messages.task} />}
+                      onClick={() => setExpandedSubMenu(null)}
+                    />
+                  )}
                   {hasNetworkMenu && (
                     <SubMenu
                       id="network"
@@ -163,7 +173,7 @@ const SideBar = () => {
                       )}
                       {hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) && (
                         <MenuItem
-                          path="/metadata"
+                          path="/metadata/order"
                           isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
                           icon="METADATA"
                           label={<FormattedMessage {...messages.metadata} />}

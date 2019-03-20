@@ -18,7 +18,6 @@ export const TaskStatusInputWrapperStyle = ({
   ${borderRadiuses.BUTTON};
   border: 2px solid ${colors.TEAL};
   height: 40px;
-  padding: 3px;
   width: ${width};
   ${status === 'InProgress'
     ? `
@@ -45,6 +44,7 @@ export const TaskStatusInputWrapperStyle = ({
 
 export const UserAvatarWrapperStyle: string = css`
   position: relative;
+  margin: 3px 0 3px 3px;
   &:hover {
     & > button {
       opacity: 1;
@@ -70,8 +70,17 @@ export const DeactivateButtonStyle: string = css`
   }
 `;
 
+export const TaskStatusButtonStyle: string = css`
+  ${presets.BUTTON};
+  flex: 1;
+  height: 100%;
+  padding: 3px 3px 3px 0;
+  border-radius: 0 50% 50% 0;
+  color: inherit;
+`;
+
 export const TaskStatusInputLabelStyle: string = css`
-  ${presets.ELLIPSIS};
+  flex: 1;
 `;
 
 export const StatusLabelStyle: string = css`

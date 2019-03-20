@@ -361,7 +361,7 @@ const OrderSection = ({ isNew }: Props) => {
                   <FieldItem
                     vertical
                     label={
-                      <Label>
+                      <Label height="30px">
                         <FormattedMessage {...messages.tags} />
                       </Label>
                     }

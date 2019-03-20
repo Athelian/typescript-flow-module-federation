@@ -8,6 +8,9 @@ export const batchFormFragment = gql`
     totalAdjusted
     autoCalculatePackageQuantity
     updatedAt
+    todo {
+      ...todoFragment
+    }
     updatedBy {
       ...userAvatarFragment
     }
@@ -23,6 +26,11 @@ export const batchFormFragment = gql`
     expiredAt
     totalVolume {
       ...metricFragment
+    }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
     }
     customFields {
       ...customFieldsFragment
@@ -202,6 +210,9 @@ export const batchCardFragment = gql`
     quantity
     deliveredAt
     desiredAt
+    todo {
+      ...todoFragment
+    }
     packageVolume {
       ...metricFragment
     }

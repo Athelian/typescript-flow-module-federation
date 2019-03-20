@@ -2,69 +2,19 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+import { removeNulls, cleanFalsy } from 'utils/data';
 import { calculatePackageQuantity } from 'utils/batch';
+import type { BatchFormState, ProductProvider } from './type.js.flow';
+import { convertVolume } from '../helper';
 
-type Metric = {
-  value: number,
-  metric: string,
-};
-
-type ProductProvider = {
-  packageName: string,
-  packageCapacity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
+export const initValues = {
+  quantity: 0,
+  customFields: {
+    fieldValues: [],
+    fieldDefinitions: [],
   },
-};
-
-export function calculateVolume(
-  volumeMetric: string,
-  height: Metric,
-  width: Metric,
-  length: Metric
-): number {
-  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
-  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
-  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
-  const volumeValue = heightValue * widthValue * lengthValue;
-
-  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
-}
-
-export type BatchFormState = {
-  id?: ?string,
-  no?: ?string,
-  quantity: number,
-  batchAdjustments: Array<any>,
-  packageName?: ?string,
-  packageCapacity: number,
-  packageQuantity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
-  deliveredAt?: ?Date | string,
-  desiredAt?: ?Date | string,
-  expiredAt?: ?Date | string,
-  customFields: ?Object,
-  producedAt?: ?Date | string,
-  orderItem?: Object,
-  tags?: Array<Object>,
-  memo?: string,
-};
-
-const initValues = {
-  memo: '',
-  packageName: '',
-  packageCapacity: 0,
+  tags: [],
+  batchAdjustments: [],
   packageQuantity: 0,
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
@@ -85,21 +35,19 @@ const initValues = {
       value: 0,
     },
   },
-  quantity: 0,
-  deliveredAt: '',
-  desiredAt: '',
-  expiredAt: '',
-  customFields: {
-    mask: null,
-    fieldValues: [],
-    fieldDefinitions: [],
-  },
-  producedAt: '',
-  batchAdjustments: [],
   autoCalculatePackageQuantity: true,
+  // reset values for batch form
+  archived: false,
+  updatedAt: null,
+  updatedBy: null,
+  ownedBy: null,
+  totalVolume: null,
+  totalAdjusted: 0,
+  orderItem: null,
+  isNew: false,
 };
 
-export default class BatchFormContainer extends Container<BatchFormState> {
+export default class BatchInfoContainer extends Container<BatchFormState> {
   state = initValues;
 
   originalValues = initValues;
@@ -112,9 +60,9 @@ export default class BatchFormContainer extends Container<BatchFormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
-    this.originalValues = Object.assign({}, parsedValues);
+    this.originalValues = parsedValues;
   };
 
   setFieldValue = (name: string, value: mixed) => {
@@ -141,7 +89,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
   syncProductProvider = (productProvider: ProductProvider) => {
     const { quantity, batchAdjustments } = this.state;
     const {
-      packageName = '',
+      packageName,
       packageCapacity = 0,
       packageGrossWeight = { value: 0, metric: 'kg' },
       packageVolume = { value: 0, metric: 'm³' },
@@ -194,7 +142,7 @@ export default class BatchFormContainer extends Container<BatchFormState> {
     this.setState(prevState => ({
       packageVolume: {
         metric: prevState.packageVolume.metric,
-        value: calculateVolume(
+        value: convertVolume(
           prevState.packageVolume.metric,
           prevState.packageSize.height,
           prevState.packageSize.width,

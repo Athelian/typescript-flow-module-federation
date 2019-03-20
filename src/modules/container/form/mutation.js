@@ -1,5 +1,4 @@
 // @flow
-import { findIndex } from 'lodash';
 import gql from 'graphql-tag';
 import {
   containerFormFragment,
@@ -23,14 +22,13 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
+  taskFormInSlideViewFragment,
+  todoFragment,
 } from 'graphql';
+import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
-  prepareUpdateBatchInput,
-  prepareParsedUpdateBatchInput,
-} from 'modules/batch/form/mutation';
-import {
-  cleanUpData,
   parseGenericField,
+  parseMemoField,
   parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
@@ -38,7 +36,7 @@ import {
   parseApprovalField,
   parseRepresentativeBatchIndexField,
 } from 'utils/data';
-import { isNullOrUndefined, isEquals, getByPathWithDefault } from 'utils/fp';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
 
 export const updateContainerMutation = gql`
   mutation containerUpdate($id: ID!, $input: ContainerUpdateInput!) {
@@ -69,63 +67,9 @@ export const updateContainerMutation = gql`
   ${fieldDefinitionFragment}
   ${badRequestFragment}
   ${ownedByFragment}
+  ${taskFormInSlideViewFragment}
+  ${todoFragment}
 `;
-
-const getIdOrReturnNull = (obj: { id: string }): string | null =>
-  isNullOrUndefined(obj) ? null : obj.id;
-
-const getDateOrReturnNull = (date: string): Date | null => (date ? new Date(date) : null);
-
-export const prepareContainer = ({
-  updatedAt,
-  updatedBy,
-  archived,
-  totalBatchPackages,
-  totalBatchQuantity,
-  totalNumberOfUniqueOrderItems,
-  totalVolume,
-  totalWeight,
-  totalPrice,
-  shipment,
-  tags,
-  warehouse,
-  warehouseArrivalAgreedDate,
-  warehouseArrivalActualDate,
-  warehouseArrivalAgreedDateApprovedAt,
-  warehouseArrivalActualDateApprovedAt,
-  warehouseArrivalAgreedDateApprovedBy,
-  warehouseArrivalActualDateApprovedBy,
-  warehouseArrivalAgreedDateAssignedTo,
-  warehouseArrivalActualDateAssignedTo,
-  totalAdjusted,
-  batches,
-  representativeBatch,
-  ownedBy,
-  isNew,
-  id,
-  ...rest
-}: Object) => ({
-  ...rest,
-  ...(isNew ? {} : { id }),
-  warehouseId: getIdOrReturnNull(warehouse),
-  warehouseArrivalAgreedDate: getDateOrReturnNull(warehouseArrivalAgreedDate),
-  warehouseArrivalActualDate: getDateOrReturnNull(warehouseArrivalActualDate),
-  warehouseArrivalAgreedDateApprovedById: getIdOrReturnNull(warehouseArrivalAgreedDateApprovedBy),
-  warehouseArrivalActualDateApprovedById: getIdOrReturnNull(warehouseArrivalActualDateApprovedBy),
-  warehouseArrivalAgreedDateAssignedToIds: isNullOrUndefined(warehouseArrivalAgreedDateAssignedTo)
-    ? null
-    : warehouseArrivalAgreedDateAssignedTo.map(getIdOrReturnNull),
-  warehouseArrivalActualDateAssignedToIds: isNullOrUndefined(warehouseArrivalActualDateAssignedTo)
-    ? null
-    : warehouseArrivalActualDateAssignedTo.map(getIdOrReturnNull),
-  batches: isNullOrUndefined(batches)
-    ? null
-    : batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)),
-  tagIds: isNullOrUndefined(tags) ? null : tags.map(getIdOrReturnNull),
-  representativeBatchIndex: representativeBatch
-    ? findIndex(batches, batch => batch.id === representativeBatch.id)
-    : null,
-});
 
 type UpdateContainerInputType = {
   originalValues: Object,
@@ -137,7 +81,7 @@ type UpdateContainerInputType = {
   },
 };
 
-export const prepareParsedUpdateContainerInput = ({
+export const prepareParsedContainerInput = ({
   originalValues,
   existingBatches,
   newValues,
@@ -217,11 +161,7 @@ export const prepareParsedUpdateContainerInput = ({
       getByPathWithDefault([], 'tags', originalValues),
       newValues.tags
     ),
-    ...parseGenericField(
-      'memo',
-      getByPathWithDefault(null, 'memo', originalValues),
-      newValues.memo
-    ),
+    ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
     ...parseParentIdField(
       'warehouseId',
       getByPathWithDefault(null, 'warehouse', originalValues),
@@ -232,7 +172,7 @@ export const prepareParsedUpdateContainerInput = ({
       existingBatches,
       newValues.batches,
       (oldBatch: ?Object, newBatch: Object) => ({
-        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+        ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm,
           inOrderForm: false,
           inContainerForm,

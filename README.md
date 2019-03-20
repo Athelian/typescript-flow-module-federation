@@ -243,10 +243,6 @@ This section describes various build and development tools used in this project 
 
   for designing and developing components.
 
-- [styleguidist](https://github.com/styleguidist/react-styleguidist)
-
-  for document and live example components.
-
 * [vscode](https://code.visualstudio.com/)
 
   vscode is the recommended ide/text editor, although no hard dependency is present in the project.
@@ -274,13 +270,12 @@ This section describes various build and development tools used in this project 
 
 ### Graphql
 
-We generated graphql things from our server and output on `src/generated` by [graphql-cli](https://github.com/graphql-cli/graphql-cli) and [graphql-cli-generate-fragments](https://github.com/develomark/graphql-cli-generate-fragments)
+We generated graphql things from our server and output on `src/generated`
 
 ```
 src/generated
 ├── fragmentTypes.json
 ├── schema.graphql
-└── zenport.fragments.graphql
 ```
 
 ```sh
@@ -302,8 +297,7 @@ yarn post:install
 │   │   ├── fileTransform.js              // file transformation for jest
 │   │   └── setupTests.js                 // configuration for setting up jest
 │   ├── paths.js                          // common paths used across the application
-│   ├── webpack.config.dev.js             // configuration for webpack development build
-│   ├── webpack.config.prod.js            // configuration for webpack production build
+│   ├── webpack.config.js             // configuration for webpack
 │   └── webpackDevServer.config.js        // configuration for webpack dev server
 │
 ├── .babelrc                              // configuration for babel
@@ -393,9 +387,9 @@ src                                        // app code
 │   │   └── messages.js                   // translation if any
 ├── media                                // global assets folder containing images, audio, video, fonts, etc
 │
-├── i18n.js                              // setup for internationalization
+├── i18n                           // setup for internationalization
 │
-├── index.jsx                             // entry point for the app
+├── index.js                             // entry point for the app
 │
 │
 ├── routes.js                            // file for route configuration
@@ -514,6 +508,30 @@ build                                    // auto generated build folder containi
 
   simple wrapper to infinitely fetch data on scroll
 
+## Git Rules
+
+**NOTE:** This convention base on [git flow](https://danielkummer.github.io/git-flow-cheatsheet/) with small customize.
+
+_When doing a fix for bug that exists on master/production_
+
+1. Create your branch from `hotfixes` branch
+2. When make PR, set target branch as `hotfixes` branch
+
+_When doing new feature & new feature bug fixes_
+
+1. Create your branch from `develop` branch
+2. When make PR, set target branch as `develop` branch (this is default so you dont have to mind)
+
+_When doing deploy of hotfixes_
+
+1. Create PR to merge `hotfixes` into `master` branch
+2. Create PR to merge `hotfixes` into `develop` branch
+
+_When doing deploy of new features_
+
+1. Create PR to merge `develop` into `master` branch
+2. Create PR to merge `master` into `hotfixes` after the merge is complete in step 1 (edited)
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning.
@@ -521,5 +539,3 @@ We use [SemVer](http://semver.org/) for versioning.
 ### Troubleshooting
 
 Try to run `pkill flow` if you meet a memory issue with `flow` then restart VSCode.
-
-**NOTE:** As a convention [git flow](https://danielkummer.github.io/git-flow-cheatsheet/) is followed.

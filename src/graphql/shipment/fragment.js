@@ -23,6 +23,11 @@ export const shipmentFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+    }
     customFields {
       ...customFieldsFragment
     }
@@ -37,6 +42,9 @@ export const shipmentFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
     }
     files {
       ...documentFragment
@@ -124,6 +132,9 @@ export const shipmentCardFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
     }
     inCharges {
       ...userAvatarFragment

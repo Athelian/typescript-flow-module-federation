@@ -20,6 +20,7 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
+  BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
 import {
   CONTAINER_BATCHES_ADD,
@@ -38,15 +39,17 @@ import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import validator from 'modules/batch/form/validator';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import BatchFormContainer from 'modules/batch/form/container';
+import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { getBatchesByContainerId } from 'modules/shipment/helpers';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -164,7 +167,9 @@ export default function ContainerBatchesArea({
                   <div className={BatchesGridStyle}>
                     {batchesInContainer.map((batch, position) => {
                       const allowRemoveBatch = getByPath('container', batch)
-                        ? hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_REMOVE])
+                        ? hasPermission(SHIPMENT_UPDATE) ||
+                          (hasPermission(CONTAINER_BATCHES_REMOVE) &&
+                            hasPermission(SHIPMENT_REMOVE_BATCH))
                         : hasPermission([SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH]);
                       const allowCloneBatch = getByPath('container', batch)
                         ? hasPermission(BATCH_CREATE) &&
@@ -182,7 +187,10 @@ export default function ContainerBatchesArea({
                               onSelect={() =>
                                 allowMoveBatches ? setSelectedBatches(batch) : () => {}
                               }
-                              editable={{ getPrice: hasPermission(ORDER_ITEMS_GET_PRICE) }}
+                              read={{
+                                price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                tasks: hasPermission(BATCH_TASK_LIST),
+                              }}
                             />
                           ) : (
                             <BooleanValue>
@@ -194,15 +202,35 @@ export default function ContainerBatchesArea({
                                     options={{ width: '1030px' }}
                                   >
                                     {opened && (
-                                      <Subscribe to={[BatchFormContainer]}>
-                                        {({ initDetailValues }) => (
+                                      <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                                        {(batchInfoContainer, batchTasksContainer) => (
                                           <BatchFormWrapper
-                                            initDetailValues={initDetailValues}
+                                            BatchFormWrapper
+                                            initDetailValues={initValues => {
+                                              const { todo, ...info } = initValues;
+                                              batchInfoContainer.initDetailValues(info);
+                                              batchTasksContainer.initDetailValues(todo);
+                                            }}
                                             batch={batch}
                                             isNew={!!batch.isNew}
                                             orderItem={batch.orderItem}
                                             onCancel={() => batchSlideToggle(false)}
-                                            onSave={updatedBatch => {
+                                            isReady={formContainer =>
+                                              formContainer.isReady(
+                                                {
+                                                  ...batchInfoContainer.state,
+                                                  ...batchTasksContainer.state,
+                                                },
+                                                validator
+                                              ) &&
+                                              (batchInfoContainer.isDirty() ||
+                                                batchTasksContainer.isDirty())
+                                            }
+                                            onSave={() => {
+                                              const updatedBatch = {
+                                                ...batchInfoContainer.state,
+                                                ...batchTasksContainer.state,
+                                              };
                                               batchSlideToggle(false);
                                               const indexOfAllBatches = batches.indexOf(batch);
                                               setFieldArrayValue(indexOfAllBatches, updatedBatch);
@@ -231,14 +259,19 @@ export default function ContainerBatchesArea({
                                       ]),
                                       removeBatch: allowRemoveBatch,
                                       cloneBatch: allowCloneBatch,
-                                      viewOrder: hasPermission(ORDER_FORM),
-                                      viewProduct: hasPermission(PRODUCT_FORM),
-                                      setRepresentativeBatch: hasPermission([
+                                      representativeBatch: hasPermission([
                                         CONTAINER_UPDATE,
                                         CONTAINER_BATCHES_ADD,
                                         CONTAINER_BATCHES_REMOVE,
                                       ]),
-                                      getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                    }}
+                                    navigate={{
+                                      product: hasPermission(PRODUCT_FORM),
+                                      order: hasPermission(ORDER_FORM),
+                                    }}
+                                    read={{
+                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                      tasks: hasPermission(BATCH_TASK_LIST),
                                     }}
                                     isRepresented={batch.id === representativeBatchId}
                                     saveOnBlur={updateBatch => {
@@ -278,35 +311,14 @@ export default function ContainerBatchesArea({
                                         batch
                                       )
                                     }
-                                    onClone={({
-                                      id,
-                                      deliveredAt,
-                                      desired,
-                                      expiredAt,
-                                      producedAt,
-                                      no,
-                                      ...rest
-                                    }) => {
+                                    onClone={value => {
                                       setFieldValue('batches', [
                                         ...batches,
-                                        injectUid({
-                                          ...rest,
-                                          isNew: true,
-                                          batchAdjustments: [],
-                                          no: `${no}- clone`,
-                                        }),
+                                        prepareBatchObjectForClone(value),
                                       ]);
                                       setDeepFieldValue(
                                         `containers.${focusedContainerIndex}.batches`,
-                                        [
-                                          ...batchesInContainer,
-                                          injectUid({
-                                            ...rest,
-                                            isNew: true,
-                                            batchAdjustments: [],
-                                            no: `${no}- clone`,
-                                          }),
-                                        ]
+                                        [...batchesInContainer, prepareBatchObjectForClone(value)]
                                       );
                                     }}
                                   />
@@ -425,6 +437,9 @@ export default function ContainerBatchesArea({
                                       no: `batch no ${batches.length + counter + 1}`,
                                       autoCalculatePackageQuantity: true,
                                       container,
+                                      todo: {
+                                        tasks: [],
+                                      },
                                     });
                                   }
                                 );

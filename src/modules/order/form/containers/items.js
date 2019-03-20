@@ -2,7 +2,6 @@
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
 
 type FormState = {
   orderItems: Array<Object>,
@@ -43,8 +42,7 @@ export default class OrderItemsContainer extends Container<FormState> {
   };
 
   initDetailValues = (orderItems: Array<Object>) => {
-    const parsedValues = cleanUpData(orderItems);
-    this.setState({ orderItems: parsedValues });
-    this.originalValues = { orderItems: parsedValues };
+    this.setState({ orderItems });
+    this.originalValues = { orderItems };
   };
 }

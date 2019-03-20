@@ -14,6 +14,7 @@ const AsyncPackagingSection = lazy(() => import('./components/PackagingSection')
 const AsyncShipmentSection = lazy(() => import('./components/ShipmentSection'));
 const AsyncContainerSection = lazy(() => import('./components/ContainerSection'));
 const AsyncOrderSection = lazy(() => import('./components/OrderSection'));
+const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 
 type OptionalProps = {
   isNew: boolean,
@@ -68,15 +69,11 @@ export default class BatchForm extends React.Component<Props> {
             selectable={selectable}
             batch={batch}
           />
-
           <AsyncQuantityAdjustmentsSection isNew={isNew} />
-
           <AsyncPackagingSection isNew={isNew} />
-
+          <AsyncTaskSection type="batch" />
           <AsyncShipmentSection shipment={batch.shipment} />
-
           <AsyncContainerSection container={batch.container} />
-
           <AsyncOrderSection />
         </div>
       </Suspense>

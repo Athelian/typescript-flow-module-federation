@@ -12,16 +12,20 @@ export const FieldItemWrapperStyle = (vertical: boolean, verticalGap: string): s
   `
     : `
     display: flex;
-    align-items: center;
     justify-content: space-between;
   `};
   width: 100%;
 `;
 
+export const LabelTooltipWrapperStyle: string = css`
+  position: relative;
+  height: min-content;
+`;
+
 export const TooltipAbsoluteWrapperStyle: string = css`
   position: absolute;
   left: -20px;
-  height: 20px;
+  height: 100%;
   width: 20px;
   display: flex;
   align-items: center;

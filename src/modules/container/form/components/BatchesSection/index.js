@@ -12,7 +12,7 @@ import {
   CONTAINER_BATCHES_REMOVE,
   CONTAINER_BATCHES_LIST,
 } from 'modules/permission/constants/container';
-import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import {
   ORDER_ITEMS_LIST,
@@ -28,6 +28,7 @@ import {
   BATCH_SET_QUANTITY,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
+  BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -38,8 +39,10 @@ import SlideView from 'components/SlideView';
 import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import validator from 'modules/batch/form/validator';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import BatchFormContainer from 'modules/batch/form/container';
+import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -54,15 +57,21 @@ function BatchesSection() {
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
+
   const allowAddBatches =
     hasPermission(BATCH_LIST) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
+
   const allowCreateBatches =
     hasPermission(BATCH_CREATE) &&
     hasPermission(ORDER_ITEMS_LIST) &&
     (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
+
   const allowCloneBatches =
     hasPermission(BATCH_CREATE) && (allowUpdate || hasPermission(CONTAINER_BATCHES_ADD));
-  const allowRemoveBatches = allowUpdate || hasPermission(CONTAINER_BATCHES_REMOVE);
+
+  const allowRemoveBatches =
+    allowUpdate ||
+    (hasPermission(CONTAINER_BATCHES_REMOVE) && hasPermission(SHIPMENT_REMOVE_BATCH));
 
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
 
@@ -214,15 +223,33 @@ function BatchesSection() {
                           options={{ width: '1030px' }}
                         >
                           {opened && (
-                            <Subscribe to={[BatchFormContainer]}>
-                              {({ initDetailValues }) => (
+                            <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                              {(batchInfoContainer, batchTasksContainer) => (
                                 <BatchFormWrapper
-                                  initDetailValues={initDetailValues}
+                                  initDetailValues={initValues => {
+                                    const { todo, ...info } = initValues;
+                                    batchInfoContainer.initDetailValues(info);
+                                    batchTasksContainer.initDetailValues(todo);
+                                  }}
                                   batch={batch}
                                   isNew={!!batch.isNew}
                                   orderItem={batch.orderItem}
                                   onCancel={() => batchSlideToggle(false)}
-                                  onSave={updatedBatch => {
+                                  isReady={formContainer =>
+                                    formContainer.isReady(
+                                      {
+                                        ...batchInfoContainer.state,
+                                        ...batchTasksContainer.state,
+                                      },
+                                      validator
+                                    ) &&
+                                    (batchInfoContainer.isDirty() || batchTasksContainer.isDirty())
+                                  }
+                                  onSave={() => {
+                                    const updatedBatch = {
+                                      ...batchInfoContainer.state,
+                                      ...batchTasksContainer.state,
+                                    };
                                     batchSlideToggle(false);
                                     setDeepFieldValue(`batches.${position}`, updatedBatch);
                                   }}
@@ -238,17 +265,22 @@ function BatchesSection() {
                               quantity: hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY]),
                               deliveredAt: hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]),
                               desiredAt: hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]),
-                              removeBatch: allowRemoveBatches,
-                              cloneBatch: allowCloneBatches,
-                              viewOrder: hasPermission(ORDER_FORM),
-                              viewShipment: hasPermission(SHIPMENT_FORM),
-                              viewProduct: hasPermission(PRODUCT_FORM),
-                              setRepresentativeBatch: hasPermission([
+                              representativeBatch: hasPermission([
                                 CONTAINER_UPDATE,
                                 CONTAINER_BATCHES_ADD,
                                 CONTAINER_BATCHES_REMOVE,
                               ]),
-                              getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                              removeBatch: allowRemoveBatches,
+                              cloneBatch: allowCloneBatches,
+                            }}
+                            navigate={{
+                              product: hasPermission(PRODUCT_FORM),
+                              order: hasPermission(ORDER_FORM),
+                              shipment: hasPermission(SHIPMENT_FORM),
+                            }}
+                            read={{
+                              price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                              tasks: hasPermission(BATCH_TASK_LIST),
                             }}
                             position={position}
                             batch={batch}
@@ -279,21 +311,8 @@ function BatchesSection() {
                                 }
                               }
                             }}
-                            onClone={({
-                              id,
-                              deliveredAt,
-                              desired,
-                              expiredAt,
-                              producedAt,
-                              no,
-                              ...rest
-                            }) => {
-                              const clonedBatch = injectUid({
-                                ...rest,
-                                isNew: true,
-                                batchAdjustments: [],
-                                no: `${no}- clone`,
-                              });
+                            onClone={value => {
+                              const clonedBatch = prepareBatchObjectForClone(value);
 
                               setFieldValue('batches', [...batches, clonedBatch]);
                               addExistingBatches([clonedBatch]);

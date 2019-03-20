@@ -3,13 +3,20 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Link } from '@reach/router';
+import { isBefore } from 'date-fns';
 import { encodeId } from 'utils/id';
+import { formatToGraphql, startOfToday } from 'utils/date';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
+import { BATCH_FORM } from 'modules/permission/constants/batch';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import {
   Label,
   Display,
@@ -36,13 +43,10 @@ import {
 type OptionalProps = {
   task: Object,
   position: number,
+  hideParentInfo: boolean,
   onClick: Function,
+  saveOnBlur: Function,
   editable: boolean,
-  viewPermissions: {
-    order: boolean,
-    batch: boolean,
-    shipment: boolean,
-  },
   actions: Array<React.Node>,
 };
 
@@ -50,13 +54,10 @@ type Props = OptionalProps;
 
 const defaultProps = {
   position: 0,
-  onClick: () => {},
+  hideParentInfo: false,
+  onClick: null,
+  saveOnBlur: () => {},
   editable: false,
-  viewPermissions: {
-    order: false,
-    batch: false,
-    shipment: false,
-  },
   actions: [],
 };
 
@@ -87,12 +88,17 @@ const getParentInfo = (parent: Object) => {
   return {};
 };
 
+let hideParentInfoForHoc = false;
+
 const TaskCard = ({
   task,
   position,
+  hideParentInfo,
   onClick,
+  saveOnBlur,
+  onActivateUser,
+  onDeactivateUser,
   editable,
-  viewPermissions,
   actions,
   ...rest
 }: Props) => {
@@ -115,9 +121,23 @@ const TaskCard = ({
 
   const values = {
     [`task.${id}.name`]: name,
+    [`task.${id}.completedBy`]: completedBy,
   };
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
+
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  const viewPermissions = {
+    order: hasPermission(ORDER_FORM),
+    batch: hasPermission(BATCH_FORM),
+    shipment: hasPermission(SHIPMENT_FORM),
+  };
+
+  hideParentInfoForHoc = hideParentInfo;
+
+  const IS_DND_DEVELOPED = false;
 
   return (
     <BaseCard
@@ -125,13 +145,13 @@ const TaskCard = ({
       color="TASK"
       showActionsOnHover
       actions={actions}
-      readOnly={!editable}
+      readOnly={!editable && !onClick}
       {...rest}
     >
       <BooleanValue>
         {({ value: isHovered, set: changeHoverState }) => (
           <div
-            className={TaskCardWrapperStyle}
+            className={TaskCardWrapperStyle(hideParentInfo)}
             onClick={onClick}
             onMouseEnter={() => {
               if (editable) {
@@ -145,31 +165,37 @@ const TaskCard = ({
             }}
             role="presentation"
           >
-            <div className={TaskParentWrapperStyle}>
-              {viewPermissions[parentType] ? (
-                <Link
-                  className={TaskParentIconStyle}
-                  to={`/${parentType}/${encodeId(parent.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon={parentIcon} />
-                </Link>
-              ) : (
-                <div className={TaskParentIconStyle}>
-                  <Icon icon={parentIcon} />
-                </div>
-              )}
-              <Display align="left">{parentData}</Display>
-            </div>
+            {!hideParentInfo && (
+              <div className={TaskParentWrapperStyle}>
+                {viewPermissions[parentType] ? (
+                  <Link
+                    className={TaskParentIconStyle}
+                    to={`/${parentType}/${encodeId(parent.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon={parentIcon} />
+                  </Link>
+                ) : (
+                  <div className={TaskParentIconStyle}>
+                    <Icon icon={parentIcon} />
+                  </div>
+                )}
+                <Display align="left">{parentData}</Display>
+              </div>
+            )}
 
             <div
               className={TaskNameWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
               role="presentation"
             >
-              {editable && isHovered ? (
+              {editable && isHovered && IS_DND_DEVELOPED ? (
                 <button className={DragButtonWrapperStyle} type="button">
                   <Icon icon="DRAG_HANDLE" />
                 </button>
@@ -188,8 +214,12 @@ const TaskCard = ({
                 {({ name: fieldName, ...inputHandlers }) => (
                   <TextInputFactory
                     {...inputHandlers}
+                    onBlur={evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({ ...task, name: inputHandlers.value });
+                    }}
                     editable={editable}
-                    inputWidth="185px"
+                    inputWidth={hideParentInfo ? '140px' : '160px'}
                     inputHeight="20px"
                     inputAlign="left"
                     name={fieldName}
@@ -202,22 +232,38 @@ const TaskCard = ({
 
             <div
               className={DateInputWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
               role="presentation"
             >
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
-              <FormField name={`task.${id}.dueDate`} initValue={dueDate}>
+              <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
                 {({ name: fieldName, ...inputHandlers }) => (
                   <DateInputFactory
                     {...inputHandlers}
+                    onBlur={evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...task,
+                        dueDate: inputHandlers.value || null,
+                      });
+                    }}
                     editable={editable}
                     inputWidth="120px"
                     inputHeight="20px"
                     name={fieldName}
                     isNew={false}
                     originalValue={dueDate}
+                    inputColor={
+                      dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
+                        ? 'RED'
+                        : null
+                    }
                   />
                 )}
               </FormField>
@@ -225,7 +271,11 @@ const TaskCard = ({
 
             <div
               className={DateInputWrapperStyle}
-              onClick={evt => evt.stopPropagation()}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
               role="presentation"
             >
               <Label>
@@ -235,6 +285,13 @@ const TaskCard = ({
                 {({ name: fieldName, ...inputHandlers }) => (
                   <DateInputFactory
                     {...inputHandlers}
+                    onBlur={evt => {
+                      inputHandlers.onBlur(evt);
+                      saveOnBlur({
+                        ...task,
+                        startDate: inputHandlers.value ? inputHandlers.value : null,
+                      });
+                    }}
                     editable={editable}
                     inputWidth="120px"
                     inputHeight="20px"
@@ -258,9 +315,45 @@ const TaskCard = ({
                   showCompletedDate
                   completedDate={completedAt}
                   editable={editable}
+                  onClick={() =>
+                    saveOnBlur({
+                      ...task,
+                      completedBy: inProgressBy,
+                      completedAt: formatToGraphql(startOfToday()),
+                    })
+                  }
+                  onClickUser={() =>
+                    completedBy
+                      ? saveOnBlur({
+                          ...task,
+                          completedBy: null,
+                          completedAt: null,
+                        })
+                      : saveOnBlur({
+                          ...task,
+                          inProgressBy: null,
+                          inProgressAt: null,
+                        })
+                  }
                 />
               ) : (
-                <TaskAssignmentInput users={assignedTo} editable={editable} />
+                <TaskAssignmentInput
+                  onChange={newAssignedTo =>
+                    saveOnBlur({
+                      ...task,
+                      assignedTo: newAssignedTo,
+                    })
+                  }
+                  users={assignedTo}
+                  onActivateUser={user =>
+                    saveOnBlur({
+                      ...task,
+                      inProgressBy: user,
+                      inProgressAt: formatToGraphql(startOfToday()),
+                    })
+                  }
+                  editable={editable}
+                />
               )}
             </div>
 
@@ -278,7 +371,7 @@ TaskCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TaskCard, 'task', {
   width: '195px',
-  height: '184px',
+  height: hideParentInfoForHoc ? '159px' : '184px',
   entityIcon: 'TASK',
   entityColor: 'TASK',
 });

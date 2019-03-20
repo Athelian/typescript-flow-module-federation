@@ -1,6 +1,5 @@
 // @flow
 import gql from 'graphql-tag';
-import { findIndex } from 'lodash';
 import {
   shipmentFormFragment,
   containerFormFragment,
@@ -26,21 +25,16 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
+  taskFormInSlideViewFragment,
+  todoFragment,
 } from 'graphql';
-import { prepareCustomFieldsData } from 'utils/customFields';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
-import {
-  prepareUpdateBatchInput,
-  prepareParsedUpdateBatchInput,
-} from 'modules/batch/form/mutation';
-import {
-  prepareContainer,
-  prepareParsedUpdateContainerInput,
-} from 'modules/container/form/mutation';
+import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
+import { prepareParsedContainerInput } from 'modules/container/form/mutation';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import {
-  cleanUpData,
   parseGenericField,
+  parseMemoField,
   parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
@@ -49,136 +43,8 @@ import {
   parseFilesField,
   parseEnumField,
   parseCustomFieldsField,
+  parseTasksField,
 } from 'utils/data';
-import type {
-  CargoReady,
-  ShipmentVoyage,
-  ShipmentGroups,
-  ShipmentCreate,
-  ShipmentUpdate,
-} from '../type.js.flow';
-
-const prepareNewContainer = ({
-  updatedAt,
-  updatedBy,
-  archived,
-  totalBatchPackages,
-  totalBatchQuantity,
-  totalNumberOfUniqueOrderItems,
-  totalVolume,
-  totalWeight,
-  totalPrice,
-  shipment,
-  tags,
-  warehouse,
-  warehouseArrivalAgreedDate,
-  warehouseArrivalActualDate,
-  warehouseArrivalAgreedDateApprovedAt,
-  warehouseArrivalActualDateApprovedAt,
-  warehouseArrivalAgreedDateApprovedBy,
-  warehouseArrivalActualDateApprovedBy,
-  warehouseArrivalAgreedDateAssignedTo,
-  warehouseArrivalActualDateAssignedTo,
-  totalAdjusted,
-  batches,
-  representativeBatch,
-  ownedBy,
-  isNew,
-  id,
-  ...rest
-}: Object) => ({
-  ...rest,
-  ...(isNew ? {} : { id }),
-  warehouseId: warehouse && warehouse.id,
-  warehouseArrivalAgreedDate: warehouseArrivalAgreedDate
-    ? new Date(warehouseArrivalAgreedDate)
-    : null,
-  warehouseArrivalActualDate: warehouseArrivalActualDate
-    ? new Date(warehouseArrivalActualDate)
-    : null,
-  warehouseArrivalAgreedDateApprovedById:
-    warehouseArrivalAgreedDateApprovedBy && warehouseArrivalAgreedDateApprovedBy.id,
-  warehouseArrivalActualDateApprovedById:
-    warehouseArrivalActualDateApprovedBy && warehouseArrivalActualDateApprovedBy.id,
-  ...(Array.isArray(warehouseArrivalAgreedDateAssignedTo) &&
-  warehouseArrivalAgreedDateAssignedTo.length > 0
-    ? {
-        warehouseArrivalAgreedDateAssignedToIds: warehouseArrivalAgreedDateAssignedTo.map(
-          item => item.id
-        ),
-      }
-    : {}),
-  ...(Array.isArray(warehouseArrivalActualDateAssignedTo) &&
-  warehouseArrivalActualDateAssignedTo.length > 0
-    ? {
-        warehouseArrivalActualDateAssignedToIds: warehouseArrivalActualDateAssignedTo.map(
-          item => item.id
-        ),
-      }
-    : {}),
-  ...(Array.isArray(batches) && batches.length > 0
-    ? { batches: batches.map(batch => prepareUpdateBatchInput(cleanUpData(batch), true, false)) }
-    : {}),
-  ...(Array.isArray(tags) && tags.length > 0 ? { tagIds: tags.map(item => item.id) } : {}),
-  representativeBatchIndex: representativeBatch
-    ? findIndex(batches, batch => batch.id === representativeBatch.id)
-    : null,
-});
-
-export const formatTimeline = (timeline: Object): ?CargoReady => {
-  if (!timeline) return null;
-
-  const { assignedTo, memo, approvedBy, date, timelineDateRevisions } = timeline;
-
-  return {
-    memo,
-    date: date ? new Date(date) : null,
-    ...(Array.isArray(assignedTo) ? { assignedToIds: assignedTo.map(({ id }) => id) } : {}),
-    ...(Array.isArray(timelineDateRevisions)
-      ? {
-          timelineDateRevisions: timelineDateRevisions
-            .filter(item => item && (item.date || item.memo))
-            .map(({ id, date: dateRevision, type, memo: memoRevision }) => ({
-              id: id && id.includes('-') ? null : id,
-              type,
-              memo: memoRevision,
-              date: dateRevision ? new Date(dateRevision) : null,
-            })),
-        }
-      : {}),
-    approvedById: approvedBy && approvedBy.id,
-  };
-};
-
-export const formatVoyages = (voyages: Array<Object>): Array<ShipmentVoyage> =>
-  voyages.map(({ id, departure, arrival, arrivalPort, departurePort, vesselName, vesselCode }) => ({
-    ...(id && id.includes('-') ? {} : { id }),
-    vesselCode,
-    vesselName,
-    departurePort: !departurePort
-      ? null
-      : {
-          airport: departurePort && departurePort.airport ? departurePort.airport : null,
-          seaport: departurePort && departurePort.seaport ? departurePort.seaport : null,
-        },
-    departure: !departure ? null : formatTimeline(departure),
-    arrivalPort: !arrivalPort
-      ? null
-      : {
-          airport: arrivalPort && arrivalPort.airport ? arrivalPort.airport : null,
-          seaport: arrivalPort && arrivalPort.seaport ? arrivalPort.seaport : null,
-        },
-    arrival: !arrival ? null : formatTimeline(arrival),
-  }));
-
-export const formatContainerGroups = (voyages: Array<Object>): Array<ShipmentGroups> =>
-  voyages.map(({ id, warehouse, customClearance, warehouseArrival, deliveryReady }) => ({
-    ...(id && id.includes('-') ? {} : { id }),
-    warehouseId: warehouse && warehouse.id,
-    customClearance: !customClearance ? null : formatTimeline(customClearance),
-    warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
-    deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
-  }));
 
 export const createShipmentMutation: Object = gql`
   mutation shipmentCreate($input: ShipmentCreateInput!) {
@@ -191,105 +57,6 @@ export const createShipmentMutation: Object = gql`
   }
   ${badRequestFragment}
 `;
-
-export const createShipmentWithReturnDataMutation: Object = gql`
-  mutation shipmentCreate($input: ShipmentCreateInput!) {
-    shipmentCreate(input: $input) {
-      ...shipmentFormFragment
-      ...badRequestFragment
-    }
-  }
-
-  ${shipmentFormFragment}
-  ${containerFormFragment}
-  ${warehouseCardFragment}
-  ${timelineDateFullFragment}
-  ${batchFormFragment}
-  ${userAvatarFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${tagFragment}
-  ${priceFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${shipmentCardFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${documentFragment}
-  ${partnerCardFragment}
-  ${badRequestFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
-`;
-
-export const prepareCreateShipmentInput = ({
-  no,
-  blNo,
-  blDate,
-  bookingNo,
-  bookingDate,
-  invoiceNo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  customFields,
-  memo,
-  cargoReady,
-  voyages,
-  containerGroups,
-  tags,
-  batches,
-  importer,
-  forwarders,
-  inCharges,
-  files,
-  containers,
-}: Object): ShipmentCreate => ({
-  no,
-  blNo,
-  bookingNo,
-  invoiceNo,
-  memo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  blDate: blDate ? new Date(blDate) : null,
-  bookingDate: bookingDate ? new Date(bookingDate) : null,
-  importerId: importer && importer.id,
-  ...(customFields ? { customFields: prepareCustomFieldsData(customFields) } : {}),
-  ...(cargoReady ? { cargoReady: formatTimeline(cargoReady) } : {}),
-  ...(Array.isArray(tags) ? { tagIds: tags.map(({ id }) => id) } : {}),
-  ...(Array.isArray(forwarders) ? { forwarderIds: forwarders.map(({ id }) => id) } : {}),
-  ...(Array.isArray(inCharges) ? { inChargeIds: inCharges.map(({ id }) => id) } : {}),
-  ...(Array.isArray(batches)
-    ? {
-        batches: getBatchesInPool(batches).map(batch =>
-          prepareUpdateBatchInput(cleanUpData(batch), true, false)
-        ),
-      }
-    : {}),
-  ...(Array.isArray(containers) ? { containers: containers.map(prepareNewContainer) } : {}),
-  ...(Array.isArray(voyages) ? { voyages: formatVoyages(voyages) } : {}),
-  ...(Array.isArray(containerGroups)
-    ? { containerGroups: formatContainerGroups(containerGroups) }
-    : {}),
-  ...(Array.isArray(files)
-    ? {
-        files: files.map(({ id, name, type, memo: fileMemo }) => ({
-          id,
-          name,
-          type,
-          memo: fileMemo,
-        })),
-      }
-    : {}),
-});
 
 export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
@@ -323,60 +90,10 @@ export const updateShipmentMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskFormInSlideViewFragment}
+  ${todoFragment}
 `;
 
-export const prepareUpdateShipmentInput = ({
-  no,
-  blNo,
-  blDate,
-  bookingNo,
-  bookingDate,
-  invoiceNo,
-  memo,
-  loadType,
-  transportType,
-  incoterm,
-  carrier,
-  customFields,
-  cargoReady,
-  voyages = [],
-  containerGroups = [],
-  tags = [],
-  batches = [],
-  forwarders = [],
-  inCharges = [],
-  files = [],
-  containers = [],
-}: Object): ShipmentUpdate => ({
-  no,
-  blNo,
-  blDate: blDate ? new Date(blDate) : null,
-  bookingNo,
-  bookingDate: bookingDate ? new Date(bookingDate) : null,
-  invoiceNo,
-  memo,
-  loadType: loadType && loadType.length > 0 ? loadType : null,
-  transportType: transportType && transportType.length > 0 ? transportType : null,
-  incoterm: incoterm && incoterm.length > 0 ? incoterm : null,
-  carrier,
-  customFields: prepareCustomFieldsData(customFields),
-  cargoReady: formatTimeline(cargoReady),
-  tagIds: tags.map(({ id }) => id),
-  forwarderIds: forwarders.map(({ id }) => id),
-  inChargeIds: inCharges.map(({ id }) => id),
-  batches: getBatchesInPool(batches).map(batch =>
-    prepareUpdateBatchInput(cleanUpData(batch), true, false)
-  ),
-  containers: containers.map(prepareContainer),
-  voyages: formatVoyages(voyages),
-  containerGroups: formatContainerGroups(containerGroups),
-  files: files.map(({ id, name, type, memo: fileMemo }) => ({
-    id,
-    name,
-    type,
-    memo: fileMemo,
-  })),
-});
 type DateRevisionType = {
   id: string,
   date: string | Date,
@@ -422,11 +139,6 @@ const parseTimelineDateField = (
         approvedAt: getByPathWithDefault(null, 'approvedAt', newTimelineDate),
       }
     ),
-    ...parseGenericField(
-      'memo',
-      getByPathWithDefault(null, 'memo', originalTimelineDate),
-      getByPathWithDefault(null, 'memo', newTimelineDate)
-    ),
     ...parseArrayOfChildrenField(
       'timelineDateRevisions',
       getByPathWithDefault([], 'timelineDateRevisions', originalTimelineDate),
@@ -443,7 +155,7 @@ const parseTimelineDateField = (
           getByPathWithDefault(null, 'type', oldDateRevision),
           getByPathWithDefault(null, 'type', newDateRevision)
         ),
-        ...parseGenericField(
+        ...parseMemoField(
           'memo',
           getByPathWithDefault(null, 'memo', oldDateRevision),
           getByPathWithDefault(null, 'memo', newDateRevision)
@@ -479,18 +191,20 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType)
   return { [key]: parsedNewPort };
 };
 
-type UpdateShipmentInputType = {
-  originalValues: Object,
+type ShipmentInputType = {
+  originalValues: ?Object,
   existingBatches: Array<Object>,
   newValues: Object,
 };
 
-export const prepareParsedUpdateShipmentInput = ({
+export const prepareParsedShipmentInput = ({
   originalValues,
   existingBatches,
   newValues,
-}: UpdateShipmentInputType): Object => {
-  const originalBatchesInPool = getBatchesInPool(originalValues.batches);
+}: ShipmentInputType): Object => {
+  const originalBatchesInPool = getBatchesInPool(
+    getByPathWithDefault([], 'batches', originalValues)
+  );
   const existingBatchesInPool = getBatchesInPool(existingBatches);
   const newBatchesInPool = getBatchesInPool(newValues.batches);
 
@@ -499,29 +213,87 @@ export const prepareParsedUpdateShipmentInput = ({
   const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
 
   return {
-    ...parseGenericField('no', originalValues.no, newValues.no),
-    ...parseGenericField('blNo', originalValues.blNo, newValues.blNo),
-    ...parseDateField('blDate', originalValues.blDate, newValues.blDate),
-    ...parseGenericField('bookingNo', originalValues.bookingNo, newValues.bookingNo),
-    ...parseDateField('bookingDate', originalValues.bookingDate, newValues.bookingDate),
-    ...parseGenericField('invoiceNo', originalValues.invoiceNo, newValues.invoiceNo),
-    ...parseEnumField('transportType', originalValues.transportType, newValues.transportType),
-    ...parseEnumField('loadType', originalValues.loadType, newValues.loadType),
-    ...parseEnumField('incoterm', originalValues.incoterm, newValues.incoterm),
-    ...parseGenericField('carrier', originalValues.carrier, newValues.carrier),
+    ...parseParentIdField(
+      'importerId',
+      getByPathWithDefault(null, 'importer', originalValues),
+      newValues.importer
+    ),
+    ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
+    ...parseGenericField(
+      'blNo',
+      getByPathWithDefault(null, 'blNo', originalValues),
+      newValues.blNo
+    ),
+    ...parseDateField(
+      'blDate',
+      getByPathWithDefault(null, 'blDate', originalValues),
+      newValues.blDate
+    ),
+    ...parseGenericField(
+      'bookingNo',
+      getByPathWithDefault(null, 'bookingNo', originalValues),
+      newValues.bookingNo
+    ),
+    ...parseDateField(
+      'bookingDate',
+      getByPathWithDefault(null, 'bookingDate', originalValues),
+      newValues.bookingDate
+    ),
+    ...parseGenericField(
+      'invoiceNo',
+      getByPathWithDefault(null, 'invoiceNo', originalValues),
+      newValues.invoiceNo
+    ),
+    ...parseEnumField(
+      'transportType',
+      getByPathWithDefault(null, 'transportType', originalValues),
+      newValues.transportType
+    ),
+    ...parseEnumField(
+      'loadType',
+      getByPathWithDefault(null, 'loadType', originalValues),
+      newValues.loadType
+    ),
+    ...parseEnumField(
+      'incoterm',
+      getByPathWithDefault(null, 'incoterm', originalValues),
+      newValues.incoterm
+    ),
+    ...parseGenericField(
+      'carrier',
+      getByPathWithDefault(null, 'carrier', originalValues),
+      newValues.carrier
+    ),
     ...parseCustomFieldsField(
       'customFields',
       getByPathWithDefault(null, 'customFields', originalValues),
       newValues.customFields
     ),
-    ...parseArrayOfIdsField('tagIds', originalValues.tags, newValues.tags),
-    ...parseGenericField('memo', originalValues.memo, newValues.memo),
-    ...parseArrayOfIdsField('inChargeIds', originalValues.inCharges, newValues.inCharges),
-    ...parseArrayOfIdsField('forwarderIds', originalValues.forwarders, newValues.forwarders),
-    ...parseTimelineDateField('cargoReady', originalValues.cargoReady, newValues.cargoReady),
+    ...parseArrayOfIdsField(
+      'tagIds',
+      getByPathWithDefault([], 'tags', originalValues),
+      newValues.tags
+    ),
+    ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
+    ...parseArrayOfIdsField(
+      'inChargeIds',
+      getByPathWithDefault([], 'inCharges', originalValues),
+      newValues.inCharges
+    ),
+    ...parseArrayOfIdsField(
+      'forwarderIds',
+      getByPathWithDefault([], 'forwarders', originalValues),
+      newValues.forwarders
+    ),
+    // TODO: Change to null default, and adjust ui components to handle null object
+    ...parseTimelineDateField(
+      'cargoReady',
+      getByPathWithDefault({}, 'cargoReady', originalValues),
+      newValues.cargoReady
+    ),
     ...parseArrayOfChildrenField(
       'containerGroups',
-      originalValues.containerGroups,
+      getByPathWithDefault([{}], 'containerGroups', originalValues),
       newValues.containerGroups,
       (oldContainerGroup: ?Object, newContainerGroup: Object) => ({
         ...(!oldContainerGroup ? {} : { id: oldContainerGroup.id }),
@@ -549,7 +321,7 @@ export const prepareParsedUpdateShipmentInput = ({
     ),
     ...parseArrayOfChildrenField(
       'voyages',
-      originalValues.voyages,
+      getByPathWithDefault([{}], 'voyages', originalValues),
       newValues.voyages,
       (oldVoyage: ?Object, newVoyage: Object) => ({
         ...(!oldVoyage ? {} : { id: oldVoyage.id }),
@@ -590,7 +362,7 @@ export const prepareParsedUpdateShipmentInput = ({
       existingBatchesInPool,
       newBatchesInPool,
       (oldBatch: ?Object, newBatch: Object) => ({
-        ...prepareParsedUpdateBatchInput(oldBatch, newBatch, {
+        ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm: true,
           inOrderForm: false,
           inContainerForm: false,
@@ -601,7 +373,7 @@ export const prepareParsedUpdateShipmentInput = ({
     ),
     ...parseArrayOfChildrenField(
       'containers',
-      originalValues.containers,
+      getByPathWithDefault([], 'containers', originalValues),
       newValues.containers,
       (oldContainer: ?Object, newContainer: Object) => {
         const existingBatchesInContainer = existingBatches.filter(
@@ -609,7 +381,7 @@ export const prepareParsedUpdateShipmentInput = ({
         );
 
         return {
-          ...prepareParsedUpdateContainerInput({
+          ...prepareParsedContainerInput({
             originalValues: oldContainer,
             existingBatches: existingBatchesInContainer,
             newValues: newContainer,
@@ -621,6 +393,7 @@ export const prepareParsedUpdateShipmentInput = ({
         };
       }
     ),
-    ...parseFilesField('files', originalValues.files, newValues.files),
+    ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
+    ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
   };
 };

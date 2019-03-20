@@ -19,6 +19,7 @@ module.file_ext=.json
 module.file_ext=.graphql
 module.name_mapper.extension='graphql' -> 'empty/object'
 module.name_mapper='^apollo$' -> '<PROJECT_ROOT>/src/apollo.js'
+module.name_mapper='^serviceWorker$' -> '<PROJECT_ROOT>/src/serviceWorker.js'
 module.name_mapper='^graphql\(.*\)$' -> '<PROJECT_ROOT>/src/graphql/\1'
 module.name_mapper='^hoc\(.*\)$' -> '<PROJECT_ROOT>/src/hoc/\1'
 module.name_mapper='^i18n\(.*\)$' -> '<PROJECT_ROOT>/src/i18n/\1'

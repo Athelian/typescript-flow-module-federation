@@ -25,6 +25,7 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
+  BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
 import {
   ORDER_FORM,
@@ -39,14 +40,16 @@ import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import validator from 'modules/batch/form/validator';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import BatchFormContainer from 'modules/batch/form/container';
+import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -168,7 +171,9 @@ function BatchesArea({
                   <div className={BatchesGridStyle}>
                     {usefulBatches.map(batch => {
                       const allowRemoveBatch = getByPath('container', batch)
-                        ? hasPermission([SHIPMENT_UPDATE, CONTAINER_BATCHES_REMOVE])
+                        ? hasPermission(SHIPMENT_UPDATE) ||
+                          (hasPermission(CONTAINER_BATCHES_REMOVE) &&
+                            hasPermission(SHIPMENT_REMOVE_BATCH))
                         : hasPermission([SHIPMENT_UPDATE, SHIPMENT_REMOVE_BATCH]);
                       const allowCloneBatch = getByPath('container', batch)
                         ? hasPermission(BATCH_CREATE) &&
@@ -183,7 +188,10 @@ function BatchesArea({
                               selectable
                               selected={selectedBatches.includes(batch)}
                               onSelect={() => setSelectedBatches(batch)}
-                              editable={{ getPrice: hasPermission(ORDER_ITEMS_GET_PRICE) }}
+                              read={{
+                                price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                tasks: hasPermission(BATCH_TASK_LIST),
+                              }}
                             />
                           ) : (
                             <BooleanValue>
@@ -195,15 +203,34 @@ function BatchesArea({
                                     options={{ width: '1030px' }}
                                   >
                                     {opened && (
-                                      <Subscribe to={[BatchFormContainer]}>
-                                        {({ initDetailValues }) => (
+                                      <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+                                        {(batchInfoContainer, batchTasksContainer) => (
                                           <BatchFormWrapper
-                                            initDetailValues={initDetailValues}
+                                            initDetailValues={initValues => {
+                                              const { todo, ...info } = initValues;
+                                              batchInfoContainer.initDetailValues(info);
+                                              batchTasksContainer.initDetailValues(todo);
+                                            }}
                                             batch={batch}
                                             isNew={!!batch.isNew}
                                             orderItem={batch.orderItem}
                                             onCancel={() => batchSlideToggle(false)}
-                                            onSave={updatedBatch => {
+                                            isReady={formContainer =>
+                                              formContainer.isReady(
+                                                {
+                                                  ...batchInfoContainer.state,
+                                                  ...batchTasksContainer.state,
+                                                },
+                                                validator
+                                              ) &&
+                                              (batchInfoContainer.isDirty() ||
+                                                batchTasksContainer.isDirty())
+                                            }
+                                            onSave={() => {
+                                              const updatedBatch = {
+                                                ...batchInfoContainer.state,
+                                                ...batchTasksContainer.state,
+                                              };
                                               batchSlideToggle(false);
 
                                               const indexOfAllBatches = batches.indexOf(batch);
@@ -248,10 +275,15 @@ function BatchesArea({
                                       ]),
                                       removeBatch: allowRemoveBatch,
                                       cloneBatch: allowCloneBatch,
-                                      viewOrder: hasPermission(ORDER_FORM),
-                                      viewProduct: hasPermission(PRODUCT_FORM),
-                                      viewContainer: hasPermission(CONTAINER_FORM),
-                                      getPrice: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                    }}
+                                    navigate={{
+                                      order: hasPermission(ORDER_FORM),
+                                      product: hasPermission(PRODUCT_FORM),
+                                      container: hasPermission(CONTAINER_FORM),
+                                    }}
+                                    read={{
+                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                      tasks: hasPermission(BATCH_TASK_LIST),
                                     }}
                                     batch={batch}
                                     saveOnBlur={updatedBatch => {
@@ -312,21 +344,8 @@ function BatchesArea({
                                       });
                                       setContainersState('containers', newContainers);
                                     }}
-                                    onClone={({
-                                      id,
-                                      deliveredAt,
-                                      desired,
-                                      expiredAt,
-                                      producedAt,
-                                      no,
-                                      ...rest
-                                    }) => {
-                                      const clonedBatch = injectUid({
-                                        ...rest,
-                                        isNew: true,
-                                        batchAdjustments: [],
-                                        no: `${no}- clone`,
-                                      });
+                                    onClone={value => {
+                                      const clonedBatch = prepareBatchObjectForClone(value);
 
                                       setFieldValue('batches', [...batches, clonedBatch]);
                                     }}
@@ -433,6 +452,9 @@ function BatchesArea({
                                         batchAdjustments: [],
                                         no: `batch no ${batches.length + counter + 1}`,
                                         autoCalculatePackageQuantity: true,
+                                        todo: {
+                                          tasks: [],
+                                        },
                                       });
                                     });
                                     setFieldValue('batches', [...batches, ...result]);

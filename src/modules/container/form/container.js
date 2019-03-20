@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+import { removeNulls, cleanFalsy } from 'utils/data';
 
 type Metric = {
   value: number,
@@ -94,10 +94,10 @@ export default class ContainerFormContainer extends Container<ContainerFormState
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues = { ...initValues, ...cleanUpData(values) };
+    const parsedValues = { ...initValues, ...values };
 
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
-    this.existingBatches = parsedValues.batches;
+    this.originalValues = { ...parsedValues };
+    this.existingBatches = [...parsedValues.batches];
   };
 }

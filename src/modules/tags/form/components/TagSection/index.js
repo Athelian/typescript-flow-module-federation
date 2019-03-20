@@ -348,6 +348,23 @@ const TagSection = ({ isNew, tag }: Props) => {
                                     </Label>
                                   </div>
                                 </RadioInput>
+                                <RadioInput
+                                  selected={entityTypeValue.entityTypes.includes('Task')}
+                                  onToggle={() => toggleSelectType('Task')}
+                                  editable={allowCreateOrUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('TASK')}>
+                                      <Icon icon="TASK" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.Tags.task"
+                                        defaultMessage="TASK"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
                               </div>
                             }
                           />

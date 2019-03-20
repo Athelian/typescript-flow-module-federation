@@ -6,6 +6,7 @@ import ShipmentTagsContainer from './tags';
 import ShipmentTimelineContainer from './timeline';
 import ShipmentTransportTypeContainer from './transportType';
 import ShipmentFilesContainer from './files';
+import ShipmentTasksContainer from './tasks';
 import ContainersInSlideViewContainer from './containersInSlideView';
 
 export {
@@ -16,5 +17,6 @@ export {
   ShipmentTimelineContainer,
   ShipmentTransportTypeContainer,
   ShipmentFilesContainer,
+  ShipmentTasksContainer,
   ContainersInSlideViewContainer,
 };

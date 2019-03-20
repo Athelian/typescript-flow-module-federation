@@ -2,19 +2,18 @@
 import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanUpData } from 'utils/data';
+import { removeNulls } from 'utils/data';
 
 type ActionDetail = {
-  approvedAt: ?Date,
-  approvedBy: ?Object,
-  assignedTo: Array<Object>,
-  date: ?Date,
-  timelineDateRevisions: Array<Object>,
+  approvedAt?: ?Date,
+  approvedBy?: ?Object,
+  assignedTo?: Array<Object>,
+  date?: ?Date,
+  timelineDateRevisions?: Array<Object>,
 };
 
 type FormState = {
   cargoReady?: ActionDetail,
-  containers?: Array<Object>,
   containerGroups: Array<{
     customClearance?: ActionDetail,
     deliveryReady?: ActionDetail,
@@ -37,6 +36,7 @@ type FormState = {
 };
 
 const initValues: FormState = {
+  cargoReady: {},
   containerGroups: [{}],
   voyages: [{}],
 };
@@ -88,9 +88,9 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: any) => {
-    const parsedValues = { ...initValues, ...cleanUpData(values) };
+    const parsedValues = { ...initValues, ...values };
 
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    this.originalValues = { ...parsedValues };
   };
 }

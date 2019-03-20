@@ -660,36 +660,48 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         }
                       }}
                       onMoveToNewShipment={() => {
+                        const defaultBatchInput = {
+                          batchAdjustments: [],
+                          todo: {
+                            tasks: [],
+                          },
+                        };
                         const batchIds = uiSelectors.targetedBatchIds();
-                        const initBatches = batchIds.map(batchId => {
-                          const [orderItemId, orderItem] =
-                            (Object.entries(orderItems || {}): Array<any>).find(
-                              ([, item]) => item.batches && item.batches.includes(batchId)
-                            ) || [];
-                          const [, order] =
-                            (Object.entries(orders || {}): Array<any>).find(
-                              ([, item]) => item.orderItems && item.orderItems.includes(orderItemId)
-                            ) || [];
-                          const { totalAdjusted, ...batch } = batches[batchId];
-                          return {
-                            ...batch,
-                            orderItem: {
-                              ...orderItem,
-                              productProvider: {
-                                ...orderItem.productProvider,
-                                exporter: exporters[orderItem.productProvider.exporter],
+                        const initBatches = batchIds
+                          .map(batchId => {
+                            const [orderItemId, orderItem] =
+                              (Object.entries(orderItems || {}): Array<any>).find(
+                                ([, item]) => item.batches && item.batches.includes(batchId)
+                              ) || [];
+                            const [, order] =
+                              (Object.entries(orders || {}): Array<any>).find(
+                                ([, item]) =>
+                                  item.orderItems && item.orderItems.includes(orderItemId)
+                              ) || [];
+
+                            if (!batches[batchId]) {
+                              return false;
+                            }
+                            const { totalAdjusted, ...batch } = batches[batchId];
+                            return {
+                              ...defaultBatchInput,
+                              ...batch,
+                              orderItem: {
+                                ...orderItem,
+                                productProvider: {
+                                  ...orderItem.productProvider,
+                                  exporter: exporters[orderItem.productProvider.exporter],
+                                },
+                                order: {
+                                  ...order,
+                                  exporter: exporters[order.exporter],
+                                },
                               },
-                              order: {
-                                ...order,
-                                exporter: exporters[order.exporter],
-                              },
-                            },
-                          };
-                        });
+                            };
+                          })
+                          .filter(Boolean);
                         shipmentBatchesContainer.initDetailValues(initBatches);
-                        shipmentContainersContainer.initDetailValues({
-                          containers: [],
-                        });
+                        shipmentContainersContainer.initDetailValues([]);
                         shipmentInfoContainer.initDetailValues({
                           no: '',
                           blNo: '',
@@ -701,6 +713,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           incoterm: '',
                           carrier: '',
                           forwarders: [],
+                          importer: {},
                           inCharges: [],
                           customFields: {
                             mask: null,
@@ -713,7 +726,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           containerGroups: [{}],
                           voyages: [{}],
                         });
-                        shipmentTransportTypeContainer.initDetailValues({});
                         shipmentFilesContainer.initDetailValues([]);
                         actions.showEditForm('NEW_SHIPMENT', 'new');
                       }}
@@ -756,6 +768,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         });
                         const processBatchIds = [];
                         const moveOrderItems = [];
+                        const defaultBatchInput = {
+                          batchAdjustments: [],
+                          isNew: true,
+                          todo: {
+                            tasks: [],
+                          },
+                        };
                         orderItemIds.forEach(orderItemId => {
                           const orderItem = orderItems[orderItemId];
                           if (orderItem) {
@@ -791,7 +810,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   .filter(batchId => batchIds.includes(batchId))
                                   .map(batchId => {
                                     const { totalAdjusted, ...inputBatchFields } = batches[batchId];
-                                    return { isNew: true, ...inputBatchFields };
+                                    return {
+                                      ...defaultBatchInput,
+                                      ...inputBatchFields,
+                                    };
                                   }),
                                 isNew: true,
                               });
@@ -822,7 +844,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                batches: [{ ...inputBatchFields, isNew: true }],
+                                batches: [{ ...defaultBatchInput, ...inputBatchFields }],
                               });
                             }
                           }

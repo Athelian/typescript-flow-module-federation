@@ -8,14 +8,15 @@ import usePermission from 'hooks/usePermission';
 import scrollIntoView from 'utils/scrollIntoView';
 import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
-import BatchFormContainer from 'modules/batch/form/container';
-import { getBatchByFillBatch } from 'modules/order/helpers';
-import { injectUid } from 'utils/id';
+import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
+import { getBatchByFillBatch, generateBatchItem } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import validator from 'modules/batch/form/validator';
+import { prepareBatchObjectForClone } from 'utils/data';
 import {
   ItemGridStyle,
   ItemStyle,
@@ -40,32 +41,6 @@ type Props = {
   onRemove: Function,
   onSave: Function,
 };
-
-export function generateBatchItem(orderItem: Object, batches: Array<Object>) {
-  const {
-    productProvider: {
-      packageName,
-      packageCapacity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    },
-  } = orderItem;
-  return injectUid({
-    orderItem,
-    tags: [],
-    packageName,
-    packageCapacity,
-    packageGrossWeight,
-    packageVolume,
-    packageSize,
-    quantity: 0,
-    isNew: true,
-    batchAdjustments: [],
-    no: `batch no ${batches.length + 1}`,
-    autoCalculatePackageQuantity: true,
-  });
-}
 
 const OrderItems = ({
   selected,
@@ -157,15 +132,40 @@ const OrderItems = ({
                                 options={{ width: '1030px' }}
                               >
                                 {opened && (
-                                  <Subscribe to={[BatchFormContainer, OrderItemsContainer]}>
-                                    {({ initDetailValues }, { state }) => (
+                                  <Subscribe
+                                    to={[
+                                      BatchInfoContainer,
+                                      BatchTasksContainer,
+                                      OrderItemsContainer,
+                                    ]}
+                                  >
+                                    {(batchInfoContainer, batchTasksContainer, { state }) => (
                                       <BatchFormWrapper
                                         batch={state.orderItems[index].batches[position]}
                                         isNew={!!batch.isNew}
                                         orderItem={item}
-                                        initDetailValues={initDetailValues}
+                                        initDetailValues={initValues => {
+                                          const { todo, ...info } = initValues;
+                                          batchInfoContainer.initDetailValues(info);
+                                          batchTasksContainer.initDetailValues(todo);
+                                        }}
                                         onCancel={() => slideToggle(false)}
-                                        onSave={updatedBatch => {
+                                        isReady={formContainer =>
+                                          formContainer.isReady(
+                                            {
+                                              ...batchInfoContainer.state,
+                                              ...batchTasksContainer.state,
+                                            },
+                                            validator
+                                          ) &&
+                                          (batchInfoContainer.isDirty() ||
+                                            batchTasksContainer.isDirty())
+                                        }
+                                        onSave={() => {
+                                          const updatedBatch = {
+                                            ...batchInfoContainer.state,
+                                            ...batchTasksContainer.state,
+                                          };
                                           slideToggle(false);
                                           changeBatch(position, 1, updatedBatch);
                                         }}
@@ -184,25 +184,8 @@ const OrderItems = ({
                                   changeBatch(position, 1, updatedBatch);
                                 }}
                                 onRemove={() => filter(({ id }) => id !== batch.id)}
-                                onClone={({
-                                  id,
-                                  deliveredAt,
-                                  desiredAt,
-                                  expiredAt,
-                                  producedAt,
-                                  no,
-                                  ...rest
-                                }) => {
-                                  changeBatch(
-                                    batches.length,
-                                    1,
-                                    injectUid({
-                                      ...rest,
-                                      batchAdjustments: [],
-                                      no: `${no}- clone`,
-                                      isNew: true,
-                                    })
-                                  );
+                                onClone={value => {
+                                  changeBatch(batches.length, 1, prepareBatchObjectForClone(value));
                                 }}
                               />
                             </>

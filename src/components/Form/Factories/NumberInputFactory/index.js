@@ -27,8 +27,6 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    InputWrapper: () => React.Node,
-    Input: () => React.Node,
     showCalculator: boolean,
     onCalculate?: Function,
     showAutoCalculateToggle: boolean,
@@ -40,12 +38,11 @@ type Props = LabelProps &
 
 const defaultProps = {
   labelWidth: '200px',
+  labelHeight: '30px',
   inputWidth: '200px',
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  InputWrapper: DefaultStyle,
-  Input: NumberInput,
   editable: false,
   blackout: false,
   vertical: false,
@@ -58,8 +55,6 @@ const NumberInputFactory = ({
   vertical,
   isTouched,
   label,
-  InputWrapper,
-  Input,
   showCalculator,
   onCalculate,
   showAutoCalculateToggle,
@@ -68,6 +63,7 @@ const NumberInputFactory = ({
   required,
   labelAlign,
   labelWidth,
+  labelHeight,
   hideTooltip,
   isNew,
   errorMessage,
@@ -90,7 +86,7 @@ const NumberInputFactory = ({
   blackout,
   nullable,
 }: Props): React.Node => {
-  const labelConfig = { required, align: labelAlign, width: labelWidth };
+  const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
   const tooltipConfig = {
     isNew,
@@ -136,9 +132,9 @@ const NumberInputFactory = ({
     if (editable) {
       renderedInput = (
         <>
-          <InputWrapper {...inputWrapperConfig}>
-            <Input {...inputConfig} />
-          </InputWrapper>
+          <DefaultStyle {...inputWrapperConfig}>
+            <NumberInput {...inputConfig} />
+          </DefaultStyle>
           {showCalculator && (
             <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
           )}
@@ -149,7 +145,7 @@ const NumberInputFactory = ({
       );
     } else {
       renderedInput = (
-        <Input {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <NumberInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
       );
     }
   }

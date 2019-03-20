@@ -64,11 +64,10 @@ type UpdateProductResponse = {|
 const cleanUpCloneProductInput = (product: Object) => ({
   ...product,
   files: [],
-  productProviders: product.productProviders.map(
-    ({ id, updatedBy, archived, ...productProvider }) => ({
-      ...productProvider,
-    })
-  ),
+  productProviders: product.productProviders.map(({ updatedBy, archived, ...productProvider }) => ({
+    isNew: true,
+    ...productProvider,
+  })),
 });
 
 type ProductFormState = {

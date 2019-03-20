@@ -10,6 +10,7 @@ import messages from 'components/Form/Inputs/messages';
 
 type Props = InputProps & {
   intl: IntlShape,
+  color?: string,
 };
 
 const DateInput = ({
@@ -20,16 +21,17 @@ const DateInput = ({
   readOnlyWidth,
   readOnlyHeight,
   placeholder,
+  color,
   ...rest
 }: Props) => {
   return readOnly ? (
-    <Display align={align} width={readOnlyWidth} height={readOnlyHeight}>
+    <Display align={align} width={readOnlyWidth} height={readOnlyHeight} color={color}>
       <FormattedDate value={value} />
     </Display>
   ) : (
     <input
       value={value ? formatToDateInput(value) : ''}
-      style={{ textAlign: align }}
+      style={{ textAlign: align, color }}
       placeholder={
         isNullOrUndefined(placeholder)
           ? intl.formatMessage(messages.defaultPlaceholder)

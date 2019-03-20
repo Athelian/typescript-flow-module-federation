@@ -19,9 +19,8 @@ import {
 type OptionalProps = {
   users: Array<UserAvatarType>,
   activeUserId: ?string,
-  name: string,
-  onChange: (name: string, values: Array<UserAvatarType>) => void,
-  onActivateUser: string => void,
+  onChange: (values: Array<UserAvatarType>) => void,
+  onActivateUser: UserAvatarType => void,
   onDeactivateUser: () => void,
   editable: boolean,
 };
@@ -30,7 +29,6 @@ type Props = OptionalProps;
 
 const defaultProps = {
   users: [],
-  name: '',
   onChange: () => {},
   onActivateUser: () => {},
   onDeactivateUser: () => {},
@@ -40,7 +38,6 @@ const defaultProps = {
 const TaskAssignmentInput = ({
   users,
   activeUserId,
-  name,
   onChange,
   onActivateUser,
   onDeactivateUser,
@@ -48,7 +45,8 @@ const TaskAssignmentInput = ({
 }: Props) => {
   return (
     <div className={TaskAssignmentWrapperStyle}>
-      {users.map(({ id, firstName, lastName }) => {
+      {users.map(user => {
+        const { id, firstName, lastName } = user;
         const isActiveUser = id === activeUserId;
         const canActivateUser = !activeUserId;
 
@@ -56,9 +54,10 @@ const TaskAssignmentInput = ({
           <div className={TaskAssignmentStyle} key={id}>
             <button
               className={UserStyle(isActiveUser, editable && canActivateUser)}
-              onClick={() => {
+              onClick={evt => {
                 if (editable && canActivateUser) {
-                  onActivateUser(id);
+                  evt.stopPropagation();
+                  onActivateUser(user);
                 }
               }}
               type="button"
@@ -66,14 +65,24 @@ const TaskAssignmentInput = ({
               <UserAvatar firstName={firstName} lastName={lastName} />
             </button>
             {editable && isActiveUser && (
-              <button className={DeactivateButtonStyle} onClick={onDeactivateUser} type="button">
+              <button
+                className={DeactivateButtonStyle}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  onDeactivateUser();
+                }}
+                type="button"
+              >
                 <Icon icon="CLEAR" />
               </button>
             )}
             {editable && !isActiveUser && (
               <button
                 className={RemoveAssignmentButtonStyle}
-                onClick={() => onChange(name, users.filter(({ id: userId }) => id !== userId))}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  onChange(users.filter(({ id: userId }) => id !== userId));
+                }}
                 type="button"
               >
                 <Icon icon="REMOVE" />
@@ -85,12 +94,15 @@ const TaskAssignmentInput = ({
       {editable && !activeUserId && users.length < MAX_USERS_ALLOWED && (
         <BooleanValue>
           {({ value: isOpen, set: slideToggle }) => (
-            <>
+            <div role="presentation" onClick={evt => evt.stopPropagation()}>
               <button
                 data-testid="addAssignerButton"
                 className={AddAssignmentButtonStyle}
                 type="button"
-                onClick={() => slideToggle(true)}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  slideToggle(true);
+                }}
               >
                 <Icon icon="ADD" />
               </button>
@@ -104,13 +116,13 @@ const TaskAssignmentInput = ({
                     selected={users}
                     onSelect={selected => {
                       slideToggle(false);
-                      onChange(name, selected);
+                      onChange(selected);
                     }}
                     onCancel={() => slideToggle(false)}
                   />
                 )}
               </SlideView>
-            </>
+            </div>
           )}
         </BooleanValue>
       )}

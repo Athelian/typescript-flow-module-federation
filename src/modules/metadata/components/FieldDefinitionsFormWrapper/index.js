@@ -9,7 +9,7 @@ import { SaveButton } from 'components/Buttons';
 import { Label } from 'components/Form';
 import FieldDefinitionsForm from 'modules/metadata/components/FieldDefinitionsForm';
 import { FormContainer } from 'modules/form';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { fieldDefinitionsQuery } from 'modules/metadata/query';
 import { updateFieldDefinitionsMutation } from 'modules/metadata/mutation';
 import FieldDefinitionsContainer from './container';
@@ -23,7 +23,7 @@ type Props = {
   entityType: string,
 };
 
-class FieldDefinitionsFormWrapper extends React.Component<Props> {
+class FieldDefinitionsFormWrapper extends React.PureComponent<Props> {
   onSaveFieldDefinitions = async (
     formData: Object,
     saveFieldDefinitions: Function,
@@ -51,26 +51,45 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
   render() {
     const { entityType } = this.props;
     return (
-      <Query query={fieldDefinitionsQuery} variables={{ entityType }} fetchPolicy="network-only">
-        {({ loading, data, error, refetch }) => {
-          if (error) {
-            if (error.message && error.message.includes('403')) {
-              navigate('/403');
-            }
-            return error.message;
-          }
+      <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
+        {(
+          { state, originalValues, initDetailValues, isDirty, onSuccess, ...fieldHelpers },
+          form
+        ) => (
+          <Query
+            query={fieldDefinitionsQuery}
+            variables={{ entityType }}
+            fetchPolicy="network-only"
+            onCompleted={data => {
+              if (
+                !isEquals(
+                  getByPathWithDefault([], 'fieldDefinitions', data),
+                  state.fieldDefinitions
+                ) &&
+                originalValues.fieldDefinitions.length === 0
+              ) {
+                initDetailValues({
+                  fieldDefinitions: getByPathWithDefault([], 'fieldDefinitions', data),
+                });
+              }
+            }}
+          >
+            {({ loading, error, refetch }) => {
+              if (error) {
+                if (error.message && error.message.includes('403')) {
+                  navigate('/403');
+                }
+                return error.message;
+              }
 
-          if (loading) return <LoadingIcon />;
-          const fieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
+              if (loading) return <LoadingIcon />;
 
-          return (
-            <Mutation mutation={updateFieldDefinitionsMutation} onCompleted={() => refetch()}>
-              {(saveFieldDefinitions, { loading: isLoading, error: apiError }) => (
-                <>
-                  {apiError && <p>Error: Please try again.</p>}
+              return (
+                <Mutation mutation={updateFieldDefinitionsMutation} onCompleted={() => refetch()}>
+                  {(saveFieldDefinitions, { loading: isLoading, error: apiError }) => (
+                    <>
+                      {apiError && <p>Error: Please try again.</p>}
 
-                  <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
-                    {({ initDetailValues, state, isDirty, onSuccess }, form) => (
                       <div className={FieldDefinitionsWrapperStyle}>
                         <div className={FieldDefinitionsHeaderStyle}>
                           <Label>
@@ -102,21 +121,19 @@ class FieldDefinitionsFormWrapper extends React.Component<Props> {
                         </div>
                         <div className={FieldDefinitionsBodyStyle}>
                           <FieldDefinitionsForm
-                            fieldDefinitions={fieldDefinitions}
-                            onFormReady={() => {
-                              initDetailValues({ fieldDefinitions });
-                            }}
+                            {...fieldHelpers}
+                            fieldDefinitions={state.fieldDefinitions}
                           />
                         </div>
                       </div>
-                    )}
-                  </Subscribe>
-                </>
-              )}
-            </Mutation>
-          );
-        }}
-      </Query>
+                    </>
+                  )}
+                </Mutation>
+              );
+            }}
+          </Query>
+        )}
+      </Subscribe>
     );
   }
 }

@@ -34,7 +34,8 @@ const getEntityType = (entityType: ?string) => {
     if (entityType === 'Order') return 'ORDER';
     if (entityType === 'Batch') return 'BATCH';
     if (entityType === 'Shipment') return 'SHIPMENT';
-    if (entityType === 'User') return 'STAFF';
+    if (entityType === 'Task') return 'TASK';
+    if (entityType === 'Container') return 'CONTAINER';
   }
   return 'GRAY_VERY_LIGHT';
 };
@@ -87,6 +88,20 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
             )}
           >
             <Icon icon="STAFF" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Container'))
+            )}
+          >
+            <Icon icon="CONTAINER" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Task'))
+            )}
+          >
+            <Icon icon="TASK" />
           </div>
         </div>
       </Link>

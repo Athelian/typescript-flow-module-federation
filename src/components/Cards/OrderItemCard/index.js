@@ -50,6 +50,7 @@ type Props = OptionalProps & {
   saveOnBlur: Function,
 };
 
+// TODO: use calculate fields from graphql
 function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;
@@ -90,7 +91,7 @@ function getQuantitySummary(item: Object) {
 }
 
 const defaultProps = {
-  onClick: () => {},
+  onClick: null,
   onSelect: () => {},
   onRemove: () => {},
   onClone: () => {},
@@ -192,7 +193,7 @@ const OrderItemCard = ({
       selectable={selectable}
       showActionsOnHover
       actions={actions}
-      readOnly={readOnly}
+      readOnly={readOnly && !onClick}
       {...rest}
     >
       <div
@@ -232,11 +233,7 @@ const OrderItemCard = ({
         </div>
 
         <div className={BodyWrapperStyle}>
-          <div
-            className={QuantityWrapperStyle}
-            onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
-            role="presentation"
-          >
+          <div className={QuantityWrapperStyle}>
             <FieldItem
               label={
                 <Label required>
@@ -251,11 +248,7 @@ const OrderItemCard = ({
             />
           </div>
 
-          <div
-            className={UnitPriceWrapperStyle}
-            role="presentation"
-            onClick={!selectable ? evt => evt.stopPropagation() : () => {}}
-          >
+          <div className={UnitPriceWrapperStyle}>
             <FieldItem
               label={
                 <Label required>

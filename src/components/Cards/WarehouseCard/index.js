@@ -1,9 +1,9 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
-import BaseCard, { CardAction } from '../BaseCard';
+import BaseCard from '../BaseCard';
 import {
   WarehouseCardWrapperStyle,
   WarehouseCardImageStyle,
@@ -18,7 +18,7 @@ type OptionalProps = {
   onClick: Function,
   selectable: boolean,
   readOnly: boolean,
-  onClone: Function,
+  actions: Array<React.Node>,
 };
 
 type Props = OptionalProps & {
@@ -35,20 +35,18 @@ const defaultProps = {
   onClick: () => {},
   selectable: false,
   readOnly: false,
-  onClone: () => {},
+  actions: [],
 };
 
-const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, onClone, ...rest }: Props) => {
+const WarehouseCard = ({ warehouse, onClick, selectable, readOnly, actions, ...rest }: Props) => {
   const { name, ownedBy } = warehouse;
-
-  const actions = selectable || readOnly ? [] : [<CardAction icon="CLONE" onClick={onClone} />];
 
   return (
     <BaseCard
       {...rest}
       icon="WAREHOUSE"
       color="WAREHOUSE"
-      actions={actions}
+      actions={selectable || readOnly ? [] : actions}
       selectable={selectable}
       readOnly={readOnly}
     >
