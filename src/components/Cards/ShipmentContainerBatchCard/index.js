@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { calculatePackageQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
@@ -144,6 +145,7 @@ const ShipmentContainerBatchCard = ({
       order,
     },
     todo,
+    autoCalculatePackageQuantity,
   } = batch;
   const productImage = getProductImage(product);
   const totalAdjustment = totalAdjustQuantity(batchAdjustments);
@@ -280,9 +282,18 @@ const ShipmentContainerBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
+                      const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
                       saveOnBlur({
                         ...batch,
-                        quantity: inputHandlers.value - totalAdjustment,
+                        quantity: baseQuantity,
+                        ...(autoCalculatePackageQuantity
+                          ? {
+                              packageQuantity: calculatePackageQuantity({
+                                ...batch,
+                                quantity: baseQuantity,
+                              }),
+                            }
+                          : {}),
                       });
                     },
                   }}
