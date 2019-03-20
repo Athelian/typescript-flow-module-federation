@@ -23,3 +23,4 @@ export const CONTAINER_ORDER_LIST = 'container.orders.list';
 export const CONTAINER_BATCHES_LIST = 'container.batches.list';
 export const CONTAINER_BATCHES_ADD = 'container.batches.add';
 export const CONTAINER_BATCHES_REMOVE = 'container.batches.remove';
+export const CONTAINER_SET_DEPARTURE_DATE_ASSIGN = 'container.containers.assignDepartureDate';

@@ -156,6 +156,47 @@ export const prepareParsedContainerInput = ({
         approvedAt: newValues.warehouseArrivalActualDateApprovedAt,
       }
     ),
+    ...parseDateField(
+      'freeTimeStartDate',
+      getByPathWithDefault(null, 'freeTimeStartDate', originalValues),
+      newValues.freeTimeStartDate
+    ),
+    ...parseGenericField(
+      'freeTimeDuration',
+      getByPathWithDefault(null, 'freeTimeDuration', originalValues),
+      newValues.freeTimeDuration
+    ),
+    ...parseGenericField(
+      'autoCalculatedFreeTimeStartDate',
+      getByPathWithDefault(null, 'autoCalculatedFreeTimeStartDate', originalValues),
+      newValues.autoCalculatedFreeTimeStartDate
+    ),
+    ...parseGenericField(
+      'yardName',
+      getByPathWithDefault(null, 'yardName', originalValues),
+      newValues.yardName
+    ),
+    ...parseDateField(
+      'departureDate',
+      getByPathWithDefault(null, 'departureDate', originalValues),
+      newValues.departureDate
+    ),
+    ...parseArrayOfIdsField(
+      'departureDateAssignedToIds',
+      getByPathWithDefault([], 'departureDateAssignedTo', originalValues),
+      newValues.departureDateAssignedTo
+    ),
+    ...parseApprovalField(
+      'departureDateApprovedById',
+      {
+        approvedBy: getByPathWithDefault(null, 'departureDateApprovedBy', originalValues),
+        approvedAt: getByPathWithDefault(null, 'departureDateApprovedAt', originalValues),
+      },
+      {
+        approvedBy: newValues.departureDateApprovedBy,
+        approvedAt: newValues.departureDateApprovedAt,
+      }
+    ),
     ...parseArrayOfIdsField(
       'tagIds',
       getByPathWithDefault([], 'tags', originalValues),

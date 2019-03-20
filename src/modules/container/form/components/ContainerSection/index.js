@@ -3,6 +3,10 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import { addDays, differenceInCalendarDays } from 'date-fns';
+import { isNullOrUndefined } from 'utils/fp';
+import { startOfToday } from 'utils/date';
+import FormattedDate from 'components/FormattedDate';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import {
   CONTAINER_UPDATE,
@@ -16,10 +20,12 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_NO,
+  CONTAINER_SET_DEPARTURE_DATE_ASSIGN,
 } from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
+import Icon from 'components/Icon';
 import {
   FieldItem,
   Label,
@@ -29,6 +35,8 @@ import {
   TextAreaInputFactory,
   AssignmentApprovalFactory,
   DateTimeInputFactory,
+  DateInputFactory,
+  DayInputFactory,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard, GrayCard } from 'components/Cards';
@@ -44,6 +52,7 @@ import {
   WarehouseSectionStyle,
   DividerStyle,
   SummaryStyle,
+  FreeTimeMessageStyle,
 } from './style';
 
 const ContainerSection = () => {
@@ -56,6 +65,13 @@ const ContainerSection = () => {
       <Subscribe to={[ContainerFormContainer]}>
         {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
           const values = { ...originalValues, ...state };
+
+          const dueDate = values.freeTimeStartDate
+            ? addDays(new Date(values.freeTimeStartDate), values.freeTimeDuration)
+            : null;
+
+          const freeTime = dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : null;
+
           return (
             <>
               <div className={MainFieldsWrapperStyle}>
@@ -173,6 +189,161 @@ const ContainerSection = () => {
                         ])}
                       />
                     </GridColumn>
+                  </GridColumn>
+
+                  <GridColumn>
+                    <FieldItem
+                      label={
+                        <Label>
+                          <Icon icon="STOPWATCH" />{' '}
+                          <FormattedMessage
+                            id="modules.container.freeTime"
+                            defaultMessage="FREE TIME"
+                          />
+                        </Label>
+                      }
+                      input={
+                        isNullOrUndefined(freeTime) ? (
+                          <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
+                        ) : (
+                          <div
+                            className={FreeTimeMessageStyle(
+                              freeTime,
+                              values.departureDateApprovedAt
+                            )}
+                          >
+                            <FormattedMessage
+                              id="modules.container.freeTimeMessage"
+                              defaultMessage="{freeTime} days left until due date*"
+                              values={{
+                                freeTime: freeTime >= 0 ? freeTime : 0,
+                              }}
+                            />
+                          </div>
+                        )
+                      }
+                    />
+
+                    <FormField
+                      name="freeTimeStartDate"
+                      initValue={values.freeTimeStartDate}
+                      setFieldValue={setFieldValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DateInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.container.startDate"
+                              defaultMessage="START DATE"
+                            />
+                          }
+                          editable
+                        />
+                      )}
+                    </FormField>
+
+                    <FormField
+                      name="freeTimeDuration"
+                      initValue={values.freeTimeDuration}
+                      setFieldValue={setFieldValue}
+                      values={values}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DayInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.container.duration"
+                              defaultMessage="DURATION"
+                            />
+                          }
+                          editable
+                        />
+                      )}
+                    </FormField>
+
+                    <FieldItem
+                      label={
+                        <Label>
+                          <FormattedMessage id="dueDate" defaultMessage="DUE DATE" />
+                        </Label>
+                      }
+                      input={
+                        dueDate ? (
+                          <FormattedDate value={dueDate} />
+                        ) : (
+                          <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
+                        )
+                      }
+                    />
+
+                    <FormField
+                      name="yardName"
+                      initValue={values.yardName}
+                      setFieldValue={setDeepFieldValue}
+                      validator={validator}
+                      values={values}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <TextInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="module.container.yardName"
+                              defaultMessage="YARD NAME"
+                            />
+                          }
+                          editable
+                        />
+                      )}
+                    </FormField>
+
+                    <FormField
+                      name="departureDate"
+                      initValue={values.departureDate}
+                      setFieldValue={setFieldValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DateInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.container.departure"
+                              defaultMessage="DEPARTURE"
+                            />
+                          }
+                          editable
+                        />
+                      )}
+                    </FormField>
+
+                    <AssignmentApprovalFactory
+                      assignmentsName="departureDateAssignedTo"
+                      assignments={values.departureDateAssignedTo}
+                      approvedAtName="departureDateApprovedAt"
+                      approvedAt={values.departureDateApprovedAt}
+                      approvedByName="departureDateApprovedBy"
+                      approvedBy={values.departureDateApprovedBy}
+                      setFieldValue={setFieldValue}
+                      assignable={hasPermission([
+                        CONTAINER_UPDATE,
+                        CONTAINER_SET_DEPARTURE_DATE_ASSIGN,
+                      ])}
+                      approvable
+                    />
                   </GridColumn>
                 </GridColumn>
 
