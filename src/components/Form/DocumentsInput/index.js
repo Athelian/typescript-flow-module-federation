@@ -6,7 +6,7 @@ import { upload } from 'utils/fs';
 import logger from 'utils/logger';
 import DocumentItem from './components/DocumentItem';
 import type { Document, FileType } from './type.js.flow';
-import { DocumentListStyle, AddDocumentStyle, ProgressStyle, NoDocumentsStyle } from './style';
+import { DocumentListStyle, AddDocumentStyle, NoDocumentsStyle } from './style';
 import messages from './messages';
 
 type OptionalProps = {
@@ -14,7 +14,6 @@ type OptionalProps = {
   name: string,
   onChange: (string, any) => void,
   onBlur: (string, boolean) => void,
-  onUpload?: ({ uploading: boolean, progress: number }) => void,
   types: Array<FileType>,
   editable: boolean,
   downloadable: boolean,
@@ -23,8 +22,10 @@ type OptionalProps = {
 type Props = OptionalProps;
 
 type State = {
-  uploading: boolean,
-  progress: number,
+  filesState: Array<{
+    uploading: boolean,
+    progress: number,
+  }>,
 };
 
 const defaultProps = {
@@ -32,7 +33,6 @@ const defaultProps = {
   name: '',
   onChange: () => {},
   onBlur: () => {},
-  onUpload: () => {},
   types: [],
   editable: true,
   downloadable: true,
@@ -41,82 +41,62 @@ const defaultProps = {
 class DocumentsInput extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
-  state = {
-    uploading: false,
-    progress: 0,
-  };
+  constructor(props) {
+    super(props);
 
-  componentDidUpdate(prevProps: Props, prevState: State): void {
-    const { onUpload } = this.props;
-    if (!onUpload) {
-      return;
-    }
-
-    const { uploading: prevUploading, progress: prevProgress } = prevState;
-    const { uploading, progress } = this.state;
-
-    if (prevProgress === progress && prevUploading === uploading) {
-      return;
-    }
-
-    onUpload({
-      uploading,
-      progress,
-    });
+    this.state = {
+      filesState: [...props.values.map(() => ({ uploading: false, progress: 100 }))],
+    };
   }
 
   handleChange = (event: Event, onUpload: Function) => {
     event.preventDefault();
 
     const { types } = this.props;
+    const { filesState } = this.state;
 
-    const input = event.target;
-    if (!(input instanceof HTMLInputElement)) {
-      return;
-    }
-
-    const {
-      files: [file],
-    } = input;
-    if (!file) {
-      return;
-    }
+    const newFiles = Array.from(event.target.files);
 
     this.setState({
-      uploading: true,
+      filesState: [...filesState, ...newFiles.map(() => ({ uploading: true, progress: 0 }))]
+    }, () => {
+      const { filesState: newFilesState } = this.state;
+
+      newFiles.forEach((newFile, index) => {
+        upload(
+          newFile,
+          ({ id, name, path }) => {
+            const clonedFilesState = [...newFilesState];
+            clonedFilesState[index].uploading = false;
+            clonedFilesState[index].done = true;
+  
+            this.setState({ filesState: [...clonedFilesState] });
+  
+            onUpload({
+              id,
+              name,
+              path,
+              type: types[0].type,
+              memo: null,
+            });
+          },
+          logger.error,
+          ({ lengthComputable, loaded, total }: ProgressEvent) => {
+            if (lengthComputable) {
+              const clonedFilesState = [...newFilesState];
+              clonedFilesState[index].progress = Math.round((loaded / total) * 100);
+              
+              this.setState({ filesState: [...clonedFilesState] });
+            }
+          }
+        );
+      });
     });
-
-    upload(
-      file,
-      ({ id, name, path }) => {
-        this.setState({
-          progress: 0,
-          uploading: false,
-        });
-
-        const [{ type = 'File' }] = types;
-        onUpload({
-          id,
-          name,
-          path,
-          type,
-          memo: null,
-        });
-      },
-      logger.error,
-      ({ lengthComputable, loaded, total }: ProgressEvent) => {
-        if (lengthComputable) {
-          this.setState({
-            progress: Math.round((loaded / total) * 100),
-          });
-        }
-      }
-    );
   };
 
   render() {
     const { name, values, onChange, onBlur, types, editable, downloadable } = this.props;
-    const { uploading, progress } = this.state;
+    const { filesState } = this.state;
 
     if (editable) {
       return (
@@ -138,27 +118,27 @@ class DocumentsInput extends React.Component<Props, State> {
                   }}
                   editable
                   downloadable={downloadable}
+                  uploading={filesState[index].uploading}
+                  progress={filesState[index].progress}
                 />
               );
             })}
-          {uploading ? (
-            <div className={ProgressStyle}>{`${progress}%`}</div>
-          ) : (
-            <label className={AddDocumentStyle}>
-              <Icon icon="ADD" />
-              <input
-                type="file"
-                accept="*"
-                disabled={uploading}
-                hidden
-                onChange={e => {
-                  this.handleChange(e, newFile => {
-                    onChange(name, [...values, newFile]);
-                  });
-                }}
-              />
-            </label>
-          )}
+
+          <label className={AddDocumentStyle}>
+            <Icon icon="ADD" />
+            <input
+              type="file"
+              accept="*"
+              // disabled={uploading}
+              hidden
+              multiple
+              onChange={e => {
+                this.handleChange(e, newFile => {
+                  onChange(name, [...values, newFile]);
+                });
+              }}
+            />
+          </label>
         </div>
       );
     }

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, colors, shadows, borderRadiuses, fontSizes, transitions } from 'styles/common';
+import { layout, presets, colors, shadows, borderRadiuses, fontSizes, transitions } from 'styles/common';
 
 export const DocumentWrapperStyle = (isExpanded: boolean): string => css`
   position: relative;
@@ -155,4 +155,14 @@ export const OpenMemoButtonStyle = (isExpanded: boolean, hasMemo: boolean): stri
         padding-right: 7px;
       }
     `};
+`;
+
+export const ProgressStyle: string = css`
+  ${presets.BOX};
+  ${layout.LAYOUT};
+  ${layout.CENTER_CENTER};
+  width: 140px;
+  height: 160px;
+  color: ${colors.TEAL};
+  font-size: 24px;
 `;
