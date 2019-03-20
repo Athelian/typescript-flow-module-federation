@@ -37,6 +37,9 @@ import {
 
 type OptionalProps = {
   actions: Array<React.Node>,
+  permission: {
+    viewWarehouse: boolean,
+  },
 };
 
 type Props = OptionalProps & {
@@ -45,9 +48,12 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   actions: [],
+  permission: {
+    viewWarehouse: false,
+  },
 };
 
-const ContainerCard = ({ container, ...rest }: Props) => {
+const ContainerCard = ({ container, permission, ...rest }: Props) => {
   const {
     representativeBatch,
     shipment,
@@ -117,15 +123,21 @@ const ContainerCard = ({ container, ...rest }: Props) => {
               </div>
             ) : (
               <>
-                <Link
-                  className={WarehouseIconStyle(true)}
-                  to={`/warehouse/${encodeId(warehouse.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="WAREHOUSE" />
-                </Link>
+                {permission.viewWarehouse ? (
+                  <Link
+                    className={WarehouseIconStyle(true)}
+                    to={`/warehouse/${encodeId(warehouse.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="WAREHOUSE" />
+                  </Link>
+                ) : (
+                  <div className={WarehouseIconStyle(true)}>
+                    <Icon icon="WAREHOUSE" />
+                  </div>
+                )}
                 <Display align="left">{warehouse.name}</Display>
               </>
             )}
