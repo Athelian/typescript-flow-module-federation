@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
-import { totalAdjustQuantity } from 'components/Cards/utils';
 import { TableDisableCell } from '..';
 import { WrapperStyle, ItemStyle } from './style';
 import {
@@ -60,8 +59,7 @@ function renderItem({
       return <InlineNumberInput name={name} value={value} {...meta} id={id} />;
 
     case 'numberAdjustment': {
-      const adjustments = getByPath('batchAdjustments', values) || [];
-      const totalAdjustment = totalAdjustQuantity(adjustments);
+      const totalAdjustment = getByPath('totalAdjusted', values) || 0;
 
       return (
         <InlineNumberAdjustmentInput
