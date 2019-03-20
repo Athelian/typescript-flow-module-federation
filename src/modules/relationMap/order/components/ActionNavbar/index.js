@@ -701,9 +701,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           })
                           .filter(Boolean);
                         shipmentBatchesContainer.initDetailValues(initBatches);
-                        shipmentContainersContainer.initDetailValues({
-                          containers: [],
-                        });
+                        shipmentContainersContainer.initDetailValues([]);
                         shipmentInfoContainer.initDetailValues({
                           no: '',
                           blNo: '',
