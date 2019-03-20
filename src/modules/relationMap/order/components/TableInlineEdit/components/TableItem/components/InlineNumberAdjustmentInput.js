@@ -20,7 +20,13 @@ const defaultProps = {
   adjustment: 0,
 };
 
-export default function InlineNumberInput({ name, value, adjustment, isRequired, id }: Props) {
+export default function InlineNumberAdjustmentInput({
+  name,
+  value,
+  adjustment,
+  isRequired,
+  id,
+}: Props) {
   const { hasError, isFocused, ...inputHandlers } = useNumberInput(value + adjustment, {
     isRequired,
   });
@@ -44,4 +50,4 @@ export default function InlineNumberInput({ name, value, adjustment, isRequired,
   );
 }
 
-InlineNumberInput.defaultProps = defaultProps;
+InlineNumberAdjustmentInput.defaultProps = defaultProps;

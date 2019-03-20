@@ -7,9 +7,10 @@ import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
 import usePermission from 'hooks/usePermission';
+import { usePrevious } from 'modules/form/hooks';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
 import scrollIntoView from 'utils/scrollIntoView';
 import useFilter from 'hooks/useFilter';
@@ -125,10 +126,18 @@ const Order = ({ intl }: Props) => {
     initFilter,
     'filterRelationMap'
   );
+  const lastFilter = usePrevious(filterAndSort);
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
+
+  React.useEffect(() => {
+    if (!isEquals(lastFilter, filterAndSort)) {
+      actions.reset();
+    }
+  });
+
   return (
     <DispatchProvider value={{ dispatch, state }}>
       <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
