@@ -146,12 +146,12 @@ const FILTER = {
 const getFilterValue = (name: string, data: any) => {
   switch (name) {
     case 'exporter':
+    case 'forwarder':
       return data.map(d => d.group && d.group.id);
     case 'ids':
     case 'tags':
     case 'inCharge':
     case 'supplier':
-    case 'forwarder':
     case 'warehouse':
       return data.map(d => d.id);
     case 'origin':
