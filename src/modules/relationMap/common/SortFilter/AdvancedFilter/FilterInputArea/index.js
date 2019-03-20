@@ -26,7 +26,7 @@ import { FilterInputAreaWrapperStyle } from './style';
 type Props = {
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
-  selectedItems: any, // Array<Object> | Object,
+  selectedItems: any,
   onToggleSelect: Function,
 };
 
@@ -74,7 +74,7 @@ const getFilterInputArea = ({
                 <MiniSelectorItem
                   onClick={() => onToggleSelect(item)}
                   selectable
-                  selected={selectedItems.includes(item)}
+                  selected={selectedItems.map(selectItem => selectItem.id).includes(item.id)}
                   key={item.id}
                 >
                   <Display align="left">{item.group.name}</Display>
@@ -94,7 +94,7 @@ const getFilterInputArea = ({
                 <MiniSelectorItem
                   onClick={() => onToggleSelect(item)}
                   selectable
-                  selected={selectedItems.includes(item)}
+                  selected={selectedItems.map(selectItem => selectItem.email).includes(item.email)}
                   key={item.id}
                 >
                   <UserAvatar
@@ -302,7 +302,7 @@ const getFilterInputArea = ({
                 <MiniSelectorItem
                   onClick={() => onToggleSelect(item)}
                   selectable
-                  selected={selectedItems.includes(item)}
+                  selected={selectedItems.map(selectItem => selectItem.id).includes(item.id)}
                   key={item.id}
                 >
                   <Display align="left">{item.group.name}</Display>
@@ -324,7 +324,7 @@ const getFilterInputArea = ({
                   key={item.id}
                   onClick={() => onToggleSelect(item)}
                   selectable
-                  selected={selectedItems.includes(item)}
+                  selected={selectedItems.map(selectItem => selectItem.id).includes(item.id)}
                 >
                   <Display align="left">{item.name}</Display>
                 </MiniSelectorItem>
@@ -342,7 +342,7 @@ const getFilterInputArea = ({
                 <MiniSelectorItem
                   onClick={() => onToggleSelect(item)}
                   selectable
-                  selected={selectedItems.includes(item)}
+                  selected={selectedItems.map(selectItem => selectItem.email).includes(item.email)}
                   key={item.id}
                 >
                   <UserAvatar

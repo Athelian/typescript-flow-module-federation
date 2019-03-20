@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Mar 14 2019 16:50:58 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Mar 20 2019 10:37:53 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30012,6 +30012,12 @@ enum NotificationType {
 
   """ContainerCreate"""
   ContainerCreate
+
+  """ContainerUpdateAgreedDate"""
+  ContainerUpdateAgreedDate
+
+  """ContainerApproveAgreedDate"""
+  ContainerApproveAgreedDate
 }
 
 type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
@@ -30023,14 +30029,14 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   piNo: String
   incoterm: Incoterm
   deliveryPlace: String
-  totalPrice: Price
-  totalOrdered: Float
-  totalBatched: Float
-  totalShipped: Float
-  orderItemCount: Int
-  batchCount: Int
-  batchShippedCount: Int
-  shipmentCount: Int
+  totalPrice: Price!
+  totalOrdered: Float!
+  totalBatched: Float!
+  totalShipped: Float!
+  orderItemCount: Int!
+  batchCount: Int!
+  batchShippedCount: Int!
+  shipmentCount: Int!
   orderItems: [OrderItemPayload!]!
   timeline: Timeline!
   todo: Todo!
@@ -30133,6 +30139,12 @@ type OrderItem implements Model & Owned & Sortable & Customizable {
   productProvider: ProductProviderPayload!
   price: Price!
   quantity: Float!
+  totalPrice: Price!
+  totalBatched: Float!
+  totalShipped: Float!
+  batchCount: Int!
+  batchShippedCount: Int!
+  shipmentCount: Int!
   batches: [BatchPayload!]!
   todo: Todo!
   id: ID!
@@ -35665,10 +35677,10 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   containerGroups: [ContainerGroupPayload!]!
   importer: GroupPayload!
   forwarders: [GroupPayload!]!
-  totalVolume: MetricValue
-  orderCount: Int
-  batchCount: Int
-  orderItemCount: Int
+  totalVolume: MetricValue!
+  orderCount: Int!
+  batchCount: Int!
+  orderItemCount: Int!
   timeline: Timeline!
   todo: Todo!
   batches: [BatchPayload!]!
