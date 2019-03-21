@@ -1,11 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, borderRadiuses, fontSizes } from 'styles/common';
+import { layout, presets, colors, borderRadiuses } from 'styles/common';
 
 type AddImageProps = {
   width: string,
   height: string,
 };
+
+export const FileListStyle: string = css`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 140px);
+  grid-auto-rows: min-content;
+  grid-gap: 20px;
+`;
 
 export const AddImageStyle = ({ width, height }: AddImageProps): string => css`
   ${presets.BUTTON};
@@ -23,14 +30,17 @@ export const AddImageStyle = ({ width, height }: AddImageProps): string => css`
   }
 `;
 
-export const ProgressStyle = ({ width, height }: AddImageProps): string => css`
+export const UploadWrapperStyle = css`
+  display: flex;
+`;
+
+export const ProgressStyle = css`
   ${presets.BOX};
   ${layout.LAYOUT};
   ${layout.CENTER_CENTER};
-  width: ${width};
-  height: ${height};
+  width: 180px;
+  height: 180px;
   color: ${colors.TEAL};
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  ${presets.ELLIPSIS};
+  font-size: 24px;
+  margin-right: 20px;
 `;

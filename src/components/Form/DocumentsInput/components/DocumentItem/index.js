@@ -34,7 +34,7 @@ type OptionalProps = {
   editable: boolean,
   downloadable: boolean,
   uploading: boolean,
-  progress: boolean,
+  progress: number,
 };
 
 type Props = OptionalProps & {
