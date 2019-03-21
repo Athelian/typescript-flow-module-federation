@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { addDays, differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import { startOfToday } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
@@ -52,6 +52,7 @@ import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import { calculateDueDate } from 'modules/container/utils';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -102,7 +103,7 @@ const ContainerSection = () => {
           const values = { ...originalValues, ...state };
 
           const dueDate = values.freeTimeStartDate
-            ? addDays(new Date(values.freeTimeStartDate), values.freeTimeDuration)
+            ? calculateDueDate(new Date(values.freeTimeStartDate), values.freeTimeDuration)
             : null;
 
           const freeTime = renderFreeTime(

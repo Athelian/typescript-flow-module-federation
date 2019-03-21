@@ -114,6 +114,8 @@ export const containerCardFragment = gql`
         id
       }
     }
+    freeTimeStartDate
+    freeTimeDuration
     shipment {
       ... on Shipment {
         id
@@ -125,41 +127,6 @@ export const containerCardFragment = gql`
           }
         }
       }
-    }
-    tags {
-      ...tagFragment
-    }
-  }
-`;
-
-export const shipmentContainerCardFragment = gql`
-  fragment shipmentContainerCardFragment on Container {
-    id
-    no
-    representativeBatch {
-      ...batchFormFragment
-    }
-    totalVolume {
-      ...metricFragment
-    }
-    batches {
-      ...batchFormFragment
-    }
-    warehouse {
-      ... on Warehouse {
-        id
-        name
-      }
-    }
-    warehouseArrivalAgreedDate
-    warehouseArrivalActualDate
-    warehouseArrivalAgreedDateApprovedAt
-    warehouseArrivalAgreedDateApprovedBy {
-      ...userAvatarFragment
-    }
-    warehouseArrivalActualDateApprovedAt
-    warehouseArrivalActualDateApprovedBy {
-      ...userAvatarFragment
     }
     tags {
       ...tagFragment

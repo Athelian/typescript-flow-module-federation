@@ -14,7 +14,7 @@ export const CardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 373px;
+  height: 418px;
 `;
 
 export const ImagePartWrapperStyle: string = css`
