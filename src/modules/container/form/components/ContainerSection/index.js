@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { addDays, differenceInCalendarDays } from 'date-fns';
-import { isNullOrUndefined } from 'utils/fp';
+import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import { startOfToday } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
@@ -45,6 +45,7 @@ import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
+import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -242,6 +243,22 @@ const ContainerSection = () => {
                               defaultMessage="START DATE"
                             />
                           }
+                          showExtraToggle
+                          toggled={values.autoCalculatedFreeTimeStartDate}
+                          onToggle={() => {
+                            const { autoCalculatedFreeTimeStartDate } = values;
+                            if (!autoCalculatedFreeTimeStartDate) {
+                              const voyages = getByPathWithDefault([], 'shipment.voyages', values);
+                              const freeTimeStartDate = getLatestDate(
+                                voyages[voyages.length - 1].arrival
+                              );
+                              setFieldValue('freeTimeStartDate', freeTimeStartDate);
+                            }
+                            setFieldValue(
+                              'autoCalculatedFreeTimeStartDate',
+                              !autoCalculatedFreeTimeStartDate
+                            );
+                          }}
                           editable
                         />
                       )}
