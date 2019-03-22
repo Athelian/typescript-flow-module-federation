@@ -20,7 +20,12 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_NO,
-  CONTAINER_SET_DEPARTURE_DATE_ASSIGN,
+  CONTAINER_SET_FREE_TIME_START_DATE,
+  CONTAINER_SET_FREE_TIME_DURATION,
+  CONTAINER_SET_YARD_NAME,
+  CONTAINER_SET_DEPARTURE_DATE,
+  CONTAINER_ASSIGN_DEPARTURE_DATE,
+  CONTAINER_APPROVE_DEPARTURE_DATE,
 } from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -272,7 +277,9 @@ const ContainerSection = () => {
                               !autoCalculatedFreeTimeStartDate
                             );
                           }}
-                          editable
+                          editable={
+                            allowUpdate || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
+                          }
                         />
                       )}
                     </FormField>
@@ -294,7 +301,7 @@ const ContainerSection = () => {
                               defaultMessage="DURATION"
                             />
                           }
-                          editable
+                          editable={allowUpdate || hasPermission(CONTAINER_SET_FREE_TIME_DURATION)}
                         />
                       )}
                     </FormField>
@@ -334,7 +341,7 @@ const ContainerSection = () => {
                               defaultMessage="YARD NAME"
                             />
                           }
-                          editable
+                          editable={allowUpdate || hasPermission(CONTAINER_SET_YARD_NAME)}
                         />
                       )}
                     </FormField>
@@ -357,7 +364,7 @@ const ContainerSection = () => {
                               defaultMessage="YARD DEPARTURE"
                             />
                           }
-                          editable
+                          editable={allowUpdate || hasPermission(CONTAINER_SET_DEPARTURE_DATE)}
                         />
                       )}
                     </FormField>
@@ -370,11 +377,8 @@ const ContainerSection = () => {
                       approvedByName="departureDateApprovedBy"
                       approvedBy={values.departureDateApprovedBy}
                       setFieldValue={setFieldValue}
-                      assignable={hasPermission([
-                        CONTAINER_UPDATE,
-                        CONTAINER_SET_DEPARTURE_DATE_ASSIGN,
-                      ])}
-                      approvable
+                      assignable={allowUpdate || hasPermission(CONTAINER_ASSIGN_DEPARTURE_DATE)}
+                      approvable={allowUpdate || hasPermission(CONTAINER_APPROVE_DEPARTURE_DATE)}
                     />
                   </GridColumn>
                 </GridColumn>
