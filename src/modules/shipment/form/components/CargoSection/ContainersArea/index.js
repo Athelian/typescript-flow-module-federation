@@ -297,10 +297,14 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                       onSave={newContainer => {
                                         const { batches: newBatches } = newContainer;
                                         updateBatchesState('batches', [
-                                          ...batches,
+                                          ...batches.filter(
+                                            ({ container: batchContainer }) =>
+                                              isNullOrUndefined(batchContainer) ||
+                                              batchContainer.id !== container.id
+                                          ),
                                           ...newBatches.map(batch => ({
                                             ...batch,
-                                            container,
+                                            container: newContainer,
                                           })),
                                         ]);
                                         setDeepFieldValue(`containers.${index}`, newContainer);
