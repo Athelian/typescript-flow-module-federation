@@ -182,7 +182,7 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
 
           <div className={LabelStyle}>
             <Label>
-              <FormattedMessage id="components.cards.due" defaultMessage="DUE" />
+              <FormattedMessage id="components.cards.due" defaultMessage="DUE DATE" />
             </Label>
           </div>
           <div className={InputIconStyle}>

@@ -88,7 +88,11 @@ const renderFreeTime = (date: ?Date, approved: boolean) => {
       </Display>
     );
   }
-  return <FormattedMessage id="modules.container.na" defaultMessage="N/A" />;
+  return (
+    <Display>
+      <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
+    </Display>
+  );
 };
 
 const ContainerSection = () => {
