@@ -408,7 +408,7 @@ const ShipmentContainerCard = ({
 
               <div className={LabelStyle}>
                 <Label>
-                  <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE DATE" />
+                  <FormattedMessage id="components.cards.due" defaultMessage="DUE" />
                 </Label>
               </div>
               <div className={InputIconStyle}>
@@ -438,7 +438,7 @@ ShipmentContainerCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentContainerCard, 'container', {
   width: '195px',
-  height: '319px',
+  height: '364px',
   entityIcon: 'CONTAINER',
   entityColor: 'CONTAINER',
 });

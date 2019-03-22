@@ -182,7 +182,7 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
 
           <div className={LabelStyle}>
             <Label>
-              <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE DATE" />
+              <FormattedMessage id="components.cards.due" defaultMessage="DUE" />
             </Label>
           </div>
           <div className={InputIconStyle}>
@@ -240,7 +240,7 @@ ContainerCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerCard, 'container', {
   width: '195px',
-  height: '373px',
+  height: '418px',
   entityIcon: 'CONTAINER',
   entityColor: 'CONTAINER',
 });
