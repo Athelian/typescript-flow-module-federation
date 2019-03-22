@@ -108,6 +108,7 @@ import {
   faMagic as MAGIC,
   faCodeBranch as BRANCH,
   faStar as STAR,
+  faStopwatch as STOPWATCH,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -176,6 +177,7 @@ export default {
   METADATA,
   TEMPLATE,
   STAR,
+  STOPWATCH,
 
   RELATION_MAP,
   CONNECT,

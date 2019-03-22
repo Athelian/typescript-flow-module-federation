@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets } from 'styles/common';
 
-export const AutoCalculateToggleStyle: string = css`
+export const ExtraToggleButtonStyle: string = css`
   position: absolute;
   top: 0;
   right: -40px;
@@ -12,4 +12,4 @@ export const AutoCalculateToggleStyle: string = css`
   flex-shrink: 0;
 `;
 
-export default AutoCalculateToggleStyle;
+export default ExtraToggleButtonStyle;

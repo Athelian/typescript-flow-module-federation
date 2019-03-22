@@ -185,7 +185,7 @@ const PackagingSection = ({ isNew }: Props) => {
                           defaultMessage="PACKAGE QUANTITY"
                         />
                       }
-                      showAutoCalculateToggle={
+                      showExtraToggleButton={
                         allowUpdate || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
                       }
                       autoCalculateIsToggled={values.autoCalculatePackageQuantity}
