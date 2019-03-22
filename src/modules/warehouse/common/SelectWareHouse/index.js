@@ -64,7 +64,7 @@ const SelectWareHouse = ({ selected, onCancel, onSelect }: Props) => (
                 isLoading={loading}
                 onLoadMore={() => loadMore({ fetchMore, data }, {}, 'warehouses')}
                 items={getByPathWithDefault([], 'warehouses.nodes', data)}
-                renderItem={item => (
+                renderItem={({ item }) => (
                   <WarehouseCard
                     warehouse={item}
                     onSelect={() => {
