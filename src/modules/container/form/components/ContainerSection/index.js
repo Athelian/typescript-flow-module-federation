@@ -37,6 +37,7 @@ import {
   DateTimeInputFactory,
   DateInputFactory,
   DayInputFactory,
+  Display,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import { WarehouseCard, GrayCard } from 'components/Cards';
@@ -53,8 +54,36 @@ import {
   WarehouseSectionStyle,
   DividerStyle,
   SummaryStyle,
-  FreeTimeMessageStyle,
 } from './style';
+
+const renderFreeTime = (date: ?Date, approved: boolean) => {
+  if (date) {
+    const freeTime = differenceInCalendarDays(date, startOfToday());
+    let freeTimeColor;
+    if (approved) {
+      freeTimeColor = 'GRAY_LIGHT';
+    } else if (freeTime > 7) {
+      freeTimeColor = 'TEAL';
+    } else if (freeTime > 0) {
+      freeTimeColor = 'YELLOW';
+    } else {
+      freeTimeColor = 'RED';
+    }
+
+    return (
+      <Display color={freeTimeColor}>
+        <FormattedMessage
+          id="modules.container.freeTimeMessage"
+          defaultMessage="{freeTime} days left until due date*"
+          values={{
+            freeTime: freeTime >= 0 ? freeTime : 0,
+          }}
+        />
+      </Display>
+    );
+  }
+  return <FormattedMessage id="modules.container.na" defaultMessage="N/A" />;
+};
 
 const ContainerSection = () => {
   const { isOwner } = usePartnerPermission();
@@ -71,7 +100,10 @@ const ContainerSection = () => {
             ? addDays(new Date(values.freeTimeStartDate), values.freeTimeDuration)
             : null;
 
-          const freeTime = dueDate ? differenceInCalendarDays(dueDate, startOfToday()) : null;
+          const freeTime = renderFreeTime(
+            dueDate,
+            !isNullOrUndefined(values.departureDateApprovedAt)
+          );
 
           return (
             <>
@@ -203,26 +235,7 @@ const ContainerSection = () => {
                           />
                         </Label>
                       }
-                      input={
-                        isNullOrUndefined(freeTime) ? (
-                          <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
-                        ) : (
-                          <div
-                            className={FreeTimeMessageStyle(
-                              freeTime,
-                              values.departureDateApprovedAt
-                            )}
-                          >
-                            <FormattedMessage
-                              id="modules.container.freeTimeMessage"
-                              defaultMessage="{freeTime} days left until due date*"
-                              values={{
-                                freeTime: freeTime >= 0 ? freeTime : 0,
-                              }}
-                            />
-                          </div>
-                        )
-                      }
+                      input={freeTime}
                     />
 
                     <FormField
@@ -293,11 +306,13 @@ const ContainerSection = () => {
                         </Label>
                       }
                       input={
-                        dueDate ? (
-                          <FormattedDate value={dueDate} />
-                        ) : (
-                          <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
-                        )
+                        <Display>
+                          {dueDate ? (
+                            <FormattedDate value={dueDate} />
+                          ) : (
+                            <FormattedMessage id="modules.container.na" defaultMessage="N/A" />
+                          )}
+                        </Display>
                       }
                     />
 
@@ -338,8 +353,8 @@ const ContainerSection = () => {
                           originalValue={originalValues[name]}
                           label={
                             <FormattedMessage
-                              id="modules.container.departure"
-                              defaultMessage="DEPARTURE"
+                              id="modules.container.yardDeparture"
+                              defaultMessage="YARD DEPARTURE"
                             />
                           }
                           editable
