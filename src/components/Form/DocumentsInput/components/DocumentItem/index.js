@@ -24,6 +24,7 @@ import {
   DeleteButtonStyle,
   MemoWrapperStyle,
   OpenMemoButtonStyle,
+  ProgressStyle,
 } from './style';
 
 type OptionalProps = {
@@ -32,6 +33,8 @@ type OptionalProps = {
   onRemove: Function,
   editable: boolean,
   downloadable: boolean,
+  uploading: boolean,
+  progress: number,
 };
 
 type Props = OptionalProps & {
@@ -46,6 +49,8 @@ const defaultProps = {
   onRemove: () => {},
   editable: true,
   downloadable: true,
+  uploading: true,
+  progress: 0,
 };
 
 const DocumentItem = ({
@@ -57,6 +62,8 @@ const DocumentItem = ({
   types,
   editable,
   downloadable,
+  uploading,
+  progress,
 }: Props) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const toggleMemo = React.useCallback(() => {
@@ -70,7 +77,9 @@ const DocumentItem = ({
   const fileIcon = computeIcon(fileExtension);
   const type = types.find(t => t.type === value.type);
 
-  return (
+  return uploading ? (
+    <div className={ProgressStyle}>{`${progress}%`}</div>
+  ) : (
     <div className={DocumentWrapperStyle(isExpanded)}>
       {editable && (
         <button type="button" className={DeleteButtonStyle} onClick={onRemove}>
