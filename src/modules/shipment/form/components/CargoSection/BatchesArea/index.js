@@ -33,7 +33,6 @@ import {
   ORDER_ITEMS_GET_PRICE,
 } from 'modules/permission/constants/order';
 import { calculatePackageQuantity } from 'utils/batch';
-import { injectUid } from 'utils/id';
 import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -49,7 +48,7 @@ import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/cont
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
-import { prepareBatchObjectForClone } from 'utils/data';
+import { prepareBatchObjectForClone, generateBatchByOrderItem } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -429,35 +428,13 @@ function BatchesArea({
                               {createBatchesIsOpen && (
                                 <SelectOrderItems
                                   onSelect={selectedOrderItems => {
-                                    const result = selectedOrderItems.map((orderItem, counter) => {
-                                      const {
-                                        productProvider: {
-                                          packageName,
-                                          packageCapacity,
-                                          packageGrossWeight,
-                                          packageVolume,
-                                          packageSize,
-                                        },
-                                      } = orderItem;
-                                      return injectUid({
-                                        orderItem,
-                                        tags: [],
-                                        packageName,
-                                        packageCapacity,
-                                        packageGrossWeight,
-                                        packageVolume,
-                                        packageSize,
-                                        quantity: 0,
-                                        isNew: true,
-                                        batchAdjustments: [],
+                                    const createdBatches = selectedOrderItems.map(
+                                      (orderItem, counter) => ({
+                                        ...generateBatchByOrderItem(orderItem),
                                         no: `batch no ${batches.length + counter + 1}`,
-                                        autoCalculatePackageQuantity: true,
-                                        todo: {
-                                          tasks: [],
-                                        },
-                                      });
-                                    });
-                                    setFieldValue('batches', [...batches, ...result]);
+                                      })
+                                    );
+                                    setFieldValue('batches', [...batches, ...createdBatches]);
                                     createBatchesSlideToggle(false);
                                   }}
                                   onCancel={() => createBatchesSlideToggle(false)}

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { injectUid } from 'utils/id';
 import { isNullOrUndefined } from 'utils/fp';
 import { calculatePackageQuantity } from 'utils/batch';
 import {
@@ -42,7 +41,7 @@ import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import validator from 'modules/batch/form/validator';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
-import { prepareBatchObjectForClone } from 'utils/data';
+import { prepareBatchObjectForClone, generateBatchByOrderItem } from 'utils/data';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -145,35 +144,14 @@ function BatchesSection() {
                       {({ state: { batches }, setFieldValue }) => (
                         <SelectOrderItems
                           onSelect={selectedOrderItems => {
-                            const newBatches = selectedOrderItems.map((orderItem, counter) => {
-                              const {
-                                productProvider: {
-                                  packageName,
-                                  packageCapacity,
-                                  packageGrossWeight,
-                                  packageVolume,
-                                  packageSize,
-                                },
-                              } = orderItem;
-                              return injectUid({
-                                orderItem,
-                                tags: [],
-                                packageName,
-                                packageCapacity,
-                                packageGrossWeight,
-                                packageVolume,
-                                packageSize,
-                                quantity: 0,
-                                isNew: true,
-                                batchAdjustments: [],
-                                no: `batch no ${batches.length + counter + 1}`,
-                                autoCalculatePackageQuantity: true,
-                              });
-                            });
-                            if (batches.length === 0 && newBatches.length > 0) {
-                              setFieldValue('representativeBatch', newBatches[0]);
+                            const createdBatches = selectedOrderItems.map((orderItem, counter) => ({
+                              ...generateBatchByOrderItem(orderItem),
+                              no: `batch no ${batches.length + counter + 1}`,
+                            }));
+                            if (batches.length === 0 && createdBatches.length > 0) {
+                              setFieldValue('representativeBatch', createdBatches[0]);
                             }
-                            setFieldValue('batches', [...batches, ...newBatches]);
+                            setFieldValue('batches', [...batches, ...createdBatches]);
                             createBatchesSlideToggle(false);
                           }}
                           onCancel={() => createBatchesSlideToggle(false)}

@@ -89,7 +89,9 @@ export default function ContainerSummary() {
                 }
                 input={
                   <Display>
-                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                    {totalVolume && (
+                      <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                    )}
                   </Display>
                 }
               />

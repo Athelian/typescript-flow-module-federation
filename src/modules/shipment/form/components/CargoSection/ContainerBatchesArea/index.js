@@ -3,7 +3,6 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { injectUid } from 'utils/id';
 import { calculatePackageQuantity } from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -49,7 +48,7 @@ import SelectOrderItems from 'providers/SelectOrderItems';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { getBatchesByContainerId } from 'modules/shipment/helpers';
-import { prepareBatchObjectForClone } from 'utils/data';
+import { prepareBatchObjectForClone, generateBatchByOrderItem } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -413,35 +412,11 @@ export default function ContainerBatchesArea({
                             <SelectOrderItems
                               onSelect={selectedOrderItems => {
                                 const createdBatches = selectedOrderItems.map(
-                                  (orderItem, counter) => {
-                                    const {
-                                      productProvider: {
-                                        packageName,
-                                        packageCapacity,
-                                        packageGrossWeight,
-                                        packageVolume,
-                                        packageSize,
-                                      },
-                                    } = orderItem;
-                                    return injectUid({
-                                      isNew: true,
-                                      orderItem,
-                                      tags: [],
-                                      packageName,
-                                      packageCapacity,
-                                      packageGrossWeight,
-                                      packageVolume,
-                                      packageSize,
-                                      quantity: 0,
-                                      batchAdjustments: [],
-                                      no: `batch no ${batches.length + counter + 1}`,
-                                      autoCalculatePackageQuantity: true,
-                                      container,
-                                      todo: {
-                                        tasks: [],
-                                      },
-                                    });
-                                  }
+                                  (orderItem, counter) => ({
+                                    ...generateBatchByOrderItem(orderItem),
+                                    no: `batch no ${batches.length + counter + 1}`,
+                                    container,
+                                  })
                                 );
                                 setFieldValue('batches', [...batches, ...createdBatches]);
                                 setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [

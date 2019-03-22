@@ -103,8 +103,9 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                   <FormattedMessage id="components.cards.ttlVol" defaultValue="TTL VOL" />
                 </Label>
                 <div className={ShipmentBadgeStyle}>
-                  <FormattedNumber value={totalVolume.value} />
-                  {totalVolume.metric}
+                  {totalVolume && (
+                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+                  )}
                 </div>
               </div>
 
