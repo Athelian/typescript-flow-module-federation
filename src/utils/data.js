@@ -427,3 +427,31 @@ export const prepareBatchObjectForClone = ({
       tasks: [],
     },
   });
+
+export const generateBatchByOrderItem = (orderItem: Object) => {
+  const {
+    productProvider: {
+      packageName,
+      packageCapacity,
+      packageGrossWeight,
+      packageVolume,
+      packageSize,
+    },
+  } = orderItem;
+  return injectUid({
+    isNew: true,
+    orderItem,
+    tags: [],
+    packageName,
+    packageCapacity,
+    packageGrossWeight,
+    packageVolume,
+    packageSize,
+    quantity: 0,
+    batchAdjustments: [],
+    autoCalculatePackageQuantity: true,
+    todo: {
+      tasks: [],
+    },
+  });
+};

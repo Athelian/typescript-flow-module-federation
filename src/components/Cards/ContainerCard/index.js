@@ -101,7 +101,9 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
               <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
             </Label>
             <Display align="right">
-              <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+              {totalVolume && (
+                <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
+              )}
             </Display>
           </div>
 
