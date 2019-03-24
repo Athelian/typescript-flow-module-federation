@@ -24,35 +24,23 @@ type Props = {
   children: React.Node,
 };
 
-type State = {
-  isSideBarExpanded: boolean,
+const UIProvider = ({ children }: Props) => {
+  const [isSideBarExpanded, setIsSideBarExpanded] = React.useState(getIsSidebarExpanded());
+  const toggleSideBarExpansion = React.useCallback(() => {
+    setIsSideBarExpanded(!isSideBarExpanded);
+    setIsSidebarExpanded(!isSideBarExpanded);
+  }, [isSideBarExpanded]);
+  return (
+    <UIContext.Provider
+      value={{
+        isSideBarExpanded,
+        toggleSideBarExpansion,
+      }}
+    >
+      {children}
+    </UIContext.Provider>
+  );
 };
-
-class UIProvider extends React.Component<Props, State> {
-  state = {
-    isSideBarExpanded: getIsSidebarExpanded(),
-  };
-
-  toggleSideBarExpansion = () => {
-    this.setState(prevState => {
-      const newIsSideBarExpanded = !prevState.isSideBarExpanded;
-      setIsSidebarExpanded(newIsSideBarExpanded);
-      return { isSideBarExpanded: newIsSideBarExpanded };
-    });
-  };
-
-  render() {
-    const { children } = this.props;
-    const { isSideBarExpanded } = this.state;
-    return (
-      <UIContext.Provider
-        value={{ isSideBarExpanded, toggleSideBarExpansion: this.toggleSideBarExpansion }}
-      >
-        {children}
-      </UIContext.Provider>
-    );
-  }
-}
 
 export const UIConsumer = UIContext.Consumer;
 
