@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { findLastIndex } from 'lodash';
-import logger from 'utils/logger';
 import type { OrderProps } from 'modules/relationMap/order/type.js.flow';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators, selectors } from 'modules/relationMap/order/store';
@@ -121,9 +120,6 @@ function findRelateOrderItem({
 }
 
 function manualSortByAction(orderItems: Array<Object>, state: Object) {
-  logger.warn({
-    state,
-  });
   const result = [];
   const processOrderItemIds = [];
   orderItems.forEach(orderItem => {

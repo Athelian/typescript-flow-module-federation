@@ -1,6 +1,6 @@
 // @flow
 
-function actionCreators(dispatch: Function) {
+function actionCreators(dispatch: (action: { type: string, payload: Object }) => void) {
   return {
     reset: () =>
       dispatch({
@@ -22,6 +22,7 @@ function actionCreators(dispatch: Function) {
     toggleTag: () =>
       dispatch({
         type: 'TOGGLE_TAG',
+        payload: {},
       }),
     toggleExpand: (entity: string, id: string) =>
       dispatch({
@@ -42,6 +43,7 @@ function actionCreators(dispatch: Function) {
     toggleShipmentList: () =>
       dispatch({
         type: 'TOGGLE_SHIPMENT_LIST',
+        payload: {},
       }),
     toggleSelectAll: (entity: string, selectedIds: Array<string>) =>
       dispatch({

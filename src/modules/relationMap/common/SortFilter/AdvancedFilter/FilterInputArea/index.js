@@ -27,7 +27,7 @@ type Props = {
   selectedEntityType: EntityTypes,
   selectedFilterItem: string,
   selectedItems: any,
-  onToggleSelect: Function,
+  dispatch: (action: { type: string, payload: Object }) => void,
 };
 
 const getFilterInputArea = ({
@@ -35,7 +35,12 @@ const getFilterInputArea = ({
   selectedFilterItem,
   selectedItems,
   onToggleSelect,
-}: Props) => {
+}: {
+  selectedEntityType: EntityTypes,
+  selectedFilterItem: string,
+  selectedItems: any,
+  onToggleSelect: Function,
+}) => {
   switch (selectedEntityType) {
     case 'order': {
       switch (selectedFilterItem) {
@@ -54,7 +59,7 @@ const getFilterInputArea = ({
                   onClick={() => onToggleSelect(item)}
                   selectable
                   selected={selectedItems.some(selectedItem => selectedItem.id === item.id)}
-                  key={item.id}
+                  key={`order-${item.id}`}
                   isArchived={item.archived}
                 >
                   <Display align="left">{item.poNo}</Display>
@@ -430,18 +435,27 @@ const getFilterInputArea = ({
   }
 };
 
-export default function FilterInputArea({
+function FilterInputArea({
   selectedEntityType,
   selectedFilterItem,
   selectedItems,
-  onToggleSelect,
+  dispatch,
 }: Props) {
   const SelectedFilterInputArea = getFilterInputArea({
     selectedEntityType,
     selectedFilterItem,
     selectedItems,
-    onToggleSelect,
+    onToggleSelect: (selectItem: any, field?: string) =>
+      dispatch({
+        type: field ? 'SET_SELECT_ITEM' : 'TOGGLE_SELECT_ITEM',
+        payload: {
+          selectItem,
+          ...(field ? { field } : {}),
+        },
+      }),
   });
 
   return <div className={FilterInputAreaWrapperStyle}>{SelectedFilterInputArea()}</div>;
 }
+
+export default FilterInputArea;

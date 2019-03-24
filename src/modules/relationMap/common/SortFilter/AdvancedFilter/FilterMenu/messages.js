@@ -2,6 +2,50 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  order: {
+    id: 'modules.Orders.order',
+    defaultMessage: 'ORDER',
+  },
+  poNo: {
+    id: 'modules.Orders.poNo',
+    defaultMessage: 'PO NO.',
+  },
+  exporter: {
+    id: 'modules.Orders.exporter',
+    defaultMessage: 'EXPORTER',
+  },
+  inCharge: {
+    id: 'modules.Orders.inCharge',
+    defaultMessage: 'IN CHARGE',
+  },
+  tags: {
+    id: 'modules.Orders.tags',
+    defaultMessage: 'TAGS',
+  },
+  createdAt: {
+    id: 'modules.Orders.createdAt',
+    defaultMessage: 'CREATED ON',
+  },
+  updatedAt: {
+    id: 'modules.Orders.updatedAt',
+    defaultMessage: 'LAST MODIFIED',
+  },
+  completelyBatched: {
+    id: 'modules.Orders.completelyBatched',
+    defaultMessage: 'COMPLETELY BATCHED',
+  },
+  completelyShipped: {
+    id: 'modules.Orders.completelyShipped',
+    defaultMessage: 'COMPLETELY SHIPPED',
+  },
+  showActive: {
+    id: 'modules.Orders.showActive',
+    defaultMessage: 'SHOW ACTIVE',
+  },
+  showArchived: {
+    id: 'modules.Orders.showArchived',
+    defaultMessage: 'SHOW ARCHIVED',
+  },
   shipment: {
     id: 'modules.Shipments.shipment',
     defaultMessage: 'SHIPMENT',
@@ -9,10 +53,6 @@ export default defineMessages({
   forwarder: {
     id: 'modules.Shipments.forwarder',
     defaultMessage: 'FORWARDER',
-  },
-  inCharge: {
-    id: 'modules.Shipments.inCharge',
-    defaultMessage: 'IN CHARGE ',
   },
   cargoReady: {
     id: 'modules.Shipments.cargoReady',
@@ -62,24 +102,28 @@ export default defineMessages({
     id: 'modules.Shipments.airports',
     defaultMessage: 'AIRPORTS',
   },
-  tags: {
-    id: 'modules.Shipments.tags',
-    defaultMessage: 'TAGS',
+  batch: {
+    id: 'modules.Batches.batch',
+    defaultMessage: 'BATCH',
   },
-  createdAt: {
-    id: 'modules.Shipments.createdAt',
-    defaultMessage: 'CREATED ON',
+  deliveredAt: {
+    id: 'modules.Batches.deliveredAt',
+    defaultMessage: 'DELIVERY DATE',
   },
-  updatedAt: {
-    id: 'modules.Shipments.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+  expiredAt: {
+    id: 'modules.Batches.expiredAt',
+    defaultMessage: 'EXPIRY',
   },
-  showActive: {
-    id: 'modules.Shipments.showActive',
-    defaultMessage: 'SHOW ACTIVE',
+  producedAt: {
+    id: 'modules.Batches.producedAt',
+    defaultMessage: 'PRODUCTION DATE',
   },
-  showArchived: {
-    id: 'modules.Shipments.showArchived',
-    defaultMessage: 'SHOW ARCHIVED',
+  packaging: {
+    id: 'modules.Batches.packaging',
+    defaultMessage: 'PACKAGING',
+  },
+  totalVolume: {
+    id: 'modules.Batches.totalVolume',
+    defaultMessage: 'TOTAL VOLUME',
   },
 });
