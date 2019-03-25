@@ -3,7 +3,11 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { calculatePackageQuantity } from 'utils/batch';
+import {
+  calculatePackageQuantity,
+  generateBatchForClone,
+  generateBatchByOrderItem,
+} from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
@@ -48,7 +52,6 @@ import SelectOrderItems from 'providers/SelectOrderItems';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { getBatchesByContainerId } from 'modules/shipment/helpers';
-import { prepareBatchObjectForClone, generateBatchByOrderItem } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -313,11 +316,11 @@ export default function ContainerBatchesArea({
                                     onClone={value => {
                                       setFieldValue('batches', [
                                         ...batches,
-                                        prepareBatchObjectForClone(value),
+                                        generateBatchForClone(value),
                                       ]);
                                       setDeepFieldValue(
                                         `containers.${focusedContainerIndex}.batches`,
-                                        [...batchesInContainer, prepareBatchObjectForClone(value)]
+                                        [...batchesInContainer, generateBatchForClone(value)]
                                       );
                                     }}
                                   />

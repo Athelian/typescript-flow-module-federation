@@ -16,7 +16,7 @@ import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import validator from 'modules/batch/form/validator';
-import { prepareBatchObjectForClone } from 'utils/data';
+import { generateBatchForClone } from 'utils/batch';
 import {
   ItemGridStyle,
   ItemStyle,
@@ -185,7 +185,7 @@ const OrderItems = ({
                                 }}
                                 onRemove={() => filter(({ id }) => id !== batch.id)}
                                 onClone={value => {
-                                  changeBatch(batches.length, 1, prepareBatchObjectForClone(value));
+                                  changeBatch(batches.length, 1, generateBatchForClone(value));
                                 }}
                               />
                             </>

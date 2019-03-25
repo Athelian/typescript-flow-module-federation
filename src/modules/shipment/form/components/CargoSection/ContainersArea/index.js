@@ -19,7 +19,7 @@ import {
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
-import { generateContainer } from 'utils/data';
+import { generateContainer } from 'utils/container';
 import { getLatestDate } from 'utils/shipment';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';

@@ -32,7 +32,11 @@ import {
   ORDER_ITEMS_LIST,
   ORDER_ITEMS_GET_PRICE,
 } from 'modules/permission/constants/order';
-import { calculatePackageQuantity } from 'utils/batch';
+import {
+  calculatePackageQuantity,
+  generateBatchForClone,
+  generateBatchByOrderItem,
+} from 'utils/batch';
 import { ShipmentBatchCard } from 'components/Cards';
 import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -48,7 +52,6 @@ import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/cont
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
-import { prepareBatchObjectForClone, generateBatchByOrderItem } from 'utils/data';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -344,7 +347,7 @@ function BatchesArea({
                                       setContainersState('containers', newContainers);
                                     }}
                                     onClone={value => {
-                                      const clonedBatch = prepareBatchObjectForClone(value);
+                                      const clonedBatch = generateBatchForClone(value);
 
                                       setFieldValue('batches', [...batches, clonedBatch]);
                                     }}

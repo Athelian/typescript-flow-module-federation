@@ -4,7 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { isNullOrUndefined } from 'utils/fp';
-import { calculatePackageQuantity } from 'utils/batch';
+import {
+  calculatePackageQuantity,
+  generateBatchForClone,
+  generateBatchByOrderItem,
+} from 'utils/batch';
 import {
   CONTAINER_UPDATE,
   CONTAINER_BATCHES_ADD,
@@ -41,7 +45,7 @@ import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
 import validator from 'modules/batch/form/validator';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
-import { prepareBatchObjectForClone, generateBatchByOrderItem } from 'utils/data';
+
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -290,7 +294,7 @@ function BatchesSection() {
                               }
                             }}
                             onClone={value => {
-                              const clonedBatch = prepareBatchObjectForClone(value);
+                              const clonedBatch = generateBatchForClone(value);
 
                               setFieldValue('batches', [...batches, clonedBatch]);
                               addExistingBatches([clonedBatch]);

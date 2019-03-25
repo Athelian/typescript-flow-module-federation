@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
-import { generateContainer } from 'utils/data';
+import { generateContainer } from 'utils/container';
 import { getLatestDate } from 'utils/shipment';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
