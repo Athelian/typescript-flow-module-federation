@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider } from 'unstated';
 import { UIConsumer } from 'modules/ui';
+import withCache from 'hoc/withCache';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
@@ -123,4 +124,4 @@ const MetadataForm = ({ entityType: entity }: Props) => {
 
 MetadataForm.defaultProps = defaultProps;
 
-export default MetadataForm;
+export default withCache(MetadataForm, ['entityType']);
