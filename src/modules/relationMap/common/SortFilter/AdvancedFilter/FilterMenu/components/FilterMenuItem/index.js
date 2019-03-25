@@ -72,14 +72,18 @@ export default function FilterMenuItem({
       <div
         className={FilterMenuItemStyle}
         role="presentation"
-        onClick={() => {
+        onClick={evt => {
+          evt.stopPropagation();
           changeSelectedFilterItem(name);
         }}
       >
         <ToggleButton
           isOn={isActive}
           hideToggle={!isValidOfFilterData}
-          onClick={() => toggleActiveFilter(name)}
+          onClick={evt => {
+            evt.stopPropagation();
+            toggleActiveFilter(name);
+          }}
         />
         <div className={FilterMenuLabelStyle}>{label}</div>
       </div>
