@@ -660,6 +660,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             return {
                               ...defaultBatchInput,
                               ...batch,
+                              shipment: null,
+                              container: null,
                               orderItem: {
                                 ...orderItem,
                                 productProvider: {
