@@ -19,7 +19,8 @@ import {
   CONTAINER_APPROVE_ACTUAL_ARRIVAL_DATE,
 } from 'modules/permission/constants/container';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
-import { injectUid } from 'utils/id';
+import { generateContainer } from 'utils/data';
+import { getLatestDate } from 'utils/shipment';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -348,26 +349,17 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                     const clonedContainers = containers.slice(0);
                     setFieldValue('containers', [
                       ...clonedContainers,
-                      injectUid({
+                      {
+                        ...generateContainer(),
                         no: `container no ${containers.length + 1}`,
-                        isNew: true,
-                        batches: [],
-                        tags: [],
-                        totalVolume: {
-                          metric: 'm³',
-                          value: 0,
+                        freeTimeStartDate:
+                          voyages.length === 0
+                            ? null
+                            : getLatestDate(voyages[voyages.length - 1].arrival),
+                        shipment: {
+                          voyages,
                         },
-                        totalWeight: {
-                          metric: 'kg',
-                          value: 0,
-                        },
-                        totalBatchQuantity: 0,
-                        totalBatchPackages: 0,
-                        totalNumberOfUniqueOrderItems: 0,
-                        warehouseArrivalActualDateAssignedTo: [],
-                        warehouseArrivalAgreedDateAssignedTo: [],
-                        representativeBatch: null,
-                      }),
+                      },
                     ]);
                   }}
                 />

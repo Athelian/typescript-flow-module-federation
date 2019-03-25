@@ -6,7 +6,8 @@ import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import { injectUid } from 'utils/id';
-import { getTransportIcon, getLatestDate } from '../Timeline/helpers';
+import { getLatestDate } from 'utils/shipment';
+import { getTransportIcon } from '../Timeline/helpers';
 import {
   VoyageSelectorWrapperStyle,
   VoyageOptionsWrapperStyle,
