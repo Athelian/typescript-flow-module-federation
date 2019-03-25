@@ -6,7 +6,7 @@ import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import { injectUid } from 'utils/id';
-import { getTransportIcon } from '../Timeline/helpers';
+import { getTransportIcon, getLatestDate } from '../Timeline/helpers';
 import {
   VoyageSelectorWrapperStyle,
   VoyageOptionsWrapperStyle,
@@ -46,6 +46,8 @@ type Props = {
     transportType: string,
   },
   setFieldDeepValue: (field: string, value: any) => void,
+  setShipmentContainers: Function,
+  shipmentContainers: Array<Object>,
 };
 
 type RenderIconOptions = {
@@ -146,11 +148,23 @@ class VoyageSelector extends React.PureComponent<Props> {
   };
 
   onClick = (numOfIcons: number, isOptionsOpen: boolean, toggle?: () => void) => () => {
-    const { shipment, setFieldDeepValue } = this.props;
+    const { shipment, setFieldDeepValue, setShipmentContainers, shipmentContainers } = this.props;
 
     const { voyages } = shipment;
     if (isOptionsOpen) {
-      setFieldDeepValue('voyages', voyagesGenerator(voyages, numOfIcons));
+      const newVoyages = voyagesGenerator(voyages, numOfIcons);
+      setFieldDeepValue('voyages', newVoyages);
+      setShipmentContainers(
+        'containers',
+        shipmentContainers.map(container =>
+          container.autoCalculatedFreeTimeStartDate
+            ? {
+                ...container,
+                freeTimeStartDate: getLatestDate(newVoyages[newVoyages.length - 1].arrival),
+              }
+            : container
+        )
+      );
     }
     if (toggle) toggle();
   };

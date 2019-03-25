@@ -67,6 +67,8 @@ const TimelineSection = ({ isNew }: Props) => {
                 editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
                 shipment={values}
                 setFieldDeepValue={setFieldDeepValue}
+                setShipmentContainers={setShipmentContainers}
+                shipmentContainers={values.containers}
                 removeArrayItem={removeArrayItem}
               />
             </div>
