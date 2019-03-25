@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, borderRadiuses, fontSizes } from 'styles/common';
+import { presets, colors, borderRadiuses, fontSizes } from 'styles/common';
 
 export const DocumentListStyle: string = css`
   display: grid;
@@ -24,16 +24,6 @@ export const AddDocumentStyle: string = css`
     border-color: ${colors.TEAL};
     background-color: rgba(0, 0, 0, 0.1);
   }
-`;
-
-export const ProgressStyle: string = css`
-  ${presets.BOX};
-  ${layout.LAYOUT};
-  ${layout.CENTER_CENTER};
-  width: 140px;
-  height: 160px;
-  color: ${colors.TEAL};
-  font-size: 24px;
 `;
 
 export const NoDocumentsStyle: string = css`

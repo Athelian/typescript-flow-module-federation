@@ -48,7 +48,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
             key={uuid()}
             className={FilterDataStyle}
             type="button"
-            onClick={() => {
+            onClick={evt => {
+              evt.stopPropagation();
               if (fromDate) {
                 onRemove(null, 'after');
               }
@@ -77,7 +78,8 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
             key={uuid()}
             className={FilterDataStyle}
             type="button"
-            onClick={() => {
+            onClick={evt => {
+              evt.stopPropagation();
               if (currency) {
                 onRemove(null, 'currency');
               }
@@ -232,7 +234,10 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
               key={user.id}
               className={FilterDataStyle}
               type="button"
-              onClick={() => onRemove(user)}
+              onClick={evt => {
+                evt.stopPropagation();
+                onRemove(user);
+              }}
             >
               <FormattedName firstName={user.firstName} lastName={user.lastName} />
               <Icon icon="CLEAR" />
@@ -249,7 +254,10 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
                 key={{}.hasOwnProperty.call(datum, 'id') ? datum.id : uuid()}
                 className={FilterDataStyle}
                 type="button"
-                onClick={() => onRemove(datum)}
+                onClick={evt => {
+                  evt.stopPropagation();
+                  onRemove(datum);
+                }}
               >
                 {field && getByPath(field, datum)}
                 <Icon icon="CLEAR" />

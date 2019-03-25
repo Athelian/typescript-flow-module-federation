@@ -2,6 +2,7 @@
 import { uniqBy } from 'lodash';
 import { isNullOrUndefined } from 'utils/fp';
 import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
+import { addDays } from 'date-fns';
 
 type BatchProp = {
   orderItem: {
@@ -44,5 +45,8 @@ export const calculateContainerTotalVolume = ({ batches = [] }: Object): Metric 
     .map(volume => volume.value)
     .reduce((a, b) => a + b, 0),
 });
+
+export const calculateDueDate = (freeTimeStartDate: Date, freeTimeDuration: number = 0) =>
+  addDays(freeTimeStartDate, freeTimeDuration);
 
 export default uniqueOrders;

@@ -7,6 +7,7 @@ import type {
   InputWrapperProps,
   InputProps,
 } from 'components/Form/Factories/type';
+import { ExtraToggleButton } from '../components';
 
 type Props = LabelProps &
   TooltipProps &
@@ -18,6 +19,9 @@ type Props = LabelProps &
     editable: boolean,
     blackout: boolean,
     inputColor?: string,
+    showExtraToggle: boolean,
+    toggled: boolean,
+    onToggle?: Function,
   };
 
 const defaultProps = {
@@ -30,6 +34,8 @@ const defaultProps = {
   editable: false,
   blackout: false,
   vertical: false,
+  showExtraToggle: false,
+  toggled: true,
 };
 
 const DateInputFactory = ({
@@ -61,6 +67,9 @@ const DateInputFactory = ({
   inputAlign,
   editable,
   blackout,
+  showExtraToggle,
+  toggled,
+  onToggle,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -112,9 +121,12 @@ const DateInputFactory = ({
   if (!blackout) {
     if (editable) {
       renderedInput = (
-        <DefaultStyle {...inputWrapperConfig}>
-          <DateInput {...inputConfig} />
-        </DefaultStyle>
+        <>
+          <DefaultStyle {...inputWrapperConfig}>
+            <DateInput {...inputConfig} />
+          </DefaultStyle>
+          {showExtraToggle && <ExtraToggleButton toggled={toggled} onClick={onToggle} />}
+        </>
       );
     } else {
       renderedInput = (

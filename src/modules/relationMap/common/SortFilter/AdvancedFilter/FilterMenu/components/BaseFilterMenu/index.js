@@ -42,18 +42,14 @@ type OptionalProps = {
     completelyBatched?: boolean,
     completelyShipped?: boolean,
   },
-  changeRadioFilter: Function,
 };
 
 type Props = OptionalProps & {
   entityType: EntityTypes,
   parsedActiveFilters: Array<string>,
-  toggleActiveFilter: (string, string) => void,
   parsedFilterToggles: Object,
-  toggleFilterToggle: (string, string) => void,
   selectedFilterItem: string,
-  changeSelectedFilterItem: string => void,
-  onToggleSelect: Function,
+  dispatch: (action: { type: string, payload: Object }) => void,
 };
 
 const isSelectedStatus = (name: string, archived: any): boolean => {
@@ -73,7 +69,6 @@ const defaultProps = {
   parsedRadioFilters: {
     archived: false,
   },
-  changeRadioFilter: () => {},
 };
 
 function BaseFilterMenu({
@@ -85,13 +80,9 @@ function BaseFilterMenu({
   entityType,
   parsedActiveFilters,
   parsedRadioFilters,
-  changeRadioFilter,
-  toggleActiveFilter,
   parsedFilterToggles,
-  toggleFilterToggle,
   selectedFilterItem,
-  changeSelectedFilterItem,
-  onToggleSelect,
+  dispatch,
 }: Props) {
   return (
     <div className={FilterMenuWrapperStyle}>
@@ -115,11 +106,32 @@ function BaseFilterMenu({
                       label={filterLabel}
                       data={data}
                       isSelected={isSelected}
-                      changeSelectedFilterItem={changeSelectedFilterItem}
+                      changeSelectedFilterItem={selectedItem =>
+                        dispatch({
+                          type: 'FILTER_ITEM',
+                          payload: {
+                            selectedFilterItem: selectedItem,
+                          },
+                        })
+                      }
                       isActive={isActive}
-                      onToggleSelect={onToggleSelect}
-                      toggleActiveFilter={(fieldName: string) =>
-                        toggleActiveFilter(entityType, fieldName)
+                      onToggleSelect={(selectItem: any, selectField?: string) =>
+                        dispatch({
+                          type: selectField ? 'SET_SELECT_ITEM' : 'TOGGLE_SELECT_ITEM',
+                          payload: {
+                            selectItem,
+                            ...(selectField ? { field: selectField } : {}),
+                          },
+                        })
+                      }
+                      toggleActiveFilter={(selectFilter: string) =>
+                        dispatch({
+                          type: 'TOGGLE_ACTIVE_FILTER',
+                          payload: {
+                            entityType,
+                            filter: selectFilter,
+                          },
+                        })
                       }
                     />
                   );
@@ -142,7 +154,16 @@ function BaseFilterMenu({
                     name,
                     isNullOrUndefined(parsedRadioFilters) ? null : parsedRadioFilters.archived
                   )}
-                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                  onToggle={() =>
+                    dispatch({
+                      type: 'CHANGE_RADIO_FILTER',
+                      payload: {
+                        entityType,
+                        filter: field,
+                        value,
+                      },
+                    })
+                  }
                 >
                   <Label>{text}</Label>
                 </RadioInput>
@@ -167,7 +188,16 @@ function BaseFilterMenu({
                       ? null
                       : parsedRadioFilters.completelyBatched
                   )}
-                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                  onToggle={() =>
+                    dispatch({
+                      type: 'CHANGE_RADIO_FILTER',
+                      payload: {
+                        entityType,
+                        filter: field,
+                        value,
+                      },
+                    })
+                  }
                 >
                   <Label>{text}</Label>
                 </RadioInput>
@@ -192,7 +222,16 @@ function BaseFilterMenu({
                       ? null
                       : parsedRadioFilters.completelyShipped
                   )}
-                  onToggle={() => changeRadioFilter(entityType, field, value)}
+                  onToggle={() =>
+                    dispatch({
+                      type: 'CHANGE_RADIO_FILTER',
+                      payload: {
+                        entityType,
+                        filter: field,
+                        value,
+                      },
+                    })
+                  }
                 >
                   <Label>{text}</Label>
                 </RadioInput>
@@ -215,7 +254,13 @@ function BaseFilterMenu({
                 icon={icon}
                 isActive={isActive}
                 toggleFilterToggle={(fieldName: string) =>
-                  toggleFilterToggle(entityType, fieldName)
+                  dispatch({
+                    type: 'TOGGLE_FILTER_TOGGLE',
+                    payload: {
+                      entityType,
+                      toggle: fieldName,
+                    },
+                  })
                 }
               />
             );

@@ -46,13 +46,7 @@ const convertArchivedQuery = (isActive: boolean, isArchive: boolean, key: string
   return query;
 };
 
-export default function MiniSelector({
-  renderItem,
-  entityType,
-  query,
-  filterBy,
-  hideToggles,
-}: Props) {
+function MiniSelector({ renderItem, entityType, query, filterBy, hideToggles }: Props) {
   const [searchText, setSearchText] = React.useState(filterBy.query);
   const [isActive, setIsActive] = React.useState(true);
   const [isArchive, setIsArchive] = React.useState(true);
@@ -64,7 +58,16 @@ export default function MiniSelector({
       setIsActive(true);
       setIsArchive(true);
     }
-  });
+  }, [prevEntity, entityType]);
+  const queryVariables = {
+    page: 1,
+    perPage: 10,
+    filterBy: {
+      ...filterBy,
+      query: searchText,
+      ...(!hideToggles ? convertArchivedQuery(isActive, isArchive, 'archived') : {}),
+    },
+  };
   return (
     <div className={MiniSelectorWrapperStyle}>
       <div className={MiniSelectorSearchWrapperStyle}>
@@ -94,19 +97,7 @@ export default function MiniSelector({
         />
       </div>
       <div className={MiniSelectorBodyWrapperStyle}>
-        <Query
-          query={query}
-          variables={{
-            page: 1,
-            perPage: 10,
-            filterBy: {
-              ...filterBy,
-              query: searchText,
-              ...(!hideToggles ? convertArchivedQuery(isActive, isArchive, 'archived') : {}),
-            },
-          }}
-          fetchPolicy="network-only"
-        >
+        <Query query={query} variables={queryVariables} fetchPolicy="network-only">
           {({ loading: isLoading, data, fetchMore, error }) => {
             if (error) {
               return error.message;
@@ -141,3 +132,5 @@ export default function MiniSelector({
 }
 
 MiniSelector.defaultProps = defaultProps;
+
+export default MiniSelector;

@@ -23,6 +23,14 @@ export type ContainerFormState = {
   warehouseArrivalActualDateAssignedTo: Array<Object>,
   warehouseArrivalActualDateApprovedBy: Object,
   warehouseArrivalActualDateApprovedAt: string,
+  freeTimeStartDate: string,
+  freeTimeDuration: string,
+  autoCalculatedFreeTimeStartDate: boolean,
+  yardName: string,
+  departureDate: string,
+  departureDateAssignedTo: Array<Object>,
+  departureDateApprovedBy: Object,
+  departureDateApprovedAt: string,
   totalBatchPackages: number,
   totalBatchQuantity: number,
   totalNumberOfUniqueOrderItems: number,
@@ -47,6 +55,8 @@ const initValues = {
   representativeBatch: null,
   warehouseArrivalAgreedDateAssignedTo: [],
   warehouseArrivalActualDateAssignedTo: [],
+  departureDateAssignedTo: [],
+  freeTimeDuration: 14,
 };
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {

@@ -19,7 +19,8 @@ const PortItem = ({ ports, name, label, onRemove }: Props): Array<React.Node> =>
           key={uuid()}
           className={FilterDataStyle}
           type="button"
-          onClick={() => {
+          onClick={evt => {
+            evt.stopPropagation();
             const newPorts = [...ports];
             newPorts.splice(index, 1);
             onRemove(newPorts, name);

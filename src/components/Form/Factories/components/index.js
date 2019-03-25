@@ -1,5 +1,5 @@
 // @flow
-import AutoCalculateToggle from './AutoCalculateToggle';
+import ExtraToggleButton from './ExtraToggleButton';
 import CalculatorButton from './CalculatorButton';
 
-export { AutoCalculateToggle, CalculatorButton };
+export { ExtraToggleButton, CalculatorButton };

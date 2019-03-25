@@ -1,11 +1,9 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { usePrevious } from 'modules/form/hooks';
 import apolloClient from 'apollo';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import logger from 'utils/logger';
 import emitter from 'utils/emitter';
 import ShipmentGridView from './ShipmentGridView';
 import { shipmentListQuery } from './query';
@@ -22,17 +20,7 @@ type Props = {
 };
 
 const ShipmentList = ({ ...filtersAndSort }: Props) => {
-  const lastFilter = usePrevious(filtersAndSort);
-  const [isReady, setIsReady] = React.useState(true);
   React.useEffect(() => {
-    if (!isEquals(lastFilter, filtersAndSort)) {
-      logger.warn('re-render');
-      if (isReady) {
-        setIsReady(false);
-      }
-    } else if (!isReady) {
-      setIsReady(true);
-    }
     emitter.once('CHANGE_SHIPMENT_STATUS', () => {
       apolloClient.reFetchObservableQueries();
     });
@@ -40,6 +28,7 @@ const ShipmentList = ({ ...filtersAndSort }: Props) => {
 
   return (
     <Query
+      key={JSON.stringify(filtersAndSort)}
       query={shipmentListQuery}
       variables={{
         page: 1,

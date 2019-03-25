@@ -12,7 +12,7 @@ import UIProvider from './modules/ui';
 import apolloClient from './apollo';
 import Routes from './routes';
 import loadFonts from './fonts';
-import { isAppInProduction } from './utils/env';
+import { isEnableStrictMode, isAppInProduction } from './utils/env';
 import logger from './utils/logger';
 import errorReport from './errorReport';
 import './styles/reset.css';
@@ -44,9 +44,13 @@ const renderApp = (Component, renderFn) => {
         <AuthenticationProvider>
           <LanguageProvider>
             <UIProvider>
-              <React.StrictMode>
+              {isEnableStrictMode ? (
+                <React.StrictMode>
+                  <Component />
+                </React.StrictMode>
+              ) : (
                 <Component />
-              </React.StrictMode>
+              )}
             </UIProvider>
           </LanguageProvider>
         </AuthenticationProvider>
@@ -71,6 +75,8 @@ serviceWorker.register({
       'New content is available and will be used when all tabs for this page are closed',
       registration
     );
+    // manual update, refer https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle#manual_updates
+    registration.update();
   },
   onSuccess: registration => {
     logger.warn('Content is cached for offline use.', registration);

@@ -19,10 +19,9 @@ import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
 import TaskCard from './TaskCard';
+import TemplateCard from './TemplateCard';
 import WarehouseCard from './WarehouseCard';
-import MaskCard from './MaskCard';
 import GrayCard from './GrayCard';
-import TableTemplateCard from './TableTemplateCard';
 
 export default BaseCard;
 
@@ -46,10 +45,9 @@ export {
   StaffCard,
   TagCard,
   TaskCard,
+  TemplateCard,
   WarehouseCard,
-  MaskCard,
   GrayCard,
-  TableTemplateCard,
   ContainerBatchCard,
   ContainerCard,
 };
