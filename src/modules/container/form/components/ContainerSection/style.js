@@ -2,6 +2,24 @@
 import { css } from 'react-emotion';
 import { presets, layout, colors, borderRadiuses } from 'styles/common';
 
+export const FreeTimeMessageStyle = (freeTime: number, approved: boolean) => {
+  let color;
+
+  if (approved) {
+    color = colors.GRAY_LIGHT;
+  } else if (freeTime > 7) {
+    color = colors.TEAL;
+  } else if (freeTime > 0) {
+    color = colors.YELLOW;
+  } else {
+    color = colors.RED;
+  }
+
+  return css`
+    color: ${color};
+  `;
+};
+
 export const ContainerSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;

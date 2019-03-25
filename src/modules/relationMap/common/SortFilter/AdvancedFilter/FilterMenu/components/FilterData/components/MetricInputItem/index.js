@@ -17,7 +17,14 @@ type Props = OptionalProps & {
 };
 
 const MetricInputItem = ({ min, max, metric, onRemove, name, label }: Props) => (
-  <button className={FilterDataStyle} type="button" onClick={() => onRemove(null, name)}>
+  <button
+    className={FilterDataStyle}
+    type="button"
+    onClick={evt => {
+      evt.stopPropagation();
+      onRemove(null, name);
+    }}
+  >
     {!isNullOrUndefined(label) && <>{label} :</>}
     {!isNullOrUndefined(min) && <FormattedNumber value={min} suffix={metric} />}
     {!isNullOrUndefined(min) && isNullOrUndefined(max) && ' > '}

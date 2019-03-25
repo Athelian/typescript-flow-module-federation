@@ -238,10 +238,11 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   };
 
   useEffect(() => {
-    if (bodyRef.current) bodyRef.current.addEventListener('scroll', handleScroll);
+    const { current: activeNode } = bodyRef;
+    if (activeNode) activeNode.addEventListener('scroll', handleScroll);
 
     return () => {
-      if (bodyRef.current) bodyRef.current.removeEventListener('scroll', handleScroll);
+      if (activeNode) activeNode.removeEventListener('scroll', handleScroll);
     };
   });
 
@@ -270,7 +271,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
       setEditData(entities);
       setIsChangeData(false);
     }
-  });
+  }, [prevEntities, entities, isChangeData]);
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
       const listener = emitter.once('INLINE_CHANGE', newData => {
@@ -425,7 +426,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
               <Layout
                 navBar={
                   <SlideViewNavBar>
-                    <EntityIcon icon="EDIT" color="EDIT" />
+                    <EntityIcon icon="EDIT_TABLE" color="RELATION_MAP" />
                     <CancelButton onClick={onCancel} />
                     <SaveButton
                       isLoading={loading}

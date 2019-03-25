@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import FormattedDate from 'components/FormattedDate';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
@@ -18,7 +19,7 @@ import {
 } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
-import { calculateContainerTotalVolume } from 'modules/container/utils';
+import { calculateContainerTotalVolume, calculateDueDate } from 'modules/container/utils';
 import validator from './validator';
 import BaseCard from '../BaseCard';
 import {
@@ -93,6 +94,8 @@ const ShipmentContainerCard = ({
     warehouseArrivalAgreedDateApprovedBy,
     warehouseArrivalActualDate,
     warehouseArrivalActualDateApprovedBy,
+    freeTimeStartDate,
+    freeTimeDuration,
     tags,
   } = container;
   const totalVolume = calculateContainerTotalVolume(container);
@@ -403,6 +406,23 @@ const ShipmentContainerCard = ({
                 )}
               </div>
 
+              <div className={LabelStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.due" defaultMessage="DUE DATE" />
+                </Label>
+              </div>
+              <div className={InputIconStyle}>
+                <Display align="left">
+                  {isNullOrUndefined(freeTimeStartDate) || isNullOrUndefined(freeTimeDuration) ? (
+                    <FormattedMessage id="component.card.na" defaultMessage="N/A" />
+                  ) : (
+                    <FormattedDate
+                      value={calculateDueDate(new Date(freeTimeStartDate), freeTimeDuration)}
+                    />
+                  )}
+                </Display>
+              </div>
+
               <div className={TagsWrapperStyle}>
                 {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
@@ -418,7 +438,7 @@ ShipmentContainerCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentContainerCard, 'container', {
   width: '195px',
-  height: '319px',
+  height: '364px',
   entityIcon: 'CONTAINER',
   entityColor: 'CONTAINER',
 });

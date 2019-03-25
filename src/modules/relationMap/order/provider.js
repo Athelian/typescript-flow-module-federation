@@ -4,7 +4,7 @@ import type { UIState } from './store/type.js.flow';
 import { uiInitState } from './store';
 
 type ContextProps = {
-  dispatch: Function,
+  dispatch: (action: { type: string, payload: Object }) => void,
   state: UIState,
 };
 

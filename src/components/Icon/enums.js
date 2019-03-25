@@ -36,6 +36,7 @@ import {
   faEdit as METADATA,
   faFileSpreadsheet as TEMPLATE,
   faClipboardCheck as TASK,
+  faTable as EDIT_TABLE,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -108,6 +109,7 @@ import {
   faMagic as MAGIC,
   faCodeBranch as BRANCH,
   faStar as STAR,
+  faStopwatch as STOPWATCH,
 } from '@fortawesome/pro-solid-svg-icons';
 
 import {
@@ -176,6 +178,8 @@ export default {
   METADATA,
   TEMPLATE,
   STAR,
+  STOPWATCH,
+  EDIT_TABLE,
 
   RELATION_MAP,
   CONNECT,

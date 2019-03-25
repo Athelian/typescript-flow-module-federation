@@ -11,6 +11,7 @@ import FormattedDate from 'components/FormattedDate';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { calculateDueDate } from 'modules/container/utils';
 import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
@@ -66,6 +67,8 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
     warehouseArrivalAgreedDateApprovedBy,
     warehouseArrivalActualDate,
     warehouseArrivalActualDateApprovedBy,
+    freeTimeStartDate,
+    freeTimeDuration,
     tags,
   } = container;
   const product = getByPathWithDefault(
@@ -178,6 +181,23 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
               <Icon icon="CHECKED" />
             </div>
           </div>
+
+          <div className={LabelStyle}>
+            <Label>
+              <FormattedMessage id="components.cards.due" defaultMessage="DUE DATE" />
+            </Label>
+          </div>
+          <div className={InputIconStyle}>
+            <Display align="left">
+              {isNullOrUndefined(freeTimeStartDate) || isNullOrUndefined(freeTimeDuration) ? (
+                <FormattedMessage id="component.card.na" defaultMessage="N/A" />
+              ) : (
+                <FormattedDate
+                  value={calculateDueDate(new Date(freeTimeStartDate), freeTimeDuration)}
+                />
+              )}
+            </Display>
+          </div>
           <div className={DividerStyle} />
 
           <div className={IconInputStyle}>
@@ -222,7 +242,7 @@ ContainerCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerCard, 'container', {
   width: '195px',
-  height: '373px',
+  height: '418px',
   entityIcon: 'CONTAINER',
   entityColor: 'CONTAINER',
 });

@@ -16,7 +16,7 @@ import {
 
 type Props = {
   selectedEntityType: EntityTypes,
-  changeSelectedEntityType: (entityType: EntityTypes) => void,
+  dispatch: (action: { type: string, payload: Object }) => void,
   activeFilters: {
     order: Array<string>,
     item: Array<string>,
@@ -25,22 +25,13 @@ type Props = {
   },
 };
 
-export default function EntityTypesMenu({
-  selectedEntityType,
-  changeSelectedEntityType,
-  activeFilters,
-}: Props) {
+function EntityTypesMenu({ selectedEntityType, dispatch, activeFilters }: Props) {
   const entityTypesMap = [
     {
       name: 'order',
       icon: 'ORDER',
       count: activeFilters.order.length,
     },
-    // {
-    //   name: 'item',
-    //   icon: 'ORDER_ITEM',
-    //   count: activeFilters.item.length,
-    // },
     {
       name: 'batch',
       icon: 'BATCH',
@@ -63,7 +54,7 @@ export default function EntityTypesMenu({
         return (
           <button
             className={EntityTypeMenuItemStyle(isSelected)}
-            onClick={() => changeSelectedEntityType(name)}
+            onClick={() => dispatch({ type: 'CHANGE_ENTITY', payload: { entityType: name } })}
             type="button"
             key={name}
           >
@@ -86,3 +77,5 @@ export default function EntityTypesMenu({
     </div>
   );
 }
+
+export default React.memo<Props>(EntityTypesMenu);

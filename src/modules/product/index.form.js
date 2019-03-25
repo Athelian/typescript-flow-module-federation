@@ -65,8 +65,9 @@ const cleanUpCloneProductInput = (product: Object) => ({
   ...product,
   files: [],
   productProviders: product.productProviders.map(({ updatedBy, archived, ...productProvider }) => ({
-    isNew: true,
     ...productProvider,
+    isNew: true,
+    files: [],
   })),
 });
 

@@ -14,7 +14,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
           isNew: false,
           nullable: false,
           showCalculator: false,
-          showAutoCalculateToggle: false,
+          showExtraToggleButton: false,
           initialValues: {
             inputTwo: 200,
           },
@@ -35,7 +35,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
             isNew,
             nullable,
             showCalculator,
-            showAutoCalculateToggle,
+            showExtraToggleButton,
             initialValues,
             values,
             touchedFields,
@@ -77,7 +77,7 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
                     nullable={nullable}
                     showCalculator={showCalculator}
                     onCalculate={() => set('values', { ...values, inputTwo: 999 })}
-                    showAutoCalculateToggle={showAutoCalculateToggle}
+                    showExtraToggleButton={showExtraToggleButton}
                     onToggleAutoCalculate={() => {}}
                     autoCalculateIsToggled={false}
                   />
@@ -105,8 +105,8 @@ storiesOf('Form/Inputs/Number Input', module).add('Number Input Factory', () => 
                     <Label>CALCULATOR</Label>
                   </ToggleInput>
                   <ToggleInput
-                    toggled={showAutoCalculateToggle}
-                    onToggle={() => set('showAutoCalculateToggle', !showAutoCalculateToggle)}
+                    toggled={showExtraToggleButton}
+                    onToggle={() => set('showExtraToggleButton', !showExtraToggleButton)}
                   >
                     <Label>AUTO CALCULATE</Label>
                   </ToggleInput>

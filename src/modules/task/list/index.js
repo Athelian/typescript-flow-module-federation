@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { usePrevious } from 'modules/form/hooks';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import logger from 'utils/logger';
 import TaskGridView from './TaskGridView';
@@ -16,18 +15,6 @@ type Props = {
 };
 
 const TaskList = ({ ...filtersAndSort }: Props) => {
-  const lastFilter = usePrevious(filtersAndSort);
-  const [isReady, setIsReady] = React.useState(true);
-  React.useEffect(() => {
-    if (!isEquals(lastFilter, filtersAndSort)) {
-      logger.warn('re-render', isReady);
-      if (isReady) {
-        setIsReady(false);
-      }
-    } else if (!isReady) {
-      setIsReady(true);
-    }
-  });
   return (
     <Query
       query={taskListQuery}

@@ -44,9 +44,12 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
       </SectionWrapper>
       <SectionWrapper id="tableTemplate_editFieldsSection">
         <SectionHeader
-          icon="METADATA"
+          icon="EDIT_TABLE"
           title={
-            <FormattedMessage id="modules.TableTemplates.editFields" defaultMessage="EDIT FIELDS" />
+            <FormattedMessage
+              id="modules.TableTemplates.relationTable"
+              defaultMessage="RELATION TABLE"
+            />
           }
         />
         <SelectFieldsSection isNew={isNew} />

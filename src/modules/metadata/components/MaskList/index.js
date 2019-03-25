@@ -14,7 +14,7 @@ import { Label } from 'components/Form';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
 import { masksQuery } from 'modules/metadata/query';
-import { MaskCard } from 'components/Cards';
+import { TemplateCard } from 'components/Cards';
 import { TemplatesListWrapperStyle, TemplatesHeaderStyle, TemplatesBodyStyle } from './style';
 
 type Props = {
@@ -97,8 +97,14 @@ const MaskList = ({ entityType }: Props) => (
                       <BooleanValue key={mask.id}>
                         {({ value: isOpen, set: toggle }) => (
                           <>
-                            <MaskCard
-                              mask={mask}
+                            <TemplateCard
+                              template={{
+                                id: mask.id,
+                                title: mask.name,
+                                description: mask.memo,
+                                count: (mask.fieldDefinitions || []).length,
+                              }}
+                              type="METADATA"
                               onClick={() => {
                                 toggle(true);
                               }}
