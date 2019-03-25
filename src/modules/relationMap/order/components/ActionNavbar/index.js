@@ -59,7 +59,7 @@ type Props = {
 };
 
 export default function ActionNavbar({ highLightEntities, entities }: Props) {
-  const { orders, orderItems, batches, exporters } = entities;
+  const { orders, orderItems, batches, shipments, exporters } = entities;
   const [activeAction, setActiveAction] = React.useState('clone');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -719,7 +719,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         const processBatchIds = [];
                         const moveOrderItems = [];
                         const defaultBatchInput = {
-                          batchAdjustments: [],
                           isNew: true,
                           todo: {
                             tasks: [],
@@ -763,9 +762,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     return {
                                       ...defaultBatchInput,
                                       ...inputBatchFields,
+                                      shipment: inputBatchFields.shipment
+                                        ? shipments[inputBatchFields.shipment.id]
+                                        : null,
                                     };
                                   }),
                                 isNew: true,
+                                order: null,
                               });
                               processBatchIds.push(...orderItem.batches);
                             }
@@ -794,7 +797,16 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                batches: [{ ...defaultBatchInput, ...inputBatchFields }],
+                                batches: [
+                                  {
+                                    ...defaultBatchInput,
+                                    ...inputBatchFields,
+                                    shipment: inputBatchFields.shipment
+                                      ? shipments[inputBatchFields.shipment.id]
+                                      : null,
+                                  },
+                                ],
+                                order: null,
                               });
                             }
                           }
