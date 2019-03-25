@@ -78,13 +78,23 @@ const renderFreeTime = (date: ?Date, approved: boolean) => {
 
     return (
       <Display color={freeTimeColor}>
-        <FormattedMessage
-          id="modules.container.freeTimeMessage"
-          defaultMessage="{freeTime} days left until due date*"
-          values={{
-            freeTime: freeTime >= 0 ? freeTime : 0,
-          }}
-        />
+        {freeTime >= 0 ? (
+          <FormattedMessage
+            id="modules.container.freeTimeMessage"
+            defaultMessage="{freeTime} days left until due date*"
+            values={{
+              freeTime,
+            }}
+          />
+        ) : (
+          <FormattedMessage
+            id="modules.container.overTimeMessage"
+            defaultMessage="{freeTime} days over the due date*"
+            values={{
+              freeTime: Math.abs(freeTime),
+            }}
+          />
+        )}
       </Display>
     );
   }
@@ -106,9 +116,10 @@ const ContainerSection = () => {
         {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
           const values = { ...originalValues, ...state };
 
-          const dueDate = values.freeTimeStartDate
-            ? calculateDueDate(new Date(values.freeTimeStartDate), values.freeTimeDuration)
-            : null;
+          const dueDate =
+            values.freeTimeStartDate && !isNullOrUndefined(values.freeTimeDuration)
+              ? calculateDueDate(new Date(values.freeTimeStartDate), values.freeTimeDuration)
+              : null;
 
           const freeTime = renderFreeTime(
             dueDate,
