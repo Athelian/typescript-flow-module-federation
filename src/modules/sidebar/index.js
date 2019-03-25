@@ -175,7 +175,7 @@ const SideBar = () => {
                         <MenuItem
                           path="/metadata/order"
                           isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
-                          icon="METADATA"
+                          icon="TEMPLATE"
                           label={<FormattedMessage {...messages.metadata} />}
                           onClick={() => setExpandedSubMenu(null)}
                         />

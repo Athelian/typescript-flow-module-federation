@@ -147,7 +147,7 @@ class TemplateFormWrapper extends React.Component<Props> {
                 <Layout
                   navBar={
                     <SlideViewNavBar>
-                      <EntityIcon icon="ORDER" color="ORDER" />
+                      <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                       <JumpToSection>
                         <SectionTabs
                           link="tableTemplate_templateSection"
@@ -163,11 +163,11 @@ class TemplateFormWrapper extends React.Component<Props> {
                           link="tableTemplate_editFieldsSection"
                           label={
                             <FormattedMessage
-                              id="modules.Templates.editFields"
-                              defaultMessage="EDIT FIELDS"
+                              id="modules.Templates.relationTable"
+                              defaultMessage="RELATION TABLE"
                             />
                           }
-                          icon="METADATA"
+                          icon="EDIT_TABLE"
                         />
                       </JumpToSection>
                       {formState.isDirty() && (

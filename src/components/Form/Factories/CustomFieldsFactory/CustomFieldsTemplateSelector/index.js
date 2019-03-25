@@ -6,7 +6,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
-import { MaskCard } from 'components/Cards';
+import { TemplateCard } from 'components/Cards';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -56,7 +56,7 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" />
+                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     data-testid="saveButtonOnSelectMask"
@@ -75,9 +75,15 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
                 hasMore={hasMore}
                 isLoading={loading}
                 renderItem={mask => (
-                  <MaskCard
+                  <TemplateCard
                     key={mask.id}
-                    mask={mask}
+                    template={{
+                      id: mask.id,
+                      title: mask.name,
+                      description: mask.memo,
+                      count: (mask.fieldDefinitions || []).length,
+                    }}
+                    type="METADATA"
                     onSelect={() => {
                       if (value && mask.id === value.id) {
                         set(null);

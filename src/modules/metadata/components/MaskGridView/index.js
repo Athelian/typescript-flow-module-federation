@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
-
-import { MaskCard } from 'components/Cards';
+import { TemplateCard } from 'components/Cards';
 
 type Props = {
   items: Array<Object>,
@@ -13,7 +12,18 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => <MaskCard key={item.id} mask={item} />;
+const defaultRenderItem = (item: Object) => (
+  <TemplateCard
+    key={item.id}
+    template={{
+      id: item.id,
+      title: item.name,
+      description: item.memo,
+      count: (item.fieldDefinitions || []).length,
+    }}
+    type="METADATA"
+  />
+);
 
 const MaskGridView = ({
   items,
@@ -26,7 +36,7 @@ const MaskGridView = ({
     onLoadMore={onLoadMore}
     hasMore={hasMore}
     isLoading={isLoading}
-    itemWidth="260px"
+    itemWidth="195px"
     isEmpty={items.length === 0}
     emptyMessage={
       <FormattedMessage id="modules.metadata.noItem" defaultMessage="No template found" />

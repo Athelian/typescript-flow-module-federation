@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { contains } from 'utils/fp';
 import { BooleanValue } from 'react-values';
-import { MaskCard, GrayCard } from 'components/Cards';
+import { TemplateCard, GrayCard } from 'components/Cards';
 import Divider from 'components/Divider';
 import FormattedNumber from 'components/FormattedNumber';
 import Layout from 'components/Layout';
@@ -117,8 +117,14 @@ class CustomFieldsForm extends React.Component<Props> {
                             {({ value: opened, set: slideToggle }) => (
                               <>
                                 {mask ? (
-                                  <MaskCard
-                                    mask={mask}
+                                  <TemplateCard
+                                    template={{
+                                      id: mask.id,
+                                      title: mask.name,
+                                      description: mask.memo,
+                                      count: (mask.fieldDefinitions || []).length,
+                                    }}
+                                    type="METADATA"
                                     onClick={editable ? () => slideToggle(true) : () => {}}
                                   />
                                 ) : (
@@ -151,7 +157,16 @@ class CustomFieldsForm extends React.Component<Props> {
                         ) : (
                           <>
                             {mask ? (
-                              <MaskCard mask={mask} readOnly />
+                              <TemplateCard
+                                template={{
+                                  id: mask.id,
+                                  title: mask.name,
+                                  description: mask.memo,
+                                  count: (mask.fieldDefinitions || []).length,
+                                }}
+                                type="METADATA"
+                                readOnly
+                              />
                             ) : (
                               <GrayCard width="195px" height="140px" />
                             )}

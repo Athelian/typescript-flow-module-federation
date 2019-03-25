@@ -3,11 +3,11 @@ import * as React from 'react';
 import { EntityIcon, SortInput, SearchInput, StatusToggleTabs } from 'components/NavBar';
 
 type OptionalProps = {
+  icon?: string,
   renderIcon: Function,
 };
 
 type Props = OptionalProps & {
-  icon: string,
   sortFields: Array<{
     title: React.Node,
     value: string,
@@ -22,7 +22,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  renderIcon: icon => <EntityIcon icon={icon} color={icon} />,
+  renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
 
 export function currentSort(
