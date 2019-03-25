@@ -413,12 +413,12 @@ const ShipmentContainerCard = ({
               </div>
               <div className={InputIconStyle}>
                 <Display align="left">
-                  {isNullOrUndefined(freeTimeStartDate) || isNullOrUndefined(freeTimeDuration) ? (
+                  {isNullOrUndefined(freeTimeStartDate) ||
+                  freeTimeStartDate === '' ||
+                  isNullOrUndefined(freeTimeDuration) ? (
                     <FormattedMessage id="component.card.na" defaultMessage="N/A" />
                   ) : (
-                    <FormattedDate
-                      value={calculateDueDate(new Date(freeTimeStartDate), freeTimeDuration)}
-                    />
+                    <FormattedDate value={calculateDueDate(freeTimeStartDate, freeTimeDuration)} />
                   )}
                 </Display>
               </div>

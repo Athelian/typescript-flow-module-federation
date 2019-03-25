@@ -117,9 +117,11 @@ const ContainerSection = () => {
           const values = { ...originalValues, ...state };
 
           const dueDate =
-            values.freeTimeStartDate && !isNullOrUndefined(values.freeTimeDuration)
-              ? calculateDueDate(new Date(values.freeTimeStartDate), values.freeTimeDuration)
-              : null;
+            isNullOrUndefined(values.freeTimeStartDate) ||
+            values.freeTimeStartDate === '' ||
+            isNullOrUndefined(values.freeTimeDuration)
+              ? null
+              : calculateDueDate(values.freeTimeStartDate, values.freeTimeDuration);
 
           const freeTime = renderFreeTime(
             dueDate,

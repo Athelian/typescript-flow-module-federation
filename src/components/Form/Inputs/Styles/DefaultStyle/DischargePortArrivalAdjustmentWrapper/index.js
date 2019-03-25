@@ -149,12 +149,10 @@ class DischargePortArrivalAdjustmentWrapper extends React.Component<Props, State
               className={RemoveButtonStyle}
               onClick={() => {
                 removeArrayItem(`${targetName}[${index}]`);
-                const { arrival, timelineDateRevisions = [] } = values;
+                const { date, timelineDateRevisions = [] } = values;
                 if (index === timelineDateRevisions.length - 1) {
                   const freeTimeStartDate =
-                    timelineDateRevisions.length > 1
-                      ? timelineDateRevisions[timelineDateRevisions.length - 2].date
-                      : arrival;
+                    index === 0 ? date : timelineDateRevisions[index - 1].date;
                   setShipmentContainers(
                     'containers',
                     shipmentContainers.map(container =>
