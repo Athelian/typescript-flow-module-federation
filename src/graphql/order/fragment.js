@@ -79,6 +79,9 @@ export const orderFormFragment = gql`
                 id
                 name
                 serial
+                tags {
+                  ...tagFragment
+                }
                 files {
                   ...imageFragment
                 }
