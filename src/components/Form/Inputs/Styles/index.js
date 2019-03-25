@@ -1,5 +1,6 @@
 // @flow
 import DefaultAdjustmentStyle from './DefaultStyle/DefaultAdjustmentStyle';
+import DischargePortArrivalAdjustmentWrapper from './DefaultStyle/DischargePortArrivalAdjustmentWrapper';
 import DefaultCustomFieldDefinitionStyle from './DefaultStyle/DefaultCustomFieldDefinitionStyle';
 import DefaultCustomFieldStyle from './DefaultStyle/DefaultCustomFieldStyle';
 import DefaultStyle from './DefaultStyle';
@@ -17,6 +18,7 @@ import {
 
 export {
   DefaultAdjustmentStyle,
+  DischargePortArrivalAdjustmentWrapper,
   DefaultCustomFieldDefinitionStyle,
   DefaultCustomFieldStyle,
   DefaultStyle,
