@@ -788,6 +788,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               const { totalAdjusted, ...inputBatchFields } = batch;
                               moveOrderItems.push({
                                 ...orderItem,
+                                quantity: inputBatchFields.quantity + totalAdjusted,
                                 isNew: true,
                                 ...(needToResetPrice
                                   ? {
@@ -966,6 +967,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
+                                quantity: batch.quantity + totalAdjusted,
                                 batches: [{ ...inputBatchFields, isNew: true }],
                               });
                             }
