@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import { usePrevious } from 'modules/form/hooks';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import logger from 'utils/logger';
 import ContainerGridView from './ContainerGridView';
 import { containerListQuery } from './query';
 
@@ -21,20 +19,13 @@ type Props = {
 };
 
 const ContainerList = ({ ...filtersAndSort }: Props) => {
-  const lastFilter = usePrevious(filtersAndSort);
-  const [isReady, setIsReady] = React.useState(true);
-  React.useEffect(() => {
-    if (!isEquals(lastFilter, filtersAndSort)) {
-      logger.warn('re-render');
-      if (isReady) {
-        setIsReady(false);
-      }
-    } else if (!isReady) {
-      setIsReady(true);
-    }
-  });
   return (
-    <Query query={containerListQuery} variables={filtersAndSort} fetchPolicy="network-only">
+    <Query
+      key={JSON.stringify(filtersAndSort)}
+      query={containerListQuery}
+      variables={filtersAndSort}
+      fetchPolicy="network-only"
+    >
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
