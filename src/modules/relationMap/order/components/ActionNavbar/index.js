@@ -25,6 +25,7 @@ import { orderDetailQuery } from 'modules/relationMap/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
+import { calculateBatchQuantity } from 'modules/batch/form/helper';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
@@ -788,7 +789,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               const { totalAdjusted, ...inputBatchFields } = batch;
                               moveOrderItems.push({
                                 ...orderItem,
-                                quantity: inputBatchFields.quantity + totalAdjusted,
+                                quantity: calculateBatchQuantity([batch]),
                                 isNew: true,
                                 ...(needToResetPrice
                                   ? {
@@ -805,6 +806,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     shipment: inputBatchFields.shipment
                                       ? shipments[inputBatchFields.shipment.id]
                                       : null,
+                                    batchAdjustments: inputBatchFields.batchAdjustments
+                                      ? inputBatchFields.batchAdjustments.map(item => ({
+                                          ...item,
+                                          isNew: true,
+                                        }))
+                                      : [],
                                   },
                                 ],
                                 order: null,
@@ -967,8 +974,19 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                quantity: batch.quantity + totalAdjusted,
-                                batches: [{ ...inputBatchFields, isNew: true }],
+                                batches: [
+                                  {
+                                    ...inputBatchFields,
+                                    batchAdjustments: inputBatchFields.batchAdjustments
+                                      ? inputBatchFields.batchAdjustments.map(item => ({
+                                          ...item,
+                                          isNew: true,
+                                        }))
+                                      : [],
+                                    isNew: true,
+                                  },
+                                ],
+                                quantity: calculateBatchQuantity([batch]),
                               });
                             }
                           }
