@@ -114,7 +114,7 @@ class MaskFormWrapper extends React.Component<Props> {
                   <Layout
                     navBar={
                       <SlideViewNavBar>
-                        <EntityIcon icon="METADATA" color="METADATA" />
+                        <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                         <JumpToSection>
                           <SectionTabs
                             link="metadata_templateSection"

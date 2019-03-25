@@ -36,6 +36,7 @@ import {
   faEdit as METADATA,
   faFileSpreadsheet as TEMPLATE,
   faClipboardCheck as TASK,
+  faTable as EDIT_TABLE,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -178,6 +179,7 @@ export default {
   TEMPLATE,
   STAR,
   STOPWATCH,
+  EDIT_TABLE,
 
   RELATION_MAP,
   CONNECT,

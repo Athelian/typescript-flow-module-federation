@@ -9,7 +9,7 @@ import { tableTemplateQuery } from 'modules/tableTemplate/list/query';
 import TableTemplateGridView from 'modules/tableTemplate/list/TableTemplateGridView';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { TableTemplateCard } from 'components/Cards';
+import { TemplateCard } from 'components/Cards';
 
 type Props = {
   selected?: ?{
@@ -56,7 +56,7 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" />
+                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                   <CancelButton onClick={onCancel} />
                   <SaveButton
                     disabled={isEquals(value, selected)}
@@ -72,10 +72,16 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
                 hasMore={hasMore}
                 isLoading={loading}
                 renderItem={item => (
-                  <TableTemplateCard
+                  <TemplateCard
                     onSelect={() => set(item)}
                     key={item.id}
-                    template={item}
+                    template={{
+                      id: item.id,
+                      title: item.name,
+                      description: item.memo,
+                      count: (item.fields || []).length,
+                    }}
+                    type="EDIT_TABLE"
                     actions={[]}
                     showActionsOnHover
                     selectable

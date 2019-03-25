@@ -426,7 +426,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
               <Layout
                 navBar={
                   <SlideViewNavBar>
-                    <EntityIcon icon="EDIT" color="EDIT" />
+                    <EntityIcon icon="EDIT_TABLE" color="RELATION_MAP" />
                     <CancelButton onClick={onCancel} />
                     <SaveButton
                       isLoading={loading}

@@ -6,21 +6,22 @@ import { TabItemStyle, DisabledStyle, IconStyle } from './style';
 
 type OptionalProps = {
   className: string,
-  disabled?: boolean,
+  disabled: boolean,
   icon?: string,
   allowClickOnDisable: boolean,
+  onClick: Function,
 };
+
 type Props = OptionalProps & {
   label: string | React.Node,
   active: boolean,
-  onClick: Function,
 };
 
 const defaultProps = {
   className: '',
   disabled: false,
   allowClickOnDisable: false,
-  icon: null,
+  onClick: () => {},
 };
 
 const TabItem = ({

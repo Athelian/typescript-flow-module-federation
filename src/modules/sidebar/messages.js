@@ -80,6 +80,6 @@ export default defineMessages({
   },
   template: {
     id: 'modules.SideBar.template',
-    defaultMessage: 'TEMPLATE',
+    defaultMessage: 'RELATION TABLE',
   },
 });

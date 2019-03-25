@@ -10,14 +10,13 @@ import SlideView from 'components/SlideView';
 import { UIConsumer } from 'modules/ui';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 import Layout from 'components/Layout';
-import Icon from 'components/Icon';
 import FilterToolBar from 'components/common/FilterToolBar';
 import NavBar, { EntityIcon } from 'components/NavBar';
+import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
 import TableTemplateList from './list';
 import messages from './messages';
-import { HeaderIconStyle } from './style';
 
 type Props = {
   intl: IntlShape,
@@ -73,22 +72,23 @@ const TableTemplateModule = (props: Props) => {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="METADATA" color="METADATA" />
-                <FilterToolBar
+                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                <TabItem
+                  active
+                  label={
+                    <FormattedMessage
+                      id="modules.TableTemplates.orderFocus"
+                      defaultMessage="ORDER FOCUS"
+                    />
+                  }
                   icon="ORDER"
-                  renderIcon={icon => (
-                    <div className={HeaderIconStyle}>
-                      <Icon icon={icon} />
-                      <FormattedMessage
-                        id="modules.TableTemplates.orderFocus"
-                        defaultMessage="ORDER FOCUS"
-                      />
-                    </div>
-                  )}
+                />
+                <FilterToolBar
                   sortFields={sortFields}
                   filtersAndSort={filtersAndSort}
                   onChange={onChangeFilter}
                 />
+
                 <BooleanValue>
                   {({ value: isOpen, set: toggle }) => (
                     <>

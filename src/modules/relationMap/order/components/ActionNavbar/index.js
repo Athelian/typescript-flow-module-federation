@@ -187,7 +187,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   {({ value: opened, set: openTableView }) => (
                     <>
                       <BaseButton
-                        icon="EDIT"
+                        icon="EDIT_TABLE"
                         label={
                           <FormattedMessage
                             id="modules.RelationMaps.label.edit"

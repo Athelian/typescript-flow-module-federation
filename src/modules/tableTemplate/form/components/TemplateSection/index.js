@@ -66,7 +66,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                         <div className={DescriptionLabelWrapperStyle}>
                           <FormattedMessage
                             id="modules.TableTemplates.memo"
-                            defaultMessage="MEMO"
+                            defaultMessage="DESCRIPTION"
                           />
                         </div>
                       }

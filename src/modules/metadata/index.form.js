@@ -42,7 +42,7 @@ const MetadataForm = ({ entityType: entity }: Props) => {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="METADATA" color="METADATA" invert />
+                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                 <TabItem
                   active={entityType === 'Order'}
                   label={<FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />}

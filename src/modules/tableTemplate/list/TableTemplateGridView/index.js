@@ -4,7 +4,7 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
-import { TableTemplateCard } from 'components/Cards';
+import { TemplateCard } from 'components/Cards';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 
 type Props = {
@@ -19,10 +19,16 @@ const defaultRenderItem = (item: Object) => (
   <BooleanValue key={item.id}>
     {({ value: isOpen, set: toggle }) => (
       <>
-        <TableTemplateCard
+        <TemplateCard
           onClick={() => toggle(true)}
           key={item.id}
-          template={item}
+          template={{
+            id: item.id,
+            title: item.name,
+            description: item.memo,
+            count: (item.fields || []).length,
+          }}
+          type="EDIT_TABLE"
           actions={[]}
           showActionsOnHover
         />
