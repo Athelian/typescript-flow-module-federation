@@ -98,6 +98,14 @@ export const batchTableFragment = gql`
     expiredAt
     producedAt
     totalAdjusted
+    batchAdjustments {
+      ... on BatchAdjustment {
+        id
+        reason
+        quantity
+        memo
+      }
+    }
     customFields {
       ...customFieldsFragment
     }
