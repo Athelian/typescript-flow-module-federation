@@ -27,6 +27,7 @@ import ContainerFormContainer from 'modules/container/form/container';
 import {
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
+  ShipmentTimelineContainer,
 } from 'modules/shipment/form/containers';
 import { WAREHOUSE_FORM, WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
 import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/Cards';
@@ -84,7 +85,9 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
   const { hasPermission } = usePermission(isOwner);
 
   return (
-    <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
+    <Subscribe
+      to={[ShipmentContainersContainer, ShipmentBatchesContainer, ShipmentTimelineContainer]}
+    >
       {(
         {
           originalValues: containersOriginalValues,
@@ -97,7 +100,8 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
           setFieldValue: updateBatchesState,
           removeExistingBatches,
           changeContainerIdToExistingBatches,
-        }
+        },
+        { state: { voyages } }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
 
@@ -310,7 +314,14 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                         setDeepFieldValue(`containers.${index}`, newContainer);
                                         toggleContainerForm(false);
                                       }}
-                                      onFormReady={() => initDetailValues(container)}
+                                      onFormReady={() =>
+                                        initDetailValues({
+                                          ...container,
+                                          shipment: {
+                                            voyages,
+                                          },
+                                        })
+                                      }
                                     />
                                   )}
                                 </Subscribe>
