@@ -155,9 +155,9 @@ const SideBar = () => {
                       isExpanded={expandedSubMenu === 'settings'}
                       hasActiveChild={
                         `/${location.pathname.split('/')[1]}` === '/tags' ||
-                        `/${location.pathname.split('/')[1]}` === '/metadata' ||
-                        `/${location.pathname.split('/')[1]}` === '/template' ||
-                        `/${location.pathname.split('/')[1]}` === '/tasks'
+                        `/${location.pathname.split('/')[2]}` === '/metadata' ||
+                        `/${location.pathname.split('/')[2]}` === '/table-template' ||
+                        `/${location.pathname.split('/')[2]}` === '/task-template'
                       }
                       icon="SETTINGS"
                       label={<FormattedMessage {...messages.settings} />}
@@ -174,8 +174,8 @@ const SideBar = () => {
                       )}
                       {hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) && (
                         <MenuItem
-                          path="/metadata/order"
-                          isActive={`/${location.pathname.split('/')[1]}` === '/metadata'}
+                          path="/settings/metadata/order"
+                          isActive={`/${location.pathname.split('/')[2]}` === '/metadata'}
                           icon="TEMPLATE"
                           label={<FormattedMessage {...messages.metadata} />}
                           onClick={() => setExpandedSubMenu(null)}
@@ -183,16 +183,16 @@ const SideBar = () => {
                       )}
                       {hasPermission(TEMPLATE_LIST) && (
                         <MenuItem
-                          path="/template"
-                          isActive={`/${location.pathname.split('/')[1]}` === '/template'}
+                          path="/settings/table-template"
+                          isActive={`/${location.pathname.split('/')[2]}` === '/table-template'}
                           icon="TEMPLATE"
                           label={<FormattedMessage {...messages.template} />}
                           onClick={() => setExpandedSubMenu(null)}
                         />
                       )}
                       <MenuItem
-                        path="/tasks"
-                        isActive={`/${location.pathname.split('/')[1]}` === '/tasks'}
+                        path="/settings/task-template"
+                        isActive={`/${location.pathname.split('/')[2]}` === '/task-template'}
                         icon="TEMPLATE"
                         label={
                           <FormattedMessage id="modules.sidebar.tasks" defaultMessage="TASKS" />
