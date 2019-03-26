@@ -48,6 +48,7 @@ type OptionalProps = {
   saveOnBlur: Function,
   editable: boolean,
   actions: Array<React.Node>,
+  isInTemplate: boolean,
 };
 
 type Props = OptionalProps;
@@ -59,6 +60,7 @@ const defaultProps = {
   saveOnBlur: () => {},
   editable: false,
   actions: [],
+  isInTemplate: false,
 };
 
 const getParentInfo = (parent: Object) => {
@@ -99,6 +101,7 @@ const TaskCard = ({
   onActivateUser,
   onDeactivateUser,
   editable,
+  isInTemplate,
   actions,
   ...rest
 }: Props) => {
@@ -135,7 +138,7 @@ const TaskCard = ({
     shipment: hasPermission(SHIPMENT_FORM),
   };
 
-  hideParentInfoForHoc = hideParentInfo;
+  hideParentInfoForHoc = hideParentInfo || isInTemplate;
 
   const IS_DND_DEVELOPED = false;
 
@@ -165,7 +168,7 @@ const TaskCard = ({
             }}
             role="presentation"
           >
-            {!hideParentInfo && (
+            {!(hideParentInfo || isInTemplate) && (
               <div className={TaskParentWrapperStyle}>
                 {viewPermissions[parentType] ? (
                   <Link
@@ -219,7 +222,7 @@ const TaskCard = ({
                       saveOnBlur({ ...task, name: inputHandlers.value });
                     }}
                     editable={editable}
-                    inputWidth={hideParentInfo ? '140px' : '160px'}
+                    inputWidth={hideParentInfo || isInTemplate ? '140px' : '160px'}
                     inputHeight="20px"
                     inputAlign="left"
                     name={fieldName}
@@ -242,31 +245,40 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
-              <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
-                {({ name: fieldName, ...inputHandlers }) => (
-                  <DateInputFactory
-                    {...inputHandlers}
-                    onBlur={evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
-                        ...task,
-                        dueDate: inputHandlers.value || null,
-                      });
-                    }}
-                    editable={editable}
-                    inputWidth="120px"
-                    inputHeight="20px"
-                    name={fieldName}
-                    isNew={false}
-                    originalValue={dueDate}
-                    inputColor={
-                      dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
-                        ? 'RED'
-                        : null
-                    }
+              {isInTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
                   />
-                )}
-              </FormField>
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          dueDate: inputHandlers.value || null,
+                        });
+                      }}
+                      editable={editable}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={dueDate}
+                      inputColor={
+                        dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
+                          ? 'RED'
+                          : null
+                      }
+                    />
+                  )}
+                </FormField>
+              )}
             </div>
 
             <div
@@ -281,26 +293,35 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
               </Label>
-              <FormField name={`task.${id}.startDate`} initValue={startDate}>
-                {({ name: fieldName, ...inputHandlers }) => (
-                  <DateInputFactory
-                    {...inputHandlers}
-                    onBlur={evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
-                        ...task,
-                        startDate: inputHandlers.value ? inputHandlers.value : null,
-                      });
-                    }}
-                    editable={editable}
-                    inputWidth="120px"
-                    inputHeight="20px"
-                    name={fieldName}
-                    isNew={false}
-                    originalValue={startDate}
+              {isInTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
                   />
-                )}
-              </FormField>
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.startDate`} initValue={startDate}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          startDate: inputHandlers.value ? inputHandlers.value : null,
+                        });
+                      }}
+                      editable={editable}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={startDate}
+                    />
+                  )}
+                </FormField>
+              )}
             </div>
 
             <div className={DividerStyle} />
@@ -345,12 +366,15 @@ const TaskCard = ({
                     })
                   }
                   users={assignedTo}
-                  onActivateUser={user =>
-                    saveOnBlur({
-                      ...task,
-                      inProgressBy: user,
-                      inProgressAt: formatToGraphql(startOfToday()),
-                    })
+                  onActivateUser={
+                    isInTemplate
+                      ? null
+                      : user =>
+                          saveOnBlur({
+                            ...task,
+                            inProgressBy: user,
+                            inProgressAt: formatToGraphql(startOfToday()),
+                          })
                   }
                   editable={editable}
                 />

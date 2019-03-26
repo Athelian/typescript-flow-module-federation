@@ -516,6 +516,7 @@ _When doing a fix for bug that exists on master/production_
 
 1. Create your branch from `hotfixes` branch
 2. When make PR, set target branch as `hotfixes` branch
+3. When make PR, set target branch as `develop` branch
 
 _When doing new feature & new feature bug fixes_
 
@@ -525,12 +526,11 @@ _When doing new feature & new feature bug fixes_
 _When doing deploy of hotfixes_
 
 1. Create PR to merge `hotfixes` into `master` branch
-2. Create PR to merge `hotfixes` into `develop` branch
 
 _When doing deploy of new features_
 
 1. Create PR to merge `develop` into `master` branch
-2. Create PR to merge `master` into `hotfixes` after the merge is complete in step 1 (edited)
+2. Create PR to merge `master` into `hotfixes` after the merge is complete in step 1
 
 ## Versioning
 

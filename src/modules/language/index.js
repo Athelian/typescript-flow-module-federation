@@ -9,7 +9,7 @@ type ContextProps = {
   setLocale: Function,
 };
 
-const LanguageContext: React.Context<ContextProps> = React.createContext({
+export const LanguageContext: React.Context<ContextProps> = React.createContext({
   language: getInitialLocale(),
   changeLocale: () => {},
   setLocale: language => language,
