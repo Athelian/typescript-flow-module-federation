@@ -48,7 +48,7 @@ type OptionalProps = {
   saveOnBlur: Function,
   editable: boolean,
   actions: Array<React.Node>,
-  isTemplate: boolean,
+  isInTemplate: boolean,
 };
 
 type Props = OptionalProps;
@@ -60,7 +60,7 @@ const defaultProps = {
   saveOnBlur: () => {},
   editable: false,
   actions: [],
-  isTemplate: false,
+  isInTemplate: false,
 };
 
 const getParentInfo = (parent: Object) => {
@@ -101,7 +101,7 @@ const TaskCard = ({
   onActivateUser,
   onDeactivateUser,
   editable,
-  isTemplate,
+  isInTemplate,
   actions,
   ...rest
 }: Props) => {
@@ -138,7 +138,7 @@ const TaskCard = ({
     shipment: hasPermission(SHIPMENT_FORM),
   };
 
-  hideParentInfoForHoc = hideParentInfo || isTemplate;
+  hideParentInfoForHoc = hideParentInfo || isInTemplate;
 
   const IS_DND_DEVELOPED = false;
 
@@ -245,7 +245,7 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
-              {isTemplate ? (
+              {isInTemplate ? (
                 <Display color="GRAY_LIGHT">
                   <FormattedMessage
                     id="components.cards.datePlaceholder"
@@ -293,7 +293,7 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
               </Label>
-              {isTemplate ? (
+              {isInTemplate ? (
                 <Display color="GRAY_LIGHT">
                   <FormattedMessage
                     id="components.cards.datePlaceholder"
@@ -367,7 +367,7 @@ const TaskCard = ({
                   }
                   users={assignedTo}
                   onActivateUser={user => {
-                    if (!isTemplate) {
+                    if (!isInTemplate) {
                       saveOnBlur({
                         ...task,
                         inProgressBy: user,

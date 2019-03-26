@@ -97,9 +97,9 @@ storiesOf('Card', module)
             {({ value: { task } }) => (
               <>
                 <Label>EDITABLE DEFAULT</Label>
-                <TaskCard task={task} editable position={1} isTemplate />
+                <TaskCard task={task} editable position={1} isInTemplate />
                 <Label>READ ONLY</Label>
-                <TaskCard task={task} editable={false} position={1} isTemplate />
+                <TaskCard task={task} editable={false} position={1} isInTemplate />
               </>
             )}
           </ObjectValue>
