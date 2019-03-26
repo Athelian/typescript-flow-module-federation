@@ -65,7 +65,9 @@ const TagSection = ({ isNew, tag }: Props) => {
                 <>
                   <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
                   {allowCreate && (
-                    <CloneButton onClick={() => navigate(`/tags/clone/${encodeId(tag.id)}`)} />
+                    <CloneButton
+                      onClick={() => navigate(`/settings/tags/clone/${encodeId(tag.id)}`)}
+                    />
                   )}
                 </>
               )}

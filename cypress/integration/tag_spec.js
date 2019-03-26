@@ -18,7 +18,7 @@ describe('Tag', () => {
   });
 
   it('new a tag', () => {
-    cy.visit('/tags')
+    cy.visit('/settings/tags')
       .getByTestId('newButton')
       .click();
 
