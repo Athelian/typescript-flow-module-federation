@@ -14,7 +14,6 @@ import FormattedNumber from 'components/FormattedNumber';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import useLanguage from 'hooks/useLanguage';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
@@ -132,7 +131,6 @@ const TaskCard = ({
 
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { isJapanese } = useLanguage();
 
   const viewPermissions = {
     order: hasPermission(ORDER_FORM),
@@ -249,17 +247,10 @@ const TaskCard = ({
               </Label>
               {isTemplate ? (
                 <Display color="GRAY_LIGHT">
-                  {isJapanese ? (
-                    <FormattedMessage
-                      id="components.cards.japanDatePlaceholder"
-                      defaultMessage="yyyy/mm/dd"
-                    />
-                  ) : (
-                    <FormattedMessage
-                      id="components.cards.englishDatePlaceholder"
-                      defaultMessage="mm/dd/yyyy"
-                    />
-                  )}
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
+                  />
                 </Display>
               ) : (
                 <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
@@ -304,17 +295,10 @@ const TaskCard = ({
               </Label>
               {isTemplate ? (
                 <Display color="GRAY_LIGHT">
-                  {isJapanese ? (
-                    <FormattedMessage
-                      id="components.cards.japanDatePlaceholder"
-                      defaultMessage="yyyy/mm/dd"
-                    />
-                  ) : (
-                    <FormattedMessage
-                      id="components.cards.englishDatePlaceholder"
-                      defaultMessage="mm/dd/yyyy"
-                    />
-                  )}
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
+                  />
                 </Display>
               ) : (
                 <FormField name={`task.${id}.startDate`} initValue={startDate}>
