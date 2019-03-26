@@ -26,7 +26,7 @@ type State = {
   isUserMenuOpen: boolean,
 };
 
-class Setting extends React.Component<Props, State> {
+class UserNavBar extends React.Component<Props, State> {
   constructor() {
     super();
     this.state = {
@@ -167,4 +167,4 @@ class Setting extends React.Component<Props, State> {
   }
 }
 
-export default Setting;
+export default UserNavBar;

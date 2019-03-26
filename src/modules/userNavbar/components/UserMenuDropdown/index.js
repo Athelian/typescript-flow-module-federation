@@ -7,14 +7,14 @@ import { Mutation } from 'react-apollo';
 import Icon from 'components/Icon';
 import { AuthenticationConsumer } from 'modules/authentication';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
-import { logOutMutation } from 'modules/setting/mutation';
+import { logOutMutation } from 'modules/userNavbar/mutation';
+import messages from 'modules/userNavbar/messages';
 import {
   UserMenuDropDownWrapperStyle,
   UserMenuItemWrapperStyle,
   UserMenuItemIconStyle,
   UserMenuItemStyle,
 } from './style';
-import messages from '../../messages';
 
 type Props = {
   isOpen: boolean,

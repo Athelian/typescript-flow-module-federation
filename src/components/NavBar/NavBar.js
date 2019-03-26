@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Setting from 'modules/setting';
+import UserNavbar from 'modules/userNavbar';
 import { NavBarStyle, ChildrenWrapperStyle } from './style';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 const NavBar = ({ children }: Props) => (
   <div className={NavBarStyle}>
     <div className={ChildrenWrapperStyle}>{children}</div>
-    <Setting />
+    <UserNavbar />
   </div>
 );
 
