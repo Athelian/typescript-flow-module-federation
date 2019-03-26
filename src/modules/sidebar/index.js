@@ -154,7 +154,7 @@ const SideBar = () => {
                       id="settings"
                       isExpanded={expandedSubMenu === 'settings'}
                       hasActiveChild={
-                        `/${location.pathname.split('/')[1]}` === '/tags' ||
+                        `/${location.pathname.split('/')[2]}` === '/tags' ||
                         `/${location.pathname.split('/')[2]}` === '/metadata' ||
                         `/${location.pathname.split('/')[2]}` === '/table-template' ||
                         `/${location.pathname.split('/')[2]}` === '/task-template'
@@ -165,8 +165,8 @@ const SideBar = () => {
                     >
                       {hasPermission(TAG_LIST) && (
                         <MenuItem
-                          path="/tags"
-                          isActive={`/${location.pathname.split('/')[1]}` === '/tags'}
+                          path="/settings/tags"
+                          isActive={`/${location.pathname.split('/')[2]}` === '/tags'}
                           icon="TAG"
                           label={<FormattedMessage {...messages.tags} />}
                           onClick={() => setExpandedSubMenu(null)}

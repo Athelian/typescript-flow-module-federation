@@ -39,7 +39,7 @@ type TagFormState = {
 export default class TagFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
 
-  onCancel = () => navigate('/tags');
+  onCancel = () => navigate('/settings/tags');
 
   onReset = ({ tagContainer, entityTypeContainer, form }: TagFormState & { form: Object }) => {
     resetFormState(tagContainer);
@@ -90,7 +90,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
   onMutationCompleted = (result: Object) => {
     if (this.isNewOrClone()) {
       const { tagCreate } = result;
-      navigate(`/tags/${encodeId(tagCreate.id)}`);
+      navigate(`/settings/tags/${encodeId(tagCreate.id)}`);
     }
   };
 

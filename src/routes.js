@@ -68,7 +68,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncTask path="task/*" />
           <AsyncRelationMap path="relation-map/*" />
           <AsyncNotifications path="notifications/*" />
-          <AsyncTags path="tags/*" />
+          <AsyncTags path="settings/tags/*" />
           <AsyncMetadata path="settings/metadata/*" />
           <AsyncTableTemplate path="settings/table-template/*" />
           <AsyncTaskTemplate path="settings/task-template/*" />
