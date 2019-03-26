@@ -5,11 +5,11 @@ import { Provider } from 'unstated';
 import { initValues } from 'modules/task/form/container';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import TaskForm from 'modules/task/form';
 import { FormContainer } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
+import TaskInfoSection from 'modules/task/form/components/TaskInfoSection';
 
 type Props = {
   task: Object,
@@ -59,7 +59,7 @@ class TaskFormWrapper extends React.Component<Props> {
             </SlideViewNavBar>
           }
         >
-          <TaskForm task={{ ...task, isNew }} />
+          <TaskInfoSection task={{ ...task, isNew }} hideParentInfo />
         </Layout>
       </Provider>
     );
