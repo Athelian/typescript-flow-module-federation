@@ -252,13 +252,13 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
             <RelationLine
               type={4}
               isTargeted={
-                findLastIndex(item.orderItems, currentOrderItem =>
+                findLastIndex(manualSortByAction(item.orderItems, state), currentOrderItem =>
                   uiSelectors.isTarget(ORDER_ITEM, currentOrderItem.id)
                 ) >= position && uiSelectors.isTarget(ORDER, item.id)
               }
               isFocused={
                 uiSelectors.isSelectEntity(highLightEntities, ORDER, item.id) &&
-                findLastIndex(item.orderItems, currentOrderItem =>
+                findLastIndex(manualSortByAction(item.orderItems, state), currentOrderItem =>
                   uiSelectors.isSelectEntity(highLightEntities, ORDER_ITEM, currentOrderItem.id)
                 ) >= position
               }
