@@ -76,7 +76,7 @@ const DischargePortArrival = (props: Props) => {
   const { user } = useUser();
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const timelineDateRevisions = [...((timelineDate && timelineDate.timelineDateRevisions) || [])];
+  const { timelineDateRevisions } = timelineDate;
   return (
     <div className={TimelineInfoSectionWrapperStyle} {...rest}>
       <GridColumn gap="10px">
