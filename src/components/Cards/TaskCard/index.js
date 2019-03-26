@@ -222,7 +222,7 @@ const TaskCard = ({
                       saveOnBlur({ ...task, name: inputHandlers.value });
                     }}
                     editable={editable}
-                    inputWidth={hideParentInfo ? '140px' : '160px'}
+                    inputWidth={hideParentInfo || isInTemplate ? '140px' : '160px'}
                     inputHeight="20px"
                     inputAlign="left"
                     name={fieldName}
@@ -366,15 +366,16 @@ const TaskCard = ({
                     })
                   }
                   users={assignedTo}
-                  onActivateUser={user => {
-                    if (!isInTemplate) {
-                      saveOnBlur({
-                        ...task,
-                        inProgressBy: user,
-                        inProgressAt: formatToGraphql(startOfToday()),
-                      });
-                    }
-                  }}
+                  onActivateUser={
+                    isInTemplate
+                      ? null
+                      : user =>
+                          saveOnBlur({
+                            ...task,
+                            inProgressBy: user,
+                            inProgressAt: formatToGraphql(startOfToday()),
+                          })
+                  }
                   editable={editable}
                 />
               )}
