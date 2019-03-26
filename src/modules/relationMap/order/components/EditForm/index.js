@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import client from 'apollo';
+import { Provider } from 'unstated';
 import { orderDetailQuery } from 'modules/relationMap/order/query';
 import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
@@ -10,6 +11,13 @@ import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
+import {
+  ShipmentInfoContainer,
+  ShipmentContainersContainer,
+  ShipmentTagsContainer,
+  ShipmentTimelineContainer,
+  ShipmentFilesContainer,
+} from 'modules/shipment/form/containers';
 
 type Props = {
   type: string,
@@ -50,19 +58,34 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
       break;
     }
     case 'NEW_SHIPMENT': {
+      const shipmentInfoContainer = new ShipmentInfoContainer();
+      const shipmentContainersContainer = new ShipmentContainersContainer();
+      const shipmentTagContainer = new ShipmentTagsContainer();
+      const shipmentTimelineContainer = new ShipmentTimelineContainer();
+      const shipmentFilesContainer = new ShipmentFilesContainer();
       form = (
-        <ShipmentForm
-          path="new"
-          isSlideView
-          redirectAfterSuccess={false}
-          onSuccessCallback={data => {
-            if (data.shipmentCreate.id) {
-              actions.addNew('SHIPMENT', data.shipmentCreate.id);
-            }
-            onClose();
-          }}
-          onCancel={onClose}
-        />
+        <Provider
+          inject={[
+            shipmentInfoContainer,
+            shipmentContainersContainer,
+            shipmentTagContainer,
+            shipmentTimelineContainer,
+            shipmentFilesContainer,
+          ]}
+        >
+          <ShipmentForm
+            path="new"
+            isSlideView
+            redirectAfterSuccess={false}
+            onSuccessCallback={data => {
+              if (data.shipmentCreate.id) {
+                actions.addNew('SHIPMENT', data.shipmentCreate.id);
+              }
+              onClose();
+            }}
+            onCancel={onClose}
+          />
+        </Provider>
       );
       break;
     }

@@ -9,15 +9,7 @@ import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import logger from 'utils/logger';
 import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
-import {
-  ShipmentBatchesContainer,
-  ShipmentContainersContainer,
-  ShipmentInfoContainer,
-  ShipmentTagsContainer,
-  ShipmentTimelineContainer,
-  ShipmentTransportTypeContainer,
-  ShipmentFilesContainer,
-} from 'modules/shipment/form/containers';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import { cleanUpData } from 'utils/data';
@@ -33,6 +25,7 @@ import { orderDetailQuery } from 'modules/relationMap/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
+import { calculateBatchQuantity } from 'modules/batch/form/helper';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
@@ -67,7 +60,7 @@ type Props = {
 };
 
 export default function ActionNavbar({ highLightEntities, entities }: Props) {
-  const { orders, orderItems, batches, exporters } = entities;
+  const { orders, orderItems, batches, shipments, exporters } = entities;
   const [activeAction, setActiveAction] = React.useState('clone');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -518,26 +511,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 />
               )}
               {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectShipment() && (
-                <Subscribe
-                  to={[
-                    ShipmentBatchesContainer,
-                    ShipmentContainersContainer,
-                    ShipmentInfoContainer,
-                    ShipmentTagsContainer,
-                    ShipmentTimelineContainer,
-                    ShipmentTransportTypeContainer,
-                    ShipmentFilesContainer,
-                  ]}
-                >
-                  {(
-                    shipmentBatchesContainer,
-                    shipmentContainersContainer,
-                    shipmentInfoContainer,
-                    shipmentTagsContainer,
-                    shipmentTimelineContainer,
-                    shipmentTransportTypeContainer,
-                    shipmentFilesContainer
-                  ) => (
+                <Subscribe to={[ShipmentBatchesContainer]}>
+                  {shipmentBatchesContainer => (
                     <MoveToShipmentPanel
                       status={state.connectShipment.status}
                       hasSelectedShipment={uiSelectors.isSelectedShipment()}
@@ -686,6 +661,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             return {
                               ...defaultBatchInput,
                               ...batch,
+                              shipment: null,
+                              container: null,
                               orderItem: {
                                 ...orderItem,
                                 productProvider: {
@@ -701,32 +678,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           })
                           .filter(Boolean);
                         shipmentBatchesContainer.initDetailValues(initBatches);
-                        shipmentContainersContainer.initDetailValues([]);
-                        shipmentInfoContainer.initDetailValues({
-                          no: '',
-                          blNo: '',
-                          blDate: '',
-                          bookingNo: '',
-                          bookingDate: '',
-                          invoiceNo: '',
-                          loadType: '',
-                          incoterm: '',
-                          carrier: '',
-                          forwarders: [],
-                          importer: {},
-                          inCharges: [],
-                          customFields: {
-                            mask: null,
-                            fieldValues: [],
-                            fieldDefinitions: [],
-                          },
-                        });
-                        shipmentTagsContainer.initDetailValues([]);
-                        shipmentTimelineContainer.initDetailValues({
-                          containerGroups: [{}],
-                          voyages: [{}],
-                        });
-                        shipmentFilesContainer.initDetailValues([]);
                         actions.showEditForm('NEW_SHIPMENT', 'new');
                       }}
                     />
@@ -769,7 +720,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         const processBatchIds = [];
                         const moveOrderItems = [];
                         const defaultBatchInput = {
-                          batchAdjustments: [],
                           isNew: true,
                           todo: {
                             tasks: [],
@@ -813,9 +763,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     return {
                                       ...defaultBatchInput,
                                       ...inputBatchFields,
+                                      shipment: inputBatchFields.shipment
+                                        ? shipments[inputBatchFields.shipment.id]
+                                        : null,
                                     };
                                   }),
                                 isNew: true,
+                                order: null,
                               });
                               processBatchIds.push(...orderItem.batches);
                             }
@@ -835,6 +789,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               const { totalAdjusted, ...inputBatchFields } = batch;
                               moveOrderItems.push({
                                 ...orderItem,
+                                quantity: calculateBatchQuantity([batch]),
                                 isNew: true,
                                 ...(needToResetPrice
                                   ? {
@@ -844,7 +799,22 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                batches: [{ ...defaultBatchInput, ...inputBatchFields }],
+                                batches: [
+                                  {
+                                    ...defaultBatchInput,
+                                    ...inputBatchFields,
+                                    shipment: inputBatchFields.shipment
+                                      ? shipments[inputBatchFields.shipment.id]
+                                      : null,
+                                    batchAdjustments: inputBatchFields.batchAdjustments
+                                      ? inputBatchFields.batchAdjustments.map(item => ({
+                                          ...item,
+                                          isNew: true,
+                                        }))
+                                      : [],
+                                  },
+                                ],
+                                order: null,
                               });
                             }
                           }
@@ -852,7 +822,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         orderItemContainer.initDetailValues(moveOrderItems);
                         orderInfoContainer.initDetailValues({
                           exporter: exporters[uiSelectors.currentExporterId()],
-                          currency: currencies.length === 1 ? currencies[0] : '',
+                          currency: currencies.length === 1 ? currencies[0] : 'USD',
                         });
                         actions.showEditForm('NEW_ORDER', 'new');
                         // remove order item and batches from original order
@@ -1004,7 +974,19 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                batches: [{ ...inputBatchFields, isNew: true }],
+                                batches: [
+                                  {
+                                    ...inputBatchFields,
+                                    batchAdjustments: inputBatchFields.batchAdjustments
+                                      ? inputBatchFields.batchAdjustments.map(item => ({
+                                          ...item,
+                                          isNew: true,
+                                        }))
+                                      : [],
+                                    isNew: true,
+                                  },
+                                ],
+                                quantity: calculateBatchQuantity([batch]),
                               });
                             }
                           }

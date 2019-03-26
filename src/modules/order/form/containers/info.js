@@ -5,21 +5,27 @@ import { isEquals } from 'utils/fp';
 
 type FormState = {
   archived?: boolean,
-  piNo?: string,
-  poNo?: string,
-  currency?: string,
-  deliveryPlace?: string,
+  piNo: ?string,
+  poNo: ?string,
+  currency: ?string,
+  deliveryPlace: ?string,
   exporter?: { id: string, name: string },
-  incoterm?: string,
-  issuedAt?: Date,
-  memo?: string,
+  incoterm: ?string,
+  issuedAt: ?Date,
+  memo: ?string,
   shipments: Array<Object>,
   inCharges: Array<Object>,
   customFields: Object,
 };
 
 const initValues = {
+  piNo: null,
+  poNo: null,
   currency: 'USD',
+  deliveryPlace: null,
+  incoterm: null,
+  issuedAt: null,
+  memo: null,
   shipments: [],
   inCharges: [],
   customFields: {

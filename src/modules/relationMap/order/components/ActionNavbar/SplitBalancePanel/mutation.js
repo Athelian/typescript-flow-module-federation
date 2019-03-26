@@ -11,11 +11,24 @@ export const batchBalanceSplitMutation = gql`
           no
           quantity
           totalAdjusted
+          batchAdjustments {
+            ... on BatchAdjustment {
+              id
+              reason
+              quantity
+              memo
+            }
+          }
           packageVolume {
             ...metricFragment
           }
           tags {
             ...tagFragment
+          }
+          orderItem {
+            ... on OrderItem {
+              id
+            }
           }
         }
       }

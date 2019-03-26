@@ -12,11 +12,24 @@ export const batchSimpleSplitMutation = gql`
             no
             quantity
             totalAdjusted
+            batchAdjustments {
+              ... on BatchAdjustment {
+                id
+                reason
+                quantity
+                memo
+              }
+            }
             tags {
               ...tagFragment
             }
             packageVolume {
               ...metricFragment
+            }
+            orderItem {
+              ... on OrderItem {
+                id
+              }
             }
           }
         }
@@ -39,11 +52,24 @@ export const batchEqualSplitMutation = gql`
             no
             quantity
             totalAdjusted
+            batchAdjustments {
+              ... on BatchAdjustment {
+                id
+                reason
+                quantity
+                memo
+              }
+            }
             packageVolume {
               ...metricFragment
             }
             tags {
               ...tagFragment
+            }
+            orderItem {
+              ... on OrderItem {
+                id
+              }
             }
           }
         }

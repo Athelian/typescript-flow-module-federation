@@ -15,4 +15,15 @@ export function convertVolume(
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
 
-export default convertVolume;
+export function calculateBatchQuantity(batches: Array<Object>): number {
+  let total = 0;
+  batches.forEach(batch => {
+    total += batch.quantity;
+    if (batch.batchAdjustments) {
+      batch.batchAdjustments.forEach(({ quantity }) => {
+        total += quantity;
+      });
+    }
+  });
+  return total;
+}

@@ -13,6 +13,14 @@ export const batchCardRMFragment = gql`
     id
     no
     quantity
+    batchAdjustments {
+      ... on BatchAdjustment {
+        id
+        reason
+        quantity
+        memo
+      }
+    }
     totalAdjusted
     tags {
       ...tagFragment
