@@ -39,8 +39,8 @@ const renderGroup = ({
         }`;
         return (
           <div style={{ display: 'flex' }} key={fieldName}>
-            <FormField name={column} initValue={hasSelectField(fieldName)}>
-              {({ name, onBlur }) => (
+            <FormField name={fieldName} initValue={hasSelectField(fieldName)}>
+              {({ onBlur }) => (
                 <>
                   <ToggleInput
                     toggled={hasSelectField(fieldName)}
@@ -50,7 +50,7 @@ const renderGroup = ({
                     }}
                     editable={editable}
                   />
-                  <Label>{name}</Label>
+                  <Label>{column}</Label>
                 </>
               )}
             </FormField>
