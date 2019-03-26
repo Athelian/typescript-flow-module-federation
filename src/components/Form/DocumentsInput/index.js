@@ -33,7 +33,13 @@ type State = {
     type: string,
     memo: string | null,
   }>,
-  prevFiles: Array<string>,
+  prevFiles: Array<{
+    id: string,
+    name: string,
+    path: string,
+    type: string,
+    memo: string | null,
+  }>,
 };
 
 const defaultProps = {
@@ -55,9 +61,26 @@ class DocumentsInput extends React.Component<Props, State> {
   };
 
   static getDerivedStateFromProps(props: Props, state: State) {
-    if (!isEquals(props.values.map(item => item.id), state.prevFiles)) {
+    if (
+      !isEquals(
+        props.values.map(({ id, type, name, path, memo }) => ({
+          id,
+          type,
+          name,
+          path,
+          memo,
+        })),
+        state.prevFiles
+      )
+    ) {
       return {
-        prevFiles: (props.values.map(item => item.id): Array<string>),
+        prevFiles: (props.values.map(({ id, type, name, path, memo }) => ({
+          id,
+          type,
+          name,
+          path,
+          memo,
+        })): Array<any>),
         filesState: (props.values.map(item => ({
           ...item,
           progress: 100,
@@ -123,7 +146,13 @@ class DocumentsInput extends React.Component<Props, State> {
             logger.error(error);
             const { values } = this.props;
             this.setState({
-              prevFiles: (values.map(item => item.id): Array<string>),
+              prevFiles: (values.map(({ id, type, name, path, memo }) => ({
+                id,
+                type,
+                name,
+                path,
+                memo,
+              })): Array<any>),
               filesState: (values.map(item => ({
                 ...item,
                 progress: 100,
