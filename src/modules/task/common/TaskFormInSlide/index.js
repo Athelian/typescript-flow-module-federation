@@ -23,7 +23,7 @@ type Props = {
 
 const formContainer = new FormContainer();
 
-class TaskFormWrapper extends React.Component<Props> {
+class TaskFormInSlide extends React.Component<Props> {
   componentDidMount() {
     const { task, initDetailValues } = this.props;
     initDetailValues({ ...initValues, ...task });
@@ -66,4 +66,4 @@ class TaskFormWrapper extends React.Component<Props> {
   }
 }
 
-export default TaskFormWrapper;
+export default TaskFormInSlide;
