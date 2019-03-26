@@ -38,7 +38,7 @@ const renderGroup = ({
           index > 0 ? groups[index - 1].columns.length + position : position
         }`;
         return (
-          <div style={{ display: 'flex' }} key={column.name}>
+          <div style={{ display: 'flex' }} key={fieldName}>
             <FormField name={column} initValue={hasSelectField(fieldName)}>
               {({ name, onBlur }) => (
                 <>
