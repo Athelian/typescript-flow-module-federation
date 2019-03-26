@@ -40,6 +40,8 @@ const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
 const AsyncTask = lazy(() => import('./modules/task'));
 
+const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
+
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <>
     <AuthenticationConsumer>
@@ -69,6 +71,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncMetadata path="metadata/*" />
           <AsyncTableTemplate path="template/*" />
           <AsyncTask path="task/*" />
+          <AsyncTaskTemplate path="tasks/*" />
           <PageNotFound default />
         </Authorized>
         <Login path="/login" />

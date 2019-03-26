@@ -156,7 +156,8 @@ const SideBar = () => {
                       hasActiveChild={
                         `/${location.pathname.split('/')[1]}` === '/tags' ||
                         `/${location.pathname.split('/')[1]}` === '/metadata' ||
-                        `/${location.pathname.split('/')[1]}` === '/template'
+                        `/${location.pathname.split('/')[1]}` === '/template' ||
+                        `/${location.pathname.split('/')[1]}` === '/tasks'
                       }
                       icon="SETTINGS"
                       label={<FormattedMessage {...messages.settings} />}
@@ -189,6 +190,15 @@ const SideBar = () => {
                           onClick={() => setExpandedSubMenu(null)}
                         />
                       )}
+                      <MenuItem
+                        path="/tasks"
+                        isActive={`/${location.pathname.split('/')[1]}` === '/tasks'}
+                        icon="TEMPLATE"
+                        label={
+                          <FormattedMessage id="modules.sidebar.tasks" defaultMessage="TASKS" />
+                        }
+                        onClick={() => setExpandedSubMenu(null)}
+                      />
                     </SubMenu>
                   )}
                 </div>
