@@ -21,7 +21,7 @@ const TaskTemplateListModule = () => {
             {...uiState}
             navBar={
               <NavBar>
-                <EntityIcon icon="TASK" color="TEMPLATE" invert />
+                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                 <TabItem
                   active={entityType === 'Order'}
                   icon="ORDER"
