@@ -168,7 +168,7 @@ const TaskCard = ({
             }}
             role="presentation"
           >
-            {!hideParentInfo && (
+            {!(hideParentInfo || isInTemplate) && (
               <div className={TaskParentWrapperStyle}>
                 {viewPermissions[parentType] ? (
                   <Link
