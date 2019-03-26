@@ -21,3 +21,6 @@ export const formatEndDate = (date: string): Date =>
   zonedTimeToUtc(endOfDay(new Date(date)), utcTimeZone);
 
 export const startOfToday = (): Date => zonedTimeToUtc(startOfDay(new Date()), utcTimeZone);
+
+export const todayForDateInput = (): string =>
+  formatToDateInput(zonedTimeToUtc(startOfDay(new Date()), utcTimeZone));

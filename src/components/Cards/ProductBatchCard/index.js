@@ -10,7 +10,7 @@ import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { FieldItem, Label, Display } from 'components/Form';
 import { totalAdjustQuantity } from 'components/Cards/utils';
-import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import { getLatestDate } from 'utils/shipment';
 import { getByPathWithDefault } from 'utils/fp';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';

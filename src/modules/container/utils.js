@@ -46,7 +46,7 @@ export const calculateContainerTotalVolume = ({ batches = [] }: Object): Metric 
     .reduce((a, b) => a + b, 0),
 });
 
-export const calculateDueDate = (freeTimeStartDate: Date, freeTimeDuration: number = 0) =>
-  addDays(freeTimeStartDate, freeTimeDuration);
+export const calculateDueDate = (freeTimeStartDate: string, freeTimeDuration: number = 0) =>
+  addDays(new Date(freeTimeStartDate), freeTimeDuration);
 
 export default uniqueOrders;

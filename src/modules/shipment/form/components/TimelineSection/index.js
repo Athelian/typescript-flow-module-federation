@@ -25,6 +25,7 @@ import {
   VerticalLayout,
   ContainerWarehouseArrivalSection,
   TimelineInfoSection,
+  DischargePortArrival,
   VoyageInfoSection,
   VoyageSelector,
 } from './components';
@@ -46,7 +47,7 @@ const TimelineSection = ({ isNew }: Props) => {
       {(
         { originalValues: initialValues, state, setFieldDeepValue, removeArrayItem },
         { state: transportTypeState },
-        { state: containersState }
+        { state: containersState, setFieldValue: setShipmentContainers }
       ) => {
         const values: Object = {
           ...initialValues,
@@ -66,6 +67,8 @@ const TimelineSection = ({ isNew }: Props) => {
                 editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_VOYAGES])}
                 shipment={values}
                 setFieldDeepValue={setFieldDeepValue}
+                setShipmentContainers={setShipmentContainers}
+                shipmentContainers={values.containers}
                 removeArrayItem={removeArrayItem}
               />
             </div>
@@ -261,7 +264,7 @@ const TimelineSection = ({ isNew }: Props) => {
                 </>
               )}
 
-              <TimelineInfoSection
+              <DischargePortArrival
                 id="dischargePortArrival"
                 isNew={isNew}
                 icon="PORT"
@@ -274,6 +277,8 @@ const TimelineSection = ({ isNew }: Props) => {
                 timelineDate={values.voyages[voyages.length - 1].arrival}
                 sourceName={`voyages.${voyages.length - 1}.arrival`}
                 setFieldDeepValue={setFieldDeepValue}
+                setShipmentContainers={setShipmentContainers}
+                shipmentContainers={values.containers}
                 removeArrayItem={removeArrayItem}
               />
               <TimelineInfoSection

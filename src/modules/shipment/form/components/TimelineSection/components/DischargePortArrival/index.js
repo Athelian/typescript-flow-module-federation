@@ -18,7 +18,7 @@ import { FormField } from 'modules/form';
 import { todayForDateInput } from 'utils/date';
 import {
   SectionHeader,
-  DefaultAdjustmentStyle,
+  DischargePortArrivalAdjustmentWrapper,
   DateInputFactory,
   AssignmentApprovalFactory,
 } from 'components/Form';
@@ -49,6 +49,8 @@ type Props = OptionalProps & {
   title: React.Node,
   sourceName: string,
   setFieldDeepValue: (field: string, value: any) => void,
+  setShipmentContainers: Function,
+  shipmentContainers: Array<Object>,
   removeArrayItem: (path: string) => void,
 };
 
@@ -57,7 +59,7 @@ const defaultProps = {
   timelineDate: { assignedTo: [], timelineDateRevisions: [] },
 };
 
-const TimelineInfoSection = (props: Props) => {
+const DischargePortArrival = (props: Props) => {
   const {
     isNew,
     icon,
@@ -65,6 +67,8 @@ const TimelineInfoSection = (props: Props) => {
     timelineDate,
     sourceName,
     setFieldDeepValue,
+    setShipmentContainers,
+    shipmentContainers,
     removeArrayItem,
     renderBelowHeader,
     ...rest
@@ -100,16 +104,28 @@ const TimelineInfoSection = (props: Props) => {
                   <FormattedMessage id="modules.Shipments.newDate" defaultMessage="NEW DATE" />
                 }
                 onClick={() => {
+                  const date = (timelineDate && timelineDate.date) || todayForDateInput();
                   setFieldDeepValue(
                     `${sourceName}.timelineDateRevisions[${timelineDateRevisions.length}]`,
                     injectUid({
                       isNew: true,
                       type: 'Other',
-                      date: (timelineDate && timelineDate.date) || todayForDateInput(),
+                      date,
                       memo: null,
                       updatedAt: new Date(),
                       updatedBy: user,
                     })
+                  );
+                  setShipmentContainers(
+                    'containers',
+                    shipmentContainers.map(container =>
+                      container.autoCalculatedFreeTimeStartDate
+                        ? {
+                            ...container,
+                            freeTimeStartDate: date,
+                          }
+                        : container
+                    )
                   );
                 }}
               />
@@ -118,13 +134,15 @@ const TimelineInfoSection = (props: Props) => {
           {timelineDateRevisions.reverse().map(
             (adjustment, index) =>
               adjustment && (
-                <DefaultAdjustmentStyle
+                <DischargePortArrivalAdjustmentWrapper
                   isNew={isNew}
                   editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
                   index={timelineDateRevisions.length - 1 - index}
                   adjustment={adjustment}
                   key={adjustment.id}
                   setFieldArrayValue={setFieldDeepValue}
+                  shipmentContainers={shipmentContainers}
+                  setShipmentContainers={setShipmentContainers}
                   removeArrayItem={removeArrayItem}
                   values={timelineDate}
                   enumType="TimelineDateRevisionType"
@@ -141,7 +159,6 @@ const TimelineInfoSection = (props: Props) => {
                     >
                       {({ name, ...inputHandlers }) => (
                         <DateInputFactory
-                          {...inputHandlers}
                           name={name}
                           isNew={isNew}
                           originalValue={adjustment.date}
@@ -151,6 +168,26 @@ const TimelineInfoSection = (props: Props) => {
                           ])}
                           required
                           hideTooltip
+                          {...{
+                            ...inputHandlers,
+                            onBlur: evt => {
+                              inputHandlers.onBlur(evt);
+                              setFieldDeepValue(name, inputHandlers.value);
+                              if (index === 0) {
+                                setShipmentContainers(
+                                  'containers',
+                                  shipmentContainers.map(container =>
+                                    container.autoCalculatedFreeTimeStartDate
+                                      ? {
+                                          ...container,
+                                          freeTimeStartDate: inputHandlers.value,
+                                        }
+                                      : container
+                                  )
+                                );
+                              }
+                            },
+                          }}
                         />
                       )}
                     </FormField>
@@ -165,7 +202,6 @@ const TimelineInfoSection = (props: Props) => {
           >
             {({ name, ...inputHandlers }) => (
               <DateInputFactory
-                {...inputHandlers}
                 name={name}
                 isNew={isNew}
                 originalValue={timelineDate && timelineDate.date}
@@ -177,6 +213,26 @@ const TimelineInfoSection = (props: Props) => {
                   />
                 }
                 hideTooltip
+                {...{
+                  ...inputHandlers,
+                  onBlur: evt => {
+                    inputHandlers.onBlur(evt);
+                    setFieldDeepValue(name, inputHandlers.value);
+                    if (timelineDateRevisions.length === 0) {
+                      setShipmentContainers(
+                        'containers',
+                        shipmentContainers.map(container =>
+                          container.autoCalculatedFreeTimeStartDate
+                            ? {
+                                ...container,
+                                freeTimeStartDate: inputHandlers.value,
+                              }
+                            : container
+                        )
+                      );
+                    }
+                  },
+                }}
               />
             )}
           </FormField>
@@ -186,6 +242,6 @@ const TimelineInfoSection = (props: Props) => {
   );
 };
 
-TimelineInfoSection.defaultProps = defaultProps;
+DischargePortArrival.defaultProps = defaultProps;
 
-export default TimelineInfoSection;
+export default DischargePortArrival;

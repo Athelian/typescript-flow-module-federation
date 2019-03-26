@@ -51,7 +51,7 @@ import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
 import ContainerFormContainer from 'modules/container/form/container';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import { getLatestDate } from 'utils/shipment';
 import { calculateDueDate } from 'modules/container/utils';
 import ContainerSummary from './ContainerSummary';
 import {
@@ -117,9 +117,11 @@ const ContainerSection = () => {
           const values = { ...originalValues, ...state };
 
           const dueDate =
-            values.freeTimeStartDate && !isNullOrUndefined(values.freeTimeDuration)
-              ? calculateDueDate(new Date(values.freeTimeStartDate), values.freeTimeDuration)
-              : null;
+            isNullOrUndefined(values.freeTimeStartDate) ||
+            values.freeTimeStartDate === '' ||
+            isNullOrUndefined(values.freeTimeDuration)
+              ? null
+              : calculateDueDate(values.freeTimeStartDate, values.freeTimeDuration);
 
           const freeTime = renderFreeTime(
             dueDate,

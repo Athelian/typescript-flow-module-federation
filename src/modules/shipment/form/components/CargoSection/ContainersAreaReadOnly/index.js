@@ -3,12 +3,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { getByPath } from 'utils/fp';
-import { injectUid } from 'utils/id';
+import { generateContainer } from 'utils/container';
+import { getLatestDate } from 'utils/shipment';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
+  ShipmentTimelineContainer,
 } from 'modules/shipment/form/containers';
 import { ShipmentContainerCard, BatchesPoolCard } from 'components/Cards';
 import Icon from 'components/Icon';
@@ -58,14 +60,17 @@ function ContainersAreaReadOnly({
   setIsSelectBatchesMode,
 }: Props) {
   return (
-    <Subscribe to={[ShipmentContainersContainer, ShipmentBatchesContainer]}>
+    <Subscribe
+      to={[ShipmentContainersContainer, ShipmentBatchesContainer, ShipmentTimelineContainer]}
+    >
       {(
         {
           state: { containers },
           setFieldValue: setContainers,
           setDeepFieldValue: setContainersByPath,
         },
-        { state: { batches }, setFieldValue: setBatches, changeContainerIdToExistingBatches }
+        { state: { batches }, setFieldValue: setBatches, changeContainerIdToExistingBatches },
+        { state: { voyages } }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
         const isFocusedBatchesPoolCard = isFocusedBatchesPool(focusedCardIndex);
@@ -270,25 +275,17 @@ function ContainersAreaReadOnly({
                   const clonedContainers = containers.slice(0);
                   setContainers('containers', [
                     ...clonedContainers,
-                    injectUid({
+                    {
+                      ...generateContainer(),
                       no: `container no ${containers.length + 1}`,
-                      isNew: true,
-                      batches: [],
-                      tags: [],
-                      totalVolume: {
-                        metric: 'm³',
-                        value: 0,
+                      freeTimeStartDate:
+                        voyages.length === 0
+                          ? null
+                          : getLatestDate(voyages[voyages.length - 1].arrival),
+                      shipment: {
+                        voyages,
                       },
-                      totalWeight: {
-                        metric: 'kg',
-                        value: 0,
-                      },
-                      totalBatchQuantity: 0,
-                      totalBatchPackages: 0,
-                      totalNumberOfUniqueOrderItems: 0,
-                      warehouseArrivalActualDateAssignedTo: [],
-                      warehouseArrivalAgreedDateAssignedTo: [],
-                    }),
+                    },
                   ]);
                 }}
               />

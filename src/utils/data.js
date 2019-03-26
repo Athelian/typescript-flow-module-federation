@@ -4,7 +4,6 @@ import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda
 import logger from 'utils/logger';
 import { type UserAvatarType } from 'types';
 import { isEquals, getByPathWithDefault } from './fp';
-import { injectUid } from './id';
 
 export const replaceUndefined: Function = when(
   either(is(Array), is(Object)),
@@ -407,51 +406,4 @@ export const findChangeData = (originalValues: Object, newValues: Object) => {
       [key]: newValues[key],
     };
   }, {});
-};
-
-export const prepareBatchObjectForClone = ({
-  id,
-  deliveredAt,
-  desired,
-  expiredAt,
-  producedAt,
-  no,
-  ...rest
-}: Object) =>
-  injectUid({
-    ...rest,
-    isNew: true,
-    no: `${no}- clone`,
-    batchAdjustments: [],
-    todo: {
-      tasks: [],
-    },
-  });
-
-export const generateBatchByOrderItem = (orderItem: Object) => {
-  const {
-    productProvider: {
-      packageName,
-      packageCapacity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    },
-  } = orderItem;
-  return injectUid({
-    isNew: true,
-    orderItem,
-    tags: [],
-    packageName,
-    packageCapacity,
-    packageGrossWeight,
-    packageVolume,
-    packageSize,
-    quantity: 0,
-    batchAdjustments: [],
-    autoCalculatePackageQuantity: true,
-    todo: {
-      tasks: [],
-    },
-  });
 };

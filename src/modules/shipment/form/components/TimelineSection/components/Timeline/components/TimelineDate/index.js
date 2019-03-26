@@ -6,7 +6,7 @@ import differenceInDays from 'date-fns/differenceInDays';
 import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import { getLatestDate } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import { getLatestDate } from 'utils/shipment';
 import {
   TimelineDateWrapperStyle,
   PrefixIconStyle,

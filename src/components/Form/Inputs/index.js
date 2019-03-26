@@ -12,6 +12,7 @@ import TextAreaInput from './TextAreaInput';
 import TextInput from './TextInput';
 import {
   DefaultAdjustmentStyle,
+  DischargePortArrivalAdjustmentWrapper,
   DefaultCustomFieldDefinitionStyle,
   DefaultCustomFieldStyle,
   DefaultStyle,
@@ -39,6 +40,7 @@ export {
   TextAreaInput,
   TextInput,
   DefaultAdjustmentStyle,
+  DischargePortArrivalAdjustmentWrapper,
   DefaultCustomFieldDefinitionStyle,
   DefaultCustomFieldStyle,
   DefaultStyle,
