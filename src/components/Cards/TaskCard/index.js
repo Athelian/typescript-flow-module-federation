@@ -14,6 +14,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useLanguage from 'hooks/useLanguage';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
@@ -48,6 +49,7 @@ type OptionalProps = {
   saveOnBlur: Function,
   editable: boolean,
   actions: Array<React.Node>,
+  isTemplate: boolean,
 };
 
 type Props = OptionalProps;
@@ -59,6 +61,7 @@ const defaultProps = {
   saveOnBlur: () => {},
   editable: false,
   actions: [],
+  isTemplate: false,
 };
 
 const getParentInfo = (parent: Object) => {
@@ -99,6 +102,7 @@ const TaskCard = ({
   onActivateUser,
   onDeactivateUser,
   editable,
+  isTemplate,
   actions,
   ...rest
 }: Props) => {
@@ -128,6 +132,7 @@ const TaskCard = ({
 
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { isJapanese } = useLanguage();
 
   const viewPermissions = {
     order: hasPermission(ORDER_FORM),
@@ -135,7 +140,7 @@ const TaskCard = ({
     shipment: hasPermission(SHIPMENT_FORM),
   };
 
-  hideParentInfoForHoc = hideParentInfo;
+  hideParentInfoForHoc = hideParentInfo || isTemplate;
 
   const IS_DND_DEVELOPED = false;
 
@@ -242,31 +247,47 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
-              <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
-                {({ name: fieldName, ...inputHandlers }) => (
-                  <DateInputFactory
-                    {...inputHandlers}
-                    onBlur={evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
-                        ...task,
-                        dueDate: inputHandlers.value || null,
-                      });
-                    }}
-                    editable={editable}
-                    inputWidth="120px"
-                    inputHeight="20px"
-                    name={fieldName}
-                    isNew={false}
-                    originalValue={dueDate}
-                    inputColor={
-                      dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
-                        ? 'RED'
-                        : null
-                    }
-                  />
-                )}
-              </FormField>
+              {isTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  {isJapanese ? (
+                    <FormattedMessage
+                      id="components.cards.japanDatePlaceholder"
+                      defaultMessage="yyyy/mm/dd"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="components.cards.englishDatePlaceholder"
+                      defaultMessage="mm/dd/yyyy"
+                    />
+                  )}
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.dueDate`} values={values} initValue={dueDate}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          dueDate: inputHandlers.value || null,
+                        });
+                      }}
+                      editable={editable}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={dueDate}
+                      inputColor={
+                        dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
+                          ? 'RED'
+                          : null
+                      }
+                    />
+                  )}
+                </FormField>
+              )}
             </div>
 
             <div
@@ -281,26 +302,42 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
               </Label>
-              <FormField name={`task.${id}.startDate`} initValue={startDate}>
-                {({ name: fieldName, ...inputHandlers }) => (
-                  <DateInputFactory
-                    {...inputHandlers}
-                    onBlur={evt => {
-                      inputHandlers.onBlur(evt);
-                      saveOnBlur({
-                        ...task,
-                        startDate: inputHandlers.value ? inputHandlers.value : null,
-                      });
-                    }}
-                    editable={editable}
-                    inputWidth="120px"
-                    inputHeight="20px"
-                    name={fieldName}
-                    isNew={false}
-                    originalValue={startDate}
-                  />
-                )}
-              </FormField>
+              {isTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  {isJapanese ? (
+                    <FormattedMessage
+                      id="components.cards.japanDatePlaceholder"
+                      defaultMessage="yyyy/mm/dd"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="components.cards.englishDatePlaceholder"
+                      defaultMessage="mm/dd/yyyy"
+                    />
+                  )}
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.startDate`} initValue={startDate}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          startDate: inputHandlers.value ? inputHandlers.value : null,
+                        });
+                      }}
+                      editable={editable}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={startDate}
+                    />
+                  )}
+                </FormField>
+              )}
             </div>
 
             <div className={DividerStyle} />
@@ -345,13 +382,15 @@ const TaskCard = ({
                     })
                   }
                   users={assignedTo}
-                  onActivateUser={user =>
-                    saveOnBlur({
-                      ...task,
-                      inProgressBy: user,
-                      inProgressAt: formatToGraphql(startOfToday()),
-                    })
-                  }
+                  onActivateUser={user => {
+                    if (!isTemplate) {
+                      saveOnBlur({
+                        ...task,
+                        inProgressBy: user,
+                        inProgressAt: formatToGraphql(startOfToday()),
+                      });
+                    }
+                  }}
                   editable={editable}
                 />
               )}
