@@ -375,7 +375,6 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                       }
                       input={
                         <TaskAssignmentInput
-                          isInTemplate={isInTemplate}
                           users={values.assignedTo}
                           onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
                           activeUserId={activeUser && activeUser.id}
