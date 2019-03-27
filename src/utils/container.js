@@ -29,6 +29,7 @@ export const generateContainer = () =>
     representativeBatch: null,
     autoCalculatedFreeTimeStartDate: true,
     freeTimeDuration: 14,
+    departureDateAssignedTo: [],
   });
 
 export default generateContainer;
