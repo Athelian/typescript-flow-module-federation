@@ -83,8 +83,6 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
 
-  const { isNew } = task;
-
   return (
     <div className={TaskFormWrapperStyle}>
       <SectionWrapper id="task_taskSection">
@@ -92,7 +90,7 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
           icon="TASK"
           title={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
         >
-          {!isNew && <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />}
+          {task.updatedAt && <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />}
         </SectionHeader>
         <Subscribe to={[TaskContainer, FormContainer]}>
           {({ originalValues, state, setFieldValue }, { setFieldTouched }) => {

@@ -6,6 +6,7 @@ import TaskInfoSection from './components/TaskInfoSection';
 type OptionalProps = {
   task?: Object,
   onFormReady?: () => void,
+  isInTemplate: boolean,
 };
 
 type Props = OptionalProps & {};
@@ -13,6 +14,7 @@ type Props = OptionalProps & {};
 const defaultProps = {
   task: {},
   onFormReady: () => {},
+  isInTemplate: false,
 };
 
 export default class TaskForm extends React.Component<Props> {
@@ -31,7 +33,7 @@ export default class TaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { task } = this.props;
-    return <TaskInfoSection task={task} />;
+    const { task, isInTemplate } = this.props;
+    return <TaskInfoSection task={task} isInTemplate={isInTemplate} />;
   }
 }
