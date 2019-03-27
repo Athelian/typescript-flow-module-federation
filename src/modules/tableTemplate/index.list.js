@@ -22,38 +22,22 @@ type Props = {
   intl: IntlShape,
 };
 
-type State = {
-  viewType: string,
+const getInitFilter = {
+  viewType: 'grid',
   filter: {
-    type: string,
+    type: 'Order',
   },
   sort: {
-    field: string,
-    direction: string,
+    field: 'updatedAt',
+    direction: 'DESCENDING',
   },
-  perPage: number,
-  page: number,
-};
-
-const getInitFilter = () => {
-  const state: State = {
-    viewType: 'grid',
-    filter: {
-      type: 'Order',
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
+  perPage: 10,
+  page: 1,
 };
 
 const TableTemplateModule = (props: Props) => {
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(),
+    getInitFilter,
     'filterTableTemplate'
   );
   const { intl } = props;

@@ -9,12 +9,11 @@ type Props = {
 };
 
 const TaskTemplate = ({ entityType }: Props) => {
-  console.log(entityType);
   const fetchMore = () => {};
   const data = [
-    { id: 1, name: 'tt1', memo: '123' },
-    { id: 2, name: 'tt1', memo: '456' },
-    { id: 3, name: 'tt2', memo: '789' },
+    { id: 1, name: 'tt1', memo: '123', entityType },
+    { id: 2, name: 'tt1', memo: '456', entityType },
+    { id: 3, name: 'tt2', memo: '789', entityType },
   ];
   const hasMore = false;
   const loading = false;

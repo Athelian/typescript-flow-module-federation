@@ -2,7 +2,8 @@
 import React, { memo, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
-import { TemplateSection, SelectFieldsSection } from './components';
+import TemplateSection from './components/TemplateSection';
+import TaskSection from './components/TaskSection';
 import { TemplateFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -19,7 +20,7 @@ const defaultProps = {
   template: {},
 };
 
-function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
+function TaskTemplateForm({ template, isNew, initDetailValues }: Props) {
   useEffect(() => {
     if (!isNew) {
       initDetailValues(template);
@@ -27,12 +28,10 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
   });
   return (
     <div className={TemplateFormWrapperStyle}>
-      <SectionWrapper id="tableTemplate_templateSection">
+      <SectionWrapper id="taskTemplate_templateSection">
         <SectionHeader
           icon="TEMPLATE"
-          title={
-            <FormattedMessage id="modules.TableTemplates.template" defaultMessage="TEMPLATE" />
-          }
+          title={<FormattedMessage id="modules.TaskTemplates.template" defaultMessage="TEMPLATE" />}
         >
           {!isNew && (
             <>
@@ -42,22 +41,17 @@ function TableTemplateForm({ template, isNew, initDetailValues }: Props) {
         </SectionHeader>
         <TemplateSection isNew={isNew} />
       </SectionWrapper>
-      <SectionWrapper id="tableTemplate_editFieldsSection">
+      <SectionWrapper id="taskTemplate_taskSection">
         <SectionHeader
-          icon="EDIT_TABLE"
-          title={
-            <FormattedMessage
-              id="modules.TableTemplates.relationTable"
-              defaultMessage="RELATION TABLE"
-            />
-          }
+          icon="EDIT_Task"
+          title={<FormattedMessage id="modules.TaskTemplates.task" defaultMessage="TASK" />}
         />
-        <SelectFieldsSection isNew={isNew} />
+        <TaskSection isNew={isNew} />
       </SectionWrapper>
     </div>
   );
 }
 
-TableTemplateForm.defaultProps = defaultProps;
+TaskTemplateForm.defaultProps = defaultProps;
 
-export default memo<Props>(TableTemplateForm);
+export default memo<Props>(TaskTemplateForm);
