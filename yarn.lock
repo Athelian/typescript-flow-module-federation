@@ -2208,13 +2208,13 @@
   dependencies:
     "@babel/runtime" "^7.3.4"
 
-"@tippy.js/react@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.1.1.tgz#3d106963ec81d55098b6ac6f85c9f7b1a76b9fc0"
-  integrity sha512-rIM5nHuaTek5uEDDD+AjkUEtVCiU6m6Boc5F9bFMiUMp8zEaodZUG7kn/xCD3jR5SfFius3gCdYq0VOZpyypQQ==
+"@tippy.js/react@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@tippy.js/react/-/react-2.1.2.tgz#2f51a206d3b90ee2423574bf256c76e1cf2b3e53"
+  integrity sha512-5napcBju8l285PiNoNHlVj0rqVHevlwBV2ndXAzbvzUfFgtb3NxoMWUWT9vCBwx6hzK3ljAw8qqTtmkImYvVEg==
   dependencies:
     prop-types "^15.6.2"
-    tippy.js "^4.0.3"
+    tippy.js "^4.2.1"
 
 "@types/babel__core@^7.1.0":
   version "7.1.0"
@@ -6684,9 +6684,10 @@ graphql-tag@^2.10.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.1.tgz#10aa41f1cd8fae5373eaf11f1f67260a3cad5e02"
 
-graphql@^14.1.1:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.1.1.tgz#d5d77df4b19ef41538d7215d1e7a28834619fac0"
+graphql@^14.2.0:
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.2.0.tgz#ff25813ad6d186f3975977d56bc2d2434871f3b9"
+  integrity sha512-dlFHRtxsL4sBy1C1e3v64IUd5ndZhAOHZ/z3Dr4Nm6+cvr9elrnz4BhMF9h9mRBBnhUCGLc4GH4xvPbKG6sUeA==
   dependencies:
     iterall "^1.2.2"
 
@@ -13395,17 +13396,10 @@ tiny-warning@^1.0.0:
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.2.tgz#1dfae771ee1a04396bdfde27a3adcebc6b648b28"
   integrity sha512-rru86D9CpQRLvsFG5XFdy0KdLAvjdQDyZCsRcuu60WtzFylDM3eAWSxEVz5kzL2Gp544XiUvPbVKtOA/txLi9Q==
 
-tippy.js@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.0.3.tgz#fc1bdb1f995616099bd1007e42d9dbb66d081797"
-  integrity sha512-an3hGGD29DruVArvST9LhiqrFEK8Lf7/nvhUir2Z/D8LmsmrO3Folw3YoG0ha2QUqbmAMKxpcSOvnHWi3rdl2Q==
-  dependencies:
-    popper.js "^1.14.7"
-
-tippy.js@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.2.0.tgz#68387485cbc5d30ad5416bb01a20e63548898145"
-  integrity sha512-+WZRGtpIusZeJdZB2W5/rmOsT+6t3ASiQP0gln/OW1c+Goc6lx4vf+3i3KAJO875y7Vc1hGmFgyAMHor/eISBQ==
+tippy.js@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-4.2.1.tgz#9e4939d976465f77229b05a3cb233b5dc28cf850"
+  integrity sha512-xEE7zYNgQxCDdPcuT6T04f0frPh0wO7CcIqJKMFazU/NqusyjCgYSkLRosIHoiRkZMRzSPOudC8wRN5GjvAyOQ==
   dependencies:
     popper.js "^1.14.7"
 
