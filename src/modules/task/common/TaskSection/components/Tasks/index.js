@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
@@ -8,8 +7,6 @@ import SlideView from 'components/SlideView';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
-import TaskContainer from 'modules/task/form/container';
-import validator from 'modules/task/form/validator';
 import { TaskCard, CardAction } from 'components/Cards';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
@@ -92,25 +89,16 @@ const Tasks = ({
                   options={{ width: '1030px' }}
                 >
                   {opened && (
-                    <Subscribe to={[TaskContainer]}>
-                      {({ state, isDirty, initDetailValues }) => (
-                        <TaskFormInSlide
-                          isInTemplate={isInTemplate}
-                          editable={hasPermission(TASK_UPDATE)}
-                          initDetailValues={initDetailValues}
-                          task={{ ...omit(task, ['isNew', 'entity']), sort: index }}
-                          isNew={!!task.isNew}
-                          isReady={formContainer =>
-                            formContainer.isReady(state, validator) && isDirty()
-                          }
-                          onCancel={() => selectTaskSlideToggle(false)}
-                          onSave={() => {
-                            selectTaskSlideToggle(false);
-                            onSave(index, state);
-                          }}
-                        />
-                      )}
-                    </Subscribe>
+                    <TaskFormInSlide
+                      isInTemplate={isInTemplate}
+                      editable={hasPermission(TASK_UPDATE)}
+                      task={{ ...omit(task, ['entity']), sort: index }}
+                      onCancel={() => selectTaskSlideToggle(false)}
+                      onSave={value => {
+                        selectTaskSlideToggle(false);
+                        onSave(index, value);
+                      }}
+                    />
                   )}
                 </SlideView>
               </>
