@@ -275,6 +275,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     }
                     editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
                     enumType="Currency"
+                    hideClearButton
                   />
                 )}
               </FormField>
