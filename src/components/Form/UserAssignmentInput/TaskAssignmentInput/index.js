@@ -106,11 +106,7 @@ const TaskAssignmentInput = ({
               >
                 <Icon icon="ADD" />
               </button>
-              <SlideView
-                isOpen={isOpen}
-                onRequestClose={() => slideToggle(false)}
-                options={{ width: '1030px' }}
-              >
+              <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
                 {isOpen && (
                   <AssignUsers
                     selected={users}

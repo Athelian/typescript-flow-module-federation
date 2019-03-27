@@ -269,7 +269,6 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                                   <SlideView
                                     isOpen={isOpenSelectWarehouse}
                                     onRequestClose={() => toggleSelectWarehouse(false)}
-                                    options={{ width: '1030px' }}
                                   >
                                     {isOpenSelectWarehouse && (
                                       <SelectWareHouse
@@ -291,7 +290,6 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                             <SlideView
                               isOpen={isOpenContainerForm}
                               onRequestClose={() => toggleContainerForm(false)}
-                              options={{ width: '1030px' }}
                             >
                               {isOpenContainerForm && (
                                 <Subscribe to={[ContainerFormContainer]}>

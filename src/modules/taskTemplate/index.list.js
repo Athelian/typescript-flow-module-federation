@@ -51,11 +51,7 @@ const TaskTemplateListModule = () => {
                   {({ value: isOpen, set: toggle }) => (
                     <>
                       {hasPermission(TASK_CREATE) && <NewButton onClick={() => toggle(true)} />}
-                      <SlideView
-                        isOpen={isOpen}
-                        onRequestClose={() => toggle(false)}
-                        options={{ width: '1030px' }}
-                      >
+                      <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                         {isOpen && (
                           <TaskTemplateFormWrapper
                             template={{}}

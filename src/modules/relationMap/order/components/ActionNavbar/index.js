@@ -191,11 +191,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         hoverBackgroundColor="TEAL_DARK"
                         onClick={() => openTableView(true)}
                       />
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => openTableView(false)}
-                        options={{ width: '1030px' }}
-                      >
+                      <SlideView isOpen={opened} onRequestClose={() => openTableView(false)}>
                         {opened && <TableView onCancel={() => openTableView(false)} />}
                       </SlideView>
                     </>

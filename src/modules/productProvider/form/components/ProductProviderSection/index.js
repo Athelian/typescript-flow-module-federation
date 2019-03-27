@@ -88,8 +88,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           <SlideView
                             isOpen={opened}
                             onRequestClose={() => exporterSlideToggle(false)}
-                            options={{ width: '980px' }}
-                            rootElementId="slide-view-root2"
                           >
                             {opened && (
                               <SelectExporters
@@ -158,8 +156,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           <SlideView
                             isOpen={opened}
                             onRequestClose={() => supplierSlideToggle(false)}
-                            options={{ width: '980px' }}
-                            rootElementId="slide-view-root2"
                           >
                             {opened && (
                               <SelectSupplier

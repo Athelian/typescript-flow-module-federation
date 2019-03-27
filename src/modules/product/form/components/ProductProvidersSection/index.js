@@ -49,11 +49,7 @@ function ProductProvidersSection({ isOwner }: Props) {
                         onClick={() => slideToggle(true)}
                         data-testid="newProviderButton"
                       />
-                      <SlideView
-                        isOpen={opened}
-                        onRequestClose={() => slideToggle(false)}
-                        options={{ width: '1030px' }}
-                      >
+                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                         {opened && (
                           <Subscribe to={[ProductProviderContainer]}>
                             {({ initDetailValues }) => (
@@ -151,11 +147,7 @@ function ProductProvidersSection({ isOwner }: Props) {
                       <BooleanValue key={productProvider.id}>
                         {({ value: opened, set: slideToggle }) => (
                           <>
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <Subscribe to={[ProductProviderContainer]}>
                                   {({ initDetailValues }) => (

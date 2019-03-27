@@ -201,7 +201,6 @@ export default function ContainerBatchesArea({
                                   <SlideView
                                     isOpen={opened}
                                     onRequestClose={() => batchSlideToggle(false)}
-                                    options={{ width: '1030px' }}
                                   >
                                     {opened && (
                                       <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
@@ -355,7 +354,6 @@ export default function ContainerBatchesArea({
                         <SlideView
                           isOpen={selectBatchesIsOpen}
                           onRequestClose={() => selectBatchesSlideToggle(false)}
-                          options={{ width: '1030px' }}
                         >
                           {selectBatchesIsOpen && (
                             <SelectBatches
@@ -409,7 +407,6 @@ export default function ContainerBatchesArea({
                         <SlideView
                           isOpen={createBatchesIsOpen}
                           onRequestClose={() => createBatchesSlideToggle(false)}
-                          options={{ width: '1030px' }}
                         >
                           {createBatchesIsOpen && (
                             <SelectOrderItems

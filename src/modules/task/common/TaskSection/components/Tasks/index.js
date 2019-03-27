@@ -68,11 +68,7 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
                     ),
                   ].filter(Boolean)}
                 />
-                <SlideView
-                  isOpen={opened}
-                  onRequestClose={() => selectTaskSlideToggle(false)}
-                  options={{ width: '1030px' }}
-                >
+                <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
                   {opened && (
                     <Subscribe to={[TaskContainer]}>
                       {({ state, isDirty, initDetailValues }) => (

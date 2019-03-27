@@ -77,11 +77,7 @@ const TableTemplateModule = (props: Props) => {
                   {({ value: isOpen, set: toggle }) => (
                     <>
                       {canCreate && <NewButton onClick={() => toggle(true)} />}
-                      <SlideView
-                        isOpen={isOpen}
-                        onRequestClose={() => toggle(false)}
-                        options={{ width: '1030px' }}
-                      >
+                      <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                         {isOpen && (
                           <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
                         )}

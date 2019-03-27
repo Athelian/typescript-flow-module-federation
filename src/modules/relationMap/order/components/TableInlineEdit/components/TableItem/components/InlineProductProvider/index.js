@@ -23,11 +23,7 @@ export default function InlineProductProvider({ name, exporter, value, id }: Pro
               <Display align="left">{value.product.name}</Display>
             </DefaultStyle>
           </button>
-          <SlideView
-            isOpen={opened}
-            onRequestClose={() => slideToggle(false)}
-            options={{ width: '980px' }}
-          >
+          <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
             {opened && (
               <SelectProduct
                 onSelect={selectedItem => {

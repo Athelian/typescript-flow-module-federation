@@ -66,11 +66,7 @@ const CustomFieldsFactory = ({
               >
                 <FormattedMessage id="modules.form.showAll" defaultMessage="Show All" />
               </button>
-              <SlideView
-                isOpen={isOpen}
-                onRequestClose={() => slideToggle(false)}
-                options={{ width: '1030px' }}
-              >
+              <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
                 {isOpen && (
                   <Query
                     query={fieldDefinitionsQuery}

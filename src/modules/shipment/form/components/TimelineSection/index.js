@@ -331,11 +331,7 @@ const TimelineSection = ({ isNew }: Props) => {
                                 onClick={() => slideToggle(true)}
                               />
                             )}
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectWareHouse
                                   selected={warehouse}

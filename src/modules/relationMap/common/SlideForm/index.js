@@ -78,11 +78,7 @@ const SlideForm = () => (
       }
       return (
         <SlideViewWrapper reset={reset}>
-          <SlideView
-            isOpen={show}
-            onRequestClose={() => set('show', false)}
-            options={{ width: '1030px' }}
-          >
+          <SlideView isOpen={show} onRequestClose={() => set('show', false)}>
             {form}
           </SlideView>
         </SlideViewWrapper>

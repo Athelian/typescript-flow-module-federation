@@ -546,7 +546,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                           <SlideView
                             isOpen={showTemplate}
                             onRequestClose={() => setShowTemplate(false)}
-                            options={{ width: '980px' }}
                           >
                             <SelectTemplate
                               onSelect={template => {

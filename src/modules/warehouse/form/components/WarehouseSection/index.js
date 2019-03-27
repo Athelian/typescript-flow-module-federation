@@ -305,11 +305,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                             >
                               {renderPartners(values.groups, allowUpdate)}
                             </div>
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectPartners
                                   selected={values.groups}
