@@ -6,6 +6,7 @@ import { isEquals, setIn } from 'utils/fp';
 
 type FormState = {
   hasServerError: boolean,
+  serverErrors: Object,
   errors: Object,
   touched: Object,
   activeField: string,
@@ -19,6 +20,7 @@ const EmptyValidation = {
 const initState = {
   hasServerError: false,
   errors: {},
+  serverErrors: {},
   touched: {},
   activeField: '',
 };
@@ -61,6 +63,7 @@ export default class FormContainer extends Container<FormState> {
     );
 
     this.setState({
+      serverErrors,
       errors: serverErrors,
       touched: fieldsTouched,
       hasServerError: true,
@@ -87,7 +90,7 @@ export default class FormContainer extends Container<FormState> {
         } else {
           const remainErrors: Object = {};
           Object.keys(errors).forEach(field => {
-            if (!formData[field]) {
+            if (typeof formData[field] === 'undefined') {
               remainErrors[field] = errors[field];
             }
           });
@@ -102,7 +105,7 @@ export default class FormContainer extends Container<FormState> {
         if (!isEquals(Object.keys(formData), Object.keys(errors))) {
           const remainErrors: Object = {};
           Object.keys(errors).forEach(field => {
-            if (!formData[field]) {
+            if (typeof formData[field] === 'undefined') {
               remainErrors[field] = errors[field];
             }
           });
