@@ -22,3 +22,16 @@ export const TasksSectionBodyStyle: string = css`
   overflow-y: auto;
   ${scrollbars.SMALL};
 `;
+
+export const ItemGridStyle: string = css`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 15px 0 15px 10px;
+`;
+
+export const TemplateItemStyle: string = css`
+  display: flex;
+  margin: 15px 10px;
+  background: ${colors.GRAY};
+  border-radius: 5px;
+`;

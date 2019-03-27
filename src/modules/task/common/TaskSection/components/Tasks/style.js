@@ -2,12 +2,6 @@
 import { css } from 'react-emotion';
 import { presets, colors, fontSizes } from 'styles/common';
 
-export const ItemGridStyle: string = css`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 15px 0 15px 10px;
-`;
-
 export const ItemStyle: string = css`
   display: flex;
   margin: 15px 10px;
