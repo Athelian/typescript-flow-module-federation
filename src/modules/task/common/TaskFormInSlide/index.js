@@ -11,7 +11,11 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import TaskInfoSection from 'modules/task/form/components/TaskInfoSection';
 
-type Props = {
+type OptionalProps = {
+  isInTemplate: boolean,
+};
+
+type Props = OptionalProps & {
   task: Object,
   isNew: boolean,
   editable: boolean,
@@ -21,9 +25,15 @@ type Props = {
   isReady: (formContainer: Object) => boolean,
 };
 
+const defaultProps = {
+  isInTemplate: false,
+};
+
 const formContainer = new FormContainer();
 
 class TaskFormInSlide extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
   componentDidMount() {
     const { task, initDetailValues } = this.props;
     initDetailValues({ ...initValues, ...task });
@@ -36,7 +46,7 @@ class TaskFormInSlide extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, editable, isReady, onSave, task, onCancel } = this.props;
+    const { isNew, editable, isReady, onSave, task, onCancel, isInTemplate } = this.props;
     return (
       <Provider inject={[formContainer]}>
         <Layout
@@ -59,7 +69,7 @@ class TaskFormInSlide extends React.Component<Props> {
             </SlideViewNavBar>
           }
         >
-          <TaskInfoSection task={{ ...task, isNew }} hideParentInfo />
+          <TaskInfoSection task={{ ...task, isNew }} hideParentInfo isInTemplate={isInTemplate} />
         </Layout>
       </Provider>
     );

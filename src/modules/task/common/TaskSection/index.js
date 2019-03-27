@@ -22,20 +22,25 @@ import messages from 'modules/task/messages';
 import { TasksSectionWrapperStyle, TasksSectionBodyStyle } from './style';
 import Tasks from './components/Tasks';
 
-type CompatibleEntityTypes = 'batch' | 'order' | 'shipment';
+type CompatibleEntityTypes = 'batch' | 'order' | 'shipment' | 'taskTemplate';
 
-type Props = {
+type OptionalProps = {
+  getConfig: string => Object,
+};
+
+type Props = OptionalProps & {
   type: CompatibleEntityTypes,
   intl: IntlShape,
 };
 
-function TaskSection({ type, intl }: Props) {
-  const getConfig = () => {
+const defaultProps = {
+  getConfig: (type: string) => {
     if (type === 'batch') {
       return {
         taskListPermission: BATCH_TASK_LIST,
         taskFormPermission: BATCH_TASK_FORM,
         tasksContainer: BatchTasksContainer,
+        isInTemplate: false,
       };
     }
     if (type === 'order') {
@@ -43,6 +48,7 @@ function TaskSection({ type, intl }: Props) {
         taskListPermission: ORDER_TASK_LIST,
         taskFormPermission: ORDER_TASK_FORM,
         tasksContainer: OrderTasksContainer,
+        isInTemplate: false,
       };
     }
     if (type === 'shipment') {
@@ -50,16 +56,19 @@ function TaskSection({ type, intl }: Props) {
         taskListPermission: SHIPMENT_TASK_LIST,
         taskFormPermission: SHIPMENT_TASK_FORM,
         tasksContainer: ShipmentTasksContainer,
+        isInTemplate: false,
       };
     }
-    return {};
-  };
+    return { isInTemplate: true };
+  },
+};
 
-  const { taskListPermission, taskFormPermission, tasksContainer } = getConfig();
+function TaskSection({ getConfig, type, intl }: Props) {
+  const { taskListPermission, taskFormPermission, tasksContainer, isInTemplate } = getConfig(type);
 
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  if (!hasPermission(taskListPermission)) return null;
+  if (!hasPermission(taskListPermission) && !isInTemplate) return null;
 
   return (
     <Subscribe to={[tasksContainer, FormContainer]}>
@@ -86,7 +95,7 @@ function TaskSection({ type, intl }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {hasPermission(TASK_CREATE) && (
+              {(hasPermission(TASK_CREATE) || isInTemplate) && (
                 <NewButton
                   label={intl.formatMessage(messages.newTask)}
                   onClick={() => {
@@ -106,10 +115,11 @@ function TaskSection({ type, intl }: Props) {
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
+                isInTemplate={isInTemplate}
                 type={type}
-                editable={hasPermission(TASK_UPDATE)}
-                viewForm={hasPermission(taskFormPermission)}
-                removable={hasPermission(TASK_DELETE)}
+                editable={hasPermission(TASK_UPDATE) || isInTemplate}
+                viewForm={hasPermission(taskFormPermission) || isInTemplate}
+                removable={hasPermission(TASK_DELETE) || isInTemplate}
                 tasks={tasks}
                 onSwap={(index: number, direction: 'left' | 'right') => {
                   const nextIndex = direction === 'left' ? index - 1 : index + 1;
@@ -139,5 +149,7 @@ function TaskSection({ type, intl }: Props) {
     </Subscribe>
   );
 }
+
+TaskSection.defaultProps = defaultProps;
 
 export default injectIntl(TaskSection);

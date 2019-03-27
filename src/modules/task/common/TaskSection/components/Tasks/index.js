@@ -14,7 +14,10 @@ import { TaskCard, CardAction } from 'components/Cards';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { ItemGridStyle, ItemStyle, EmptyMessageStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  isInTemplate: boolean,
+};
+type Props = OptionalProps & {
   tasks: Array<Object>,
   onSwap: Function,
   onRemove: Function,
@@ -25,7 +28,21 @@ type Props = {
   type: string,
 };
 
-const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
+const defaultProps = {
+  isInTemplate: false,
+};
+
+const Tasks = ({
+  tasks,
+  onSwap,
+  onRemove,
+  onSave,
+  editable,
+  viewForm,
+  removable,
+  type,
+  isInTemplate,
+}: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   return tasks.length > 0 ? (
@@ -36,6 +53,7 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
             {({ value: opened, set: selectTaskSlideToggle }) => (
               <>
                 <TaskCard
+                  isInTemplate={isInTemplate}
                   editable={editable}
                   task={{
                     ...task,
@@ -77,6 +95,7 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
                     <Subscribe to={[TaskContainer]}>
                       {({ state, isDirty, initDetailValues }) => (
                         <TaskFormInSlide
+                          isInTemplate={isInTemplate}
                           editable={hasPermission(TASK_UPDATE)}
                           initDetailValues={initDetailValues}
                           task={{ ...omit(task, ['isNew', 'entity']), sort: index }}
@@ -107,4 +126,5 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
   );
 };
 
+Tasks.defaultProps = defaultProps;
 export default Tasks;

@@ -1,9 +1,10 @@
 // @flow
 import React, { memo, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
+import TaskSection from 'modules/task/common/TaskSection';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
 import TemplateSection from './components/TemplateSection';
-import TaskSection from './components/TaskSection';
 import { TemplateFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -41,13 +42,14 @@ function TaskTemplateForm({ template, isNew, initDetailValues }: Props) {
         </SectionHeader>
         <TemplateSection isNew={isNew} />
       </SectionWrapper>
-      <SectionWrapper id="taskTemplate_taskSection">
-        <SectionHeader
-          icon="EDIT_Task"
-          title={<FormattedMessage id="modules.TaskTemplates.task" defaultMessage="TASK" />}
-        />
-        <TaskSection isNew={isNew} />
-      </SectionWrapper>
+      <TaskSection
+        isNew={isNew}
+        type="taskTemplate"
+        getConfig={() => ({
+          tasksContainer: TaskTemplateFormContainer,
+          isInTemplate: true,
+        })}
+      />
     </div>
   );
 }

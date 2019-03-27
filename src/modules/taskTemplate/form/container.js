@@ -1,39 +1,22 @@
 // @flow
 import { Container } from 'unstated';
+import { cloneDeep, set } from 'lodash';
 import { cleanFalsy, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
   name?: string,
-  duDate?: string,
-  startDate?: string,
   description?: string,
-  tags?: Array<Object>,
-  memo?: string,
-  assignedTo?: Array<Object>,
-  inProgressBy?: Object,
-  inProgressAt?: string,
-  completedBy?: Object,
-  completedAt?: string,
-  updatedAt?: string,
-  updatedBy?: Object,
   type?: string,
+  todo: {
+    tasks: Array<Object>,
+  },
 };
 
-export const initValues = {
-  type: '',
-  dueDate: '',
-  startDate: '',
-  description: '',
-  name: '',
-  memo: '',
-  tags: [],
-  assignedTo: [],
-  inProgressBy: null,
-  completedAt: null,
-  completedBy: null,
-  updatedAt: null,
-  updatedBy: null,
+const initValues = {
+  todo: {
+    tasks: [],
+  },
 };
 
 export default class TaskTemplateFormContainer extends Container<FormState> {
@@ -48,10 +31,8 @@ export default class TaskTemplateFormContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
-    });
+  setFieldValue = (path: string, value: mixed) => {
+    this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
   initDetailValues = (values: Object) => {
