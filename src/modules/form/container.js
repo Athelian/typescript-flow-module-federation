@@ -33,12 +33,17 @@ export default class FormContainer extends Container<FormState> {
   };
 
   setFieldTouched = (field: string) => {
-    this.setState(prevState => ({
+    const { serverErrors, touched } = this.state;
+    if (serverErrors[field]) {
+      delete serverErrors[field];
+    }
+    this.setState({
+      serverErrors,
       touched: {
-        ...prevState.touched,
+        ...touched,
         [field]: true,
       },
-    }));
+    });
   };
 
   onReset = () => {
@@ -81,29 +86,26 @@ export default class FormContainer extends Container<FormState> {
       validate: (any, any) => Promise<any>,
     } = EmptyValidation
   ) => {
-    const { errors } = this.state;
+    const { errors, serverErrors } = this.state;
     schema
       .validate(formData, { abortEarly: false })
       .then(() => {
-        if (isEquals(Object.keys(formData), Object.keys(errors)) && Object.keys(errors).length) {
-          this.setState({ errors: {}, hasServerError: false });
-        } else {
-          const remainErrors: Object = {};
-          Object.keys(errors).forEach(field => {
-            if (typeof formData[field] === 'undefined') {
-              remainErrors[field] = errors[field];
-            }
-          });
-          this.setState({
-            errors: remainErrors,
-            hasServerError: false,
-          });
-        }
+        const remainErrors: Object = { ...serverErrors };
+        Object.keys(errors).forEach(field => {
+          if (typeof formData[field] === 'undefined') {
+            remainErrors[field] = errors[field];
+          }
+        });
+
+        this.setState({
+          errors: remainErrors,
+          hasServerError: Object.keys(serverErrors).length > 0,
+        });
       })
       .catch((yupErrors: Object) => {
         const newErrors = yupToFormErrors(yupErrors);
         if (!isEquals(Object.keys(formData), Object.keys(errors))) {
-          const remainErrors: Object = {};
+          const remainErrors: Object = { ...serverErrors };
           Object.keys(errors).forEach(field => {
             if (typeof formData[field] === 'undefined') {
               remainErrors[field] = errors[field];
@@ -116,7 +118,7 @@ export default class FormContainer extends Container<FormState> {
         } else if (!isEquals(newErrors, errors)) {
           this.setState({
             errors: newErrors,
-            hasServerError: false,
+            hasServerError: Object.keys(serverErrors).length > 0,
           });
         }
       });
