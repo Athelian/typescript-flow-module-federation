@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import TaskFormWrapper from 'modules/task/common/TaskFormWrapper';
+import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import { TaskCard, CardAction } from 'components/Cards';
@@ -76,7 +76,7 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
                   {opened && (
                     <Subscribe to={[TaskContainer]}>
                       {({ state, isDirty, initDetailValues }) => (
-                        <TaskFormWrapper
+                        <TaskFormInSlide
                           editable={hasPermission(TASK_UPDATE)}
                           initDetailValues={initDetailValues}
                           task={{ ...omit(task, ['isNew', 'entity']), sort: index }}

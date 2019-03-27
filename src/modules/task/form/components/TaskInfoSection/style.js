@@ -34,3 +34,9 @@ export const AssignedToStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   justify-content: space-between;
 `;
+
+export const TaskFormWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 40px;
+  padding: 50px 0;
+`;
