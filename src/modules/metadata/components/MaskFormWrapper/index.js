@@ -139,20 +139,17 @@ class MaskFormWrapper extends React.Component<Props> {
                         </JumpToSection>
 
                         <Subscribe to={[MaskContainer, FormContainer]}>
-                          {(maskContainer, form) =>
-                            maskContainer.isDirty() && (
-                              <>
-                                {isNew ? (
-                                  <CancelButton onClick={() => onCancel()} />
-                                ) : (
-                                  <ResetButton onClick={() => this.onReset(maskContainer, form)} />
-                                )}
+                          {(maskContainer, form) => (
+                            <>
+                              {isNew && <CancelButton onClick={() => onCancel()} />}
 
+                              {!isNew && maskContainer.isDirty() && (
+                                <ResetButton onClick={() => this.onReset(maskContainer, form)} />
+                              )}
+
+                              {(isNew || maskContainer.isDirty()) && (
                                 <SaveButton
-                                  disabled={
-                                    !maskContainer.isDirty() ||
-                                    !form.isReady(maskContainer.state, validator)
-                                  }
+                                  disabled={!form.isReady(maskContainer.state, validator)}
                                   onClick={() => {
                                     this.onSave(
                                       maskContainer.state,
@@ -166,9 +163,9 @@ class MaskFormWrapper extends React.Component<Props> {
                                   }}
                                   isLoading={isLoading}
                                 />
-                              </>
-                            )
-                          }
+                              )}
+                            </>
+                          )}
                         </Subscribe>
                       </SlideViewNavBar>
                     }
