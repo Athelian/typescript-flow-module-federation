@@ -101,6 +101,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     editable={canCreateOrUpdate}
                     enumType="Currency"
                     blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE)}
+                    hideClearButton
                   />
                 )}
               </FormField>
