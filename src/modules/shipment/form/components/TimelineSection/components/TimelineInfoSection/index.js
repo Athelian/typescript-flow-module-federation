@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { isNullOrUndefined } from 'utils/fp';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -54,7 +55,6 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   renderBelowHeader: null,
-  timelineDate: { assignedTo: [], timelineDateRevisions: [] },
 };
 
 const TimelineInfoSection = (props: Props) => {
@@ -72,7 +72,8 @@ const TimelineInfoSection = (props: Props) => {
   const { user } = useUser();
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const { timelineDateRevisions } = timelineDate;
+  if (isNullOrUndefined(timelineDate)) return null;
+  const { timelineDateRevisions = [] } = timelineDate;
   return (
     <div className={TimelineInfoSectionWrapperStyle} {...rest}>
       <GridColumn gap="10px">
