@@ -415,6 +415,26 @@ const TaskCard = ({
                     <>
                       {isExpand ? (
                         <div className={ApprovalPanelWrapperStyle}>
+                          <TaskAssignmentInput
+                            onChange={newAssignedTo =>
+                              saveOnBlur({
+                                ...task,
+                                assignedTo: newAssignedTo,
+                              })
+                            }
+                            users={[]}
+                            onActivateUser={
+                              isInTemplate
+                                ? null
+                                : user =>
+                                    saveOnBlur({
+                                      ...task,
+                                      inProgressBy: user,
+                                      inProgressAt: formatToGraphql(startOfToday()),
+                                    })
+                            }
+                            editable={editable}
+                          />
                           <OutsideClickHandler
                             onOutsideClick={() => toggleExpandPanel(false)}
                             ignoreClick={!isExpand}

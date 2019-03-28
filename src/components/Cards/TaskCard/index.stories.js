@@ -1,14 +1,52 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import apolloStorybookDecorator from 'apollo-storybook-react';
+import { range } from 'lodash';
+import faker from 'faker';
 import { Provider } from 'unstated';
 import { IntlProvider } from 'react-intl';
 import { ObjectValue } from 'react-values';
 import StoryBookWrapper from 'components/StoryBookWrapper';
+import typeDefs from 'generated/schema.graphql';
 import { Label } from 'components/Form';
 import { TaskCard } from 'components/Cards';
 
+const baseUserMock = () => {
+  return {
+    id: faker.random.uuid(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    email: faker.internet.email(),
+    role: 'default',
+    tags: [],
+    __typename: 'User',
+  };
+};
+
+const mocks = {
+  User: () => {
+    return baseUserMock();
+  },
+  UserPayloadPagination: () => {
+    return {
+      nodes: range(10).map(baseUserMock),
+      page: 1,
+      totalPage: 1,
+    };
+  },
+};
+
 storiesOf('Card', module)
+  .addDecorator(
+    apolloStorybookDecorator({
+      typeDefs,
+      mocks,
+      resolverValidationOptions: {
+        requireResolversForResolveType: false,
+      },
+    })
+  )
   .add('Task Card', () => (
     <StoryBookWrapper>
       <IntlProvider>
@@ -25,13 +63,30 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [
-                  { id: '3', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '4', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '5', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '6', firstName: 'Kevin', lastName: 'Nguyen' },
+                assignedTo: [baseUserMock()],
+                tags: [
+                  {
+                    id: 'bicsesovsbnbasgumrk0',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bics8lovsbnbasgumrjg',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bi4dmb4s7cc75f5td1lg',
+                    name: 'test for task',
+                    description: '1',
+                    color: '#11d1a6',
+                    __typename: 'Tag',
+                  },
                 ],
-                tags: [{ id: '7', name: 'tag', color: '#cccccc' }],
               },
             }}
           >
@@ -84,13 +139,30 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [
-                  { id: '3', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '4', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '5', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '6', firstName: 'Kevin', lastName: 'Nguyen' },
+                assignedTo: [baseUserMock()],
+                tags: [
+                  {
+                    id: 'bicsesovsbnbasgumrk0',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bics8lovsbnbasgumrjg',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bi4dmb4s7cc75f5td1lg',
+                    name: 'test for task',
+                    description: '1',
+                    color: '#11d1a6',
+                    __typename: 'Tag',
+                  },
                 ],
-                tags: [{ id: '7', name: 'tag', color: '#cccccc' }],
               },
             }}
           >
@@ -124,13 +196,30 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [
-                  { id: '3', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '4', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '5', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '6', firstName: 'Kevin', lastName: 'Nguyen' },
+                assignedTo: [baseUserMock(), baseUserMock()],
+                tags: [
+                  {
+                    id: 'bicsesovsbnbasgumrk0',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bics8lovsbnbasgumrjg',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bi4dmb4s7cc75f5td1lg',
+                    name: 'test for task',
+                    description: '1',
+                    color: '#11d1a6',
+                    __typename: 'Tag',
+                  },
                 ],
-                tags: [{ id: '7', name: 'tag', color: '#cccccc' }],
               },
             }}
           >
@@ -187,13 +276,30 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [
-                  { id: '3', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '4', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '5', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '6', firstName: 'Kevin', lastName: 'Nguyen' },
+                assignedTo: [baseUserMock(), baseUserMock()],
+                tags: [
+                  {
+                    id: 'bicsesovsbnbasgumrk0',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bics8lovsbnbasgumrjg',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bi4dmb4s7cc75f5td1lg',
+                    name: 'test for task',
+                    description: '1',
+                    color: '#11d1a6',
+                    __typename: 'Tag',
+                  },
                 ],
-                tags: [{ id: '7', name: 'tag', color: '#cccccc' }],
               },
             }}
           >
@@ -250,13 +356,30 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [
-                  { id: '3', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '4', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '5', firstName: 'Kevin', lastName: 'Nguyen' },
-                  { id: '6', firstName: 'Kevin', lastName: 'Nguyen' },
+                assignedTo: [baseUserMock(), baseUserMock()],
+                tags: [
+                  {
+                    id: 'bicsesovsbnbasgumrk0',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bics8lovsbnbasgumrjg',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bi4dmb4s7cc75f5td1lg',
+                    name: 'test for task',
+                    description: '1',
+                    color: '#11d1a6',
+                    __typename: 'Tag',
+                  },
                 ],
-                tags: [{ id: '7', name: 'tag', color: '#cccccc' }],
               },
             }}
           >

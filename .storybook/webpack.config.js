@@ -18,6 +18,11 @@ module.exports = {
         loaders: ['style-loader', 'css-loader'],
       },
       {
+        test: /\.(graphql|gql)$/,
+        loader: 'graphql-tag/loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.(png|jpg|gif|woff|woff2|eot|ttf|svg|otf)$/i,
         include: resolve(__dirname, '../'),
         use: [
