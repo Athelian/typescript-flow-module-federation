@@ -134,6 +134,7 @@ export const ApprovableWrapperStyle: string = css`
   position: absolute;
   width: 100%;
   bottom: 0px;
+  z-index: 2;
 `;
 
 export const ApprovableButtonStyle = ({

@@ -23,6 +23,7 @@ type OptionalProps = {
   onActivateUser: ?(UserAvatarType) => void,
   onDeactivateUser: () => void,
   editable: boolean,
+  onToggleSlideView: boolean => void,
 };
 
 type Props = OptionalProps;
@@ -32,6 +33,7 @@ const defaultProps = {
   onChange: () => {},
   onActivateUser: null,
   onDeactivateUser: () => {},
+  onToggleSlideView: () => {},
   editable: false,
 };
 
@@ -41,6 +43,7 @@ const TaskAssignmentInput = ({
   onChange,
   onActivateUser,
   onDeactivateUser,
+  onToggleSlideView,
   editable,
 }: Props) => {
   return (
@@ -92,7 +95,7 @@ const TaskAssignmentInput = ({
         );
       })}
       {editable && !activeUserId && users.length < MAX_USERS_ALLOWED && (
-        <BooleanValue>
+        <BooleanValue onChange={onToggleSlideView}>
           {({ value: isOpen, set: slideToggle }) => (
             <div role="presentation" onClick={evt => evt.stopPropagation()}>
               <button

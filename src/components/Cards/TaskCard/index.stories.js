@@ -24,13 +24,15 @@ const baseUserMock = () => {
   };
 };
 
+const usersMock = range(10).map(baseUserMock);
+
 const mocks = {
   User: () => {
     return baseUserMock();
   },
   UserPayloadPagination: () => {
     return {
-      nodes: range(10).map(baseUserMock),
+      nodes: usersMock,
       page: 1,
       totalPage: 1,
     };
@@ -63,7 +65,7 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [baseUserMock()],
+                assignedTo: usersMock.splice(1, 3),
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -90,29 +92,14 @@ storiesOf('Card', module)
               },
             }}
           >
-            {({ value: { task } }) => (
+            {({ value: { task }, assign }) => (
               <>
                 <Label>EDITABLE DEFAULT</Label>
-                <TaskCard task={task} editable position={1} />
-                <Label>EDITABLE IN PROGRESS</Label>
                 <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                  }}
+                  task={task}
                   editable
                   position={1}
-                />
-                <Label>EDITABLE COMPLETE</Label>
-                <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedAt: '2019-01-01',
-                  }}
-                  editable
-                  position={1}
+                  saveOnBlur={newTask => assign({ task: newTask })}
                 />
                 <Label>READ ONLY</Label>
                 <TaskCard task={task} editable={false} position={1} />
@@ -139,7 +126,7 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [baseUserMock()],
+                assignedTo: usersMock.splice(1, 3),
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -166,12 +153,24 @@ storiesOf('Card', module)
               },
             }}
           >
-            {({ value: { task } }) => (
+            {({ value: { task }, assign }) => (
               <>
                 <Label>EDITABLE DEFAULT</Label>
-                <TaskCard task={task} editable position={1} isInTemplate />
+                <TaskCard
+                  task={task}
+                  editable
+                  position={1}
+                  isInTemplate
+                  saveOnBlur={newTask => assign({ task: newTask })}
+                />
                 <Label>READ ONLY</Label>
-                <TaskCard task={task} editable={false} position={1} isInTemplate />
+                <TaskCard
+                  task={task}
+                  editable={false}
+                  position={1}
+                  isInTemplate
+                  saveOnBlur={newTask => assign({ task: newTask })}
+                />
               </>
             )}
           </ObjectValue>
@@ -196,7 +195,7 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [baseUserMock(), baseUserMock()],
+                assignedTo: usersMock.splice(1, 2),
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -223,29 +222,14 @@ storiesOf('Card', module)
               },
             }}
           >
-            {({ value: { task } }) => (
+            {({ value: { task }, assign }) => (
               <>
                 <Label>EDITABLE DEFAULT</Label>
-                <TaskCard task={task} editable position={1} />
-                <Label>EDITABLE IN PROGRESS</Label>
                 <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                  }}
+                  task={task}
                   editable
                   position={1}
-                />
-                <Label>EDITABLE COMPLETE</Label>
-                <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedAt: '2019-01-01',
-                  }}
-                  editable
-                  position={1}
+                  saveOnBlur={newTask => assign({ task: newTask })}
                 />
                 <Label>READ ONLY</Label>
                 <TaskCard task={task} editable={false} position={1} />
@@ -276,7 +260,7 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [baseUserMock(), baseUserMock()],
+                assignedTo: usersMock.splice(1, 2),
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -303,29 +287,14 @@ storiesOf('Card', module)
               },
             }}
           >
-            {({ value: { task } }) => (
+            {({ value: { task }, assign }) => (
               <>
                 <Label>EDITABLE DEFAULT</Label>
-                <TaskCard task={task} editable position={1} />
-                <Label>EDITABLE IN PROGRESS</Label>
                 <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                  }}
+                  task={task}
                   editable
                   position={1}
-                />
-                <Label>EDITABLE COMPLETE</Label>
-                <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedAt: '2019-01-01',
-                  }}
-                  editable
-                  position={1}
+                  saveOnBlur={newTask => assign({ task: newTask })}
                 />
                 <Label>READ ONLY</Label>
                 <TaskCard task={task} editable={false} position={1} />
@@ -356,7 +325,7 @@ storiesOf('Card', module)
                 name: 'Task name',
                 dueDate: null,
                 startDate: null,
-                assignedTo: [baseUserMock(), baseUserMock()],
+                assignedTo: usersMock.splice(1, 2),
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -383,29 +352,14 @@ storiesOf('Card', module)
               },
             }}
           >
-            {({ value: { task } }) => (
+            {({ value: { task }, assign }) => (
               <>
                 <Label>EDITABLE DEFAULT</Label>
-                <TaskCard task={task} editable position={1} />
-                <Label>EDITABLE IN PROGRESS</Label>
                 <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                  }}
+                  task={task}
                   editable
                   position={1}
-                />
-                <Label>EDITABLE COMPLETE</Label>
-                <TaskCard
-                  task={{
-                    ...task,
-                    inProgressBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedBy: { id: '1', firstName: 'Kevin', lastName: 'Nguyen' },
-                    completedAt: '2019-01-01',
-                  }}
-                  editable
-                  position={1}
+                  saveOnBlur={newTask => assign({ task: newTask })}
                 />
                 <Label>READ ONLY</Label>
                 <TaskCard task={task} editable={false} position={1} />

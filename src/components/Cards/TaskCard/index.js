@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import { encodeId } from 'utils/id';
@@ -410,40 +410,50 @@ const TaskCard = ({
             </div>
             {approvable && (
               <div className={ApprovableWrapperStyle} ref={panelEl}>
-                <BooleanValue>
-                  {({ value: isExpand, set: toggleExpandPanel }) => (
+                <ObjectValue
+                  defaultValue={{
+                    isExpand: false,
+                    isSlideViewOpen: false,
+                  }}
+                >
+                  {({ value: { isExpand, isSlideViewOpen }, set }) => (
                     <>
                       {isExpand ? (
                         <div className={ApprovalPanelWrapperStyle}>
-                          <TaskAssignmentInput
-                            onChange={newAssignedTo =>
-                              saveOnBlur({
-                                ...task,
-                                assignedTo: newAssignedTo,
-                              })
-                            }
-                            users={[]}
-                            onActivateUser={
-                              isInTemplate
-                                ? null
-                                : user =>
-                                    saveOnBlur({
-                                      ...task,
-                                      inProgressBy: user,
-                                      inProgressAt: formatToGraphql(startOfToday()),
-                                    })
-                            }
-                            editable={editable}
-                          />
                           <OutsideClickHandler
-                            onOutsideClick={() => toggleExpandPanel(false)}
-                            ignoreClick={!isExpand}
-                            ignoreElements={panelEl && panelEl.current ? [panelEl.current] : []}
+                            onOutsideClick={() => set('isExpand', false)}
+                            ignoreClick={!isExpand || isSlideViewOpen}
+                            ignoreElements={[panelEl && panelEl.current].filter(Boolean)}
                           >
+                            <div className={TaskStatusWrapperStyle}>
+                              <TaskAssignmentInput
+                                onChange={newAssignedTo =>
+                                  saveOnBlur({
+                                    ...task,
+                                    assignedTo: newAssignedTo,
+                                  })
+                                }
+                                users={assignedTo}
+                                onActivateUser={
+                                  isInTemplate
+                                    ? null
+                                    : user =>
+                                        saveOnBlur({
+                                          ...task,
+                                          inProgressBy: user,
+                                          inProgressAt: formatToGraphql(startOfToday()),
+                                        })
+                                }
+                                onToggleSlideView={isOpen => {
+                                  set('isSlideViewOpen', isOpen);
+                                }}
+                                editable={editable}
+                              />
+                            </div>
                             <button
                               className={ClosePanelButtonStyle}
                               type="button"
-                              onClick={() => toggleExpandPanel(false)}
+                              onClick={() => set('isExpand', false)}
                             >
                               <Icon icon="CHEVRON_DOWN" />
                             </button>
@@ -453,14 +463,14 @@ const TaskCard = ({
                         <button
                           className={ApprovableButtonStyle({ approvalBy, rejectBy })}
                           type="button"
-                          onClick={() => toggleExpandPanel(true)}
+                          onClick={() => set('isExpand', true)}
                         >
                           {rejectBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
                         </button>
                       )}
                     </>
                   )}
-                </BooleanValue>
+                </ObjectValue>
               </div>
             )}
           </div>
