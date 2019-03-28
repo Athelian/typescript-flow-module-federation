@@ -88,10 +88,7 @@ const Tasks = ({
                 ),
               ].filter(Boolean)}
             />
-            <SlideView
-              isOpen={opened}
-              onRequestClose={() => selectTaskSlideToggle(false)}
-            >
+            <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
                   isInTemplate={isInTemplate}
