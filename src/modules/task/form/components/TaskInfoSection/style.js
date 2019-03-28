@@ -1,6 +1,12 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, borderRadiuses, colors } from 'styles/common';
+import { layout, presets, borderRadiuses, colors, fontSizes } from 'styles/common';
+
+export const TaskFormWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 40px;
+  padding: 50px 0;
+`;
 
 export const TaskSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -35,8 +41,11 @@ export const AssignedToStyle: string = css`
   justify-content: space-between;
 `;
 
-export const TaskFormWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 40px;
-  padding: 50px 0;
+export const ApprovalToggleWrapperStyle: string = css`
+  display: flex;
+  width: 100%;
+  ${fontSizes.SMALL};
+  color: ${colors.GRAY_DARK};
+  justify-content: flex-end;
+  align-items: center;
 `;

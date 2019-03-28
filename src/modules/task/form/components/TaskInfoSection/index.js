@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
+import { ObjectValue } from 'react-values';
 import { getByPath } from 'utils/fp';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
@@ -19,7 +20,11 @@ import {
   TaskAssignmentInput,
   Display,
   TaskStatusInput,
+  ToggleInput,
+  ApproveRejectMenu,
 } from 'components/Form';
+import Divider from 'components/Divider';
+import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import FormattedNumber from 'components/FormattedNumber';
 import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
@@ -31,12 +36,13 @@ import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import {
+  TaskFormWrapperStyle,
   TaskSectionWrapperStyle,
   MainFieldsWrapperStyle,
   MemoWrapperStyle,
   TaskStatusWrapperStyle,
   AssignedToStyle,
-  TaskFormWrapperStyle,
+  ApprovalToggleWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -82,6 +88,11 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
+
+  // TODO: Remove this hardcoding
+  const FAKE_USER = { id: 'fake', firstName: 'kevin', lastName: 'nguyen' };
+  const FAKE_APPROVED = false;
+  const FAKE_REJECTED = false;
 
   return (
     <div className={TaskFormWrapperStyle}>
@@ -366,8 +377,8 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                       label={
                         <Label height="30px">
                           <FormattedMessage
-                            id="modules.Tasks.assignedTo"
-                            defaultMessage="ASSIGNED TO"
+                            id="modules.Tasks.assignedToComplete"
+                            defaultMessage="ASSIGNED TO COMPLETE"
                           />
                         </Label>
                       }
@@ -404,55 +415,47 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                       }
                     />
 
-                    {isInTemplate ? (
-                      <FieldItem
-                        vertical
-                        label={
-                          <Label height="30px" align="right">
-                            <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
-                          </Label>
-                        }
-                        input={
+                    <FieldItem
+                      vertical
+                      label={
+                        <Label height="30px" align="right">
+                          <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
+                        </Label>
+                      }
+                      input={
+                        isInTemplate ? (
                           <Display color="GRAY_LIGHT">
                             <FormattedMessage
                               id="modules.Tasks.statusDisabled"
                               defaultMessage="Status will be displayed here"
                             />
                           </Display>
-                        }
-                      />
-                    ) : (
-                      <FieldItem
-                        vertical
-                        label={
-                          <Label height="30px" align="right">
-                            <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
-                          </Label>
-                        }
-                        input={
-                          activeUser ? (
-                            <TaskStatusInput
-                              activeUser={activeUser}
-                              status={status}
-                              onClick={() => {
-                                setFieldValue('completedBy', activeUser);
-                                setFieldValue('completedAt', formatToGraphql(startOfToday()));
-                                setFieldTouched('completedBy');
-                                setFieldTouched('completedAt');
-                              }}
-                              editable={editable}
-                            />
-                          ) : (
-                            <Display color="GRAY_DARK">
-                              <FormattedMessage
-                                id="modules.Tasks.chooseUser"
-                                defaultMessage="Please choose a user to start the task"
+                        ) : (
+                          <>
+                            {activeUser ? (
+                              <TaskStatusInput
+                                activeUser={activeUser}
+                                status={status}
+                                onClick={() => {
+                                  setFieldValue('completedBy', activeUser);
+                                  setFieldValue('completedAt', formatToGraphql(startOfToday()));
+                                  setFieldTouched('completedBy');
+                                  setFieldTouched('completedAt');
+                                }}
+                                editable={editable}
                               />
-                            </Display>
-                          )
-                        }
-                      />
-                    )}
+                            ) : (
+                              <Display color="GRAY_DARK">
+                                <FormattedMessage
+                                  id="modules.Tasks.chooseUser"
+                                  defaultMessage="Please choose a user to start the task"
+                                />
+                              </Display>
+                            )}
+                          </>
+                        )
+                      }
+                    />
                   </div>
 
                   {status === COMPLETED && (
@@ -479,6 +482,95 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                       )}
                     </FormField>
                   )}
+
+                  <Divider />
+
+                  <div className={ApprovalToggleWrapperStyle}>
+                    <Icon icon="CONFIRM" />
+                    <Label align="right" width="min-content">
+                      <FormattedMessage id="modules.Tasks.approval" defaultMessage="APPROVAL" />
+                    </Label>
+                    {/* TODO: Connect api logic */}
+                    <ToggleInput />
+                  </div>
+
+                  <ObjectValue>
+                    {({ value: userChosen, set: setUserChosen }) => (
+                      <div className={AssignedToStyle}>
+                        <FieldItem
+                          vertical
+                          label={
+                            <Label height="30px">
+                              <FormattedMessage
+                                id="modules.Tasks.assignedToApprove"
+                                defaultMessage="ASSIGNED TO APPROVE"
+                              />
+                            </Label>
+                          }
+                          /* TODO: Connect api logic */
+                          input={
+                            <TaskAssignmentInput
+                              users={[FAKE_USER]}
+                              onChange={() => {}}
+                              activeUserId="fake"
+                              onActivateUser={
+                                isInTemplate
+                                  ? null
+                                  : user => {
+                                      setUserChosen(user);
+                                    }
+                              }
+                              onDeactivateUser={() => {
+                                setUserChosen(null);
+                              }}
+                              editable={editable}
+                            />
+                          }
+                        />
+
+                        <FieldItem
+                          vertical
+                          label={
+                            <Label height="30px" align="right">
+                              <FormattedMessage
+                                id="modules.Tasks.approval"
+                                defaultMessage="APPROVAL"
+                              />
+                            </Label>
+                          }
+                          input={
+                            isInTemplate ? (
+                              <Display color="GRAY_LIGHT">
+                                <FormattedMessage
+                                  id="modules.Tasks.approvalDisabled"
+                                  defaultMessage="Approval will be displayed here"
+                                />
+                              </Display>
+                            ) : (
+                              <>
+                                {userChosen ? (
+                                  <>
+                                    {!FAKE_APPROVED && !FAKE_REJECTED ? (
+                                      <ApproveRejectMenu />
+                                    ) : (
+                                      <div>wip</div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <Display color="GRAY_DARK">
+                                    <FormattedMessage
+                                      id="modules.Tasks.chooseUserForApproval"
+                                      defaultMessage="Please choose a user to start the approval"
+                                    />
+                                  </Display>
+                                )}
+                              </>
+                            )
+                          }
+                        />
+                      </div>
+                    )}
+                  </ObjectValue>
                 </div>
               </div>
             );
