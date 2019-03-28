@@ -35,7 +35,7 @@ const defaultProps = {
   isOpen: false,
   options: {
     width: { initialValue: 80, step: 10, unit: 'vw' },
-    minWidth: { initialValue: 800, step: 50, unit: 'px' },
+    minWidth: { initialValue: 1030, step: 50, unit: 'px' },
   },
 };
 
