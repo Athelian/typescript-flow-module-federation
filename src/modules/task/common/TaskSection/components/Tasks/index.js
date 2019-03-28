@@ -91,7 +91,6 @@ const Tasks = ({
             <SlideView
               isOpen={opened}
               onRequestClose={() => selectTaskSlideToggle(false)}
-              options={{ width: '1030px' }}
             >
               {opened && (
                 <TaskFormInSlide
