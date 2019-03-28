@@ -25,6 +25,7 @@ import {
   DateInputFactory,
   TaskAssignmentInput,
   TaskStatusInput,
+  ApproveRejectMenu,
 } from 'components/Form';
 import BaseCard from '../BaseCard';
 import validator from './validator';
@@ -97,6 +98,14 @@ const getParentInfo = (parent: Object) => {
 };
 
 let hideParentInfoForHoc = false;
+
+const approvableStatus = (approvalBy: ?Object, rejectBy: ?Object) => {
+  if (approvalBy && approvalBy.id) return 'Approved';
+
+  if (rejectBy && rejectBy.id) return 'Rejected';
+
+  return 'Unapproved';
+};
 
 const TaskCard = ({
   task,
@@ -415,46 +424,77 @@ const TaskCard = ({
                   defaultValue={{
                     isExpand: false,
                     isSlideViewOpen: false,
+                    selectUser: {},
                   }}
                 >
-                  {({ value: { isExpand, isSlideViewOpen }, set }) => (
+                  {({ value: { isExpand, isSlideViewOpen, selectUser }, set, assign }) => (
                     <>
                       {isExpand ? (
                         <div className={ApprovalPanelWrapperStyle}>
+                          <p>{approvableStatus(approvalBy, rejectBy)}</p>
                           <OutsideClickHandler
-                            onOutsideClick={() => set('isExpand', false)}
+                            onOutsideClick={() =>
+                              assign({
+                                isExpand: false,
+                                isSlideViewOpen: false,
+                                selectUser: {},
+                              })
+                            }
                             ignoreClick={!isExpand || isSlideViewOpen}
                             ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
                           >
                             <div className={TaskStatusWrapperStyle}>
-                              <TaskAssignmentInput
-                                onChange={newAssignedTo =>
-                                  saveOnBlur({
-                                    ...task,
-                                    assignedTo: newAssignedTo,
-                                  })
-                                }
-                                users={assignedTo}
-                                onActivateUser={
-                                  isInTemplate
-                                    ? null
-                                    : user =>
-                                        saveOnBlur({
-                                          ...task,
-                                          inProgressBy: user,
-                                          inProgressAt: formatToGraphql(startOfToday()),
-                                        })
-                                }
-                                onToggleSlideView={isOpen => {
-                                  set('isSlideViewOpen', isOpen);
-                                }}
-                                editable={editable}
-                              />
+                              {selectUser && selectUser.id ? (
+                                <ApproveRejectMenu
+                                  width="180px"
+                                  onApprove={() =>
+                                    saveOnBlur({
+                                      ...task,
+                                      approvalBy: selectUser,
+                                      approvalAt: formatToGraphql(startOfToday()),
+                                      rejectBy: null,
+                                      rejectAt: null,
+                                    })
+                                  }
+                                  onReject={() =>
+                                    saveOnBlur({
+                                      ...task,
+                                      approvalBy: null,
+                                      approvalAt: null,
+                                      rejectBy: selectUser,
+                                      rejectAt: formatToGraphql(startOfToday()),
+                                    })
+                                  }
+                                />
+                              ) : (
+                                <TaskAssignmentInput
+                                  onChange={newAssignedTo =>
+                                    saveOnBlur({
+                                      ...task,
+                                      assignedTo: newAssignedTo,
+                                    })
+                                  }
+                                  users={assignedTo}
+                                  onActivateUser={
+                                    isInTemplate ? null : user => set('selectUser', user)
+                                  }
+                                  onToggleSlideView={isOpen => {
+                                    set('isSlideViewOpen', isOpen);
+                                  }}
+                                  editable={editable}
+                                />
+                              )}
                             </div>
                             <button
                               className={ClosePanelButtonStyle}
                               type="button"
-                              onClick={() => set('isExpand', false)}
+                              onClick={() =>
+                                assign({
+                                  isExpand: false,
+                                  isSlideViewOpen: false,
+                                  selectUser: {},
+                                })
+                              }
                             >
                               <Icon icon="CHEVRON_DOWN" />
                             </button>
