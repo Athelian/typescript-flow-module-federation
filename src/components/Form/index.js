@@ -26,6 +26,7 @@ import {
   DefaultSelect,
 } from './Inputs';
 import ApprovalInput from './ApprovalInput';
+import ApproveRejectMenu from './ApproveRejectMenu';
 import Blackout from './Blackout';
 import CheckboxInput from './CheckboxInput';
 import ColorInput from './ColorInput';
@@ -95,6 +96,7 @@ export {
   Display,
   DashedPlusButton,
   ApprovalInput,
+  ApproveRejectMenu,
   Blackout,
   CheckboxInput,
   ColorInput,
