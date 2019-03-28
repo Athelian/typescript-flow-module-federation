@@ -3,12 +3,41 @@ import { css } from 'react-emotion';
 import { layout, colors, presets, borderRadiuses, fontSizes } from 'styles/common';
 
 export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
+  position: relative;
   ${layout.GRID_VERTICAL};
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
   height: ${hideParentInfo ? '159px' : '184px'};
   padding: 5px 0 10px 0;
+`;
+
+export const TaskInTemplateIconStyle: string = css`
+  ${presets.BUTTON};
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  ${fontSizes.SMALL};
+  color: ${colors.GRAY_LIGHT};
+  background: ${colors.WHITE};
+  cursor: pointer;
+  z-index: 1;
+  box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.15);
+  border-radius: 0 5px 0 5px;
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 0 5px 0 0;
+    box-shadow: 5px 0 0 0 ${colors.WHITE};
+    z-index: -1;
+  }
 `;
 
 export const TaskParentWrapperStyle: string = css`

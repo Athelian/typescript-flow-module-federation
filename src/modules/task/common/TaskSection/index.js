@@ -8,7 +8,7 @@ import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
-import { SectionWrapper, SectionHeader, DashedPlusButton } from 'components/Form';
+import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
 import { TemplateCard } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -132,16 +132,22 @@ function TaskSection({ getConfig, type, intl }: Props) {
                 {!isInTemplate && (
                   <BooleanValue>
                     {({ value: opened, set: slideToggle }) => (
-                      <div className={TemplateItemStyle}>
-                        <div>
-                          <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
+                      <>
+                        <div className={TemplateItemStyle}>
+                          <Label height="24px">
+                            {' '}
+                            <FormattedMessage
+                              id="modules.Tasks.template"
+                              defaultMessage="TEMPLATE"
+                            />
+                          </Label>
                           {useTemplate ? (
                             <TemplateCard />
                           ) : (
                             <DashedPlusButton
                               data-testid="selecTaskTemplateButton"
-                              width="195px"
-                              height="122px"
+                              width="175px"
+                              height="125px"
                               onClick={() => slideToggle(true)}
                             />
                           )}
@@ -163,7 +169,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
                             />
                           )}
                         </SlideView>
-                      </div>
+                      </>
                     )}
                   </BooleanValue>
                 )}
