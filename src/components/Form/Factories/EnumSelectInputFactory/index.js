@@ -124,6 +124,17 @@ const EnumSelectInputFactory = ({
             onChange(convertValueToFormFieldFormat(itemToValue(newValue)));
           }
         },
+        afterClearSelection: () => {
+          if (onChange) {
+            onChange(convertValueToFormFieldFormat(null));
+          }
+          if (onBlur && onFocus) {
+            setTimeout(() => {
+              onBlur();
+              onFocus();
+            }, 0);
+          }
+        },
         onBlur,
         onFocus,
         align: inputAlign,
