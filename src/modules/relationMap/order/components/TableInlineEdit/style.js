@@ -4,7 +4,7 @@ import { colors, shadows, transitions, layout, scrollbars } from 'styles/common'
 
 export const EditTableViewWrapperStyle: string = css`
   position: relative;
-  width: 1030px;
+  width: 100%;
   height: calc(100% - 50px);
 `;
 
@@ -39,7 +39,7 @@ export const SidebarWrapperStyle: string = css`
   position: absolute;
   top: 0;
   left: 0;
-  padding: 55px 0 25px 0;
+  padding: 55px 0 45px 0;
   background: ${colors.WHITE};
   ${shadows.HEADER};
   overflow: hidden;
