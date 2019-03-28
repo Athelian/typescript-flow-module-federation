@@ -8,7 +8,7 @@ export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: ${hideParentInfo ? '159px' : '184px'};
+  height: ${hideParentInfo ? '159px' : '194px'};
   padding: 5px 0 10px 0;
 `;
 
@@ -118,4 +118,35 @@ export const TaskTagsWrapperStyle: string = css`
   width: 175px;
   margin: 0 10px;
   overflow: hidden;
+`;
+
+const approvalColor = (approvalBy: ?Object, rejectBy: ?Object) => {
+  if (approvalBy) return colors.BLUE;
+
+  if (rejectBy) return colors.RED;
+
+  return colors.GRAY_LIGHT;
+};
+
+export const ApprovableWrapperStyle: string = css`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const ApprovableButtonStyle = ({
+  approvalBy,
+  rejectBy,
+}: {
+  approvalBy: ?Object,
+  rejectBy: ?Object,
+}) => css`
+  color: ${colors.WHITE};
+  background: ${approvalColor(approvalBy, rejectBy)};
+  display: inline-block;
+  width: 30px;
+  height: 15px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  text-align: center;
+  cursor: pointer;
 `;

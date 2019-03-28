@@ -39,6 +39,8 @@ import {
   DividerStyle,
   TaskStatusWrapperStyle,
   TaskTagsWrapperStyle,
+  ApprovableWrapperStyle,
+  ApprovableButtonStyle,
 } from './style';
 
 type OptionalProps = {
@@ -118,6 +120,9 @@ const TaskCard = ({
     completedAt,
     tags,
     taskTemplate,
+    approvable,
+    approvalBy,
+    rejectBy,
   } = task;
 
   const validation = validator({
@@ -398,6 +403,17 @@ const TaskCard = ({
             <div className={TaskTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
+            {approvable && (
+              <div className={ApprovableWrapperStyle}>
+                <button
+                  className={ApprovableButtonStyle({ approvalBy, rejectBy })}
+                  type="button"
+                  onClick={console.warn}
+                >
+                  {rejectBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
+                </button>
+              </div>
+            )}
           </div>
         )}
       </BooleanValue>
