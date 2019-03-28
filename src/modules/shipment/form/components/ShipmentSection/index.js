@@ -491,7 +491,6 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                 <SlideView
                                   isOpen={opened}
                                   onRequestClose={() => slideToggle(false)}
-                                  options={{ width: '1030px' }}
                                 >
                                   {opened && (
                                     <SelectImporter
@@ -555,11 +554,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                 hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_FORWARDERS])
                               )}
                             </div>
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectForwarders
                                   selected={values.forwarders}

@@ -281,11 +281,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                               />
                             )}
 
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectOrderItem
                                   selected={values.orderItem}

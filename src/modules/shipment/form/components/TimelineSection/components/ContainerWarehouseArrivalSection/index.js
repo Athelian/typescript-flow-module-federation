@@ -72,11 +72,7 @@ const ContainerWarehouseArrivalSection = () => {
                           }
                           onClick={() => slideToggle(true)}
                         />
-                        <SlideView
-                          isOpen={isOpen}
-                          onRequestClose={() => slideToggle(false)}
-                          options={{ width: '1030px' }}
-                        >
+                        <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
                           {isOpen && (
                             <Subscribe to={[ContainersInSlideViewContainer]}>
                               {({ initDetailValues }) => (

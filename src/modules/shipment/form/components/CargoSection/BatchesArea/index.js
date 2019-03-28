@@ -202,7 +202,6 @@ function BatchesArea({
                                   <SlideView
                                     isOpen={opened}
                                     onRequestClose={() => batchSlideToggle(false)}
-                                    options={{ width: '1030px' }}
                                   >
                                     {opened && (
                                       <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
@@ -384,7 +383,6 @@ function BatchesArea({
                             <SlideView
                               isOpen={selectBatchesIsOpen}
                               onRequestClose={() => selectBatchesSlideToggle(false)}
-                              options={{ width: '1030px' }}
                             >
                               {selectBatchesIsOpen && (
                                 <SelectBatches
@@ -426,7 +424,6 @@ function BatchesArea({
                             <SlideView
                               isOpen={createBatchesIsOpen}
                               onRequestClose={() => createBatchesSlideToggle(false)}
-                              options={{ width: '1030px' }}
                             >
                               {createBatchesIsOpen && (
                                 <SelectOrderItems

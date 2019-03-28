@@ -304,7 +304,6 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 <SlideView
                                   isOpen={opened}
                                   onRequestClose={() => slideToggle(false)}
-                                  options={{ width: '1030px' }}
                                 >
                                   <Layout
                                     navBar={

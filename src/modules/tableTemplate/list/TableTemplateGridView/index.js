@@ -32,11 +32,7 @@ const defaultRenderItem = (item: Object) => (
           actions={[]}
           showActionsOnHover
         />
-        <SlideView
-          isOpen={isOpen}
-          onRequestClose={() => toggle(false)}
-          options={{ width: '1030px' }}
-        >
+        <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
           {isOpen && <TemplateFormWrapper template={item} onCancel={() => toggle(false)} />}
         </SlideView>
       </>

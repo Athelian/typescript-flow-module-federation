@@ -64,11 +64,7 @@ export default function InlineForwarderInput({ name, values, max, id: inputId }:
               >
                 <Icon icon="ADD" />
               </button>
-              <SlideView
-                isOpen={isOpen}
-                onRequestClose={() => slideToggle(false)}
-                options={{ width: '1030px' }}
-              >
+              <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
                 {isOpen && (
                   <SelectForwarders
                     selected={values}

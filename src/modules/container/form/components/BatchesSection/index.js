@@ -98,7 +98,6 @@ function BatchesSection() {
                 <SlideView
                   isOpen={selectBatchesIsOpen}
                   onRequestClose={() => selectBatchesSlideToggle(false)}
-                  options={{ width: '1030px' }}
                 >
                   {selectBatchesIsOpen && (
                     <Subscribe to={[ContainerFormContainer]}>
@@ -141,7 +140,6 @@ function BatchesSection() {
                 <SlideView
                   isOpen={createBatchesIsOpen}
                   onRequestClose={() => createBatchesSlideToggle(false)}
-                  options={{ width: '1030px' }}
                 >
                   {createBatchesIsOpen && (
                     <Subscribe to={[ContainerFormContainer]}>
@@ -199,11 +197,7 @@ function BatchesSection() {
                   <BooleanValue key={batch.id}>
                     {({ value: opened, set: batchSlideToggle }) => (
                       <>
-                        <SlideView
-                          isOpen={opened}
-                          onRequestClose={() => batchSlideToggle(false)}
-                          options={{ width: '1030px' }}
-                        >
+                        <SlideView isOpen={opened} onRequestClose={() => batchSlideToggle(false)}>
                           {opened && (
                             <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
                               {(batchInfoContainer, batchTasksContainer) => (

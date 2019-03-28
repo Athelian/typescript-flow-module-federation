@@ -126,11 +126,7 @@ const OrderItems = ({
                         <BooleanValue key={batch.id}>
                           {({ value: opened, set: slideToggle }) => (
                             <>
-                              <SlideView
-                                isOpen={opened}
-                                onRequestClose={() => slideToggle(false)}
-                                options={{ width: '1030px' }}
-                              >
+                              <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                                 {opened && (
                                   <Subscribe
                                     to={[

@@ -111,11 +111,7 @@ function ItemSection({ intl, isNew }: Props) {
                                 </>
                               )}
                             </Subscribe>
-                            <SlideView
-                              isOpen={opened}
-                              onRequestClose={() => slideToggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <Subscribe to={[OrderItemsContainer, FormContainer]}>
                                   {(

@@ -58,11 +58,7 @@ const MaskList = ({ entityType }: Props) => (
                       {({ value: isOpen, set: toggle }) => (
                         <>
                           <NewButton onClick={() => toggle(true)} />
-                          <SlideView
-                            isOpen={isOpen}
-                            onRequestClose={() => toggle(false)}
-                            options={{ width: '1030px' }}
-                          >
+                          <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                             {isOpen && (
                               <MaskFormWrapper
                                 entityType={entityType}
@@ -109,11 +105,7 @@ const MaskList = ({ entityType }: Props) => (
                                 toggle(true);
                               }}
                             />
-                            <SlideView
-                              isOpen={isOpen}
-                              onRequestClose={() => toggle(false)}
-                              options={{ width: '1030px' }}
-                            >
+                            <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                               {isOpen && (
                                 <MaskFormWrapper
                                   entityType={entityType}

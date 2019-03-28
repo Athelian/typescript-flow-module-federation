@@ -120,7 +120,7 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
     }
   }
   return (
-    <SlideView isOpen={id !== ''} onRequestClose={onClose} options={{ width: '1030px' }}>
+    <SlideView isOpen={id !== ''} onRequestClose={onClose}>
       {form}
     </SlideView>
   );

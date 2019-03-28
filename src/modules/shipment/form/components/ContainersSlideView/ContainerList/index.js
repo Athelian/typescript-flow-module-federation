@@ -65,7 +65,6 @@ export default function ContainerList({ containers, setDeepFieldValue }: Props) 
               <SlideView
                 isOpen={isOpenSelectWarehouse}
                 onRequestClose={() => toggleSelectWarehouse(false)}
-                options={{ width: '1030px' }}
               >
                 {isOpenSelectWarehouse && (
                   <SelectWareHouse
