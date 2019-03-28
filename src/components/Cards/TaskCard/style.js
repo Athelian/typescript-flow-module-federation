@@ -131,6 +131,9 @@ const approvalColor = (approvalBy: ?Object, rejectBy: ?Object) => {
 export const ApprovableWrapperStyle: string = css`
   display: flex;
   justify-content: flex-end;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
 `;
 
 export const ApprovableButtonStyle = ({
@@ -149,4 +152,27 @@ export const ApprovableButtonStyle = ({
   border-top-right-radius: 30px;
   text-align: center;
   cursor: pointer;
+  margin-right: 6px;
+`;
+
+export const ClosePanelButtonStyle = css`
+  color: ${colors.WHITE};
+  background: ${colors.PURPLE};
+  display: inline-block;
+  width: 30px;
+  height: 15px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 7px;
+`;
+
+export const ApprovalPanelWrapperStyle: string = css`
+  background: ${colors.BLUE};
+  border-radius: 5px;
+  height: 89px;
+  width: 100%;
 `;

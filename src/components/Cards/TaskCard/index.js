@@ -7,6 +7,7 @@ import { isBefore } from 'date-fns';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { FormField } from 'modules/form';
+import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
@@ -41,6 +42,8 @@ import {
   TaskTagsWrapperStyle,
   ApprovableWrapperStyle,
   ApprovableButtonStyle,
+  ApprovalPanelWrapperStyle,
+  ClosePanelButtonStyle,
 } from './style';
 
 type OptionalProps = {
@@ -154,6 +157,8 @@ const TaskCard = ({
   else if (hideParentInfoForHoc) nameWidth = '140px';
 
   const IS_DND_DEVELOPED = false;
+
+  const panelEl = React.useRef(null);
 
   return (
     <BaseCard
@@ -404,14 +409,38 @@ const TaskCard = ({
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
             {approvable && (
-              <div className={ApprovableWrapperStyle}>
-                <button
-                  className={ApprovableButtonStyle({ approvalBy, rejectBy })}
-                  type="button"
-                  onClick={console.warn}
-                >
-                  {rejectBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
-                </button>
+              <div className={ApprovableWrapperStyle} ref={panelEl}>
+                <BooleanValue>
+                  {({ value: isExpand, set: toggleExpandPanel }) => (
+                    <>
+                      {isExpand ? (
+                        <div className={ApprovalPanelWrapperStyle}>
+                          <OutsideClickHandler
+                            onOutsideClick={() => toggleExpandPanel(false)}
+                            ignoreClick={!isExpand}
+                            ignoreElements={panelEl && panelEl.current ? [panelEl.current] : []}
+                          >
+                            <button
+                              className={ClosePanelButtonStyle}
+                              type="button"
+                              onClick={() => toggleExpandPanel(false)}
+                            >
+                              <Icon icon="CHEVRON_DOWN" />
+                            </button>
+                          </OutsideClickHandler>
+                        </div>
+                      ) : (
+                        <button
+                          className={ApprovableButtonStyle({ approvalBy, rejectBy })}
+                          type="button"
+                          onClick={() => toggleExpandPanel(true)}
+                        >
+                          {rejectBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
+                        </button>
+                      )}
+                    </>
+                  )}
+                </BooleanValue>
               </div>
             )}
           </div>
