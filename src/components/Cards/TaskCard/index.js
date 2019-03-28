@@ -158,7 +158,7 @@ const TaskCard = ({
 
   const IS_DND_DEVELOPED = false;
 
-  const panelEl = React.useRef(null);
+  const taskEl = React.useRef(null);
 
   return (
     <BaseCard
@@ -172,6 +172,7 @@ const TaskCard = ({
       <BooleanValue>
         {({ value: isHovered, set: changeHoverState }) => (
           <div
+            ref={taskEl}
             className={TaskCardWrapperStyle(hideParentInfo)}
             onClick={onClick}
             onMouseEnter={() => {
@@ -409,7 +410,7 @@ const TaskCard = ({
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
             {approvable && (
-              <div className={ApprovableWrapperStyle} ref={panelEl}>
+              <div className={ApprovableWrapperStyle}>
                 <ObjectValue
                   defaultValue={{
                     isExpand: false,
@@ -423,7 +424,7 @@ const TaskCard = ({
                           <OutsideClickHandler
                             onOutsideClick={() => set('isExpand', false)}
                             ignoreClick={!isExpand || isSlideViewOpen}
-                            ignoreElements={[panelEl && panelEl.current].filter(Boolean)}
+                            ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
                           >
                             <div className={TaskStatusWrapperStyle}>
                               <TaskAssignmentInput
