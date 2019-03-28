@@ -4,10 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { FormContainer } from 'modules/form';
+import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
 import validator from 'modules/task/form/validator';
 import TaskContainer from 'modules/task/form/container';
 import TaskForm from 'modules/task/form';
@@ -20,7 +20,6 @@ type Props = OptionalProps & {
   task: Object,
   editable: boolean,
   onSave: Function,
-  onCancel: Function,
 };
 
 const defaultProps = {
@@ -29,11 +28,11 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-const TaskFormInSlide = ({ editable, onSave, task, onCancel, isInTemplate }: Props) => {
+const TaskFormInSlide = ({ editable, onSave, task, isInTemplate }: Props) => {
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[TaskContainer]}>
-        {({ state, isDirty, initDetailValues }) => (
+        {taskContainer => (
           <Layout
             navBar={
               <SlideViewNavBar>
@@ -45,12 +44,17 @@ const TaskFormInSlide = ({ editable, onSave, task, onCancel, isInTemplate }: Pro
                     icon="TASK"
                   />
                 </JumpToSection>
-                {editable && (
+                {editable && taskContainer.isDirty() && (
                   <>
-                    <CancelButton onClick={onCancel} />
+                    <ResetButton
+                      onClick={() => {
+                        resetFormState(taskContainer);
+                        formContainer.onReset();
+                      }}
+                    />
                     <SaveButton
-                      disabled={!formContainer.isReady(state, validator) || !isDirty()}
-                      onClick={() => onSave(state)}
+                      disabled={!formContainer.isReady(taskContainer.state, validator)}
+                      onClick={() => onSave(taskContainer.state)}
                     />
                   </>
                 )}
@@ -61,7 +65,7 @@ const TaskFormInSlide = ({ editable, onSave, task, onCancel, isInTemplate }: Pro
               task={task}
               hideParentInfo
               isInTemplate={isInTemplate}
-              onFormReady={() => initDetailValues(task)}
+              onFormReady={() => taskContainer.initDetailValues(task)}
             />
           </Layout>
         )}
