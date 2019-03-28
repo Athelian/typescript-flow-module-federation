@@ -14,6 +14,7 @@ import {
   DeactivateButtonStyle,
   RemoveAssignmentButtonStyle,
   AddAssignmentButtonStyle,
+  ConfirmIconWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -55,18 +56,38 @@ const TaskAssignmentInput = ({
 
         return (
           <div className={TaskAssignmentStyle} key={id}>
-            <button
-              className={UserStyle(isActiveUser, editable && canActivateUser)}
-              onClick={evt => {
-                if (editable && canActivateUser) {
-                  evt.stopPropagation();
-                  if (onActivateUser) onActivateUser(user);
-                }
-              }}
-              type="button"
-            >
-              <UserAvatar firstName={firstName} lastName={lastName} />
-            </button>
+            <BooleanValue>
+              {({ value: isHovered, set: changeHoverState }) => (
+                <button
+                  className={UserStyle(isActiveUser, editable && canActivateUser)}
+                  onClick={evt => {
+                    if (editable && canActivateUser) {
+                      evt.stopPropagation();
+                      if (onActivateUser) onActivateUser(user);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    if (editable) {
+                      changeHoverState(true);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (editable) {
+                      changeHoverState(false);
+                    }
+                  }}
+                  type="button"
+                >
+                  {isHovered ? (
+                    <div className={ConfirmIconWrapperStyle}>
+                      <Icon icon="CONFIRM" />
+                    </div>
+                  ) : (
+                    <UserAvatar firstName={firstName} lastName={lastName} />
+                  )}
+                </button>
+              )}
+            </BooleanValue>
             {editable && isActiveUser && (
               <button
                 className={DeactivateButtonStyle}

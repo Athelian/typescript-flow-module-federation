@@ -98,3 +98,18 @@ export const AddAssignmentButtonStyle: string = css`
     background-color: ${colors.GRAY_SUPER_LIGHT};
   }
 `;
+
+export const ConfirmIconWrapperStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  ${borderRadiuses.CIRCLE};
+  ${fontSizes.MAIN};
+  background-color: ${colors.GRAY_LIGHT};
+  ${shadows.FAINT};
+  user-select: none;
+`;
