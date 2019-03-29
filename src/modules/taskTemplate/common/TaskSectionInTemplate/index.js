@@ -83,7 +83,7 @@ function TaskSectionInTemplate() {
                     setFieldTouched(`tasks.${id}`);
                   }}
                   onSave={(index, newValue) => {
-                    setFieldValue(`todo.tasks.${index}`, newValue);
+                    setFieldValue(`tasks.${index}`, newValue);
                     setFieldTouched(`tasks.${index}`);
                   }}
                 />

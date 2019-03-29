@@ -76,15 +76,19 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                 />
 
                 <BooleanValue>
-                  {({ value: isOpen, set: toggle }) => (
+                  {({ value: isOpen, set: toggleTaskTemplateForm }) => (
                     <>
-                      {hasPermission(TASK_CREATE) && <NewButton onClick={() => toggle(true)} />}
-                      <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
+                      {hasPermission(TASK_CREATE) && (
+                        <NewButton onClick={() => toggleTaskTemplateForm(true)} />
+                      )}
+                      <SlideView
+                        isOpen={isOpen}
+                        onRequestClose={() => toggleTaskTemplateForm(false)}
+                      >
                         {isOpen && (
                           <TaskTemplateFormWrapper
-                            template={{}}
                             isNew
-                            onCancel={() => toggle(false)}
+                            onCancel={() => toggleTaskTemplateForm(false)}
                           />
                         )}
                       </SlideView>

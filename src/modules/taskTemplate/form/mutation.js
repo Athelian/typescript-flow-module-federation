@@ -18,12 +18,12 @@ export const prepareTaskTemplateForCreate = ({
   name,
   description,
   entityType,
-  todo,
+  tasks,
 }: Object): Object => ({
   name,
   description,
   entityType,
-  tasks: todo.tasks.map(
+  tasks: tasks.map(
     ({
       isNew,
       id,

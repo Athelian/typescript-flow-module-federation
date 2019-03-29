@@ -132,7 +132,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     return (
       <Provider inject={[formContainer]}>
         <Subscribe to={[TaskTemplateFormContainer]}>
-          {formState => (
+          {taskTemplateContainer => (
             <Mutation
               mutation={isNew ? createTaskTemplateMutation : updateTaskTemplateMutation}
               {...mutationKey}
@@ -166,20 +166,20 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                       </JumpToSection>
                       {isNew && <CancelButton onClick={() => onCancel()} />}
 
-                      {!isNew && formState.isDirty() && (
-                        <ResetButton onClick={() => this.onReset(formState)} />
+                      {!isNew && taskTemplateContainer.isDirty() && (
+                        <ResetButton onClick={() => this.onReset(taskTemplateContainer)} />
                       )}
-                      {(isNew || formState.isDirty()) && (
+                      {(isNew || taskTemplateContainer.isDirty()) && (
                         <SaveButton
-                          disabled={!formContainer.isReady(formState.state, validator)}
+                          disabled={!formContainer.isReady(taskTemplateContainer.state, validator)}
                           isLoading={isLoading}
                           data-testid="saveButtonOnTaskTemplate"
                           onClick={() =>
                             this.onSave(
-                              formState.state,
+                              taskTemplateContainer.state,
                               saveTemplate,
                               () => {
-                                formState.onSuccess();
+                                taskTemplateContainer.onSuccess();
                                 formContainer.onReset();
                               },
                               formContainer.onErrors
@@ -192,7 +192,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   <TaskTemplateForm
-                    initDetailValues={formState.initDetailValues}
+                    initDetailValues={taskTemplateContainer.initDetailValues}
                     template={template}
                     isNew={isNew}
                   />
