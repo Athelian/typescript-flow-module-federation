@@ -47,7 +47,7 @@ const ApproveRejectMenu = ({ width, onApprove, onReject }: Props) => (
               type="button"
             >
               <div className={ButtonIconStyle}>
-                <Icon icon="CONFIRM" />
+                <Icon icon="CHECKED" />
               </div>
               <div className={ButtonLabelStyle}>
                 <FormattedMessage id="components.inputs.approve" defaultMessage="APPROVE" />
@@ -72,7 +72,7 @@ const ApproveRejectMenu = ({ width, onApprove, onReject }: Props) => (
                 <FormattedMessage id="components.inputs.reject" defaultMessage="REJECT" />
               </div>
               <div className={ButtonIconStyle}>
-                <Icon icon="CLEAR" />
+                <Icon icon="CANCEL" />
               </div>
             </button>
           </div>

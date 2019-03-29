@@ -45,6 +45,7 @@ import LastModified from './SectionHeader/LastModified';
 import StatusToggle from './SectionHeader/StatusToggle';
 import SectionWrapper from './SectionWrapper';
 import NumberRangeInput from './NumberRangeInput';
+import TaskApprovalStatusInput from './TaskApprovalStatusInput';
 import TaskStatusInput from './TaskStatusInput';
 import ToggleInput from './ToggleInput';
 import UserAssignmentInput from './UserAssignmentInput';
@@ -110,6 +111,7 @@ export {
   SectionWrapper,
   ImagesUploadInput,
   NumberRangeInput,
+  TaskApprovalStatusInput,
   TaskStatusInput,
   ToggleInput,
   UserAssignmentInput,
