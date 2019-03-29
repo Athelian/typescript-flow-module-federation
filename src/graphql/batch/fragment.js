@@ -31,6 +31,9 @@ export const batchFormFragment = gql`
       tasks {
         ...taskFormInSlideViewFragment
       }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     customFields {
       ...customFieldsFragment

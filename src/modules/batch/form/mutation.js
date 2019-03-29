@@ -22,6 +22,8 @@ import {
   ownedByFragment,
   taskFormInSlideViewFragment,
   todoFragment,
+  taskTemplateCardFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -78,6 +80,8 @@ export const updateBatchMutation = gql`
   ${ownedByFragment}
   ${taskFormInSlideViewFragment}
   ${todoFragment}
+  ${taskTemplateCardFragment}
+  ${taskFormInTemplateFragment}
 `;
 
 export const prepareParsedBatchInput = (
@@ -210,6 +214,9 @@ export const prepareParsedBatchInput = (
       getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
-    ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
+    ...parseTasksField(
+      getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+      newValues.todo
+    ),
   };
 };

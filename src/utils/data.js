@@ -329,6 +329,8 @@ export const parseTasksField = (
     taskTemplate: ?{ id: string },
   }
 ): Object => {
+  console.warn('ORIGINAL', originalTodo);
+  console.warn('NEW', newTodo);
   if (isEquals(originalTodo, newTodo)) return {};
 
   const originalTasks = getByPathWithDefault([], 'tasks', originalTodo);
