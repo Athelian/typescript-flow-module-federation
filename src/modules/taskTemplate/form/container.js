@@ -7,7 +7,7 @@ import { isEquals } from 'utils/fp';
 type FormState = {
   name?: string,
   description?: string,
-  type?: string,
+  entityType?: string,
   todo: {
     tasks: Array<Object>,
   },
