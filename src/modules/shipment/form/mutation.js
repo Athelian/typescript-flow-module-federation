@@ -179,12 +179,12 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: ?PortType
     ...parseEnumField(
       'seaport',
       getByPathWithDefault(null, 'seaport', originalPort),
-      newPort.seaport
+      getByPathWithDefault(null, 'seaport', newPort),
     ),
     ...parseEnumField(
       'airport',
       getByPathWithDefault(null, 'airport', originalPort),
-      newPort.airport
+      getByPathWithDefault(null, 'airport', newPort),
     ),
   };
 
@@ -328,32 +328,32 @@ export const prepareParsedShipmentInput = ({
         ...parseGenericField(
           'vesselName',
           getByPathWithDefault(null, 'vesselName', oldVoyage),
-          getByPathWithDefault(null, 'vesselName', newVoyage)
+          newVoyage.vesselName
         ),
         ...parseGenericField(
           'vesselCode',
           getByPathWithDefault(null, 'vesselCode', oldVoyage),
-          getByPathWithDefault(null, 'vesselCode', newVoyage)
+          newVoyage.vesselCode
         ),
         ...parsePortField(
           'departurePort',
           getByPathWithDefault(null, 'departurePort', oldVoyage),
-          getByPathWithDefault(null, 'departurePort', newVoyage)
+          newVoyage.departurePort
         ),
         ...parsePortField(
           'arrivalPort',
           getByPathWithDefault(null, 'arrivalPort', oldVoyage),
-          getByPathWithDefault(null, 'arrivalPort', newVoyage)
+          newVoyage.arrivalPort
         ),
         ...parseTimelineDateField(
           'departure',
           getByPathWithDefault(null, 'departure', oldVoyage),
-          getByPathWithDefault(null, 'departure', newVoyage)
+          newVoyage.departure
         ),
         ...parseTimelineDateField(
           'arrival',
           getByPathWithDefault(null, 'arrival', oldVoyage),
-          getByPathWithDefault(null, 'arrival', newVoyage)
+          newVoyage.arrival
         ),
       })
     ),
