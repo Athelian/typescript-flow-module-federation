@@ -120,10 +120,10 @@ export const TaskTagsWrapperStyle: string = css`
   overflow: hidden;
 `;
 
-const approvalColor = (approvalBy: ?Object, rejectBy: ?Object) => {
-  if (approvalBy) return colors.BLUE;
+const approvalColor = (approvedBy: ?Object, rejectedBy: ?Object) => {
+  if (approvedBy) return colors.BLUE;
 
-  if (rejectBy) return colors.RED;
+  if (rejectedBy) return colors.RED;
 
   return colors.GRAY_LIGHT;
 };
@@ -134,18 +134,19 @@ export const ApprovableWrapperStyle: string = css`
   position: absolute;
   width: 100%;
   bottom: 0px;
+  padding-top: 15px;
   z-index: 2;
 `;
 
 export const ApprovableButtonStyle = ({
-  approvalBy,
-  rejectBy,
+  approvedBy,
+  rejectedBy,
 }: {
-  approvalBy: ?Object,
-  rejectBy: ?Object,
+  approvedBy: ?Object,
+  rejectedBy: ?Object,
 }) => css`
   color: ${colors.WHITE};
-  background: ${approvalColor(approvalBy, rejectBy)};
+  background: ${approvalColor(approvedBy, rejectedBy)};
   display: inline-block;
   width: 30px;
   height: 15px;
