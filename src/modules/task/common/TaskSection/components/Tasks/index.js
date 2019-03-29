@@ -94,7 +94,6 @@ const Tasks = ({
                   isInTemplate={isInTemplate}
                   editable={hasPermission(TASK_UPDATE)}
                   task={{ ...omit(task, ['entity']), sort: index }}
-                  onCancel={() => selectTaskSlideToggle(false)}
                   onSave={value => {
                     selectTaskSlideToggle(false);
                     onSave(index, value);
