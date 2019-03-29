@@ -3,6 +3,7 @@ import scroll from 'scroll-into-view-if-needed';
 
 type OptionalProps = {
   boundaryId?: string,
+  scrollMode?: string,
 };
 
 type Props = OptionalProps & {
@@ -11,25 +12,38 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   boundaryId: null,
+  scrollMode: 'if-needed',
 };
 
-const scrollIntoView = ({ targetId, boundaryId }: Props) => {
+const scrollIntoView = ({ targetId, boundaryId, scrollMode }: Props) => {
   const node = document.querySelector(`#${targetId}`);
   const boundaryNode = boundaryId ? document.querySelector(`#${boundaryId}`) : null;
 
   if (node) {
     if (boundaryNode) {
       scroll(node, {
+        scrollMode,
         behavior: 'smooth',
-        scrollMode: 'if-needed',
         boundary: boundaryNode,
       });
     } else {
       scroll(node, {
+        scrollMode,
         behavior: 'smooth',
-        scrollMode: 'if-needed',
       });
     }
+  } else {
+    // wait for the element is rendering on DOM
+    const retryFindElement = () => {
+      const foundElement = document.querySelector(`#${targetId}`);
+      if (!foundElement) {
+        requestAnimationFrame(retryFindElement);
+      } else {
+        // force to scroll to element
+        scrollIntoView({ targetId, boundaryId, scrollMode: 'always' });
+      }
+    };
+    requestAnimationFrame(retryFindElement);
   }
 };
 
