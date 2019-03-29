@@ -12,6 +12,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
+import Tooltip from 'components/Tooltip';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -105,6 +106,16 @@ const approvableStatus = (approvalBy: ?Object, rejectBy: ?Object) => {
   if (rejectBy && rejectBy.id) return 'Rejected';
 
   return 'Unapproved';
+};
+
+const tooltipMesssage = (approvalBy: ?Object, rejectBy: ?Object) => {
+  if (approvalBy && approvalBy.id)
+    return <FormattedMessage id="components.cards.approved" defaultMessage="Approved" />;
+
+  if (rejectBy && rejectBy.id)
+    return <FormattedMessage id="components.cards.rejected" defaultMessage="Rejected" />;
+
+  return <FormattedMessage id="components.cards.unapproved" defaultMessage="Unapproved" />;
 };
 
 const TaskCard = ({
@@ -501,13 +512,15 @@ const TaskCard = ({
                           </OutsideClickHandler>
                         </div>
                       ) : (
-                        <button
-                          className={ApprovableButtonStyle({ approvalBy, rejectBy })}
-                          type="button"
-                          onClick={() => set('isExpand', true)}
-                        >
-                          {rejectBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
-                        </button>
+                        <Tooltip message={tooltipMesssage(approvalBy, rejectBy)}>
+                          <button
+                            className={ApprovableButtonStyle({ approvalBy, rejectBy })}
+                            type="button"
+                            onClick={() => set('isExpand', true)}
+                          >
+                            {rejectBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
+                          </button>
+                        </Tooltip>
                       )}
                     </>
                   )}
