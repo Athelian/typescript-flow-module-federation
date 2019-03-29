@@ -33,9 +33,9 @@ export const TemplateItemStyle: string = css`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 15px 10px;
+  margin: 5px 0;
   background: ${colors.GRAY_VERY_LIGHT};
   ${borderRadiuses.MAIN};
-  height: 159px;
-  padding: 0 10px 10px 10px;
+  padding: 5px 10px 10px 10px;
+  height: 179px;
 `;

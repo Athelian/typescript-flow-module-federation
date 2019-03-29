@@ -322,14 +322,16 @@ type TaskType = {
 export const parseTasksField = (
   originalTodo: ?{
     tasks: Array<TaskType>,
+    taskTemplate: ?{ id: string },
   },
   newTodo: {
     tasks: Array<TaskType>,
+    taskTemplate: ?{ id: string },
   }
 ): Object => {
   if (isEquals(originalTodo, newTodo)) return {};
 
-  const originalTasks = getByPathWithDefault(null, 'tasks', originalTodo);
+  const originalTasks = getByPathWithDefault([], 'tasks', originalTodo);
   const newTasks = newTodo.tasks;
 
   return {
@@ -388,8 +390,18 @@ export const parseTasksField = (
               getByPathWithDefault(null, 'tags', oldTask),
               newTask.tags
             ),
+            ...parseParentIdField(
+              'taskTemplateId',
+              getByPathWithDefault(null, 'taskTemplate', oldTask),
+              newTask.taskTemplate
+            ),
           };
         }
+      ),
+      ...parseParentIdField(
+        'taskTemplateId',
+        getByPathWithDefault(null, 'taskTemplate', originalTodo),
+        newTodo.taskTemplate
       ),
     },
   };

@@ -152,7 +152,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
                           ) : (
                             <DashedPlusButton
                               data-testid="selecTaskTemplateButton"
-                              width="175px"
+                              width="195px"
                               height="125px"
                               onClick={() => slideToggle(true)}
                             />
