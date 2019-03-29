@@ -11,7 +11,7 @@ import TaskTemplateForm from 'modules/taskTemplate/form';
 import {
   createTaskTemplateMutation,
   updateTaskTemplateMutation,
-  prepareTaskTemplateForCreate,
+  prepareParsedTaskTemplate,
 } from 'modules/taskTemplate/form/mutation';
 import query from 'modules/taskTemplate/list/query';
 import emitter from 'utils/emitter';
@@ -44,14 +44,15 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
   }
 
   onSave = async (
-    formData: Object,
+    originalValues: Object,
+    values: Object,
     saveTemplate: Function,
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
     const { isNew, template, onCancel: closeSlideView } = this.props;
 
-    const input = prepareTaskTemplateForCreate(formData);
+    const input = prepareParsedTaskTemplate(originalValues, values);
 
     if (isNew) {
       const { data } = await saveTemplate({
@@ -93,26 +94,15 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       }
     } else if (template.id) {
       const { data } = await saveTemplate({
-        variables: { input, id: template.id },
-        optimisticResponse: {
-          taskUpdate: {
-            __typename: 'TaskMutated',
-            task: {
-              __typename: 'Task',
-              id: template.id,
-              updatedBy: template.updatedBy,
-              updatedAt: new Date(),
-              ...formData,
-            },
-          },
-        },
+        variables: { id: template.id, input },
       });
       const {
-        taskUpdate: { violations },
+        taskTemplateUpdate: { violations },
       } = data;
       if (violations && violations.length) {
         onErrors(violations);
       } else {
+        emitter.emit('RELOAD_TASK_TEMPLATE');
         closeSlideView();
         onSuccess();
       }
@@ -176,6 +166,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                           data-testid="saveButtonOnTaskTemplate"
                           onClick={() =>
                             this.onSave(
+                              taskTemplateContainer.originalValues,
                               taskTemplateContainer.state,
                               saveTemplate,
                               () => {

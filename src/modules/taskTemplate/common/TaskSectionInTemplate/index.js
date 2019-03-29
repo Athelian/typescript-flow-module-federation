@@ -21,7 +21,7 @@ function TaskSectionInTemplate() {
 
   return (
     <Subscribe to={[TaskTemplateFormContainer, FormContainer]}>
-      {({ state: { tasks }, setFieldValue }, { setFieldTouched }) => (
+      {({ state: { entityType, tasks }, setFieldValue }, { setFieldTouched }) => (
         <SectionWrapper id="task_template_tasks_section">
           <SectionHeader
             icon="TASK"
@@ -63,8 +63,7 @@ function TaskSectionInTemplate() {
                   editable
                   removable
                   viewForm
-                  // TODO:
-                  type="Order"
+                  type={entityType}
                   tasks={tasks}
                   onSwap={(index: number, direction: 'left' | 'right') => {
                     const nextIndex = direction === 'left' ? index - 1 : index + 1;
