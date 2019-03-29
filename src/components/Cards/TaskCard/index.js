@@ -137,6 +137,7 @@ const TaskCard = ({
     tags,
     taskTemplate,
     approvable,
+    approvalAssignedTo,
     approvedBy,
     approvedAt,
     rejectedBy,
@@ -479,10 +480,10 @@ const TaskCard = ({
                                       onChange={newAssignedTo =>
                                         saveOnBlur({
                                           ...task,
-                                          assignedTo: newAssignedTo,
+                                          approvalAssignedTo: newAssignedTo,
                                         })
                                       }
-                                      users={assignedTo}
+                                      users={approvalAssignedTo}
                                       onActivateUser={
                                         isInTemplate ? null : user => set('selectUser', user)
                                       }
