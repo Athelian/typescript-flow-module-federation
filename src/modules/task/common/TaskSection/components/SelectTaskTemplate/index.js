@@ -12,27 +12,25 @@ import { TemplateCard } from 'components/Cards';
 import { taskTemplateListQuery } from 'modules/taskTemplate/list/query';
 
 type Props = {
-  selected?: ?{
-    id: string,
-    name: string,
-  },
+  entityType: string,
+  selected: { id: string },
   onSelect: (item: Object) => void,
   onCancel: Function,
 };
 
 const defaultProps = {
-  selected: {
-    id: '',
-    name: '',
-  },
+  selected: { id: '' },
 };
 
-const SelectTaskTemplate = ({ selected, onCancel, onSelect }: Props) => (
+const SelectTaskTemplate = ({ entityType, selected, onCancel, onSelect }: Props) => (
   <Query
     query={taskTemplateListQuery}
     variables={{
       page: 1,
       perPage: 10,
+      filterBy: {
+        entityTypes: [entityType],
+      },
     }}
     fetchPolicy="network-only"
   >
@@ -64,9 +62,16 @@ const SelectTaskTemplate = ({ selected, onCancel, onSelect }: Props) => (
                 isLoading={loading}
                 onLoadMore={() => loadMore({ fetchMore, data }, {}, 'taskTemplates')}
                 items={getByPathWithDefault([], 'taskTemplates.nodes', data)}
-                renderItem={({ item }) => (
+                renderItem={item => (
                   <TemplateCard
-                    template={item}
+                    key={item.id}
+                    type="TASK"
+                    template={{
+                      id: item.id,
+                      title: item.name,
+                      description: item.description,
+                      count: item.tasks.length,
+                    }}
                     onSelect={() => {
                       if (value && item.id === value.id) {
                         set(null);
@@ -76,7 +81,6 @@ const SelectTaskTemplate = ({ selected, onCancel, onSelect }: Props) => (
                     }}
                     selectable
                     selected={value && item.id === value.id}
-                    key={item.id}
                   />
                 )}
               />
