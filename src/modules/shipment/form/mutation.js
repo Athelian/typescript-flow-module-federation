@@ -27,6 +27,8 @@ import {
   ownedByFragment,
   taskFormInSlideViewFragment,
   todoFragment,
+  taskTemplateCardFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -92,6 +94,8 @@ export const updateShipmentMutation: Object = gql`
   ${ownedByFragment}
   ${taskFormInSlideViewFragment}
   ${todoFragment}
+  ${taskTemplateCardFragment}
+  ${taskFormInTemplateFragment}
 `;
 
 type DateRevisionType = {
@@ -394,6 +398,9 @@ export const prepareParsedShipmentInput = ({
       }
     ),
     ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
-    ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
+    ...parseTasksField(
+      getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+      newValues.todo
+    ),
   };
 };
