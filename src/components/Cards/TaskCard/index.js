@@ -50,7 +50,6 @@ type OptionalProps = {
   editable: boolean,
   actions: Array<React.Node>,
   isInTemplate: boolean,
-  isFromTemplate: boolean,
 };
 
 type Props = OptionalProps;
@@ -63,7 +62,6 @@ const defaultProps = {
   editable: false,
   actions: [],
   isInTemplate: false,
-  isFromTemplate: false,
 };
 
 const getParentInfo = (parent: Object) => {
@@ -105,7 +103,6 @@ const TaskCard = ({
   onDeactivateUser,
   editable,
   isInTemplate,
-  isFromTemplate,
   actions,
   ...rest
 }: Props) => {
@@ -120,6 +117,7 @@ const TaskCard = ({
     completedBy,
     completedAt,
     tags,
+    taskTemplate,
   } = task;
 
   const validation = validator({
@@ -143,6 +141,8 @@ const TaskCard = ({
   };
 
   hideParentInfoForHoc = hideParentInfo || isInTemplate;
+
+  const isFromTemplate = !!taskTemplate;
 
   let nameWidth = '160px';
   if (isFromTemplate) nameWidth = '120px';

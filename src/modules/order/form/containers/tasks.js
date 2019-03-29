@@ -31,6 +31,13 @@ export default class OrderTasksContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
+  applyTemplate = (template: Object) => {
+    const nonTemplateTasks = this.state.todo.tasks.filter(task => !task.taskTemplate);
+    const newTaskList = [...nonTemplateTasks, ...template.tasks];
+
+    this.setState({ todo: { tasks: newTaskList, taskTemplate: template } });
+  };
+
   initDetailValues = (todo: { tasks: Array<Object> }) => {
     const parsedValues: Object = { ...initValues, todo };
     this.setState(parsedValues);

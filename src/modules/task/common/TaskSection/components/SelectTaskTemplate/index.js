@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -13,16 +13,11 @@ import { taskTemplateListQuery } from 'modules/taskTemplate/list/query';
 
 type Props = {
   entityType: string,
-  selected: { id: string },
   onSelect: (item: Object) => void,
   onCancel: Function,
 };
 
-const defaultProps = {
-  selected: { id: '' },
-};
-
-const SelectTaskTemplate = ({ entityType, selected, onCancel, onSelect }: Props) => (
+const SelectTaskTemplate = ({ entityType, onCancel, onSelect }: Props) => (
   <Query
     query={taskTemplateListQuery}
     variables={{
@@ -43,17 +38,14 @@ const SelectTaskTemplate = ({ entityType, selected, onCancel, onSelect }: Props)
       const hasMore = nextPage <= totalPage;
 
       return (
-        <ObjectValue defaultValue={selected}>
+        <ObjectValue defaultValue={null}>
           {({ value, set }) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
                   <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                   <CancelButton onClick={onCancel} />
-                  <ApplyButton
-                    disabled={isEquals(value, selected)}
-                    onClick={() => onSelect(value)}
-                  />
+                  <ApplyButton disabled={!value} onClick={() => onSelect(value)} />
                 </SlideViewNavBar>
               }
             >
@@ -91,7 +83,5 @@ const SelectTaskTemplate = ({ entityType, selected, onCancel, onSelect }: Props)
     }}
   </Query>
 );
-
-SelectTaskTemplate.defaultProps = defaultProps;
 
 export default SelectTaskTemplate;

@@ -33,6 +33,9 @@ export const orderFormFragment = gql`
       tasks {
         ...taskFormInSlideViewFragment
       }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     exporter {
       ...partnerCardFragment

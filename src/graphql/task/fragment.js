@@ -71,6 +71,11 @@ export const taskFormInTemplateFragment = gql`
     assignedTo {
       ...userAvatarFragment
     }
+    taskTemplate {
+      ... on TaskTemplate {
+        id
+      }
+    }
   }
 `;
 
@@ -101,6 +106,11 @@ export const taskFormInSlideViewFragment = gql`
       ...tagFragment
     }
     memo
+    taskTemplate {
+      ... on TaskTemplate {
+        id
+      }
+    }
   }
 `;
 

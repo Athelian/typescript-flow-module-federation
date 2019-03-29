@@ -88,6 +88,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
             todo: { tasks, taskTemplate },
           },
           setFieldValue,
+          applyTemplate,
         },
         { setFieldTouched }
       ) => (
@@ -162,12 +163,10 @@ function TaskSection({ getConfig, type, intl }: Props) {
                           {opened && (
                             <SelectTaskTemplate
                               entityType={upperFirst(type)}
-                              selected={taskTemplate}
                               onCancel={() => slideToggle(false)}
                               onSelect={newValue => {
                                 slideToggle(false);
-                                setFieldValue('todo.taskTemplate', newValue);
-                                // replace current tasks from previous template
+                                applyTemplate(newValue);
                               }}
                             />
                           )}
