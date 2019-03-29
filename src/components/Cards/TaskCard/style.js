@@ -171,9 +171,9 @@ export const ClosePanelButtonStyle = css`
   right: 7px;
 `;
 
-export const ApprovalPanelWrapperStyle: string = css`
+export const ApprovalPanelWrapperStyle = (isInTemplate: boolean) => css`
   background: ${colors.BLUE};
   border-radius: 5px;
-  height: 89px;
+  height: ${isInTemplate ? '114px' : '89px'};
   width: 100%;
 `;

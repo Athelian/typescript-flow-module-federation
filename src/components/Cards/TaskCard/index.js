@@ -108,7 +108,7 @@ const approvableStatus = (approvalBy: ?Object, rejectBy: ?Object) => {
   return 'Unapproved';
 };
 
-const tooltipMesssage = (approvalBy: ?Object, rejectBy: ?Object) => {
+const tooltipMessage = (approvalBy: ?Object, rejectBy: ?Object) => {
   if (approvalBy && approvalBy.id)
     return <FormattedMessage id="components.cards.approved" defaultMessage="Approved" />;
 
@@ -441,7 +441,7 @@ const TaskCard = ({
                   {({ value: { isExpand, isSlideViewOpen, selectUser }, set, assign }) => (
                     <>
                       {isExpand ? (
-                        <div className={ApprovalPanelWrapperStyle}>
+                        <div className={ApprovalPanelWrapperStyle(isInTemplate)}>
                           <p>{approvableStatus(approvalBy, rejectBy)}</p>
                           <OutsideClickHandler
                             onOutsideClick={() =>
@@ -512,7 +512,7 @@ const TaskCard = ({
                           </OutsideClickHandler>
                         </div>
                       ) : (
-                        <Tooltip message={tooltipMesssage(approvalBy, rejectBy)}>
+                        <Tooltip message={tooltipMessage(approvalBy, rejectBy)}>
                           <button
                             className={ApprovableButtonStyle({ approvalBy, rejectBy })}
                             type="button"
