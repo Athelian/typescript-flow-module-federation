@@ -87,6 +87,9 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                       >
                         {isOpen && (
                           <TaskTemplateFormWrapper
+                            template={{
+                              entityType: activeType,
+                            }}
                             isNew
                             onCancel={() => toggleTaskTemplateForm(false)}
                           />

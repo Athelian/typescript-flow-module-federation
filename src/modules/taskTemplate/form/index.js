@@ -22,9 +22,7 @@ const defaultProps = {
 
 function TaskTemplateForm({ template, isNew, initDetailValues }: Props) {
   useEffect(() => {
-    if (!isNew) {
-      initDetailValues(template);
-    }
+    initDetailValues(template);
   });
   return (
     <div className={TemplateFormWrapperStyle}>
