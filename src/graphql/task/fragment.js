@@ -42,12 +42,34 @@ export const taskCardFragment = gql`
 export const taskTemplateCardFragment = gql`
   fragment taskTemplateCardFragment on TaskTemplate {
     id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
     name
     description
+    entityType
     tasks {
-      ... on Task {
-        id
-      }
+      ...taskFormInTemplateFragment
+    }
+  }
+`;
+
+export const taskFormInTemplateFragment = gql`
+  fragment taskFormInTemplateFragment on Task {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    sort
+    name
+    description
+    tags {
+      ...tagFragment
+    }
+    assignedTo {
+      ...userAvatarFragment
     }
   }
 `;

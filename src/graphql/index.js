@@ -16,6 +16,7 @@ import {
   taskTemplateCardFragment,
   taskFormInSlideViewFragment,
   taskFormFragment,
+  taskFormInTemplateFragment,
   todoFragment,
 } from './task/fragment';
 import { tableTemplateCardFragment } from './tableTemplate/fragment';
@@ -61,6 +62,7 @@ export {
   tagCardFragment,
   taskFormInSlideViewFragment,
   taskFormFragment,
+  taskFormInTemplateFragment,
   warehouseFormFragment,
   warehouseCardFragment,
   metricFragment,
