@@ -172,19 +172,19 @@ type PortType = {
   airport: ?string,
 };
 
-const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType) => {
+const parsePortField = (key: string, originalPort: ?PortType, newPort: ?PortType) => {
   if (isEquals(originalPort, newPort)) return {};
 
   const parsedNewPort = {
     ...parseEnumField(
       'seaport',
       getByPathWithDefault(null, 'seaport', originalPort),
-      newPort.seaport
+      getByPathWithDefault(null, 'seaport', newPort),
     ),
     ...parseEnumField(
       'airport',
       getByPathWithDefault(null, 'airport', originalPort),
-      newPort.airport
+      getByPathWithDefault(null, 'airport', newPort),
     ),
   };
 
