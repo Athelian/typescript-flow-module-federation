@@ -6,7 +6,8 @@ import TaskTemplateListModule from './index.list';
 
 const TaskTemplateModule = () => (
   <Router>
-    <TaskTemplateListModule path="/" />
+    <TaskTemplateListModule path="/" redirectUrl="/order" />
+    <TaskTemplateListModule path="/:entityType" />
   </Router>
 );
 

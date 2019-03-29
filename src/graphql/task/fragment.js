@@ -39,6 +39,19 @@ export const taskCardFragment = gql`
   }
 `;
 
+export const taskTemplateCardFragment = gql`
+  fragment taskTemplateCardFragment on TaskTemplate {
+    id
+    name
+    description
+    tasks {
+      ... on Task {
+        id
+      }
+    }
+  }
+`;
+
 export const taskFormInSlideViewFragment = gql`
   fragment taskFormInSlideViewFragment on Task {
     sort

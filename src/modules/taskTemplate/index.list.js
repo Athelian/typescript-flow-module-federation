@@ -1,8 +1,11 @@
 // @flow
-import React, { useState } from 'react';
+import * as React from 'react';
+import { upperFirst } from 'lodash';
 import { BooleanValue } from 'react-values';
+import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
+import withCache from 'hoc/withCache';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
@@ -10,13 +13,38 @@ import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import usePermission from 'hooks/usePermission';
+import useFilter from 'hooks/useFilter';
 import { TASK_CREATE } from 'modules/permission/constants/task';
 import TaskTemplateList from './list';
 import TaskTemplateFormWrapper from './common/TaskTemplateFormWrapper';
 
-const TaskTemplateListModule = () => {
-  const [entityType, setEntityType] = useState('Order');
+type OptionalProps = {
+  entityType: string,
+};
+
+type Props = OptionalProps & {};
+
+const getInitFilter = () => {
+  const state = {
+    filter: {},
+    sort: {
+      field: 'updatedAt',
+      direction: 'DESCENDING',
+    },
+    perPage: 10,
+    page: 1,
+  };
+  return state;
+};
+
+const defaultProps = {
+  entityType: 'order',
+};
+
+const TaskTemplateListModule = ({ entityType }: Props) => {
+  const activeType = upperFirst(entityType);
   const { hasPermission } = usePermission();
+  const { queryVariables } = useFilter(getInitFilter(), `filterTaskTemplate${activeType}`);
   return (
     <Provider>
       <UIConsumer>
@@ -27,24 +55,24 @@ const TaskTemplateListModule = () => {
               <NavBar>
                 <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                 <TabItem
-                  active={entityType === 'Order'}
+                  active={activeType === 'Order'}
                   icon="ORDER"
                   label={<FormattedMessage id="module.TaskTemplate.order" defaultMessage="ORDER" />}
-                  onClick={() => setEntityType('Order')}
+                  onClick={() => navigate('/settings/task-template/order')}
                 />
                 <TabItem
-                  active={entityType === 'Batch'}
+                  active={activeType === 'Batch'}
                   icon="BATCH"
                   label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
-                  onClick={() => setEntityType('Batch')}
+                  onClick={() => navigate('/settings/task-template/batch')}
                 />
                 <TabItem
-                  active={entityType === 'Shipment'}
+                  active={activeType === 'Shipment'}
                   icon="SHIPMENT"
                   label={
                     <FormattedMessage id="module.TaskTemplate.shipment" defaultMessage="SHIPMENT" />
                   }
-                  onClick={() => setEntityType('Shipment')}
+                  onClick={() => navigate('/settings/task-template/shipment')}
                 />
 
                 <BooleanValue>
@@ -66,7 +94,7 @@ const TaskTemplateListModule = () => {
               </NavBar>
             }
           >
-            <TaskTemplateList entityType={entityType} />
+            <TaskTemplateList {...queryVariables} entityType={activeType} />
           </Layout>
         )}
       </UIConsumer>
@@ -74,4 +102,6 @@ const TaskTemplateListModule = () => {
   );
 };
 
-export default TaskTemplateListModule;
+TaskTemplateListModule.defaultProps = defaultProps;
+
+export default withCache(TaskTemplateListModule, ['entityType']);

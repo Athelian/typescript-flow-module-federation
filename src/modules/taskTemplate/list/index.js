@@ -1,30 +1,55 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
+import { Query } from 'react-apollo';
+import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-
+import logger from 'utils/logger';
 import TaskTemplateGridView from './TaskTemplateGridView';
+import { taskTemplateListQuery } from './query';
 
 type Props = {
   entityType: string,
+  sortBy: {
+    [field: string]: string,
+  },
+  perPage: number,
 };
 
-const TaskTemplate = ({ entityType }: Props) => {
-  const fetchMore = () => {};
-  const data = [
-    { id: 1, name: 'tt1', memo: '123', entityType },
-    { id: 2, name: 'tt1', memo: '456', entityType },
-    { id: 3, name: 'tt2', memo: '789', entityType },
-  ];
-  const hasMore = false;
-  const loading = false;
+const TaskTemplateList = ({ entityType, ...filtersAndSort }: Props) => {
   return (
-    <TaskTemplateGridView
-      items={data}
-      onLoadMore={() => loadMore({ fetchMore, data })}
-      hasMore={hasMore}
-      isLoading={loading}
-    />
+    <Query
+      query={taskTemplateListQuery}
+      key={entityType}
+      variables={{
+        ...filtersAndSort,
+        page: 1,
+        filterBy: {
+          entityTypes: [entityType],
+        },
+      }}
+      fetchPolicy="network-only"
+      onCompleted={logger.warn}
+      onError={logger.error}
+    >
+      {({ loading, data, fetchMore, error }) => {
+        if (error) {
+          return error.message;
+        }
+        const nextPage = getByPathWithDefault(1, 'taskTemplates.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'taskTemplates.totalPage', data);
+        const hasMore = nextPage <= totalPage;
+
+        return (
+          <TaskTemplateGridView
+            items={getByPathWithDefault([], 'taskTemplates.nodes', data)}
+            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'taskTemplates')}
+            hasMore={hasMore}
+            isLoading={loading}
+          />
+        );
+      }}
+    </Query>
   );
 };
 
-export default TaskTemplate;
+export default TaskTemplateList;

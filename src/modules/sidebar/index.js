@@ -191,7 +191,7 @@ const SideBar = () => {
                         />
                       )}
                       <MenuItem
-                        path="/settings/task-template"
+                        path="/settings/task-template/order"
                         isActive={`/${location.pathname.split('/')[2]}` === '/task-template'}
                         icon="TEMPLATE"
                         label={
