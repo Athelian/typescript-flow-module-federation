@@ -172,7 +172,7 @@ type PortType = {
   airport: ?string,
 };
 
-const parsePortField = (key: string, originalPort: ?PortType, newPort: PortType) => {
+const parsePortField = (key: string, originalPort: ?PortType, newPort: ?PortType) => {
   if (isEquals(originalPort, newPort)) return {};
 
   const parsedNewPort = {
@@ -328,32 +328,32 @@ export const prepareParsedShipmentInput = ({
         ...parseGenericField(
           'vesselName',
           getByPathWithDefault(null, 'vesselName', oldVoyage),
-          newVoyage.vesselName
+          getByPathWithDefault(null, 'vesselName', newVoyage)
         ),
         ...parseGenericField(
           'vesselCode',
           getByPathWithDefault(null, 'vesselCode', oldVoyage),
-          newVoyage.vesselCode
+          getByPathWithDefault(null, 'vesselCode', newVoyage)
         ),
         ...parsePortField(
           'departurePort',
           getByPathWithDefault(null, 'departurePort', oldVoyage),
-          newVoyage.departurePort
+          getByPathWithDefault(null, 'departurePort', newVoyage)
         ),
         ...parsePortField(
           'arrivalPort',
           getByPathWithDefault(null, 'arrivalPort', oldVoyage),
-          newVoyage.arrivalPort
+          getByPathWithDefault(null, 'arrivalPort', newVoyage)
         ),
         ...parseTimelineDateField(
           'departure',
           getByPathWithDefault(null, 'departure', oldVoyage),
-          newVoyage.departure
+          getByPathWithDefault(null, 'departure', newVoyage)
         ),
         ...parseTimelineDateField(
           'arrival',
           getByPathWithDefault(null, 'arrival', oldVoyage),
-          newVoyage.arrival
+          getByPathWithDefault(null, 'arrival', newVoyage)
         ),
       })
     ),
