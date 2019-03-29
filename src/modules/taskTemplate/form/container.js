@@ -8,15 +8,11 @@ type FormState = {
   name?: string,
   description?: string,
   entityType?: string,
-  todo: {
-    tasks: Array<Object>,
-  },
+  tasks?: Array<Object>,
 };
 
 const initValues = {
-  todo: {
-    tasks: [],
-  },
+  tasks: [],
 };
 
 export default class TaskTemplateFormContainer extends Container<FormState> {

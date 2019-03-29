@@ -2,8 +2,8 @@
 import React, { memo, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
-import TaskSection from 'modules/task/common/TaskSection';
 import { SectionHeader, SectionWrapper, LastModified } from 'components/Form';
+import TaskSectionInTemplate from 'modules/taskTemplate/common/TaskSectionInTemplate';
 import TemplateSection from './components/TemplateSection';
 import { TemplateFormWrapperStyle } from './style';
 
@@ -42,7 +42,7 @@ function TaskTemplateForm({ template, isNew, initDetailValues }: Props) {
         </SectionHeader>
         <TemplateSection isNew={isNew} />
       </SectionWrapper>
-      <TaskSection
+      <TaskSectionInTemplate
         isNew={isNew}
         type="taskTemplate"
         getConfig={() => ({
