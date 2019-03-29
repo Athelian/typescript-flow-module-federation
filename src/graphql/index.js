@@ -13,6 +13,7 @@ import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
 import {
   taskCardFragment,
+  taskTemplateCardFragment,
   taskFormInSlideViewFragment,
   taskFormFragment,
   todoFragment,
@@ -83,5 +84,6 @@ export {
   forbiddenFragment,
   ownedByFragment,
   taskCardFragment,
+  taskTemplateCardFragment,
   todoFragment,
 };

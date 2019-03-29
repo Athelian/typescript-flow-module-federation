@@ -30,7 +30,7 @@ const TaskTemplateGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) 
           id: item.id,
           title: item.name,
           description: item.memo,
-          count: 1,
+          count: item.tasks.length,
         }}
       />
     ))}

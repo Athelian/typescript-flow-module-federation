@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Mar 27 2019 10:23:24 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Mar 29 2019 11:51:58 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -28632,21 +28632,6 @@ input EntityInput {
 
 union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | File | Task | BadRequest | Forbidden | NotFound
 
-input EntityTaskInput {
-  name: String
-  startDate: DateTime
-  dueDate: DateTime
-  assignedToIds: [ID!]
-  inProgressById: ID
-  inProgressAt: DateTime
-  completedById: ID
-  completedAt: DateTime
-  memo: String
-  description: String
-  tagIds: [ID!]
-  id: ID
-}
-
 type EntityValue {
   entity: EntityPayload
 }
@@ -29849,6 +29834,10 @@ type Mutation {
   taskUpdate(id: ID!, input: TaskUpdateInput!): TaskPayload!
   taskStart(id: ID!): TaskPayload!
   taskComplete(id: ID!): TaskPayload!
+  taskDelete(id: ID!): EmptyPayload
+  taskTemplateCreate(input: TaskTemplateCreateInput!): TaskTemplatePayload!
+  taskTemplateUpdate(id: ID!, input: TaskTemplateUpdateInput!): TaskTemplatePayload!
+  taskTemplateDelete(id: ID!): EmptyPayload
 }
 
 type NotFound {
@@ -30680,6 +30669,9 @@ type Query {
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPagination!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
+  taskTemplate(id: ID!): TaskTemplatePayload!
+  taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPagination!
+  taskTemplatesByIDs(ids: [ID!]!): [TaskTemplatePayload!]!
   fieldDefinition(id: ID!): FieldDefinitionPayload!
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
   mask(id: ID!): MaskPayload!
@@ -30695,6 +30687,7 @@ type Query {
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
   exportExtensions: [ExportExtensionPayload!]!
   genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): FilePayload!
+  role(id: ID!): RolePayload!
   roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPagination!
   permissions: [String!]!
 }
@@ -35810,6 +35803,7 @@ input ShipmentFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  importerId: ID
   tagIds: [ID!]
   forwarderIds: [ID!]
   inChargeIds: [ID!]
@@ -36005,7 +35999,8 @@ input TagUpdateInput {
 type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   name: String!
   description: String
-  entity: EntityPayload!
+  entity: EntityPayload
+  taskTemplate: TaskTemplatePayload
   assignedTo: [UserPayload!]!
   startDate: DateTime
   dueDate: DateTime
@@ -36028,7 +36023,6 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
 
 input TaskCreateInput {
   name: String!
-  entity: EntityInput!
   startDate: DateTime
   dueDate: DateTime
   assignedToIds: [ID!]
@@ -36039,6 +36033,8 @@ input TaskCreateInput {
   memo: String
   description: String
   tagIds: [ID!]
+  entity: EntityInput!
+  taskTemplateId: ID
 }
 
 input TaskFilterInput {
@@ -36067,6 +36063,104 @@ input TaskSortInput {
   dueDate: SortOrder
 }
 
+type TaskTemplate implements Model & Owned {
+  name: String!
+  entityType: TaskTemplateEntityType!
+  description: String
+  tasks: [TaskPayload!]!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+}
+
+input TaskTemplateCreateInput {
+  name: String!
+  entityType: TaskTemplateEntityType!
+  description: String
+  tasks: [TaskTemplateTaskCreateInput!]
+}
+
+enum TaskTemplateEntityType {
+  """Order"""
+  Order
+
+  """OrderItem"""
+  OrderItem
+
+  """Batch"""
+  Batch
+
+  """Shipment"""
+  Shipment
+
+  """Container"""
+  Container
+}
+
+input TaskTemplateFilterInput {
+  query: String
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
+  entityTypes: [TaskTemplateEntityType!]
+}
+
+union TaskTemplatePayload = TaskTemplate | BadRequest | Forbidden | NotFound
+
+type TaskTemplatePayloadPagination {
+  nodes: [TaskTemplatePayload!]!
+  page: Int!
+  perPage: Int!
+  totalPage: Int!
+  count: Int!
+  totalCount: Int!
+}
+
+input TaskTemplateSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+input TaskTemplateTaskCreateInput {
+  name: String!
+  startDate: DateTime
+  dueDate: DateTime
+  assignedToIds: [ID!]
+  inProgressById: ID
+  inProgressAt: DateTime
+  completedById: ID
+  completedAt: DateTime
+  memo: String
+  description: String
+  tagIds: [ID!]
+}
+
+input TaskTemplateTaskUpdateInput {
+  name: String
+  startDate: DateTime
+  dueDate: DateTime
+  assignedToIds: [ID!]
+  inProgressById: ID
+  inProgressAt: DateTime
+  completedById: ID
+  completedAt: DateTime
+  memo: String
+  description: String
+  tagIds: [ID!]
+  id: ID
+}
+
+input TaskTemplateUpdateInput {
+  name: ID
+  entityType: TaskTemplateEntityType
+  description: String
+  tasks: [TaskTemplateTaskUpdateInput!]
+}
+
 input TaskUpdateInput {
   name: String
   startDate: DateTime
@@ -36080,6 +36174,7 @@ input TaskUpdateInput {
   description: String
   tagIds: [ID!]
   entity: EntityInput
+  taskTemplateId: ID
 }
 
 type Timeline {
@@ -36157,10 +36252,28 @@ type Todo {
   inProgressCount: Int!
   remainingCount: Int!
   tasks: [TaskPayload!]!
+  taskTemplate: TaskTemplatePayload
 }
 
 input TodoInput {
-  tasks: [EntityTaskInput!]
+  tasks: [TodoTaskInput!]
+  taskTemplateId: ID
+}
+
+input TodoTaskInput {
+  name: String
+  startDate: DateTime
+  dueDate: DateTime
+  assignedToIds: [ID!]
+  inProgressById: ID
+  inProgressAt: DateTime
+  completedById: ID
+  completedAt: DateTime
+  memo: String
+  description: String
+  tagIds: [ID!]
+  id: ID
+  taskTemplateId: ID
 }
 
 type Token {
