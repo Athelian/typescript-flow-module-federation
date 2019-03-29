@@ -369,4 +369,73 @@ storiesOf('Card', module)
         </Provider>
       </IntlProvider>
     </StoryBookWrapper>
+  ))
+  .add('Task Card for template with approval', () => (
+    <StoryBookWrapper>
+      <IntlProvider>
+        <Provider>
+          <ObjectValue
+            defaultValue={{
+              task: {
+                id: '1',
+                approvable: true,
+                entity: {
+                  id: '2',
+                  __typename: 'Order',
+                  poNo: 'ABC',
+                },
+                name: 'Task name',
+                dueDate: null,
+                startDate: null,
+                assignedTo: usersMock.splice(1, 3),
+                tags: [
+                  {
+                    id: 'bicsesovsbnbasgumrk0',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bics8lovsbnbasgumrjg',
+                    name: '111',
+                    description: null,
+                    color: '#e0c041',
+                    __typename: 'Tag',
+                  },
+                  {
+                    id: 'bi4dmb4s7cc75f5td1lg',
+                    name: 'test for task',
+                    description: '1',
+                    color: '#11d1a6',
+                    __typename: 'Tag',
+                  },
+                ],
+              },
+            }}
+          >
+            {({ value: { task }, assign }) => (
+              <>
+                <Label>EDITABLE DEFAULT</Label>
+                <TaskCard
+                  task={task}
+                  editable
+                  position={1}
+                  isInTemplate
+                  saveOnBlur={newTask => assign({ task: newTask })}
+                />
+                <Label>READ ONLY</Label>
+                <TaskCard
+                  task={task}
+                  editable={false}
+                  position={1}
+                  isInTemplate
+                  saveOnBlur={newTask => assign({ task: newTask })}
+                />
+              </>
+            )}
+          </ObjectValue>
+        </Provider>
+      </IntlProvider>
+    </StoryBookWrapper>
   ));
