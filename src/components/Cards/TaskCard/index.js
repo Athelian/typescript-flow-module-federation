@@ -29,6 +29,7 @@ import BaseCard from '../BaseCard';
 import validator from './validator';
 import {
   TaskCardWrapperStyle,
+  TaskInTemplateIconStyle,
   TaskParentWrapperStyle,
   TaskParentIconStyle,
   TaskNameWrapperStyle,
@@ -49,6 +50,7 @@ type OptionalProps = {
   editable: boolean,
   actions: Array<React.Node>,
   isInTemplate: boolean,
+  isFromTemplate: boolean,
 };
 
 type Props = OptionalProps;
@@ -61,6 +63,7 @@ const defaultProps = {
   editable: false,
   actions: [],
   isInTemplate: false,
+  isFromTemplate: false,
 };
 
 const getParentInfo = (parent: Object) => {
@@ -102,6 +105,7 @@ const TaskCard = ({
   onDeactivateUser,
   editable,
   isInTemplate,
+  isFromTemplate,
   actions,
   ...rest
 }: Props) => {
@@ -140,6 +144,10 @@ const TaskCard = ({
 
   hideParentInfoForHoc = hideParentInfo || isInTemplate;
 
+  let nameWidth = '160px';
+  if (isFromTemplate) nameWidth = '120px';
+  else if (hideParentInfoForHoc) nameWidth = '140px';
+
   const IS_DND_DEVELOPED = false;
 
   return (
@@ -168,6 +176,12 @@ const TaskCard = ({
             }}
             role="presentation"
           >
+            {isFromTemplate && (
+              <div className={TaskInTemplateIconStyle}>
+                <Icon icon="TASK" />
+              </div>
+            )}
+
             {!(hideParentInfo || isInTemplate) && (
               <div className={TaskParentWrapperStyle}>
                 {viewPermissions[parentType] ? (
@@ -222,7 +236,7 @@ const TaskCard = ({
                       saveOnBlur({ ...task, name: inputHandlers.value });
                     }}
                     editable={editable}
-                    inputWidth={hideParentInfo || isInTemplate ? '140px' : '160px'}
+                    inputWidth={nameWidth}
                     inputHeight="20px"
                     inputAlign="left"
                     name={fieldName}

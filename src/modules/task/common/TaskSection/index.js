@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { SectionNavBar } from 'components/NavBar';
+import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
-import { SectionWrapper, SectionHeader } from 'components/Form';
+import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
+import { TemplateCard } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -19,8 +22,14 @@ import { SHIPMENT_TASK_FORM, SHIPMENT_TASK_LIST } from 'modules/permission/const
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
-import { TasksSectionWrapperStyle, TasksSectionBodyStyle } from './style';
+import {
+  TasksSectionWrapperStyle,
+  TasksSectionBodyStyle,
+  ItemGridStyle,
+  TemplateItemStyle,
+} from './style';
 import Tasks from './components/Tasks';
+import SelectTaskTemplate from './components/SelectTaskTemplate';
 
 type CompatibleEntityTypes = 'batch' | 'order' | 'shipment' | 'taskTemplate';
 
@@ -75,6 +84,8 @@ function TaskSection({ getConfig, type, intl }: Props) {
       {(
         {
           state: {
+            template,
+            useTemplate,
             todo: { tasks },
           },
           setFieldValue,
@@ -112,36 +123,84 @@ function TaskSection({ getConfig, type, intl }: Props) {
                   }}
                 />
               )}
+              {hasPermission(TASK_CREATE) && !isInTemplate && (
+                <NewButton label={intl.formatMessage(messages.useTemplate)} onClick={() => {}} />
+              )}
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
-              <Tasks
-                isInTemplate={isInTemplate}
-                type={type}
-                editable={hasPermission(TASK_UPDATE) || isInTemplate}
-                viewForm={hasPermission(taskFormPermission) || isInTemplate}
-                removable={hasPermission(TASK_DELETE) || isInTemplate}
-                tasks={tasks}
-                onSwap={(index: number, direction: 'left' | 'right') => {
-                  const nextIndex = direction === 'left' ? index - 1 : index + 1;
+              <div className={ItemGridStyle}>
+                {!isInTemplate && (
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) => (
+                      <>
+                        <div className={TemplateItemStyle}>
+                          <Label height="24px">
+                            {' '}
+                            <FormattedMessage
+                              id="modules.Tasks.template"
+                              defaultMessage="TEMPLATE"
+                            />
+                          </Label>
+                          {useTemplate ? (
+                            <TemplateCard />
+                          ) : (
+                            <DashedPlusButton
+                              data-testid="selecTaskTemplateButton"
+                              width="175px"
+                              height="125px"
+                              onClick={() => slideToggle(true)}
+                            />
+                          )}
+                        </div>
 
-                  if (nextIndex > -1 && nextIndex < tasks.length) {
-                    const clonedTasks = [...tasks];
-                    clonedTasks[nextIndex] = { ...tasks[index] };
-                    clonedTasks[index] = { ...tasks[nextIndex] };
-                    setFieldValue('todo.tasks', clonedTasks);
+                        <SlideView
+                          isOpen={opened}
+                          onRequestClose={() => slideToggle(false)}
+                        >
+                          {opened && (
+                            <SelectTaskTemplate
+                              selected={template}
+                              onCancel={() => slideToggle(false)}
+                              onSelect={newValue => {
+                                slideToggle(false);
+                                setFieldValue('warehouse', newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                )}
+                <Tasks
+                  isInTemplate={isInTemplate}
+                  type={type}
+                  editable={hasPermission(TASK_UPDATE) || isInTemplate}
+                  viewForm={hasPermission(taskFormPermission) || isInTemplate}
+                  removable={hasPermission(TASK_DELETE) || isInTemplate}
+                  tasks={tasks}
+                  onSwap={(index: number, direction: 'left' | 'right') => {
+                    const nextIndex = direction === 'left' ? index - 1 : index + 1;
+
+                    if (nextIndex > -1 && nextIndex < tasks.length) {
+                      const clonedTasks = [...tasks];
+                      clonedTasks[nextIndex] = { ...tasks[index] };
+                      clonedTasks[index] = { ...tasks[nextIndex] };
+                      setFieldValue('todo.tasks', clonedTasks);
+                      setFieldTouched(`tasks.${index}`);
+                      setFieldTouched(`tasks.${nextIndex}`);
+                    }
+                  }}
+                  onRemove={({ id }) => {
+                    setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
+                    setFieldTouched(`tasks.${id}`);
+                  }}
+                  onSave={(index, newValue) => {
+                    setFieldValue(`todo.tasks.${index}`, newValue);
                     setFieldTouched(`tasks.${index}`);
-                    setFieldTouched(`tasks.${nextIndex}`);
-                  }
-                }}
-                onRemove={({ id }) => {
-                  setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
-                  setFieldTouched(`tasks.${id}`);
-                }}
-                onSave={(index, newValue) => {
-                  setFieldValue(`todo.tasks.${index}`, newValue);
-                  setFieldTouched(`tasks.${index}`);
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
         </SectionWrapper>

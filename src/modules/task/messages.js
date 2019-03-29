@@ -30,4 +30,8 @@ export default defineMessages({
     id: 'modules.Tasks.newTask',
     defaultMessage: 'NEW TASK',
   },
+  useTemplate: {
+    id: 'modules.Tasks.useTemplate',
+    defaultMessage: 'USE TEMPLATE',
+  },
 });
