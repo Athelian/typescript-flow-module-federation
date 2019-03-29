@@ -1,6 +1,11 @@
 // @flow
 import gql from 'graphql-tag';
-import { taskTemplateCardFragment } from 'graphql';
+import {
+  taskTemplateCardFragment,
+  userAvatarFragment,
+  taskFormInTemplateFragment,
+  tagFragment,
+} from 'graphql';
 
 export const taskTemplateListQuery = gql`
   query(
@@ -19,6 +24,9 @@ export const taskTemplateListQuery = gql`
   }
 
   ${taskTemplateCardFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${tagFragment}
 `;
 
 export default taskTemplateListQuery;

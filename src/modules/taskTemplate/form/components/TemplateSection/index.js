@@ -65,8 +65,8 @@ const TableTemplateSection = ({ isNew }: Props) => {
                 <FormField
                   validator={validator}
                   values={values}
-                  name="memo"
-                  initValue={values.memo}
+                  name="description"
+                  initValue={values.description}
                   setFieldValue={setFieldValue}
                 >
                   {({ name, ...inputHandlers }) => (
@@ -78,7 +78,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                       label={
                         <div className={DescriptionLabelWrapperStyle}>
                           <FormattedMessage
-                            id="modules.TaskTemplates.memo"
+                            id="modules.TaskTemplates.description"
                             defaultMessage="DESCRIPTION"
                           />
                         </div>
@@ -91,13 +91,17 @@ const TableTemplateSection = ({ isNew }: Props) => {
                     />
                   )}
                 </FormField>
-                <FormField name="type" initValue={values.type} setFieldValue={setFieldValue}>
+                <FormField
+                  name="entityType"
+                  initValue={values.entityType}
+                  setFieldValue={setFieldValue}
+                >
                   {({ name, isTouched, errorMessage, ...inputHandlers }) => (
                     <FieldItem
                       vertical
                       label={
                         <Label required>
-                          <FormattedMessage id="modules.TaskTemplates.type" defaultMessage="Type" />
+                          <FormattedMessage id="modules.TaskTemplates.type" defaultMessage="TYPE" />
                         </Label>
                       }
                       tooltip={

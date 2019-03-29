@@ -333,6 +333,7 @@
           { "name": "Shipment" },
           { "name": "Tag" },
           { "name": "Task" },
+          { "name": "TaskTemplate" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
           { "name": "User" },
@@ -397,6 +398,7 @@
           { "name": "Shipment" },
           { "name": "Tag" },
           { "name": "Task" },
+          { "name": "TaskTemplate" },
           { "name": "TimelineDate" },
           { "name": "TimelineDateRevision" },
           { "name": "Voyage" },
@@ -517,6 +519,16 @@
         "name": "TaskPayload",
         "possibleTypes": [
           { "name": "Task" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TaskTemplatePayload",
+        "possibleTypes": [
+          { "name": "TaskTemplate" },
           { "name": "BadRequest" },
           { "name": "Forbidden" },
           { "name": "NotFound" }

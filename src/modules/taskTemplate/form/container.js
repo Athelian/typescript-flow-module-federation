@@ -7,16 +7,12 @@ import { isEquals } from 'utils/fp';
 type FormState = {
   name?: string,
   description?: string,
-  type?: string,
-  todo: {
-    tasks: Array<Object>,
-  },
+  entityType?: string,
+  tasks?: Array<Object>,
 };
 
 const initValues = {
-  todo: {
-    tasks: [],
-  },
+  tasks: [],
 };
 
 export default class TaskTemplateFormContainer extends Container<FormState> {

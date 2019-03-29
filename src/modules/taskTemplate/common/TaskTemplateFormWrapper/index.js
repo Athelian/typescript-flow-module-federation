@@ -11,6 +11,7 @@ import TaskTemplateForm from 'modules/taskTemplate/form';
 import {
   createTaskTemplateMutation,
   updateTaskTemplateMutation,
+  prepareTaskTemplateForCreate,
 } from 'modules/taskTemplate/form/mutation';
 import query from 'modules/taskTemplate/list/query';
 import emitter from 'utils/emitter';
@@ -49,13 +50,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     onErrors: Function = () => {}
   ) => {
     const { isNew, template, onCancel: closeSlideView } = this.props;
-    const { name, memo, type, fields } = formData;
-    const input = {
-      name,
-      type,
-      memo,
-      fields,
-    };
+
+    const input = prepareTaskTemplateForCreate(formData);
+
     if (isNew) {
       const { data } = await saveTemplate({
         variables: { input },
@@ -85,7 +82,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
         },
       });
       const {
-        taskCreate: { violations },
+        taskTemplateCreate: { violations },
       } = data;
       if (violations && violations.length) {
         onErrors(violations);
@@ -104,11 +101,8 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
               __typename: 'Task',
               id: template.id,
               updatedBy: template.updatedBy,
-              name,
-              type,
-              memo,
-              fields,
               updatedAt: new Date(),
+              ...formData,
             },
           },
         },
