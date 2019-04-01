@@ -276,8 +276,7 @@ function ContainersAreaReadOnly({
                   setContainers('containers', [
                     ...clonedContainers,
                     {
-                      ...generateContainer(),
-                      no: `container no ${containers.length + 1}`,
+                      ...generateContainer({ no: `container no ${containers.length + 1}` }),
                       freeTimeStartDate:
                         voyages.length === 0
                           ? null
