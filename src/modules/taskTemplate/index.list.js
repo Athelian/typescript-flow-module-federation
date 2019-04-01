@@ -24,9 +24,11 @@ type OptionalProps = {
 
 type Props = OptionalProps & {};
 
-const getInitFilter = () => {
+const getInitFilter = (entityType: string) => {
   const state = {
-    filter: {},
+    filter: {
+      entityTypes: [entityType],
+    },
     sort: {
       field: 'updatedAt',
       direction: 'DESCENDING',
@@ -44,7 +46,10 @@ const defaultProps = {
 const TaskTemplateListModule = ({ entityType }: Props) => {
   const activeType = upperFirst(entityType);
   const { hasPermission } = usePermission();
-  const { queryVariables } = useFilter(getInitFilter(), `filterTaskTemplate${activeType}`);
+  const { queryVariables } = useFilter(
+    getInitFilter(activeType),
+    `filterTaskTemplate${activeType}`
+  );
   return (
     <Provider>
       <UIConsumer>

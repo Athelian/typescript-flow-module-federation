@@ -21,7 +21,7 @@ type Props = OptionalProps & {
 };
 
 const defaultRenderItem = (item: Object, hasPermission: Function) => (
-  <BooleanValue>
+  <BooleanValue key={`wrapper-${item.id}`}>
     {({ value: isOpen, set: toggleTaskTemplateForm }) => (
       <React.Fragment key={item.id}>
         <TemplateCard
