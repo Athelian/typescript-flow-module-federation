@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { TASK_CREATE, TASK_UPDATE } from 'modules/permission/constants/task';
+import { TASK_TEMPLATE_UPDATE } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import TemplateFormContainer from 'modules/taskTemplate/form/container';
 import validator from 'modules/taskTemplate/form/validator';
@@ -31,7 +31,7 @@ type Props = {
 
 const TableTemplateSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const canCreateOrUpdate = hasPermission(TASK_CREATE) || hasPermission(TASK_UPDATE);
+  const allowUpdate = hasPermission(TASK_TEMPLATE_UPDATE);
   return (
     <div className={TableTemplateSectionWrapperStyle}>
       <GridColumn>
@@ -58,7 +58,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                         <FormattedMessage id="modules.TaskTemplates.name" defaultMessage="NAME" />
                       }
                       required
-                      editable={canCreateOrUpdate}
+                      editable={allowUpdate}
                     />
                   )}
                 </FormField>
@@ -83,7 +83,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                           />
                         </div>
                       }
-                      editable={canCreateOrUpdate}
+                      editable={allowUpdate}
                       vertical={false}
                       inputWidth="200px"
                       inputHeight="100px"
@@ -120,7 +120,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                             data-testid="orderRadio"
                             selected={inputHandlers.value === 'Order'}
                             onToggle={() => setFieldValue(name, 'Order')}
-                            editable={canCreateOrUpdate}
+                            editable={allowUpdate}
                           >
                             <div className={EntityTypeStyle}>
                               <div className={EntityIconStyle('ORDER')}>
@@ -137,7 +137,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                           <RadioInput
                             selected={inputHandlers.value === 'Batch'}
                             onToggle={() => setFieldValue(name, 'Batch')}
-                            editable={canCreateOrUpdate}
+                            editable={allowUpdate}
                           >
                             <div className={EntityTypeStyle}>
                               <div className={EntityIconStyle('BATCH')}>
@@ -155,7 +155,7 @@ const TableTemplateSection = ({ isNew }: Props) => {
                           <RadioInput
                             selected={inputHandlers.value === 'Shipment'}
                             onToggle={() => setFieldValue(name, 'Shipment')}
-                            editable={canCreateOrUpdate}
+                            editable={allowUpdate}
                           >
                             <div className={EntityTypeStyle}>
                               <div className={EntityIconStyle('SHIPMENT')}>

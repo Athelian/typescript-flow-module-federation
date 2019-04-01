@@ -14,7 +14,7 @@ import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
-import { TASK_CREATE } from 'modules/permission/constants/task';
+import { TASK_TEMPLATE_CREATE } from 'modules/permission/constants/task';
 import TaskTemplateList from './list';
 import TaskTemplateFormWrapper from './common/TaskTemplateFormWrapper';
 
@@ -78,7 +78,7 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                 <BooleanValue>
                   {({ value: isOpen, set: toggleTaskTemplateForm }) => (
                     <>
-                      {hasPermission(TASK_CREATE) && (
+                      {hasPermission(TASK_TEMPLATE_CREATE) && (
                         <NewButton onClick={() => toggleTaskTemplateForm(true)} />
                       )}
                       <SlideView

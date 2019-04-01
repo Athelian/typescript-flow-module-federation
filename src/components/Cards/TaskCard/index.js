@@ -204,7 +204,7 @@ const TaskCard = ({
             }}
             role="presentation"
           >
-            {isFromTemplate && (
+            {(isFromTemplate || isInTemplate) && (
               <div className={TaskInTemplateIconStyle}>
                 <Icon icon="TASK" />
               </div>

@@ -45,40 +45,35 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   getConfig: (type: string) => {
-    if (type === 'batch') {
-      return {
-        taskListPermission: BATCH_TASK_LIST,
-        taskFormPermission: BATCH_TASK_FORM,
-        tasksContainer: BatchTasksContainer,
-        isInTemplate: false,
-      };
+    switch (type) {
+      case 'order':
+        return {
+          taskListPermission: ORDER_TASK_LIST,
+          taskFormPermission: ORDER_TASK_FORM,
+          tasksContainer: OrderTasksContainer,
+        };
+      case 'batch':
+        return {
+          taskListPermission: BATCH_TASK_LIST,
+          taskFormPermission: BATCH_TASK_FORM,
+          tasksContainer: BatchTasksContainer,
+        };
+      default:
+        return {
+          taskListPermission: SHIPMENT_TASK_LIST,
+          taskFormPermission: SHIPMENT_TASK_FORM,
+          tasksContainer: ShipmentTasksContainer,
+        };
     }
-    if (type === 'order') {
-      return {
-        taskListPermission: ORDER_TASK_LIST,
-        taskFormPermission: ORDER_TASK_FORM,
-        tasksContainer: OrderTasksContainer,
-        isInTemplate: false,
-      };
-    }
-    if (type === 'shipment') {
-      return {
-        taskListPermission: SHIPMENT_TASK_LIST,
-        taskFormPermission: SHIPMENT_TASK_FORM,
-        tasksContainer: ShipmentTasksContainer,
-        isInTemplate: false,
-      };
-    }
-    return { isInTemplate: true };
   },
 };
 
 function TaskSection({ getConfig, type, intl }: Props) {
-  const { taskListPermission, taskFormPermission, tasksContainer, isInTemplate } = getConfig(type);
+  const { taskListPermission, taskFormPermission, tasksContainer } = getConfig(type);
 
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  if (!hasPermission(taskListPermission) && !isInTemplate) return null;
+  if (!hasPermission(taskListPermission)) return null;
 
   return (
     <Subscribe to={[tasksContainer, FormContainer]}>
@@ -106,7 +101,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {(hasPermission(TASK_CREATE) || isInTemplate) && (
+              {hasPermission(TASK_CREATE) && (
                 <NewButton
                   label={intl.formatMessage(messages.newTask)}
                   onClick={() => {
@@ -126,7 +121,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <div className={ItemGridStyle}>
-                {!isInTemplate && (
+                {
                   <BooleanValue>
                     {({ value: opened, set: slideToggle }) => (
                       <>
@@ -174,13 +169,12 @@ function TaskSection({ getConfig, type, intl }: Props) {
                       </>
                     )}
                   </BooleanValue>
-                )}
+                }
                 <Tasks
-                  isInTemplate={isInTemplate}
                   type={type}
-                  editable={hasPermission(TASK_UPDATE) || isInTemplate}
-                  viewForm={hasPermission(taskFormPermission) || isInTemplate}
-                  removable={hasPermission(TASK_DELETE) || isInTemplate}
+                  editable={hasPermission(TASK_UPDATE)}
+                  viewForm={hasPermission(taskFormPermission)}
+                  removable={hasPermission(TASK_DELETE)}
                   tasks={tasks}
                   onSwap={(index: number, direction: 'left' | 'right') => {
                     const nextIndex = direction === 'left' ? index - 1 : index + 1;
