@@ -6,6 +6,7 @@ import type { DocumentNode } from 'graphql';
 import useUser from 'hooks/useUser';
 import LoadingIcon from 'components/LoadingIcon';
 import { decodeId } from 'utils/id';
+import logger from 'utils/logger';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import QueryFormPermissionContext from './context';
 import { partnerPermissionQuery } from './query';
@@ -20,7 +21,13 @@ type Props = {
 export default function QueryForm({ query, entityId, entityType, render }: Props) {
   const { isOwnerBy } = useUser();
   return (
-    <Query query={query} variables={{ id: decodeId(entityId) }} fetchPolicy="network-only">
+    <Query
+      query={query}
+      variables={{ id: decodeId(entityId) }}
+      fetchPolicy="network-only"
+      onCompleted={logger.warn}
+      onError={logger.error}
+    >
       {({ loading, data, error }) => {
         if (error) {
           if (error.message && error.message.includes('403')) {

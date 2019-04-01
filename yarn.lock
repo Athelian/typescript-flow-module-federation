@@ -7059,10 +7059,10 @@ graphql-tools@^4.0.4:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql@^14.2.0:
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.2.0.tgz#ff25813ad6d186f3975977d56bc2d2434871f3b9"
-  integrity sha512-dlFHRtxsL4sBy1C1e3v64IUd5ndZhAOHZ/z3Dr4Nm6+cvr9elrnz4BhMF9h9mRBBnhUCGLc4GH4xvPbKG6sUeA==
+graphql@^14.2.1:
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.2.1.tgz#779529bf9a01e7207b977a54c20670b48ca6e95c"
+  integrity sha512-2PL1UbvKeSjy/lUeJqHk+eR9CvuErXoCNwJI4jm3oNFEeY+9ELqHNKO1ZuSxAkasPkpWbmT/iMRMFxd3cEL3tQ==
   dependencies:
     iterall "^1.2.2"
 
@@ -12307,10 +12307,10 @@ react-helmet-async@^0.2.0:
     react-fast-compare "^2.0.2"
     shallowequal "^1.0.2"
 
-react-hot-loader@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.8.0.tgz#0b7c7dd9407415e23eb8246fdd28b0b839f54cb6"
-  integrity sha512-HY9F0vITYSVmXhAR6tPkMk240nxmoH8+0rca9iO2B82KVguiCiBJkieS0Wb4CeSIzLWecYx3iOcq8dcbnp0bxA==
+react-hot-loader@^4.8.2:
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.8.2.tgz#21a00cfca7fc848c53d78c34f6081f5ae3737dda"
+  integrity sha512-W5I8ps/32q5zL0mKfGGdPgsZfgljs/tdCTYxM6P1N8GV4+rUAu4g6ysy//5/jJpAFM0Bpgr6HrVLWK9h0jMdrA==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -12462,10 +12462,10 @@ react-snap@^1.23.0:
     serve-static "1.13.2"
     sourcemapped-stacktrace-node "2.1.8"
 
-react-svg@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-8.0.1.tgz#7d9cbcfb3d12588e9cf3d54a2bda3cdec8bfce82"
-  integrity sha512-3NjPSkls3RXblLW1UAzCZvhOLtgwbmCzB0MqVVnFATXfxNQzax1NrxeEHcJowQjrGMRP4XwWKwwWwKrdgIDc6w==
+react-svg@^8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-8.0.2.tgz#63b983d77f2dd69694401c25cfc0842de809387f"
+  integrity sha512-qvlzmHATcW1yhK+u750IlYXY4BVm/puhCgktD5rDyXm1ZfneFuZYx/v1yE2/NdMFlpdi2eQiml1o+o6aGNV4/Q==
   dependencies:
     "@babel/runtime" "^7.4.2"
     "@tanem/svg-injector" "^7.0.8"
