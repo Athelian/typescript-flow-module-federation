@@ -43,10 +43,10 @@ import {
   DividerStyle,
   TaskStatusWrapperStyle,
   TaskTagsWrapperStyle,
-  ApprovableWrapperStyle,
-  ApprovableButtonStyle,
+  ApprovalWrapperStyle,
   ApprovalPanelWrapperStyle,
-  ClosePanelButtonStyle,
+  ApprovalInputWrapperStyle,
+  ApprovalButtonStyle,
 } from './style';
 
 type OptionalProps = {
@@ -170,7 +170,7 @@ const TaskCard = ({
 
   let nameWidth = '160px';
   if (isFromTemplate) nameWidth = '120px';
-  else if (hideParentInfoForHoc) nameWidth = '140px';
+  else if (hideParentInfo || isInTemplate) nameWidth = '140px';
 
   const IS_DND_DEVELOPED = false;
 
@@ -190,7 +190,7 @@ const TaskCard = ({
         {({ value: isHovered, set: changeHoverState }) => (
           <div
             ref={taskEl}
-            className={TaskCardWrapperStyle(hideParentInfo)}
+            className={TaskCardWrapperStyle(hideParentInfo || isInTemplate)}
             onClick={onClick}
             onMouseEnter={() => {
               if (editable) {
@@ -426,8 +426,9 @@ const TaskCard = ({
             <div className={TaskTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
+
             {approvable && (
-              <div className={ApprovableWrapperStyle}>
+              <div className={ApprovalWrapperStyle}>
                 <ObjectValue
                   defaultValue={{
                     isExpand: false,
@@ -435,125 +436,125 @@ const TaskCard = ({
                     selectUser: null,
                   }}
                 >
-                  {({ value: { isExpand, isSlideViewOpen, selectUser }, set, assign }) => (
+                  {({ value: { isExpanded, isSlideViewOpen, selectUser }, set, assign }) => (
                     <>
-                      {isExpand ? (
-                        <div className={ApprovalPanelWrapperStyle(isInTemplate)}>
-                          <OutsideClickHandler
-                            onOutsideClick={() =>
+                      <div className={ApprovalPanelWrapperStyle(isExpanded ? '79px' : '0px')}>
+                        <OutsideClickHandler
+                          onOutsideClick={() =>
+                            assign({
+                              isExpanded: false,
+                              isSlideViewOpen: false,
+                              selectUser: null,
+                            })
+                          }
+                          ignoreClick={!isExpanded || isSlideViewOpen}
+                          ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
+                        >
+                          <div className={ApprovalInputWrapperStyle}>
+                            {isUnapproved ? (
+                              <>
+                                {selectUser && selectUser.id ? (
+                                  <ApproveRejectMenu
+                                    width="175px"
+                                    onApprove={() =>
+                                      saveOnBlur({
+                                        ...task,
+                                        approvedBy: selectUser,
+                                        approvedAt: formatToGraphql(startOfToday()),
+                                        rejectedBy: null,
+                                        rejectedAt: null,
+                                      })
+                                    }
+                                    onReject={() =>
+                                      saveOnBlur({
+                                        ...task,
+                                        approvedBy: null,
+                                        approvedAt: null,
+                                        rejectedBy: selectUser,
+                                        rejectedAt: formatToGraphql(startOfToday()),
+                                      })
+                                    }
+                                  />
+                                ) : (
+                                  <TaskAssignmentInput
+                                    onChange={newAssignedTo =>
+                                      saveOnBlur({
+                                        ...task,
+                                        approvalAssignedTo: newAssignedTo,
+                                      })
+                                    }
+                                    users={approvalAssignedTo}
+                                    onActivateUser={
+                                      isInTemplate ? null : user => set('selectUser', user)
+                                    }
+                                    onToggleSlideView={isOpen => {
+                                      set('isSlideViewOpen', isOpen);
+                                    }}
+                                    editable={editable}
+                                  />
+                                )}
+                              </>
+                            ) : (
+                              <TaskApprovalStatusInput
+                                showUser
+                                showDate
+                                width="175px"
+                                editable={editable}
+                                onClickUser={() => {
+                                  saveOnBlur({
+                                    ...task,
+                                    approvedBy: null,
+                                    approvedAt: null,
+                                    rejectedBy: null,
+                                    rejectedAt: null,
+                                  });
+                                  set('selectUser', null);
+                                }}
+                                approval={
+                                  approvedBy && approvedBy.id
+                                    ? {
+                                        approvedAt,
+                                        approvedBy,
+                                      }
+                                    : null
+                                }
+                                rejection={
+                                  rejectedBy && rejectedBy.id
+                                    ? {
+                                        rejectedBy,
+                                        rejectedAt,
+                                      }
+                                    : null
+                                }
+                              />
+                            )}
+                          </div>
+                        </OutsideClickHandler>
+                      </div>
+
+                      <Tooltip message={tooltipMessage(approvedBy, rejectedBy)}>
+                        <button
+                          className={ApprovalButtonStyle({ approvedBy, rejectedBy }, isExpanded)}
+                          type="button"
+                          onClick={() => {
+                            if (isExpanded) {
                               assign({
-                                isExpand: false,
+                                isExpanded: false,
                                 isSlideViewOpen: false,
                                 selectUser: null,
-                              })
+                              });
+                            } else {
+                              set('isExpanded', true);
                             }
-                            ignoreClick={!isExpand || isSlideViewOpen}
-                            ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
-                          >
-                            <div className={TaskStatusWrapperStyle}>
-                              {isUnapproved ? (
-                                <>
-                                  {selectUser && selectUser.id ? (
-                                    <ApproveRejectMenu
-                                      width="180px"
-                                      onApprove={() =>
-                                        saveOnBlur({
-                                          ...task,
-                                          approvedBy: selectUser,
-                                          approvedAt: formatToGraphql(startOfToday()),
-                                          rejectedBy: null,
-                                          rejectedAt: null,
-                                        })
-                                      }
-                                      onReject={() =>
-                                        saveOnBlur({
-                                          ...task,
-                                          approvedBy: null,
-                                          approvedAt: null,
-                                          rejectedBy: selectUser,
-                                          rejectedAt: formatToGraphql(startOfToday()),
-                                        })
-                                      }
-                                    />
-                                  ) : (
-                                    <TaskAssignmentInput
-                                      onChange={newAssignedTo =>
-                                        saveOnBlur({
-                                          ...task,
-                                          approvalAssignedTo: newAssignedTo,
-                                        })
-                                      }
-                                      users={approvalAssignedTo}
-                                      onActivateUser={
-                                        isInTemplate ? null : user => set('selectUser', user)
-                                      }
-                                      onToggleSlideView={isOpen => {
-                                        set('isSlideViewOpen', isOpen);
-                                      }}
-                                      editable={editable}
-                                    />
-                                  )}
-                                </>
-                              ) : (
-                                <TaskApprovalStatusInput
-                                  showUser
-                                  showDate
-                                  width="180px"
-                                  editable={editable}
-                                  onClickUser={() => {
-                                    saveOnBlur({
-                                      ...task,
-                                      approvedBy: null,
-                                      approvedAt: null,
-                                      rejectedBy: null,
-                                      rejectedAt: null,
-                                    });
-                                  }}
-                                  approval={
-                                    approvedBy && approvedBy.id
-                                      ? {
-                                          approvedAt,
-                                          approvedBy,
-                                        }
-                                      : null
-                                  }
-                                  rejection={
-                                    rejectedBy && rejectedBy.id
-                                      ? {
-                                          rejectedBy,
-                                          rejectedAt,
-                                        }
-                                      : null
-                                  }
-                                />
-                              )}
-                            </div>
-                            <button
-                              className={ClosePanelButtonStyle}
-                              type="button"
-                              onClick={() =>
-                                assign({
-                                  isExpand: false,
-                                  isSlideViewOpen: false,
-                                  selectUser: null,
-                                })
-                              }
-                            >
-                              <Icon icon="CHEVRON_DOWN" />
-                            </button>
-                          </OutsideClickHandler>
-                        </div>
-                      ) : (
-                        <Tooltip message={tooltipMessage(approvedBy, rejectedBy)}>
-                          <button
-                            className={ApprovableButtonStyle({ approvedBy, rejectedBy })}
-                            type="button"
-                            onClick={() => set('isExpand', true)}
-                          >
-                            {rejectedBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
-                          </button>
-                        </Tooltip>
-                      )}
+                          }}
+                        >
+                          {isExpanded ? (
+                            <Icon icon="CHEVRON_DOWN" />
+                          ) : (
+                            <Icon icon={rejectedBy ? 'CLEAR' : 'CONFIRM'} />
+                          )}
+                        </button>
+                      </Tooltip>
                     </>
                   )}
                 </ObjectValue>

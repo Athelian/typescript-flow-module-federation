@@ -78,7 +78,7 @@ const TaskAssignmentInput = ({
                   }}
                   type="button"
                 >
-                  {isHovered ? (
+                  {isHovered && canActivateUser && editable ? (
                     <div className={ConfirmIconWrapperStyle}>
                       <Icon icon="CONFIRM" />
                     </div>

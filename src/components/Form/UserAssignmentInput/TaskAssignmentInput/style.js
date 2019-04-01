@@ -6,7 +6,6 @@ export const TaskAssignmentWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 6.333px;
   padding: 5px 0;
-  width: 200px;
   height: 40px;
 `;
 
@@ -95,7 +94,7 @@ export const AddAssignmentButtonStyle: string = css`
   :focus {
     color: ${colors.TEAL};
     border-color: ${colors.TEAL};
-    background-color: ${colors.GRAY_SUPER_LIGHT};
+    background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 

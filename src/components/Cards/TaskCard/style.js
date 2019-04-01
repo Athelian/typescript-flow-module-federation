@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, presets, borderRadiuses, fontSizes } from 'styles/common';
+import { layout, colors, presets, borderRadiuses, fontSizes, transitions } from 'styles/common';
 
 export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
   position: relative;
@@ -8,7 +8,7 @@ export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: ${hideParentInfo ? '159px' : '194px'};
+  height: ${hideParentInfo ? '159px' : '184px'};
   padding: 5px 0 10px 0;
 `;
 
@@ -120,61 +120,82 @@ export const TaskTagsWrapperStyle: string = css`
   overflow: hidden;
 `;
 
-const approvalColor = (approvedBy: ?Object, rejectedBy: ?Object) => {
-  if (approvedBy) return colors.BLUE;
-
-  if (rejectedBy) return colors.RED;
-
-  return colors.GRAY_LIGHT;
-};
-
-export const ApprovableWrapperStyle: string = css`
-  display: flex;
-  justify-content: flex-end;
+export const ApprovalWrapperStyle: string = css`
   position: absolute;
   width: 100%;
-  bottom: 0px;
-  padding-top: 15px;
+  bottom: 0;
+  right: 0;
   z-index: 2;
 `;
 
-export const ApprovableButtonStyle = ({
-  approvedBy,
-  rejectedBy,
-}: {
-  approvedBy: ?Object,
-  rejectedBy: ?Object,
-}) => css`
-  color: ${colors.WHITE};
-  background: ${approvalColor(approvedBy, rejectedBy)};
-  display: inline-block;
-  width: 30px;
-  height: 15px;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  text-align: center;
-  cursor: pointer;
-  margin-right: 6px;
+export const ApprovalPanelWrapperStyle = (height: string) => css`
+  position: relative;
+  background-color: ${colors.BLUE};
+  ${borderRadiuses.MAIN};
+  height: ${height};
+  width: 100%;
+  overflow: hidden;
+  ${transitions.EXPAND};
 `;
 
-export const ClosePanelButtonStyle = css`
-  color: ${colors.WHITE};
-  background: ${colors.PURPLE};
-  display: inline-block;
-  width: 30px;
-  height: 15px;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-  text-align: center;
-  cursor: pointer;
+export const ApprovalInputWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  padding: 0 10px;
+`;
+
+export const ApprovalButtonStyle = (
+  {
+    approvedBy,
+    rejectedBy,
+  }: {
+    approvedBy: ?Object,
+    rejectedBy: ?Object,
+  },
+  isExpanded: boolean
+) => css`
   position: absolute;
   bottom: 0;
-  right: 7px;
-`;
-
-export const ApprovalPanelWrapperStyle = (isInTemplate: boolean) => css`
-  background: ${colors.BLUE};
-  border-radius: 5px;
-  height: ${isInTemplate ? '114px' : '89px'};
-  width: 100%;
+  right: 10px;
+  ${presets.BUTTON};
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  width: 30px;
+  height: 15px;
+  border-radius: 30px 30px 0 0;
+  flex-shrink: 0;
+  ${!isExpanded &&
+    !approvedBy &&
+    !rejectedBy &&
+    `
+    background-color: ${colors.GRAY_LIGHT};
+    &:hover, :focus {
+      background-color: ${colors.GRAY};
+    }
+  `};
+  ${!isExpanded &&
+    approvedBy &&
+    `
+    background-color: ${colors.BLUE};
+    &:hover, :focus {
+      background-color: ${colors.BLUE_DARK};
+    }
+  `};
+  ${!isExpanded &&
+    rejectedBy &&
+    `
+    background-color: ${colors.RED};
+    &:hover, :focus {
+      background-color: ${colors.RED_DARK};
+    }
+  `};
+  ${isExpanded &&
+    `
+    background-color: ${colors.PURPLE};
+    &:hover, :focus {
+      background-color: ${colors.PURPLE_DARK};
+    }
+  `};
 `;
