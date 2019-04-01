@@ -123,6 +123,7 @@ export const taskFormFragment = gql`
       ...userAvatarFragment
     }
     name
+    approvable
     dueDate
     startDate
     description
@@ -134,7 +135,18 @@ export const taskFormFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
+    rejectedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
     assignedTo {
+      ...userAvatarFragment
+    }
+    approvers {
       ...userAvatarFragment
     }
     tags {
