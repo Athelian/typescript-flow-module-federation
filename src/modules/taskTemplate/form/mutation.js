@@ -34,12 +34,8 @@ export const updateTaskTemplateMutation = gql`
 `;
 
 export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Object): Object => ({
-  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
-  ...parseGenericField(
-    'entityType',
-    getByPathWithDefault(null, 'entityType', originalValues),
-    newValues.entityType
-  ),
+  name: newValues.name,
+  entityType: newValues.entityType,
   ...parseMemoField(
     'description',
     getByPathWithDefault(null, 'description', originalValues),
