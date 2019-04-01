@@ -140,7 +140,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
                                 id: taskTemplate.id,
                                 title: taskTemplate.name,
                                 description: taskTemplate.description,
-                                count: taskTemplate.tasks.length,
+                                count: taskTemplate.tasks && taskTemplate.tasks.length,
                               }}
                               onClick={() => slideToggle(true)}
                             />
