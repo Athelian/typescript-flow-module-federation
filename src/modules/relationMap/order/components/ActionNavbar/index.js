@@ -51,6 +51,7 @@ import {
 import { updateOrderMutation } from './MoveToOrderPanel/mutation';
 import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
 import TableView from '../TableInlineEdit';
+import EditableTaskList from '../EditableTaskList';
 
 type Props = {
   highLightEntities: Array<string>,
@@ -179,6 +180,28 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     setActiveAction('connectShipment');
                   }}
                 />
+
+                <BooleanValue>
+                  {({ value: isOpen, set: toggleTaskList }) => (
+                    <>
+                      <BaseButton
+                        icon="TASK"
+                        label={
+                          <FormattedMessage
+                            id="module.RelationMaps.label.task"
+                            defaultMessage="TASK"
+                          />
+                        }
+                        backgroundColor="TEAL"
+                        hoverBackgroundColor="TEAL_DARK"
+                        onClick={() => toggleTaskList(true)}
+                      />
+                      <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskList(false)}>
+                        {isOpen && <EditableTaskList />}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
 
                 <BooleanValue>
                   {({ value: opened, set: openTableView }) => (
