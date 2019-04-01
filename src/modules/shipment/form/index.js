@@ -45,7 +45,18 @@ class ShipmentForm extends React.Component<Props> {
     if (onFormReady) onFormReady();
 
     if (anchor) {
-      scrollIntoView({ targetId: anchor });
+      // wait for the element is rendering on DOM
+      const targetId = 'timelineInfoSection';
+      const retryFindElement = () => {
+        const foundElement = document.querySelector(`#${targetId}`);
+        if (!foundElement) {
+          requestAnimationFrame(retryFindElement);
+        } else {
+          // scroll to element after rendering
+          setTimeout(() => scrollIntoView({ targetId: anchor }), 200);
+        }
+      };
+      requestAnimationFrame(retryFindElement);
     }
   }
 

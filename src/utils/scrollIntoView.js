@@ -1,5 +1,6 @@
 // @flow
 import scroll from 'scroll-into-view-if-needed';
+import logger from 'utils/logger';
 
 type OptionalProps = {
   boundaryId?: string,
@@ -20,6 +21,7 @@ const scrollIntoView = ({ targetId, boundaryId, scrollMode }: Props) => {
   const boundaryNode = boundaryId ? document.querySelector(`#${boundaryId}`) : null;
 
   if (node) {
+    logger.warn('scroll to element', targetId, boundaryId);
     if (boundaryNode) {
       scroll(node, {
         scrollMode,
