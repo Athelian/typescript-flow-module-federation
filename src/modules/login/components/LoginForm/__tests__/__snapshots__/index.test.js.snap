@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<LoginForm /> should allow to click on submit button on valid data 1`] = `
-.emotion-12 {
+.emotion-14 {
   box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #fff;
@@ -15,7 +15,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   justify-items: center;
 }
 
-.emotion-11 {
+.emotion-13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -51,11 +51,11 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   flex-shrink: 0;
 }
 
-.emotion-11:focus {
+.emotion-13:focus {
   outline: 0;
 }
 
-.emotion-9 {
+.emotion-11 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -66,15 +66,22 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   font-size: 12px;
 }
 
-.emotion-10 {
+.emotion-12 {
   margin: 0 0 0 5px;
   font-size: 12px;
+}
+
+.emotion-2 {
+  position: relative;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
 }
 
 .emotion-0 {
   position: absolute;
   left: -20px;
-  height: 20px;
+  height: 100%;
   width: 20px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -90,14 +97,14 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   justify-content: center;
 }
 
-.emotion-8 {
+.emotion-10 {
   display: grid;
   grid-auto-flow: row;
   grid-auto-rows: min-content;
   grid-gap: 20px;
 }
 
-.emotion-3 {
+.emotion-4 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -136,7 +143,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   text-transform: uppercase;
 }
 
-.emotion-2 {
+.emotion-3 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -161,22 +168,22 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
-.emotion-2:focus {
+.emotion-3:focus {
   border-color: #11d1a6;
 }
 
-.emotion-2 > button {
+.emotion-3 > button {
   opacity: 1;
 }
 
-.emotion-2 > input {
+.emotion-3 > input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.emotion-2 > input,
-.emotion-2 > textarea {
+.emotion-3 > input,
+.emotion-3 > textarea {
   border: none;
   padding: 0;
   width: 100%;
@@ -190,29 +197,29 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   font-weight: bold;
 }
 
-.emotion-2 > input:focus,
-.emotion-2 > textarea:focus {
+.emotion-3 > input:focus,
+.emotion-3 > textarea:focus {
   outline: none;
   border-color: #11d1a6;
 }
 
-.emotion-2 > input::-webkit-input-placeholder,
-.emotion-2 > textarea::-webkit-input-placeholder {
+.emotion-3 > input::-webkit-input-placeholder,
+.emotion-3 > textarea::-webkit-input-placeholder {
   color: #ccc;
 }
 
-.emotion-2 > input::-moz-placeholder,
-.emotion-2 > textarea::-moz-placeholder {
+.emotion-3 > input::-moz-placeholder,
+.emotion-3 > textarea::-moz-placeholder {
   color: #ccc;
 }
 
-.emotion-2 > input:-ms-input-placeholder,
-.emotion-2 > textarea:-ms-input-placeholder {
+.emotion-3 > input:-ms-input-placeholder,
+.emotion-3 > textarea:-ms-input-placeholder {
   color: #ccc;
 }
 
-.emotion-2 > input::placeholder,
-.emotion-2 > textarea::placeholder {
+.emotion-3 > input::placeholder,
+.emotion-3 > textarea::placeholder {
   color: #ccc;
 }
 
@@ -221,24 +228,28 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
     data-testid="loginForm"
   >
     <div
-      class="emotion-12"
+      class="emotion-14"
     >
       <div
-        class="emotion-8"
+        class="emotion-10"
       >
         <div
-          class="emotion-3"
+          class="emotion-4"
         >
           <div
-            class="emotion-0"
-          />
-          <div
-            class="emotion-1"
+            class="emotion-2"
           >
-            EMAIL
+            <div
+              class="emotion-0"
+            />
+            <div
+              class="emotion-1"
+            >
+              EMAIL
+            </div>
           </div>
           <div
-            class="emotion-2"
+            class="emotion-3"
           >
             <input
               data-testid="email"
@@ -251,18 +262,22 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           </div>
         </div>
         <div
-          class="emotion-3"
+          class="emotion-4"
         >
           <div
-            class="emotion-0"
-          />
-          <div
-            class="emotion-1"
+            class="emotion-2"
           >
-            PASSWORD
+            <div
+              class="emotion-0"
+            />
+            <div
+              class="emotion-1"
+            >
+              PASSWORD
+            </div>
           </div>
           <div
-            class="emotion-2"
+            class="emotion-3"
           >
             <input
               data-testid="password"
@@ -276,18 +291,18 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
         </div>
       </div>
       <button
-        class="emotion-11"
+        class="emotion-13"
         data-testid="submitButton"
         disabled=""
         type="submit"
       >
         <div
-          class="emotion-9"
+          class="emotion-11"
         >
           LOGIN
         </div>
         <div
-          class="emotion-10"
+          class="emotion-12"
         >
           <svg
             aria-hidden="true"
@@ -326,12 +341,16 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
           class="css-ldwt5s"
         >
           <div
-            class="css-4kx44c"
-          />
-          <div
-            class="css-12hroh9"
+            class="css-1tsdwfr"
           >
-            EMAIL
+            <div
+              class="css-1i7oahi"
+            />
+            <div
+              class="css-12hroh9"
+            >
+              EMAIL
+            </div>
           </div>
           <div
             class="css-bnsvj3"
@@ -350,12 +369,16 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
           class="css-ldwt5s"
         >
           <div
-            class="css-4kx44c"
-          />
-          <div
-            class="css-12hroh9"
+            class="css-1tsdwfr"
           >
-            PASSWORD
+            <div
+              class="css-1i7oahi"
+            />
+            <div
+              class="css-12hroh9"
+            >
+              PASSWORD
+            </div>
           </div>
           <div
             class="css-bnsvj3"
@@ -408,7 +431,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
 `;
 
 exports[`<LoginForm /> should render without crash 1`] = `
-.emotion-12 {
+.emotion-14 {
   box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #fff;
@@ -422,7 +445,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   justify-items: center;
 }
 
-.emotion-11 {
+.emotion-13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -458,11 +481,11 @@ exports[`<LoginForm /> should render without crash 1`] = `
   flex-shrink: 0;
 }
 
-.emotion-11:focus {
+.emotion-13:focus {
   outline: 0;
 }
 
-.emotion-9 {
+.emotion-11 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -473,15 +496,22 @@ exports[`<LoginForm /> should render without crash 1`] = `
   font-size: 12px;
 }
 
-.emotion-10 {
+.emotion-12 {
   margin: 0 0 0 5px;
   font-size: 12px;
+}
+
+.emotion-2 {
+  position: relative;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
 }
 
 .emotion-0 {
   position: absolute;
   left: -20px;
-  height: 20px;
+  height: 100%;
   width: 20px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -497,14 +527,14 @@ exports[`<LoginForm /> should render without crash 1`] = `
   justify-content: center;
 }
 
-.emotion-8 {
+.emotion-10 {
   display: grid;
   grid-auto-flow: row;
   grid-auto-rows: min-content;
   grid-gap: 20px;
 }
 
-.emotion-3 {
+.emotion-4 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -543,7 +573,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
   text-transform: uppercase;
 }
 
-.emotion-2 {
+.emotion-3 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -568,22 +598,22 @@ exports[`<LoginForm /> should render without crash 1`] = `
   box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
-.emotion-2:focus {
+.emotion-3:focus {
   border-color: #11d1a6;
 }
 
-.emotion-2 > button {
+.emotion-3 > button {
   opacity: 1;
 }
 
-.emotion-2 > input {
+.emotion-3 > input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.emotion-2 > input,
-.emotion-2 > textarea {
+.emotion-3 > input,
+.emotion-3 > textarea {
   border: none;
   padding: 0;
   width: 100%;
@@ -597,29 +627,29 @@ exports[`<LoginForm /> should render without crash 1`] = `
   font-weight: bold;
 }
 
-.emotion-2 > input:focus,
-.emotion-2 > textarea:focus {
+.emotion-3 > input:focus,
+.emotion-3 > textarea:focus {
   outline: none;
   border-color: #11d1a6;
 }
 
-.emotion-2 > input::-webkit-input-placeholder,
-.emotion-2 > textarea::-webkit-input-placeholder {
+.emotion-3 > input::-webkit-input-placeholder,
+.emotion-3 > textarea::-webkit-input-placeholder {
   color: #ccc;
 }
 
-.emotion-2 > input::-moz-placeholder,
-.emotion-2 > textarea::-moz-placeholder {
+.emotion-3 > input::-moz-placeholder,
+.emotion-3 > textarea::-moz-placeholder {
   color: #ccc;
 }
 
-.emotion-2 > input:-ms-input-placeholder,
-.emotion-2 > textarea:-ms-input-placeholder {
+.emotion-3 > input:-ms-input-placeholder,
+.emotion-3 > textarea:-ms-input-placeholder {
   color: #ccc;
 }
 
-.emotion-2 > input::placeholder,
-.emotion-2 > textarea::placeholder {
+.emotion-3 > input::placeholder,
+.emotion-3 > textarea::placeholder {
   color: #ccc;
 }
 
@@ -628,24 +658,28 @@ exports[`<LoginForm /> should render without crash 1`] = `
     data-testid="loginForm"
   >
     <div
-      class="emotion-12"
+      class="emotion-14"
     >
       <div
-        class="emotion-8"
+        class="emotion-10"
       >
         <div
-          class="emotion-3"
+          class="emotion-4"
         >
           <div
-            class="emotion-0"
-          />
-          <div
-            class="emotion-1"
+            class="emotion-2"
           >
-            EMAIL
+            <div
+              class="emotion-0"
+            />
+            <div
+              class="emotion-1"
+            >
+              EMAIL
+            </div>
           </div>
           <div
-            class="emotion-2"
+            class="emotion-3"
           >
             <input
               data-testid="email"
@@ -658,18 +692,22 @@ exports[`<LoginForm /> should render without crash 1`] = `
           </div>
         </div>
         <div
-          class="emotion-3"
+          class="emotion-4"
         >
           <div
-            class="emotion-0"
-          />
-          <div
-            class="emotion-1"
+            class="emotion-2"
           >
-            PASSWORD
+            <div
+              class="emotion-0"
+            />
+            <div
+              class="emotion-1"
+            >
+              PASSWORD
+            </div>
           </div>
           <div
-            class="emotion-2"
+            class="emotion-3"
           >
             <input
               data-testid="password"
@@ -683,18 +721,18 @@ exports[`<LoginForm /> should render without crash 1`] = `
         </div>
       </div>
       <button
-        class="emotion-11"
+        class="emotion-13"
         data-testid="submitButton"
         disabled=""
         type="submit"
       >
         <div
-          class="emotion-9"
+          class="emotion-11"
         >
           LOGIN
         </div>
         <div
-          class="emotion-10"
+          class="emotion-12"
         >
           <svg
             aria-hidden="true"

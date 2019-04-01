@@ -14,6 +14,7 @@ import {
   DeactivateButtonStyle,
   RemoveAssignmentButtonStyle,
   AddAssignmentButtonStyle,
+  ConfirmIconWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -23,6 +24,7 @@ type OptionalProps = {
   onActivateUser: ?(UserAvatarType) => void,
   onDeactivateUser: () => void,
   editable: boolean,
+  onToggleSlideView: boolean => void,
 };
 
 type Props = OptionalProps;
@@ -32,6 +34,7 @@ const defaultProps = {
   onChange: () => {},
   onActivateUser: null,
   onDeactivateUser: () => {},
+  onToggleSlideView: () => {},
   editable: false,
 };
 
@@ -41,6 +44,7 @@ const TaskAssignmentInput = ({
   onChange,
   onActivateUser,
   onDeactivateUser,
+  onToggleSlideView,
   editable,
 }: Props) => {
   return (
@@ -52,18 +56,38 @@ const TaskAssignmentInput = ({
 
         return (
           <div className={TaskAssignmentStyle} key={id}>
-            <button
-              className={UserStyle(isActiveUser, editable && canActivateUser)}
-              onClick={evt => {
-                if (editable && canActivateUser) {
-                  evt.stopPropagation();
-                  if (onActivateUser) onActivateUser(user);
-                }
-              }}
-              type="button"
-            >
-              <UserAvatar firstName={firstName} lastName={lastName} />
-            </button>
+            <BooleanValue>
+              {({ value: isHovered, set: changeHoverState }) => (
+                <button
+                  className={UserStyle(isActiveUser, editable && canActivateUser)}
+                  onClick={evt => {
+                    if (editable && canActivateUser) {
+                      evt.stopPropagation();
+                      if (onActivateUser) onActivateUser(user);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    if (editable) {
+                      changeHoverState(true);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (editable) {
+                      changeHoverState(false);
+                    }
+                  }}
+                  type="button"
+                >
+                  {isHovered ? (
+                    <div className={ConfirmIconWrapperStyle}>
+                      <Icon icon="CONFIRM" />
+                    </div>
+                  ) : (
+                    <UserAvatar firstName={firstName} lastName={lastName} />
+                  )}
+                </button>
+              )}
+            </BooleanValue>
             {editable && isActiveUser && (
               <button
                 className={DeactivateButtonStyle}
@@ -92,7 +116,7 @@ const TaskAssignmentInput = ({
         );
       })}
       {editable && !activeUserId && users.length < MAX_USERS_ALLOWED && (
-        <BooleanValue>
+        <BooleanValue onChange={onToggleSlideView}>
           {({ value: isOpen, set: slideToggle }) => (
             <div role="presentation" onClick={evt => evt.stopPropagation()}>
               <button

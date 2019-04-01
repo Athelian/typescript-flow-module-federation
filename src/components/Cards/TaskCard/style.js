@@ -8,7 +8,7 @@ export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: ${hideParentInfo ? '159px' : '184px'};
+  height: ${hideParentInfo ? '159px' : '194px'};
   padding: 5px 0 10px 0;
 `;
 
@@ -118,4 +118,63 @@ export const TaskTagsWrapperStyle: string = css`
   width: 175px;
   margin: 0 10px;
   overflow: hidden;
+`;
+
+const approvalColor = (approvedBy: ?Object, rejectedBy: ?Object) => {
+  if (approvedBy) return colors.BLUE;
+
+  if (rejectedBy) return colors.RED;
+
+  return colors.GRAY_LIGHT;
+};
+
+export const ApprovableWrapperStyle: string = css`
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  padding-top: 15px;
+  z-index: 2;
+`;
+
+export const ApprovableButtonStyle = ({
+  approvedBy,
+  rejectedBy,
+}: {
+  approvedBy: ?Object,
+  rejectedBy: ?Object,
+}) => css`
+  color: ${colors.WHITE};
+  background: ${approvalColor(approvedBy, rejectedBy)};
+  display: inline-block;
+  width: 30px;
+  height: 15px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: 6px;
+`;
+
+export const ClosePanelButtonStyle = css`
+  color: ${colors.WHITE};
+  background: ${colors.PURPLE};
+  display: inline-block;
+  width: 30px;
+  height: 15px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 7px;
+`;
+
+export const ApprovalPanelWrapperStyle = (isInTemplate: boolean) => css`
+  background: ${colors.BLUE};
+  border-radius: 5px;
+  height: ${isInTemplate ? '114px' : '89px'};
+  width: 100%;
 `;

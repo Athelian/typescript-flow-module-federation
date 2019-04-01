@@ -1,16 +1,18 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { FormField } from 'modules/form';
+import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
+import Tooltip from 'components/Tooltip';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -24,6 +26,8 @@ import {
   DateInputFactory,
   TaskAssignmentInput,
   TaskStatusInput,
+  ApproveRejectMenu,
+  TaskApprovalStatusInput,
 } from 'components/Form';
 import BaseCard from '../BaseCard';
 import validator from './validator';
@@ -39,6 +43,10 @@ import {
   DividerStyle,
   TaskStatusWrapperStyle,
   TaskTagsWrapperStyle,
+  ApprovableWrapperStyle,
+  ApprovableButtonStyle,
+  ApprovalPanelWrapperStyle,
+  ClosePanelButtonStyle,
 } from './style';
 
 type OptionalProps = {
@@ -93,6 +101,16 @@ const getParentInfo = (parent: Object) => {
 
 let hideParentInfoForHoc = false;
 
+const tooltipMessage = (approvedBy: ?Object, rejectedBy: ?Object) => {
+  if (approvedBy && approvedBy.id)
+    return <FormattedMessage id="components.cards.approved" defaultMessage="Approved" />;
+
+  if (rejectedBy && rejectedBy.id)
+    return <FormattedMessage id="components.cards.rejected" defaultMessage="Rejected" />;
+
+  return <FormattedMessage id="components.cards.unapproved" defaultMessage="Unapproved" />;
+};
+
 const TaskCard = ({
   task,
   position,
@@ -118,6 +136,12 @@ const TaskCard = ({
     completedAt,
     tags,
     taskTemplate,
+    approvable,
+    approvalAssignedTo,
+    approvedBy,
+    approvedAt,
+    rejectedBy,
+    rejectedAt,
   } = task;
 
   const validation = validator({
@@ -150,6 +174,9 @@ const TaskCard = ({
 
   const IS_DND_DEVELOPED = false;
 
+  const taskEl = React.useRef(null);
+  const isUnapproved = !((approvedBy && approvedBy.id) || (rejectedBy && rejectedBy.id));
+
   return (
     <BaseCard
       icon="TASK"
@@ -162,6 +189,7 @@ const TaskCard = ({
       <BooleanValue>
         {({ value: isHovered, set: changeHoverState }) => (
           <div
+            ref={taskEl}
             className={TaskCardWrapperStyle(hideParentInfo)}
             onClick={onClick}
             onMouseEnter={() => {
@@ -398,6 +426,139 @@ const TaskCard = ({
             <div className={TaskTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
+            {approvable && (
+              <div className={ApprovableWrapperStyle}>
+                <ObjectValue
+                  defaultValue={{
+                    isExpand: false,
+                    isSlideViewOpen: false,
+                    selectUser: null,
+                  }}
+                >
+                  {({ value: { isExpand, isSlideViewOpen, selectUser }, set, assign }) => (
+                    <>
+                      {isExpand ? (
+                        <div className={ApprovalPanelWrapperStyle(isInTemplate)}>
+                          <OutsideClickHandler
+                            onOutsideClick={() =>
+                              assign({
+                                isExpand: false,
+                                isSlideViewOpen: false,
+                                selectUser: null,
+                              })
+                            }
+                            ignoreClick={!isExpand || isSlideViewOpen}
+                            ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
+                          >
+                            <div className={TaskStatusWrapperStyle}>
+                              {isUnapproved ? (
+                                <>
+                                  {selectUser && selectUser.id ? (
+                                    <ApproveRejectMenu
+                                      width="180px"
+                                      onApprove={() =>
+                                        saveOnBlur({
+                                          ...task,
+                                          approvedBy: selectUser,
+                                          approvedAt: formatToGraphql(startOfToday()),
+                                          rejectedBy: null,
+                                          rejectedAt: null,
+                                        })
+                                      }
+                                      onReject={() =>
+                                        saveOnBlur({
+                                          ...task,
+                                          approvedBy: null,
+                                          approvedAt: null,
+                                          rejectedBy: selectUser,
+                                          rejectedAt: formatToGraphql(startOfToday()),
+                                        })
+                                      }
+                                    />
+                                  ) : (
+                                    <TaskAssignmentInput
+                                      onChange={newAssignedTo =>
+                                        saveOnBlur({
+                                          ...task,
+                                          approvalAssignedTo: newAssignedTo,
+                                        })
+                                      }
+                                      users={approvalAssignedTo}
+                                      onActivateUser={
+                                        isInTemplate ? null : user => set('selectUser', user)
+                                      }
+                                      onToggleSlideView={isOpen => {
+                                        set('isSlideViewOpen', isOpen);
+                                      }}
+                                      editable={editable}
+                                    />
+                                  )}
+                                </>
+                              ) : (
+                                <TaskApprovalStatusInput
+                                  showUser
+                                  showDate
+                                  width="180px"
+                                  editable={editable}
+                                  onClickUser={() => {
+                                    saveOnBlur({
+                                      ...task,
+                                      approvedBy: null,
+                                      approvedAt: null,
+                                      rejectedBy: null,
+                                      rejectedAt: null,
+                                    });
+                                  }}
+                                  approval={
+                                    approvedBy && approvedBy.id
+                                      ? {
+                                          approvedAt,
+                                          approvedBy,
+                                        }
+                                      : null
+                                  }
+                                  rejection={
+                                    rejectedBy && rejectedBy.id
+                                      ? {
+                                          rejectedBy,
+                                          rejectedAt,
+                                        }
+                                      : null
+                                  }
+                                />
+                              )}
+                            </div>
+                            <button
+                              className={ClosePanelButtonStyle}
+                              type="button"
+                              onClick={() =>
+                                assign({
+                                  isExpand: false,
+                                  isSlideViewOpen: false,
+                                  selectUser: null,
+                                })
+                              }
+                            >
+                              <Icon icon="CHEVRON_DOWN" />
+                            </button>
+                          </OutsideClickHandler>
+                        </div>
+                      ) : (
+                        <Tooltip message={tooltipMessage(approvedBy, rejectedBy)}>
+                          <button
+                            className={ApprovableButtonStyle({ approvedBy, rejectedBy })}
+                            type="button"
+                            onClick={() => set('isExpand', true)}
+                          >
+                            {rejectedBy ? <Icon icon="CLEAR" /> : <Icon icon="CONFIRM" />}
+                          </button>
+                        </Tooltip>
+                      )}
+                    </>
+                  )}
+                </ObjectValue>
+              </div>
+            )}
           </div>
         )}
       </BooleanValue>

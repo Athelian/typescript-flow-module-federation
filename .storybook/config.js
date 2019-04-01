@@ -1,9 +1,9 @@
 import { configure, addDecorator } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
-import { checkA11y } from '@storybook/addon-a11y';
+import { withA11y } from '@storybook/addon-a11y';
 
-addDecorator((story, context) => withInfo()(story)(context));
-addDecorator(checkA11y);
+addDecorator(withInfo);
+addDecorator(withA11y);
 
 // automatically import all files ending in *.stories.js
 function loadStories() {
