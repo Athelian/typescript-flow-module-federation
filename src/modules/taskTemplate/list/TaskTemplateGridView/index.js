@@ -21,9 +21,9 @@ type Props = OptionalProps & {
 };
 
 const defaultRenderItem = (item: Object, hasPermission: Function) => (
-  <BooleanValue key={item.id}>
+  <BooleanValue>
     {({ value: isOpen, set: toggleTaskTemplateForm }) => (
-      <>
+      <React.Fragment key={item.id}>
         <TemplateCard
           type="TASK"
           template={{
@@ -44,7 +44,7 @@ const defaultRenderItem = (item: Object, hasPermission: Function) => (
             />
           )}
         </SlideView>
-      </>
+      </React.Fragment>
     )}
   </BooleanValue>
 );
