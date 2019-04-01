@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Mar 29 2019 10:45:49 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Apr 01 2019 12:05:28 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -35998,16 +35998,22 @@ input TagUpdateInput {
 
 type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   name: String!
-  description: String
+  approvable: Boolean!
   entity: EntityPayload
   taskTemplate: TaskTemplatePayload
+  description: String
   assignedTo: [UserPayload!]!
+  approvers: [UserPayload!]!
   startDate: DateTime
   dueDate: DateTime
   inProgressBy: UserPayload
   inProgressAt: DateTime
   completedBy: UserPayload
   completedAt: DateTime
+  rejectedBy: UserPayload
+  rejectedAt: DateTime
+  approvedBy: UserPayload
+  approvedAt: DateTime
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -36023,13 +36029,19 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
 
 input TaskCreateInput {
   name: String!
+  approvable: Boolean
   startDate: DateTime
   dueDate: DateTime
   assignedToIds: [ID!]
+  approverIds: [ID!]
   inProgressById: ID
   inProgressAt: DateTime
   completedById: ID
   completedAt: DateTime
+  rejectedById: ID
+  rejectedAt: DateTime
+  approvedById: ID
+  approvedAt: DateTime
   memo: String
   description: String
   tagIds: [ID!]
@@ -36127,13 +36139,19 @@ input TaskTemplateSortInput {
 
 input TaskTemplateTaskCreateInput {
   name: String!
+  approvable: Boolean
   startDate: DateTime
   dueDate: DateTime
   assignedToIds: [ID!]
+  approverIds: [ID!]
   inProgressById: ID
   inProgressAt: DateTime
   completedById: ID
   completedAt: DateTime
+  rejectedById: ID
+  rejectedAt: DateTime
+  approvedById: ID
+  approvedAt: DateTime
   memo: String
   description: String
   tagIds: [ID!]
@@ -36141,13 +36159,19 @@ input TaskTemplateTaskCreateInput {
 
 input TaskTemplateTaskUpdateInput {
   name: String
+  approvable: Boolean
   startDate: DateTime
   dueDate: DateTime
   assignedToIds: [ID!]
+  approverIds: [ID!]
   inProgressById: ID
   inProgressAt: DateTime
   completedById: ID
   completedAt: DateTime
+  rejectedById: ID
+  rejectedAt: DateTime
+  approvedById: ID
+  approvedAt: DateTime
   memo: String
   description: String
   tagIds: [ID!]
@@ -36163,13 +36187,19 @@ input TaskTemplateUpdateInput {
 
 input TaskUpdateInput {
   name: String
+  approvable: Boolean
   startDate: DateTime
   dueDate: DateTime
   assignedToIds: [ID!]
+  approverIds: [ID!]
   inProgressById: ID
   inProgressAt: DateTime
   completedById: ID
   completedAt: DateTime
+  rejectedById: ID
+  rejectedAt: DateTime
+  approvedById: ID
+  approvedAt: DateTime
   memo: String
   description: String
   tagIds: [ID!]
@@ -36262,13 +36292,19 @@ input TodoInput {
 
 input TodoTaskInput {
   name: String
+  approvable: Boolean
   startDate: DateTime
   dueDate: DateTime
   assignedToIds: [ID!]
+  approverIds: [ID!]
   inProgressById: ID
   inProgressAt: DateTime
   completedById: ID
   completedAt: DateTime
+  rejectedById: ID
+  rejectedAt: DateTime
+  approvedById: ID
+  approvedAt: DateTime
   memo: String
   description: String
   tagIds: [ID!]
