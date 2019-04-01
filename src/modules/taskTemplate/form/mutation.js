@@ -47,7 +47,7 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
   ),
   ...parseArrayOfChildrenField(
     'tasks',
-    getByPathWithDefault(null, 'tasks', originalValues),
+    getByPathWithDefault([], 'tasks', originalValues),
     newValues.tasks,
     (oldTask: ?Object, newTask: Object) => {
       return {
@@ -55,7 +55,7 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
         ...parseArrayOfIdsField(
           'assignedToIds',
-          getByPathWithDefault(null, 'assignedTo', oldTask),
+          getByPathWithDefault([], 'assignedTo', oldTask),
           newTask.assignedTo
         ),
         ...parseMemoField(
@@ -63,11 +63,7 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
           getByPathWithDefault(null, 'description', oldTask),
           newTask.description
         ),
-        ...parseArrayOfIdsField(
-          'tagIds',
-          getByPathWithDefault(null, 'tags', oldTask),
-          newTask.tags
-        ),
+        ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldTask), newTask.tags),
       };
     }
   ),

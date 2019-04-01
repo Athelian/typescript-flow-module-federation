@@ -354,7 +354,7 @@ export const parseTasksField = (
             ),
             ...parseArrayOfIdsField(
               'assignedToIds',
-              getByPathWithDefault(null, 'assignedTo', oldTask),
+              getByPathWithDefault([], 'assignedTo', oldTask),
               newTask.assignedTo
             ),
             ...parseParentIdField(
@@ -385,7 +385,7 @@ export const parseTasksField = (
             ),
             ...parseArrayOfIdsField(
               'tagIds',
-              getByPathWithDefault(null, 'tags', oldTask),
+              getByPathWithDefault([], 'tags', oldTask),
               newTask.tags
             ),
           };
