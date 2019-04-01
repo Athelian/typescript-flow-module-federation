@@ -1,9 +1,8 @@
 // @flow
 import React from 'react';
-import { cx } from 'react-emotion';
 import { StringValue } from 'react-values';
 import Icon from 'components/Icon';
-import * as style from './style';
+import { ActionCardWrapperStyle, DisabledWrapper, ActionWrapperStyle } from './style';
 
 type ActionCardProps = {
   children: Function,
@@ -21,11 +20,11 @@ type ActionProps = OptionalActionProps & {
   icon: string,
 };
 
-const DisabledAction = () => <div className={style.DisabledWrapper} />;
+const DisabledAction = () => <div className={DisabledWrapper} />;
 
 const Action = ({ icon, targeted, className, onClick, toggle }: ActionProps) => (
   <div
-    className={style.ActionWrapperStyle(targeted === icon)}
+    className={ActionWrapperStyle(targeted === icon)}
     role="presentation"
     onClick={() => {
       const isSelectedAction = targeted === icon;
@@ -42,6 +41,7 @@ const Action = ({ icon, targeted, className, onClick, toggle }: ActionProps) => 
     </div>
   </div>
 );
+
 Action.defaultProps = {
   className: '',
 };
@@ -50,7 +50,7 @@ const ActionCard = ({ children, show }: ActionCardProps) => (
   <StringValue>
     {({ value: targeted, set: toggle }) =>
       show && (
-        <div className={cx(style.OverlayStyle, style.CardWrapperStyle)}>
+        <div className={ActionCardWrapperStyle}>
           {children({
             targeted,
             toggle,
@@ -62,4 +62,5 @@ const ActionCard = ({ children, show }: ActionCardProps) => (
 );
 
 export { Action, DisabledAction };
+
 export default ActionCard;

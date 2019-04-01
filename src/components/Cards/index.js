@@ -9,6 +9,7 @@ import PartnerCard from './PartnerCard';
 import ProductBatchCard from './ProductBatchCard';
 import ProductCard from './ProductCard';
 import ProductProviderCard from './ProductProviderCard';
+import RMOrderCard from './RMOrderCard';
 import ShipmentCard from './ShipmentCard';
 import ShipmentBatchCard from './ShipmentBatchCard';
 import ContainerBatchCard from './ContainerBatchCard';
@@ -37,6 +38,7 @@ export {
   ProductBatchCard,
   ProductCard,
   ProductProviderCard,
+  RMOrderCard,
   ShipmentCard,
   ShipmentBatchCard,
   ShipmentWarehouseCard,

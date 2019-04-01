@@ -8,8 +8,7 @@ import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import type { ShipmentProps } from 'modules/relationMap/order/type.js.flow';
 import { ItemWrapperStyle } from 'modules/relationMap/order/style';
-import BaseCard, { ShipmentCard } from 'components/Cards';
-import { WrapperCard } from 'components/RelationMap';
+import { ShipmentCard } from 'components/Cards';
 import SelectedShipment from './SelectedShipment';
 import Badge from '../Badge';
 
@@ -34,68 +33,68 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
   );
   const isNew = uiSelectors.isNewShipment(id);
   const { hasPermission } = usePermission();
+
   return (
-    <BaseCard id={`shipment-${id}`} wrapperClassName={wrapperClassName}>
-      {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
-      <BooleanValue>
-        {({ value: hovered, set: setToggle }) => (
-          <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            {/* Send empty array for tags for hidden tags on shipment card when hidden tags */}
-            <ShipmentCard
-              shipment={showTag ? { ...shipment, id, no } : { ...shipment, id, no, tags: [] }}
-              actions={[]}
-            />
-            {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
-              (() => {
-                if (uiSelectors.selectedConnectShipment(id)) {
-                  return (
-                    <ActionCard show>
-                      {() => (
-                        <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />
-                      )}
-                    </ActionCard>
-                  );
-                }
+    <BooleanValue id={`shipment-${id}`}>
+      {({ value: hovered, set: setToggle }) => (
+        <div
+          className={wrapperClassName}
+          onMouseEnter={() => setToggle(true)}
+          onMouseLeave={() => setToggle(false)}
+        >
+          <ShipmentCard
+            shipment={showTag ? { ...shipment, id, no } : { ...shipment, id, no, tags: [] }}
+            actions={[]}
+          />
+          {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
+          {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
+            (() => {
+              if (uiSelectors.selectedConnectShipment(id)) {
                 return (
-                  <ActionCard show={hovered}>
-                    {() => (
-                      <Action icon="CHECKED" onClick={() => actions.toggleSelectedShipment(id)} />
-                    )}
+                  <ActionCard show>
+                    {() => <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />}
                   </ActionCard>
                 );
-              })()
-            ) : (
-              <ActionCard show={hovered}>
-                {({ targeted, toggle }) => (
-                  <>
+              }
+              return (
+                <ActionCard show={hovered}>
+                  {() => (
+                    <Action icon="CHECKED" onClick={() => actions.toggleSelectedShipment(id)} />
+                  )}
+                </ActionCard>
+              );
+            })()
+          ) : (
+            <ActionCard show={hovered}>
+              {({ targeted, toggle }) => (
+                <>
+                  <Action
+                    icon="MAGIC"
+                    targeted={targeted}
+                    toggle={toggle}
+                    onClick={() => actions.toggleHighLight('SHIPMENT', id)}
+                  />
+                  <Action
+                    icon="DOCUMENT"
+                    targeted={targeted}
+                    toggle={toggle}
+                    onClick={() => actions.showEditForm('SHIPMENT', id)}
+                  />
+                  {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                     <Action
-                      icon="MAGIC"
+                      icon="CHECKED"
                       targeted={targeted}
                       toggle={toggle}
-                      onClick={() => actions.toggleHighLight('SHIPMENT', id)}
+                      onClick={() => actions.targetShipmentEntity(id, no)}
                     />
-                    <Action
-                      icon="DOCUMENT"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() => actions.showEditForm('SHIPMENT', id)}
-                    />
-                    {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                      <Action
-                        icon="CHECKED"
-                        targeted={targeted}
-                        toggle={toggle}
-                        onClick={() => actions.targetShipmentEntity(id, no)}
-                      />
-                    )}
-                  </>
-                )}
-              </ActionCard>
-            )}
-          </WrapperCard>
-        )}
-      </BooleanValue>
-    </BaseCard>
+                  )}
+                </>
+              )}
+            </ActionCard>
+          )}
+        </div>
+      )}
+    </BooleanValue>
   );
 }
 

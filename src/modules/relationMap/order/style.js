@@ -56,6 +56,7 @@ export const CardWrapperStyle = css`
   grid-template-columns: auto 90px;
   padding: 0 25px 0 5px;
 `;
+
 export const CardTitleStyle = css`
   ${fontSizes.SMALL};
   overflow: hidden;
@@ -64,6 +65,7 @@ export const CardTitleStyle = css`
   padding-right: 2px;
   word-break: break-all;
 `;
+
 export const CardVisualizeStyle = css`
   width: 90px;
   height: 30px;
@@ -96,10 +98,8 @@ export const ItemWrapperStyle = (
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: auto;
+    width: min-content;
     height: fit-content;
-    min-height: 50px;
-    max-height: 200px;
     margin: 0 0 15px 0;
     ${fontSizes.MAIN};
     font-weight: bold;

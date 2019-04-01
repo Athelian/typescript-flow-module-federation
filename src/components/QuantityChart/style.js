@@ -14,7 +14,6 @@ export const FloatingQuantityWrapperStyle = (positioning: 'top' | 'bottom'): str
   background-color: ${colors.WHITE};
   ${borderRadiuses.BUTTON};
   width: min-content;
-  padding: 0 5px;
   max-width: 100%;
   left: 50%;
   transform: translateX(-50%);
