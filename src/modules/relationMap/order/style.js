@@ -101,9 +101,6 @@ export const ItemWrapperStyle = (
     width: min-content;
     height: fit-content;
     margin: 0 0 15px 0;
-    ${fontSizes.MAIN};
-    font-weight: bold;
-    color: ${colors.BLACK};
     position: relative;
   `;
 };

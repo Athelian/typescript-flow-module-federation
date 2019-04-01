@@ -19,6 +19,12 @@ export type BatchProps = {
     value: number,
     metric: string,
   },
+  deliveredAt: ?string,
+  product: {
+    files: Array<{
+      pathSmall: string,
+    }>,
+  }
 };
 
 export type OrderItemProps = {

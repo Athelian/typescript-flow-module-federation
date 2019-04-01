@@ -16,9 +16,7 @@ export const batchCardRMFragment = gql`
     batchAdjustments {
       ... on BatchAdjustment {
         id
-        reason
         quantity
-        memo
       }
     }
     totalAdjusted
@@ -28,6 +26,7 @@ export const batchCardRMFragment = gql`
     totalVolume {
       ...metricFragment
     }
+    deliveredAt
   }
 `;
 
