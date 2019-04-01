@@ -31,6 +31,10 @@ export default class TaskTemplateFormContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
+  setFieldValues = (values: Object) => {
+    this.setState(values);
+  };
+
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);

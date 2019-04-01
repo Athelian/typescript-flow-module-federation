@@ -1,6 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment } from 'graphql';
+import {
+  badRequestFragment,
+  taskTemplateFormFragment,
+  userAvatarFragment,
+  taskFormInTemplateFragment,
+  tagFragment,
+} from 'graphql';
 import {
   parseGenericField,
   parseArrayOfChildrenField,
@@ -13,11 +19,15 @@ export const createTaskTemplateMutation = gql`
   mutation taskTemplateCreate($input: TaskTemplateCreateInput!) {
     taskTemplateCreate(input: $input) {
       ... on TaskTemplate {
-        id
+        ...taskTemplateFormFragment
       }
       ...badRequestFragment
     }
   }
+  ${taskTemplateFormFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${tagFragment}
   ${badRequestFragment}
 `;
 
@@ -25,11 +35,15 @@ export const updateTaskTemplateMutation = gql`
   mutation taskTemplateUpdate($id: ID!, $input: TaskTemplateUpdateInput!) {
     taskTemplateUpdate(id: $id, input: $input) {
       ... on TaskTemplate {
-        id
+        ...taskTemplateFormFragment
       }
       ...badRequestFragment
     }
   }
+  ${taskTemplateFormFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${tagFragment}
   ${badRequestFragment}
 `;
 
@@ -53,10 +67,20 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
       return {
         ...(oldTask ? { id: oldTask.id } : {}),
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
+        ...parseGenericField(
+          'approvable',
+          getByPathWithDefault(null, 'approvable', oldTask),
+          newTask.approvable
+        ),
         ...parseArrayOfIdsField(
           'assignedToIds',
           getByPathWithDefault([], 'assignedTo', oldTask),
           newTask.assignedTo
+        ),
+        ...parseArrayOfIdsField(
+          'approverIds',
+          getByPathWithDefault([], 'approvers', oldTask),
+          newTask.approvers
         ),
         ...parseMemoField(
           'description',

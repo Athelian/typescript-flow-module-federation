@@ -50,6 +50,7 @@ function TaskSectionInTemplate() {
                         isNew: true,
                         name: `task - ${tasks.length + 1}`,
                         assignedTo: [],
+                        approvers: [],
                         tags: [],
                       }),
                     ]);
