@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Apr 01 2019 12:05:28 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Apr 01 2019 15:46:35 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -36055,6 +36055,7 @@ input TaskFilterInput {
   updatedAt: DateRangeInput
   startDate: DateRangeInput
   dueDate: DateRangeInput
+  entities: [EntityInput!]
 }
 
 union TaskPayload = Task | BadRequest | Forbidden | NotFound
