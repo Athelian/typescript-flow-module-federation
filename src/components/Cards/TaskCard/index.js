@@ -536,7 +536,8 @@ const TaskCard = ({
                         <button
                           className={ApprovalButtonStyle({ approvedBy, rejectedBy }, isExpanded)}
                           type="button"
-                          onClick={() => {
+                          onClick={evt => {
+                            evt.stopPropagation();
                             if (isExpanded) {
                               assign({
                                 isExpanded: false,
