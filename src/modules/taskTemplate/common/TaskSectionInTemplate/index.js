@@ -9,7 +9,13 @@ import { SectionWrapper, SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { TASK_CREATE } from 'modules/permission/constants/task';
+import {
+  TASK_CREATE,
+  TASK_UPDATE,
+  TASK_DELETE,
+  TASK_TEMPLATE_CREATE,
+  TASK_TEMPLATE_UPDATE,
+} from 'modules/permission/constants/task';
 import { FormContainer } from 'modules/form';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
 import { TasksSectionWrapperStyle, TasksSectionBodyStyle, ItemGridStyle } from './style';
@@ -18,6 +24,8 @@ import Tasks from './components/Tasks';
 function TaskSectionInTemplate() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
+  const allowCreateOrUpdate = hasPermission([TASK_TEMPLATE_CREATE, TASK_TEMPLATE_UPDATE]);
 
   return (
     <Subscribe to={[TaskTemplateFormContainer, FormContainer]}>
@@ -36,7 +44,7 @@ function TaskSectionInTemplate() {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {hasPermission(TASK_CREATE) && (
+              {allowCreateOrUpdate && hasPermission(TASK_CREATE) && (
                 <NewButton
                   label={
                     <FormattedMessage id="modules.taskTemplate.newTask" defaultMessage="NEW TASK" />
@@ -60,9 +68,9 @@ function TaskSectionInTemplate() {
               <div className={ItemGridStyle}>
                 <Tasks
                   isInTemplate
-                  editable
-                  removable
-                  viewForm
+                  editable={allowCreateOrUpdate && hasPermission([TASK_CREATE, TASK_UPDATE])}
+                  removable={allowCreateOrUpdate && hasPermission(TASK_DELETE)}
+                  viewForm={allowCreateOrUpdate && hasPermission(TASK_UPDATE)}
                   type={entityType}
                   tasks={tasks}
                   onSwap={(index: number, direction: 'left' | 'right') => {

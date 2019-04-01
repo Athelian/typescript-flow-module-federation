@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { TASK_CREATE, TASK_UPDATE } from 'modules/permission/constants/task';
+import { TASK_TEMPLATE_CREATE, TASK_TEMPLATE_UPDATE } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import TemplateFormContainer from 'modules/taskTemplate/form/container';
 import validator from 'modules/taskTemplate/form/validator';
@@ -31,7 +31,7 @@ type Props = {
 
 const TableTemplateSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
-  const canCreateOrUpdate = hasPermission(TASK_CREATE) || hasPermission(TASK_UPDATE);
+  const canCreateOrUpdate = hasPermission([TASK_TEMPLATE_CREATE, TASK_TEMPLATE_UPDATE]);
   return (
     <div className={TableTemplateSectionWrapperStyle}>
       <GridColumn>

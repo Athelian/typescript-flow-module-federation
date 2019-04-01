@@ -16,7 +16,7 @@ import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/cust
 import { TEMPLATE_LIST } from 'modules/permission/constants/template';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
-import { TASK_LIST } from 'modules/permission/constants/task';
+import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
@@ -31,8 +31,8 @@ const SideBar = () => {
   const hasSettingMenu =
     hasPermission(TAG_LIST) ||
     hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) ||
-    hasPermission(TEMPLATE_LIST);
-
+    hasPermission(TEMPLATE_LIST) ||
+    hasPermission(TASK_TEMPLATE_LIST);
   const hasNetworkMenu = hasPermission(PARTNER_LIST) || hasPermission(STAFF_LIST);
 
   return (
@@ -190,15 +190,17 @@ const SideBar = () => {
                           onClick={() => setExpandedSubMenu(null)}
                         />
                       )}
-                      <MenuItem
-                        path="/settings/task-template/order"
-                        isActive={`/${location.pathname.split('/')[2]}` === '/task-template'}
-                        icon="TEMPLATE"
-                        label={
-                          <FormattedMessage id="modules.sidebar.tasks" defaultMessage="TASKS" />
-                        }
-                        onClick={() => setExpandedSubMenu(null)}
-                      />
+                      {hasPermission(TASK_TEMPLATE_LIST) && (
+                        <MenuItem
+                          path="/settings/task-template/order"
+                          isActive={`/${location.pathname.split('/')[2]}` === '/task-template'}
+                          icon="TEMPLATE"
+                          label={
+                            <FormattedMessage id="modules.sidebar.tasks" defaultMessage="TASKS" />
+                          }
+                          onClick={() => setExpandedSubMenu(null)}
+                        />
+                      )}
                     </SubMenu>
                   )}
                 </div>
