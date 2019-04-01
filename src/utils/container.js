@@ -10,7 +10,6 @@ import { injectUid } from './id';
  */
 export const generateContainer = () =>
   injectUid({
-    isNew: true,
     batches: [],
     tags: [],
     totalVolume: {

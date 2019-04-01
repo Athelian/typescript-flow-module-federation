@@ -279,8 +279,7 @@ const ContainerSection = () => {
                               defaultMessage="START DATE"
                             />
                           }
-                          // hide for a short time
-                          // showExtraToggle
+                          showExtraToggle
                           toggled={values.autoCalculatedFreeTimeStartDate}
                           onToggle={() => {
                             const { autoCalculatedFreeTimeStartDate } = values;

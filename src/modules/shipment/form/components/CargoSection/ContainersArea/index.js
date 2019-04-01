@@ -349,6 +349,7 @@ function ContainersArea({ focusedCardIndex, setSelected }: Props) {
                       ...clonedContainers,
                       {
                         ...generateContainer(),
+                        isNew: true,
                         no: `container no ${containers.length + 1}`,
                         freeTimeStartDate:
                           voyages.length === 0
