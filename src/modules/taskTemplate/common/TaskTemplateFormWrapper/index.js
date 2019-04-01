@@ -19,6 +19,7 @@ import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { removeTypename } from 'utils/data';
 
 type OptionalProps = {
   template: Object,
@@ -51,7 +52,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     onErrors: Function = () => {}
   ) => {
     const { isNew, template, onCancel: closeSlideView } = this.props;
-    const input = prepareParsedTaskTemplate(isNew ? null : originalValues, values);
+    const input = prepareParsedTaskTemplate(isNew ? null : removeTypename(originalValues), values);
     if (isNew) {
       const { data } = await saveTemplate({
         variables: { input },

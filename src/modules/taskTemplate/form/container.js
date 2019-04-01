@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
-import { cleanFalsy, cleanUpData } from 'utils/data';
+import { cleanFalsy } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -32,7 +32,7 @@ export default class TaskTemplateFormContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
