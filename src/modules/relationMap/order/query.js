@@ -67,6 +67,12 @@ export const orderCardRMFragment = gql`
                 id
                 name
                 serial
+                files {
+                  ... on File {
+                    id
+                    pathSmall: path(preset: Small)
+                  }
+                }
               }
             }
             exporter {

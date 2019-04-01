@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import BaseCard from 'components/Cards';
-import { WrapperCard, TotalCard } from 'components/RelationMap';
+import { TotalCard } from 'components/RelationMap';
 
 type OptionalProps = {
   wrapperClassName?: string,
@@ -15,10 +15,10 @@ type Props = OptionalProps & {
 
 export default function TotalItems({ type, total, onToggle, wrapperClassName }: Props) {
   return (
-    <BaseCard wrapperClassName={wrapperClassName}>
-      <WrapperCard onClick={onToggle}>
+    <div className={wrapperClassName} onClick={onToggle} role="presentation">
+      <BaseCard>
         <TotalCard name={type} quantity={total} />
-      </WrapperCard>
-    </BaseCard>
+      </BaseCard>
+    </div>
   );
 }

@@ -4,15 +4,13 @@ import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
-import BaseCard from 'components/Cards';
-import { OrderItemCard, WrapperCard } from 'components/RelationMap';
+import { RMOrderItemCard } from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
 import type { OrderItemProps } from 'modules/relationMap/order/type.js.flow';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import Badge from '../Badge';
 
 type OptionalProps = {
@@ -81,60 +79,61 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   return (
-    <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" wrapperClassName={wrapperClassName}>
-      {showCloneBadge && <Badge label="clone" />}
-      <BooleanValue>
-        {({ value: hovered, set: setToggle }) => (
-          <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            <OrderItemCard
-              viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-              orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
-            />
-            <ActionCard show={hovered}>
-              {({ targeted, toggle }) => (
-                <>
-                  <Action
-                    icon="MAGIC"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
-                  />
-                  {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                    <>
-                      <Action
-                        icon="BRANCH"
-                        targeted={targeted}
-                        toggle={toggle}
-                        onClick={() =>
-                          actions.selectBranch([
-                            {
-                              id,
-                              entity: ORDER_ITEM,
-                              exporterId: `${ORDER_ITEM}-${exporterId}`,
-                            },
-                            ...batches.map(batch => ({
-                              entity: BATCH,
-                              id: batch.id,
-                              exporterId: `${BATCH}-${exporterId}`,
-                            })),
-                          ])
-                        }
-                        className={RotateIcon}
-                      />
-                      <Action
-                        icon="CHECKED"
-                        targeted={targeted}
-                        toggle={toggle}
-                        onClick={() => actions.targetOrderItemEntity(id, `${id}-${exporterId}`)}
-                      />
-                    </>
-                  )}
-                </>
-              )}
-            </ActionCard>
-          </WrapperCard>
-        )}
-      </BooleanValue>
-    </BaseCard>
+    <BooleanValue>
+      {({ value: hovered, set: setToggle }) => (
+        <div
+          className={wrapperClassName}
+          onMouseEnter={() => setToggle(true)}
+          onMouseLeave={() => setToggle(false)}
+        >
+          <RMOrderItemCard
+            orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
+          />
+          {showCloneBadge && <Badge label="clone" />}
+          <ActionCard show={hovered}>
+            {({ targeted, toggle }) => (
+              <>
+                <Action
+                  icon="MAGIC"
+                  targeted={targeted}
+                  toggle={toggle}
+                  onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
+                />
+                {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                  <>
+                    <Action
+                      icon="BRANCH"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() =>
+                        actions.selectBranch([
+                          {
+                            id,
+                            entity: ORDER_ITEM,
+                            exporterId: `${ORDER_ITEM}-${exporterId}`,
+                          },
+                          ...batches.map(batch => ({
+                            entity: BATCH,
+                            id: batch.id,
+                            exporterId: `${BATCH}-${exporterId}`,
+                          })),
+                        ])
+                      }
+                      className={RotateIcon}
+                    />
+                    <Action
+                      icon="CHECKED"
+                      targeted={targeted}
+                      toggle={toggle}
+                      onClick={() => actions.targetOrderItemEntity(id, `${id}-${exporterId}`)}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </ActionCard>
+        </div>
+      )}
+    </BooleanValue>
   );
 }

@@ -22,7 +22,7 @@ type Props = {
   },
 };
 
-export default class OrderCard extends React.PureComponent<Props> {
+export default class RMOrderCard extends React.PureComponent<Props> {
   render() {
     const {
       order: { poNo, exporter, orderedQuantity, batchedQuantity, shippedQuantity },
