@@ -7,7 +7,7 @@ import GridView from 'components/GridView';
 import { TemplateCard } from 'components/Cards';
 import { BooleanValue } from 'react-values';
 import TaskTemplateFormWrapper from 'modules/taskTemplate/common/TaskTemplateFormWrapper';
-import { TASK_TEMPLATE_UPDATE, TASK_TEMPLATE_FORM } from 'modules/permission/constants/task';
+import { TASK_TEMPLATE_FORM } from 'modules/permission/constants/task';
 
 type OptionalProps = {
   renderItem?: Function,
@@ -33,9 +33,7 @@ const defaultRenderItem = (item: Object, hasPermission: Function) => (
             count: item.tasks.length,
           }}
           onClick={() =>
-            hasPermission([TASK_TEMPLATE_UPDATE, TASK_TEMPLATE_FORM])
-              ? toggleTaskTemplateForm(true)
-              : null
+            hasPermission([TASK_TEMPLATE_FORM]) ? toggleTaskTemplateForm(true) : null
           }
         />
         <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
