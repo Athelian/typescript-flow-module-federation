@@ -24,6 +24,8 @@ import {
   ownedByFragment,
   taskFormInSlideViewFragment,
   todoFragment,
+  taskTemplateCardFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -84,6 +86,8 @@ export const updateOrderMutation = gql`
   ${ownedByFragment}
   ${taskFormInSlideViewFragment}
   ${todoFragment}
+  ${taskTemplateCardFragment}
+  ${taskFormInTemplateFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({
@@ -165,5 +169,5 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     })
   ),
   ...parseFilesField('files', getByPathWithDefault(null, 'files', originalValues), newValues.files),
-  ...parseTasksField(getByPathWithDefault({ tasks: [] }, 'todo', originalValues), newValues.todo),
+  ...parseTasksField(getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues), newValues.todo),
 });

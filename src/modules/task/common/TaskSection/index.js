@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import { upperFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
@@ -84,11 +85,10 @@ function TaskSection({ getConfig, type, intl }: Props) {
       {(
         {
           state: {
-            template,
-            useTemplate,
-            todo: { tasks },
+            todo: { tasks, taskTemplate },
           },
           setFieldValue,
+          applyTemplate,
         },
         { setFieldTouched }
       ) => (
@@ -123,9 +123,6 @@ function TaskSection({ getConfig, type, intl }: Props) {
                   }}
                 />
               )}
-              {hasPermission(TASK_CREATE) && !isInTemplate && (
-                <NewButton label={intl.formatMessage(messages.useTemplate)} onClick={() => {}} />
-              )}
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <div className={ItemGridStyle}>
@@ -141,29 +138,35 @@ function TaskSection({ getConfig, type, intl }: Props) {
                               defaultMessage="TEMPLATE"
                             />
                           </Label>
-                          {useTemplate ? (
-                            <TemplateCard />
+                          {taskTemplate ? (
+                            <TemplateCard
+                              type="TASK"
+                              template={{
+                                id: taskTemplate.id,
+                                title: taskTemplate.name,
+                                description: taskTemplate.description,
+                                count: taskTemplate.tasks.length,
+                              }}
+                              onClick={() => slideToggle(true)}
+                            />
                           ) : (
                             <DashedPlusButton
                               data-testid="selecTaskTemplateButton"
-                              width="175px"
+                              width="195px"
                               height="125px"
                               onClick={() => slideToggle(true)}
                             />
                           )}
                         </div>
 
-                        <SlideView
-                          isOpen={opened}
-                          onRequestClose={() => slideToggle(false)}
-                        >
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                           {opened && (
                             <SelectTaskTemplate
-                              selected={template}
+                              entityType={upperFirst(type)}
                               onCancel={() => slideToggle(false)}
                               onSelect={newValue => {
                                 slideToggle(false);
-                                setFieldValue('warehouse', newValue);
+                                applyTemplate(newValue);
                               }}
                             />
                           )}
