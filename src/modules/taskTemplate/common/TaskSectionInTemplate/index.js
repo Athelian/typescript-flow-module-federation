@@ -9,12 +9,7 @@ import { SectionWrapper, SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import {
-  TASK_CREATE,
-  TASK_UPDATE,
-  TASK_DELETE,
-  TASK_TEMPLATE_UPDATE,
-} from 'modules/permission/constants/task';
+import { TASK_TEMPLATE_UPDATE } from 'modules/permission/constants/task';
 import { FormContainer } from 'modules/form';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
 import { TasksSectionWrapperStyle, TasksSectionBodyStyle, ItemGridStyle } from './style';
@@ -43,7 +38,7 @@ function TaskSectionInTemplate() {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {allowUpdate && hasPermission(TASK_CREATE) && (
+              {allowUpdate && (
                 <NewButton
                   label={
                     <FormattedMessage id="modules.taskTemplate.newTask" defaultMessage="NEW TASK" />
@@ -67,9 +62,9 @@ function TaskSectionInTemplate() {
               <div className={ItemGridStyle}>
                 <Tasks
                   isInTemplate
-                  editable={allowUpdate && hasPermission([TASK_CREATE, TASK_UPDATE])}
-                  removable={allowUpdate && hasPermission(TASK_DELETE)}
-                  viewForm={allowUpdate && hasPermission(TASK_UPDATE)}
+                  editable={allowUpdate}
+                  removable={allowUpdate}
+                  viewForm={allowUpdate}
                   type={entityType}
                   tasks={tasks}
                   onSwap={(index: number, direction: 'left' | 'right') => {
