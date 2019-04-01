@@ -180,7 +180,7 @@ storiesOf('Card', module)
       </IntlProvider>
     </StoryBookWrapper>
   ))
-  .add('Task Card for approvable', () => (
+  .add('Task Card with Approval', () => (
     <StoryBookWrapper>
       <IntlProvider>
         <Provider>
@@ -243,7 +243,7 @@ storiesOf('Card', module)
       </IntlProvider>
     </StoryBookWrapper>
   ))
-  .add('Task Card with approvable', () => (
+  .add('Task Card with Approved', () => (
     <StoryBookWrapper>
       <IntlProvider>
         <Provider>
@@ -309,7 +309,7 @@ storiesOf('Card', module)
       </IntlProvider>
     </StoryBookWrapper>
   ))
-  .add('Task Card with reject', () => (
+  .add('Task Card with Rejected', () => (
     <StoryBookWrapper>
       <IntlProvider>
         <Provider>
@@ -375,7 +375,7 @@ storiesOf('Card', module)
       </IntlProvider>
     </StoryBookWrapper>
   ))
-  .add('Task Card for template with approval', () => (
+  .add('Task Card for Template with Approval', () => (
     <StoryBookWrapper>
       <IntlProvider>
         <Provider>
