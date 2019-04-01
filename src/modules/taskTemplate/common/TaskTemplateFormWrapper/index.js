@@ -51,9 +51,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     onErrors: Function = () => {}
   ) => {
     const { isNew, template, onCancel: closeSlideView } = this.props;
-
-    const input = prepareParsedTaskTemplate(originalValues, values);
-
+    const input = prepareParsedTaskTemplate(isNew ? null : originalValues, values);
     if (isNew) {
       const { data } = await saveTemplate({
         variables: { input },
