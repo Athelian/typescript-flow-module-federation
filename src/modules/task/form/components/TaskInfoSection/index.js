@@ -501,6 +501,15 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                     <ToggleInput
                       toggled={values.approvable}
                       onToggle={() => {
+                        if (values.approvable) {
+                          setFieldValues({
+                            approvedBy: null,
+                            approvedAt: null,
+                            rejectedBy: null,
+                            rejectedAt: null,
+                            approvers: [],
+                          });
+                        }
                         setFieldValue('approvable', !values.approvable);
                         setFieldTouched('approvable');
                       }}
@@ -576,22 +585,26 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                                         {userChosen && userChosen.id ? (
                                           <ApproveRejectMenu
                                             width="175px"
-                                            onApprove={() =>
+                                            onApprove={() => {
                                               setFieldValues({
                                                 approvedBy: userChosen,
                                                 approvedAt: formatToGraphql(startOfToday()),
                                                 rejectedBy: null,
                                                 rejectedAt: null,
-                                              })
-                                            }
-                                            onReject={() =>
+                                              });
+                                              setFieldTouched('approvedBy');
+                                              setFieldTouched('approvedAt');
+                                            }}
+                                            onReject={() => {
                                               setFieldValues({
                                                 approvedBy: null,
                                                 approvedAt: null,
                                                 rejectedBy: userChosen,
                                                 rejectedAt: formatToGraphql(startOfToday()),
-                                              })
-                                            }
+                                              });
+                                              setFieldTouched('rejectedBy');
+                                              setFieldTouched('rejectedAt');
+                                            }}
                                           />
                                         ) : (
                                           <Display color="GRAY_DARK">
@@ -609,13 +622,13 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                                         width="175px"
                                         editable={editable}
                                         onClickUser={() => {
+                                          setUserChosen(null);
                                           setFieldValues({
                                             approvedBy: null,
                                             approvedAt: null,
                                             rejectedBy: null,
                                             rejectedAt: null,
                                           });
-                                          setUserChosen('userChosen', null);
                                         }}
                                         approval={
                                           values.approvedBy && values.approvedBy.id
