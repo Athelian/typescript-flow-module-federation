@@ -4,13 +4,12 @@ import { injectUid } from './id';
  * generate a container
  *
  * without:
+ *   - no
  *   - freeTimeStart
  *   - shipment
  */
-export const generateContainer = ({ no }: { no: string }) =>
+export const generateContainer = () =>
   injectUid({
-    isNew: true,
-    no,
     batches: [],
     tags: [],
     totalVolume: {
