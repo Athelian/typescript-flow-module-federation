@@ -58,6 +58,7 @@ export const taskTemplateCardFragment = gql`
 export const taskFormInTemplateFragment = gql`
   fragment taskFormInTemplateFragment on Task {
     id
+    approvable
     updatedAt
     updatedBy {
       ...userAvatarFragment
@@ -69,6 +70,9 @@ export const taskFormInTemplateFragment = gql`
       ...tagFragment
     }
     assignedTo {
+      ...userAvatarFragment
+    }
+    approvers {
       ...userAvatarFragment
     }
     taskTemplate {
@@ -163,6 +167,22 @@ export const taskFormFragment = gql`
       ... on Shipment {
         ...shipmentCardFragment
       }
+    }
+  }
+`;
+
+export const taskTemplateFormFragment = gql`
+  fragment taskTemplateFormFragment on TaskTemplate {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    name
+    description
+    entityType
+    tasks {
+      ...taskFormInTemplateFragment
     }
   }
 `;
