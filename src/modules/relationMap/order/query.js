@@ -6,6 +6,9 @@ import {
   userAvatarFragment,
   metricFragment,
   priceFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
+  taskTemplateCardFragment,
 } from 'graphql';
 
 export const batchCardRMFragment = gql`
@@ -41,6 +44,12 @@ export const batchCardRMFragment = gql`
       completedCount
       inProgressCount
       remainingCount
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
   }
 `;
@@ -245,6 +254,9 @@ export const orderDetailQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${priceFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const shipmentDetailQuery = gql`
@@ -300,6 +312,9 @@ export const orderListQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${priceFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const shipmentListQuery = gql`

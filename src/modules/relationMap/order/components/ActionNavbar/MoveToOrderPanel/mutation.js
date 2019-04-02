@@ -8,6 +8,9 @@ import {
   userAvatarFragment,
   metricFragment,
   priceFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
+  taskTemplateCardFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -80,6 +83,9 @@ export const updateOrderMutation = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${priceFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const prepareUpdateOrderInput = ({ orderItems = [] }: Object): Object => ({
