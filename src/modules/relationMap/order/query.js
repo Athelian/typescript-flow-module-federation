@@ -20,6 +20,7 @@ export const batchCardRMFragment = gql`
       ... on BatchAdjustment {
         id
         quantity
+        reason
       }
     }
     totalAdjusted
