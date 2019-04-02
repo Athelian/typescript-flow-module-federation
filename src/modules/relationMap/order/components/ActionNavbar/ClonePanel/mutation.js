@@ -8,6 +8,9 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   priceFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
+  taskTemplateCardFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -27,6 +30,10 @@ export const cloneBatchMutation = gql`
   ${tagFragment}
   ${metricFragment}
   ${badRequestFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const cloneShipmentMutation = gql`
@@ -94,6 +101,10 @@ export const cloneOrderItemMutation = gql`
   ${priceFragment}
   ${tagFragment}
   ${metricFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const cloneOrderMutation = gql`
@@ -112,4 +123,7 @@ export const cloneOrderMutation = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${priceFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
