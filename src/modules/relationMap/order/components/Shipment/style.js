@@ -5,16 +5,15 @@ export const OverlayStyle = css`
   position: absolute;
   top: 0;
   left: 0;
-
   width: 100%;
   height: 100%;
-
   background-color: ${colors.TRANSPARENT};
 `;
 
 export const ButtonStyle = css`
   cursor: pointer;
 `;
+
 export const CenteredStyle = css`
   ${layout.LAYOUT};
   ${layout.JUSTIFIED_CENTER};
@@ -30,6 +29,7 @@ export const LabelStyle = css`
   background-color: ${colors.TEAL};
   color: ${colors.WHITE};
 `;
+
 export const LabelShipmentStyle = css`
   ${LabelStyle};
   width: 180px;
@@ -40,7 +40,6 @@ export const CenteredOrderStyle = css`
   ${CenteredStyle};
   width: 100%;
   height: 100%;
-
   ${borderRadiuses.MAIN};
   background-color: ${colors.TEAL};
 `;

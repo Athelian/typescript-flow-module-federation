@@ -8,7 +8,11 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import logger from 'utils/logger';
-import { OrderItemsContainer, OrderInfoContainer } from 'modules/order/form/containers';
+import {
+  OrderItemsContainer,
+  OrderInfoContainer,
+  OrderTasksContainer,
+} from 'modules/order/form/containers';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
@@ -681,8 +685,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 </Subscribe>
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
-                <Subscribe to={[OrderItemsContainer, OrderInfoContainer]}>
-                  {(orderItemContainer, orderInfoContainer) => (
+                <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTasksContainer]}>
+                  {(orderItemContainer, orderInfoContainer, orderTaskContainer) => (
                     <MoveToOrderPanel
                       status={state.connectOrder.status}
                       hasSelectedOrderItem={uiSelectors.targetedOrderItemIds().length > 0}
@@ -820,6 +824,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           exporter: exporters[uiSelectors.currentExporterId()],
                           currency: currencies.length === 1 ? currencies[0] : 'USD',
                         });
+                        orderTaskContainer.initDetailValues({ tasks: [] });
                         actions.showEditForm('NEW_ORDER', 'new');
                         // remove order item and batches from original order
                         const orderIds = [];

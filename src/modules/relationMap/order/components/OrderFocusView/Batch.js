@@ -5,8 +5,8 @@ import usePermission from 'hooks/usePermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
-import BaseCard from 'components/Cards';
-import { BatchCard, WrapperCard, Tags } from 'components/RelationMap';
+import { RMBatchCard } from 'components/Cards';
+import { Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import { BATCH } from 'modules/relationMap/constants';
 import type { BatchProps } from 'modules/relationMap/order/type.js.flow';
@@ -51,6 +51,10 @@ export default function Batch({
   quantity,
   totalAdjusted,
   totalVolume,
+  deliveredAt,
+  shipment,
+  container,
+  todo,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
@@ -67,57 +71,62 @@ export default function Batch({
   const showAutoFillBadge = !!balanceSplit.batches.find(item => item.id === id);
   const { hasPermission } = usePermission();
   return (
-    <BaseCard showActionsOnHover icon="BATCH" color="BATCH" wrapperClassName={wrapperClassName}>
-      {(showSplitBadge || showAutoFillBadge || showCloneBadge) && (
-        <Badge label={findBadgeLabel({ showSplitBadge, showCloneBadge, showAutoFillBadge })} />
+    <BooleanValue>
+      {({ value: hovered, set: setToggle }) => (
+        <div
+          className={wrapperClassName}
+          onMouseEnter={() => setToggle(true)}
+          onMouseLeave={() => setToggle(false)}
+        >
+          <RMBatchCard
+            batch={{
+              no,
+              totalVolume,
+              batchedQuantity: quantity + totalAdjusted,
+              deliveredAt,
+              shipment,
+              container,
+              todo,
+            }}
+          />
+          {(showSplitBadge || showAutoFillBadge || showCloneBadge) && (
+            <Badge label={findBadgeLabel({ showSplitBadge, showCloneBadge, showAutoFillBadge })} />
+          )}
+          <ActionCard show={hovered}>
+            {({ targeted, toggle }) => (
+              <>
+                <Action
+                  icon="MAGIC"
+                  targeted={targeted}
+                  toggle={toggle}
+                  onClick={() => actions.toggleHighLight(BATCH, id)}
+                />
+                <Action
+                  icon="DOCUMENT"
+                  targeted={targeted}
+                  toggle={toggle}
+                  onClick={() => actions.showEditForm(BATCH, id)}
+                />
+                {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                  <Action
+                    icon="CHECKED"
+                    targeted={targeted}
+                    toggle={toggle}
+                    onClick={() =>
+                      actions.targetBatchEntity({
+                        id,
+                        parentOrderId,
+                        exporterId: `${id}-${exporterId}`,
+                      })
+                    }
+                  />
+                )}
+              </>
+            )}
+          </ActionCard>
+          {showTag && <Tags dataSource={tags} />}
+        </div>
       )}
-      <BooleanValue>
-        {({ value: hovered, set: setToggle }) => (
-          <WrapperCard onMouseEnter={() => setToggle(true)} onMouseLeave={() => setToggle(false)}>
-            <BatchCard
-              batch={{
-                no,
-                volumeLabel: totalVolume && totalVolume.value,
-                metric: totalVolume && totalVolume.metric,
-                batchedQuantity: quantity + totalAdjusted,
-              }}
-            />
-            <ActionCard show={hovered}>
-              {({ targeted, toggle }) => (
-                <>
-                  <Action
-                    icon="MAGIC"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.toggleHighLight(BATCH, id)}
-                  />
-                  <Action
-                    icon="DOCUMENT"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.showEditForm(BATCH, id)}
-                  />
-                  {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                    <Action
-                      icon="CHECKED"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() =>
-                        actions.targetBatchEntity({
-                          id,
-                          parentOrderId,
-                          exporterId: `${id}-${exporterId}`,
-                        })
-                      }
-                    />
-                  )}
-                </>
-              )}
-            </ActionCard>
-            {showTag && <Tags dataSource={tags} />}
-          </WrapperCard>
-        )}
-      </BooleanValue>
-    </BaseCard>
+    </BooleanValue>
   );
 }

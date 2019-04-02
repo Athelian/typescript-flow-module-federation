@@ -197,7 +197,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
           !state.expandCards.orders.includes(item.id) &&
             item.orderItems.map(({ id }) => id).some(id => uiSelectors.isTarget(ORDER_ITEM, id))
         )}
-        type="ITEMS"
+        type="itemsLabel"
         total={item.orderItemCount}
         onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />
@@ -240,7 +240,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
               )
               .some(id => uiSelectors.isTarget(BATCH, id))
         )}
-        type="BATCHES"
+        type="batchesLabel"
         total={item.batchCount}
         onToggle={() => actions.toggleExpand(ORDER, item.id)}
       />

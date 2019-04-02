@@ -6,6 +6,9 @@ import {
   userAvatarFragment,
   metricFragment,
   priceFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
+  taskTemplateCardFragment,
 } from 'graphql';
 
 export const batchCardRMFragment = gql`
@@ -16,9 +19,7 @@ export const batchCardRMFragment = gql`
     batchAdjustments {
       ... on BatchAdjustment {
         id
-        reason
         quantity
-        memo
       }
     }
     totalAdjusted
@@ -27,6 +28,28 @@ export const batchCardRMFragment = gql`
     }
     totalVolume {
       ...metricFragment
+    }
+    deliveredAt
+    shipment {
+      ... on Shipment {
+        id
+      }
+    }
+    container {
+      ... on Container {
+        id
+      }
+    }
+    todo {
+      completedCount
+      inProgressCount
+      remainingCount
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
   }
 `;
@@ -43,6 +66,11 @@ export const orderCardRMFragment = gql`
     batchCount
     batchShippedCount
     shipmentCount
+    todo {
+      completedCount
+      inProgressCount
+      remainingCount
+    }
     exporter {
       ... on Group {
         id
@@ -67,6 +95,12 @@ export const orderCardRMFragment = gql`
                 id
                 name
                 serial
+                files {
+                  ... on File {
+                    id
+                    pathSmall: path(preset: Small)
+                  }
+                }
               }
             }
             exporter {
@@ -138,6 +172,11 @@ export const shipmentCardRMFragment = gql`
     }
     inCharges {
       ...userAvatarFragment
+    }
+    todo {
+      completedCount
+      inProgressCount
+      remainingCount
     }
     voyages {
       ... on Voyage {
@@ -215,6 +254,9 @@ export const orderDetailQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${priceFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const shipmentDetailQuery = gql`
@@ -270,6 +312,9 @@ export const orderListQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${priceFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const shipmentListQuery = gql`

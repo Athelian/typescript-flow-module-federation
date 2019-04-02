@@ -2,8 +2,10 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import FormattedNumber from 'components/FormattedNumber';
+import { Label } from 'components/Form';
 import messages from 'modules/relationMap/messages';
-import { TotalCardWrapperStyle } from '../style';
+import { TotalCardWrapperStyle } from './style';
 
 type Props = {
   quantity: number,
@@ -13,10 +15,13 @@ type Props = {
 class TotalCard extends React.PureComponent<Props> {
   render() {
     const { quantity, name, intl } = this.props;
+
     return (
       <div className={TotalCardWrapperStyle}>
-        <span>{intl.formatMessage(messages.total, { number: quantity, name })}</span>
-        <span>{intl.formatMessage(messages.all)}</span>
+        <Label align="center">
+          <FormattedNumber value={quantity} />
+          {` ${intl.formatMessage(messages[name])}`}
+        </Label>
       </div>
     );
   }

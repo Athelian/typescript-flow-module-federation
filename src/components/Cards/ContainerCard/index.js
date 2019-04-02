@@ -192,7 +192,7 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
               {isNullOrUndefined(freeTimeStartDate) ||
               freeTimeStartDate === '' ||
               isNullOrUndefined(freeTimeDuration) ? (
-                <FormattedMessage id="component.card.na" defaultMessage="N/A" />
+                <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
               ) : (
                 <FormattedDate value={calculateDueDate(freeTimeStartDate, freeTimeDuration)} />
               )}

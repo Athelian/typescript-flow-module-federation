@@ -43,14 +43,13 @@ const QuantityChart = ({
   shipped,
 }: Props) => {
   let batchProgress = 0;
+  let shippedProgress = 0;
   if (orderedQuantity <= 0) {
-    if (batchedQuantity > 0) {
-      batchProgress = 1;
-    } else {
-      batchProgress = 0;
-    }
+    batchProgress = 1;
+    shippedProgress = 1;
   } else {
     batchProgress = batchedQuantity / orderedQuantity;
+    shippedProgress = shippedQuantity / orderedQuantity;
   }
 
   return (
@@ -69,12 +68,7 @@ const QuantityChart = ({
       </div>
 
       <div className={BarWrapperStyle}>
-        <div
-          className={ProgressBarStyle(
-            'SHIPMENT',
-            orderedQuantity === 0 ? 0 : shippedQuantity / orderedQuantity
-          )}
-        />
+        <div className={ProgressBarStyle('SHIPMENT', shippedProgress)} />
         <div className={IconStyle}>
           <Icon icon="SHIPMENT" />
         </div>
@@ -107,10 +101,10 @@ const QuantityChart = ({
       ) : (
         <div className={FloatingQuantityWrapperStyle('top')}>
           <GridRow gap="0px">
-            <Display color="BATCH" fontSize="SMALL">
+            <Display color="BATCH" fontSize="SMALL" height="16px">
               <FormattedNumber value={batchedQuantity} />
             </Display>
-            <Display color="GRAY_LIGHT" fontSize="SMALL">
+            <Display color="GRAY_LIGHT" fontSize="SMALL" height="16px">
               <FormattedNumber value={orderedQuantity - batchedQuantity} />
             </Display>
           </GridRow>
@@ -138,10 +132,10 @@ const QuantityChart = ({
       ) : (
         <div className={FloatingQuantityWrapperStyle('bottom')}>
           <GridRow gap="0px">
-            <Display color="SHIPMENT" fontSize="SMALL">
+            <Display color="SHIPMENT" fontSize="SMALL" height="16px">
               <FormattedNumber value={shippedQuantity} />
             </Display>
-            <Display color="GRAY_LIGHT" fontSize="SMALL">
+            <Display color="GRAY_LIGHT" fontSize="SMALL" height="16px">
               <FormattedNumber value={orderedQuantity - shippedQuantity} />
             </Display>
           </GridRow>
