@@ -22,6 +22,7 @@ import {
   BottomWrapperStyle,
   FileNameWrapperStyle,
   FileNameStyle,
+  FileStatusColoringWrapper,
   DownloadButtonStyle,
   MemoWrapperStyle,
   OpenMemoButtonStyle,
@@ -151,19 +152,26 @@ const DocumentItem = ({
           </div>
 
           {editable ? (
-            <FormField name={`${name}.status`} initValue={value.status} setFieldValue={onChange}>
+            <FormField
+              name={`${name}.status`}
+              initValue={value.status}
+              setFieldValue={onChange}
+              saveOnChange
+            >
               {({ ...inputHandlers }) => (
-                <EnumSelectInputFactory
-                  {...inputHandlers}
-                  enumType="FileStatus"
-                  editable={editable}
-                  inputWidth="130px"
-                  inputHeight="30px"
-                  hideTooltip
-                  inputAlign="left"
-                  required
-                  hideDropdownArrow
-                />
+                <span className={FileStatusColoringWrapper(value.status)}>
+                  <EnumSelectInputFactory
+                    {...inputHandlers}
+                    enumType="FileStatus"
+                    editable={editable}
+                    inputWidth="130px"
+                    inputHeight="30px"
+                    hideTooltip
+                    inputAlign="center"
+                    required
+                    hideDropdownArrow
+                  />
+                </span>
               )}
             </FormField>
           ) : (

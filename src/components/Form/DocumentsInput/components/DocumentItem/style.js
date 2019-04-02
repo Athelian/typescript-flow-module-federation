@@ -53,6 +53,38 @@ export const FileNameStyle: string = css`
   ${presets.ELLIPSIS};
 `;
 
+const getFileStatusColor = (status: string): { textColor: string, backgroundColor: string } => {
+  switch (status) {
+    case 'Draft':
+      return { textColor: 'BLACK', backgroundColor: 'GRAY_SUPER_LIGHT' };
+    case 'Submitted':
+      return { textColor: 'WHITE', backgroundColor: 'BLUE' };
+    case 'Revise':
+      return { textColor: 'WHITE', backgroundColor: 'RED' };
+    case 'Approved':
+      return { textColor: 'WHITE', backgroundColor: 'TEAL' };
+    default:
+      return { textColor: 'BLACK', backgroundColor: 'WHITE' };
+  }
+};
+
+export const FileStatusColoringWrapper = (status: string) => {
+  const coloring = getFileStatusColor(status);
+
+  return css`
+    & > div {
+      & > div {
+        & > div {
+          background-color: ${colors[coloring.backgroundColor]};
+          & > input {
+            color: ${colors[coloring.textColor]};
+          }
+        }
+      }
+    }
+  `;
+};
+
 export const DownloadButtonStyle = (downloadDisabled: boolean): string => css`
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
