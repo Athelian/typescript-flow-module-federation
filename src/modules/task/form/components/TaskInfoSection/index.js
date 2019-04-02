@@ -617,19 +617,7 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                                       </>
                                     ) : (
                                       <TaskApprovalStatusInput
-                                        showUser
-                                        showDate
-                                        width="175px"
                                         editable={editable}
-                                        onClickUser={() => {
-                                          setUserChosen(null);
-                                          setFieldValues({
-                                            approvedBy: null,
-                                            approvedAt: null,
-                                            rejectedBy: null,
-                                            rejectedAt: null,
-                                          });
-                                        }}
                                         approval={
                                           values.approvedBy && values.approvedBy.id
                                             ? {
