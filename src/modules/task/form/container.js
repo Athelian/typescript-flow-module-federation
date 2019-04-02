@@ -15,6 +15,12 @@ type FormState = {
   inProgressAt?: string,
   completedBy?: Object,
   completedAt?: string,
+  approvers?: Array<Object>,
+  approvable?: boolean,
+  rejectedBy?: Object,
+  rejectedAt?: string,
+  approvedBy?: Object,
+  approvedAt?: string,
   updatedAt?: string,
   updatedBy?: Object,
 };
@@ -32,6 +38,12 @@ export const initValues = {
   completedBy: null,
   updatedAt: null,
   updatedBy: null,
+  approvers: [],
+  approvable: null,
+  rejectedAt: null,
+  rejectedBy: null,
+  approvedAt: null,
+  approvedBy: null,
 };
 
 export default class TaskContainer extends Container<FormState> {
@@ -50,6 +62,10 @@ export default class TaskContainer extends Container<FormState> {
     this.setState({
       [name]: value,
     });
+  };
+
+  setFieldValues = (values: Object) => {
+    this.setState(values);
   };
 
   initDetailValues = (values: Object) => {

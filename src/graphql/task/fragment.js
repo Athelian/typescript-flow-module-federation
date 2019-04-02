@@ -5,6 +5,7 @@ export const taskCardFragment = gql`
   fragment taskCardFragment on Task {
     id
     name
+    approvable
     sort
     entity {
       ... on Model {
@@ -23,6 +24,9 @@ export const taskCardFragment = gql`
     assignedTo {
       ...userAvatarFragment
     }
+    approvers {
+      ...userAvatarFragment
+    }
     startDate
     dueDate
     inProgressBy {
@@ -33,6 +37,14 @@ export const taskCardFragment = gql`
       ...userAvatarFragment
     }
     completedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    rejectedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
     tags {
       ...tagFragment
     }
@@ -58,6 +70,7 @@ export const taskTemplateCardFragment = gql`
 export const taskFormInTemplateFragment = gql`
   fragment taskFormInTemplateFragment on Task {
     id
+    approvable
     updatedAt
     updatedBy {
       ...userAvatarFragment
@@ -69,6 +82,9 @@ export const taskFormInTemplateFragment = gql`
       ...tagFragment
     }
     assignedTo {
+      ...userAvatarFragment
+    }
+    approvers {
       ...userAvatarFragment
     }
     taskTemplate {
@@ -83,6 +99,7 @@ export const taskFormInSlideViewFragment = gql`
   fragment taskFormInSlideViewFragment on Task {
     sort
     id
+    approvable
     updatedAt
     updatedBy {
       ...userAvatarFragment
@@ -99,7 +116,18 @@ export const taskFormInSlideViewFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
+    rejectedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
     assignedTo {
+      ...userAvatarFragment
+    }
+    approvers {
       ...userAvatarFragment
     }
     tags {
@@ -123,6 +151,7 @@ export const taskFormFragment = gql`
       ...userAvatarFragment
     }
     name
+    approvable
     dueDate
     startDate
     description
@@ -134,7 +163,18 @@ export const taskFormFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
+    rejectedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
     assignedTo {
+      ...userAvatarFragment
+    }
+    approvers {
       ...userAvatarFragment
     }
     tags {
@@ -151,6 +191,22 @@ export const taskFormFragment = gql`
       ... on Shipment {
         ...shipmentCardFragment
       }
+    }
+  }
+`;
+
+export const taskTemplateFormFragment = gql`
+  fragment taskTemplateFormFragment on TaskTemplate {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    name
+    description
+    entityType
+    tasks {
+      ...taskFormInTemplateFragment
     }
   }
 `;

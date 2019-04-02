@@ -344,6 +344,11 @@ export const parseTasksField = (
           return {
             ...(oldTask ? { id: oldTask.id } : {}),
             ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
+            ...parseGenericField(
+              'approvable',
+              getByPathWithDefault(null, 'approvable', oldTask),
+              newTask.approvable
+            ),
             ...parseDateField(
               'startDate',
               getByPathWithDefault(null, 'startDate', oldTask),
@@ -358,6 +363,11 @@ export const parseTasksField = (
               'assignedToIds',
               getByPathWithDefault([], 'assignedTo', oldTask),
               newTask.assignedTo
+            ),
+            ...parseArrayOfIdsField(
+              'approverIds',
+              getByPathWithDefault([], 'approvers', oldTask),
+              newTask.approvers
             ),
             ...parseParentIdField(
               'inProgressById',
@@ -378,6 +388,26 @@ export const parseTasksField = (
               'completedAt',
               getByPathWithDefault(null, 'completedAt', oldTask),
               newTask.completedAt
+            ),
+            ...parseParentIdField(
+              'rejectedById',
+              getByPathWithDefault(null, 'rejectedBy', oldTask),
+              newTask.rejectedBy
+            ),
+            ...parseDateField(
+              'rejectedAt',
+              getByPathWithDefault(null, 'rejectedAt', oldTask),
+              newTask.rejectedAt
+            ),
+            ...parseParentIdField(
+              'approvedById',
+              getByPathWithDefault(null, 'approvedBy', oldTask),
+              newTask.approvedBy
+            ),
+            ...parseDateField(
+              'approvedAt',
+              getByPathWithDefault(null, 'approvedAt', oldTask),
+              newTask.approvedAt
             ),
             ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldTask), newTask.memo),
             ...parseMemoField(

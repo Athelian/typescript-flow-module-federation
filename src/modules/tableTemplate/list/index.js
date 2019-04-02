@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import apolloClient from 'apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import emitter from 'utils/emitter';
 import TableTemplateGridView from './TableTemplateGridView';
 import { tableTemplateQuery } from './query';
 
@@ -20,12 +18,6 @@ type Props = {
 };
 
 const TableTemplateList = ({ ...filtersAndSort }: Props) => {
-  React.useEffect(() => {
-    emitter.once('RELOAD_TEMPLATE', () => {
-      apolloClient.reFetchObservableQueries();
-    });
-  });
-
   return (
     <Query
       query={tableTemplateQuery}

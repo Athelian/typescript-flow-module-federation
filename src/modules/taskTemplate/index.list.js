@@ -13,6 +13,7 @@ import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import usePermission from 'hooks/usePermission';
+import usePrevious from 'hooks/usePrevious';
 import useFilter from 'hooks/useFilter';
 import { TASK_TEMPLATE_CREATE } from 'modules/permission/constants/task';
 import TaskTemplateList from './list';
@@ -24,9 +25,11 @@ type OptionalProps = {
 
 type Props = OptionalProps & {};
 
-const getInitFilter = () => {
+const getInitFilter = (entityType: string) => {
   const state = {
-    filter: {},
+    filter: {
+      entityTypes: [entityType],
+    },
     sort: {
       field: 'updatedAt',
       direction: 'DESCENDING',
@@ -43,8 +46,24 @@ const defaultProps = {
 
 const TaskTemplateListModule = ({ entityType }: Props) => {
   const activeType = upperFirst(entityType);
+  const lastEntityType = usePrevious(activeType);
+
   const { hasPermission } = usePermission();
-  const { queryVariables } = useFilter(getInitFilter(), `filterTaskTemplate${activeType}`);
+  const { queryVariables, onChangeFilter } = useFilter(
+    getInitFilter(activeType),
+    `filterTaskTemplate${activeType}`
+  );
+
+  React.useEffect(() => {
+    if (lastEntityType !== activeType) {
+      onChangeFilter({
+        filter: {
+          entityTypes: [activeType],
+        },
+      });
+    }
+  }, [lastEntityType, activeType, onChangeFilter]);
+
   return (
     <Provider>
       <UIConsumer>

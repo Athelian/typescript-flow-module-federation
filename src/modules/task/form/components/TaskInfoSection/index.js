@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
+import { ObjectValue } from 'react-values';
 import { getByPath } from 'utils/fp';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
@@ -19,7 +20,12 @@ import {
   TaskAssignmentInput,
   Display,
   TaskStatusInput,
+  ToggleInput,
+  ApproveRejectMenu,
+  TaskApprovalStatusInput,
 } from 'components/Form';
+import Divider from 'components/Divider';
+import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import FormattedNumber from 'components/FormattedNumber';
 import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
@@ -31,12 +37,13 @@ import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import {
+  TaskFormWrapperStyle,
   TaskSectionWrapperStyle,
   MainFieldsWrapperStyle,
   MemoWrapperStyle,
   TaskStatusWrapperStyle,
   AssignedToStyle,
-  TaskFormWrapperStyle,
+  ApprovalToggleWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -93,10 +100,14 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
           {task.updatedAt && <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />}
         </SectionHeader>
         <Subscribe to={[TaskContainer, FormContainer]}>
-          {({ originalValues, state, setFieldValue }, { setFieldTouched }) => {
+          {({ originalValues, state, setFieldValue, setFieldValues }, { setFieldTouched }) => {
             const values = { ...originalValues, ...state };
             const { status, activeUser } = getStatusState(values);
 
+            const isUnapproved = !(
+              (values.approvedBy && values.approvedBy.id) ||
+              (values.rejectedBy && values.rejectedBy.id)
+            );
             return (
               <div className={TaskSectionWrapperStyle}>
                 {!hideParentInfo && getByPath('entity.__typename', task) === 'Shipment' && (
@@ -366,8 +377,8 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                       label={
                         <Label height="30px">
                           <FormattedMessage
-                            id="modules.Tasks.assignedTo"
-                            defaultMessage="ASSIGNED TO"
+                            id="modules.Tasks.assignedToComplete"
+                            defaultMessage="ASSIGNED TO COMPLETE"
                           />
                         </Label>
                       }
@@ -380,21 +391,27 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                             isInTemplate
                               ? null
                               : user => {
-                                  setFieldValue('inProgressBy', user);
-                                  setFieldValue('inProgressAt', new Date());
+                                  setFieldValues({
+                                    inProgressBy: user,
+                                    inProgressAt: new Date(),
+                                  });
                                   setFieldTouched('inProgressBy');
                                   setFieldTouched('inProgressAt');
                                 }
                           }
                           onDeactivateUser={() => {
                             if (status === COMPLETED) {
-                              setFieldValue('completedBy', null);
-                              setFieldValue('completedAt', null);
+                              setFieldValues({
+                                completedBy: null,
+                                inProgressAt: null,
+                              });
                               setFieldTouched('completedBy');
                               setFieldTouched('completedBy');
                             } else if (status === IN_PROGRESS) {
-                              setFieldValue('inProgressBy', null);
-                              setFieldValue('inProgressAt', null);
+                              setFieldValues({
+                                inProgressBy: null,
+                                inProgressAt: null,
+                              });
                               setFieldTouched('inProgressBy');
                               setFieldTouched('inProgressAt');
                             }
@@ -404,55 +421,49 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                       }
                     />
 
-                    {isInTemplate ? (
-                      <FieldItem
-                        vertical
-                        label={
-                          <Label height="30px" align="right">
-                            <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
-                          </Label>
-                        }
-                        input={
+                    <FieldItem
+                      vertical
+                      label={
+                        <Label height="30px" align="right">
+                          <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
+                        </Label>
+                      }
+                      input={
+                        isInTemplate ? (
                           <Display color="GRAY_LIGHT">
                             <FormattedMessage
                               id="modules.Tasks.statusDisabled"
                               defaultMessage="Status will be displayed here"
                             />
                           </Display>
-                        }
-                      />
-                    ) : (
-                      <FieldItem
-                        vertical
-                        label={
-                          <Label height="30px" align="right">
-                            <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
-                          </Label>
-                        }
-                        input={
-                          activeUser ? (
-                            <TaskStatusInput
-                              activeUser={activeUser}
-                              status={status}
-                              onClick={() => {
-                                setFieldValue('completedBy', activeUser);
-                                setFieldValue('completedAt', formatToGraphql(startOfToday()));
-                                setFieldTouched('completedBy');
-                                setFieldTouched('completedAt');
-                              }}
-                              editable={editable}
-                            />
-                          ) : (
-                            <Display color="GRAY_DARK">
-                              <FormattedMessage
-                                id="modules.Tasks.chooseUser"
-                                defaultMessage="Please choose a user to start the task"
+                        ) : (
+                          <>
+                            {activeUser ? (
+                              <TaskStatusInput
+                                activeUser={activeUser}
+                                status={status}
+                                onClick={() => {
+                                  setFieldValues({
+                                    completedBy: activeUser,
+                                    completedAt: formatToGraphql(startOfToday()),
+                                  });
+                                  setFieldTouched('completedBy');
+                                  setFieldTouched('completedAt');
+                                }}
+                                editable={editable}
                               />
-                            </Display>
-                          )
-                        }
-                      />
-                    )}
+                            ) : (
+                              <Display color="GRAY_DARK">
+                                <FormattedMessage
+                                  id="modules.Tasks.chooseUser"
+                                  defaultMessage="Please choose a user to start the task"
+                                />
+                              </Display>
+                            )}
+                          </>
+                        )
+                      }
+                    />
                   </div>
 
                   {status === COMPLETED && (
@@ -478,6 +489,209 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                         />
                       )}
                     </FormField>
+                  )}
+
+                  <Divider />
+
+                  <div className={ApprovalToggleWrapperStyle}>
+                    <Icon icon="CONFIRM" />
+                    <Label align="right" width="min-content">
+                      <FormattedMessage id="modules.Tasks.approval" defaultMessage="APPROVAL" />
+                    </Label>
+                    <ToggleInput
+                      toggled={values.approvable}
+                      onToggle={() => {
+                        if (values.approvable) {
+                          setFieldValues({
+                            approvedBy: null,
+                            approvedAt: null,
+                            rejectedBy: null,
+                            rejectedAt: null,
+                            approvers: [],
+                          });
+                        }
+                        setFieldValue('approvable', !values.approvable);
+                        setFieldTouched('approvable');
+                      }}
+                      editable={editable}
+                    />
+                  </div>
+
+                  {values.approvable && (
+                    <>
+                      <ObjectValue defaultValue={values.rejectedBy || values.approvedBy}>
+                        {({ value: userChosen, set: setUserChosen }) => (
+                          <div className={AssignedToStyle}>
+                            <FieldItem
+                              vertical
+                              label={
+                                <Label height="30px">
+                                  <FormattedMessage
+                                    id="modules.Tasks.assignedToApprove"
+                                    defaultMessage="ASSIGNED TO APPROVE"
+                                  />
+                                </Label>
+                              }
+                              input={
+                                <TaskAssignmentInput
+                                  users={values.approvers}
+                                  onChange={newApprovers =>
+                                    setFieldValue('approvers', newApprovers)
+                                  }
+                                  activeUserId={userChosen && userChosen.id}
+                                  onActivateUser={
+                                    isInTemplate
+                                      ? null
+                                      : user => {
+                                          setUserChosen(user);
+                                        }
+                                  }
+                                  onDeactivateUser={() => {
+                                    setUserChosen(null);
+                                    setFieldValues({
+                                      approvedBy: null,
+                                      approvedAt: null,
+                                      rejectedBy: null,
+                                      rejectedAt: null,
+                                    });
+                                  }}
+                                  editable={editable}
+                                />
+                              }
+                            />
+
+                            <FieldItem
+                              vertical
+                              label={
+                                <Label height="30px" align="right">
+                                  <FormattedMessage
+                                    id="modules.Tasks.approval"
+                                    defaultMessage="APPROVAL"
+                                  />
+                                </Label>
+                              }
+                              input={
+                                isInTemplate ? (
+                                  <Display color="GRAY_LIGHT">
+                                    <FormattedMessage
+                                      id="modules.Tasks.approvalDisabled"
+                                      defaultMessage="Approval will be displayed here"
+                                    />
+                                  </Display>
+                                ) : (
+                                  <>
+                                    {isUnapproved ? (
+                                      <>
+                                        {userChosen && userChosen.id ? (
+                                          <ApproveRejectMenu
+                                            width="175px"
+                                            onApprove={() => {
+                                              setFieldValues({
+                                                approvedBy: userChosen,
+                                                approvedAt: formatToGraphql(startOfToday()),
+                                                rejectedBy: null,
+                                                rejectedAt: null,
+                                              });
+                                              setFieldTouched('approvedBy');
+                                              setFieldTouched('approvedAt');
+                                            }}
+                                            onReject={() => {
+                                              setFieldValues({
+                                                approvedBy: null,
+                                                approvedAt: null,
+                                                rejectedBy: userChosen,
+                                                rejectedAt: formatToGraphql(startOfToday()),
+                                              });
+                                              setFieldTouched('rejectedBy');
+                                              setFieldTouched('rejectedAt');
+                                            }}
+                                          />
+                                        ) : (
+                                          <Display color="GRAY_DARK">
+                                            <FormattedMessage
+                                              id="modules.Tasks.chooseUserForApproval"
+                                              defaultMessage="Please choose a user to start the approval"
+                                            />
+                                          </Display>
+                                        )}
+                                      </>
+                                    ) : (
+                                      <TaskApprovalStatusInput
+                                        editable={editable}
+                                        approval={
+                                          values.approvedBy && values.approvedBy.id
+                                            ? {
+                                                approvedAt: values.approvedAt,
+                                                approvedBy: values.approvedBy,
+                                              }
+                                            : null
+                                        }
+                                        rejection={
+                                          values.rejectedBy && values.rejectedBy.id
+                                            ? {
+                                                rejectedBy: values.rejectedBy,
+                                                rejectedAt: values.rejectedAt,
+                                              }
+                                            : null
+                                        }
+                                      />
+                                    )}
+                                  </>
+                                )
+                              }
+                            />
+                          </div>
+                        )}
+                      </ObjectValue>
+                      {values.approvedBy && values.approvedBy.id && (
+                        <FormField
+                          name="approvedAt"
+                          initValue={values.approvedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.approvedDate"
+                                  defaultMessage="APPROVED DATE"
+                                />
+                              }
+                              editable={editable}
+                            />
+                          )}
+                        </FormField>
+                      )}
+                      {values.rejectedBy && values.rejectedBy.id && (
+                        <FormField
+                          name="rejectedAt"
+                          initValue={values.rejectedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.rejectedDate"
+                                  defaultMessage="REJECTED DATE"
+                                />
+                              }
+                              editable={editable}
+                            />
+                          )}
+                        </FormField>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

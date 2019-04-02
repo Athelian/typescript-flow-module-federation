@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
-import apolloClient from 'apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import TaskTemplateGridView from './TaskTemplateGridView';
 import { taskTemplateListQuery } from './query';
@@ -18,12 +16,6 @@ type Props = {
 };
 
 const TaskTemplateList = ({ entityType, ...filtersAndSort }: Props) => {
-  React.useEffect(() => {
-    emitter.once('RELOAD_TASK_TEMPLATE', () => {
-      apolloClient.reFetchObservableQueries();
-    });
-  });
-
   return (
     <Query
       query={taskTemplateListQuery}
@@ -31,9 +23,6 @@ const TaskTemplateList = ({ entityType, ...filtersAndSort }: Props) => {
       variables={{
         ...filtersAndSort,
         page: 1,
-        filterBy: {
-          entityTypes: [entityType],
-        },
       }}
       fetchPolicy="network-only"
       onCompleted={logger.warn}

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
@@ -14,7 +15,6 @@ import {
   prepareParsedTaskTemplate,
 } from 'modules/taskTemplate/form/mutation';
 import query from 'modules/taskTemplate/list/query';
-import emitter from 'utils/emitter';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -47,38 +47,35 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
   onSave = async (
     originalValues: Object,
     values: Object,
-    saveTemplate: Function,
+    saveTaskTemplate: Function,
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
     const { isNew, template, onCancel: closeSlideView } = this.props;
     const input = prepareParsedTaskTemplate(isNew ? null : removeTypename(originalValues), values);
     if (isNew) {
-      const { data } = await saveTemplate({
+      const { data } = await saveTaskTemplate({
         variables: { input },
-        update: (store, { data: { taskCreate } }) => {
+        update: (store, { data: { taskTemplateCreate } }) => {
           const collections = store.readQuery({
             query,
             variables: {
               page: 1,
               perPage: 10,
-              filter: {
-                type: 'Order',
+              filterBy: {
+                entityTypes: [input.entityType],
               },
-              sort: {
+              sortBy: {
                 updatedAt: 'DESCENDING',
               },
             },
           });
-          collections.tasks.nodes.unshift(taskCreate);
-          collections.tasks.totalCount += 1;
-          if (collections.tasks.totalCount % collections.tasks.perPage === 1) {
-            collections.tasks.totalPage += 1;
+          collections.taskTemplates.nodes.unshift(taskTemplateCreate);
+          collections.taskTemplates.totalCount += 1;
+          if (collections.taskTemplates.totalCount % collections.taskTemplates.perPage === 1) {
+            collections.taskTemplates.totalPage += 1;
           }
           store.writeQuery({ query, data: collections });
-          // This is open issue on apollo client repo https://github.com/apollographql/apollo-client/issues/2415
-          // workaround is sending a message to force render
-          // emitter.emit('RELOAD_TEMPLATE');
         },
       });
       const {
@@ -87,12 +84,11 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
-        emitter.emit('RELOAD_TASK_TEMPLATE');
         closeSlideView();
         onSuccess();
       }
     } else if (template.id) {
-      const { data } = await saveTemplate({
+      const { data } = await saveTaskTemplate({
         variables: { id: template.id, input },
       });
       const {
@@ -101,7 +97,6 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
-        emitter.emit('RELOAD_TASK_TEMPLATE');
         closeSlideView();
         onSuccess();
       }
@@ -110,6 +105,12 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
 
   onReset = (formState: Object) => {
     resetFormState(formState);
+  };
+
+  onMutationCompleted = (result: Object) => {
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+    }
   };
 
   render() {
@@ -124,9 +125,10 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
           {taskTemplateContainer => (
             <Mutation
               mutation={isNew ? createTaskTemplateMutation : updateTaskTemplateMutation}
+              onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
-              {(saveTemplate, { loading: isLoading, error: apiError }) => (
+              {(saveTaskTemplate, { loading: isLoading, error: apiError }) => (
                 <Layout
                   navBar={
                     <SlideViewNavBar>
@@ -167,7 +169,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                             this.onSave(
                               taskTemplateContainer.originalValues,
                               taskTemplateContainer.state,
-                              saveTemplate,
+                              saveTaskTemplate,
                               () => {
                                 taskTemplateContainer.onSuccess();
                                 formContainer.onReset();

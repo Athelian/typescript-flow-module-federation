@@ -33,7 +33,7 @@ function useFilter(state: State, cacheKey: string) {
     if (window.localStorage) {
       window.localStorage.setItem(cacheKey, JSON.stringify(filterAndSort));
     }
-  });
+  }, [cacheKey, filterAndSort]);
 
   return {
     filterAndSort,

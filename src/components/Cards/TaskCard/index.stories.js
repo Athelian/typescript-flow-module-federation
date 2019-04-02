@@ -66,7 +66,7 @@ storiesOf('Card', module)
                 dueDate: null,
                 startDate: null,
                 assignedTo: usersMock.splice(1, 3),
-                approvalAssignedTo: [],
+                approvers: [],
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -128,7 +128,7 @@ storiesOf('Card', module)
                 dueDate: null,
                 startDate: null,
                 assignedTo: usersMock.splice(1, 3),
-                approvalAssignedTo: [],
+                approvers: [],
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -198,7 +198,7 @@ storiesOf('Card', module)
                 dueDate: null,
                 startDate: null,
                 assignedTo: usersMock.splice(1, 2),
-                approvalAssignedTo: [],
+                approvers: [],
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -264,7 +264,7 @@ storiesOf('Card', module)
                 dueDate: null,
                 startDate: null,
                 assignedTo: usersMock.splice(1, 2),
-                approvalAssignedTo: [],
+                approvers: [],
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -330,7 +330,7 @@ storiesOf('Card', module)
                 dueDate: null,
                 startDate: null,
                 assignedTo: usersMock.splice(1, 2),
-                approvalAssignedTo: [],
+                approvers: [],
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
@@ -393,7 +393,7 @@ storiesOf('Card', module)
                 dueDate: null,
                 startDate: null,
                 assignedTo: usersMock.splice(1, 3),
-                approvalAssignedTo: [],
+                approvers: [],
                 tags: [
                   {
                     id: 'bicsesovsbnbasgumrk0',
