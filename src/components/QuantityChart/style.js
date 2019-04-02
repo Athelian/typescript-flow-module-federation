@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, fontSizes, colors, layout } from 'styles/common';
+import { borderRadiuses, colors, layout } from 'styles/common';
 
 export const QuantityChartWrapperStyle: string = css`
   position: relative;
@@ -59,9 +59,10 @@ export const BadgeStyle = (positioning: 'top' | 'bottom'): string => css`
   display: flex;
   justify-content: center;
   align-items: center;
-  ${fontSizes.SMALL};
+  font-size: 11px;
   height: 12px;
   min-width: 12px;
+  line-height: 12px;
   ${borderRadiuses.BUTTON};
   font-weight: bold;
   background-color: ${positioning === 'bottom' ? colors.BATCH : colors.SHIPMENT};

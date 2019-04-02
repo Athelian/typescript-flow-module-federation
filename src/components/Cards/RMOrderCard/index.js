@@ -19,13 +19,23 @@ type Props = {
     orderedQuantity: number,
     batchedQuantity: number,
     shippedQuantity: number,
+    batched: number,
+    shipped: number,
   },
 };
 
 export default class RMOrderCard extends React.PureComponent<Props> {
   render() {
     const {
-      order: { poNo, exporter, orderedQuantity, batchedQuantity, shippedQuantity },
+      order: {
+        poNo,
+        exporter,
+        orderedQuantity,
+        batchedQuantity,
+        shippedQuantity,
+        batched,
+        shipped,
+      },
     } = this.props;
 
     return (
@@ -47,6 +57,8 @@ export default class RMOrderCard extends React.PureComponent<Props> {
               orderedQuantity={orderedQuantity}
               batchedQuantity={batchedQuantity}
               shippedQuantity={shippedQuantity}
+              batched={batched}
+              shipped={shipped}
             />
           </div>
         </div>

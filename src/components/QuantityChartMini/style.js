@@ -39,6 +39,24 @@ export const IconStyle: string = css`
   color: ${colors.WHITE};
 `;
 
+export const BadgeStyle = (positioning: 'top' | 'bottom'): string => css`
+  position: absolute;
+  ${positioning}: 0;
+  left: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 9px;
+  height: 10px;
+  min-width: 10px;
+  line-height: 10px;
+  font-weight: bold;
+  ${borderRadiuses.BUTTON};
+  background-color: ${positioning === 'bottom' ? colors.SHIPMENT : colors.BATCH};
+  color: ${colors.WHITE};
+  padding: 0 3px;
+`;
+
 export const FloatingQuantityWrapperStyle: string = css`
   position: absolute;
   top: 7.5px;

@@ -27,6 +27,8 @@ type Props = {
     orderedQuantity: number,
     batchedQuantity: number,
     shippedQuantity: number,
+    batched: number,
+    shipped: number,
   },
 };
 
@@ -40,6 +42,8 @@ export default class RMOrderItemCard extends React.PureComponent<Props> {
         orderedQuantity,
         batchedQuantity,
         shippedQuantity,
+        batched,
+        shipped,
       },
     } = this.props;
 
@@ -63,6 +67,8 @@ export default class RMOrderItemCard extends React.PureComponent<Props> {
               orderedQuantity={orderedQuantity}
               batchedQuantity={batchedQuantity}
               shippedQuantity={shippedQuantity}
+              batched={batched}
+              shipped={shipped}
             />
           </div>
         </div>
