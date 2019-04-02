@@ -28,6 +28,7 @@ export default function Order({
   totalShipped,
   batchCount,
   batchShippedCount,
+  todo,
   tags,
   id,
   orderItems,
@@ -62,6 +63,7 @@ export default function Order({
               shippedQuantity: totalShipped,
               batched: batchCount,
               shipped: batchShippedCount,
+              todo,
             }}
           />
           {(showCloneBadge || isNewOrder) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}

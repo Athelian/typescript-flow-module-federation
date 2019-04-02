@@ -54,6 +54,7 @@ export default function Batch({
   deliveredAt,
   shipment,
   container,
+  todo,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
@@ -85,6 +86,7 @@ export default function Batch({
               deliveredAt,
               shipment,
               container,
+              todo,
             }}
           />
           {(showSplitBadge || showAutoFillBadge || showCloneBadge) && (

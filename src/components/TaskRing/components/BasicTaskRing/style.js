@@ -2,24 +2,24 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, colors, fontSizes } from 'styles/common';
 
-export const TaskRingStyle: string = css`
+export const TaskRingStyle = (size: number): string => css`
   position: relative;
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
   background-color: ${colors.WHITE};
-  width: 20px;
-  height: 20px;
+  width: ${size}px;
+  height: ${size}px;
   flex-shrink: 0;
   border: 2px solid ${colors.GRAY_LIGHT};
 `;
 
-export const NumberStyle: string = css`
+export const NumberStyle = (size: number): string => css`
   color: ${colors.BLACK};
   ${fontSizes.SMALL};
   font-weight: bold;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
+  width: ${size}px;
+  height: ${size}px;
+  line-height: ${size}px;
   text-align: center;
 `;
 

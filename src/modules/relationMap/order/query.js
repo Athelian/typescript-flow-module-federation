@@ -37,6 +37,11 @@ export const batchCardRMFragment = gql`
         id
       }
     }
+    todo {
+      completedCount
+      inProgressCount
+      remainingCount
+    }
   }
 `;
 
@@ -52,6 +57,11 @@ export const orderCardRMFragment = gql`
     batchCount
     batchShippedCount
     shipmentCount
+    todo {
+      completedCount
+      inProgressCount
+      remainingCount
+    }
     exporter {
       ... on Group {
         id
@@ -153,6 +163,11 @@ export const shipmentCardRMFragment = gql`
     }
     inCharges {
       ...userAvatarFragment
+    }
+    todo {
+      completedCount
+      inProgressCount
+      remainingCount
     }
     voyages {
       ... on Voyage {

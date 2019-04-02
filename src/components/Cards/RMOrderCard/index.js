@@ -3,6 +3,7 @@ import * as React from 'react';
 import BaseCard from 'components/Cards';
 import Icon from 'components/Icon';
 import { Display } from 'components/Form';
+import TaskRing from 'components/TaskRing';
 import QuantityChartMini from 'components/QuantityChartMini';
 import {
   RMOrderCardWrapperStyle,
@@ -10,6 +11,7 @@ import {
   PONoWrapperStyle,
   ExporterWrapperStyle,
   ChartWrapperStyle,
+  TaskRingWrapperStyle,
 } from './style';
 
 type Props = {
@@ -21,6 +23,11 @@ type Props = {
     shippedQuantity: number,
     batched: number,
     shipped: number,
+    todo: {
+      completedCount: number,
+      inProgressCount: number,
+      remainingCount: number,
+    },
   },
 };
 
@@ -35,6 +42,7 @@ export default class RMOrderCard extends React.PureComponent<Props> {
         shippedQuantity,
         batched,
         shipped,
+        todo,
       },
     } = this.props;
 
@@ -60,6 +68,10 @@ export default class RMOrderCard extends React.PureComponent<Props> {
               batched={batched}
               shipped={shipped}
             />
+          </div>
+
+          <div className={TaskRingWrapperStyle}>
+            <TaskRing {...todo} size={18} />
           </div>
         </div>
       </BaseCard>

@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { colors, fontSizesWithHeights, presets } from 'styles/common';
 
 export const RMOrderCardWrapperStyle: string = css`
+  position: relative;
   display: flex;
   width: 290px;
   height: 40px;
@@ -36,4 +37,10 @@ export const ChartWrapperStyle: string = css`
   justify-content: center;
   width: 135px;
   padding: 0 5px 0 0;
+`;
+
+export const TaskRingWrapperStyle: string = css`
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
 `;

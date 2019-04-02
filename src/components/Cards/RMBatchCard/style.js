@@ -3,6 +3,7 @@ import { css } from 'react-emotion';
 import { colors, fontSizes, presets } from 'styles/common';
 
 export const RMBatchCardWrapperStyle: string = css`
+  position: relative;
   display: flex;
   width: 290px;
   height: 40px;
@@ -45,8 +46,8 @@ export const DataRowStyle: string = css`
 
 export const RelatedWrapperStyle: string = css`
   display: flex;
-  align-items: flex-end;
-  width: 40px;
+  flex-direction: column;
+  width: 20px;
   height: 40px;
   flex-shrink: 0;
 `;
@@ -59,4 +60,10 @@ export const RelatedIconStyle = (isActive: boolean): string => css`
   height: 20px;
   align-items: center;
   justify-content: center;
+`;
+
+export const TaskRingWrapperStyle: string = css`
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
 `;

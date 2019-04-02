@@ -9,6 +9,7 @@ import BasicTaskRing from './components/BasicTaskRing';
 type OptionalProps = TaskRingDataProps & {
   blackout?: boolean,
   tasks?: Array<Object>,
+  size: number,
 };
 
 type Props = OptionalProps;
@@ -18,6 +19,7 @@ const defaultProps = {
   inProgressCount: 0,
   remainingCount: 0,
   blackout: false,
+  size: 20,
 };
 
 const calculateTasks = (tasks: Array<Object>) => ({
@@ -30,15 +32,23 @@ const calculateTasks = (tasks: Array<Object>) => ({
   ),
 });
 
-const TaskRing = ({ completedCount, inProgressCount, remainingCount, tasks, blackout }: Props) => {
+const TaskRing = ({
+  completedCount,
+  inProgressCount,
+  remainingCount,
+  tasks,
+  blackout,
+  size,
+}: Props) => {
   if (blackout) return <Blackout width="20px" height="20px" />;
   return tasks ? (
-    <BasicTaskRing {...calculateTasks(tasks)} />
+    <BasicTaskRing {...calculateTasks(tasks)} size={size} />
   ) : (
     <BasicTaskRing
       completedCount={completedCount}
       inProgressCount={inProgressCount}
       remainingCount={remainingCount}
+      size={size}
     />
   );
 };

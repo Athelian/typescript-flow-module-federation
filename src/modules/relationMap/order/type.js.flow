@@ -26,6 +26,11 @@ export type BatchProps = {
   container: ?{
     id: string
   },
+  todo: {
+    completedCount: number,
+    inProgressCount: number,
+    remainingCount: number,
+  },
 };
 
 export type OrderItemProps = {
@@ -60,5 +65,10 @@ export type OrderProps = {
   tags: Array<Object>,
   exporter: {
     id: string,
+  },
+  todo: {
+    completedCount: number,
+    inProgressCount: number,
+    remainingCount: number,
   },
 };

@@ -5,6 +5,7 @@ import BaseCard from 'components/Cards';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
+import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
 import {
   RMBatchCardWrapperStyle,
@@ -15,6 +16,7 @@ import {
   DataRowStyle,
   RelatedWrapperStyle,
   RelatedIconStyle,
+  TaskRingWrapperStyle,
 } from './style';
 
 type Props = {
@@ -28,13 +30,18 @@ type Props = {
     deliveredAt: ?string,
     shipment: ?Object,
     container: ?Object,
+    todo: {
+      completedCount: number,
+      inProgressCount: number,
+      remainingCount: number,
+    },
   },
 };
 
 export default class RMBatchCard extends React.PureComponent<Props> {
   render() {
     const {
-      batch: { no, batchedQuantity, totalVolume, deliveredAt, shipment, container },
+      batch: { no, batchedQuantity, totalVolume, deliveredAt, shipment, container, todo },
     } = this.props;
 
     return (
@@ -85,13 +92,17 @@ export default class RMBatchCard extends React.PureComponent<Props> {
           </div>
 
           <div className={RelatedWrapperStyle}>
-            <div className={RelatedIconStyle(!!container)}>
-              <Icon icon="CONTAINER" />
-            </div>
-
             <div className={RelatedIconStyle(!!shipment)}>
               <Icon icon="SHIPMENT" />
             </div>
+
+            <div className={RelatedIconStyle(!!container)}>
+              <Icon icon="CONTAINER" />
+            </div>
+          </div>
+
+          <div className={TaskRingWrapperStyle}>
+            <TaskRing {...todo} size={18} />
           </div>
         </div>
       </BaseCard>
