@@ -54,7 +54,11 @@ export default class RMBatchCard extends React.PureComponent<Props> {
               <Label>
                 <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
               </Label>
-              <FormattedDate value={deliveredAt} />
+              {deliveredAt ? (
+                <FormattedDate value={deliveredAt} />
+              ) : (
+                <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+              )}
             </div>
           </div>
 
@@ -73,11 +77,13 @@ export default class RMBatchCard extends React.PureComponent<Props> {
                 <FormattedMessage id="components.cards.vol" defaultMessage="VOL" />
               </Label>
               <Display align="left">
-                {totalVolume && (
+                {totalVolume ? (
                   <>
                     <FormattedNumber value={totalVolume.value} />
                     {` ${totalVolume.metric}`}
                   </>
+                ) : (
+                  <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
                 )}
               </Display>
             </div>

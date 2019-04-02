@@ -34,7 +34,7 @@
   "components.cards.agreedArrival": "予定到着日",
   "components.cards.actualArrival": "実際到着日",
   "components.cards.due": "期日",
-  "component.card.na": "該当なし",
+  "components.cards.na": "該当なし",
   "components.cards.deleteBatchItem": "本当にこのバッチを削除しますか?",
   "components.cards.deleteBatchItemShipment": "現在シップメントされています。",
   "components.cards.total": "金額合計",

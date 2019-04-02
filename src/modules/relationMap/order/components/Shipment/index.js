@@ -35,12 +35,13 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
   const { hasPermission } = usePermission();
 
   return (
-    <BooleanValue id={`shipment-${id}`}>
+    <BooleanValue>
       {({ value: hovered, set: setToggle }) => (
         <div
           className={wrapperClassName}
           onMouseEnter={() => setToggle(true)}
           onMouseLeave={() => setToggle(false)}
+          id={`shipment-${id}`}
         >
           <ShipmentCard
             shipment={showTag ? { ...shipment, id, no } : { ...shipment, id, no, tags: [] }}

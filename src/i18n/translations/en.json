@@ -34,7 +34,7 @@
   "components.cards.agreedArrival": "AGREED ARRIVAL",
   "components.cards.actualArrival": "ACTUAL ARRIVAL",
   "components.cards.due": "DUE DATE",
-  "component.card.na": "N/A",
+  "components.cards.na": "N/A",
   "components.cards.deleteBatchItem": "Are you sure you want to delete this Batch?",
   "components.cards.deleteBatchItemShipment": "It is being used in a Shipment",
   "components.cards.total": "TOTAL",

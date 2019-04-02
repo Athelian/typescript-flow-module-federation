@@ -43,12 +43,13 @@ export default function Order({
   const { hasPermission } = usePermission();
 
   return (
-    <BooleanValue id={`order-${id}`}>
+    <BooleanValue>
       {({ value: hovered, set: setToggle }) => (
         <div
           className={wrapperClassName}
           onMouseEnter={() => setToggle(true)}
           onMouseLeave={() => setToggle(false)}
+          id={`order-${id}`}
         >
           <RMOrderCard
             order={{
