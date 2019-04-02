@@ -27,6 +27,16 @@ export const batchCardRMFragment = gql`
       ...metricFragment
     }
     deliveredAt
+    shipment {
+      ... on Shipment {
+        id
+      }
+    }
+    container {
+      ... on Container {
+        id
+      }
+    }
   }
 `;
 

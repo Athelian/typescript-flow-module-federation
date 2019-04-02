@@ -52,7 +52,8 @@ export default function Batch({
   totalAdjusted,
   totalVolume,
   deliveredAt,
-  product,
+  shipment,
+  container,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const {
@@ -82,8 +83,9 @@ export default function Batch({
               totalVolume,
               batchedQuantity: quantity + totalAdjusted,
               deliveredAt,
+              shipment,
+              container,
             }}
-            product={product}
           />
           {(showSplitBadge || showAutoFillBadge || showCloneBadge) && (
             <Badge label={findBadgeLabel({ showSplitBadge, showCloneBadge, showAutoFillBadge })} />

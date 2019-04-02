@@ -12,7 +12,7 @@ export const ActionCardWrapperStyle: string = css`
   justify-content: space-between;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.8);
-  z-index: 2;
+  z-index: 1;
   ${borderRadiuses.MAIN};
 `;
 

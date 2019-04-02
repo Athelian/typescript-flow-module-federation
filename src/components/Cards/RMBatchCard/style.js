@@ -1,20 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizes, presets, borderRadiuses } from 'styles/common';
+import { colors, fontSizes, presets } from 'styles/common';
 
 export const RMBatchCardWrapperStyle: string = css`
   display: flex;
   width: 290px;
   height: 40px;
-`;
-
-export const ProductImageStyle: string = css`
-  height: 40px;
-  width: 40px;
-  ${borderRadiuses.MAIN};
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  object-fit: cover;
 `;
 
 export const InfoWrapperStyle: string = css`
@@ -50,4 +41,22 @@ export const DataRowStyle: string = css`
   display: grid;
   grid-template-columns: 36px 1fr;
   width: 100%;
+`;
+
+export const RelatedWrapperStyle: string = css`
+  display: flex;
+  align-items: flex-end;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+`;
+
+export const RelatedIconStyle = (isActive: boolean): string => css`
+  color: ${isActive ? colors.TEAL : colors.GRAY_LIGHT};
+  ${fontSizes.SMALL};
+  display: flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
 `;

@@ -305,7 +305,6 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                     highlight.type === BATCH && highlight.selectedId === orderItem.batches[0].id
                   )}
                   {...orderItem.batches[0]}
-                  product={orderItem.productProvider.product}
                 />
               </>
             ) : (
@@ -374,7 +373,6 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
                           highlight.type === BATCH && highlight.selectedId === batch.id
                         )}
                         {...batch}
-                        product={orderItem.productProvider.product}
                       />
                     </React.Fragment>
                   )

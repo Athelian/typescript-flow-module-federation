@@ -5,15 +5,16 @@ import BaseCard from 'components/Cards';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { Display, Label } from 'components/Form';
-import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
+import Icon from 'components/Icon';
 import {
   RMBatchCardWrapperStyle,
-  ProductImageStyle,
   InfoWrapperStyle,
   NameWrapperStyle,
   DeliveryWrapperStyle,
   DataWrapperStyle,
   DataRowStyle,
+  RelatedWrapperStyle,
+  RelatedIconStyle,
 } from './style';
 
 type Props = {
@@ -25,22 +26,16 @@ type Props = {
       metric: string,
     },
     deliveredAt: ?string,
-  },
-  product: {
-    files: Array<{
-      pathSmall: string,
-    }>,
+    shipment: ?Object,
+    container: ?Object,
   },
 };
 
 export default class RMBatchCard extends React.PureComponent<Props> {
   render() {
     const {
-      batch: { no, batchedQuantity, totalVolume, deliveredAt },
-      product: { files },
+      batch: { no, batchedQuantity, totalVolume, deliveredAt, shipment, container },
     } = this.props;
-
-    const productImage = files && files.length > 0 ? files[0].pathSmall : FALLBACK_IMAGE;
 
     return (
       <BaseCard icon="BATCH" color="BATCH" actions={[]}>
@@ -89,7 +84,15 @@ export default class RMBatchCard extends React.PureComponent<Props> {
             </div>
           </div>
 
-          <img className={ProductImageStyle} src={productImage} alt="product_image" />
+          <div className={RelatedWrapperStyle}>
+            <div className={RelatedIconStyle(!!container)}>
+              <Icon icon="CONTAINER" />
+            </div>
+
+            <div className={RelatedIconStyle(!!shipment)}>
+              <Icon icon="SHIPMENT" />
+            </div>
+          </div>
         </div>
       </BaseCard>
     );

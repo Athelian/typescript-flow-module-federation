@@ -20,11 +20,12 @@ export type BatchProps = {
     metric: string,
   },
   deliveredAt: ?string,
-  product: {
-    files: Array<{
-      pathSmall: string,
-    }>,
-  }
+  shipment: ?{
+    id: string
+  },
+  container: ?{
+    id: string
+  },
 };
 
 export type OrderItemProps = {
