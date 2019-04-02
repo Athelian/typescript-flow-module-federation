@@ -5,6 +5,7 @@ export const taskCardFragment = gql`
   fragment taskCardFragment on Task {
     id
     name
+    approvable
     sort
     entity {
       ... on Model {
@@ -23,6 +24,9 @@ export const taskCardFragment = gql`
     assignedTo {
       ...userAvatarFragment
     }
+    approvers {
+      ...userAvatarFragment
+    }
     startDate
     dueDate
     inProgressBy {
@@ -33,6 +37,14 @@ export const taskCardFragment = gql`
       ...userAvatarFragment
     }
     completedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    rejectedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
     tags {
       ...tagFragment
     }
@@ -87,6 +99,7 @@ export const taskFormInSlideViewFragment = gql`
   fragment taskFormInSlideViewFragment on Task {
     sort
     id
+    approvable
     updatedAt
     updatedBy {
       ...userAvatarFragment
@@ -103,7 +116,18 @@ export const taskFormInSlideViewFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
+    rejectedAt
+    rejectedBy {
+      ...userAvatarFragment
+    }
+    approvedAt
+    approvedBy {
+      ...userAvatarFragment
+    }
     assignedTo {
+      ...userAvatarFragment
+    }
+    approvers {
       ...userAvatarFragment
     }
     tags {
