@@ -113,6 +113,7 @@ class BaseFormField extends React.Component<Props, State> {
   render() {
     const { children, name, activeField, isTouched, errorMessage } = this.props;
     const { value } = this.state;
+
     return children({
       name,
       value,

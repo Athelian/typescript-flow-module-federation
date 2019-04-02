@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, shadows, borderRadiuses, fontSizes, transitions } from 'styles/common';
+import {
+  layout,
+  presets,
+  colors,
+  shadows,
+  borderRadiuses,
+  fontSizes,
+  transitions,
+} from 'styles/common';
 
 export const DocumentWrapperStyle = (isExpanded: boolean): string => css`
   position: relative;
@@ -11,26 +19,23 @@ export const DocumentWrapperStyle = (isExpanded: boolean): string => css`
 
 export const DocumentCardStyle: string = css`
   ${presets.BOX};
-  display: grid;
-  grid-template-columns: 120px;
-  grid-auto-rows: min-content;
-  align-content: space-between;
+  ${layout.GRID_VERTICAL};
   width: 140px;
-  height: 160px;
-  padding: 10px;
-  z-index: 1;
+  height: 165px;
+  grid-gap: 5px;
+  padding: 5px;
 `;
 
 export const FileExtensionIconStyle = (color: string): string => css`
   font-size: 40px;
   text-align: center;
   color: ${colors[color]};
-  margin: 15px 0 5px 0;
 `;
 
 export const BottomWrapperStyle: string = css`
   display: flex;
   justify-content: space-between;
+  width: 130px;
 `;
 
 export const FileNameWrapperStyle: string = css`
@@ -40,12 +45,45 @@ export const FileNameWrapperStyle: string = css`
   color: ${colors.GRAY_DARK};
   justify-content: center;
   align-items: center;
-  width: 100%;
+  flex: 1;
+  padding: 0 0 0 5px;
 `;
 
 export const FileNameStyle: string = css`
   ${presets.ELLIPSIS};
 `;
+
+const getFileStatusColor = (status: string): { textColor: string, backgroundColor: string } => {
+  switch (status) {
+    case 'Draft':
+      return { textColor: 'BLACK', backgroundColor: 'GRAY_SUPER_LIGHT' };
+    case 'Submitted':
+      return { textColor: 'WHITE', backgroundColor: 'BLUE' };
+    case 'Revise':
+      return { textColor: 'WHITE', backgroundColor: 'RED' };
+    case 'Approved':
+      return { textColor: 'WHITE', backgroundColor: 'TEAL' };
+    default:
+      return { textColor: 'BLACK', backgroundColor: 'WHITE' };
+  }
+};
+
+export const FileStatusColoringWrapper = (status: string) => {
+  const coloring = getFileStatusColor(status);
+
+  return css`
+    & > div {
+      & > div {
+        & > div {
+          background-color: ${colors[coloring.backgroundColor]};
+          & > input {
+            color: ${colors[coloring.textColor]};
+          }
+        }
+      }
+    }
+  `;
+};
 
 export const DownloadButtonStyle = (downloadDisabled: boolean): string => css`
   ${presets.BUTTON};
@@ -74,29 +112,6 @@ export const DownloadButtonStyle = (downloadDisabled: boolean): string => css`
   `};
 `;
 
-export const DeleteButtonStyle: string = css`
-  ${presets.BUTTON};
-  ${borderRadiuses.CIRCLE};
-  ${shadows.NAV_BUTTON};
-  ${fontSizes.MAIN};
-  position: absolute;
-  top: -12.5px;
-  right: -12.5px;
-  background-color: #fff;
-  color: ${colors.GRAY_LIGHT};
-  height: 25px;
-  width: 25px;
-  z-index: 2;
-  &:hover {
-    ${shadows.NAV_BUTTON_HOVER};
-    color: ${colors.RED};
-  }
-  &:focus {
-    color: ${colors.RED};
-    border: 1px solid ${colors.RED};
-  }
-`;
-
 export const MemoWrapperStyle = (isExpanded: boolean): string => css`
   position: relative;
   ${presets.BOX};
@@ -113,48 +128,17 @@ export const OpenMemoButtonStyle = (isExpanded: boolean, hasMemo: boolean): stri
   position: absolute;
   ${presets.BUTTON};
   ${borderRadiuses.CIRCLE};
-  width: 40px;
-  height: 40px;
-  right: -10px;
-  top: 60px;
+  width: 30px;
+  height: 30px;
+  right: -15px;
+  top: 65px;
   ${shadows.NAV_BUTTON};
-  border: 2px solid transparent;
-  ${hasMemo
-    ? `
-      background-color: ${colors.TEAL};
-      color: #fff;
-      &:focus {
-        border-color: #fff;
-      }
-    `
-    : `
-      background-color: #fff;
-      color: ${colors.TEAL};
-      &:focus {
-        border-color: ${colors.TEAL}
-      }
-    `};
-  ${isExpanded
-    ? `
-      color: ${colors.GRAY_LIGHT};
-      background-color: #fff;
-      right: -20px;
-      &:focus {
-        border-color: ${colors.TEAL};
-      }
-      &:hover {
-        color: ${colors.TEAL};
-        ${shadows.NAV_BUTTON_HOVER};
-      }
-    `
-    : `
-      justify-content: flex-end;
-      padding-right: 10px;
-      &:hover {
-        right: -20px;
-        padding-right: 7px;
-      }
-    `};
+  background-color: ${colors.WHITE};
+  color: ${hasMemo && !isExpanded ? colors.TEAL : colors.GRAY_LIGHT};
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_SUPER_LIGHT};
+  }
 `;
 
 export const ProgressStyle: string = css`
@@ -162,7 +146,7 @@ export const ProgressStyle: string = css`
   ${layout.LAYOUT};
   ${layout.CENTER_CENTER};
   width: 140px;
-  height: 160px;
+  height: 165px;
   color: ${colors.TEAL};
   font-size: 24px;
 `;

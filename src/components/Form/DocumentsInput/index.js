@@ -31,14 +31,16 @@ type State = {
     name: string,
     path: string,
     type: string,
-    memo: string | null,
+    status: string,
+    memo: ?string,
   }>,
   prevFiles: Array<{
     id: string,
     name: string,
     path: string,
     type: string,
-    memo: string | null,
+    status: string,
+    memo: ?string,
   }>,
 };
 
@@ -63,22 +65,24 @@ class DocumentsInput extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (
       !isEquals(
-        props.values.map(({ id, type, name, path, memo }) => ({
+        props.values.map(({ id, type, name, path, status, memo }) => ({
           id,
           type,
           name,
           path,
+          status,
           memo,
         })),
         state.prevFiles
       )
     ) {
       return {
-        prevFiles: (props.values.map(({ id, type, name, path, memo }) => ({
+        prevFiles: (props.values.map(({ id, type, name, path, status, memo }) => ({
           id,
           type,
           name,
           path,
+          status,
           memo,
         })): Array<any>),
         filesState: (props.values.map(item => ({
@@ -110,6 +114,7 @@ class DocumentsInput extends React.Component<Props, State> {
             type,
             id: uuid(),
             path: '',
+            status: 'Draft',
             memo: '',
             uploading: true,
             progress: 0,
@@ -136,6 +141,7 @@ class DocumentsInput extends React.Component<Props, State> {
                 name,
                 path,
                 type: types[0].type,
+                status: 'Draft',
                 memo: null,
                 uploading: false,
                 progress: 100,
@@ -146,11 +152,12 @@ class DocumentsInput extends React.Component<Props, State> {
             logger.error(error);
             const { values } = this.props;
             this.setState({
-              prevFiles: (values.map(({ id, type, name, path, memo }) => ({
+              prevFiles: (values.map(({ id, type, name, path, status, memo }) => ({
                 id,
                 type,
                 name,
                 path,
+                status,
                 memo,
               })): Array<any>),
               filesState: (values.map(item => ({

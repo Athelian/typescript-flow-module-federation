@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Apr 01 2019 15:46:35 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Apr 02 2019 14:47:22 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27113,6 +27113,11 @@ type BooleanValue {
   boolean: Boolean!
 }
 
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
 type Comment implements Model & Owned {
   entity: EntityPayload!
   content: String!
@@ -28817,6 +28822,7 @@ union FieldValuePayload = FieldValue | BadRequest | Forbidden | NotFound
 type File implements Model & Owned & Memorizable {
   name: String!
   type: FileType!
+  status: FileStatus!
   size: Int!
   mimetype: String!
   path(preset: ResizePreset, width: Int, height: Int): String!
@@ -28837,10 +28843,25 @@ input FileInput {
   id: ID!
   name: String
   type: FileType
+  status: FileStatus
   memo: String
 }
 
 union FilePayload = File | BadRequest | Forbidden | NotFound
+
+enum FileStatus {
+  """Draft"""
+  Draft
+
+  """Submitted"""
+  Submitted
+
+  """Revise"""
+  Revise
+
+  """Approved"""
+  Approved
+}
 
 enum FileType {
   """File"""
@@ -29779,6 +29800,7 @@ interface Model {
 type Mutation {
   login(input: CredentialsInput!): TokenPayload!
   logout: Boolean!
+  changePassword(input: ChangePasswordInput!): EmptyPayload
   userUpdate(id: ID!, input: UserUpdateInput!): UserPayload!
   userAddRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
   userRemoveRole(id: ID!, input: UserRoleInput!): UserRolesPayload!
@@ -29832,6 +29854,7 @@ type Mutation {
   roleDelete(id: ID!): EmptyPayload
   taskCreate(input: TaskCreateInput!): TaskPayload!
   taskUpdate(id: ID!, input: TaskUpdateInput!): TaskPayload!
+  taskUpdateMany(tasks: [TaskUpdateWrapperInput!]!): [TaskPayload!]!
   taskStart(id: ID!): TaskPayload!
   taskComplete(id: ID!): TaskPayload!
   taskDelete(id: ID!): EmptyPayload
@@ -29913,6 +29936,15 @@ enum NotificationType {
   """ShipmentAddForwarder"""
   ShipmentAddForwarder
 
+  """ShipmentUpdateBookingNo"""
+  ShipmentUpdateBookingNo
+
+  """ShipmentUpdateImporterBookingNo"""
+  ShipmentUpdateImporterBookingNo
+
+  """ShipmentUnapprovedDate"""
+  ShipmentUnapprovedDate
+
   """ProductCreate"""
   ProductCreate
 
@@ -29967,11 +29999,11 @@ enum NotificationType {
   """BatchDeleteAssignment"""
   BatchDeleteAssignment
 
-  """BatchUpdateQuantityOffBoard"""
-  BatchUpdateQuantityOffBoard
+  """BatchUpdateQuantity"""
+  BatchUpdateQuantity
 
-  """BatchUpdateQuantityOnBoard"""
-  BatchUpdateQuantityOnBoard
+  """BatchUpdateQuantityInShipment"""
+  BatchUpdateQuantityInShipment
 
   """BatchCreateAdjustmentOffBoard"""
   BatchCreateAdjustmentOffBoard
@@ -30008,6 +30040,12 @@ enum NotificationType {
 
   """ContainerApproveAgreedDate"""
   ContainerApproveAgreedDate
+
+  """ContainerUpdateActualDate"""
+  ContainerUpdateActualDate
+
+  """ContainerApproveActualDate"""
+  ContainerApproveActualDate
 }
 
 type Order implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
@@ -36074,6 +36112,7 @@ input TaskSortInput {
   updatedAt: SortOrder
   startDate: SortOrder
   dueDate: SortOrder
+  entity: SortOrder
 }
 
 type TaskTemplate implements Model & Owned {
@@ -36206,6 +36245,11 @@ input TaskUpdateInput {
   tagIds: [ID!]
   entity: EntityInput
   taskTemplateId: ID
+}
+
+input TaskUpdateWrapperInput {
+  id: ID!
+  input: TaskUpdateInput!
 }
 
 type Timeline {

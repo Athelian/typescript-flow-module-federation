@@ -5,7 +5,8 @@ export type Document = {
   name: string,
   path: string,
   type: string,
-  memo: string | null,
+  status: string,
+  memo: ?string,
 };
 
 export type FileType = {

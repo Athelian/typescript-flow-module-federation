@@ -271,6 +271,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           }}
                           values={transportTypeValues}
                           validator={validator}
+                          saveOnChange
                         >
                           {({ name, ...inputHandlers }) => (
                             <EnumSelectInputFactory
@@ -302,6 +303,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     setFieldValue={setFieldValue}
                     values={values}
                     validator={validator}
+                    saveOnChange
                   >
                     {({ name, ...inputHandlers }) => (
                       <EnumSelectInputFactory

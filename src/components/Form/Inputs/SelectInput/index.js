@@ -20,12 +20,12 @@ class SelectInput extends React.Component<Props, State> {
     const { value, items, itemToValue } = props;
     const { selectedItem } = state;
 
-    if (value !== selectedItem) {
+    if (!isEquals(itemToValue(selectedItem), value)) {
       return {
         selectedItem: value ? (items || []).find(item => isEquals(itemToValue(item), value)) : null,
       };
     }
-    return null;
+    return { selectedItem };
   }
 
   componentDidUpdate(prevProps: Props) {
