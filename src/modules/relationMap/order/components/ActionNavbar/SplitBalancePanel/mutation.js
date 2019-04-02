@@ -1,43 +1,35 @@
 // @flow
 import gql from 'graphql-tag';
-import { metricFragment, tagFragment, badRequestFragment } from 'graphql';
+import {
+  badRequestFragment,
+  metricFragment,
+  tagFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
+  taskTemplateCardFragment,
+  userAvatarFragment,
+} from 'graphql';
+import { batchCardRMFragment } from 'modules/relationMap/order/query';
 
 export const batchBalanceSplitMutation = gql`
   mutation batchBalanceSplit($orderItemId: ID!) {
     batchBalanceSplit(orderItemId: $orderItemId) {
       ... on Batches {
         batches {
-          id
-          no
-          quantity
-          totalAdjusted
-          batchAdjustments {
-            ... on BatchAdjustment {
-              id
-              reason
-              quantity
-              memo
-            }
-          }
-          packageVolume {
-            ...metricFragment
-          }
-          tags {
-            ...tagFragment
-          }
-          orderItem {
-            ... on OrderItem {
-              id
-            }
-          }
+          ...batchCardRMFragment
         }
       }
       ...badRequestFragment
     }
   }
-  ${badRequestFragment}
-  ${metricFragment}
+  ${batchCardRMFragment}
   ${tagFragment}
+  ${metricFragment}
+  ${badRequestFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export default batchBalanceSplitMutation;
