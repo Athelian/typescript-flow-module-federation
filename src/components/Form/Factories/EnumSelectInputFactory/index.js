@@ -33,6 +33,7 @@ type Props = LabelProps &
     isTouched: boolean,
     label?: React.Node,
     enumType: string,
+    hideDropdownArrow: boolean,
     editable: boolean,
     blackout: boolean,
   };
@@ -44,6 +45,7 @@ const defaultProps = {
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
+  hideDropdownArrow: false,
   editable: false,
   blackout: false,
   vertical: false,
@@ -77,6 +79,7 @@ const EnumSelectInputFactory = ({
   onBlur,
   onFocus,
   inputAlign,
+  hideDropdownArrow,
   editable,
   blackout,
 }: Props): React.Node => (
@@ -106,6 +109,7 @@ const EnumSelectInputFactory = ({
         forceHoverStyle,
         placeholder,
         required,
+        hideDropdownArrow,
       };
 
       const optionsConfig = {

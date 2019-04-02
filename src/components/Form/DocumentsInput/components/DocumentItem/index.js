@@ -8,7 +8,9 @@ import {
   DefaultOptions,
   Display,
   TextAreaInputFactory,
+  EnumSelectInputFactory,
 } from 'components/Form';
+import BaseCard, { CardAction } from 'components/Cards';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
@@ -21,7 +23,6 @@ import {
   FileNameWrapperStyle,
   FileNameStyle,
   DownloadButtonStyle,
-  DeleteButtonStyle,
   MemoWrapperStyle,
   OpenMemoButtonStyle,
   ProgressStyle,
@@ -81,72 +82,97 @@ const DocumentItem = ({
     <div className={ProgressStyle}>{`${progress}%`}</div>
   ) : (
     <div className={DocumentWrapperStyle(isExpanded)}>
-      {editable && (
-        <button type="button" className={DeleteButtonStyle} onClick={onRemove}>
-          <Icon icon="REMOVE" />
-        </button>
-      )}
-
-      <div className={DocumentCardStyle}>
-        {editable ? (
-          <SelectInput
-            name={`${name}.type`}
-            value={value.type}
-            onBlur={onBlur}
-            onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
-            readOnly={!editable}
-            items={types}
-            itemToValue={v => (v ? v.type : null)}
-            itemToString={v => (v ? v.label : '')}
-            renderSelect={({ ...rest }) => (
-              <DefaultSelect {...rest} required align="left" width="120px" />
-            )}
-            renderOptions={({ ...rest }) => <DefaultOptions {...rest} align="left" width="120px" />}
-          />
-        ) : (
-          <Display height="30px" align="left">
-            {type ? type.label : ''}
-          </Display>
-        )}
-
-        <div className={FileExtensionIconStyle(fileIcon.color)}>
-          <Icon icon={fileIcon.icon} />
-        </div>
-
-        <div className={BottomWrapperStyle}>
-          <Tooltip message={`${fileName}.${fileExtension}`}>
-            <div className={FileNameWrapperStyle}>
-              <div className={FileNameStyle}>{fileName}</div>
-              {`.${fileExtension}`}
-            </div>
-          </Tooltip>
-
-          {downloadable ? (
-            <button
-              type="button"
-              className={DownloadButtonStyle(false)}
-              onClick={() => {
-                window.open(value.path, '_blank');
-              }}
-            >
-              <Icon icon="DOWNLOAD" />
-            </button>
+      <BaseCard
+        actions={[
+          editable && <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
+        ].filter(Boolean)}
+        showActionsOnHover
+      >
+        <div className={DocumentCardStyle}>
+          {editable ? (
+            <SelectInput
+              name={`${name}.type`}
+              value={value.type}
+              onBlur={onBlur}
+              onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
+              readOnly={!editable}
+              items={types}
+              itemToValue={v => (v ? v.type : null)}
+              itemToString={v => (v ? v.label : '')}
+              renderSelect={({ ...rest }) => (
+                <DefaultSelect {...rest} hideDropdownArrow required align="left" width="130px" />
+              )}
+              renderOptions={({ ...rest }) => (
+                <DefaultOptions {...rest} align="left" width="130px" />
+              )}
+            />
           ) : (
-            <Tooltip
-              message={
-                <FormattedMessage
-                  id="components.documentInput.cantDownload"
-                  defaultMessage="You do not have the rights to download this document"
-                />
-              }
-            >
-              <div className={DownloadButtonStyle(true)}>
-                <Icon icon="DOWNLOAD" />
+            <Display height="30px" align="left" width="130px">
+              {type ? type.label : ''}
+            </Display>
+          )}
+
+          <div className={FileExtensionIconStyle(fileIcon.color)}>
+            <Icon icon={fileIcon.icon} />
+          </div>
+
+          <div className={BottomWrapperStyle}>
+            <Tooltip message={`${fileName}.${fileExtension}`}>
+              <div className={FileNameWrapperStyle}>
+                <div className={FileNameStyle}>{fileName}</div>
+                {`.${fileExtension}`}
               </div>
             </Tooltip>
+
+            {downloadable ? (
+              <button
+                type="button"
+                className={DownloadButtonStyle(false)}
+                onClick={() => {
+                  window.open(value.path, '_blank');
+                }}
+              >
+                <Icon icon="DOWNLOAD" />
+              </button>
+            ) : (
+              <Tooltip
+                message={
+                  <FormattedMessage
+                    id="components.documentInput.cantDownload"
+                    defaultMessage="You do not have the rights to download this document"
+                  />
+                }
+              >
+                <div className={DownloadButtonStyle(true)}>
+                  <Icon icon="DOWNLOAD" />
+                </div>
+              </Tooltip>
+            )}
+          </div>
+
+          {editable ? (
+            <FormField name={`${name}.status`} initValue={value.status} setFieldValue={onChange}>
+              {({ ...inputHandlers }) => (
+                <EnumSelectInputFactory
+                  {...inputHandlers}
+                  enumType="FileStatus"
+                  editable={editable}
+                  inputWidth="130px"
+                  inputHeight="30px"
+                  hideTooltip
+                  inputAlign="left"
+                  required
+                  hideDropdownArrow
+                />
+              )}
+            </FormField>
+          ) : (
+            <Display height="30px" align="left" width="130px">
+              {value.status}
+            </Display>
           )}
         </div>
-      </div>
+      </BaseCard>
 
       <div className={MemoWrapperStyle(isExpanded)}>
         <FormField name={`${name}.memo`} initValue={value.memo} setFieldValue={onChange}>
@@ -156,7 +182,7 @@ const DocumentItem = ({
               isNew
               editable={editable}
               inputWidth="590px"
-              inputHeight="120px"
+              inputHeight="125px"
             />
           )}
         </FormField>
@@ -167,7 +193,7 @@ const DocumentItem = ({
         onClick={toggleMemo}
         className={OpenMemoButtonStyle(isExpanded, !!value.memo)}
       >
-        <Icon icon={isExpanded ? 'CHEVRON_DOWN' : 'MEMO'} />
+        <Icon icon={isExpanded ? 'CHEVRON_LEFT' : 'MEMO'} />
       </button>
     </div>
   );

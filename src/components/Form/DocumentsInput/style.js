@@ -17,7 +17,7 @@ export const AddDocumentStyle: string = css`
   border: 5px dashed rgba(0, 0, 0, 0.2);
   background: none;
   width: 140px;
-  height: 160px;
+  height: 165px;
   &:hover,
   :focus {
     color: ${colors.TEAL};

@@ -85,10 +85,11 @@ export const prepareCreateProductInput = ({
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
       customFields: prepareCustomFieldsData(productProviderCustomFields),
-      files: productProviderFiles.map(({ id: fileId, name: fileName, type, memo }) => ({
+      files: productProviderFiles.map(({ id: fileId, name: fileName, type, status, memo }) => ({
         id: fileId,
         name: fileName,
         type,
+        status,
         memo,
       })),
     })
@@ -161,10 +162,11 @@ export const prepareUpdateProductInput = ({
       exporterId: exporter ? exporter.id : null,
       supplierId: supplier ? supplier.id : null,
       customFields: prepareCustomFieldsData(productProviderCustomFields),
-      files: productProviderFiles.map(({ id: fileId, name: fileName, type, memo }) => ({
+      files: productProviderFiles.map(({ id: fileId, name: fileName, type, status, memo }) => ({
         id: fileId,
         name: fileName,
         type,
+        status,
         memo,
       })),
     })
