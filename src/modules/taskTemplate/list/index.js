@@ -23,9 +23,6 @@ const TaskTemplateList = ({ entityType, ...filtersAndSort }: Props) => {
       variables={{
         ...filtersAndSort,
         page: 1,
-        filterBy: {
-          entityTypes: [entityType],
-        },
       }}
       fetchPolicy="network-only"
       onCompleted={logger.warn}
