@@ -7,7 +7,7 @@ import GridView from 'components/GridView';
 import { BooleanValue } from 'react-values';
 import { TaskCard } from 'components/Cards';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
-import RMTaskListContainer from '../../container';
+import RMrmEditTasksContainer from '../../container';
 
 type Props = {
   tasks: Array<Object>,
@@ -19,15 +19,17 @@ type Props = {
 
 const TaskListInSlide = ({ tasks, initDetailValues, onLoadMore, hasMore, isLoading }: Props) => {
   useEffect(() => {
-    initDetailValues(tasks);
+    if (tasks.length > 0) {
+      initDetailValues(tasks);
+    }
   }, [initDetailValues, tasks]);
 
   return (
-    <Subscribe to={[RMTaskListContainer]}>
-      {taskListContainer => {
+    <Subscribe to={[RMrmEditTasksContainer]}>
+      {rmEditTasksContainer => {
         const {
           state: { tasks: values = [] },
-        } = taskListContainer;
+        } = rmEditTasksContainer;
         return (
           <GridView
             onLoadMore={onLoadMore}
@@ -51,7 +53,7 @@ const TaskListInSlide = ({ tasks, initDetailValues, onLoadMore, hasMore, isLoadi
                       position={task.sort + 1}
                       editable
                       saveOnBlur={value =>
-                        taskListContainer.setDeepFieldValue(`tasks.${index}`, value)
+                        rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value)
                       }
                       onClick={() => toggleTaskForm(true)}
                     />
@@ -61,7 +63,7 @@ const TaskListInSlide = ({ tasks, initDetailValues, onLoadMore, hasMore, isLoadi
                           editable
                           task={{ ...task, sort: index }}
                           onSave={value => {
-                            taskListContainer.setDeepFieldValue(`tasks.${index}`, value);
+                            rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value);
                             toggleTaskForm(false);
                           }}
                         />

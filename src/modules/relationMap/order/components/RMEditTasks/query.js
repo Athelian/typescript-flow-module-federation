@@ -16,7 +16,7 @@ import {
   todoFragment,
 } from 'graphql';
 
-export const editableTaskListQuery = gql`
+const editableTaskListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: TaskFilterInput, $sortBy: TaskSortInput) {
     tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {

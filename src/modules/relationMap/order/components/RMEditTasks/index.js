@@ -17,9 +17,9 @@ import loadMore from 'utils/loadMore';
 import LoadingIcon from 'components/LoadingIcon';
 import messages from 'modules/task/messages';
 import TaskListInSlide from './components/TaskListInSlide';
-import RMTaskListContainer from './container';
-import { editableTaskListQuery } from './query';
-import taskUpdateManyMutation, { prepareTasksForUpdateMany } from './mutation';
+import RMEditTasksContainer from './container';
+import editableTaskListQuery from './query';
+import { taskUpdateManyMutation, prepareTasksForUpdateMany } from './mutation';
 
 type Props = {
   intl: IntlShape,
@@ -76,6 +76,8 @@ const EditableTaskList = (props: Props) => {
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
     { title: intl.formatMessage(messages.startDate), value: 'startDate' },
+    { title: intl.formatMessage(messages.taskName), value: 'name' },
+    { title: intl.formatMessage(messages.hierarchy), value: 'entity' },
   ];
 
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
@@ -91,8 +93,8 @@ const EditableTaskList = (props: Props) => {
 
   return (
     <Provider>
-      <Subscribe to={[RMTaskListContainer, FormContainer]}>
-        {(taskListContainer, formContainer) => (
+      <Subscribe to={[RMEditTasksContainer, FormContainer]}>
+        {(rmEditTasksContainer, formContainer) => (
           <Mutation mutation={taskUpdateManyMutation}>
             {(saveTasks, { loading: isLoading, error: mutationError }) => (
               <Layout
@@ -104,11 +106,11 @@ const EditableTaskList = (props: Props) => {
                       filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
-                    {taskListContainer.isDirty() && (
+                    {rmEditTasksContainer.isDirty() && (
                       <>
                         <ResetButton
                           onClick={() => {
-                            resetFormState(taskListContainer, 'tasks');
+                            resetFormState(rmEditTasksContainer, 'tasks');
                             formContainer.onReset();
                           }}
                         />
@@ -116,11 +118,11 @@ const EditableTaskList = (props: Props) => {
                           isLoading={isLoading}
                           onClick={() =>
                             onSave(
-                              taskListContainer.originalValues,
-                              taskListContainer.state,
+                              rmEditTasksContainer.originalValues,
+                              rmEditTasksContainer.state,
                               saveTasks,
                               () => {
-                                taskListContainer.onSuccess();
+                                rmEditTasksContainer.onSuccess();
                                 formContainer.onReset();
                               },
                               formContainer.onErrors
@@ -161,7 +163,7 @@ const EditableTaskList = (props: Props) => {
                       <TaskListInSlide
                         tasks={getByPathWithDefault([], 'tasks.nodes', data)}
                         onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
-                        initDetailValues={taskListContainer.initDetailValues}
+                        initDetailValues={rmEditTasksContainer.initDetailValues}
                         hasMore={hasMore}
                         isLoading={queryLoading}
                       />

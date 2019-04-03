@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { parseTaskField } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-const taskUpdateManyMutation = gql`
+export const taskUpdateManyMutation = gql`
   mutation taskUpdateMany($tasks: [TaskUpdateWrapperInput!]!) {
     taskUpdateMany(tasks: $tasks) {
       ... on Task {
@@ -12,8 +12,6 @@ const taskUpdateManyMutation = gql`
     }
   }
 `;
-
-export default taskUpdateManyMutation;
 
 export const prepareTasksForUpdateMany = (
   originalValues: Array<Object>,
