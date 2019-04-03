@@ -7,6 +7,7 @@ import type {
   InputWrapperProps,
   InputProps,
 } from 'components/Form/Factories/type';
+import { colors } from 'styles/common';
 import { ExtraToggleButton } from '../components';
 
 type Props = LabelProps &
@@ -106,7 +107,7 @@ const DateInputFactory = ({
     required,
     ...(inputColor
       ? {
-          color: inputColor,
+          color: colors[inputColor],
         }
       : {}),
   };

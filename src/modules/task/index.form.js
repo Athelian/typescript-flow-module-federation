@@ -7,6 +7,7 @@ import { Provider, Subscribe } from 'unstated';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import { decodeId } from 'utils/id';
+import { removeTypename } from 'utils/data';
 import Layout from 'components/Layout';
 import { ResetButton, SaveButton } from 'components/Buttons';
 import NavBar, { EntityIcon } from 'components/NavBar';
@@ -17,7 +18,7 @@ import { taskFormQuery } from './form/query';
 import TaskForm from './form';
 import TaskContainer from './form/container';
 import validator from './form/validator';
-import { updateTaskMutation, prepareTaskUpdateData } from './form/mutation';
+import { updateTaskMutation, prepareParsedTaskInput } from './form/mutation';
 
 type OptionalProps = {
   path: string,
@@ -39,7 +40,11 @@ export default class TaskFormModule extends React.Component<Props> {
     onErrors: Function = () => {}
   ) => {
     const { taskId } = this.props;
-    const input = prepareTaskUpdateData(formData.originalValues, formData.state);
+
+    const input = prepareParsedTaskInput(
+      removeTypename(formData.originalValues),
+      removeTypename(formData.state)
+    );
 
     if (taskId) {
       const { data } = await saveTask({ variables: { input, id: decodeId(taskId) } });

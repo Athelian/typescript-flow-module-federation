@@ -12,7 +12,7 @@ import usePermission from 'hooks/usePermission';
 import { TASK_TEMPLATE_UPDATE } from 'modules/permission/constants/task';
 import { FormContainer } from 'modules/form';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
-import { TasksSectionWrapperStyle, TasksSectionBodyStyle, ItemGridStyle } from './style';
+import { TasksSectionWrapperStyle, TasksSectionBodyStyle } from './style';
 import Tasks from './components/Tasks';
 
 function TaskSectionInTemplate() {
@@ -24,12 +24,12 @@ function TaskSectionInTemplate() {
   return (
     <Subscribe to={[TaskTemplateFormContainer, FormContainer]}>
       {({ state: { entityType, tasks }, setFieldValue }, { setFieldTouched }) => (
-        <SectionWrapper id="task_template_tasks_section">
+        <SectionWrapper id="taskTemplate_taskSection">
           <SectionHeader
             icon="TASK"
             title={
               <>
-                <FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />
+                <FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />
                 {' ('}
                 <FormattedNumber value={tasks.length} />
                 {')'}
@@ -50,8 +50,9 @@ function TaskSectionInTemplate() {
                         isNew: true,
                         name: `task - ${tasks.length + 1}`,
                         assignedTo: [],
-                        approvers: [],
                         tags: [],
+                        approvers: [],
+                        approvable: false,
                       }),
                     ]);
                     setFieldTouched('tasks');
@@ -60,36 +61,34 @@ function TaskSectionInTemplate() {
               )}
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
-              <div className={ItemGridStyle}>
-                <Tasks
-                  isInTemplate
-                  editable={allowUpdate}
-                  removable={allowUpdate}
-                  viewForm={allowUpdate}
-                  type={entityType}
-                  tasks={tasks}
-                  onSwap={(index: number, direction: 'left' | 'right') => {
-                    const nextIndex = direction === 'left' ? index - 1 : index + 1;
+              <Tasks
+                isInTemplate
+                editable={allowUpdate}
+                removable={allowUpdate}
+                viewForm={allowUpdate}
+                type={entityType}
+                tasks={tasks}
+                onSwap={(index: number, direction: 'left' | 'right') => {
+                  const nextIndex = direction === 'left' ? index - 1 : index + 1;
 
-                    if (nextIndex > -1 && nextIndex < tasks.length) {
-                      const clonedTasks = [...tasks];
-                      clonedTasks[nextIndex] = { ...tasks[index] };
-                      clonedTasks[index] = { ...tasks[nextIndex] };
-                      setFieldValue('tasks', clonedTasks);
-                      setFieldTouched(`tasks.${index}`);
-                      setFieldTouched(`tasks.${nextIndex}`);
-                    }
-                  }}
-                  onRemove={({ id }) => {
-                    setFieldValue('tasks', tasks.filter(({ id: itemId }) => id !== itemId));
-                    setFieldTouched(`tasks.${id}`);
-                  }}
-                  onSave={(index, newValue) => {
-                    setFieldValue(`tasks.${index}`, newValue);
+                  if (nextIndex > -1 && nextIndex < tasks.length) {
+                    const clonedTasks = [...tasks];
+                    clonedTasks[nextIndex] = { ...tasks[index] };
+                    clonedTasks[index] = { ...tasks[nextIndex] };
+                    setFieldValue('tasks', clonedTasks);
                     setFieldTouched(`tasks.${index}`);
-                  }}
-                />
-              </div>
+                    setFieldTouched(`tasks.${nextIndex}`);
+                  }
+                }}
+                onRemove={({ id }) => {
+                  setFieldValue('tasks', tasks.filter(({ id: itemId }) => id !== itemId));
+                  setFieldTouched(`tasks.${id}`);
+                }}
+                onSave={(index, newValue) => {
+                  setFieldValue(`tasks.${index}`, newValue);
+                  setFieldTouched(`tasks.${index}`);
+                }}
+              />
             </div>
           </div>
         </SectionWrapper>

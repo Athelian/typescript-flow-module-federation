@@ -147,12 +147,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                         <SectionTabs
                           link="taskTemplate_taskSection"
                           label={
-                            <FormattedMessage
-                              id="modules.TaskTemplates.relationTable"
-                              defaultMessage="TASK"
-                            />
+                            <FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />
                           }
-                          icon="EDIT_TABLE"
+                          icon="TASK"
                         />
                       </JumpToSection>
                       {isNew && <CancelButton onClick={() => onCancel()} />}

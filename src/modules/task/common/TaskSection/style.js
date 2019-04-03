@@ -10,8 +10,6 @@ export const TasksSectionWrapperStyle: string = css`
 `;
 
 export const TasksSectionBodyStyle: string = css`
-  display: flex;
-  flex-direction: column;
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -21,9 +19,6 @@ export const TasksSectionBodyStyle: string = css`
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
-`;
-
-export const ItemGridStyle: string = css`
   display: flex;
   flex-wrap: wrap;
   padding: 15px 0 15px 10px;

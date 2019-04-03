@@ -34,7 +34,7 @@ import {
   parseParentIdField,
   parseArrayOfChildrenField,
   parseCustomFieldsField,
-  parseTasksField,
+  parseTodoField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -214,7 +214,7 @@ export const prepareParsedBatchInput = (
       getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
-    ...parseTasksField(
+    ...parseTodoField(
       getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
       newValues.todo
     ),

@@ -45,7 +45,7 @@ import {
   parseFilesField,
   parseEnumField,
   parseCustomFieldsField,
-  parseTasksField,
+  parseTodoField,
 } from 'utils/data';
 
 export const createShipmentMutation: Object = gql`
@@ -183,12 +183,12 @@ const parsePortField = (key: string, originalPort: ?PortType, newPort: ?PortType
     ...parseEnumField(
       'seaport',
       getByPathWithDefault(null, 'seaport', originalPort),
-      getByPathWithDefault(null, 'seaport', newPort),
+      getByPathWithDefault(null, 'seaport', newPort)
     ),
     ...parseEnumField(
       'airport',
       getByPathWithDefault(null, 'airport', originalPort),
-      getByPathWithDefault(null, 'airport', newPort),
+      getByPathWithDefault(null, 'airport', newPort)
     ),
   };
 
@@ -398,7 +398,7 @@ export const prepareParsedShipmentInput = ({
       }
     ),
     ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
-    ...parseTasksField(
+    ...parseTodoField(
       getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
       newValues.todo
     ),

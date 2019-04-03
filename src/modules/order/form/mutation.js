@@ -38,7 +38,7 @@ import {
   parseArrayOfChildrenField,
   parseCustomFieldsField,
   parseFilesField,
-  parseTasksField,
+  parseTodoField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 import type { OrderForm } from '../type.js.flow';
@@ -169,5 +169,8 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     })
   ),
   ...parseFilesField('files', getByPathWithDefault(null, 'files', originalValues), newValues.files),
-  ...parseTasksField(getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues), newValues.todo),
+  ...parseTodoField(
+    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    newValues.todo
+  ),
 });
