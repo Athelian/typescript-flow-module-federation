@@ -10,16 +10,28 @@ import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
-import { TemplateCard } from 'components/Cards';
+import { TemplateCard, GrayCard } from 'components/Cards';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { TASK_CREATE, TASK_UPDATE, TASK_DELETE } from 'modules/permission/constants/task';
-import { BATCH_TASK_FORM, BATCH_TASK_LIST } from 'modules/permission/constants/batch';
+import {
+  BATCH_TASK_FORM,
+  BATCH_TASK_LIST,
+  BATCH_UPDATE,
+  BATCH_SET_TASKS,
+  BATCH_SET_TASK_TEMPLATE,
+} from 'modules/permission/constants/batch';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
-import { ORDER_TASK_FORM, ORDER_TASK_LIST } from 'modules/permission/constants/order';
+import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { OrderTasksContainer } from 'modules/order/form/containers';
-import { SHIPMENT_TASK_FORM, SHIPMENT_TASK_LIST } from 'modules/permission/constants/shipment';
+import {
+  SHIPMENT_TASK_FORM,
+  SHIPMENT_TASK_LIST,
+  SHIPMENT_UPDATE,
+  SHIPMENT_SET_TASK_TEMPLATE,
+  SHIPMENT_SET_TASKS,
+} from 'modules/permission/constants/shipment';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
@@ -27,48 +39,77 @@ import { TasksSectionWrapperStyle, TasksSectionBodyStyle, TemplateItemStyle } fr
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
-type CompatibleEntityTypes = 'batch' | 'order' | 'shipment' | 'taskTemplate';
+type CompatibleEntityTypes = 'batch' | 'order' | 'shipment';
 
-type OptionalProps = {
-  getConfig: string => Object,
-};
-
-type Props = OptionalProps & {
+type Props = {
   type: CompatibleEntityTypes,
   intl: IntlShape,
 };
 
-const defaultProps = {
-  getConfig: (type: string) => {
-    switch (type) {
-      case 'order':
-        return {
-          taskListPermission: ORDER_TASK_LIST,
-          taskFormPermission: ORDER_TASK_FORM,
-          tasksContainer: OrderTasksContainer,
-        };
-      case 'batch':
-        return {
-          taskListPermission: BATCH_TASK_LIST,
-          taskFormPermission: BATCH_TASK_FORM,
-          tasksContainer: BatchTasksContainer,
-        };
-      default:
-        return {
-          taskListPermission: SHIPMENT_TASK_LIST,
-          taskFormPermission: SHIPMENT_TASK_FORM,
-          tasksContainer: ShipmentTasksContainer,
-        };
-    }
-  },
+const getConfig = (type: string, hasPermission: Function): Object => {
+  switch (type) {
+    case 'order':
+      return {
+        canViewList: hasPermission(ORDER_TASK_LIST),
+        canViewForm: hasPermission(ORDER_TASK_FORM),
+        canAddTasks: hasPermission(TASK_CREATE) && hasPermission(ORDER_UPDATE),
+        canDeleteTasks: hasPermission(TASK_DELETE) && hasPermission(ORDER_UPDATE),
+        canUpdateTasks: hasPermission(TASK_UPDATE) && hasPermission(ORDER_UPDATE),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) && hasPermission(TASK_DELETE) && hasPermission(ORDER_UPDATE),
+        tasksContainer: OrderTasksContainer,
+      };
+    case 'batch':
+      return {
+        canViewList: hasPermission(BATCH_TASK_LIST),
+        canViewForm: hasPermission(BATCH_TASK_FORM),
+        canAddTasks: hasPermission(TASK_CREATE) && hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]),
+        canDeleteTasks:
+          hasPermission(TASK_DELETE) && hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]),
+        canUpdateTasks:
+          hasPermission(TASK_UPDATE) && hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          (hasPermission(BATCH_UPDATE) ||
+            (hasPermission(BATCH_SET_TASK_TEMPLATE) && hasPermission(BATCH_SET_TASKS))),
+        tasksContainer: BatchTasksContainer,
+      };
+    default:
+      return {
+        canViewList: hasPermission(SHIPMENT_TASK_LIST),
+        canViewForm: hasPermission(SHIPMENT_TASK_FORM),
+        canAddTasks:
+          hasPermission(TASK_CREATE) && hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
+        canDeleteTasks:
+          hasPermission(TASK_DELETE) && hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
+        canUpdateTasks:
+          hasPermission(TASK_UPDATE) && hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          (hasPermission(SHIPMENT_UPDATE) ||
+            (hasPermission(SHIPMENT_SET_TASK_TEMPLATE) && hasPermission(SHIPMENT_SET_TASKS))),
+        tasksContainer: ShipmentTasksContainer,
+      };
+  }
 };
 
-function TaskSection({ getConfig, type, intl }: Props) {
-  const { taskListPermission, taskFormPermission, tasksContainer } = getConfig(type);
-
+function TaskSection({ type, intl }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  if (!hasPermission(taskListPermission)) return null;
+
+  const {
+    canViewList,
+    canViewForm,
+    canAddTasks,
+    canDeleteTasks,
+    canUpdateTasks,
+    canUpdateTaskTemplate,
+    tasksContainer,
+  } = getConfig(type, hasPermission);
+
+  if (!canViewList) return null;
 
   return (
     <Subscribe to={[tasksContainer, FormContainer]}>
@@ -96,7 +137,7 @@ function TaskSection({ getConfig, type, intl }: Props) {
           />
           <div className={TasksSectionWrapperStyle}>
             <SectionNavBar>
-              {hasPermission(TASK_CREATE) && (
+              {canAddTasks && (
                 <NewButton
                   label={intl.formatMessage(messages.newTask)}
                   onClick={() => {
@@ -135,15 +176,25 @@ function TaskSection({ getConfig, type, intl }: Props) {
                               description: taskTemplate.description,
                               count: taskTemplate.tasks && taskTemplate.tasks.length,
                             }}
-                            onClick={() => slideToggle(true)}
+                            onClick={() => {
+                              if (canUpdateTaskTemplate) {
+                                slideToggle(true);
+                              }
+                            }}
+                            readOnly={!canUpdateTaskTemplate}
                           />
                         ) : (
-                          <DashedPlusButton
-                            data-testid="selecTaskTemplateButton"
-                            width="195px"
-                            height="125px"
-                            onClick={() => slideToggle(true)}
-                          />
+                          <>
+                            {canUpdateTaskTemplate ? (
+                              <DashedPlusButton
+                                width="195px"
+                                height="125px"
+                                onClick={() => slideToggle(true)}
+                              />
+                            ) : (
+                              <GrayCard width="195px" height="125px" />
+                            )}
+                          </>
                         )}
                       </div>
 
@@ -165,9 +216,9 @@ function TaskSection({ getConfig, type, intl }: Props) {
               }
               <Tasks
                 type={type}
-                editable={hasPermission(TASK_UPDATE)}
-                viewForm={hasPermission(taskFormPermission)}
-                removable={hasPermission(TASK_DELETE)}
+                editable={canUpdateTasks}
+                viewForm={canViewForm}
+                removable={canDeleteTasks}
                 tasks={tasks}
                 onSwap={(index: number, direction: 'left' | 'right') => {
                   const nextIndex = direction === 'left' ? index - 1 : index + 1;
@@ -197,7 +248,5 @@ function TaskSection({ getConfig, type, intl }: Props) {
     </Subscribe>
   );
 }
-
-TaskSection.defaultProps = defaultProps;
 
 export default injectIntl(TaskSection);

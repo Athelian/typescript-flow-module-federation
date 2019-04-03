@@ -38,5 +38,7 @@ export const SHIPMENT_CONTAINER_LIST = 'shipment.containers.list';
 export const SHIPMENT_SET_VESSEL_CODE = 'shipment.shipments.setVesselCode';
 export const SHIPMENT_SET_VESSEL_NAME = 'shipment.shipments.setVesselName';
 export const SHIPMENT_SET_VOYAGES = 'shipment.shipments.setVoyages';
+export const SHIPMENT_SET_TASKS = 'shipment.shipments.setTasks';
+export const SHIPMENT_SET_TASK_TEMPLATE = 'shipment.shipments.setTaskTemplate';
 export const SHIPMENT_TASK_LIST = 'shipment.tasks.list';
 export const SHIPMENT_TASK_FORM = 'shipment.tasks.form';

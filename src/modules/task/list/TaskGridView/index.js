@@ -2,8 +2,6 @@
 import * as React from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import { TASK_CREATE } from 'modules/permission/constants/task';
-import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { TaskCard } from 'components/Cards';
 import { encodeId } from 'utils/id';
@@ -16,14 +14,13 @@ type Props = {
   renderItem?: Function,
 };
 
-const defaultRenderItem = (item: Object, allowCreate: boolean) => (
+const defaultRenderItem = (item: Object) => (
   <TaskCard
     key={item.id}
     position={item.sort + 1}
     task={item}
     onClick={() => navigate(`/task/${encodeId(item.id)}`)}
     showActionsOnHover
-    readOnly={!allowCreate}
   />
 );
 
@@ -32,8 +29,6 @@ const defaultProps = {
 };
 
 const TaskGridView = (props: Props) => {
-  const { hasPermission } = usePermission();
-  const allowCreate = hasPermission(TASK_CREATE);
   const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
 
   return (
@@ -45,7 +40,7 @@ const TaskGridView = (props: Props) => {
       isEmpty={items.length === 0}
       emptyMessage={<FormattedMessage id="modules.Tasks.noItem" defaultMessage="No tasks found" />}
     >
-      {items.map(item => renderItem(item, allowCreate))}
+      {items.map(item => renderItem(item))}
     </GridView>
   );
 };

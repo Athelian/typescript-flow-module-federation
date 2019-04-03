@@ -8,7 +8,7 @@ import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import { FieldItem, Label, Display } from 'components/Form';
+import { FieldItem, Label, Display, Blackout } from 'components/Form';
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import { getLatestDate } from 'utils/shipment';
 import { getByPathWithDefault } from 'utils/fp';
@@ -46,7 +46,7 @@ const defaultProps = {
 
 const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
   const { no, quantity, orderItem, shipment, batchAdjustments, container, todo } = batch;
-  const { order } = orderItem;
+  const order = getByPathWithDefault(null, 'order', orderItem);
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
@@ -76,16 +76,27 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
           <div className={DividerStyle} />
 
           <div className={OrderWrapperStyle}>
-            <Link
-              className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="ORDER" />
-            </Link>
-            <Display align="left">{order.poNo}</Display>
+            {order ? (
+              <>
+                <Link
+                  className={OrderIconStyle}
+                  to={`/order/${encodeId(order.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="ORDER" />
+                </Link>
+                <Display align="left">{order.poNo}</Display>
+              </>
+            ) : (
+              <>
+                <div className={OrderIconStyle}>
+                  <Icon icon="ORDER" />
+                </div>
+                <Blackout height="20px" />
+              </>
+            )}
           </div>
 
           <div className={ShipmentWrapperStyle}>
