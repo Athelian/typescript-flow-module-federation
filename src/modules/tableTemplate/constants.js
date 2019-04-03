@@ -5,7 +5,7 @@ import { getByPath, getByPathWithDefault } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
-
+import FormattedNumber from 'components/FormattedNumber';
 import {
   metrics as weightMetrics,
   convert as weightConvert,
@@ -229,25 +229,116 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.totalItemQuantity,
     name: 'totalItemQuantity',
-    type: 'number',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [] } = values;
+      if (orderItems.length === 0) {
+        return 0;
+      }
+      return orderItems.reduce((total, orderItemId) => {
+        return total + editData.orderItems[orderItemId].quantity;
+      }, 0);
+    },
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        const { orderItems = [] } = values;
+        if (orderItems.length === 0) {
+          return <FormattedNumber value={0} />;
+        }
+
+        const totalItemQuantity = orderItems.reduce((total, orderItemId) => {
+          return total + editData.orderItems[orderItemId].quantity;
+        }, 0);
+        return <FormattedNumber value={totalItemQuantity} />;
+      },
     },
   },
   {
     messageId: orderMessages.totalPrice,
     name: 'orderTotalPrice',
-    type: 'number',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [], currency } = values;
+      if (orderItems.length === 0) {
+        return `0${currency}`;
+      }
+      return `${orderItems.reduce((total, orderItemId) => {
+        return total + editData.orderItems[orderItemId].price.amount;
+      }, 0)}${currency}`;
+    },
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        const { orderItems = [], currency } = values;
+        if (orderItems.length === 0) {
+          return (
+            <>
+              <FormattedNumber value={0} suffix={currency} />
+            </>
+          );
+        }
+
+        const orderTotalPrice = orderItems.reduce((total, orderItemId) => {
+          return total + editData.orderItems[orderItemId].price.amount;
+        }, 0);
+        return (
+          <>
+            <FormattedNumber value={orderTotalPrice} suffix={currency} />
+          </>
+        );
+      },
     },
   },
   {
     messageId: orderMessages.totalVolume,
     name: 'orderTotalVolume',
-    type: 'text',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [] } = values;
+      if (orderItems.length === 0) {
+        return '0m³';
+      }
+
+      const allBatchIds = [];
+      orderItems.forEach(orderItemId => {
+        const { batches = [] } = editData.orderItems[orderItemId] || {};
+        batches.forEach(id => {
+          if (!allBatchIds.includes(id)) allBatchIds.push(id);
+        });
+      });
+
+      const orderTotalVolume = allBatchIds.reduce((total, batchId) => {
+        const { packageQuantity, packageVolume } = editData.batches[batchId] || {};
+        if (!packageVolume || !packageQuantity) return total;
+
+        return packageVolume.metric !== 'cm³' ? packageVolume.value : packageVolume.value / 1e6;
+      }, 0);
+
+      return orderTotalVolume;
+    },
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        const { orderItems = [] } = values;
+        if (orderItems.length === 0) {
+          return <FormattedNumber value={0} suffix="m³" />;
+        }
+
+        const allBatchIds = [];
+        orderItems.forEach(orderItemId => {
+          const { batches = [] } = editData.orderItems[orderItemId] || {};
+          batches.forEach(id => {
+            if (!allBatchIds.includes(id)) allBatchIds.push(id);
+          });
+        });
+
+        const orderTotalVolume = allBatchIds.reduce((total, batchId) => {
+          const { packageQuantity, packageVolume } = editData.batches[batchId] || {};
+          if (!packageVolume || !packageQuantity) return total;
+
+          return packageVolume.metric !== 'cm³' ? packageVolume.value : packageVolume.value / 1e6;
+        }, 0);
+
+        return <FormattedNumber value={orderTotalVolume} suffix="m³" />;
+      },
     },
   },
 ];
@@ -311,9 +402,15 @@ export const orderItemColumnFields = [
   {
     messageId: orderMessages.totalPrice,
     name: 'orderItemTotalPrice',
-    type: 'number',
+    type: 'calculate',
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        console.warn({
+          values,
+          editData,
+        });
+        return JSON.stringify(values.id);
+      },
     },
   },
 ];
@@ -539,25 +636,43 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.totalVolume,
     name: 'shipmentTotalVolume',
-    type: 'text',
+    type: 'calculate',
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        console.warn({
+          values,
+          editData,
+        });
+        return JSON.stringify(values.id);
+      },
     },
   },
   {
     messageId: shipmentMessages.totalContainers,
     name: 'shipmentTotalContainers',
-    type: 'number',
+    type: 'calculate',
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        console.warn({
+          values,
+          editData,
+        });
+        return JSON.stringify(values.id);
+      },
     },
   },
   {
     messageId: shipmentMessages.totalBatchQuantity,
     name: 'shipmentTotalBatchQuantity',
-    type: 'number',
+    type: 'calculate',
     meta: {
-      disabled: true,
+      renderValue: (values: Object, editData: Object) => {
+        console.warn({
+          values,
+          editData,
+        });
+        return JSON.stringify(values.id);
+      },
     },
   },
   {

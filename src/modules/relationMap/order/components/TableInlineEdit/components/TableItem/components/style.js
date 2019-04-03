@@ -1,0 +1,12 @@
+// @flow
+import { css } from 'react-emotion';
+import { borderRadiuses } from 'styles/common';
+
+export const WrapperStyle: string = css`
+  ${borderRadiuses.MAIN};
+  background-color: rgba(0, 0, 0, 0.05);
+  width: 100%;
+  height: 100%;
+`;
+
+export default WrapperStyle;

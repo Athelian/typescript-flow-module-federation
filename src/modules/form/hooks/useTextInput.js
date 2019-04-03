@@ -4,7 +4,6 @@ import { string } from 'yup';
 import type { ValidationObject } from './type.js.flow';
 
 function useTextInput(initialValue: string = '', schema: ValidationObject) {
-  // $FlowFixMe: Missing type annotation.
   const [value, setValue] = useState(initialValue || '');
   const [focus, setFocus] = useState(false);
   const hasError = schema.isRequired
