@@ -1,45 +1,35 @@
 // @flow
 import gql from 'graphql-tag';
-import { metricFragment, tagFragment, badRequestFragment } from 'graphql';
+import {
+  badRequestFragment,
+  metricFragment,
+  tagFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
+  taskTemplateCardFragment,
+  userAvatarFragment,
+} from 'graphql';
+import { batchCardRMFragment } from 'modules/relationMap/order/query';
 
 export const batchSimpleSplitMutation = gql`
   mutation batchSimpleSplit($id: ID!, $input: BatchSimpleSplitInput!) {
     batchSimpleSplit(id: $id, input: $input) {
       ... on Batches {
         batches {
-          ... on Batch {
-            id
-            no
-            quantity
-            totalAdjusted
-            batchAdjustments {
-              ... on BatchAdjustment {
-                id
-                reason
-                quantity
-                memo
-              }
-            }
-            tags {
-              ...tagFragment
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            orderItem {
-              ... on OrderItem {
-                id
-              }
-            }
-          }
+          ...batchCardRMFragment
         }
       }
       ...badRequestFragment
     }
   }
-  ${badRequestFragment}
-  ${metricFragment}
+  ${batchCardRMFragment}
   ${tagFragment}
+  ${metricFragment}
+  ${badRequestFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;
 
 export const batchEqualSplitMutation = gql`
@@ -47,37 +37,18 @@ export const batchEqualSplitMutation = gql`
     batchEqualSplit(id: $id, input: $input) {
       ... on Batches {
         batches {
-          ... on Batch {
-            id
-            no
-            quantity
-            totalAdjusted
-            batchAdjustments {
-              ... on BatchAdjustment {
-                id
-                reason
-                quantity
-                memo
-              }
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            tags {
-              ...tagFragment
-            }
-            orderItem {
-              ... on OrderItem {
-                id
-              }
-            }
-          }
+          ...batchCardRMFragment
         }
       }
       ...badRequestFragment
     }
   }
-  ${badRequestFragment}
-  ${metricFragment}
+  ${batchCardRMFragment}
   ${tagFragment}
+  ${metricFragment}
+  ${badRequestFragment}
+  ${userAvatarFragment}
+  ${taskFormInTemplateFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskTemplateCardFragment}
 `;

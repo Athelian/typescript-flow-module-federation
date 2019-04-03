@@ -16,7 +16,6 @@ import {
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
@@ -30,6 +29,7 @@ import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constant
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
 import { calculateBatchQuantity } from 'modules/batch/form/helper';
+import { prepareParsedOrderInput } from 'modules/order/form/mutation';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
@@ -48,7 +48,7 @@ import {
   cloneShipmentMutation,
   cloneOrderItemMutation,
 } from './ClonePanel/mutation';
-import { updateOrderMutation, prepareUpdateOrderInput } from './MoveToOrderPanel/mutation';
+import { updateOrderMutation } from './MoveToOrderPanel/mutation';
 import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
 import TableView from '../TableInlineEdit';
 
@@ -737,7 +737,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 ...(needToResetPrice
                                   ? {
                                       price: {
-                                        currency: currencies[0],
+                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
                                         amount: 0,
                                       },
                                     }
@@ -751,7 +751,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 ...(needToResetPrice
                                   ? {
                                       price: {
-                                        currency: currencies[0],
+                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
                                         amount: 0,
                                       },
                                     }
@@ -794,7 +794,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 ...(needToResetPrice
                                   ? {
                                       price: {
-                                        currency: currencies[0],
+                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
                                         amount: 0,
                                       },
                                     }
@@ -838,10 +838,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         });
                         const updateOrdersInput = [];
                         orderIds.forEach(orderId => {
-                          const { orderItems: currentOrderItems } = orders[orderId];
+                          const { orderItems: oldOrderItems } = orders[orderId];
                           updateOrdersInput.push({
                             id: orderId,
-                            orderItems: currentOrderItems
+                            orderItems: oldOrderItems
                               .filter(
                                 orderItemId =>
                                   orderItemIds &&
@@ -906,7 +906,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           }
                         });
                         const processBatchIds = [];
-                        const updateOrdersInput = [];
+                        const updateOrdersInput: Array<{
+                          id: string,
+                          oldOrderItems: Array<Object>,
+                          orderItems: Array<Object>,
+                        }> = [];
                         // add order items and batches to target
                         const moveOrderItems = [];
                         orderItemIds.forEach(orderItemId => {
@@ -927,7 +931,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     }
                                   : {}),
                                 batches: [],
-                                isNew: true,
                               });
                             } else {
                               moveOrderItems.push({
@@ -942,11 +945,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   : {}),
                                 batches: orderItem.batches
                                   .filter(batchId => batchIds.includes(batchId))
-                                  .map(batchId => {
-                                    const { totalAdjusted, ...inputBatchFields } = batches[batchId];
-                                    return { isNew: true, ...inputBatchFields };
-                                  }),
-                                isNew: true,
+                                  .map(batchId => batches[batchId]),
                               });
                               processBatchIds.push(...orderItem.batches);
                             }
@@ -963,10 +962,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   return currentBatches.includes(batch.id);
                                 }
                               );
-                              const { totalAdjusted, ...inputBatchFields } = batch;
                               moveOrderItems.push({
                                 ...orderItem,
-                                isNew: true,
                                 ...(needToResetPrice
                                   ? {
                                       price: {
@@ -975,48 +972,39 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       },
                                     }
                                   : {}),
-                                batches: [
-                                  {
-                                    ...inputBatchFields,
-                                    batchAdjustments: inputBatchFields.batchAdjustments
-                                      ? inputBatchFields.batchAdjustments.map(item => ({
-                                          ...item,
-                                          isNew: true,
-                                        }))
-                                      : [],
-                                    isNew: true,
-                                  },
-                                ],
+                                batches: [batch],
                                 quantity: calculateBatchQuantity([batch]),
                               });
                             }
                           }
                         });
 
+                        const oldOrderItems = targetOrder.orderItems.map(orderItemId => {
+                          const orderItem = orderItems[orderItemId];
+                          return {
+                            ...orderItem,
+                            batches: orderItem.batches.map(batchId => batches[batchId]),
+                          };
+                        });
                         updateOrdersInput.push({
                           id: targetOrder.id,
-                          orderItems: [
-                            ...targetOrder.orderItems.map(orderItemId => {
-                              const orderItem = orderItems[orderItemId];
-                              return {
-                                ...orderItem,
-                                batches: orderItem.batches.map(batchId => {
-                                  const { totalAdjusted, ...inputBatchFields } = batches[batchId];
-                                  return { isNew: false, ...inputBatchFields };
-                                }),
-                                isNew: false,
-                              };
-                            }),
-                            ...moveOrderItems,
-                          ],
+                          oldOrderItems,
+                          orderItems: [...oldOrderItems, ...moveOrderItems],
                         });
 
                         // remove order item and batches from original order
                         orderIds.forEach(orderId => {
-                          const { orderItems: currentOrderItems } = orders[orderId];
+                          const { orderItems: existOrderItems } = orders[orderId];
                           updateOrdersInput.push({
                             id: orderId,
-                            orderItems: currentOrderItems
+                            oldOrderItems: existOrderItems.map(orderItemId => {
+                              const orderItem = orderItems[orderItemId];
+                              return {
+                                ...orderItem,
+                                batches: orderItem.batches.map(batchId => batches[batchId]),
+                              };
+                            }),
+                            orderItems: existOrderItems
                               .filter(orderItemId => !orderItemIds.includes(orderItemId))
                               .map(orderItemId => {
                                 const orderItem = orderItems[orderItemId];
@@ -1032,7 +1020,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     : {}),
                                   batches: orderItem.batches
                                     .filter(batchId => !batchIds.includes(batchId))
-                                    .map(batchId => ({ id: batchId, isNew: false })),
+                                    .map(batchId => batches[batchId]),
                                 };
                               }),
                           });
@@ -1051,9 +1039,28 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 mutation: updateOrderMutation,
                                 variables: {
                                   id: item.id,
-                                  input: prepareUpdateOrderInput({
-                                    orderItems: cleanUpData(item.orderItems),
-                                  }),
+                                  input: prepareParsedOrderInput(
+                                    {
+                                      tags: [],
+                                      inCharges: [],
+                                      files: [],
+                                      todo: {
+                                        tasks: [],
+                                      },
+                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                      orderItems: item.oldOrderItems,
+                                    },
+                                    {
+                                      tags: [],
+                                      inCharges: [],
+                                      files: [],
+                                      todo: {
+                                        tasks: [],
+                                      },
+                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                      orderItems: item.orderItems,
+                                    }
+                                  ),
                                 },
                               })
                             )
@@ -1066,7 +1073,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         }
                       }}
                       onClearSelectOrder={() => actions.toggleSelectedOrder('')}
-                      onDelete={async () => {
+                      onDelete={async (currencies: Array<string>) => {
                         const orderItemIds = uiSelectors.targetedOrderItemIds();
                         const batchIds = uiSelectors.targetedBatchIds();
                         const allOrderItemIds = [...orderItemIds];
@@ -1091,12 +1098,17 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         });
 
                         // remove order item and batches from original order
-                        const updateOrdersInput = [];
+                        const updateOrdersInput: Array<{
+                          id: string,
+                          oldOrderItems: Array<Object>,
+                          orderItems: Array<Object>,
+                        }> = [];
                         orderIds.forEach(orderId => {
-                          const { orderItems: currentOrderItems } = orders[orderId];
+                          const { orderItems: oldOrderItems } = orders[orderId];
                           updateOrdersInput.push({
                             id: orderId,
-                            orderItems: currentOrderItems
+                            oldOrderItems,
+                            orderItems: oldOrderItems
                               .filter(orderItemId => !orderItemIds.includes(orderItemId))
                               .map(orderItemId => {
                                 const orderItem = orderItems[orderItemId];
@@ -1117,9 +1129,28 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 mutation: updateOrderMutation,
                                 variables: {
                                   id: item.id,
-                                  input: prepareUpdateOrderInput({
-                                    orderItems: cleanUpData(item.orderItems),
-                                  }),
+                                  input: prepareParsedOrderInput(
+                                    {
+                                      tags: [],
+                                      inCharges: [],
+                                      files: [],
+                                      todo: {
+                                        tasks: [],
+                                      },
+                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                      orderItems: item.oldOrderItems,
+                                    },
+                                    {
+                                      tags: [],
+                                      inCharges: [],
+                                      files: [],
+                                      todo: {
+                                        tasks: [],
+                                      },
+                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                      orderItems: item.orderItems,
+                                    }
+                                  ),
                                 },
                               })
                             )

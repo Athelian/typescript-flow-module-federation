@@ -9,6 +9,7 @@ const errorReport = () => {
     setupLogRocketReact(LogRocket);
     init({
       dsn: process.env.ZENPORT_SENTRY_URL || '',
+      debug: true,
     });
     configureScope(scope => {
       scope.addEventProcessor(async event => {

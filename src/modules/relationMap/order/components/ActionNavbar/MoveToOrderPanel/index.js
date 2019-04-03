@@ -119,7 +119,7 @@ const MoveToOrderPanel = ({
               message={<DeleteConfirmDialog />}
               onConfirm={() => {
                 dialogToggle(false);
-                onDelete();
+                onDelete(currencies);
               }}
             />
           </>
