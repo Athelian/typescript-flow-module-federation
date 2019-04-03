@@ -10,6 +10,7 @@ import {
   metrics as weightMetrics,
   convert as weightConvert,
 } from 'modules/form/helpers/metricInput/weightInput';
+import Tooltip from 'components/Tooltip';
 import {
   metrics as volumeMetrics,
   convert as volumeConvert,
@@ -18,7 +19,13 @@ import {
   metrics as distanceMetrics,
   convert as distanceConvert,
 } from 'modules/form/helpers/metricInput/distanceInput';
-import { mapColumnId } from './helpers';
+import {
+  mapColumnId,
+  calculateOrderTotalVolume,
+  calculateShipmentTotalVolume,
+  calculateShipmentTotalBatchQuantity,
+  calculateShipmentTotalPrice,
+} from './helpers';
 
 export const orderColumns = [
   {
@@ -298,22 +305,9 @@ export const orderColumnFields = [
         return '0m³';
       }
 
-      const allBatchIds = [];
-      orderItems.forEach(orderItemId => {
-        const { batches = [] } = editData.orderItems[orderItemId] || {};
-        batches.forEach(id => {
-          if (!allBatchIds.includes(id)) allBatchIds.push(id);
-        });
-      });
+      const orderTotalVolume = calculateOrderTotalVolume(orderItems, editData);
 
-      const orderTotalVolume = allBatchIds.reduce((total, batchId) => {
-        const { packageQuantity, packageVolume } = editData.batches[batchId] || {};
-        if (!packageVolume || !packageQuantity) return total;
-
-        return packageVolume.metric !== 'cm³' ? packageVolume.value : packageVolume.value / 1e6;
-      }, 0);
-
-      return orderTotalVolume;
+      return `${orderTotalVolume}m³`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
@@ -322,20 +316,7 @@ export const orderColumnFields = [
           return <FormattedNumber value={0} suffix="m³" />;
         }
 
-        const allBatchIds = [];
-        orderItems.forEach(orderItemId => {
-          const { batches = [] } = editData.orderItems[orderItemId] || {};
-          batches.forEach(id => {
-            if (!allBatchIds.includes(id)) allBatchIds.push(id);
-          });
-        });
-
-        const orderTotalVolume = allBatchIds.reduce((total, batchId) => {
-          const { packageQuantity, packageVolume } = editData.batches[batchId] || {};
-          if (!packageVolume || !packageQuantity) return total;
-
-          return packageVolume.metric !== 'cm³' ? packageVolume.value : packageVolume.value / 1e6;
-        }, 0);
+        const orderTotalVolume = calculateOrderTotalVolume(orderItems, editData);
 
         return <FormattedNumber value={orderTotalVolume} suffix="m³" />;
       },
@@ -406,13 +387,21 @@ export const orderItemColumnFields = [
     getFieldValue: (values: Object, editData: Object) => {
       const { id: orderItemId } = values;
       const { price, quantity } = editData.orderItems[orderItemId];
-      return `${price.amount * quantity}${price.currency}`;
+      const [, order] =
+        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
+          currentOrder.orderItems.includes(orderItemId)
+        ) || [];
+      return `${price.amount * quantity}${order.currency}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
         const { id: orderItemId } = values;
         const { price, quantity } = editData.orderItems[orderItemId];
-        return <FormattedNumber value={price.amount * quantity} suffix={price.currency} />;
+        const [, order] =
+          (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
+            currentOrder.orderItems.includes(orderItemId)
+          ) || [];
+        return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
       },
     },
   },
@@ -640,13 +629,16 @@ export const shipmentColumnFields = [
     messageId: shipmentMessages.totalVolume,
     name: 'shipmentTotalVolume',
     type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
+      return `${shipmentTotalVolume}m³`;
+    },
     meta: {
       renderValue: (values: Object, editData: Object) => {
-        console.warn({
-          values,
-          editData,
-        });
-        return JSON.stringify(values.id);
+        const { id: shipmentId } = values;
+        const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
+        return <FormattedNumber value={shipmentTotalVolume} suffix="m³" />;
       },
     },
   },
@@ -654,13 +646,14 @@ export const shipmentColumnFields = [
     messageId: shipmentMessages.totalContainers,
     name: 'shipmentTotalContainers',
     type: 'calculate',
+    getFieldValue: (values: Object) => {
+      const { containerGroups = [] } = values;
+      return containerGroups.length;
+    },
     meta: {
-      renderValue: (values: Object, editData: Object) => {
-        console.warn({
-          values,
-          editData,
-        });
-        return JSON.stringify(values.id);
+      renderValue: (values: Object) => {
+        const { containerGroups = [] } = values;
+        return <FormattedNumber value={containerGroups.length} />;
       },
     },
   },
@@ -668,13 +661,48 @@ export const shipmentColumnFields = [
     messageId: shipmentMessages.totalBatchQuantity,
     name: 'shipmentTotalBatchQuantity',
     type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      return calculateShipmentTotalBatchQuantity(shipmentId, editData);
+    },
     meta: {
       renderValue: (values: Object, editData: Object) => {
-        console.warn({
-          values,
-          editData,
-        });
-        return JSON.stringify(values.id);
+        const { id: shipmentId } = values;
+        return (
+          <FormattedNumber value={calculateShipmentTotalBatchQuantity(shipmentId, editData)} />
+        );
+      },
+    },
+  },
+  {
+    messageId: shipmentMessages.totalPrice,
+    name: 'shipmentTotalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      const { total } = calculateShipmentTotalPrice(shipmentId, editData);
+      if (total < 0) return 'N/A';
+      return total;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: shipmentId } = values;
+        const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);
+        if (total < 0) {
+          return (
+            <Tooltip
+              message={
+                <FormattedMessage
+                  id="modules.Shipments.invalidCurrency"
+                  defaultMessage="Cannot compute this field because this Shipment contains Cargo with different Currencies"
+                />
+              }
+            >
+              <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+            </Tooltip>
+          );
+        }
+        return <FormattedNumber value={total} suffix={allCurrencies[0]} />;
       },
     },
   },
