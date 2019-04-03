@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Provider } from 'unstated';
 import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
@@ -12,12 +13,14 @@ const ProductFormModuleCreationWrapper = withForbidden(ProductFormModuleWrapper,
 const ProductModuleListWrapper = withForbidden(ProductListModule, PRODUCT_LIST);
 
 const ProductApp = () => (
-  <Router>
-    <ProductModuleListWrapper path="/" />
-    <ProductFormModuleCreationWrapper path="new" />
-    <ProductFormModuleCreationWrapper path="clone/:productId" />
-    <ProductFormModuleWrapper path=":productId" />
-  </Router>
+  <Provider>
+    <Router>
+      <ProductModuleListWrapper path="/" />
+      <ProductFormModuleCreationWrapper path="new" />
+      <ProductFormModuleCreationWrapper path="clone/:productId" />
+      <ProductFormModuleWrapper path=":productId" />
+    </Router>
+  </Provider>
 );
 
 export default ProductApp;

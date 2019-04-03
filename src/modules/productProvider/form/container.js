@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy, cleanUpData, cleanUpFiles } from 'utils/data';
+import { removeNulls, cleanFalsy } from 'utils/data';
 import { convertVolume } from 'modules/batch/form/helper';
 
 type Price = {
@@ -45,14 +45,8 @@ type FormState = {
 };
 
 const initValues = {
-  isNew: false,
-  exporter: null,
-  supplier: null,
-  origin: '',
-  packageName: '',
   packageCapacity: 0,
   productionLeadTime: 0,
-  unitType: '',
   unitVolume: {
     metric: 'm³',
     value: 0,
@@ -106,7 +100,6 @@ const initValues = {
     },
   },
   customFields: {
-    mask: null,
     fieldValues: [],
     fieldDefinitions: [],
   },
@@ -148,12 +141,7 @@ export default class ProductProviderContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const { files, ...restValues } = values;
-    const parsedValues: Object = {
-      ...initValues,
-      ...cleanUpData(restValues),
-      files: [...cleanUpFiles(files)],
-    };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
