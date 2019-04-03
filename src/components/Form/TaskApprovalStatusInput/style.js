@@ -10,7 +10,7 @@ export const TaskApprovalStatusInputWrapperStyle = (
   ${borderRadiuses.BUTTON};
   height: 40px;
   width: ${width};
-  cursor: default;
+  cursor: inherit;
   padding: 3px;
   ${isApproved
     ? `
@@ -45,6 +45,7 @@ export const DeactivateButtonStyle: string = css`
   height: 30px;
   width: 30px;
   flex-shrink: 0;
+  cursor: inherit;
   ${shadows.DROPDOWN};
   &:hover,
   :focus {

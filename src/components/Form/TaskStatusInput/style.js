@@ -31,14 +31,14 @@ export const TaskStatusInputWrapperStyle = ({
       }
     `
         : `
-      cursor: default;
+      cursor: inherit;
     `
     }
   `
     : `
     background-color: ${colors.TEAL};
     color: ${colors.WHITE};
-    cursor: default;
+    cursor: inherit;
   `};
 `;
 
@@ -77,6 +77,7 @@ export const TaskStatusButtonStyle: string = css`
   padding: 3px 3px 3px 0;
   border-radius: 0 50% 50% 0;
   color: inherit;
+  cursor: inherit;
 `;
 
 export const TaskStatusInputLabelStyle: string = css`

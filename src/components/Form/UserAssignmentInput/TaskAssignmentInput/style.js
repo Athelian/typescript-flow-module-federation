@@ -29,13 +29,14 @@ export const UserStyle = (isActiveUser: boolean, clickable: boolean): string => 
       clickable
         ? `
           opacity: 0.5;
-        ${presets.BUTTON};
-        &:hover, :focus {
-          opacity: 1;
-        }
+          ${presets.BUTTON};
+          &:hover, :focus {
+            opacity: 1;
+          }
         `
         : `
-        opacity: 0.5 !important;
+          opacity: 0.5 !important;
+          cursor: inherit;
         `
     };
   `}
