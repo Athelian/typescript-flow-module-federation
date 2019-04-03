@@ -403,13 +403,16 @@ export const orderItemColumnFields = [
     messageId: orderMessages.totalPrice,
     name: 'orderItemTotalPrice',
     type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: orderItemId } = values;
+      const { price, quantity } = editData.orderItems[orderItemId];
+      return `${price.amount * quantity}${price.currency}`;
+    },
     meta: {
       renderValue: (values: Object, editData: Object) => {
-        console.warn({
-          values,
-          editData,
-        });
-        return JSON.stringify(values.id);
+        const { id: orderItemId } = values;
+        const { price, quantity } = editData.orderItems[orderItemId];
+        return <FormattedNumber value={price.amount * quantity} suffix={price.currency} />;
       },
     },
   },
