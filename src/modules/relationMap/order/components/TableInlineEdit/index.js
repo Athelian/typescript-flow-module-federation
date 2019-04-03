@@ -5,6 +5,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
 import { getByPathWithDefault } from 'utils/fp';
+import logger from 'utils/logger';
 import TableInlineEdit from './index.table';
 import { findAllPossibleIds } from './helpers';
 import { findIdsQuery, editTableViewQuery } from './query';
@@ -32,6 +33,8 @@ const TableView = (props: Props) => {
         orderItemIds,
       }}
       fetchPolicy="network-only"
+      onCompleted={logger.warn}
+      onError={logger.error}
     >
       {({ data, error, loading }) => {
         if (error) {
@@ -50,7 +53,13 @@ const TableView = (props: Props) => {
 
         const allId = findAllPossibleIds(state.targets, entities);
         return (
-          <Query query={editTableViewQuery} variables={allId} fetchPolicy="network-only">
+          <Query
+            query={editTableViewQuery}
+            variables={allId}
+            fetchPolicy="network-only"
+            onCompleted={logger.warn}
+            onError={logger.error}
+          >
             {({ data: fullData, error: fetchError, loading: isLoading }) => {
               if (fetchError) {
                 return fetchError.message;

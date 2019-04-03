@@ -136,7 +136,7 @@ export default defineMessages({
   },
   totalPrice: {
     id: 'modules.Shipments.totalPrice',
-    defaultMessage: 'TOTAL PRODUCT PRICE',
+    defaultMessage: 'TOTAL PRICE',
   },
   supplier: {
     id: 'modules.Shipments.supplier',

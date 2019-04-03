@@ -226,6 +226,30 @@ export const orderColumnFields = [
     getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
+  {
+    messageId: orderMessages.totalItemQuantity,
+    name: 'totalItemQuantity',
+    type: 'number',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: orderMessages.totalPrice,
+    name: 'orderTotalPrice',
+    type: 'number',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: orderMessages.totalVolume,
+    name: 'orderTotalVolume',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
 ];
 
 export const orderItemColumnFields = [
@@ -282,6 +306,14 @@ export const orderItemColumnFields = [
     type: 'number',
     meta: {
       isRequired: true,
+    },
+  },
+  {
+    messageId: orderMessages.totalPrice,
+    name: 'orderItemTotalPrice',
+    type: 'number',
+    meta: {
+      disabled: true,
     },
   },
 ];
@@ -503,6 +535,30 @@ export const shipmentColumnFields = [
     },
     getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
+  },
+  {
+    messageId: shipmentMessages.totalVolume,
+    name: 'shipmentTotalVolume',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: shipmentMessages.totalContainers,
+    name: 'shipmentTotalContainers',
+    type: 'number',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: shipmentMessages.totalBatchQuantity,
+    name: 'shipmentTotalBatchQuantity',
+    type: 'number',
+    meta: {
+      disabled: true,
+    },
   },
   {
     messageId: shipmentMessages.cargoReady.id,
