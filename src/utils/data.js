@@ -319,8 +319,94 @@ type TaskType = {
   description: ?string,
 };
 
+// Used only in Task Form. For tasks inside other entities, use parseTodoField function.
+export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Object => {
+  if (isEquals(originalTask, newTask)) return {};
+
+  return {
+    ...parseGenericField('name', getByPathWithDefault(null, 'name', originalTask), newTask.name),
+    ...parseDateField(
+      'startDate',
+      getByPathWithDefault(null, 'startDate', originalTask),
+      newTask.startDate
+    ),
+    ...parseDateField(
+      'dueDate',
+      getByPathWithDefault(null, 'dueDate', originalTask),
+      newTask.dueDate
+    ),
+    ...parseArrayOfIdsField(
+      'assignedToIds',
+      getByPathWithDefault([], 'assignedTo', originalTask),
+      newTask.assignedTo
+    ),
+    ...parseParentIdField(
+      'inProgressById',
+      getByPathWithDefault(null, 'inProgressBy', originalTask),
+      newTask.inProgressBy
+    ),
+    ...parseDateField(
+      'inProgressAt',
+      getByPathWithDefault(null, 'inProgressAt', originalTask),
+      newTask.inProgressAt
+    ),
+    ...parseParentIdField(
+      'completedById',
+      getByPathWithDefault(null, 'completedBy', originalTask),
+      newTask.completedBy
+    ),
+    ...parseDateField(
+      'completedAt',
+      getByPathWithDefault(null, 'completedAt', originalTask),
+      newTask.completedAt
+    ),
+    ...parseGenericField(
+      'approvable',
+      getByPathWithDefault(null, 'approvable', originalTask),
+      newTask.approvable
+    ),
+    ...parseArrayOfIdsField(
+      'approverIds',
+      getByPathWithDefault([], 'approvers', originalTask),
+      newTask.approvers
+    ),
+    ...parseParentIdField(
+      'approvedById',
+      getByPathWithDefault(null, 'approvedBy', originalTask),
+      newTask.approvedBy
+    ),
+    ...parseDateField(
+      'approvedAt',
+      getByPathWithDefault(null, 'approvedAt', originalTask),
+      newTask.approvedAt
+    ),
+    ...parseParentIdField(
+      'rejectedById',
+      getByPathWithDefault(null, 'rejectedBy', originalTask),
+      newTask.rejectedBy
+    ),
+    ...parseDateField(
+      'rejectedAt',
+      getByPathWithDefault(null, 'rejectedAt', originalTask),
+      newTask.rejectedAt
+    ),
+    ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalTask), newTask.memo),
+    ...parseMemoField(
+      'description',
+      getByPathWithDefault(null, 'description', originalTask),
+      newTask.description
+    ),
+    ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', originalTask), newTask.tags),
+    ...parseParentIdField(
+      'taskTemplateId',
+      getByPathWithDefault(null, 'taskTemplate', originalTask),
+      newTask.taskTemplate
+    ),
+  };
+};
+
 // Use for Todo (Tasks) field. Make sure to send 'todo' which contains 'tasks'.
-export const parseTasksField = (
+export const parseTodoField = (
   originalTodo: ?{
     tasks: Array<TaskType>,
     taskTemplate: ?{ id: string },
@@ -332,102 +418,16 @@ export const parseTasksField = (
 ): Object => {
   if (isEquals(originalTodo, newTodo)) return {};
 
-  const originalTasks = getByPathWithDefault([], 'tasks', originalTodo);
-  const newTasks = newTodo.tasks;
-
   return {
     todo: {
       ...parseArrayOfChildrenField(
         'tasks',
-        originalTasks,
-        newTasks,
-        (oldTask: ?Object, newTask: Object) => {
-          return {
-            ...(oldTask ? { id: oldTask.id } : {}),
-            ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
-            ...parseGenericField(
-              'approvable',
-              getByPathWithDefault(null, 'approvable', oldTask),
-              newTask.approvable
-            ),
-            ...parseDateField(
-              'startDate',
-              getByPathWithDefault(null, 'startDate', oldTask),
-              newTask.startDate
-            ),
-            ...parseDateField(
-              'dueDate',
-              getByPathWithDefault(null, 'dueDate', oldTask),
-              newTask.dueDate
-            ),
-            ...parseArrayOfIdsField(
-              'assignedToIds',
-              getByPathWithDefault([], 'assignedTo', oldTask),
-              newTask.assignedTo
-            ),
-            ...parseArrayOfIdsField(
-              'approverIds',
-              getByPathWithDefault([], 'approvers', oldTask),
-              newTask.approvers
-            ),
-            ...parseParentIdField(
-              'inProgressById',
-              getByPathWithDefault(null, 'inProgressBy', oldTask),
-              newTask.inProgressBy
-            ),
-            ...parseDateField(
-              'inProgressAt',
-              getByPathWithDefault(null, 'inProgressAt', oldTask),
-              newTask.inProgressAt
-            ),
-            ...parseParentIdField(
-              'completedById',
-              getByPathWithDefault(null, 'completedBy', oldTask),
-              newTask.completedBy
-            ),
-            ...parseDateField(
-              'completedAt',
-              getByPathWithDefault(null, 'completedAt', oldTask),
-              newTask.completedAt
-            ),
-            ...parseParentIdField(
-              'rejectedById',
-              getByPathWithDefault(null, 'rejectedBy', oldTask),
-              newTask.rejectedBy
-            ),
-            ...parseDateField(
-              'rejectedAt',
-              getByPathWithDefault(null, 'rejectedAt', oldTask),
-              newTask.rejectedAt
-            ),
-            ...parseParentIdField(
-              'approvedById',
-              getByPathWithDefault(null, 'approvedBy', oldTask),
-              newTask.approvedBy
-            ),
-            ...parseDateField(
-              'approvedAt',
-              getByPathWithDefault(null, 'approvedAt', oldTask),
-              newTask.approvedAt
-            ),
-            ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldTask), newTask.memo),
-            ...parseMemoField(
-              'description',
-              getByPathWithDefault(null, 'description', oldTask),
-              newTask.description
-            ),
-            ...parseArrayOfIdsField(
-              'tagIds',
-              getByPathWithDefault([], 'tags', oldTask),
-              newTask.tags
-            ),
-            ...parseParentIdField(
-              'taskTemplateId',
-              getByPathWithDefault(null, 'taskTemplate', oldTask),
-              newTask.taskTemplate
-            ),
-          };
-        }
+        getByPathWithDefault([], 'tasks', originalTodo),
+        newTodo.tasks,
+        (oldTask: ?Object, newTask: Object) => ({
+          ...(oldTask ? { id: oldTask.id } : {}),
+          ...parseTaskField(oldTask, newTask),
+        })
       ),
       ...parseParentIdField(
         'taskTemplateId',

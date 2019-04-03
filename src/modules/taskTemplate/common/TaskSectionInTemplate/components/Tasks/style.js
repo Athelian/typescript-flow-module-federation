@@ -26,7 +26,6 @@ export const EmptyMessageStyle: string = css`
   color: ${colors.BLACK};
   text-align: center;
   width: 100%;
-  height: 100%;
   flex: 1;
   display: flex;
   align-items: center;
