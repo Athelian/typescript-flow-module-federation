@@ -34,6 +34,9 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.deliveryPlace} />,
       <FormattedMessage {...orderMessages.inCharge} />,
       <FormattedMessage {...orderMessages.tags} />,
+      <FormattedMessage {...orderMessages.totalItemQuantity} />,
+      <FormattedMessage {...orderMessages.totalPrice} />,
+      <FormattedMessage {...orderMessages.totalVolume} />,
     ],
   },
 ];
@@ -53,6 +56,7 @@ export const orderItemColumns = [
         defaultMessage="UNIT PRICE CURRENCY"
       />,
       <FormattedMessage id="global.quantity" defaultMessage="QUANTITY" />,
+      <FormattedMessage {...orderMessages.totalPrice} />,
     ],
   },
 ];
@@ -104,6 +108,10 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.forwarder} />,
       <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE " />,
       <FormattedMessage {...shipmentMessages.tags} />,
+      <FormattedMessage {...shipmentMessages.totalVolume} />,
+      <FormattedMessage {...shipmentMessages.totalContainers} />,
+      <FormattedMessage {...shipmentMessages.totalBatchQuantity} />,
+      <FormattedMessage {...shipmentMessages.totalPrice} />,
     ],
   },
   {

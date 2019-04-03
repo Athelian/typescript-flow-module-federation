@@ -510,4 +510,8 @@ export default defineMessages({
     id: 'modules,Orders.resetPrice',
     defaultMessage: 'Would you like to reset all Unit Prices to 0?',
   },
+  totalItemQuantity: {
+    id: 'modules,Orders.totalItemQuantity',
+    defaultMessage: 'TOTAL ITEM QUANTITY',
+  },
 });
