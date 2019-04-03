@@ -27,6 +27,6 @@ export const updateTaskMutation = gql`
   ${badRequestFragment}
 `;
 
-export const prepareTaskUpdateData = (originalValues: ?Object, values: Object) => ({
+export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
   ...parseTaskField(originalValues, values),
 });

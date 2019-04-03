@@ -187,9 +187,11 @@ const TaskInfoSection = ({ task, isInTemplate, hideParentInfo }: Props) => {
                           <DateInputFactory
                             name={name}
                             inputColor={
-                              isBefore(new Date(values.dueDate), new Date()) && status !== COMPLETED
+                              values.dueDate &&
+                              isBefore(new Date(values.dueDate), new Date()) &&
+                              status !== COMPLETED
                                 ? 'RED'
-                                : null
+                                : 'BLACK'
                             }
                             {...inputHandlers}
                             originalValue={originalValues[name]}
