@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
@@ -177,6 +178,11 @@ class ProductFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateProductResponse | UpdateProductResponse) => {
+    if (!result) {
+      toast.error('There was an error. Please try again later');
+      return;
+    }
+
     if (this.isNewOrClone() && result.productCreate) {
       const { productCreate } = result;
 
