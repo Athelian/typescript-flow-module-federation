@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Apr 02 2019 14:47:22 GMT+0900 (Tokyo Standard Time)
+# timestamp: Wed Apr 03 2019 11:39:27 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26919,6 +26919,7 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
+  autoCalculatePackageVolume: Boolean!
   packageSize: Size
   packageCapacity: Float
   tags: [TagPayload!]!
@@ -27014,6 +27015,7 @@ input BatchCreateInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
@@ -27091,6 +27093,7 @@ input BatchUpdateInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
@@ -27186,6 +27189,7 @@ input ContainerBatchInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
@@ -30199,6 +30203,7 @@ input OrderItemBatchCreateInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
@@ -30223,6 +30228,7 @@ input OrderItemBatchUpdateInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
@@ -30360,6 +30366,7 @@ interface Package {
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
+  autoCalculatePackageVolume: Boolean!
   packageSize: Size
   packageCapacity: Float
 }
@@ -30560,6 +30567,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
+  autoCalculatePackageVolume: Boolean!
   packageSize: Size
   packageCapacity: Float
   files: [FilePayload!]!
@@ -30581,6 +30589,7 @@ input ProductProviderCreateInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   files: [FileInput!]
@@ -30633,6 +30642,7 @@ input ProductProviderUpdateInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   files: [FileInput!]
@@ -35746,6 +35756,7 @@ input ShipmentBatchInput {
   packageName: String
   packageGrossWeight: MetricValueInput
   packageVolume: MetricValueInput
+  autoCalculatePackageVolume: Boolean
   packageSize: SizeInput
   packageCapacity: Float
   memo: String
