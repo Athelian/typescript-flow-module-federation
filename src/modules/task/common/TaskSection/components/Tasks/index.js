@@ -64,7 +64,7 @@ const Tasks = ({
                   __typename: type,
                 },
               }}
-              position={index + 1}
+              position={task.sort + 1}
               hideParentInfo
               saveOnBlur={newValue => onSave(index, newValue)}
               onClick={viewForm ? () => selectTaskSlideToggle(true) : () => {}}

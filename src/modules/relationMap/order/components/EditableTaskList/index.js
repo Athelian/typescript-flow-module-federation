@@ -134,6 +134,7 @@ const EditableTaskList = (props: Props) => {
               >
                 {mutationError && <p>Error: Please try again.</p>}
                 <Query
+                  key={JSON.stringify(filterAndSort)}
                   query={editableTaskListQuery}
                   variables={{
                     ...queryVariables,
@@ -148,7 +149,6 @@ const EditableTaskList = (props: Props) => {
                     if (queryError) {
                       return queryError.message;
                     }
-                    console.log({ queryLoading, data });
                     if (queryLoading) {
                       return <LoadingIcon />;
                     }
