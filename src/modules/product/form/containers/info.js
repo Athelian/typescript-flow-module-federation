@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy, cleanUpData } from 'utils/data';
+import { removeNulls, cleanFalsy } from 'utils/data';
 
 type FormState = {
   name?: string,
@@ -55,7 +55,7 @@ export default class ProductInfoContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = cleanUpData(values);
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
