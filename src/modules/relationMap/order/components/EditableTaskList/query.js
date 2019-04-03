@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  taskFormInSlideViewFragment,
+  taskFormFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -17,43 +17,17 @@ import {
 } from 'graphql';
 
 export const editableTaskListQuery = gql`
-  query($orderIds: [ID!]!, $batchIds: [ID!]!, $shipmentIds: [ID!]!) {
-    orders: ordersByIDs(ids: $orderIds) {
-      ... on Order {
-        id
-        ...orderCardFragment
-        todo {
-          tasks {
-            ...taskFormInSlideViewFragment
-          }
-        }
+  query($page: Int!, $perPage: Int!, $filterBy: TaskFilterInput, $sortBy: TaskSortInput) {
+    tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+      nodes {
+        ...taskFormFragment
       }
-    }
-    batches: batchesByIDs(ids: $batchIds) {
-      ... on Batch {
-        id
-        ...batchCardFragment
-        todo {
-          tasks {
-            ...taskFormInSlideViewFragment
-          }
-        }
-      }
-    }
-    shipments: shipmentsByIDs(ids: $shipmentIds) {
-      ... on Shipment {
-        id
-        ...shipmentCardFragment
-        todo {
-          tasks {
-            ...taskFormInSlideViewFragment
-          }
-        }
-      }
+      page
+      totalPage
     }
   }
 
-  ${taskFormInSlideViewFragment}
+  ${taskFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
