@@ -100,7 +100,6 @@ const CustomFieldsFactory = ({
                           {({ initDetailValues }) => (
                             <CustomFieldsForm
                               entityType={entityType}
-                              onCancel={() => slideToggle(false)}
                               onSave={(value: Object) => {
                                 if (value.mask) {
                                   setFieldValue('customFields', {
