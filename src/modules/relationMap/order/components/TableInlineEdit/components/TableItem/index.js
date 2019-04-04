@@ -16,6 +16,7 @@ import {
   InlineMetricInput,
   InlineForwarderInput,
   InlineTimeLineInput,
+  AutoCalculate,
 } from './components';
 
 type OptionalProps = {
@@ -33,6 +34,7 @@ type Props = OptionalProps & {
   }>,
   values: ?Object,
   validator: Object,
+  editData: Object,
 };
 
 const defaultProps = {
@@ -46,17 +48,22 @@ function renderItem({
   name,
   meta,
   values,
+  editData,
 }: {
   id: string,
   value: any,
   type: string,
   name: string,
   values: Object,
+  editData: Object,
   meta?: Object,
 }) {
   switch (type) {
     case 'number':
       return <InlineNumberInput name={name} value={value} {...meta} id={id} />;
+
+    case 'calculate':
+      return <AutoCalculate values={values} editData={editData} {...meta} id={id} />;
 
     case 'numberAdjustment': {
       const totalAdjustment = getByPath('totalAdjusted', values) || 0;
@@ -111,25 +118,19 @@ function renderItem({
   }
 }
 
-function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) {
+function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo }: Props) {
   if (!values) return null;
 
   return (
     <div className={WrapperStyle}>
       {fields.map(({ name, type, meta, getFieldValue, getFieldName }, fieldCounter) => {
-        const value = getFieldValue ? getFieldValue(values) : getByPath(name, values);
+        const value = getFieldValue ? getFieldValue(values, editData) : getByPath(name, values);
         const fieldName = getFieldName ? getFieldName(values) : name;
         const cellName = `${cell}.${fieldName}`;
         const id = `${rowNo}-${fieldCounter + columnNo + 1}`;
         return (
           <div className={ItemStyle} key={name}>
-            <FormField
-              key={id}
-              name={cellName}
-              initValue={value}
-              validator={validator}
-              values={values}
-            >
+            <FormField name={cellName} initValue={value} validator={validator} values={values}>
               {() =>
                 renderItem({
                   id,
@@ -138,6 +139,7 @@ function TableItem({ cell, fields, values, validator, rowNo, columnNo }: Props) 
                   meta,
                   value,
                   values,
+                  editData,
                 })
               }
             </FormField>

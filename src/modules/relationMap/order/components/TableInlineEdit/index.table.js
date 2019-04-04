@@ -643,6 +643,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               cell={`shipments.${shipmentId}`}
                               fields={shipmentColumnFieldsFilter}
                               values={editData.shipments[shipmentId]}
+                              editData={editData}
                               validator={shipmentValidator}
                             />
                           </div>
@@ -654,6 +655,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               key={`shipments.customFields.1.${shipmentId}`}
                               fields={shipmentCustomFieldsFilter}
                               values={editData.shipments[shipmentId]}
+                              editData={editData}
                               validator={shipmentValidator}
                             />
                           </div>
@@ -686,6 +688,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                 cell={`orders.${order.data.id}`}
                                 fields={orderColumnFieldsFilter}
                                 values={editData.orders[orderId]}
+                                editData={editData}
                                 validator={orderValidator}
                               />
                             ) : (
@@ -699,6 +702,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                     cell={`orders.${order.data.id}`}
                                     fields={orderColumnFieldsFilter}
                                     values={editData.orders[orderId]}
+                                    editData={editData}
                                     validator={orderValidator}
                                   />
                                 ) : (
@@ -718,6 +722,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                           cell={`orders.${order.data.id}`}
                                           fields={orderColumnFieldsFilter}
                                           values={editData.orders[orderId]}
+                                          editData={editData}
                                           validator={orderValidator}
                                         />
                                       ))}
@@ -790,6 +795,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                     key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                                     fields={orderItemColumnFieldsFilter}
                                     values={editData.orderItems[orderItem.data.id]}
+                                    editData={editData}
                                     validator={orderValidator}
                                   />
                                 ) : (
@@ -806,6 +812,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                           key={`orderItem.${counter + 1}.duplication.${batchId}`}
                                           fields={orderItemColumnFieldsFilter}
                                           values={editData.orderItems[orderItem.data.id]}
+                                          editData={editData}
                                           validator={orderValidator}
                                         />
                                       ))}
@@ -876,6 +883,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                         key={batch.id}
                                         fields={batchColumnFieldsFilter}
                                         values={setPackageBatchData(editData.batches[batch.id])}
+                                        editData={editData}
                                         validator={batchValidator}
                                       />
                                     ))
@@ -967,6 +975,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                         cell={`shipments.${shipment.data.id}`}
                                         fields={shipmentColumnFieldsFilter}
                                         values={editData.shipments[shipment.data.id]}
+                                        editData={editData}
                                         validator={shipmentValidator}
                                       />
                                     );

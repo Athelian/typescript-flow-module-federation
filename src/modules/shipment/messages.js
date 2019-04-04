@@ -136,7 +136,7 @@ export default defineMessages({
   },
   totalPrice: {
     id: 'modules.Shipments.totalPrice',
-    defaultMessage: 'TOTAL PRODUCT PRICE',
+    defaultMessage: 'TOTAL PRICE',
   },
   supplier: {
     id: 'modules.Shipments.supplier',
@@ -549,5 +549,13 @@ export default defineMessages({
   actualDateLabel: {
     id: 'modules.Shipments.actualDateLabel',
     defaultMessage: 'ACTUAL',
+  },
+  totalContainers: {
+    id: 'modules.Shipments.totalContainers',
+    defaultMessage: 'TOTAL CONTAINERS',
+  },
+  totalBatchQuantity: {
+    id: 'modules.Shipments.totalBatchQuantity',
+    defaultMessage: 'TOTAL BATCH QUANTITY',
   },
 });

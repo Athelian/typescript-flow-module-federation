@@ -10,6 +10,7 @@ import InlineProductProvider from './InlineProductProvider';
 import InlineMetricInput from './InlineMetricInput';
 import InlineForwarderInput from './InlineForwarderInput';
 import InlineTimeLineInput from './InlineTimeLineInput';
+import AutoCalculate from './AutoCalculate';
 
 export {
   InlineTextInput,
@@ -23,4 +24,5 @@ export {
   InlineMetricInput,
   InlineForwarderInput,
   InlineTimeLineInput,
+  AutoCalculate,
 };

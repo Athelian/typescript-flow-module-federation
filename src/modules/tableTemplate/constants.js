@@ -5,11 +5,12 @@ import { getByPath, getByPathWithDefault } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
-
+import FormattedNumber from 'components/FormattedNumber';
 import {
   metrics as weightMetrics,
   convert as weightConvert,
 } from 'modules/form/helpers/metricInput/weightInput';
+import Tooltip from 'components/Tooltip';
 import {
   metrics as volumeMetrics,
   convert as volumeConvert,
@@ -18,7 +19,13 @@ import {
   metrics as distanceMetrics,
   convert as distanceConvert,
 } from 'modules/form/helpers/metricInput/distanceInput';
-import { mapColumnId } from './helpers';
+import {
+  mapColumnId,
+  calculateOrderTotalVolume,
+  calculateShipmentTotalVolume,
+  calculateShipmentTotalBatchQuantity,
+  calculateShipmentTotalPrice,
+} from './helpers';
 
 export const orderColumns = [
   {
@@ -34,6 +41,9 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.deliveryPlace} />,
       <FormattedMessage {...orderMessages.inCharge} />,
       <FormattedMessage {...orderMessages.tags} />,
+      <FormattedMessage {...orderMessages.totalItemQuantity} />,
+      <FormattedMessage {...orderMessages.totalPrice} />,
+      <FormattedMessage {...orderMessages.totalVolume} />,
     ],
   },
 ];
@@ -53,6 +63,7 @@ export const orderItemColumns = [
         defaultMessage="UNIT PRICE CURRENCY"
       />,
       <FormattedMessage id="global.quantity" defaultMessage="QUANTITY" />,
+      <FormattedMessage {...orderMessages.totalPrice} />,
     ],
   },
 ];
@@ -104,6 +115,10 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.forwarder} />,
       <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE " />,
       <FormattedMessage {...shipmentMessages.tags} />,
+      <FormattedMessage {...shipmentMessages.totalVolume} />,
+      <FormattedMessage {...shipmentMessages.totalContainers} />,
+      <FormattedMessage {...shipmentMessages.totalBatchQuantity} />,
+      <FormattedMessage {...shipmentMessages.totalPrice} />,
     ],
   },
   {
@@ -218,6 +233,95 @@ export const orderColumnFields = [
     getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
+  {
+    messageId: orderMessages.totalItemQuantity,
+    name: 'totalItemQuantity',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [] } = values;
+      if (orderItems.length === 0) {
+        return 0;
+      }
+      return orderItems.reduce((total, orderItemId) => {
+        return total + editData.orderItems[orderItemId].quantity;
+      }, 0);
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { orderItems = [] } = values;
+        if (orderItems.length === 0) {
+          return <FormattedNumber value={0} />;
+        }
+
+        const totalItemQuantity = orderItems.reduce((total, orderItemId) => {
+          return total + editData.orderItems[orderItemId].quantity;
+        }, 0);
+        return <FormattedNumber value={totalItemQuantity} />;
+      },
+    },
+  },
+  {
+    messageId: orderMessages.totalPrice,
+    name: 'orderTotalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [], currency } = values;
+      if (orderItems.length === 0) {
+        return `0${currency}`;
+      }
+      return `${orderItems.reduce((total, orderItemId) => {
+        return total + editData.orderItems[orderItemId].price.amount;
+      }, 0)}${currency}`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { orderItems = [], currency } = values;
+        if (orderItems.length === 0) {
+          return (
+            <>
+              <FormattedNumber value={0} suffix={currency} />
+            </>
+          );
+        }
+
+        const orderTotalPrice = orderItems.reduce((total, orderItemId) => {
+          return total + editData.orderItems[orderItemId].price.amount;
+        }, 0);
+        return (
+          <>
+            <FormattedNumber value={orderTotalPrice} suffix={currency} />
+          </>
+        );
+      },
+    },
+  },
+  {
+    messageId: orderMessages.totalVolume,
+    name: 'orderTotalVolume',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [] } = values;
+      if (orderItems.length === 0) {
+        return '0m³';
+      }
+
+      const orderTotalVolume = calculateOrderTotalVolume(orderItems, editData);
+
+      return `${orderTotalVolume}m³`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { orderItems = [] } = values;
+        if (orderItems.length === 0) {
+          return <FormattedNumber value={0} suffix="m³" />;
+        }
+
+        const orderTotalVolume = calculateOrderTotalVolume(orderItems, editData);
+
+        return <FormattedNumber value={orderTotalVolume} suffix="m³" />;
+      },
+    },
+  },
 ];
 
 export const orderItemColumnFields = [
@@ -274,6 +378,31 @@ export const orderItemColumnFields = [
     type: 'number',
     meta: {
       isRequired: true,
+    },
+  },
+  {
+    messageId: orderMessages.totalPrice,
+    name: 'orderItemTotalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: orderItemId } = values;
+      const { price, quantity } = editData.orderItems[orderItemId];
+      const [, order] =
+        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
+          currentOrder.orderItems.includes(orderItemId)
+        ) || [];
+      return `${price.amount * quantity}${order.currency}`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: orderItemId } = values;
+        const { price, quantity } = editData.orderItems[orderItemId];
+        const [, order] =
+          (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
+            currentOrder.orderItems.includes(orderItemId)
+          ) || [];
+        return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
+      },
     },
   },
 ];
@@ -495,6 +624,87 @@ export const shipmentColumnFields = [
     },
     getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
+  },
+  {
+    messageId: shipmentMessages.totalVolume,
+    name: 'shipmentTotalVolume',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
+      return `${shipmentTotalVolume}m³`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: shipmentId } = values;
+        const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
+        return <FormattedNumber value={shipmentTotalVolume} suffix="m³" />;
+      },
+    },
+  },
+  {
+    messageId: shipmentMessages.totalContainers,
+    name: 'shipmentTotalContainers',
+    type: 'calculate',
+    getFieldValue: (values: Object) => {
+      const { containerGroups = [] } = values;
+      return containerGroups.length;
+    },
+    meta: {
+      renderValue: (values: Object) => {
+        const { containerGroups = [] } = values;
+        return <FormattedNumber value={containerGroups.length} />;
+      },
+    },
+  },
+  {
+    messageId: shipmentMessages.totalBatchQuantity,
+    name: 'shipmentTotalBatchQuantity',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      return calculateShipmentTotalBatchQuantity(shipmentId, editData);
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: shipmentId } = values;
+        return (
+          <FormattedNumber value={calculateShipmentTotalBatchQuantity(shipmentId, editData)} />
+        );
+      },
+    },
+  },
+  {
+    messageId: shipmentMessages.totalPrice,
+    name: 'shipmentTotalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      const { total } = calculateShipmentTotalPrice(shipmentId, editData);
+      if (total < 0) return 'N/A';
+      return total;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: shipmentId } = values;
+        const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);
+        if (total < 0) {
+          return (
+            <Tooltip
+              message={
+                <FormattedMessage
+                  id="modules.Shipments.invalidCurrency"
+                  defaultMessage="Cannot compute this field because this Shipment contains Cargo with different Currencies"
+                />
+              }
+            >
+              <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+            </Tooltip>
+          );
+        }
+        return <FormattedNumber value={total} suffix={allCurrencies[0]} />;
+      },
+    },
   },
   {
     messageId: shipmentMessages.cargoReady.id,
