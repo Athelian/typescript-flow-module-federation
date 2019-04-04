@@ -24,10 +24,23 @@ type FormState = {
 };
 
 export const initValues = {
+  name: null,
+  dueDate: null,
+  startDate: null,
+  description: null,
   tags: [],
+  memo: null,
   assignedTo: [],
+  inProgressBy: null,
+  inProgressAt: null,
+  completedBy: null,
+  completedAt: null,
   approvers: [],
   approvable: false,
+  rejectedBy: null,
+  rejectedAt: null,
+  approvedBy: null,
+  approvedAt: null,
 };
 
 export default class TaskContainer extends Container<FormState> {
