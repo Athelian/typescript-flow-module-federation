@@ -68,6 +68,7 @@ const EditableTaskList = (props: Props) => {
 
   const uiSelectors = selectors(state);
   const orderIds = uiSelectors.targetedOrderIds();
+  const orderItemIds = uiSelectors.targetedOrderItemIds();
   const batchIds = uiSelectors.targetedBatchIds();
   const shipmentIds = uiSelectors.targetedShipmentIds();
 
@@ -87,6 +88,7 @@ const EditableTaskList = (props: Props) => {
 
   const entities = [
     ...orderIds.map(orderId => ({ orderId })),
+    ...orderItemIds.map(orderItemId => ({ orderItemId })),
     ...batchIds.map(batchId => ({ batchId })),
     ...shipmentIds.map(shipmentId => ({ shipmentId })),
   ];
