@@ -11,7 +11,7 @@
     "@fortawesome/pro-solid-svg-icons": "^5.8.1",
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@reach/router": "^1.2.1",
-    "@sentry/browser": "^5.0.3",
+    "@sentry/browser": "^5.0.5",
     "@tippy.js/react": "^2.1.2",
     "apollo-cache-inmemory": "^1.5.1",
     "apollo-client": "^2.5.1",
@@ -183,7 +183,7 @@
     "eslint-config-react-app": "^3.0.8",
     "eslint-loader": "2.1.2",
     "eslint-plugin-cypress": "^2.2.1",
-    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-flowtype": "^3.5.1",
     "eslint-plugin-graphql": "^3.0.3",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-json": "^1.4.0",
@@ -241,7 +241,7 @@
     "webpack-bundle-analyzer": "^3.1.0",
     "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "4.1.1"
+    "workbox-webpack-plugin": "4.2.0"
   },
   "config": {
     "commitizen": {
