@@ -15,25 +15,18 @@ import {
   portFragment,
   todoFragment,
 } from 'graphql';
+import { parseTaskField } from 'utils/data';
+import { isEquals } from 'utils/fp';
 
-export const editableTaskListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: TaskFilterInput, $sortBy: TaskSortInput) {
-    tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
-      nodes {
+export const taskUpdateManyMutation = gql`
+  mutation taskUpdateMany($tasks: [TaskUpdateWrapperInput!]!) {
+    taskUpdateMany(tasks: $tasks) {
+      ... on Task {
         ...taskFormFragment
       }
-      page
-      totalPage
     }
   }
-
   ${taskFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
-  ${orderCardFragment}
-  ${batchCardFragment}
-  ${shipmentCardFragment}
-  ${partnerNameFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
@@ -49,4 +42,14 @@ export const editableTaskListQuery = gql`
   ${todoFragment}
 `;
 
-export default editableTaskListQuery;
+export const prepareTasksForUpdateMany = (
+  originalValues: Array<Object>,
+  values: Array<Object>
+): Array<Object> =>
+  values
+    .map((value, index) => {
+      return isEquals(value, originalValues[index])
+        ? null
+        : { id: value.id, input: parseTaskField(originalValues[index], value) };
+    })
+    .filter(Boolean);

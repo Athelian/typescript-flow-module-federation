@@ -12,7 +12,7 @@ const initValues = {
   tasks: [],
 };
 
-export default class RMTaskListContainer extends Container<TasksState> {
+export default class RMEditTasksContainer extends Container<TasksState> {
   state = initValues;
 
   originalValues = initValues;

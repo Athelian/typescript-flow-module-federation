@@ -44,6 +44,6 @@ const loadMore = (
         fetchMoreResult
       );
     },
-  });
+  }).catch(logger.warn);
 };
 export default loadMore;

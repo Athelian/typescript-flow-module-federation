@@ -51,7 +51,7 @@ import {
 import { updateOrderMutation } from './MoveToOrderPanel/mutation';
 import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
 import TableView from '../TableInlineEdit';
-import EditableTaskList from '../EditableTaskList';
+import RMEditTasks from '../RMEditTasks';
 
 type Props = {
   highLightEntities: Array<string>,
@@ -197,7 +197,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         onClick={() => toggleTaskList(true)}
                       />
                       <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskList(false)}>
-                        {isOpen && <EditableTaskList />}
+                        {isOpen && <RMEditTasks />}
                       </SlideView>
                     </>
                   )}

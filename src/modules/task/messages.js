@@ -18,6 +18,14 @@ export default defineMessages({
     id: 'modules.Tasks.dueDate',
     defaultMessage: 'DUE DATE',
   },
+  taskName: {
+    id: 'modules.Tasks.taskName',
+    defaultMessage: 'TASK NAME',
+  },
+  hierarchy: {
+    id: 'modules.Tasks.hierarchy',
+    defaultMessage: 'HIERARCHY',
+  },
   required: {
     id: 'modules.Tasks.validation.required',
     defaultMessage: 'Required',
