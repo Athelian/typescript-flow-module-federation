@@ -214,6 +214,11 @@ export const prepareParsedBatchInput = (
       getByPathWithDefault(null, 'autoCalculatePackageQuantity', originalValues),
       newValues.autoCalculatePackageQuantity
     ),
+    ...parseGenericField(
+      'autoCalculatePackageVolume',
+      getByPathWithDefault(null, 'autoCalculatePackageVolume', originalValues),
+      newValues.autoCalculatePackageVolume
+    ),
     ...parseTodoField(
       getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
       newValues.todo

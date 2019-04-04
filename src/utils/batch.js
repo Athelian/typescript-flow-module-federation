@@ -17,6 +17,48 @@ export const findBatchQuantity = ({
   return batchQuantity;
 };
 
+type Metric = {
+  value: number,
+  metric: string,
+};
+
+export function convertVolume(
+  volumeMetric: string,
+  height: Metric,
+  width: Metric,
+  length: Metric
+): number {
+  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
+  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
+  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
+  const volumeValue = heightValue * widthValue * lengthValue;
+
+  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
+}
+
+export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => ({
+  metric: packageVolume.metric,
+  value: convertVolume(
+    packageVolume.metric,
+    packageSize.height,
+    packageSize.width,
+    packageSize.length
+  ),
+});
+
+export function calculateBatchQuantity(batches: Array<Object>): number {
+  let total = 0;
+  batches.forEach(batch => {
+    total += batch.quantity;
+    if (batch.batchAdjustments) {
+      batch.batchAdjustments.forEach(({ quantity }) => {
+        total += quantity;
+      });
+    }
+  });
+  return total;
+}
+
 export const calculatePackageQuantity = ({
   packageCapacity = 0,
   quantity,

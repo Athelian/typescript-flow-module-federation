@@ -3,9 +3,8 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsy } from 'utils/data';
-import { calculatePackageQuantity } from 'utils/batch';
+import { calculatePackageQuantity, calculatePackageVolume } from 'utils/batch';
 import type { BatchFormState, ProductProvider } from './type.js.flow';
-import { convertVolume } from '../helper';
 
 export const initValues = {
   quantity: 0,
@@ -36,6 +35,7 @@ export const initValues = {
     },
   },
   autoCalculatePackageQuantity: true,
+  autoCalculatePackageVolume: true,
   // reset values for batch form
   archived: false,
   updatedAt: null,
@@ -140,15 +140,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   calculatePackageVolume = () => {
     this.setState(prevState => ({
-      packageVolume: {
-        metric: prevState.packageVolume.metric,
-        value: convertVolume(
-          prevState.packageVolume.metric,
-          prevState.packageSize.height,
-          prevState.packageSize.width,
-          prevState.packageSize.length
-        ),
-      },
+      packageVolume: calculatePackageVolume(prevState),
     }));
   };
 }
