@@ -698,7 +698,9 @@ export const shipmentColumnFields = [
                 />
               }
             >
-              <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+              <div>
+                <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+              </div>
             </Tooltip>
           );
         }
