@@ -1,5 +1,20 @@
 // @flow
 import gql from 'graphql-tag';
+import {
+  taskFormFragment,
+  userAvatarFragment,
+  tagFragment,
+  orderCardFragment,
+  batchCardFragment,
+  shipmentCardFragment,
+  partnerNameFragment,
+  priceFragment,
+  metricFragment,
+  imageFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  todoFragment,
+} from 'graphql';
 import { parseTaskField } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
@@ -7,10 +22,24 @@ export const taskUpdateManyMutation = gql`
   mutation taskUpdateMany($tasks: [TaskUpdateWrapperInput!]!) {
     taskUpdateMany(tasks: $tasks) {
       ... on Task {
-        id
+        ...taskFormFragment
       }
     }
   }
+  ${taskFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${orderCardFragment}
+  ${batchCardFragment}
+  ${shipmentCardFragment}
+  ${orderCardFragment}
+  ${partnerNameFragment}
+  ${priceFragment}
+  ${metricFragment}
+  ${imageFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${todoFragment}
 `;
 
 export const prepareTasksForUpdateMany = (
