@@ -24,7 +24,7 @@ const FormattedValue = ({ value }: Props) => {
     case 'FloatValue':
       return value.float;
     case 'BooleanValue':
-      return value.boolean;
+      return value.boolean ? 'true' : 'false';
     case 'DateTimeValue':
       return <FormattedDate value={new Date(value.datetime)} />;
     case 'MetricValueValue':
@@ -37,7 +37,7 @@ const FormattedValue = ({ value }: Props) => {
       // eslint-disable-next-line
       return value.values.map((v, i) => <FormattedValue key={i} value={v} />).join(', ');
     default:
-      return value;
+      return null;
   }
 };
 
