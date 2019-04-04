@@ -1,6 +1,8 @@
 // @flow
 import { intersection } from 'lodash';
 import type { IntlShape } from 'react-intl';
+// $FlowFixMe missing define for partialRight
+import { partialRight } from 'ramda';
 import { removeTypename } from 'utils/data';
 import { getByPathWithDefault, compose } from 'utils/fp';
 import { formatToDateLabel } from 'utils/date';
@@ -449,10 +451,13 @@ export const getFieldValueByType = (type: string) => (value: any) => {
   }
 };
 
-export function getFieldValues(fields: Array<Object>, values: Array<Object>) {
+export function getFieldValues(fields: Array<Object>, values: Array<Object>, editData: Object) {
   const fieldValues: Array<string> = (fields: Array<Object>).map(
     ({ name, type, getExportValue }): any => {
-      const getValueFunction = getExportValue || getByPathWithDefault('', name);
+      const getValueFunction =
+        typeof getExportValue === 'function'
+          ? partialRight(getExportValue, [editData])
+          : getByPathWithDefault('', name);
       const value = compose(
         getFieldValueByType(type),
         getValueFunction
@@ -538,7 +543,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       ...batchCustomFieldsFilter,
     ]);
     const shipmentData = editData.shipments[shipmentId];
-    const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
+    const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
     const shipmentCustomValues = getCustomFieldValues(shipmentCustomFieldsFilter, shipmentData);
     const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
     const currentRow = [...emptyRow, ...shipmentRow];
@@ -551,7 +556,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       item => order.relation.orderItem[item.data.id] && orderItemIds.includes(item.data.id)
     );
     const orderData = editData.orders[orderId];
-    const orderValues = getFieldValues(orderColumnFieldsFilter, orderData);
+    const orderValues = getFieldValues(orderColumnFieldsFilter, orderData, editData);
     const orderCustomValues = getCustomFieldValues(orderCustomFieldsFilter, orderData);
     const orderRow = [...orderValues, ...orderCustomValues];
     if (orderItems.length === 0) {
@@ -569,7 +574,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     return orderItems.forEach(orderItem => {
       const notHaveBatches = Object.keys(orderItem.relation.batch).length === 0;
       const orderItemData = editData.orderItems[orderItem.data.id];
-      const orderItemValues = getFieldValues(orderItemColumnFieldsFilter, orderItemData);
+      const orderItemValues = getFieldValues(orderItemColumnFieldsFilter, orderItemData, editData);
       const orderItemCustomValues = getCustomFieldValues(
         orderItemCustomFieldsFilter,
         orderItemData
@@ -589,7 +594,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         .filter(batch => batchIds.includes(batch.id))
         .forEach(batch => {
           const batchData = editData.batches[batch.id];
-          const batchValues = getFieldValues(batchColumnFieldsFilter, batchData);
+          const batchValues = getFieldValues(batchColumnFieldsFilter, batchData, editData);
           const batchCustomValues = getCustomFieldValues(batchCustomFieldsFilter, batchData);
           const batchRow = [...batchValues, ...batchCustomValues];
           let shipmentRow = [];
@@ -600,7 +605,11 @@ export function getExportRows(info: Object): Array<Array<?string>> {
             ]);
           } else {
             const shipmentData = editData.shipments[batch.shipment.id];
-            const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData);
+            const shipmentValues = getFieldValues(
+              shipmentColumnFieldsFilter,
+              shipmentData,
+              editData
+            );
             const shipmentCustomValues = getCustomFieldValues(
               shipmentCustomFieldsFilter,
               shipmentData

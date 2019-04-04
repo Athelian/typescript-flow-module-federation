@@ -234,10 +234,19 @@ export const orderColumnFields = [
       tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
-    messageId: orderMessages.totalItemQuantity,
+    messageId: orderMessages.totalItemQuantity.id,
     name: 'totalItemQuantity',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [] } = values;
+      if (orderItems.length === 0) {
+        return 0;
+      }
+      return orderItems.reduce((total, orderItemId) => {
+        return total + editData.orderItems[orderItemId].quantity;
+      }, 0);
+    },
+    getExportValue: (values: Object, editData: Object) => {
       const { orderItems = [] } = values;
       if (orderItems.length === 0) {
         return 0;
@@ -261,10 +270,19 @@ export const orderColumnFields = [
     },
   },
   {
-    messageId: orderMessages.totalPrice,
+    messageId: orderMessages.totalPrice.id,
     name: 'orderTotalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [], currency } = values;
+      if (orderItems.length === 0) {
+        return `0${currency}`;
+      }
+      return `${orderItems.reduce((total, orderItemId) => {
+        return total + editData.orderItems[orderItemId].price.amount;
+      }, 0)}${currency}`;
+    },
+    getExportValue: (values: Object, editData: Object) => {
       const { orderItems = [], currency } = values;
       if (orderItems.length === 0) {
         return `0${currency}`;
@@ -296,10 +314,20 @@ export const orderColumnFields = [
     },
   },
   {
-    messageId: orderMessages.totalVolume,
+    messageId: orderMessages.totalVolume.id,
     name: 'orderTotalVolume',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
+      const { orderItems = [] } = values;
+      if (orderItems.length === 0) {
+        return '0m³';
+      }
+
+      const orderTotalVolume = calculateOrderTotalVolume(orderItems, editData);
+
+      return `${orderTotalVolume}m³`;
+    },
+    getExportValue: (values: Object, editData: Object) => {
       const { orderItems = [] } = values;
       if (orderItems.length === 0) {
         return '0m³';
@@ -381,10 +409,19 @@ export const orderItemColumnFields = [
     },
   },
   {
-    messageId: orderMessages.totalPrice,
+    messageId: orderMessages.totalPrice.id,
     name: 'orderItemTotalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
+      const { id: orderItemId } = values;
+      const { price, quantity } = editData.orderItems[orderItemId];
+      const [, order] =
+        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
+          currentOrder.orderItems.includes(orderItemId)
+        ) || [];
+      return `${price.amount * quantity}${order.currency}`;
+    },
+    getExportValue: (values: Object, editData: Object) => {
       const { id: orderItemId } = values;
       const { price, quantity } = editData.orderItems[orderItemId];
       const [, order] =
@@ -626,10 +663,15 @@ export const shipmentColumnFields = [
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
-    messageId: shipmentMessages.totalVolume,
+    messageId: shipmentMessages.totalVolume.id,
     name: 'shipmentTotalVolume',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
+      return `${shipmentTotalVolume}m³`;
+    },
+    getExportValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
       const shipmentTotalVolume = calculateShipmentTotalVolume(shipmentId, editData);
       return `${shipmentTotalVolume}m³`;
@@ -643,10 +685,14 @@ export const shipmentColumnFields = [
     },
   },
   {
-    messageId: shipmentMessages.totalContainers,
+    messageId: shipmentMessages.totalContainers.id,
     name: 'shipmentTotalContainers',
     type: 'calculate',
     getFieldValue: (values: Object) => {
+      const { containerGroups = [] } = values;
+      return containerGroups.length;
+    },
+    getExportValue: (values: Object) => {
       const { containerGroups = [] } = values;
       return containerGroups.length;
     },
@@ -658,10 +704,14 @@ export const shipmentColumnFields = [
     },
   },
   {
-    messageId: shipmentMessages.totalBatchQuantity,
+    messageId: shipmentMessages.totalBatchQuantity.id,
     name: 'shipmentTotalBatchQuantity',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      return calculateShipmentTotalBatchQuantity(shipmentId, editData);
+    },
+    getExportValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
       return calculateShipmentTotalBatchQuantity(shipmentId, editData);
     },
@@ -675,14 +725,20 @@ export const shipmentColumnFields = [
     },
   },
   {
-    messageId: shipmentMessages.totalPrice,
+    messageId: shipmentMessages.totalPrice.id,
     name: 'shipmentTotalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
       const { total } = calculateShipmentTotalPrice(shipmentId, editData);
-      if (total < 0) return 'N/A';
+      if (total < 0) return 'Invalid';
       return total;
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: shipmentId } = values;
+      const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);
+      if (total < 0) return 'Invalid';
+      return `${total}${allCurrencies[0]}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
@@ -698,7 +754,9 @@ export const shipmentColumnFields = [
                 />
               }
             >
-              <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+              <div>
+                <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+              </div>
             </Tooltip>
           );
         }
