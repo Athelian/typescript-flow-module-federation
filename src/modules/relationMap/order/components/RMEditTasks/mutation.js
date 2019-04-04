@@ -52,4 +52,4 @@ export const prepareTasksForUpdateMany = (
         ? null
         : { id: value.id, input: parseTaskField(originalValues[index], value) };
     })
-    .filter(item => item);
+    .filter(Boolean);

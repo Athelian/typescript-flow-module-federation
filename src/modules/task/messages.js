@@ -4,27 +4,27 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   createdAt: {
     id: 'modules.Tasks.createdAt',
-    defaultMessage: 'Created On',
+    defaultMessage: 'CREATED ON',
   },
   updatedAt: {
     id: 'modules.Tasks.updatedAt',
-    defaultMessage: 'Last Modified',
+    defaultMessage: 'LAST MODIFIED',
   },
   startDate: {
     id: 'modules.Tasks.startDate',
-    defaultMessage: 'Start Date',
+    defaultMessage: 'START DATE',
   },
   dueDate: {
     id: 'modules.Tasks.dueDate',
-    defaultMessage: 'Due Date',
+    defaultMessage: 'DUE DATE',
   },
   taskName: {
     id: 'modules.Tasks.taskName',
-    defaultMessage: 'Task Name',
+    defaultMessage: 'TASK NAME',
   },
   hierarchy: {
     id: 'modules.Tasks.hierarchy',
-    defaultMessage: 'Hierarchy',
+    defaultMessage: 'HIERARCHY',
   },
   required: {
     id: 'modules.Tasks.validation.required',
