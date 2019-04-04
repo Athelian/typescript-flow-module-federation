@@ -149,24 +149,20 @@ function ProductProvidersSection({ isOwner }: Props) {
                           <>
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
-                                <Subscribe to={[ProductProviderContainer]}>
-                                  {({ initDetailValues }) => (
-                                    <ProductProviderFormWrapper
-                                      isOwner={isOwner}
-                                      productProviders={productProviders}
-                                      productProvider={productProviders[index]}
-                                      isNew={!!productProvider.isNew}
-                                      initDetailValues={initDetailValues}
-                                      onCancel={() => slideToggle(false)}
-                                      onSave={newProvider => {
-                                        slideToggle(false);
-                                        setFieldValue(`productProviders.${index}`, newProvider);
-                                      }}
-                                    />
-                                  )}
-                                </Subscribe>
+                                <ProductProviderFormWrapper
+                                  isOwner={isOwner}
+                                  productProviders={productProviders}
+                                  productProvider={productProviders[index]}
+                                  isNew={!!productProvider.isNew}
+                                  onCancel={() => slideToggle(false)}
+                                  onSave={newProvider => {
+                                    slideToggle(false);
+                                    setFieldValue(`productProviders.${index}`, newProvider);
+                                  }}
+                                />
                               )}
                             </SlideView>
+
                             <ProductProviderCard
                               productProvider={productProvider}
                               onClick={() => slideToggle(true)}
