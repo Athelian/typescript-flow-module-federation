@@ -49,7 +49,7 @@ const TaskListInSlide = ({ tasks, initDetailValues, onLoadMore, hasMore, isLoadi
                 <>
                   <TaskCard
                     task={task}
-                    position={task.sort + 1}
+                    position={index + 1}
                     editable
                     saveOnBlur={value =>
                       rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value)
