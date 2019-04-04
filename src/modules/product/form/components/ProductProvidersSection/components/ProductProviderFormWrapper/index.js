@@ -21,7 +21,6 @@ type OptionalProps = {
 type Props = OptionalProps & {
   productProviders: Array<Object>,
   productProvider: Object,
-  isNew: boolean,
   onSave: Function,
   onCancel: Function,
 };
@@ -58,7 +57,6 @@ function isExist(
 }
 
 const ProductProviderFormWrapper = ({
-  isNew,
   isOwner,
   onSave,
   productProviders,
@@ -119,7 +117,7 @@ const ProductProviderFormWrapper = ({
 
                 {productProviderContainer.isDirty() && (
                   <>
-                    {isNew ? (
+                    {productProvider.isNew ? (
                       <CancelButton onClick={() => onCancel()} />
                     ) : (
                       <ResetButton
@@ -147,7 +145,7 @@ const ProductProviderFormWrapper = ({
               productProvider={productProvider}
               initDetailValues={productProviderContainer.initDetailValues}
               isExist={isExist(productProvider, productProviders, isAddedProvider)}
-              isNew={isNew}
+              isNew={productProvider.isNew}
               isOwner={isOwner}
             />
           </Layout>
