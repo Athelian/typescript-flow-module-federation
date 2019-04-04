@@ -556,8 +556,8 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                                   template.name
                                 );
                                 window.localStorage.setItem(
-                                  `${user.id}-table-template-fields`,
-                                  template.fields
+                                  'filterRMTemplateColumns',
+                                  JSON.stringify(template.fields)
                                 );
                                 setTemplateColumns(template.fields);
                               }}
