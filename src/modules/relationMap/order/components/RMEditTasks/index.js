@@ -14,7 +14,6 @@ import { FilterToolBar } from 'components/common';
 import { ResetButton, SaveButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import loadMore from 'utils/loadMore';
-import LoadingIcon from 'components/LoadingIcon';
 import messages from 'modules/task/messages';
 import TaskListInSlide from './components/TaskListInSlide';
 import RMEditTasksContainer from './container';
@@ -152,9 +151,6 @@ const EditableTaskList = (props: Props) => {
                   {({ error: queryError, loading: queryLoading, data, fetchMore }) => {
                     if (queryError) {
                       return queryError.message;
-                    }
-                    if (queryLoading) {
-                      return <LoadingIcon />;
                     }
 
                     const nextPage = getByPathWithDefault(1, 'tasks.page', data) + 1;

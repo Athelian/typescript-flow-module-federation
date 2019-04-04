@@ -25,58 +25,56 @@ const TaskListInSlide = ({ tasks, initDetailValues, onLoadMore, hasMore, isLoadi
   }, [initDetailValues, tasks]);
 
   return (
-    <Subscribe to={[RMrmEditTasksContainer]}>
-      {rmEditTasksContainer => {
-        const {
-          state: { tasks: values = [] },
-        } = rmEditTasksContainer;
-        return (
-          <GridView
-            onLoadMore={onLoadMore}
-            hasMore={hasMore}
-            isLoading={isLoading}
-            isEmpty={values.length === 0}
-            itemWidth="200px"
-            emptyMessage={
-              <FormattedMessage
-                id="modules.RelationalMaps.noTasksFound"
-                defaultMessage="No tasks found"
-              />
-            }
-          >
-            {values.map((task, index) => (
-              <BooleanValue key={task.id}>
-                {({ value: isOpen, set: toggleTaskForm }) => (
-                  <>
-                    <TaskCard
-                      task={task}
-                      position={task.sort + 1}
-                      editable
-                      saveOnBlur={value =>
-                        rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value)
-                      }
-                      onClick={() => toggleTaskForm(true)}
-                    />
-                    <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
-                      {isOpen && (
-                        <TaskFormInSlide
-                          editable
-                          task={{ ...task, sort: index }}
-                          onSave={value => {
-                            rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value);
-                            toggleTaskForm(false);
-                          }}
-                        />
-                      )}
-                    </SlideView>
-                  </>
-                )}
-              </BooleanValue>
-            ))}
-          </GridView>
-        );
-      }}
-    </Subscribe>
+    <GridView
+      onLoadMore={onLoadMore}
+      hasMore={hasMore}
+      isLoading={isLoading}
+      isEmpty={tasks.length === 0}
+      itemWidth="200px"
+      emptyMessage={
+        <FormattedMessage
+          id="modules.RelationalMaps.noTasksFound"
+          defaultMessage="No tasks found"
+        />
+      }
+    >
+      <Subscribe to={[RMrmEditTasksContainer]}>
+        {rmEditTasksContainer => {
+          const {
+            state: { tasks: values = [] },
+          } = rmEditTasksContainer;
+          return values.map((task, index) => (
+            <BooleanValue key={task.id}>
+              {({ value: isOpen, set: toggleTaskForm }) => (
+                <>
+                  <TaskCard
+                    task={task}
+                    position={task.sort + 1}
+                    editable
+                    saveOnBlur={value =>
+                      rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value)
+                    }
+                    onClick={() => toggleTaskForm(true)}
+                  />
+                  <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
+                    {isOpen && (
+                      <TaskFormInSlide
+                        editable
+                        task={{ ...task, sort: index }}
+                        onSave={value => {
+                          rmEditTasksContainer.setDeepFieldValue(`tasks.${index}`, value);
+                          toggleTaskForm(false);
+                        }}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
+          ));
+        }}
+      </Subscribe>
+    </GridView>
   );
 };
 
