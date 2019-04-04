@@ -15,14 +15,14 @@ import GridColumn from 'components/GridColumn';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
 import { SectionHeader, SectionWrapper, Label, DashedPlusButton, FieldItem } from 'components/Form';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
+import { FormContainer, resetFormState } from 'modules/form';
 import CustomFieldsContainer from 'components/Form/Factories/CustomFieldsFactory/container';
 import CustomFieldsTemplateSelector from 'components/Form/Factories/CustomFieldsFactory/CustomFieldsTemplateSelector';
 import { CustomFieldsFormWrapperStyle, CustomFieldsSectionWrapperStyle } from './style';
 
 type OptionalProps = {
   onFormReady: () => void,
-  onCancel: Function,
   onSave: Function,
   editable: {
     values: boolean,
@@ -36,7 +36,6 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onFormReady: () => {},
-  onCancel: () => {},
   onSave: () => {},
   editable: {
     values: false,
@@ -54,12 +53,15 @@ class CustomFieldsForm extends React.Component<Props> {
   }
 
   render() {
-    const { entityType, onCancel, onSave, editable } = this.props;
+    const { entityType, onSave, editable } = this.props;
 
     return (
-      <Subscribe to={[CustomFieldsContainer]}>
-        {({ originalValues, state, setFieldValue, isDirty }) => {
-          const values = { ...originalValues, ...state };
+      <Subscribe to={[CustomFieldsContainer, FormContainer]}>
+        {(customFieldsContainer, formContainer) => {
+          const values = {
+            ...customFieldsContainer.originalValues,
+            ...customFieldsContainer.state,
+          };
           const { mask, fieldValues } = values;
           return (
             <Layout
@@ -78,9 +80,14 @@ class CustomFieldsForm extends React.Component<Props> {
                       icon="METADATA"
                     />
                   </JumpToSection>
-                  {isDirty() && (
+                  {customFieldsContainer.isDirty() && (
                     <>
-                      <CancelButton onClick={onCancel} />
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(customFieldsContainer);
+                          formContainer.onReset();
+                        }}
+                      />
                       <SaveButton onClick={() => onSave(values)} />
                     </>
                   )}
@@ -144,7 +151,7 @@ class CustomFieldsForm extends React.Component<Props> {
                                       selected={mask}
                                       onCancel={() => slideToggle(false)}
                                       onSave={item => {
-                                        setFieldValue('mask', item);
+                                        customFieldsContainer.setFieldValue('mask', item);
                                         slideToggle(false);
                                       }}
                                     />
@@ -184,7 +191,7 @@ class CustomFieldsForm extends React.Component<Props> {
                               targetName={`fieldValues.${index}`}
                               fieldName={fieldDefinition.name}
                               value={value}
-                              setFieldValue={setFieldValue}
+                              setFieldValue={customFieldsContainer.setFieldValue}
                               editable={editable.values}
                             />
                           ) : null
