@@ -3,8 +3,8 @@ import React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query, Mutation } from 'react-apollo';
-import { Provider, Subscribe } from 'unstated';
-import { getByPathWithDefault } from 'utils/fp';
+import { Subscribe } from 'unstated';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
 import Layout from 'components/Layout';
@@ -93,87 +93,97 @@ const EditableTaskList = (props: Props) => {
   ];
 
   return (
-    <Provider>
-      <Subscribe to={[RMEditTasksContainer, FormContainer]}>
-        {(rmEditTasksContainer, formContainer) => (
-          <Mutation mutation={taskUpdateManyMutation}>
-            {(saveTasks, { loading: isLoading, error: mutationError }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="TASK"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    {rmEditTasksContainer.isDirty() && (
-                      <>
-                        <ResetButton
-                          onClick={() => {
-                            resetFormState(rmEditTasksContainer, 'tasks');
-                            formContainer.onReset();
-                          }}
-                        />
-                        <SaveButton
-                          isLoading={isLoading}
-                          onClick={() =>
-                            onSave(
-                              rmEditTasksContainer.originalValues,
-                              rmEditTasksContainer.state,
-                              saveTasks,
-                              () => {
-                                rmEditTasksContainer.onSuccess();
-                                formContainer.onReset();
-                              },
-                              formContainer.onErrors
-                            )
-                          }
-                        />
-                      </>
-                    )}
-                  </SlideViewNavBar>
-                }
-              >
-                {mutationError && <p>Error: Please try again.</p>}
-                <Query
-                  key={JSON.stringify(filterAndSort)}
-                  query={editableTaskListQuery}
-                  variables={{
-                    ...queryVariables,
-                    filterBy: {
-                      ...queryVariables.filterBy,
-                      entities,
-                    },
-                  }}
-                  fetchPolicy="network-only"
-                >
-                  {({ error: queryError, loading: queryLoading, data, fetchMore }) => {
-                    if (queryError) {
-                      return queryError.message;
-                    }
-
-                    const nextPage = getByPathWithDefault(1, 'tasks.page', data) + 1;
-                    const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
-                    const hasMore = nextPage <= totalPage;
-
-                    return (
-                      <TaskListInSlide
-                        tasks={getByPathWithDefault([], 'tasks.nodes', data)}
-                        onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
-                        initDetailValues={rmEditTasksContainer.initDetailValues}
-                        hasMore={hasMore}
-                        isLoading={queryLoading}
+    <Subscribe to={[RMEditTasksContainer, FormContainer]}>
+      {(rmEditTasksContainer, formContainer) => (
+        <Mutation mutation={taskUpdateManyMutation}>
+          {(saveTasks, { loading: isLoading, error: mutationError }) => (
+            <Layout
+              navBar={
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="TASK"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  {rmEditTasksContainer.isDirty() && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(rmEditTasksContainer, 'tasks');
+                          formContainer.onReset();
+                        }}
                       />
+                      <SaveButton
+                        isLoading={isLoading}
+                        onClick={() =>
+                          onSave(
+                            rmEditTasksContainer.originalValues,
+                            rmEditTasksContainer.state,
+                            saveTasks,
+                            () => {
+                              rmEditTasksContainer.onSuccess();
+                              formContainer.onReset();
+                            },
+                            formContainer.onErrors
+                          )
+                        }
+                      />
+                    </>
+                  )}
+                </SlideViewNavBar>
+              }
+            >
+              {mutationError && <p>Error: Please try again.</p>}
+              <Query
+                key={JSON.stringify(filterAndSort)}
+                query={editableTaskListQuery}
+                variables={{
+                  ...queryVariables,
+                  filterBy: {
+                    ...queryVariables.filterBy,
+                    entities,
+                  },
+                }}
+                fetchPolicy="network-only"
+                onCompleted={data => {
+                  if (
+                    !isEquals(
+                      getByPathWithDefault([], 'tasks.nodes', data),
+                      rmEditTasksContainer.state.tasks
+                    )
+                  ) {
+                    rmEditTasksContainer.initDetailValues(
+                      getByPathWithDefault([], 'tasks.nodes', data)
                     );
-                  }}
-                </Query>
-              </Layout>
-            )}
-          </Mutation>
-        )}
-      </Subscribe>
-    </Provider>
+                  }
+                }}
+              >
+                {({ error: queryError, loading: queryLoading, data, fetchMore }) => {
+                  if (queryError) {
+                    return queryError.message;
+                  }
+
+                  const nextPage = getByPathWithDefault(1, 'tasks.page', data) + 1;
+                  const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
+                  const hasMore = nextPage <= totalPage;
+
+                  return (
+                    <TaskListInSlide
+                      tasks={rmEditTasksContainer.state.tasks}
+                      onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
+                      hasMore={hasMore}
+                      isLoading={queryLoading}
+                      onChange={rmEditTasksContainer.setDeepFieldValue}
+                    />
+                  );
+                }}
+              </Query>
+            </Layout>
+          )}
+        </Mutation>
+      )}
+    </Subscribe>
   );
 };
 
