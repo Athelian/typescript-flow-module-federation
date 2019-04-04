@@ -10,12 +10,12 @@ import {
 } from 'styles/common';
 
 export const MainNameStyle = css`
+  ${transitions.MAIN};
   ${borderRadiuses.MAIN};
   padding: 0 2px;
   background-color: ${colors.WHITE};
   cursor: default;
   &:hover {
-    ${transitions.MAIN};
     color: ${colors.WHITE};
     background-color: rgba(17, 209, 166, 0.4);
   }

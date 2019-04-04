@@ -80,7 +80,7 @@ const ProductProviderFormWrapper = ({
             <Layout
               navBar={
                 <SlideViewNavBar>
-                  <EntityIcon icon="PROVIDER" color="PROVIDER" />
+                  <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
                   <JumpToSection>
                     <SectionTabs
                       link="productProvider_productProviderSection"
@@ -90,7 +90,7 @@ const ProductProviderFormWrapper = ({
                           defaultMessage="END PRODUCT"
                         />
                       }
-                      icon="PROVIDER"
+                      icon="PRODUCT_PROVIDER"
                     />
                     <SectionTabs
                       link="productProvider_specificationsSection"

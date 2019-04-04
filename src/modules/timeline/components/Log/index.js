@@ -7,13 +7,11 @@ import { LogStyle, LogWrapperStyle, TimeStyle } from './style';
 
 type Props = {
   log: LogItem,
-  formatters: Array<LogFormatter>,
+  formatters: { [key: string]: LogFormatter },
 };
 
 const Log = ({ log, formatters }: Props) => {
-  const formatter: ?LogFormatter = formatters.find((f: LogFormatter) =>
-    f.support(log.translationKey)
-  );
+  const formatter: ?LogFormatter = formatters[log.translationKey];
 
   return (
     <div className={LogWrapperStyle}>
@@ -21,7 +19,7 @@ const Log = ({ log, formatters }: Props) => {
         <FormattedTime value={log.createdAt} />
       </span>
 
-      <span className={LogStyle}>{formatter ? formatter.format(log) : log.translationKey}</span>
+      <span className={LogStyle}>{formatter ? formatter(log) : log.translationKey}</span>
     </div>
   );
 };

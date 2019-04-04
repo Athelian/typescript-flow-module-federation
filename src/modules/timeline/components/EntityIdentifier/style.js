@@ -2,13 +2,18 @@
 import { css } from 'react-emotion';
 import { borderRadiuses, colors, transitions } from 'styles/common';
 
-export const ValueStyle = css`
+export const IdentifierStyle = (color: string) => css`
   ${transitions.MAIN};
   ${borderRadiuses.BUTTON};
   color: ${colors.BLACK};
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  padding: 2px 5px;
+  padding: 2px 7px 2px 5px;
   cursor: default;
+
+  & > svg {
+    color: ${color};
+    margin-right: 3px;
+  }
 
   &:hover {
     color: ${colors.TEAL};
@@ -16,4 +21,4 @@ export const ValueStyle = css`
   }
 `;
 
-export default ValueStyle;
+export default IdentifierStyle;

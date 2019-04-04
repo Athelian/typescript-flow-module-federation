@@ -18,12 +18,12 @@ type Props = {
   queryField: string,
   variables: Object,
   entity: Object,
-  formatters: Array<LogFormatter>,
+  formatters: { [key: string]: LogFormatter },
 };
 
 const defaultProps = {
   variables: {},
-  formatters: [],
+  formatters: {},
 };
 
 const Timeline = ({
@@ -40,7 +40,7 @@ const Timeline = ({
     page: 1,
     perPage: 20,
   };
-  const formatters = [...customFormatters, ...DefaultFormatters];
+  const formatters = { ...DefaultFormatters, ...customFormatters };
 
   return (
     <Query

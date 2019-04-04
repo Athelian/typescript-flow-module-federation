@@ -258,7 +258,6 @@ class ProductFormModule extends React.Component<Props> {
                             icon="PROVIDER"
                           />
                         </JumpToSection>
-
                         <BooleanValue>
                           {({ value: opened, set: slideToggle }) =>
                             !isNewOrClone && (
@@ -267,7 +266,6 @@ class ProductFormModule extends React.Component<Props> {
                                 <SlideView
                                   isOpen={opened}
                                   onRequestClose={() => slideToggle(false)}
-                                  options={{ width: '1030px' }}
                                 >
                                   <Layout
                                     navBar={

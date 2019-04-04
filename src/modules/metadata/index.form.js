@@ -103,7 +103,7 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                       defaultMessage="END PRODUCTS"
                     />
                   }
-                  icon="PROVIDER"
+                  icon="PRODUCT_PROVIDER"
                   onClick={
                     entityType === 'ProductProvider'
                       ? () => {}

@@ -52,7 +52,7 @@ const ProductActivateDialog = ({
                     total: productProviders.length,
                     providers: spanWithColor(
                       <FormattedMessage {...messages.providers} />,
-                      'PROVIDER'
+                      'PRODUCT_PROVIDER'
                     ),
                   }}
                 />

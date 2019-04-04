@@ -117,7 +117,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
                 navBar={
                   <SlideViewNavBar>
                     <FilterToolBar
-                      icon="PROVIDER"
+                      icon="PRODUCT_PROVIDER"
                       sortFields={sortFields}
                       filtersAndSort={filtersAndSort}
                       onChange={onChange}

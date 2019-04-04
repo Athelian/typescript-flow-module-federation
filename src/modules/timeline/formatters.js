@@ -2,108 +2,134 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { getByPathWithDefault } from 'utils/fp';
 import User from './components/User';
-import { ARCHIVED, UNARCHIVED, UPDATE_FIELD } from './contants';
+import { ARCHIVED, CREATE, UNARCHIVED, UPDATE_FIELD } from './contants';
 import type { LogItem } from './types';
-import messages from './messages';
+import EntityIdentifier from './components/EntityIdentifier';
 import Value from './components/Value';
 import Field from './components/Field';
+import messages from './messages';
 
-export interface LogFormatter {
-  format(log: LogItem): any;
-  support(translationKey: string): boolean;
-}
+export type LogFormatter = (log: LogItem) => *;
 
-export class DefaultUpdateFormatter implements LogFormatter {
-  format(log: LogItem): * {
-    if (log.parameters.old !== null) {
-      return (
-        <FormattedMessage
-          {...messages.updateField}
-          values={{
-            user: <User user={log.createdBy} />,
-            field: (
-              <Field
-                field={log.parameters.field.string}
-                entityType={log.parameters.entity_type.string}
-              />
-            ),
-            oldValue: <Value value={log.parameters.old} />,
-            newValue: <Value value={log.parameters.new} />,
-          }}
-        />
-      );
-    }
+export const CreateFormatter = (log: LogItem): * => {
+  const entityType = log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
 
-    return (
-      <FormattedMessage
-        {...messages.setField}
-        values={{
-          user: <User user={log.createdBy} />,
-          field: (
-            <Field
-              field={getByPathWithDefault('', 'parameters.field.string', log)}
-              entityType={getByPathWithDefault('', 'parameters.entity_type.string', log)}
-            />
-          ),
-          value: <Value value={log.parameters.new} />,
-        }}
-      />
-    );
+  return (
+    <FormattedMessage
+      {...messages.create}
+      values={{
+        user: <User user={log.createdBy} />,
+        entityType: <FormattedMessage {...messages[entityType]} />,
+      }}
+    />
+  );
+};
+
+export const UpdateFormatter = (log: LogItem): * => {
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+    field: (
+      <Field field={log.parameters.field.string} entityType={log.parameters.entity_type.string} />
+    ),
+  };
+
+  if (log.parameters.old === null) {
+    message =
+      log.entity.__typename === log.parentEntity.__typename
+        ? messages.setField
+        : messages.setChildField;
+    values = {
+      ...values,
+      value: <Value value={log.parameters.new} />,
+    };
+  } else if (log.parameters.new === null) {
+    message =
+      log.entity.__typename === log.parentEntity.__typename
+        ? messages.clearField
+        : messages.clearChildField;
+    values = {
+      ...values,
+      value: <Value value={log.parameters.old} />,
+    };
+  } else {
+    message =
+      log.entity.__typename === log.parentEntity.__typename
+        ? messages.updateField
+        : messages.updateChildField;
+    values = {
+      ...values,
+      oldValue: <Value value={log.parameters.old} />,
+      newValue: <Value value={log.parameters.new} />,
+    };
   }
 
-  support(translationKey: string): boolean {
-    return translationKey === UPDATE_FIELD;
-  }
-}
-
-export class DefaultArchivedFormatter implements LogFormatter {
-  format(log: LogItem): * {
-    const entityType =
-      log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
-
-    return (
-      <FormattedMessage
-        {...messages.archived}
-        values={{
-          user: <User user={log.createdBy} />,
-          entityType: <FormattedMessage {...messages[entityType]} />,
-        }}
-      />
-    );
+  if (log.entity.__typename !== log.parentEntity.__typename) {
+    values = {
+      ...values,
+      child: <EntityIdentifier log={log} />,
+    };
   }
 
-  support(translationKey: string): boolean {
-    return translationKey === ARCHIVED;
+  return <FormattedMessage {...message} values={values} />;
+};
+
+export const ArchivedFormatter = (log: LogItem): * => {
+  const entityType = log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
+
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+  };
+
+  if (log.entity.__typename !== log.parentEntity.__typename) {
+    message = messages.archivedChild;
+    values = {
+      ...values,
+      child: <EntityIdentifier log={log} />,
+    };
+  } else {
+    message = messages.archived;
+    values = {
+      ...values,
+      entityType: <FormattedMessage {...messages[entityType]} />,
+    };
   }
-}
 
-export class DefaultUnarchivedFormatter implements LogFormatter {
-  format(log: LogItem): * {
-    const entityType =
-      log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
+  return <FormattedMessage {...message} values={values} />;
+};
 
-    return (
-      <FormattedMessage
-        {...messages.unarchived}
-        values={{
-          user: <User user={log.createdBy} />,
-          entityType: <FormattedMessage {...messages[entityType]} />,
-        }}
-      />
-    );
+export const UnarchivedFormatter = (log: LogItem): * => {
+  const entityType = log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
+
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+  };
+
+  if (log.entity.__typename !== log.parentEntity.__typename) {
+    message = messages.unarchivedChild;
+    values = {
+      ...values,
+      child: <EntityIdentifier log={log} />,
+    };
+  } else {
+    message = messages.unarchived;
+    values = {
+      ...values,
+      entityType: <FormattedMessage {...messages[entityType]} />,
+    };
   }
 
-  support(translationKey: string): boolean {
-    return translationKey === UNARCHIVED;
-  }
-}
+  return <FormattedMessage {...message} values={values} />;
+};
 
-const DefaultFormatters = [
-  new DefaultUpdateFormatter(),
-  new DefaultArchivedFormatter(),
-  new DefaultUnarchivedFormatter(),
-];
+const DefaultFormatters = {
+  [CREATE]: CreateFormatter,
+  [UPDATE_FIELD]: UpdateFormatter,
+  [ARCHIVED]: ArchivedFormatter,
+  [UNARCHIVED]: UnarchivedFormatter,
+};
 
 export default DefaultFormatters;

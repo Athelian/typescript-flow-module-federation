@@ -52,7 +52,7 @@ const ProductArchiveDialog = ({
                     total: productProviders.length,
                     providers: spanWithColor(
                       <FormattedMessage {...messages.providers} />,
-                      'PROVIDER'
+                      'PRODUCT_PROVIDER'
                     ),
                   }}
                 />

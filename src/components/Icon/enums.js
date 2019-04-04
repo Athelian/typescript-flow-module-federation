@@ -118,7 +118,7 @@ import {
   faIndustryAlt as IMPORTER,
   faIndustry as SUPPLIER,
   faWarehouse as WAREHOUSER,
-  faCube as PROVIDER,
+  faCube as PRODUCT_PROVIDER,
   // Common UI
   faThList as TABLE,
   faList as LIST,
@@ -170,7 +170,7 @@ export default {
   CARGO,
   PACKAGING,
   QUANTITY_ADJUSTMENTS,
-  PROVIDER,
+  PRODUCT_PROVIDER,
   SPECIFICATIONS,
   PHOTO,
   LOGS,
