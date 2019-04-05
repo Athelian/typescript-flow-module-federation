@@ -413,8 +413,7 @@ const ContainerSection = () => {
                           {values.warehouse ? (
                             <WarehouseCard
                               warehouse={values.warehouse}
-                              readOnly
-                              onSelect={() => slideToggle(true)}
+                              onClick={() => slideToggle(true)}
                             />
                           ) : (
                             <DashedPlusButton
