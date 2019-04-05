@@ -37,12 +37,7 @@ const defaultRenderItem = (item: Object, hasPermission: Function) => (
           }
         />
         <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
-          {isOpen && (
-            <TaskTemplateFormWrapper
-              template={item}
-              onCancel={() => toggleTaskTemplateForm(false)}
-            />
-          )}
+          {isOpen && <TaskTemplateFormWrapper template={item} />}
         </SlideView>
       </React.Fragment>
     )}
