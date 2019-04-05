@@ -14,7 +14,7 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
-import { CalculatorButton } from 'components/Form/Factories/components';
+import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
 import { getMetrics, getConvert } from './helpers';
 
 type InputProps = StandardInputProps & {
@@ -34,6 +34,9 @@ type Props = LabelProps &
     metricType?: 'distance' | 'area' | 'volume' | 'weight',
     showCalculator: boolean,
     onCalculate?: Function,
+    showExtraToggleButton: boolean,
+    onToggleAutoCalculate?: Function,
+    autoCalculateIsToggled: boolean,
     editable: boolean,
     blackout: boolean,
   };
@@ -45,12 +48,14 @@ const defaultProps = {
   inputHeight: '30px',
   hideTooltip: false,
   isTouched: false,
-  showCalculator: false,
   metricSelectWidth: '30px',
   metricOptionWidth: '35px',
   editable: false,
   blackout: false,
   vertical: false,
+  showCalculator: false,
+  showExtraToggleButton: false,
+  autoCalculateIsToggled: true,
 };
 
 const MetricInputFactory = ({
@@ -59,6 +64,9 @@ const MetricInputFactory = ({
   label,
   metricType,
   showCalculator,
+  showExtraToggleButton,
+  onToggleAutoCalculate,
+  autoCalculateIsToggled,
   onCalculate,
   required,
   labelAlign,
@@ -142,8 +150,9 @@ const MetricInputFactory = ({
           <DefaultStyle {...inputWrapperConfig}>
             <MetricInput {...inputConfig} />
           </DefaultStyle>
-          {showCalculator && (
-            <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
+          {showCalculator && <CalculatorButton onClick={onCalculate} />}
+          {showExtraToggleButton && (
+            <ExtraToggleButton toggled={autoCalculateIsToggled} onClick={onToggleAutoCalculate} />
           )}
         </>
       );

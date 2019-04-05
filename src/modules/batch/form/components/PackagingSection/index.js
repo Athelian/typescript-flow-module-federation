@@ -51,6 +51,7 @@ const PackagingSection = ({ isNew }: Props) => {
         BATCH_SET_PACKAGE_SIZE,
       ].every(hasPermission));
 
+  const allowAutoCalculatePackageVolume = allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME);
   return (
     <SectionWrapper id="batch_packagingSection">
       <SectionHeader
@@ -105,9 +106,9 @@ const PackagingSection = ({ isNew }: Props) => {
             state,
             setFieldValue,
             setFieldArrayValue,
-            calculatePackageVolume,
             calculatePackageQuantity,
             triggerCalculatePackageQuantity,
+            calculatePackageVolume,
           }) => {
             const values = { ...originalValues, ...state };
             return (
@@ -245,9 +246,18 @@ const PackagingSection = ({ isNew }: Props) => {
                           defaultMessage="PKG VOLUME"
                         />
                       }
-                      showCalculator={allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME)}
-                      onCalculate={calculatePackageVolume}
-                      editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_VOLUME)}
+                      showExtraToggleButton={allowAutoCalculatePackageVolume}
+                      autoCalculateIsToggled={values.autoCalculatePackageVolume}
+                      onToggleAutoCalculate={() => {
+                        setFieldValue(
+                          'autoCalculatePackageVolume',
+                          !values.autoCalculatePackageVolume
+                        );
+                        if (!values.autoCalculatePackageVolume) {
+                          calculatePackageVolume();
+                        }
+                      }}
+                      editable={allowAutoCalculatePackageVolume}
                     />
                   )}
                 </FormField>
@@ -255,7 +265,12 @@ const PackagingSection = ({ isNew }: Props) => {
                 <FormField
                   name="packageSize.length"
                   initValue={getByPath('packageSize.length', values)}
-                  setFieldValue={(field, value) => setFieldArrayValue('packageSize.length', value)}
+                  setFieldValue={(field, value) => {
+                    setFieldArrayValue('packageSize.length', value);
+                    if (allowAutoCalculatePackageVolume && values.autoCalculatePackageVolume) {
+                      calculatePackageVolume();
+                    }
+                  }}
                   values={values}
                 >
                   {({ name, ...inputHandlers }) => (
@@ -279,7 +294,12 @@ const PackagingSection = ({ isNew }: Props) => {
                 <FormField
                   name="packageSize.width"
                   initValue={getByPath('packageSize.width', values)}
-                  setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
+                  setFieldValue={(field, value) => {
+                    setFieldArrayValue('packageSize.width', value);
+                    if (allowAutoCalculatePackageVolume && values.autoCalculatePackageVolume) {
+                      calculatePackageVolume();
+                    }
+                  }}
                   values={values}
                 >
                   {({ name, ...inputHandlers }) => (
@@ -303,7 +323,12 @@ const PackagingSection = ({ isNew }: Props) => {
                 <FormField
                   name="packageSize.height"
                   initValue={getByPath('packageSize.height', values)}
-                  setFieldValue={(field, value) => setFieldArrayValue('packageSize.height', value)}
+                  setFieldValue={(field, value) => {
+                    setFieldArrayValue('packageSize.height', value);
+                    if (allowAutoCalculatePackageVolume && values.autoCalculatePackageVolume) {
+                      calculatePackageVolume();
+                    }
+                  }}
                   values={values}
                 >
                   {({ name, ...inputHandlers }) => (

@@ -1,5 +1,5 @@
 // @flow
-import { calculateBatchQuantity } from 'modules/batch/form/helper';
+import { calculateBatchQuantity } from 'utils/batch';
 
 export const mapColumnId: Function = (entity: string) => (_: any, index: number): string =>
   `${entity}-${index}`;

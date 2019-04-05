@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Apr 03 2019 11:39:27 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Apr 04 2019 16:10:22 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30009,17 +30009,23 @@ enum NotificationType {
   """BatchUpdateQuantityInShipment"""
   BatchUpdateQuantityInShipment
 
-  """BatchCreateAdjustmentOffBoard"""
-  BatchCreateAdjustmentOffBoard
+  """BatchCreateAdjustment"""
+  BatchCreateAdjustment
 
-  """BatchCreateAdjustmentOnBoard"""
-  BatchCreateAdjustmentOnBoard
+  """BatchCreateAdjustmentInShipment"""
+  BatchCreateAdjustmentInShipment
 
-  """BatchUpdateAdjustmentQuantityOffBoard"""
-  BatchUpdateAdjustmentQuantityOffBoard
+  """BatchUpdateAdjustment"""
+  BatchUpdateAdjustment
 
-  """BatchUpdateAdjustmentQuantityOnBoard"""
-  BatchUpdateAdjustmentQuantityOnBoard
+  """BatchUpdateAdjustmentInShipment"""
+  BatchUpdateAdjustmentInShipment
+
+  """BatchDeleteAdjustment"""
+  BatchDeleteAdjustment
+
+  """BatchDeleteAdjustmentInShipment"""
+  BatchDeleteAdjustmentInShipment
 
   """WarehouseCreate"""
   WarehouseCreate
@@ -36121,6 +36127,7 @@ type TaskPayloadPagination {
 input TaskSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
   startDate: SortOrder
   dueDate: SortOrder
   entity: SortOrder
