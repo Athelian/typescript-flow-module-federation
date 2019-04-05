@@ -25,7 +25,7 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
   removeExistingBatches = (batches: Array<Object>) => {
     this.existingBatches = [
       ...this.existingBatches.filter(existingBatch =>
-        batches.some(batch => batch.id === existingBatch.id)
+        batches.some(batch => batch.id !== existingBatch.id)
       ),
     ];
   };

@@ -206,15 +206,15 @@ export const prepareParsedShipmentInput = ({
   existingBatches,
   newValues,
 }: ShipmentInputType): Object => {
-  const originalBatchesInPool = getBatchesInPool(
-    getByPathWithDefault([], 'batches', originalValues)
-  );
-  const existingBatchesInPool = getBatchesInPool(existingBatches);
-  const newBatchesInPool = getBatchesInPool(newValues.batches);
+  const originalBatches = getByPathWithDefault([], 'batches', originalValues);
+  const newBatches = newValues.batches;
 
-  const originalBatchIdsInPool = originalBatchesInPool.map(batch => batch.id);
-  const existingBatchIdsInPool = existingBatchesInPool.map(batch => batch.id);
-  const forceSendBatchIdsForPool = !isEquals(originalBatchIdsInPool, existingBatchIdsInPool);
+  const existingBatchesInPool = getBatchesInPool(existingBatches);
+  const newBatchesInPool = getBatchesInPool(newBatches);
+
+  const originalBatchIds = originalBatches.map(batch => batch.id);
+  const newBatchIds = newBatches.map(batch => batch.id);
+  const forceSendBatchIdsForPool = !isEquals(originalBatchIds, newBatchIds);
 
   return {
     ...parseParentIdField(
