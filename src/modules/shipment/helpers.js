@@ -1,5 +1,5 @@
 // @flow
-import { isNullOrUndefined, isDataType } from 'utils/fp';
+import { isNullOrUndefined, isDataType, getByPathWithDefault } from 'utils/fp';
 
 export const getShipmentSummary = (shipment: Object) => {
   const totalBatches = shipment.batches ? shipment.batches.length : 0;
@@ -26,13 +26,14 @@ export const isFocusedContainerCard = (selected: string | number | null): boolea
 
 export const getBatchesByContainerId = (
   batches: Array<Object>,
-  containerId: string
-): Array<Object> =>
-  batches
+  containerId: ?string
+): Array<Object> => {
+  if (!containerId) return batches;
+
+  return batches
     .slice(0)
-    .filter(batch =>
-      !isNullOrUndefined(batch.container) ? batch.container.id === containerId : false
-    );
+    .filter(batch => getByPathWithDefault(null, 'container.id', batch) === containerId);
+};
 
 export const getBatchesInPool = (batches: Array<Object>): Array<Object> =>
   batches.filter(batch => isNullOrUndefined(batch.container));

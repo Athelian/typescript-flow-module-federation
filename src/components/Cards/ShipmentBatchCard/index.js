@@ -47,17 +47,20 @@ import {
   InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
+  RepresentIconStyle,
 } from './style';
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
   onClone: (batch: Object) => void,
   onClear: (batch: Object) => void,
+  onClickRepresentative: () => void,
   selectable: boolean,
   editable: {
     no: boolean,
     quantity: boolean,
     deliveredAt: boolean,
+    representativeBatch: boolean,
     desiredAt: boolean,
     removeBatch: boolean,
     cloneBatch: boolean,
@@ -71,6 +74,7 @@ type OptionalProps = {
     price: boolean,
     tasks: boolean,
   },
+  isRepresented: ?boolean,
 };
 
 type Props = OptionalProps & {
@@ -83,12 +87,14 @@ const defaultProps = {
   onClick: () => {},
   onClone: () => {},
   onClear: () => {},
+  onClickRepresentative: () => {},
   selectable: false,
   editable: {
     no: false,
     quantity: false,
     deliveredAt: false,
     desiredAt: false,
+    representativeBatch: false,
     removeBatch: false,
     cloneBatch: false,
   },
@@ -101,6 +107,7 @@ const defaultProps = {
     price: false,
     tasks: false,
   },
+  isRepresented: null,
 };
 
 const ShipmentBatchCard = ({
@@ -108,11 +115,13 @@ const ShipmentBatchCard = ({
   onClick,
   onClear,
   onClone,
+  onClickRepresentative,
   saveOnBlur,
   currency,
   selectable,
   editable,
   navigate,
+  isRepresented,
   read,
   ...rest
 }: Props) => {
@@ -205,7 +214,26 @@ const ShipmentBatchCard = ({
               <Icon icon="PRODUCT" />
             </div>
           )}
+          {isRepresented !== null &&
+            (editable.representativeBatch ? (
+              <button
+                type="button"
+                onClick={evt => {
+                  evt.stopPropagation();
+
+                  onClickRepresentative();
+                }}
+                className={RepresentIconStyle(!!isRepresented)}
+              >
+                <Icon icon="STAR" />
+              </button>
+            ) : (
+              <div className={RepresentIconStyle(!!isRepresented)}>
+                <Icon icon="STAR" />
+              </div>
+            ))}
         </div>
+
         <div className={BatchInfoWrapperStyle}>
           <div
             className={BatchNoWrapperStyle}

@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { isFocusedBatchesPool, isFocusedContainerCard } from 'modules/shipment/helpers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
@@ -9,100 +8,69 @@ import {
   SHIPMENT_BATCH_LIST_IN_CONTAINER,
 } from 'modules/permission/constants/shipment';
 import { CargoSectionWrapperStyle } from './style';
-import ContainersAreaReadOnly from './ContainersAreaReadOnly';
 import ContainersArea from './ContainersArea';
 import BatchesArea from './BatchesArea';
-import ContainerBatchesArea from './ContainerBatchesArea';
 
-type Props = {};
+const UNSELECTED = -2;
+const POOL = -1;
 
-type State = {
-  focusedCardIndex: string | number | null,
-  isSelectBatchesMode: boolean,
-  selectedBatches: Array<Object>,
-};
-
-class CargoSection extends React.Component<Props, State> {
-  state = {
-    focusedCardIndex: null, // 'Batches_Pool' = Batches Pool
-    isSelectBatchesMode: false,
-    selectedBatches: [],
-  };
-
-  setIsSelectBatchesMode = (isSelectBatchesMode: boolean) =>
-    this.setState({ isSelectBatchesMode, selectedBatches: [] });
-
-  setSelected = (cardIndex: string | number | null) => {
-    const { focusedCardIndex } = this.state;
-    if (focusedCardIndex === cardIndex) {
-      this.setState({ focusedCardIndex: null });
-    } else {
-      this.setState({ focusedCardIndex: cardIndex });
-    }
-  };
-
-  setSelectedBatches = (batch: Object) => {
-    const { selectedBatches } = this.state;
-    if (selectedBatches.includes(batch)) {
-      this.setState({
-        selectedBatches: selectedBatches.filter(({ id }) => id !== batch.id),
-      });
-    } else {
-      this.setState({
-        selectedBatches: [...selectedBatches, batch],
-      });
-    }
-  };
-
-  render() {
-    const { focusedCardIndex, isSelectBatchesMode, selectedBatches } = this.state;
-
-    return (
-      <div className={CargoSectionWrapperStyle}>
-        {isSelectBatchesMode ? (
-          <ContainersAreaReadOnly
-            focusedCardIndex={focusedCardIndex}
-            setIsSelectBatchesMode={this.setIsSelectBatchesMode}
-            selectedBatches={selectedBatches}
-          />
-        ) : (
-          <ContainersArea focusedCardIndex={focusedCardIndex} setSelected={this.setSelected} />
-        )}
-
-        {isFocusedContainerCard(focusedCardIndex) ? (
-          <ContainerBatchesArea
-            // $FlowFixMe
-            focusedContainerIndex={focusedCardIndex}
-            isSelectBatchesMode={isSelectBatchesMode}
-            setIsSelectBatchesMode={this.setIsSelectBatchesMode}
-            selectedBatches={selectedBatches}
-            setSelectedBatches={this.setSelectedBatches}
-          />
-        ) : (
-          <BatchesArea
-            isFocusedBatchesPool={isFocusedBatchesPool(focusedCardIndex)}
-            isSelectBatchesMode={isSelectBatchesMode}
-            setIsSelectBatchesMode={this.setIsSelectBatchesMode}
-            selectedBatches={selectedBatches}
-            setSelectedBatches={this.setSelectedBatches}
-          />
-        )}
-      </div>
-    );
-  }
-}
-
-const CargoSectionPermissionWrapper = () => {
+const CargoSection = () => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const [focusedContainerIndex, setFocusedCardIndex] = React.useState(UNSELECTED);
+  const [isSelectBatchesMode, setIsSelectBatchesMode] = React.useState(false);
+  const [selectedBatches, setSelectedBatches] = React.useState([]);
+
+  const onSelectBatch = React.useCallback(
+    (batch: Object) => {
+      if (selectedBatches.includes(batch)) {
+        setSelectedBatches(selectedBatches.filter(item => item.id !== batch.id));
+      } else {
+        setSelectedBatches([...selectedBatches, batch]);
+      }
+    },
+    [selectedBatches]
+  );
+
+  const onChangeSelectMode = React.useCallback((isSelectMode: boolean) => {
+    setIsSelectBatchesMode(isSelectMode);
+    setSelectedBatches([]);
+  }, []);
 
   if (
     !hasPermission(SHIPMENT_CONTAINER_LIST) ||
     !hasPermission(SHIPMENT_BATCH_LIST) ||
     !hasPermission(SHIPMENT_BATCH_LIST_IN_CONTAINER)
-  )
+  ) {
     return null;
-  return <CargoSection />;
+  }
+
+  return (
+    <div className={CargoSectionWrapperStyle}>
+      <ContainersArea
+        isFocusedBatchesPool={focusedContainerIndex === POOL}
+        focusedContainerIndex={focusedContainerIndex}
+        isSelectBatchesMode={isSelectBatchesMode}
+        onChangeSelectMode={onChangeSelectMode}
+        onSelect={setFocusedCardIndex}
+        onSelectPool={() =>
+          focusedContainerIndex === POOL
+            ? setFocusedCardIndex(UNSELECTED)
+            : setFocusedCardIndex(POOL)
+        }
+        onDeselect={() => setFocusedCardIndex(UNSELECTED)}
+        selectedBatches={selectedBatches}
+      />
+      <BatchesArea
+        isFocusedBatchesPool={focusedContainerIndex === POOL}
+        focusedContainerIndex={focusedContainerIndex}
+        isSelectBatchesMode={isSelectBatchesMode}
+        onChangeSelectMode={onChangeSelectMode}
+        selectedBatches={selectedBatches}
+        onSelectBatch={onSelectBatch}
+      />
+    </div>
+  );
 };
 
-export default CargoSectionPermissionWrapper;
+export default CargoSection;
