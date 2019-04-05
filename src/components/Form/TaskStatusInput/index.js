@@ -65,12 +65,12 @@ const TaskStatusInput = ({
         <div
           className={TaskStatusInputWrapperStyle({ status, editable, width })}
           onMouseEnter={() => {
-            if (isInProgress && editable) {
+            if (editable) {
               changeHoverState(true);
             }
           }}
           onMouseLeave={() => {
-            if (isInProgress && editable) {
+            if (editable) {
               changeHoverState(false);
             }
           }}
