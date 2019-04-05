@@ -1,6 +1,6 @@
 // @flow
 
-type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight' | 'surface';
+type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight';
 
 export const getMetrics = (metricType?: MetricEnumType): Array<string> => {
   if (metricType) {
@@ -8,7 +8,6 @@ export const getMetrics = (metricType?: MetricEnumType): Array<string> => {
       case 'distance':
         return ['cm', 'm'];
       case 'area':
-      case 'surface':
         return ['cm²', 'm²'];
       case 'volume':
         return ['cm³', 'm³'];

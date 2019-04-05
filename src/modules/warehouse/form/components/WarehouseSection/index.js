@@ -207,7 +207,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                   >
                     {({ name, ...inputHandlers }) => (
                       <MetricInputFactory
-                        metricType="surface"
+                        metricType="area"
                         name={name}
                         {...inputHandlers}
                         isNew={isNew}
