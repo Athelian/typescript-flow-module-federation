@@ -2,20 +2,16 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue, ArrayValue } from 'react-values';
-import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import scrollIntoView from 'utils/scrollIntoView';
-import { OrderItemsContainer } from 'modules/order/form/containers';
 import { ORDER_UPDATE, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
-import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import { getBatchByFillBatch, generateBatchItem } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import validator from 'modules/batch/form/validator';
 import { generateBatchForClone } from 'utils/batch';
 import {
   ItemGridStyle,
@@ -128,46 +124,13 @@ const OrderItems = ({
                             <>
                               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                                 {opened && (
-                                  <Subscribe
-                                    to={[
-                                      BatchInfoContainer,
-                                      BatchTasksContainer,
-                                      OrderItemsContainer,
-                                    ]}
-                                  >
-                                    {(batchInfoContainer, batchTasksContainer, { state }) => (
-                                      <BatchFormWrapper
-                                        batch={state.orderItems[index].batches[position]}
-                                        isNew={!!batch.isNew}
-                                        orderItem={item}
-                                        initDetailValues={initValues => {
-                                          const { todo, ...info } = initValues;
-                                          batchInfoContainer.initDetailValues(info);
-                                          batchTasksContainer.initDetailValues(todo);
-                                        }}
-                                        onCancel={() => slideToggle(false)}
-                                        isReady={formContainer =>
-                                          formContainer.isReady(
-                                            {
-                                              ...batchInfoContainer.state,
-                                              ...batchTasksContainer.state,
-                                            },
-                                            validator
-                                          ) &&
-                                          (batchInfoContainer.isDirty() ||
-                                            batchTasksContainer.isDirty())
-                                        }
-                                        onSave={() => {
-                                          const updatedBatch = {
-                                            ...batchInfoContainer.state,
-                                            ...batchTasksContainer.state,
-                                          };
-                                          slideToggle(false);
-                                          changeBatch(position, 1, updatedBatch);
-                                        }}
-                                      />
-                                    )}
-                                  </Subscribe>
+                                  <BatchFormWrapper
+                                    batch={batch}
+                                    onSave={value => {
+                                      slideToggle(false);
+                                      changeBatch(position, 1, value);
+                                    }}
+                                  />
                                 )}
                               </SlideView>
                               <OrderBatchCard
