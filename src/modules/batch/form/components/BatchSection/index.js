@@ -81,7 +81,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
         icon="BATCH"
         title={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
       >
-        {!isNew && (
+        {batch.updatedAt && (
           <>
             <LastModified updatedAt={batch.updatedAt} updatedBy={batch.updatedBy} />
 
