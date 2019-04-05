@@ -1,13 +1,14 @@
 // @flow
 
-export const getMetrics = (
-  metricType?: 'distance' | 'area' | 'volume' | 'weight'
-): Array<string> => {
+type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight' | 'surface';
+
+export const getMetrics = (metricType?: MetricEnumType): Array<string> => {
   if (metricType) {
     switch (metricType) {
       case 'distance':
         return ['cm', 'm'];
       case 'area':
+      case 'surface':
         return ['cm²', 'm²'];
       case 'volume':
         return ['cm³', 'm³'];
@@ -21,7 +22,7 @@ export const getMetrics = (
   return [];
 };
 
-export const getConvert = (metricType?: 'distance' | 'area' | 'volume' | 'weight'): Function => {
+export const getConvert = (metricType?: MetricEnumType): Function => {
   if (metricType) {
     switch (metricType) {
       case 'distance':

@@ -27,11 +27,10 @@ import {
   SectionWrapper,
   LastModified,
   TextInputFactory,
-  NumberInputFactory,
   EnumSearchSelectInputFactory,
-  DefaultSurfaceStyle,
   CustomFieldsFactory,
   UserAssignmentInputFactory,
+  MetricInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
 import SelectPartners from '../SelectPartners';
@@ -202,24 +201,23 @@ const WarehouseSection = ({ isNew }: Props) => {
 
                   <FormField
                     name="surface"
-                    initValue={getByPath('surface.value', values)}
-                    setFieldValue={(field, value) =>
-                      setFieldArrayValue('surface', { value, metric: 'm²' })
-                    }
+                    initValue={getByPath('surface', values)}
+                    setFieldValue={(field, value) => setFieldArrayValue('surface', value)}
+                    values={values}
                   >
                     {({ name, ...inputHandlers }) => (
-                      <NumberInputFactory
+                      <MetricInputFactory
+                        metricType="surface"
                         name={name}
                         {...inputHandlers}
                         isNew={isNew}
-                        originalValue={getByPath('surface.value', originalValues)}
+                        originalValue={getByPath('surface', originalValues)}
                         label={
                           <FormattedMessage
                             id="modules.WareHouses.surfaceArea"
                             defaultMessage="SURFACE AREA"
                           />
                         }
-                        WrapperComponent={DefaultSurfaceStyle}
                         editable={allowUpdate}
                       />
                     )}
