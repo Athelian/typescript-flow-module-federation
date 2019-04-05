@@ -34,11 +34,11 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-function isExist(
+const exist = (
   productProvider: Object,
   productProviders: Array<Object>,
   isAddedProvider: boolean
-): boolean {
+): boolean => {
   const provider = {
     exporter: getByPathWithDefault(0, 'exporter.id', productProvider),
     supplier: getByPathWithDefault(0, 'supplier.id', productProvider),
@@ -56,7 +56,7 @@ function isExist(
         }));
 
   return contains(provider, providers);
-}
+};
 
 const ProductProviderFormWrapper = ({
   isOwner,
@@ -70,89 +70,92 @@ const ProductProviderFormWrapper = ({
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[ProductProviderContainer]}>
-        {productProviderContainer => (
-          <Layout
-            navBar={
-              <SlideViewNavBar>
-                <EntityIcon icon="PROVIDER" color="PROVIDER" />
-                <JumpToSection>
-                  <SectionTabs
-                    link="productProvider_productProviderSection"
-                    label={
-                      <FormattedMessage
-                        id="modules.Products.provider"
-                        defaultMessage="END PRODUCT"
-                      />
-                    }
-                    icon="PROVIDER"
-                  />
-                  <SectionTabs
-                    link="productProvider_specificationsSection"
-                    label={
-                      <FormattedMessage
-                        id="modules.Products.specifications"
-                        defaultMessage="SPECIFICATIONS"
-                      />
-                    }
-                    icon="SPECIFICATIONS"
-                  />
-                  <SectionTabs
-                    link="productProvider_productProviderPackagingSection"
-                    label={
-                      <FormattedMessage
-                        id="modules.Products.packaging"
-                        defaultMessage="PACKAGING"
-                      />
-                    }
-                    icon="PACKAGING"
-                  />
-                  <SectionTabs
-                    link="productProvider_documentsSection"
-                    label={
-                      <FormattedMessage
-                        id="modules.Products.documents"
-                        defaultMessage="DOCUMENTS"
-                      />
-                    }
-                    icon="DOCUMENT"
-                  />
-                </JumpToSection>
-
-                {productProviderContainer.isDirty() && (
-                  <>
-                    {isNew ? (
-                      <CancelButton onClick={() => onCancel()} />
-                    ) : (
-                      <ResetButton
-                        onClick={() => {
-                          resetFormState(productProviderContainer);
-                          formContainer.onReset();
-                        }}
-                      />
-                    )}
-                    <SaveButton
-                      data-testid="saveProviderButton"
-                      disabled={
-                        !productProviderContainer.isDirty() ||
-                        !formContainer.isReady(productProviderContainer.state, validator) ||
-                        isExist(productProviderContainer.state, productProviders, isAddedProvider)
+        {productProviderContainer => {
+          const isExist = exist(productProviderContainer.state, productProviders, isAddedProvider);
+          return (
+            <Layout
+              navBar={
+                <SlideViewNavBar>
+                  <EntityIcon icon="PROVIDER" color="PROVIDER" />
+                  <JumpToSection>
+                    <SectionTabs
+                      link="productProvider_productProviderSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.provider"
+                          defaultMessage="END PRODUCT"
+                        />
                       }
-                      onClick={() => onSave(productProviderContainer.state)}
+                      icon="PROVIDER"
                     />
-                  </>
-                )}
-              </SlideViewNavBar>
-            }
-          >
-            <ProductProviderForm
-              productProvider={productProvider}
-              initDetailValues={productProviderContainer.initDetailValues}
-              isExist={isExist(productProvider, productProviders, isAddedProvider)}
-              isNew={productProvider.isNew}
-              isOwner={isOwner}
-            />
-          </Layout>
-        )}
+                    <SectionTabs
+                      link="productProvider_specificationsSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.specifications"
+                          defaultMessage="SPECIFICATIONS"
+                        />
+                      }
+                      icon="SPECIFICATIONS"
+                    />
+                    <SectionTabs
+                      link="productProvider_productProviderPackagingSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.packaging"
+                          defaultMessage="PACKAGING"
+                        />
+                      }
+                      icon="PACKAGING"
+                    />
+                    <SectionTabs
+                      link="productProvider_documentsSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.Products.documents"
+                          defaultMessage="DOCUMENTS"
+                        />
+                      }
+                      icon="DOCUMENT"
+                    />
+                  </JumpToSection>
+
+                  {productProviderContainer.isDirty() && (
+                    <>
+                      {isNew ? (
+                        <CancelButton onClick={() => onCancel()} />
+                      ) : (
+                        <ResetButton
+                          onClick={() => {
+                            resetFormState(productProviderContainer);
+                            formContainer.onReset();
+                          }}
+                        />
+                      )}
+                      <SaveButton
+                        data-testid="saveProviderButton"
+                        disabled={
+                          !productProviderContainer.isDirty() ||
+                          !formContainer.isReady(productProviderContainer.state, validator) ||
+                          isExist
+                        }
+                        onClick={() => onSave(productProviderContainer.state)}
+                      />
+                    </>
+                  )}
+                </SlideViewNavBar>
+              }
+            >
+              <ProductProviderForm
+                productProvider={productProvider}
+                initDetailValues={productProviderContainer.initDetailValues}
+                isExist={isExist}
+                isNew={isNew}
+                isOwner={isOwner}
+              />
+            </Layout>
+          );
+        }}
       </Subscribe>
     </Provider>
   );

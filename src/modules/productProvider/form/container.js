@@ -44,8 +44,11 @@ type FormState = {
   files?: Array<Document>,
 };
 
-const initValues = {
+export const initValues = {
+  supplier: null,
   origin: null,
+  packageName: null,
+  unitType: null,
   packageCapacity: 0,
   productionLeadTime: 0,
   unitVolume: {

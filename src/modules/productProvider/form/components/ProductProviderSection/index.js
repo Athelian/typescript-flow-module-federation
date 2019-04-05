@@ -68,7 +68,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     }
                   />
 
-                  {isNew ? (
+                  {values.isNew ? (
                     <BooleanValue>
                       {({ value: opened, set: exporterSlideToggle }) => (
                         <>
@@ -137,7 +137,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       ) : null
                     }
                   />
-                  {isNew ? (
+                  {values.isNew ? (
                     <BooleanValue>
                       {({ value: opened, set: supplierSlideToggle }) => (
                         <>

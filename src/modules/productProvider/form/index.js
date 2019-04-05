@@ -51,7 +51,7 @@ const ProductProviderForm = ({
               />
             }
           >
-            {!isNew && (
+            {productProvider.updatedAt && (
               <LastModified
                 updatedAt={productProvider.updatedAt}
                 updatedBy={productProvider.updatedBy}
