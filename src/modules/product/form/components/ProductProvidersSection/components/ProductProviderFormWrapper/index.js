@@ -16,13 +16,12 @@ import { contains, getByPathWithDefault } from 'utils/fp';
 type OptionalProps = {
   isAddedProvider: boolean,
   isOwner: boolean,
+  isNew: boolean,
 };
 
 type Props = OptionalProps & {
   productProviders: Array<Object>,
   productProvider: Object,
-  isNew: boolean,
-  initDetailValues: Function,
   onSave: Function,
   onCancel: Function,
 };
@@ -30,15 +29,16 @@ type Props = OptionalProps & {
 const defaultProps = {
   isAddedProvider: false,
   isOwner: true,
+  isNew: false,
 };
 
 const formContainer = new FormContainer();
 
-function isExist(
+const exist = (
   productProvider: Object,
   productProviders: Array<Object>,
   isAddedProvider: boolean
-): boolean {
+): boolean => {
   const provider = {
     exporter: getByPathWithDefault(0, 'exporter.id', productProvider),
     supplier: getByPathWithDefault(0, 'supplier.id', productProvider),
@@ -56,31 +56,27 @@ function isExist(
         }));
 
   return contains(provider, providers);
-}
+};
 
-class ProductProviderFormWrapper extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
-  componentDidMount() {
-    const { productProvider, initDetailValues } = this.props;
-    initDetailValues(productProvider);
-  }
-
-  componentWillUnmount() {
-    formContainer.onReset();
-  }
-
-  onReset = (state: Object) => {
-    resetFormState(state);
-  };
-
-  render() {
-    const { isNew, isOwner, onSave, productProviders, isAddedProvider, onCancel } = this.props;
-
-    return (
-      <Provider inject={[formContainer]}>
-        <Subscribe to={[ProductProviderContainer]}>
-          {formState => (
+const ProductProviderFormWrapper = ({
+  isOwner,
+  isNew,
+  onSave,
+  productProviders,
+  productProvider,
+  isAddedProvider,
+  onCancel,
+}: Props) => {
+  return (
+    <Provider inject={[formContainer]}>
+      <Subscribe to={[ProductProviderContainer]}>
+        {productProviderContainer => {
+          const isExist = exist(productProviderContainer.state, productProviders, isAddedProvider);
+          const disableSaveButton =
+            !productProviderContainer.isDirty() ||
+            !formContainer.isReady(productProviderContainer.state, validator) ||
+            isExist;
+          return (
             <Layout
               navBar={
                 <SlideViewNavBar>
@@ -127,22 +123,28 @@ class ProductProviderFormWrapper extends React.Component<Props> {
                       icon="DOCUMENT"
                     />
                   </JumpToSection>
-
-                  {formState.isDirty() && (
+                  {isNew && (
                     <>
-                      {isNew ? (
-                        <CancelButton onClick={() => onCancel()} />
-                      ) : (
-                        <ResetButton onClick={() => this.onReset(formState)} />
-                      )}
+                      <CancelButton onClick={() => onCancel()} />
                       <SaveButton
                         data-testid="saveProviderButton"
-                        disabled={
-                          !formState.isDirty() ||
-                          !formContainer.isReady(formState.state, validator) ||
-                          isExist(formState.state, productProviders, isAddedProvider)
-                        }
-                        onClick={() => onSave(formState.state)}
+                        disabled={disableSaveButton}
+                        onClick={() => onSave(productProviderContainer.state)}
+                      />
+                    </>
+                  )}
+                  {!isNew && productProviderContainer.isDirty() && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(productProviderContainer);
+                          formContainer.onReset();
+                        }}
+                      />
+                      <SaveButton
+                        data-testid="saveProviderButton"
+                        disabled={disableSaveButton}
+                        onClick={() => onSave(productProviderContainer.state)}
                       />
                     </>
                   )}
@@ -150,17 +152,20 @@ class ProductProviderFormWrapper extends React.Component<Props> {
               }
             >
               <ProductProviderForm
-                productProvider={formState.state}
-                isExist={isExist(formState.state, productProviders, isAddedProvider)}
+                productProvider={productProvider}
+                initDetailValues={productProviderContainer.initDetailValues}
+                isExist={isExist}
                 isNew={isNew}
                 isOwner={isOwner}
               />
             </Layout>
-          )}
-        </Subscribe>
-      </Provider>
-    );
-  }
-}
+          );
+        }}
+      </Subscribe>
+    </Provider>
+  );
+};
+
+ProductProviderFormWrapper.defaultProps = defaultProps;
 
 export default ProductProviderFormWrapper;

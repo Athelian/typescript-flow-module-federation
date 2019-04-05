@@ -9,8 +9,8 @@ import { BooleanValue } from 'react-values';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import { injectUid } from 'utils/id';
+import generateEndProduct from 'utils/product';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
-import ProductProviderContainer from 'modules/productProvider/form/container';
 import {
   PRODUCT_PROVIDER_FORM,
   PRODUCT_PROVIDER_CREATE,
@@ -51,80 +51,23 @@ function ProductProvidersSection({ isOwner }: Props) {
                       />
                       <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                         {opened && (
-                          <Subscribe to={[ProductProviderContainer]}>
-                            {({ initDetailValues }) => (
-                              <ProductProviderFormWrapper
-                                isAddedProvider
-                                productProviders={productProviders}
-                                productProvider={injectUid({
-                                  isNew: true,
-                                  unitVolume: {
-                                    value: 0,
-                                    metric: 'm³',
-                                  },
-                                  unitSize: {
-                                    width: {
-                                      value: 0,
-                                      metric: 'cm',
-                                    },
-                                    height: {
-                                      value: 0,
-                                      metric: 'cm',
-                                    },
-                                    length: {
-                                      value: 0,
-                                      metric: 'cm',
-                                    },
-                                  },
-                                  unitWeight: {
-                                    value: 0,
-                                    metric: 'kg',
-                                  },
-                                  unitPrice: {
-                                    amount: 0,
-                                    currency: 'JPY',
-                                  },
-                                  inspectionFee: {
-                                    amount: 0,
-                                    currency: 'JPY',
-                                  },
-                                  packageGrossWeight: {
-                                    value: 0,
-                                    metric: 'kg',
-                                  },
-                                  packageVolume: {
-                                    value: 0,
-                                    metric: 'm³',
-                                  },
-                                  packageSize: {
-                                    width: {
-                                      value: 0,
-                                      metric: 'cm',
-                                    },
-                                    height: {
-                                      value: 0,
-                                      metric: 'cm',
-                                    },
-                                    length: {
-                                      value: 0,
-                                      metric: 'cm',
-                                    },
-                                  },
-                                  files: [],
-                                })}
-                                isNew
-                                initDetailValues={initDetailValues}
-                                onCancel={() => slideToggle(false)}
-                                onSave={newProvider => {
-                                  slideToggle(false);
-                                  setFieldValue(
-                                    `productProviders.${productProviders.length}`,
-                                    newProvider
-                                  );
-                                }}
-                              />
-                            )}
-                          </Subscribe>
+                          <ProductProviderFormWrapper
+                            isAddedProvider
+                            productProviders={productProviders}
+                            productProvider={{
+                              isNew: true,
+                              ...generateEndProduct(),
+                            }}
+                            isNew
+                            onCancel={() => slideToggle(false)}
+                            onSave={newProvider => {
+                              slideToggle(false);
+                              setFieldValue(
+                                `productProviders.${productProviders.length}`,
+                                newProvider
+                              );
+                            }}
+                          />
                         )}
                       </SlideView>
                     </>
@@ -149,24 +92,19 @@ function ProductProvidersSection({ isOwner }: Props) {
                           <>
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
-                                <Subscribe to={[ProductProviderContainer]}>
-                                  {({ initDetailValues }) => (
-                                    <ProductProviderFormWrapper
-                                      isOwner={isOwner}
-                                      productProviders={productProviders}
-                                      productProvider={productProviders[index]}
-                                      isNew={!!productProvider.isNew}
-                                      initDetailValues={initDetailValues}
-                                      onCancel={() => slideToggle(false)}
-                                      onSave={newProvider => {
-                                        slideToggle(false);
-                                        setFieldValue(`productProviders.${index}`, newProvider);
-                                      }}
-                                    />
-                                  )}
-                                </Subscribe>
+                                <ProductProviderFormWrapper
+                                  isOwner={isOwner}
+                                  productProviders={productProviders}
+                                  productProvider={productProviders[index]}
+                                  onCancel={() => slideToggle(false)}
+                                  onSave={newProvider => {
+                                    slideToggle(false);
+                                    setFieldValue(`productProviders.${index}`, newProvider);
+                                  }}
+                                />
                               )}
                             </SlideView>
+
                             <ProductProviderCard
                               productProvider={productProvider}
                               onClick={() => slideToggle(true)}
