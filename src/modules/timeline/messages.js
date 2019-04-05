@@ -36,7 +36,7 @@ export default defineMessages({
     defaultMessage: '{user} has archived this {entityType}',
   },
   archivedChild: {
-    id: 'modules.timeline.archived',
+    id: 'modules.timeline.archivedChild',
     defaultMessage: '{user} has archived {child}',
   },
   unarchived: {
@@ -44,7 +44,7 @@ export default defineMessages({
     defaultMessage: '{user} has activated this {entityType}',
   },
   unarchivedChild: {
-    id: 'modules.timeline.unarchived',
+    id: 'modules.timeline.unarchivedChild',
     defaultMessage: '{user} has activated {child}',
   },
   // OTHER
