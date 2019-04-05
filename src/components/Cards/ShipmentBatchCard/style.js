@@ -204,3 +204,18 @@ export const BatchTagsWrapperStyle: string = css`
   padding: 0 0 0 10px;
   overflow: hidden;
 `;
+
+export const RepresentIconStyle = (isRepresented: boolean) => css`
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  ${fontSizes.SMALL};
+  width: 20px;
+  height: 20px;
+  ${presets.BUTTON};
+  color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
+  &:hover,
+  :focus {
+    color: ${isRepresented ? colors.YELLOW_DARK : colors.WHITE};
+  }
+`;
