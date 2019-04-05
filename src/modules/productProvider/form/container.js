@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy } from 'utils/data';
+import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 import { convertVolume, calculatePackageVolume } from 'utils/batch';
 
 type Price = {
@@ -137,7 +137,8 @@ export default class ProductProviderContainer extends Container<FormState> {
     });
   };
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

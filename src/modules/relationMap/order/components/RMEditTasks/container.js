@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
-import { cleanFalsy } from 'utils/data';
+import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type TasksState = {
@@ -30,7 +30,8 @@ export default class RMEditTasksContainer extends Container<TasksState> {
     });
   };
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

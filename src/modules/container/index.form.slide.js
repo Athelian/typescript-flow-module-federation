@@ -87,15 +87,7 @@ export default class ContainerFormInSlide extends React.PureComponent<Props> {
             </NavBar>
           }
         >
-          <Subscribe to={[ContainerFormContainer]}>
-            {({ initDetailValues }) => (
-              <ContainerForm
-                inShipmentForm
-                container={container}
-                onFormReady={() => initDetailValues(container)}
-              />
-            )}
-          </Subscribe>
+          <ContainerForm inShipmentForm container={container} />
         </Layout>
       </Provider>
     );
