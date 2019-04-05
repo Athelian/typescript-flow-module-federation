@@ -72,6 +72,10 @@ const ProductProviderFormWrapper = ({
       <Subscribe to={[ProductProviderContainer]}>
         {productProviderContainer => {
           const isExist = exist(productProviderContainer.state, productProviders, isAddedProvider);
+          const disableSaveButton =
+            !productProviderContainer.isDirty() ||
+            !formContainer.isReady(productProviderContainer.state, validator) ||
+            isExist;
           return (
             <Layout
               navBar={
@@ -119,26 +123,27 @@ const ProductProviderFormWrapper = ({
                       icon="DOCUMENT"
                     />
                   </JumpToSection>
-
-                  {productProviderContainer.isDirty() && (
+                  {isNew && (
                     <>
-                      {isNew ? (
-                        <CancelButton onClick={() => onCancel()} />
-                      ) : (
-                        <ResetButton
-                          onClick={() => {
-                            resetFormState(productProviderContainer);
-                            formContainer.onReset();
-                          }}
-                        />
-                      )}
+                      <CancelButton onClick={() => onCancel()} />
                       <SaveButton
                         data-testid="saveProviderButton"
-                        disabled={
-                          !productProviderContainer.isDirty() ||
-                          !formContainer.isReady(productProviderContainer.state, validator) ||
-                          isExist
-                        }
+                        disabled={disableSaveButton}
+                        onClick={() => onSave(productProviderContainer.state)}
+                      />
+                    </>
+                  )}
+                  {!isNew && productProviderContainer.isDirty() && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(productProviderContainer);
+                          formContainer.onReset();
+                        }}
+                      />
+                      <SaveButton
+                        data-testid="saveProviderButton"
+                        disabled={disableSaveButton}
                         onClick={() => onSave(productProviderContainer.state)}
                       />
                     </>
