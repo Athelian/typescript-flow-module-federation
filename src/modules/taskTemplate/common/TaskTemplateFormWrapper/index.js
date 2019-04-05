@@ -24,15 +24,15 @@ import { removeTypename } from 'utils/data';
 type OptionalProps = {
   template: Object,
   isNew: boolean,
-};
-
-type Props = OptionalProps & {
   onCancel: Function,
 };
+
+type Props = OptionalProps & {};
 
 const defaultProps = {
   template: {},
   isNew: false,
+  onCancel: () => {},
 };
 
 const formContainer = new FormContainer();
@@ -103,10 +103,6 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     }
   };
 
-  onReset = (formState: Object) => {
-    resetFormState(formState);
-  };
-
   onMutationCompleted = (result: Object) => {
     if (!result) {
       toast.error('There was an error. Please try again later');
@@ -155,7 +151,12 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                       {isNew && <CancelButton onClick={() => onCancel()} />}
 
                       {!isNew && taskTemplateContainer.isDirty() && (
-                        <ResetButton onClick={() => this.onReset(taskTemplateContainer)} />
+                        <ResetButton
+                          onClick={() => {
+                            resetFormState(taskTemplateContainer);
+                            formContainer.onReset();
+                          }}
+                        />
                       )}
                       {(isNew || taskTemplateContainer.isDirty()) && (
                         <SaveButton
