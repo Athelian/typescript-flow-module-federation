@@ -16,6 +16,7 @@ import { contains, getByPathWithDefault } from 'utils/fp';
 type OptionalProps = {
   isAddedProvider: boolean,
   isOwner: boolean,
+  isNew: boolean,
 };
 
 type Props = OptionalProps & {
@@ -28,6 +29,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   isAddedProvider: false,
   isOwner: true,
+  isNew: false,
 };
 
 const formContainer = new FormContainer();
@@ -58,6 +60,7 @@ function isExist(
 
 const ProductProviderFormWrapper = ({
   isOwner,
+  isNew,
   onSave,
   productProviders,
   productProvider,
@@ -117,7 +120,7 @@ const ProductProviderFormWrapper = ({
 
                 {productProviderContainer.isDirty() && (
                   <>
-                    {productProvider.isNew ? (
+                    {isNew ? (
                       <CancelButton onClick={() => onCancel()} />
                     ) : (
                       <ResetButton

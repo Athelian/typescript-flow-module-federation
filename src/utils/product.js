@@ -3,6 +3,7 @@ import { injectUid } from './id';
 
 const generateEndProduct = () =>
   injectUid({
+    origin: null,
     unitVolume: {
       value: 0,
       metric: 'm³',

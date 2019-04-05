@@ -58,6 +58,7 @@ function ProductProvidersSection({ isOwner }: Props) {
                               isNew: true,
                               ...generateEndProduct(),
                             }}
+                            isNew
                             onCancel={() => slideToggle(false)}
                             onSave={newProvider => {
                               slideToggle(false);

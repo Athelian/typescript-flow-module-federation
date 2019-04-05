@@ -45,6 +45,7 @@ type FormState = {
 };
 
 const initValues = {
+  origin: null,
   packageCapacity: 0,
   productionLeadTime: 0,
   unitVolume: {
