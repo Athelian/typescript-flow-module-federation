@@ -8,6 +8,7 @@ import EnumSearchSelectInputFactory from './EnumSearchSelectInputFactory';
 import EnumSelectInputFactory from './EnumSelectInputFactory';
 import MetricInputFactory from './MetricInputFactory';
 import NumberInputFactory from './NumberInputFactory';
+import SelectInputFactory from './SelectInputFactory';
 import TextAreaInputFactory from './TextAreaInputFactory';
 import TextInputFactory from './TextInputFactory';
 import UserAssignmentInputFactory from './UserAssignmentInputFactory';
@@ -22,6 +23,7 @@ export {
   EnumSelectInputFactory,
   MetricInputFactory,
   NumberInputFactory,
+  SelectInputFactory,
   TextAreaInputFactory,
   TextInputFactory,
   UserAssignmentInputFactory,
