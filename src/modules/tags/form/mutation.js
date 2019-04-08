@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import { badRequestFragment } from 'graphql';
-import { parseGenericField } from 'utils/data';
+import { parseGenericField, parseMemoField } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
 export const createTagMutation = gql`
@@ -29,9 +29,9 @@ export const updateTagMutation = gql`
   ${badRequestFragment}
 `;
 
-export const prepareParsedTag = (originalValues: Object, newValues: Object): Object => ({
+export const prepareParsedTagInput = (originalValues: Object, newValues: Object): Object => ({
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
-  ...parseGenericField(
+  ...parseMemoField(
     'description',
     getByPathWithDefault(null, 'description', originalValues),
     newValues.description

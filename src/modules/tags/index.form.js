@@ -4,20 +4,21 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import { decodeId, encodeId } from 'utils/id';
+import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import { UIConsumer } from 'modules/ui';
-import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { decodeId, encodeId } from 'utils/id';
+import { UIConsumer } from 'modules/ui';
+import { FormContainer, resetFormState } from 'modules/form';
 import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
 import { tagFormQuery } from './form/query';
 import validator from './form/validator';
-import { createTagMutation, updateTagMutation, prepareParsedTag } from './form/mutation';
+import { createTagMutation, updateTagMutation, prepareParsedTagInput } from './form/mutation';
 
 type OptionalProps = {
   path: string,
@@ -55,7 +56,10 @@ export default class TagFormModule extends React.PureComponent<Props> {
     onErrors: Function = () => {}
   ) => {
     const { tagId } = this.props;
-    const input = prepareParsedTag(this.isNewOrClone() ? null : originalValues, value);
+    const input = prepareParsedTagInput(
+      this.isNewOrClone() ? null : removeTypename(originalValues),
+      removeTypename(value)
+    );
 
     if (this.isNewOrClone()) {
       const { data } = await saveTag({ variables: { input } });

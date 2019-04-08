@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
+import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -35,7 +35,7 @@ export default class TagInfoContainer extends Container<FormState> {
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues: Object = { ...initValues, ...cleanUpData(values) };
+    const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
   };
