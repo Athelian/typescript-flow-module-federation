@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { getByPath } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
@@ -232,7 +233,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
 
               <FormField
                 name="inspectionFee.amount"
-                initValue={values.inspectionFee.amount}
+                initValue={getByPath('inspectionFee.amount', values)}
                 setFieldValue={setFieldValue}
               >
                 {({ name, ...inputHandlers }) => (
@@ -240,7 +241,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={initialValues.inspectionFee.amount}
+                    originalValue={getByPath('inspectionFee.amount', initialValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.inspectionFee"
@@ -254,7 +255,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
 
               <FormField
                 name="inspectionFee.currency"
-                initValue={values.inspectionFee.currency}
+                initValue={getByPath('inspectionFee.currency', values)}
                 setFieldValue={setFieldValue}
               >
                 {({ name, ...inputHandlers }) => (
@@ -262,7 +263,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={initialValues.inspectionFee.currency}
+                    originalValue={getByPath('inspectionFee.currency', initialValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.inspectionFeeCurrency"
