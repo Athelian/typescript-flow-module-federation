@@ -19,7 +19,6 @@ const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 type OptionalProps = {
   isNew: boolean,
   isClone: boolean,
-  orderItemIsReadonly: boolean,
   onFormReady: () => void,
 };
 
@@ -30,7 +29,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   isNew: false,
   isClone: false,
-  orderItemIsReadonly: true,
   onFormReady: () => {},
 };
 
@@ -44,13 +42,9 @@ export default class BatchForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { batch, orderItemIsReadonly, isNew } = this.props;
+    const { batch, isNew } = this.props;
 
-    return (
-      !isEquals(batch, nextProps.batch) ||
-      !isEquals(orderItemIsReadonly, nextProps.orderItemIsReadonly) ||
-      !isEquals(isNew, nextProps.isNew)
-    );
+    return !isEquals(batch, nextProps.batch) || !isEquals(isNew, nextProps.isNew);
   }
 
   onClone = () => {
@@ -59,16 +53,11 @@ export default class BatchForm extends React.Component<Props> {
   };
 
   render() {
-    const { batch, isNew, isClone, orderItemIsReadonly } = this.props;
+    const { batch, isNew, isClone } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={BatchFormWrapperStyle}>
-          <AsyncBatchSection
-            isNew={isNew}
-            isClone={isClone}
-            orderItemIsReadonly={orderItemIsReadonly}
-            batch={batch}
-          />
+          <AsyncBatchSection isNew={isNew} isClone={isClone} batch={batch} />
           <AsyncQuantityAdjustmentsSection isNew={isNew} />
           <AsyncPackagingSection isNew={isNew} />
           <AsyncTaskSection type="batch" />
