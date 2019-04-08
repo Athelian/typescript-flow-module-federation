@@ -61,7 +61,7 @@ const TagSection = ({ isNew, tag }: Props) => {
               icon="TAG"
               title={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
             >
-              {!isNew && (
+              {tag.updatedAt && (
                 <>
                   <LastModified updatedAt={tag.updatedAt} updatedBy={tag.updatedBy} />
                   {allowCreate && (

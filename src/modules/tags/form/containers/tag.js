@@ -4,13 +4,14 @@ import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
-  id?: string,
   name?: string,
-  description?: ?string,
+  description?: string,
   color?: string,
 };
 
 const initValues = {
+  name: null,
+  description: null,
   color: '#cccccc',
 };
 
