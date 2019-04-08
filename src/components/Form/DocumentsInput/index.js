@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import Dropzone from 'react-dropzone';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
@@ -96,14 +97,19 @@ class DocumentsInput extends React.Component<Props, State> {
   }
 
   handleChange = (
-    event: SyntheticInputEvent<HTMLInputElement>,
+    event: SyntheticInputEvent<HTMLInputElement> | Array<File>,
     onUpload: (Array<Object>) => any
   ) => {
-    event.preventDefault();
+    let newFiles = [];
+    if (Array.isArray(event)) {
+      newFiles = event;
+    } else {
+      event.preventDefault();
+      newFiles = Array.from(event.target.files);
+    }
     const { types } = this.props;
     const { filesState } = this.state;
 
-    const newFiles = Array.from(event.target.files);
     const basePosition = filesState.length;
     this.setState(
       prevState => ({
@@ -176,45 +182,59 @@ class DocumentsInput extends React.Component<Props, State> {
     const { filesState } = this.state;
     if (editable) {
       return (
-        <div className={DocumentListStyle}>
-          {filesState &&
-            filesState.map((document, index) => {
-              const documentName = `${name}[${index}]`;
+        <Dropzone
+          onDrop={acceptedFiles => {
+            this.handleChange(acceptedFiles, newFiles => {
+              onChange(name, [...values, ...newFiles]);
+            });
+          }}
+        >
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps()}>
+              <p>Drag & drop some files here, or click to select files</p>
+              <div className={DocumentListStyle}>
+                {filesState &&
+                  filesState.map((document, index) => {
+                    const documentName = `${name}[${index}]`;
 
-              return (
-                <DocumentItem
-                  name={documentName}
-                  key={document.id}
-                  value={document}
-                  types={types}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  onRemove={() => {
-                    onChange(name, values.filter(d => d.id !== document.id));
-                  }}
-                  editable
-                  downloadable={downloadable}
-                  uploading={filesState.length > 0 ? filesState[index].uploading : false}
-                  progress={filesState.length > 0 ? filesState[index].progress : 0}
-                />
-              );
-            })}
+                    return (
+                      <DocumentItem
+                        name={documentName}
+                        key={document.id}
+                        value={document}
+                        types={types}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        onRemove={() => {
+                          onChange(name, values.filter(d => d.id !== document.id));
+                        }}
+                        editable
+                        downloadable={downloadable}
+                        uploading={filesState.length > 0 ? filesState[index].uploading : false}
+                        progress={filesState.length > 0 ? filesState[index].progress : 0}
+                      />
+                    );
+                  })}
 
-          <label className={AddDocumentStyle}>
-            <Icon icon="ADD" />
-            <input
-              type="file"
-              accept="*"
-              hidden
-              multiple
-              onChange={e => {
-                this.handleChange(e, newFiles => {
-                  onChange(name, [...values, ...newFiles]);
-                });
-              }}
-            />
-          </label>
-        </div>
+                <label className={AddDocumentStyle}>
+                  <Icon icon="ADD" />
+                  <input
+                    {...getInputProps()}
+                    type="file"
+                    accept="*"
+                    hidden
+                    multiple
+                    onChange={e => {
+                      this.handleChange(e, newFiles => {
+                        onChange(name, [...values, ...newFiles]);
+                      });
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+          )}
+        </Dropzone>
       );
     }
 
