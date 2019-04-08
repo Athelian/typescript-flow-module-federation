@@ -133,7 +133,10 @@ export default function ContainerSummary() {
                         <span>N/A</span>
                       </Tooltip>
                     ) : (
-                      <FormattedNumber value={totalPrice.amount} suffix={totalPrice.currency} />
+                      <FormattedNumber
+                        value={totalPrice && totalPrice.amount}
+                        suffix={totalPrice && totalPrice.currency}
+                      />
                     )}
                   </Display>
                 }
