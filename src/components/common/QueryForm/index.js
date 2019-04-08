@@ -11,11 +11,11 @@ import { getByPathWithDefault, getByPath } from 'utils/fp';
 import QueryFormPermissionContext from './context';
 import { partnerPermissionQuery } from './query';
 
-type OptionProps = {
+type OptionalProps = {
   onCompleted: ?Function,
 };
 
-type Props = OptionProps & {
+type Props = OptionalProps & {
   query: DocumentNode,
   entityId: string,
   entityType: string,

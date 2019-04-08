@@ -23,14 +23,14 @@ export const OptionWrapperStyle = (width: string, height: string): string => css
   }
 `;
 
-type OptionProps = {
+type OptionalProps = {
   onHover: boolean,
   selected: boolean,
   align: 'left' | 'right' | 'center',
   type: 'standard' | 'label',
 };
 
-export const OptionStyle = ({ onHover, selected, align, type }: OptionProps): string => css`
+export const OptionStyle = ({ onHover, selected, align, type }: OptionalProps): string => css`
   background: ${onHover ? colors.GRAY_SUPER_LIGHT : colors.WHITE};
   text-align: ${align};
   line-height: 20px;

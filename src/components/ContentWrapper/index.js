@@ -3,12 +3,12 @@ import * as React from 'react';
 import { cx } from 'react-emotion';
 import { ContentWrapperStyle } from './style';
 
-type OptionProps = {
+type OptionalProps = {
   width: string,
   className: string,
 };
 
-type Props = OptionProps & {
+type Props = OptionalProps & {
   children: React.Node,
 };
 
