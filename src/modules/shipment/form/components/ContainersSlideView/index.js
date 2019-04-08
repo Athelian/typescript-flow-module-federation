@@ -4,7 +4,8 @@ import { Provider, Subscribe } from 'unstated';
 import { earliest, latest } from 'utils/date';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton } from 'components/Buttons';
+import { SaveButton, ResetButton } from 'components/Buttons';
+import { resetFormState } from 'modules/form';
 import {
   getAgreedArrivalDates,
   getActualArrivalDates,
@@ -17,14 +18,12 @@ import ContainerList from './ContainerList';
 
 type OptionalProps = {
   onFormReady?: Function,
-  onCancel: Function,
   onSave: Function,
 };
 
 type Props = OptionalProps & {};
 
 const defaultProps = {
-  onCancel: () => {},
   onSave: () => {},
 };
 
@@ -37,11 +36,16 @@ class ContainersSlideView extends React.Component<Props> {
   }
 
   render() {
-    const { onCancel, onSave } = this.props;
+    const { onSave } = this.props;
     return (
       <Provider>
         <Subscribe to={[ContainersInSlideViewContainer]}>
-          {({ state: { containers }, isDirty, setDeepFieldValue }) => {
+          {containersInSlideViewContainer => {
+            const {
+              state: { containers },
+              isDirty,
+              setDeepFieldValue,
+            } = containersInSlideViewContainer;
             const agreedArrivalDates = getAgreedArrivalDates(containers);
             const actualArrivalDates = getActualArrivalDates(containers);
             const agreedArrivalDateFrom = earliest(agreedArrivalDates);
@@ -56,8 +60,16 @@ class ContainersSlideView extends React.Component<Props> {
                 navBar={
                   <SlideViewNavBar>
                     <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton disabled={!isDirty()} onClick={() => onSave(containers)} />
+                    {isDirty() && (
+                      <>
+                        <ResetButton
+                          onClick={() => {
+                            resetFormState(containersInSlideViewContainer, 'containers');
+                          }}
+                        />
+                        <SaveButton disabled={!isDirty()} onClick={() => onSave(containers)} />
+                      </>
+                    )}
                   </SlideViewNavBar>
                 }
               >
