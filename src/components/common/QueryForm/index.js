@@ -46,6 +46,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
         const errorType = getByPath(`${entityType}.__typename`, data);
         if (['NotFound', 'Forbidden'].includes(errorType)) {
           navigate('/404');
+          return null;
         }
 
         const partnerId = getByPath(`${entityType}.ownedBy.partner.id`, data);
