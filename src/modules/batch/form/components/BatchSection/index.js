@@ -67,11 +67,11 @@ import {
 type Props = {
   isNew: boolean,
   isClone: boolean,
-  selectable: boolean,
+  orderItemIsReadonly: boolean,
   batch: Object,
 };
 
-const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
+const BatchSection = ({ isNew, isClone, orderItemIsReadonly, batch }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -275,9 +275,11 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                             ) : (
                               <OrderItemCard
                                 viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                                selectable
+                                selectable={!orderItemIsReadonly || isNew}
                                 item={values.orderItem}
-                                onSelect={selectable ? () => slideToggle(true) : null}
+                                onSelect={
+                                  !orderItemIsReadonly || isNew ? () => slideToggle(true) : null
+                                }
                               />
                             )}
 
@@ -326,7 +328,7 @@ const BatchSection = ({ isNew, isClone, selectable, batch }: Props) => {
                         {values.orderItem ? (
                           <OrderItemCard
                             viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                            selectable
+                            orderItemIsReadonly
                             item={values.orderItem}
                             readOnly
                           />
