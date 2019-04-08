@@ -1,4 +1,5 @@
 // @flow
+import { cloneDeep } from 'lodash';
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
 import { convert as convertWeight } from 'modules/form/helpers/metricInput/weightInput';
@@ -47,7 +48,7 @@ const findWeight = (batch: Object) => {
 };
 
 export const findSummary = (values: Object) => {
-  const { batches = [], totalVolume, totalWeight } = values;
+  const { batches = [], totalVolume, totalWeight } = cloneDeep(values);
   let diffCurrency = false;
   let totalBatchQuantity = 0;
   let totalPriceAmount = 0;

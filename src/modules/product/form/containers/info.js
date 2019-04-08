@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy } from 'utils/data';
+import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 
 type FormState = {
   name?: string,
@@ -26,7 +26,8 @@ export default class ProductInfoContainer extends Container<FormState> {
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

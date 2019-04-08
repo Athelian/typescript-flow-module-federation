@@ -58,7 +58,7 @@ export const cleanUpData: Function = pipe(
   removeNulls
 );
 
-export const cleanFalsy: Function = pipe(
+export const cleanFalsyAndTypeName: Function = pipe(
   removeTypename,
   removeNulls,
   removeEmpty

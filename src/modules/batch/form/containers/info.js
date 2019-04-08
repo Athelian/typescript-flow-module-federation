@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy } from 'utils/data';
+import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 import { calculatePackageQuantity, calculatePackageVolume } from 'utils/batch';
 
 export type Metric = {
@@ -100,7 +100,8 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

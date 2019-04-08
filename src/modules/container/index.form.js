@@ -20,7 +20,7 @@ import { containerFormQuery } from './form/query';
 import { updateContainerMutation, prepareParsedContainerInput } from './form/mutation';
 import ContainerFormContainer from './form/container';
 import validator from './form/validator';
-import ContainerForm from './form/index';
+import ContainerForm from './form';
 
 type OptionalProps = {
   containerId: string,
