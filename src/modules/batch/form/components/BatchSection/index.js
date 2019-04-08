@@ -275,6 +275,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                               <OrderItemCard
                                 viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
                                 selectable={isNew || isClone}
+                                readOnly
                                 item={values.orderItem}
                                 onSelect={isNew || isClone ? () => slideToggle(true) : null}
                               />
