@@ -7,6 +7,8 @@ import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { LanguageConsumer } from 'modules/language';
 import { AuthenticationConsumer } from 'modules/authentication';
+import loginIcon from 'media/icon_white.png';
+import loginIconName from 'media/logo_white.png';
 import LoadingIcon from 'components/LoadingIcon';
 import LoginForm from './components/LoginForm';
 import {
@@ -20,8 +22,6 @@ import {
 } from './style';
 import messages from './messages';
 import { loginMutation } from './mutation';
-import loginIcon from './media/icon_white.png';
-import loginIconName from './media/logo_white.png';
 
 type Props = {
   redirectUrl?: string,
