@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
-import { cleanFalsy, cleanUpData } from 'utils/data';
+import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type Metric = {
@@ -60,7 +60,8 @@ export default class WarehouseContainer extends Container<FormState> {
     });
   };
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

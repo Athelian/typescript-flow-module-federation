@@ -295,6 +295,7 @@ const ShipmentContainerCard = ({
                         update({
                           ...container,
                           warehouseArrivalAgreedDateApprovedBy: null,
+                          warehouseArrivalAgreedDateApprovedAt: null,
                         });
                       }
                     }}
@@ -314,6 +315,7 @@ const ShipmentContainerCard = ({
                         update({
                           ...container,
                           warehouseArrivalAgreedDateApprovedBy: user,
+                          warehouseArrivalAgreedDateApprovedAt: new Date(),
                         });
                       }
                     }}
@@ -378,6 +380,7 @@ const ShipmentContainerCard = ({
                         update({
                           ...container,
                           warehouseArrivalActualDateApprovedBy: null,
+                          warehouseArrivalActualDateApprovedAt: null,
                         });
                       }
                     }}
@@ -397,6 +400,7 @@ const ShipmentContainerCard = ({
                         update({
                           ...container,
                           warehouseArrivalActualDateApprovedBy: user,
+                          warehouseArrivalActualDateApprovedAt: new Date(),
                         });
                       }
                     }}

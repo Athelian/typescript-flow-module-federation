@@ -2,18 +2,72 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy } from 'utils/data';
+import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 import { calculatePackageQuantity, calculatePackageVolume } from 'utils/batch';
-import type { BatchFormState, ProductProvider } from './type.js.flow';
+
+export type Metric = {
+  value: number,
+  metric: string,
+};
+
+export type ProductProvider = {
+  packageName: string,
+  packageCapacity: number,
+  packageGrossWeight: Metric,
+  packageVolume: Metric,
+  packageSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
+};
+
+export type BatchFormState = {
+  no?: ?string,
+  quantity: number,
+  deliveredAt?: ?Date | string,
+  desiredAt?: ?Date | string,
+  expiredAt?: ?Date | string,
+  producedAt?: ?Date | string,
+  customFields: ?Object,
+  tags?: Array<Object>,
+  memo?: string,
+  orderItem?: Object,
+  batchAdjustments: Array<any>,
+  packageName?: ?string,
+  packageCapacity?: number,
+  packageQuantity: number,
+  packageGrossWeight: Metric,
+  packageVolume: Metric,
+  packageSize: {
+    width: Metric,
+    height: Metric,
+    length: Metric,
+  },
+  autoCalculatePackageQuantity: boolean,
+  autoCalculatePackageVolume: boolean,
+  todo: {
+    tasks: Array<Object>,
+  },
+};
 
 export const initValues = {
+  no: null,
   quantity: 0,
+  deliveredAt: null,
+  desiredAt: null,
+  expiredAt: null,
+  producedAt: null,
   customFields: {
     fieldValues: [],
     fieldDefinitions: [],
   },
   tags: [],
+  memo: null,
+  orderItem: null,
   batchAdjustments: [],
+  packageName: null,
+  packageCapacity: 0,
   packageQuantity: 0,
   packageGrossWeight: { value: 0, metric: 'kg' },
   packageVolume: {
@@ -36,15 +90,9 @@ export const initValues = {
   },
   autoCalculatePackageQuantity: true,
   autoCalculatePackageVolume: true,
-  // reset values for batch form
-  archived: false,
-  updatedAt: null,
-  updatedBy: null,
-  ownedBy: null,
-  totalVolume: null,
-  totalAdjusted: 0,
-  orderItem: null,
-  isNew: false,
+  todo: {
+    tasks: [],
+  },
 };
 
 export default class BatchInfoContainer extends Container<BatchFormState> {
@@ -52,7 +100,8 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };
