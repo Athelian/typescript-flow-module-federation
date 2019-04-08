@@ -1,6 +1,6 @@
 // @flow
 
-type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight';
+export type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight' | 'duration';
 
 export const getMetrics = (metricType?: MetricEnumType): Array<string> => {
   if (metricType) {
@@ -13,6 +13,8 @@ export const getMetrics = (metricType?: MetricEnumType): Array<string> => {
         return ['cm³', 'm³'];
       case 'weight':
         return ['g', 'kg', 'ton'];
+      case 'duration':
+        return ['days', 'weeks', 'months'];
       default:
         return [];
     }
@@ -52,6 +54,9 @@ export const getConvert = (metricType?: MetricEnumType): Function => {
           if (metric === 'ton' && newMetric === 'g') return value * 1e6;
           return value;
         };
+      case 'duration':
+        // No conversion
+        return (value: number) => value;
       default:
         return (value: number) => value;
     }

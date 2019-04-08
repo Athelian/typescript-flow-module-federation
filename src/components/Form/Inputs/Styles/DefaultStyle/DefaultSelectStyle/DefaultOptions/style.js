@@ -6,6 +6,7 @@ export const OptionWrapperStyle = (width: string, height: string): string => css
   & > div {
     list-style-type: none;
     position: absolute;
+    right: 0;
     margin: 0;
     padding: 0;
     margin-top: 5px;
