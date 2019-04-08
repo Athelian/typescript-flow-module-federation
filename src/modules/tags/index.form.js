@@ -17,7 +17,7 @@ import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
 import { tagFormQuery } from './form/query';
 import validator from './form/validator';
-import { createTagMutation, updateTagMutation } from './form/mutation';
+import { createTagMutation, updateTagMutation, prepareParsedTag } from './form/mutation';
 
 type OptionalProps = {
   path: string,
@@ -48,21 +48,14 @@ export default class TagFormModule extends React.PureComponent<Props> {
   };
 
   onSave = async (
-    formData: Object,
+    originalValues: Object,
+    value: Object,
     saveTag: Function,
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
     const { tagId } = this.props;
-
-    const { name, description, color, entityTypes } = formData;
-
-    const input = {
-      name,
-      description,
-      color,
-      entityTypes,
-    };
+    const input = prepareParsedTag(this.isNewOrClone() ? null : originalValues, value);
 
     if (this.isNewOrClone()) {
       const { data } = await saveTag({ variables: { input } });
@@ -166,6 +159,10 @@ export default class TagFormModule extends React.PureComponent<Props> {
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
+                                    {
+                                      ...tagContainer.originalValues,
+                                      ...entityTypeContainer.originalValues,
+                                    },
                                     { ...tagContainer.state, ...entityTypeContainer.state },
                                     saveTag,
                                     () => {
