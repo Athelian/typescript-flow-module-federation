@@ -92,6 +92,14 @@ const EditableTaskList = (props: Props) => {
     ...shipmentIds.map(shipmentId => ({ shipmentId })),
   ];
 
+  const variables = {
+    ...queryVariables,
+    filterBy: {
+      ...queryVariables.filterBy,
+      entities,
+    },
+  };
+
   return (
     <Subscribe to={[RMEditTasksContainer, FormContainer]}>
       {(rmEditTasksContainer, formContainer) => (
@@ -136,15 +144,9 @@ const EditableTaskList = (props: Props) => {
             >
               {mutationError && <p>Error: Please try again.</p>}
               <Query
-                key={JSON.stringify(filterAndSort)}
+                key={JSON.stringify(variables)}
                 query={editableTaskListQuery}
-                variables={{
-                  ...queryVariables,
-                  filterBy: {
-                    ...queryVariables.filterBy,
-                    entities,
-                  },
-                }}
+                variables={variables}
                 fetchPolicy="network-only"
                 onCompleted={data => {
                   if (
