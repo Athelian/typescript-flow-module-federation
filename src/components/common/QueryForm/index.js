@@ -11,21 +11,25 @@ import { getByPathWithDefault, getByPath } from 'utils/fp';
 import QueryFormPermissionContext from './context';
 import { partnerPermissionQuery } from './query';
 
-type Props = {
+type OptionProps = {
+  onCompleted: ?Function,
+};
+
+type Props = OptionProps & {
   query: DocumentNode,
   entityId: string,
   entityType: string,
   render: (Object, boolean) => React.Node,
 };
 
-export default function QueryForm({ query, entityId, entityType, render }: Props) {
+export default function QueryForm({ query, entityId, entityType, render, onCompleted }: Props) {
   const { isOwnerBy } = useUser();
   return (
     <Query
       query={query}
       variables={{ id: decodeId(entityId) }}
       fetchPolicy="network-only"
-      onCompleted={logger.warn}
+      onCompleted={onCompleted || logger.warn}
       onError={logger.error}
     >
       {({ loading, data, error }) => {
