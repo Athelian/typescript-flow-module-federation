@@ -42,9 +42,7 @@ import SlideView from 'components/SlideView';
 import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import validator from 'modules/batch/form/validator';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 
 import {
   BatchesSectionWrapperStyle,
@@ -199,39 +197,13 @@ function BatchesSection() {
                       <>
                         <SlideView isOpen={opened} onRequestClose={() => batchSlideToggle(false)}>
                           {opened && (
-                            <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
-                              {(batchInfoContainer, batchTasksContainer) => (
-                                <BatchFormWrapper
-                                  initDetailValues={initValues => {
-                                    const { todo, ...info } = initValues;
-                                    batchInfoContainer.initDetailValues(info);
-                                    batchTasksContainer.initDetailValues(todo);
-                                  }}
-                                  batch={batch}
-                                  isNew={!!batch.isNew}
-                                  orderItem={batch.orderItem}
-                                  onCancel={() => batchSlideToggle(false)}
-                                  isReady={formContainer =>
-                                    formContainer.isReady(
-                                      {
-                                        ...batchInfoContainer.state,
-                                        ...batchTasksContainer.state,
-                                      },
-                                      validator
-                                    ) &&
-                                    (batchInfoContainer.isDirty() || batchTasksContainer.isDirty())
-                                  }
-                                  onSave={() => {
-                                    const updatedBatch = {
-                                      ...batchInfoContainer.state,
-                                      ...batchTasksContainer.state,
-                                    };
-                                    batchSlideToggle(false);
-                                    setDeepFieldValue(`batches.${position}`, updatedBatch);
-                                  }}
-                                />
-                              )}
-                            </Subscribe>
+                            <BatchFormWrapper
+                              batch={batch}
+                              onSave={value => {
+                                batchSlideToggle(false);
+                                setDeepFieldValue(`batches.${position}`, value);
+                              }}
+                            />
                           )}
                         </SlideView>
                         <div className={ItemStyle}>
