@@ -4,20 +4,21 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import { decodeId, encodeId } from 'utils/id';
+import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import { UIConsumer } from 'modules/ui';
-import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { decodeId, encodeId } from 'utils/id';
+import { UIConsumer } from 'modules/ui';
+import { FormContainer, resetFormState } from 'modules/form';
 import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
 import { tagFormQuery } from './form/query';
 import validator from './form/validator';
-import { createTagMutation, updateTagMutation } from './form/mutation';
+import { createTagMutation, updateTagMutation, prepareParsedTagInput } from './form/mutation';
 
 type OptionalProps = {
   path: string,
@@ -48,21 +49,17 @@ export default class TagFormModule extends React.PureComponent<Props> {
   };
 
   onSave = async (
-    formData: Object,
+    originalValues: Object,
+    value: Object,
     saveTag: Function,
     onSuccess: Function = () => {},
     onErrors: Function = () => {}
   ) => {
     const { tagId } = this.props;
-
-    const { name, description, color, entityTypes } = formData;
-
-    const input = {
-      name,
-      description,
-      color,
-      entityTypes,
-    };
+    const input = prepareParsedTagInput(
+      this.isNewOrClone() ? null : removeTypename(originalValues),
+      removeTypename(value)
+    );
 
     if (this.isNewOrClone()) {
       const { data } = await saveTag({ variables: { input } });
@@ -166,6 +163,10 @@ export default class TagFormModule extends React.PureComponent<Props> {
                                 isLoading={isLoading}
                                 onClick={() =>
                                   this.onSave(
+                                    {
+                                      ...tagContainer.originalValues,
+                                      ...entityTypeContainer.originalValues,
+                                    },
                                     { ...tagContainer.state, ...entityTypeContainer.state },
                                     saveTag,
                                     () => {
