@@ -237,12 +237,14 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                         align="right"
                         selected={manualSettings.startDate}
                         onToggle={() =>
-                          onChangeBinding({
-                            type: entity,
-                            field: 'startDate',
-                            isManual: !manualSettings.startDate,
-                            onChange: setFieldValues,
-                          })
+                          !manualSettings.startDate
+                            ? onChangeBinding({
+                                type: entity,
+                                field: 'startDate',
+                                isManual: !manualSettings.startDate,
+                                onChange: setFieldValues,
+                              })
+                            : () => {}
                         }
                         editable={editable}
                       >
@@ -405,12 +407,14 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                         align="right"
                         selected={manualSettings.dueDate}
                         onToggle={() =>
-                          onChangeBinding({
-                            type: entity,
-                            field: 'dueDate',
-                            isManual: !manualSettings.dueDate,
-                            onChange: setFieldValues,
-                          })
+                          !manualSettings.dueDate
+                            ? onChangeBinding({
+                                type: entity,
+                                field: 'dueDate',
+                                isManual: !manualSettings.dueDate,
+                                onChange: setFieldValues,
+                              })
+                            : () => {}
                         }
                         editable={editable}
                       >
