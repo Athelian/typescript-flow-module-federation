@@ -4,15 +4,18 @@ import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import { BooleanValue } from 'react-values';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
+import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
+import Timeline from 'modules/timeline/components/Timeline';
 import { encodeId, decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import {
@@ -29,6 +32,7 @@ import {
   updateProductMutation,
   prepareParsedProductInput,
 } from './form/mutation';
+import { productTimelineQuery } from './query';
 
 type OptionalProps = {
   path: string,
@@ -254,6 +258,40 @@ class ProductFormModule extends React.Component<Props> {
                             icon="PROVIDER"
                           />
                         </JumpToSection>
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) =>
+                            !isNewOrClone && (
+                              <>
+                                <LogsButton onClick={() => slideToggle(true)} />
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                >
+                                  <Layout
+                                    navBar={
+                                      <SlideViewNavBar>
+                                        <EntityIcon icon="LOGS" color="LOGS" />
+                                      </SlideViewNavBar>
+                                    }
+                                  >
+                                    {productId && opened ? (
+                                      <Timeline
+                                        query={productTimelineQuery}
+                                        queryField="product"
+                                        variables={{
+                                          id: decodeId(productId),
+                                        }}
+                                        entity={{
+                                          productId: decodeId(productId),
+                                        }}
+                                      />
+                                    ) : null}
+                                  </Layout>
+                                </SlideView>
+                              </>
+                            )
+                          }
+                        </BooleanValue>
 
                         {(isNewOrClone ||
                           productInfoState.isDirty() ||

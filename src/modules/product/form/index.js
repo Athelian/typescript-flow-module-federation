@@ -56,7 +56,7 @@ class ProductForm extends React.Component<Props> {
 
         <SectionWrapper id="product_productProvidersSection">
           <SectionHeader
-            icon="PROVIDER"
+            icon="PRODUCT_PROVIDER"
             title={
               <FormattedMessage id="modules.Products.providers" defaultMessage="END PRODUCTS" />
             }

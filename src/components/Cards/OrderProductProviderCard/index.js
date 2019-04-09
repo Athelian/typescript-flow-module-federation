@@ -94,8 +94,8 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 
     return (
       <BaseCard
-        icon="PROVIDER"
-        color="PROVIDER"
+        icon="PRODUCT_PROVIDER"
+        color="PRODUCT_PROVIDER"
         actions={actions}
         selectable={selectable}
         forceShowActions={rest.selected}
@@ -174,6 +174,6 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 export default withForbiddenCard(OrderProductProviderCard, 'productProvider', {
   width: '195px',
   height: '222px',
-  entityIcon: 'PROVIDER',
-  entityColor: 'PROVIDER',
+  entityIcon: 'PRODUCT_PROVIDER',
+  entityColor: 'PRODUCT_PROVIDER',
 });
