@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import apolloClient from 'apollo';
 import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
@@ -56,6 +57,12 @@ class UserMenuDropdown extends React.Component<Props> {
                     mutation={logOutMutation}
                     onCompleted={() => {
                       setAuthenticated(false);
+                      // clear all cache after logout
+                      if (window.localStorage) {
+                        window.localStorage.clear();
+                      }
+                      // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
+                      apolloClient.resetStore();
                     }}
                   >
                     {logout => (
