@@ -68,7 +68,7 @@ export default defineMessages({
   },
   task: {
     id: 'modules.SideBar.task',
-    defaultMessage: 'TASK',
+    defaultMessage: 'TASKS',
   },
   tags: {
     id: 'modules.SideBar.tags',
