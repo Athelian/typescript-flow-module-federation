@@ -68,18 +68,29 @@ const getFileStatusColor = (status: string): { textColor: string, backgroundColo
   }
 };
 
-export const FileStatusColoringWrapper = (status: string) => {
+export const FileStatusColoringWrapper = (status: string, editable: boolean) => {
   const coloring = getFileStatusColor(status);
 
-  return css`
-    & > div {
+  if (editable) {
+    return css`
       & > div {
         & > div {
-          background-color: ${colors[coloring.backgroundColor]};
-          & > input {
-            color: ${colors[coloring.textColor]};
+          & > div {
+            background-color: ${colors[coloring.backgroundColor]};
+            & > input {
+              color: ${colors[coloring.textColor]};
+            }
           }
         }
+      }
+    `;
+  }
+  return css`
+    background-color: ${colors[coloring.backgroundColor]};
+    ${borderRadiuses.MAIN};
+    & > div {
+      & > div {
+        color: ${colors[coloring.textColor]};
       }
     }
   `;
@@ -133,8 +144,8 @@ export const OpenMemoButtonStyle = (isExpanded: boolean, hasMemo: boolean): stri
   right: -15px;
   top: 65px;
   ${shadows.NAV_BUTTON};
-  background-color: ${colors.WHITE};
-  color: ${hasMemo && !isExpanded ? colors.TEAL : colors.GRAY_LIGHT};
+  background-color: ${hasMemo && !isExpanded ? colors.TEAL : colors.WHITE};
+  color: ${hasMemo && !isExpanded ? colors.WHITE : colors.GRAY_LIGHT};
   &:hover,
   :focus {
     background-color: ${colors.GRAY_SUPER_LIGHT};
