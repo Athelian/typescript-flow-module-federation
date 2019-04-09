@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Apr 09 2019 15:41:13 GMT+0900 (Tokyo Standard Time)
+# timestamp: Tue Apr 09 2019 16:46:44 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
