@@ -43,6 +43,10 @@ const defaultProps = {
   },
 };
 
+const countCustomFields = (mask: Object, fieldValues: Array<Object>): number => {
+  return mask && mask.fieldDefinitions ? mask.fieldDefinitions.length : fieldValues.length;
+};
+
 class CustomFieldsForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -105,7 +109,7 @@ class CustomFieldsForm extends React.Component<Props> {
                           defaultMessage="CUSTOM FIELDS"
                         />
                         {' ('}
-                        <FormattedNumber value={fieldValues.length} />
+                        <FormattedNumber value={countCustomFields(mask, fieldValues)} />
                         {')'}
                       </>
                     }
