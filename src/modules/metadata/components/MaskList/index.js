@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
+import { countMaskFieldDefinitions } from 'utils/customFields';
 import loadMore from 'utils/loadMore';
 import { CUSTOM_FIELD_MASKS_CREATE } from 'modules/permission/constants/customFields';
 import { PermissionConsumer } from 'modules/permission';
@@ -98,7 +99,7 @@ const MaskList = ({ entityType }: Props) => (
                                 id: mask.id,
                                 title: mask.name,
                                 description: mask.memo,
-                                count: (mask.fieldDefinitions || []).length,
+                                count: countMaskFieldDefinitions(mask),
                               }}
                               type="METADATA"
                               onClick={() => {
