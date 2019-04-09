@@ -134,7 +134,7 @@ const OrderItems = ({
                                 )}
                               </SlideView>
                               <OrderBatchCard
-                                readOnly={!allowUpdate}
+                                editable={allowUpdate}
                                 batch={batch}
                                 currency={currency}
                                 price={item.price}
