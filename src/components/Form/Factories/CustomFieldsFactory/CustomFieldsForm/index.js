@@ -2,8 +2,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { contains } from 'utils/fp';
 import { BooleanValue } from 'react-values';
+import { contains } from 'utils/fp';
+import { countMaskFieldDefinitions } from 'utils/customFields';
 import { TemplateCard, GrayCard } from 'components/Cards';
 import Divider from 'components/Divider';
 import FormattedNumber from 'components/FormattedNumber';
@@ -44,7 +45,7 @@ const defaultProps = {
 };
 
 const countCustomFields = (mask: Object, fieldValues: Array<Object>): number => {
-  return mask && mask.fieldDefinitions ? mask.fieldDefinitions.length : fieldValues.length;
+  return mask ? countMaskFieldDefinitions(mask) : fieldValues.length;
 };
 
 class CustomFieldsForm extends React.Component<Props> {
@@ -133,7 +134,7 @@ class CustomFieldsForm extends React.Component<Props> {
                                       id: mask.id,
                                       title: mask.name,
                                       description: mask.memo,
-                                      count: (mask.fieldDefinitions || []).length,
+                                      count: countMaskFieldDefinitions(mask),
                                     }}
                                     type="METADATA"
                                     onClick={editable ? () => slideToggle(true) : () => {}}
@@ -172,7 +173,7 @@ class CustomFieldsForm extends React.Component<Props> {
                                   id: mask.id,
                                   title: mask.name,
                                   description: mask.memo,
-                                  count: (mask.fieldDefinitions || []).length,
+                                  count: countMaskFieldDefinitions(mask),
                                 }}
                                 type="METADATA"
                                 readOnly
