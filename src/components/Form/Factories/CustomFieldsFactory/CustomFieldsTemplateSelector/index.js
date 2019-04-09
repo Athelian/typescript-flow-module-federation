@@ -11,6 +11,7 @@ import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { masksQuery } from 'modules/metadata/query';
+import { countMaskFieldDefinitions } from 'utils/customFields';
 
 type OptionalProps = {
   selected: {
@@ -81,7 +82,7 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
                       id: mask.id,
                       title: mask.name,
                       description: mask.memo,
-                      count: (mask.fieldDefinitions || []).length,
+                      count: countMaskFieldDefinitions(mask),
                     }}
                     type="METADATA"
                     onSelect={() => {

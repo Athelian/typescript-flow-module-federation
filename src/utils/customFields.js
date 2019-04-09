@@ -17,3 +17,9 @@ export const list2Map = (list: Array<Object>): Map<string, Object> => {
   });
   return map;
 };
+
+export const countMaskFieldDefinitions = ({
+  fieldDefinitions = [],
+}: {
+  fieldDefinitions: Array<Object>,
+}): number => fieldDefinitions.filter(({ id }) => id).length;

@@ -82,6 +82,7 @@ export const updateProductMutation: Object = gql`
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
+  ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'serial',
@@ -201,7 +202,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
       ),
       ...parseFilesField(
         'files',
-        getByPathWithDefault(null, 'files', oldProductProvider),
+        getByPathWithDefault([], 'files', oldProductProvider),
         newProductProvider.files
       ),
     })
