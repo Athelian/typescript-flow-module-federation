@@ -152,8 +152,18 @@ export const taskFormFragment = gql`
     }
     name
     approvable
-    dueDate
     startDate
+    startDateInterval {
+      months
+      days
+    }
+    startDateBinding
+    dueDate
+    dueDateInterval {
+      months
+      days
+    }
+    dueDateBinding
     description
     inProgressAt
     inProgressBy {
