@@ -60,7 +60,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
 
               <FormField
                 name="unitPrice.amount"
-                initValue={values.unitPrice.amount}
+                initValue={getByPath('unitPrice.amount', values)}
                 setFieldValue={setFieldValue}
               >
                 {({ name, ...inputHandlers }) => (
@@ -68,7 +68,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={originalValues.unitPrice.amount}
+                    originalValue={getByPath('unitPrice.amount', originalValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.unitPrice"
@@ -83,7 +83,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
 
               <FormField
                 name="unitPrice.currency"
-                initValue={values.unitPrice.currency}
+                initValue={getByPath('unitPrice.currency', values)}
                 setFieldValue={setFieldValue}
               >
                 {({ name, ...inputHandlers }) => (
@@ -91,7 +91,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={originalValues.unitPrice.currency}
+                    originalValue={getByPath('unitPrice.currency', originalValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.unitPriceCurrency"
