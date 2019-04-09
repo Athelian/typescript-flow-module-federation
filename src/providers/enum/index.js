@@ -14,7 +14,7 @@ type Props = {
 };
 
 const EnumProvider = ({ enumType, children }: Props) => (
-  <Query query={query} variables={{ enumType }}>
+  <Query query={query} variables={{ enumType }} fetchPolicy="cache-first">
     {({ loading, error, data }) =>
       children({
         loading,

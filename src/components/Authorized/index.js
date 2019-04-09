@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import { Location, Redirect } from '@reach/router';
-import { EnumsProvider } from 'providers/enums';
 import UserProvider from 'modules/user';
 import { AuthenticationConsumer } from 'modules/authentication';
 
@@ -13,10 +12,7 @@ const Authorized = ({ children }: Props) => (
   <AuthenticationConsumer>
     {({ authenticated }) =>
       authenticated ? (
-        // FIXME: where is better?
-        <EnumsProvider>
-          <UserProvider>{children}</UserProvider>
-        </EnumsProvider>
+        <UserProvider>{children}</UserProvider>
       ) : (
         <Location>
           {({ location }) => <Redirect from={location.pathname} to="login" noThrow />}
