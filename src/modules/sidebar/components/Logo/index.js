@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { Link } from '@reach/router';
 import Icon from 'components/Icon';
+import iconWhite from 'media/icon_white.png';
+import logoWhite from 'media/logo_white.png';
 import {
   LogoWrapperStyle,
   LogoButtonWrapperStyle,
@@ -9,8 +11,6 @@ import {
   LogoStyle,
   ToggleButtonStyle,
 } from './style';
-import iconWhite from './media/icon_white.png';
-import logoWhite from './media/logo_white.png';
 
 type Props = { isSideBarExpanded: boolean, toggleSideBarExpansion: Function };
 

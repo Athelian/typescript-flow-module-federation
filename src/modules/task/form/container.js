@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import { cleanFalsy } from 'utils/data';
+import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
@@ -48,7 +48,8 @@ export default class TaskContainer extends Container<FormState> {
 
   originalValues = initValues;
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = { ...this.state };

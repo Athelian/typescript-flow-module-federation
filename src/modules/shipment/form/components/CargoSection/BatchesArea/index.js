@@ -44,12 +44,10 @@ import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
-import validator from 'modules/batch/form/validator';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
@@ -254,61 +252,33 @@ function BatchesArea({
                                     onRequestClose={() => batchSlideToggle(false)}
                                   >
                                     {opened && (
-                                      <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
-                                        {(batchInfoContainer, batchTasksContainer) => (
-                                          <BatchFormWrapper
-                                            initDetailValues={initValues => {
-                                              const { todo, ...info } = initValues;
-                                              batchInfoContainer.initDetailValues(info);
-                                              batchTasksContainer.initDetailValues(todo);
-                                            }}
-                                            batch={batch}
-                                            isNew={!!batch.isNew}
-                                            orderItem={batch.orderItem}
-                                            onCancel={() => batchSlideToggle(false)}
-                                            isReady={formContainer =>
-                                              formContainer.isReady(
-                                                {
-                                                  ...batchInfoContainer.state,
-                                                  ...batchTasksContainer.state,
-                                                },
-                                                validator
-                                              ) &&
-                                              (batchInfoContainer.isDirty() ||
-                                                batchTasksContainer.isDirty())
-                                            }
-                                            onSave={() => {
-                                              const updatedBatch = {
-                                                ...batchInfoContainer.state,
-                                                ...batchTasksContainer.state,
-                                              };
-                                              batchSlideToggle(false);
+                                      <BatchFormWrapper
+                                        batch={batch}
+                                        onSave={value => {
+                                          batchSlideToggle(false);
 
-                                              const indexOfAllBatches = batches.indexOf(batch);
-                                              setFieldArrayValue(indexOfAllBatches, updatedBatch);
-                                              if (batch.container) {
-                                                const indexOfContainer = containers.findIndex(
-                                                  container => container.id === batch.container.id
+                                          const indexOfAllBatches = batches.indexOf(batch);
+                                          setFieldArrayValue(indexOfAllBatches, value);
+                                          if (batch.container) {
+                                            const indexOfContainer = containers.findIndex(
+                                              container => container.id === batch.container.id
+                                            );
+                                            if (indexOfContainer >= 0) {
+                                              const indexOfBatch = containers[
+                                                indexOfContainer
+                                              ].batches.findIndex(
+                                                containersBatch => containersBatch.id === batch.id
+                                              );
+                                              if (indexOfBatch >= 0) {
+                                                setDeepFieldValue(
+                                                  `containers.${indexOfContainer}.batches.${indexOfBatch}`,
+                                                  value
                                                 );
-                                                if (indexOfContainer >= 0) {
-                                                  const indexOfBatch = containers[
-                                                    indexOfContainer
-                                                  ].batches.findIndex(
-                                                    containersBatch =>
-                                                      containersBatch.id === batch.id
-                                                  );
-                                                  if (indexOfBatch >= 0) {
-                                                    setDeepFieldValue(
-                                                      `containers.${indexOfContainer}.batches.${indexOfBatch}`,
-                                                      updatedBatch
-                                                    );
-                                                  }
-                                                }
                                               }
-                                            }}
-                                          />
-                                        )}
-                                      </Subscribe>
+                                            }
+                                          }
+                                        }}
+                                      />
                                     )}
                                   </SlideView>
 

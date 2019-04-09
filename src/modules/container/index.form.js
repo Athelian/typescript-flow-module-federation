@@ -20,7 +20,7 @@ import { containerFormQuery } from './form/query';
 import { updateContainerMutation, prepareParsedContainerInput } from './form/mutation';
 import ContainerFormContainer from './form/container';
 import validator from './form/validator';
-import ContainerForm from './form/index';
+import ContainerForm from './form';
 
 type OptionalProps = {
   containerId: string,
@@ -200,6 +200,11 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                         query={containerFormQuery}
                         entityId={containerId}
                         entityType="container"
+                        onCompleted={({ container }) => {
+                          if (container) {
+                            this.onFormReady({ containerContainer })(container);
+                          }
+                        }}
                         render={container => {
                           const {
                             warehouseArrivalAgreedDate,
@@ -224,14 +229,7 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                             ...rest,
                           };
 
-                          return (
-                            <ContainerForm
-                              container={usefulContainer}
-                              onFormReady={() => {
-                                this.onFormReady({ containerContainer })(container);
-                              }}
-                            />
-                          );
+                          return <ContainerForm container={usefulContainer} />;
                         }}
                       />
                     </Layout>

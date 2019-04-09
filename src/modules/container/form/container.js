@@ -2,61 +2,71 @@
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsy } from 'utils/data';
-
-type Metric = {
-  value: number,
-  metric: string,
-};
+import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 
 export type ContainerFormState = {
-  id?: ?string,
-  no?: ?string,
-  memo?: string,
   archived: boolean,
-  warehouse: Object,
-  warehouseArrivalAgreedDate: string,
-  warehouseArrivalAgreedDateAssignedTo: Array<Object>,
-  warehouseArrivalAgreedDateApprovedBy: Object,
-  warehouseArrivalAgreedDateApprovedAt: string,
-  warehouseArrivalActualDate: string,
-  warehouseArrivalActualDateAssignedTo: Array<Object>,
-  warehouseArrivalActualDateApprovedBy: Object,
-  warehouseArrivalActualDateApprovedAt: string,
-  freeTimeStartDate: string,
-  freeTimeDuration: string,
   autoCalculatedFreeTimeStartDate: boolean,
-  yardName: string,
-  departureDate: string,
-  departureDateAssignedTo: Array<Object>,
-  departureDateApprovedBy: Object,
-  departureDateApprovedAt: string,
-  totalBatchPackages: number,
-  totalBatchQuantity: number,
-  totalNumberOfUniqueOrderItems: number,
-  totalVolume: Metric,
-  totalWeight: Metric,
-  totalPrice: ?Metric,
-  shipment?: Object,
   batches: Array<Object>,
-  tags?: Array<Object>,
-  representativeBatch: Object,
+  departureDate: ?string,
+  departureDateApprovedBy: ?Object,
+  departureDateApprovedAt: ?string,
+  departureDateAssignedTo: Array<Object>,
+  freeTimeDuration: number,
+  freeTimeStartDate: ?string,
+  memo: ?string,
+  no: ?string,
+  ownedBy: ?Object,
+  representativeBatch: ?Object,
+  shipment: ?Object,
+  tags: Array<Object>,
+  updatedAt: ?string,
+  updatedBy: ?string,
+  warehouse: ?Object,
+  warehouseArrivalAgreedDate: ?string,
+  warehouseArrivalAgreedDateApprovedAt: ?string,
+  warehouseArrivalAgreedDateApprovedBy: ?Object,
+  warehouseArrivalAgreedDateAssignedTo: Array<Object>,
+  warehouseArrivalActualDate: ?string,
+  warehouseArrivalActualDateApprovedAt: ?string,
+  warehouseArrivalActualDateApprovedBy: ?Object,
+  warehouseArrivalActualDateAssignedTo: Array<Object>,
+  yardName: ?string,
 };
 
-const initValues = {
-  totalBatchPackages: 0,
-  totalBatchQuantity: 0,
-  totalNumberOfUniqueOrderItems: 0,
-  totalVolume: { value: 0, metric: 'm³' },
-  totalWeight: { value: 0, metric: 'kg' },
-  totalPrice: null,
+const initValues: ContainerFormState = {
+  autoCalculatedFreeTimeStartDate: false,
   batches: [],
-  tags: [],
-  representativeBatch: null,
-  warehouseArrivalAgreedDateAssignedTo: [],
-  warehouseArrivalActualDateAssignedTo: [],
+  departureDate: null,
+  departureDateApprovedAt: null,
+  departureDateApprovedBy: null,
   departureDateAssignedTo: [],
   freeTimeDuration: 14,
+  freeTimeStartDate: null,
+  memo: null,
+  no: null,
+  representativeBatch: null,
+  shipment: null,
+  tags: [],
+  warehouse: null,
+  warehouseArrivalAgreedDate: null,
+  warehouseArrivalAgreedDateApprovedAt: null,
+  warehouseArrivalAgreedDateApprovedBy: null,
+  warehouseArrivalAgreedDateAssignedTo: [],
+  warehouseArrivalActualDate: null,
+  warehouseArrivalActualDateApprovedAt: null,
+  warehouseArrivalActualDateApprovedBy: null,
+  warehouseArrivalActualDateAssignedTo: [],
+  yardName: null,
+  // reset values for container form
+  archived: false,
+  updatedAt: null,
+  updatedBy: null,
+  ownedBy: null,
+  totalVolume: null,
+  totalAdjusted: 0,
+  orderItem: null,
+  isNew: false,
 };
 
 export default class ContainerFormContainer extends Container<ContainerFormState> {
@@ -95,7 +105,8 @@ export default class ContainerFormContainer extends Container<ContainerFormState
     });
   };
 
-  isDirty = () => !isEquals(cleanFalsy(this.state), cleanFalsy(this.originalValues));
+  isDirty = () =>
+    !isEquals(cleanFalsyAndTypeName(this.state), cleanFalsyAndTypeName(this.originalValues));
 
   onSuccess = () => {
     this.originalValues = this.state;

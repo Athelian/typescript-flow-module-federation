@@ -193,7 +193,7 @@ const OrderItemCard = ({
       selectable={selectable}
       showActionsOnHover
       actions={actions}
-      readOnly={readOnly && !onClick}
+      readOnly={readOnly && !selectable && !onClick}
       {...rest}
     >
       <div
