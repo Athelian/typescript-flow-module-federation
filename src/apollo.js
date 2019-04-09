@@ -35,7 +35,7 @@ class SubscriptionSSE {
           return;
         }
 
-        handler(JSON.parse(msg.data));
+        handler(JSON.parse(String(msg.data)));
       } catch (e) {
         logger.error(e);
       }

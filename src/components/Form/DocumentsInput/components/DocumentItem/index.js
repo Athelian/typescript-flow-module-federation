@@ -2,14 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FormField } from 'modules/form';
-import {
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
-  Display,
-  TextAreaInputFactory,
-  EnumSelectInputFactory,
-} from 'components/Form';
+import { TextAreaInputFactory, EnumSelectInputFactory, SelectInputFactory } from 'components/Form';
 import BaseCard, { CardAction } from 'components/Cards';
 import Icon from 'components/Icon';
 import Tooltip from 'components/Tooltip';
@@ -31,7 +24,6 @@ import {
 
 type OptionalProps = {
   onChange: (string, any) => void,
-  onBlur: (string, boolean) => void,
   onRemove: Function,
   editable: boolean,
   downloadable: boolean,
@@ -47,7 +39,6 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onChange: () => {},
-  onBlur: () => {},
   onRemove: () => {},
   editable: true,
   downloadable: true,
@@ -59,7 +50,6 @@ const DocumentItem = ({
   name,
   value,
   onChange,
-  onBlur,
   onRemove,
   types,
   editable,
@@ -77,7 +67,6 @@ const DocumentItem = ({
   const fileExtension = getFileExtension(value.name);
   const fileName = getFileName(value.name);
   const fileIcon = computeIcon(fileExtension);
-  const type = types.find(t => t.type === value.type);
 
   return uploading ? (
     <div className={ProgressStyle}>{`${progress}%`}</div>
@@ -88,30 +77,29 @@ const DocumentItem = ({
           editable && <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />,
         ].filter(Boolean)}
         showActionsOnHover
+        readOnly={!editable}
       >
         <div className={DocumentCardStyle}>
-          {editable ? (
-            <SelectInput
-              name={`${name}.type`}
-              value={value.type}
-              onBlur={onBlur}
-              onChange={({ type: newType }) => onChange(`${name}.type`, newType)}
-              readOnly={!editable}
-              items={types}
-              itemToValue={v => (v ? v.type : null)}
-              itemToString={v => (v ? v.label : '')}
-              renderSelect={({ ...rest }) => (
-                <DefaultSelect {...rest} hideDropdownArrow required align="left" width="130px" />
-              )}
-              renderOptions={({ ...rest }) => (
-                <DefaultOptions {...rest} align="left" width="130px" />
-              )}
-            />
-          ) : (
-            <Display height="30px" align="left" width="130px">
-              {type ? type.label : ''}
-            </Display>
-          )}
+          <FormField
+            name={`${name}.type`}
+            initValue={value.type}
+            setFieldValue={onChange}
+            saveOnChange
+          >
+            {({ ...inputHandlers }) => (
+              <SelectInputFactory
+                {...inputHandlers}
+                items={types}
+                editable={editable}
+                inputWidth="130px"
+                inputHeight="30px"
+                hideTooltip
+                inputAlign="left"
+                required
+                hideDropdownArrow
+              />
+            )}
+          </FormField>
 
           <div className={FileExtensionIconStyle(fileIcon.color)}>
             <Icon icon={fileIcon.icon} />
@@ -151,34 +139,28 @@ const DocumentItem = ({
             )}
           </div>
 
-          {editable ? (
-            <FormField
-              name={`${name}.status`}
-              initValue={value.status}
-              setFieldValue={onChange}
-              saveOnChange
-            >
-              {({ ...inputHandlers }) => (
-                <span className={FileStatusColoringWrapper(value.status)}>
-                  <EnumSelectInputFactory
-                    {...inputHandlers}
-                    enumType="FileStatus"
-                    editable={editable}
-                    inputWidth="130px"
-                    inputHeight="30px"
-                    hideTooltip
-                    inputAlign="center"
-                    required
-                    hideDropdownArrow
-                  />
-                </span>
-              )}
-            </FormField>
-          ) : (
-            <Display height="30px" align="left" width="130px">
-              {value.status}
-            </Display>
-          )}
+          <FormField
+            name={`${name}.status`}
+            initValue={value.status}
+            setFieldValue={onChange}
+            saveOnChange
+          >
+            {({ ...inputHandlers }) => (
+              <span className={FileStatusColoringWrapper(value.status, editable)}>
+                <EnumSelectInputFactory
+                  {...inputHandlers}
+                  enumType="FileStatus"
+                  editable={editable}
+                  inputWidth="130px"
+                  inputHeight="30px"
+                  hideTooltip
+                  inputAlign="center"
+                  required
+                  hideDropdownArrow
+                />
+              </span>
+            )}
+          </FormField>
         </div>
       </BaseCard>
 
@@ -189,7 +171,7 @@ const DocumentItem = ({
               {...inputHandlers}
               isNew
               editable={editable}
-              inputWidth="590px"
+              inputWidth="630px"
               inputHeight="125px"
             />
           )}

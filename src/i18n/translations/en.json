@@ -70,7 +70,7 @@
   "components.inputs.approve": "APPROVE",
   "components.inputs.reject": "REJECT",
   "components.documentInput.cantDownload": "You do not have the rights to download this document",
-  "components.Form.DocumentsInput.noDocuments": "No documents",
+  "components.Form.DocumentsInput.noDocuments": "No documents found",
   "components.inputs.assignedTo": "ASSIGNED TO",
   "components.inputs.approval": "APPROVAL",
   "modules.metadata.sectionHeader": "CUSTOM FIELDS",
