@@ -32,7 +32,7 @@ export const DocumentsSectionBodyStyle: string = css`
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   max-height: 615px;
-  min-height: 205px;
+  min-height: 225px;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};

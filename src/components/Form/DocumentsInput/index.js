@@ -7,7 +7,6 @@ import { uuid } from 'utils/id';
 import { upload } from 'utils/fs';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
-import { Label } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 import Tooltip from 'components/Tooltip';
 import DocumentItem from './components/DocumentItem';
@@ -161,7 +160,7 @@ class DocumentsInput extends React.Component<Props, State> {
                 id,
                 name,
                 path,
-                type: types[0].type,
+                type: types[0].value,
                 status: 'Draft',
                 memo: null,
                 uploading: false,
@@ -220,8 +219,6 @@ class DocumentsInput extends React.Component<Props, State> {
                   }}
                 />
               </label>
-
-              <Label>you can also drag and drop files below</Label>
             </>
           )}
         </SectionNavBar>

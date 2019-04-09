@@ -66,27 +66,27 @@ function DocumentsSection({ intl }: Props) {
           }}
           types={[
             {
-              type: 'ShipmentBl',
+              value: 'ShipmentBl',
               label: intl.formatMessage(messages.bl),
             },
             {
-              type: 'ShipmentInvoice',
+              value: 'ShipmentInvoice',
               label: intl.formatMessage(messages.invoice),
             },
             {
-              type: 'ShipmentPackingList',
+              value: 'ShipmentPackingList',
               label: intl.formatMessage(messages.packing),
             },
             {
-              type: 'ShipmentImportDeclaration',
+              value: 'ShipmentImportDeclaration',
               label: intl.formatMessage(messages.import),
             },
             {
-              type: 'ShipmentInspectionApplication',
+              value: 'ShipmentInspectionApplication',
               label: intl.formatMessage(messages.inspection),
             },
             {
-              type: 'Document',
+              value: 'Document',
               label: intl.formatMessage(messages.document),
             },
           ]}

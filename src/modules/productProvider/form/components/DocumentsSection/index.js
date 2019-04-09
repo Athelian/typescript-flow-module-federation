@@ -37,28 +37,28 @@ function DocumentsSection({ intl, isOwner }: Props) {
           }}
           types={[
             {
-              type: 'ProductSpec',
+              value: 'ProductSpec',
               label: intl.formatMessage({
                 id: 'modules.provider.fileType.productSpec',
                 defaultMessage: 'Product Specification',
               }),
             },
             {
-              type: 'ProductAnalysisCert',
+              value: 'ProductAnalysisCert',
               label: intl.formatMessage({
                 id: 'modules.provider.fileType.productAnalysisCert',
                 defaultMessage: 'Product Analysis Certificate',
               }),
             },
             {
-              type: 'ProductOriginCert',
+              value: 'ProductOriginCert',
               label: intl.formatMessage({
                 id: 'modules.provider.fileType.productOriginCert',
                 defaultMessage: 'Product Origin Certificate',
               }),
             },
             {
-              type: 'Document',
+              value: 'Document',
               label: intl.formatMessage({
                 id: 'modules.provider.fileType.document',
                 defaultMessage: 'Document',
