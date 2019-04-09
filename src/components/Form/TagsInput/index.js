@@ -140,88 +140,87 @@ export default class TagsInput extends React.Component<Props, State> {
     const { focused } = this.state;
 
     return (
-      <TagListProvider tagType={tagType}>
-        {({ data: tags }) => (
-          <HoverWrapper>
-            {isHover => (
-              <div className={HoverStyle}>
-                <Downshift
-                  itemCount={tags.length}
-                  itemToString={i => (i ? i.id : '')}
-                  selectedItem={null}
-                  onChange={this.handleDownshiftChange}
-                  onStateChange={this.handleStateChange}
-                  stateReducer={this.stateReducer}
-                  labelId={`${name}TagInputs`}
-                >
-                  {({
-                    getInputProps,
-                    getToggleButtonProps,
-                    getItemProps,
-                    isOpen,
-                    inputValue,
-                    highlightedIndex,
-                    clearSelection,
-                    reset,
-                  }) => (
-                    <div className={WrapperStyle(focused, !!disabled, !!editable)}>
-                      <div className={SelectionWrapperStyle}>
-                        {values &&
-                          values.map(tag => (
-                            <Tag
-                              key={tag.id}
-                              tag={tag}
-                              suffix={
-                                editable.remove && (
-                                  <button
-                                    type="button"
-                                    className={RemoveStyle}
-                                    onClick={() => {
-                                      this.handleRemove(tag);
-                                    }}
-                                  >
-                                    <Icon icon="CLEAR" />
-                                  </button>
-                                )
-                              }
-                            />
-                          ))}
-                        {editable.set && (
-                          <div className={InputStyle(isHover)}>
-                            <input
-                              type="text"
-                              {...getInputProps({
-                                spellCheck: false,
-                                disabled,
-                                onKeyDown: e => {
-                                  switch (e.key) {
-                                    case 'Backspace':
-                                      if (!inputValue && values && values.length > 0 && !e.repeat) {
-                                        this.handleRemove(values[values.length - 1]);
-                                      }
-                                      break;
-                                    default:
+      <HoverWrapper>
+        {isHover => (
+          <div className={HoverStyle}>
+            <Downshift
+              itemToString={i => (i ? i.id : '')}
+              selectedItem={null}
+              onChange={this.handleDownshiftChange}
+              onStateChange={this.handleStateChange}
+              stateReducer={this.stateReducer}
+              labelId={`${name}TagInputs`}
+            >
+              {({
+                getInputProps,
+                getToggleButtonProps,
+                getItemProps,
+                isOpen,
+                inputValue,
+                highlightedIndex,
+                clearSelection,
+                reset,
+              }) => (
+                <div className={WrapperStyle(focused, !!disabled, !!editable)}>
+                  <div className={SelectionWrapperStyle}>
+                    {values &&
+                      values.map(tag => (
+                        <Tag
+                          key={tag.id}
+                          tag={tag}
+                          suffix={
+                            editable.remove && (
+                              <button
+                                type="button"
+                                className={RemoveStyle}
+                                onClick={() => {
+                                  this.handleRemove(tag);
+                                }}
+                              >
+                                <Icon icon="CLEAR" />
+                              </button>
+                            )
+                          }
+                        />
+                      ))}
+                    {editable.set && (
+                      <div className={InputStyle(isHover)}>
+                        <input
+                          type="text"
+                          {...getInputProps({
+                            spellCheck: false,
+                            disabled,
+                            onKeyDown: e => {
+                              switch (e.key) {
+                                case 'Backspace':
+                                  if (!inputValue && values && values.length > 0 && !e.repeat) {
+                                    this.handleRemove(values[values.length - 1]);
                                   }
-                                },
-                                onFocus: this.handleInputFocus,
-                                onBlur: () => {
-                                  this.handleInputBlur();
-                                  reset();
-                                  clearSelection();
-                                },
-                                ...(id ? { id } : {}),
-                              })}
-                            />
+                                  break;
+                                default:
+                              }
+                            },
+                            onFocus: this.handleInputFocus,
+                            onBlur: () => {
+                              this.handleInputBlur();
+                              reset();
+                              clearSelection();
+                            },
+                            ...(id ? { id } : {}),
+                          })}
+                        />
 
-                            <button
-                              {...getToggleButtonProps()}
-                              type="button"
-                              className={ExpandButtonStyle}
-                              disabled={disabled}
-                            >
-                              <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
-                            </button>
-                            {isOpen && (
+                        <button
+                          {...getToggleButtonProps()}
+                          type="button"
+                          className={ExpandButtonStyle}
+                          disabled={disabled}
+                        >
+                          <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
+                        </button>
+                        {isOpen && (
+                          <TagListProvider tagType={tagType}>
+                            {({ data: tags }) => (
                               <div className={ListWrapperStyle}>
                                 {this.computeFilteredTags(tags, inputValue).map((tag, index) => {
                                   const isActive = highlightedIndex === index;
@@ -243,17 +242,17 @@ export default class TagsInput extends React.Component<Props, State> {
                                 })}
                               </div>
                             )}
-                          </div>
+                          </TagListProvider>
                         )}
                       </div>
-                    </div>
-                  )}
-                </Downshift>
-              </div>
-            )}
-          </HoverWrapper>
+                    )}
+                  </div>
+                </div>
+              )}
+            </Downshift>
+          </div>
         )}
-      </TagListProvider>
+      </HoverWrapper>
     );
   }
 }
