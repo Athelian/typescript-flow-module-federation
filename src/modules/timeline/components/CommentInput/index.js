@@ -86,7 +86,7 @@ const CommentInput = ({ entity, query, queryField, variables }: Props) => {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     onKeyPress={e => {
-                      if (e.which === 13 && !e.shiftKey) {
+                      if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         submit();
                       }
