@@ -1,13 +1,19 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
+import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
+import { getByPath } from 'utils/fp';
 import { calculatePackageQuantity } from 'utils/batch';
-import { Label, Display, FieldItem } from 'components/Form';
+import {
+  Label,
+  Display,
+  TextInputFactory,
+  NumberInputFactory,
+  DateInputFactory,
+} from 'components/Form';
 import { FormField } from 'modules/form';
-import { numberInputFactory, textInputFactory, dateInputFactory } from 'modules/form/helpers';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -16,6 +22,7 @@ import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { getLatestDate } from 'utils/shipment';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -28,15 +35,18 @@ import {
   VolumeWrapperStyle,
   ShipmentWrapperStyle,
   ShipmentIconStyle,
+  ContainerWrapperStyle,
+  ContainerIconStyle,
   WarehouseArrivalWrapperStyle,
   WarehouseArrivalIconStyle,
+  ApprovalIconStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
 } from './style';
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
-  readOnly: boolean,
+  editable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -53,7 +63,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onClick: () => {},
-  readOnly: false,
+  editable: false,
 };
 
 const OrderBatchCard = ({
@@ -64,56 +74,59 @@ const OrderBatchCard = ({
   saveOnBlur,
   currency,
   price,
-  readOnly,
+  editable,
   ...rest
 }: Props) => {
-  const actions = [
-    <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-    <BooleanValue>
-      {({ value: isOpen, set: dialogToggle }) => (
-        <>
-          <RemoveDialog
-            isOpen={isOpen}
-            onRequestClose={() => dialogToggle(false)}
-            onCancel={() => dialogToggle(false)}
-            onRemove={() => {
-              onRemove(batch);
-              dialogToggle(false);
-            }}
-            message={
-              <div>
-                <div>
-                  <FormattedMessage
-                    id="components.cards.deleteBatchItem"
-                    defaultMessage="Are you sure you want to delete this Batch?"
-                  />
-                </div>
-                <div>
-                  <FormattedMessage
-                    id="components.cards.deleteBatchItemShipment"
-                    defaultMessage="It is being used in a Shipment"
-                  />
-                </div>
-              </div>
-            }
-          />
-          <CardAction
-            icon="REMOVE"
-            hoverColor="RED"
-            onClick={() => {
-              if (batch.shipment) {
-                dialogToggle(true);
-              } else {
-                onRemove(batch);
-              }
-            }}
-          />
-        </>
-      )}
-    </BooleanValue>,
-  ];
+  const actions = editable
+    ? [
+        <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
+        <BooleanValue>
+          {({ value: isOpen, set: dialogToggle }) => (
+            <>
+              <RemoveDialog
+                isOpen={isOpen}
+                onRequestClose={() => dialogToggle(false)}
+                onCancel={() => dialogToggle(false)}
+                onRemove={() => {
+                  onRemove(batch);
+                  dialogToggle(false);
+                }}
+                message={
+                  <div>
+                    <div>
+                      <FormattedMessage
+                        id="components.cards.deleteBatchItem"
+                        defaultMessage="Are you sure you want to delete this Batch?"
+                      />
+                    </div>
+                    <div>
+                      <FormattedMessage
+                        id="components.cards.deleteBatchItemShipment"
+                        defaultMessage="It is being used in a Shipment"
+                      />
+                    </div>
+                  </div>
+                }
+              />
+              <CardAction
+                icon="REMOVE"
+                hoverColor="RED"
+                onClick={() => {
+                  if (batch.shipment) {
+                    dialogToggle(true);
+                  } else {
+                    onRemove(batch);
+                  }
+                }}
+              />
+            </>
+          )}
+        </BooleanValue>,
+      ]
+    : [];
 
   const {
+    id,
     no,
     quantity,
     deliveredAt,
@@ -122,17 +135,12 @@ const OrderBatchCard = ({
     packageQuantity,
     batchAdjustments,
     shipment,
+    container,
     autoCalculatePackageQuantity,
     todo,
   } = batch;
 
-  const warehouseArrivalApproved = !!(
-    batch &&
-    batch.shipment &&
-    batch.shipment.containerGroups &&
-    batch.shipment.containerGroups[0] &&
-    batch.shipment.containerGroups[0].warehouseArrival.date
-  );
+  const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
   const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
@@ -146,118 +154,11 @@ const OrderBatchCard = ({
     [`batch.${batch.id}.quantity`]: quantity + totalAdjustment,
   };
 
-  return readOnly ? (
-    <BaseCard icon="BATCH" color="BATCH" {...rest}>
-      <div
-        className={OrderBatchCardWrapperStyle}
-        onClick={() => onClick(batch)}
-        role="presentation"
-      >
-        <div className={BatchNoWrapperStyle}>
-          <FieldItem input={<Display align="left">{no}</Display>} />
-        </div>
-
-        <div className={QuantityWrapperStyle}>
-          <Label required>
-            <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
-          </Label>
-          <Display>
-            <FormattedNumber value={quantity + totalAdjustment} />
-          </Display>
-        </div>
-
-        <div className={DateInputWrapperStyle}>
-          <Label>
-            <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
-          </Label>
-          <Display>
-            <FormattedDate value={deliveredAt} />
-          </Display>
-        </div>
-
-        <div className={DateInputWrapperStyle}>
-          <Label>
-            <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
-          </Label>
-          <Display>
-            <FormattedDate value={desiredAt} />
-          </Display>
-        </div>
-
-        <div className={DividerStyle} />
-
-        <div className={TotalPriceWrapperStyle}>
-          <Label>
-            <FormattedMessage id="components.cards.total" defaultMessage="TTL PRICE" />
-          </Label>
-          <Display>
-            <FormattedNumber
-              value={(price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)}
-              suffix={currency}
-            />
-          </Display>
-        </div>
-
-        <div className={VolumeWrapperStyle}>
-          <Label>
-            <FormattedMessage id="components.cards.volume" defaultMessage="TTL VOL" />
-          </Label>
-          <Display>
-            {packageVolume && packageQuantity != null && (
-              <FormattedNumber
-                value={packageVolume.value * packageQuantity}
-                suffix={packageVolume.metric}
-              />
-            )}
-          </Display>
-        </div>
-
-        <div className={ShipmentWrapperStyle}>
-          <Link
-            className={ShipmentIconStyle(!!shipment)}
-            to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="SHIPMENT" />
-          </Link>
-          <Display align="left">{batch.shipment && batch.shipment.no}</Display>
-        </div>
-
-        <div className={WarehouseArrivalWrapperStyle}>
-          <div className={WarehouseArrivalIconStyle(warehouseArrivalApproved)}>
-            <Icon icon="WAREHOUSE" />
-          </div>
-          <Label>
-            <FormattedMessage id="components.cards.arrival" defaultMessage="ARRIVAL" />
-          </Label>
-          <Display align="left">
-            <FormattedDate
-              value={
-                batch &&
-                batch.shipment &&
-                batch.shipment.containerGroups &&
-                batch.shipment.containerGroups[0] &&
-                batch.shipment.containerGroups[0].warehouseArrival.date
-              }
-            />
-          </Display>
-        </div>
-
-        <div className={TagsAndTaskWrapperStyle}>
-          <div className={BatchTagsWrapperStyle}>
-            {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
-          </div>
-          <TaskRing {...todo} />
-        </div>
-      </div>
-    </BaseCard>
-  ) : (
+  return (
     <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
       <div
         className={OrderBatchCardWrapperStyle}
-        onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
+        onClick={() => onClick(batch)}
         role="presentation"
       >
         <div
@@ -265,29 +166,25 @@ const OrderBatchCard = ({
           onClick={evt => evt.stopPropagation()}
           role="presentation"
         >
-          <FormField
-            name={`batch.${batch.id}.no`}
-            initValue={no}
-            validator={validation}
-            values={values}
-          >
-            {({ name: fieldName, ...inputHandlers }) =>
-              textInputFactory({
-                width: '165px',
-                height: '20px',
-                inputHandlers: {
+          <FormField name={`batch.${id}.no`} initValue={no} validator={validation} values={values}>
+            {({ name: fieldName, ...inputHandlers }) => (
+              <TextInputFactory
+                {...{
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
                     saveOnBlur({ ...batch, no: inputHandlers.value });
                   },
-                },
-                name: fieldName,
-                isNew: false,
-                originalValue: no,
-                align: 'left',
-              })
-            }
+                }}
+                editable={editable}
+                inputWidth="165px"
+                inputHeight="20px"
+                inputAlign="left"
+                name={fieldName}
+                isNew={false}
+                originalValue={no}
+              />
+            )}
           </FormField>
         </div>
 
@@ -305,11 +202,12 @@ const OrderBatchCard = ({
             validator={validation}
             values={values}
           >
-            {({ name: fieldName, ...inputHandlers }) =>
-              numberInputFactory({
-                width: '90px',
-                height: '20px',
-                inputHandlers: {
+            {({ name: fieldName, ...inputHandlers }) => (
+              <NumberInputFactory
+                inputWidth="90px"
+                inputHeight="20px"
+                editable={editable}
+                {...{
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
@@ -327,12 +225,12 @@ const OrderBatchCard = ({
                         : {}),
                     });
                   },
-                },
-                name: fieldName,
-                isNew: false,
-                originalValue: quantity + totalAdjustment,
-              })
-            }
+                }}
+                name={fieldName}
+                isNew={false}
+                originalValue={quantity + totalAdjustment}
+              />
+            )}
           </FormField>
         </div>
 
@@ -345,14 +243,15 @@ const OrderBatchCard = ({
             <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
           </Label>
           <FormField name={`batch.${batch.id}.deliveredAt`} initValue={deliveredAt}>
-            {({ name, ...inputHandlers }) =>
-              dateInputFactory({
-                width: '120px',
-                height: '20px',
-                name,
-                isNew: false,
-                originalValue: deliveredAt,
-                inputHandlers: {
+            {({ name: fieldName, ...inputHandlers }) => (
+              <DateInputFactory
+                inputWidth="120px"
+                inputHeight="20px"
+                name={fieldName}
+                isNew={false}
+                originalValue={deliveredAt}
+                editable={editable}
+                {...{
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
@@ -361,9 +260,9 @@ const OrderBatchCard = ({
                       deliveredAt: inputHandlers.value ? inputHandlers.value : null,
                     });
                   },
-                },
-              })
-            }
+                }}
+              />
+            )}
           </FormField>
         </div>
 
@@ -376,14 +275,15 @@ const OrderBatchCard = ({
             <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
           </Label>
           <FormField name={`batch.${batch.id}.desiredAt`} initValue={desiredAt}>
-            {({ name, ...inputHandlers }) =>
-              dateInputFactory({
-                width: '120px',
-                height: '20px',
-                name,
-                isNew: false,
-                originalValue: desiredAt,
-                inputHandlers: {
+            {({ name: fieldName, ...inputHandlers }) => (
+              <DateInputFactory
+                inputWidth="120px"
+                inputHeight="20px"
+                name={fieldName}
+                isNew={false}
+                originalValue={desiredAt}
+                editable={editable}
+                {...{
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
@@ -392,9 +292,9 @@ const OrderBatchCard = ({
                       desiredAt: inputHandlers.value ? inputHandlers.value : null,
                     });
                   },
-                },
-              })
-            }
+                }}
+              />
+            )}
           </FormField>
         </div>
 
@@ -417,7 +317,7 @@ const OrderBatchCard = ({
             <FormattedMessage id="components.cards.volume" defaultMessage="TTL VOL" />
           </Label>
           <Display>
-            {packageVolume && packageQuantity != null && (
+            {packageVolume && packageQuantity !== null && (
               <FormattedNumber
                 value={packageVolume.value * packageQuantity}
                 suffix={packageVolume.metric}
@@ -427,37 +327,103 @@ const OrderBatchCard = ({
         </div>
 
         <div className={ShipmentWrapperStyle}>
-          <Link
+          <div
             className={ShipmentIconStyle(!!shipment)}
-            to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
             onClick={evt => {
-              evt.stopPropagation();
+              if (shipment) {
+                evt.stopPropagation();
+                navigate(`/shipment/${encodeId(shipment.id)}`);
+              }
             }}
+            role="presentation"
           >
             <Icon icon="SHIPMENT" />
-          </Link>
-          <Display align="left">{batch.shipment && batch.shipment.no}</Display>
+          </div>
+          <Display align="left">{getByPath('no', shipment)}</Display>
         </div>
 
-        <div className={WarehouseArrivalWrapperStyle}>
-          <div className={WarehouseArrivalIconStyle(warehouseArrivalApproved)}>
-            <Icon icon="WAREHOUSE" />
-          </div>
-          <Label>
-            <FormattedMessage id="components.cards.arrival" defaultMessage="ARRIVAL" />
-          </Label>
-          <Display align="left">
-            <FormattedDate
-              value={
-                batch &&
-                batch.shipment &&
-                batch.shipment.containerGroups &&
-                batch.shipment.containerGroups[0] &&
-                batch.shipment.containerGroups[0].warehouseArrival.date
+        <div className={ContainerWrapperStyle}>
+          <div
+            className={ContainerIconStyle(!!container)}
+            onClick={evt => {
+              if (container) {
+                evt.stopPropagation();
+                navigate(`/container/${encodeId(container.id)}`);
               }
-            />
-          </Display>
+            }}
+            role="presentation"
+          >
+            <Icon icon="CONTAINER" />
+          </div>
+          <Display align="left">{getByPath('no', container)}</Display>
         </div>
+
+        {hasContainers ? (
+          <>
+            <div className={WarehouseArrivalWrapperStyle}>
+              <div className={WarehouseArrivalIconStyle}>
+                <Icon icon="WAREHOUSE" />
+              </div>
+              <Label>
+                <FormattedMessage id="components.cards.agreed" defaultMessage="AGREED" />
+              </Label>
+              <Display align="left">
+                <FormattedDate value={getByPath('warehouseArrivalAgreedDate', container)} />
+              </Display>
+              <div
+                className={ApprovalIconStyle(
+                  !!getByPath('warehouseArrivalAgreedDateApprovedBy', container)
+                )}
+              >
+                <Icon icon="CHECKED" />
+              </div>
+            </div>
+
+            <div className={WarehouseArrivalWrapperStyle}>
+              <div className={WarehouseArrivalIconStyle}>
+                <Icon icon="WAREHOUSE" />
+              </div>
+              <Label>
+                <FormattedMessage id="components.cards.actual" defaultMessage="ACTUAL" />
+              </Label>
+              <Display align="left">
+                <FormattedDate value={getByPath('warehouseArrivalActualDate', container)} />
+              </Display>
+              <div
+                className={ApprovalIconStyle(
+                  !!getByPath('warehouseArrivalActualDateApprovedBy', container)
+                )}
+              >
+                <Icon icon="CHECKED" />
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={WarehouseArrivalWrapperStyle}>
+              <div className={WarehouseArrivalIconStyle}>
+                <Icon icon="WAREHOUSE" />
+              </div>
+              <Label>
+                <FormattedMessage id="components.cards.arrival" defaultMessage="ARRIVAL" />
+              </Label>
+              <Display align="left">
+                <FormattedDate
+                  value={getLatestDate(getByPath('containerGroups.0.warehouseArrival', shipment))}
+                />
+              </Display>
+              <div
+                className={ApprovalIconStyle(
+                  !!getByPath('containerGroups.0.warehouseArrival.approvedAt', shipment)
+                )}
+              >
+                <Icon icon="CHECKED" />
+              </div>
+            </div>
+            <div className={WarehouseArrivalWrapperStyle} />
+          </>
+        )}
+
         <div className={TagsAndTaskWrapperStyle}>
           <div className={BatchTagsWrapperStyle}>
             {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
@@ -473,7 +439,7 @@ OrderBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderBatchCard, 'batch', {
   width: '195px',
-  height: '241px',
+  height: '291px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });
