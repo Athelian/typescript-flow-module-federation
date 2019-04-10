@@ -1,26 +1,31 @@
 // @flow
 import { type IntlShape } from 'react-intl';
-import { addWeeks, subWeeks, addMonths, subMonths, addDays, subDays } from 'date-fns';
+import { addWeeks, addMonths, addDays } from 'date-fns';
+import { formatToGraphql } from 'utils/date';
 import { orderBinding, batchBinding, shipmentBinding } from './constants';
 
 export const calculateDate = ({
-  date,
+  date: selectedDate,
   duration,
   offset,
 }: {
-  date: Date,
-  duration: 'day' | 'week' | 'month',
+  date: ?Date,
+  duration: 'days' | 'weeks' | 'months',
   offset: number,
 }) => {
-  switch (duration) {
-    case 'week':
-      return offset >= 0 ? addWeeks(date, offset) : subWeeks(date, offset);
+  if (!selectedDate) return null;
 
-    case 'month':
-      return offset >= 0 ? addMonths(date, offset) : subMonths(date, offset);
+  const date = new Date(selectedDate);
+
+  switch (duration) {
+    case 'weeks':
+      return formatToGraphql(addWeeks(date, offset));
+
+    case 'months':
+      return formatToGraphql(addMonths(date, offset));
 
     default:
-      return offset >= 0 ? addDays(date, offset) : subDays(date, offset);
+      return formatToGraphql(addDays(date, offset));
   }
 };
 

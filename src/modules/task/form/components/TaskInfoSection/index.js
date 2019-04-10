@@ -44,8 +44,8 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { orderBinding, batchBinding, shipmentBinding } from './constants';
-import { convertBindingToSelection, getFieldsByEntity } from './helpers';
+import { orderBinding, batchBinding, shipmentBinding, START_DATE } from './constants';
+import { convertBindingToSelection, getFieldsByEntity, calculateDate } from './helpers';
 import {
   TaskFormWrapperStyle,
   TaskSectionWrapperStyle,
@@ -100,6 +100,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
+  const parentValues = React.useRef({});
 
   const onChangeBinding = React.useCallback(
     ({
@@ -111,66 +112,65 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
       isManual: boolean,
       type: string,
       field: 'startDate' | 'dueDate',
-      onChange: Function,
+      onChange: Object => void,
     }) => {
-      switch (type) {
-        case 'Shipment': {
-          if (!isManual) {
+      if (!isManual) {
+        switch (type) {
+          case 'Shipment': {
             onChange({
-              [`${field}Binding`]: shipmentBinding(intl).blDate.field,
+              [`${field}Binding`]:
+                field === 'dueDate' ? START_DATE : shipmentBinding(intl).blDate.field,
               [`${field}Interval`]: null,
             });
-          } else {
-            onChange({
-              [`${field}Binding`]: null,
-              [`${field}Interval`]: null,
+            emitter.emit('FIND_SHIPMENT_VALUE', {
+              field: field === 'dueDate' ? START_DATE : shipmentBinding(intl).blDate.field,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
             });
+            break;
           }
-          break;
-        }
-        case 'Batch': {
-          if (!isManual) {
+          case 'Batch': {
             onChange({
-              [`${field}Binding`]: batchBinding(intl).deliveredAt.field,
+              [`${field}Binding`]:
+                field === 'dueDate' ? START_DATE : batchBinding(intl).deliveredAt.field,
               [`${field}Interval`]: null,
             });
-          } else {
-            onChange({
-              [`${field}Binding`]: null,
-              [`${field}Interval`]: null,
+            emitter.emit('FIND_BATCH_VALUE', {
+              field: field === 'dueDate' ? START_DATE : batchBinding(intl).deliveredAt.field,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
             });
+            break;
           }
-          break;
-        }
-        default: {
-          if (!isManual) {
+          default: {
             onChange({
-              [`${field}Binding`]: orderBinding(intl).issuedAt.field,
+              [`${field}Binding`]:
+                field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
               [`${field}Interval`]: null,
             });
-            emitter.emit(
-              'FIND_ORDER_VALUE',
-              orderBinding(intl).issuedAt.field,
-              getByPath('entity.id', task)
-            );
-          } else {
-            onChange({
-              [`${field}Binding`]: null,
-              [`${field}Interval`]: null,
+            emitter.emit('FIND_ORDER_VALUE', {
+              field: field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
             });
+            break;
           }
-          break;
         }
+      } else {
+        onChange({
+          [`${field}Binding`]: null,
+          [`${field}Interval`]: null,
+        });
       }
     },
     [intl, task]
   );
 
   React.useEffect(() => {
-    emitter.addListener('LIVE_VALUE', value => {
-      console.warn({
-        value,
-      });
+    emitter.addListener('LIVE_VALUE', (field: string, value: ?Date) => {
+      if (value && parentValues.current) {
+        parentValues.current[field] = value;
+      }
     });
 
     return () => {
@@ -259,7 +259,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                             ? onChangeBinding({
                                 type: entity,
                                 field: 'startDate',
-                                isManual: !manualSettings.startDate,
+                                isManual: true,
                                 onChange: setFieldValues,
                               })
                             : () => {}
@@ -291,7 +291,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                             initValue={values.startDate}
                             values={values}
                             validator={validator}
-                            setFieldValue={setFieldValue}
+                            setFieldValue={(field, value) => {
+                              setFieldValue(field, value);
+                              if (values.dueDateBinding === START_DATE) {
+                                setFieldValue('dueDate', value);
+                              }
+                            }}
                           >
                             {({ name, ...inputHandlers }) => (
                               <DateInputFactory
@@ -304,7 +309,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                     defaultMessage="START DATE"
                                   />
                                 }
-                                editable={editable}
+                                editable={editable && manualSettings.startDate}
                               />
                             )}
                           </FormField>
@@ -318,7 +323,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                             ? onChangeBinding({
                                 type: entity,
                                 field: 'startDate',
-                                isManual: !manualSettings.startDate,
+                                isManual: false,
                                 onChange: setFieldValues,
                               })
                             : () => {}
@@ -333,6 +338,22 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                   autoDateField: values.startDateBinding,
                                   ...convertBindingToSelection(values.startDateInterval),
                                 }}
+                                onChange={({ autoDateOffset, autoDateDuration }) => {
+                                  const newDate = calculateDate({
+                                    date:
+                                      parentValues.current &&
+                                      parentValues.current[values.startDateBinding],
+                                    duration: autoDateDuration.metric,
+                                    offset:
+                                      autoDateOffset === 'after'
+                                        ? autoDateDuration.value
+                                        : -autoDateDuration.value,
+                                  });
+                                  setFieldValue('startDate', newDate);
+                                  if (values.dueDateBinding === START_DATE) {
+                                    setFieldValue('dueDate', newDate);
+                                  }
+                                }}
                               >
                                 {({
                                   value: { autoDateDuration, autoDateOffset, autoDateField },
@@ -341,9 +362,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                   <div className={AutoDateWrapperStyle}>
                                     <div className={AutoDateOffsetWrapperStyle}>
                                       <FormField
-                                        name="autoStartDateDuration"
+                                        name="autoStateDateDuration"
                                         initValue={autoDateDuration}
-                                        setFieldValue={set}
+                                        setFieldValue={(field, value) =>
+                                          set('autoDateDuration', value)
+                                        }
                                       >
                                         {({ name, ...inputHandlers }) => (
                                           <MetricInputFactory
@@ -360,7 +383,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                       </FormField>
 
                                       <FormField
-                                        name="autoStartDateOffset"
+                                        name="autoDateOffset"
                                         initValue={autoDateOffset}
                                         setFieldValue={set}
                                       >
@@ -385,9 +408,21 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                     </div>
 
                                     <FormField
-                                      name="autoStartDateField"
+                                      name="autoDateField"
                                       initValue={autoDateField}
-                                      setFieldValue={set}
+                                      setFieldValue={(field, value) => {
+                                        if (values.startDateBinding !== value) {
+                                          set(field, value);
+                                          setFieldValue('startDateBinding', value);
+                                          emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                            field: value,
+                                            entityId: getByPath('entity.id', task),
+                                            selectedField: 'startDate',
+                                            autoDateDuration,
+                                            autoDateOffset,
+                                          });
+                                        }
+                                      }}
                                     >
                                       {({ ...inputHandlers }) => (
                                         <SelectInputFactory
@@ -429,7 +464,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                             ? onChangeBinding({
                                 type: entity,
                                 field: 'dueDate',
-                                isManual: !manualSettings.dueDate,
+                                isManual: true,
                                 onChange: setFieldValues,
                               })
                             : () => {}
@@ -481,7 +516,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                     defaultMessage="DUE DATE"
                                   />
                                 }
-                                editable={editable}
+                                editable={manualSettings.dueDate && editable}
                               />
                             )}
                           </FormField>
@@ -495,7 +530,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                             ? onChangeBinding({
                                 type: entity,
                                 field: 'dueDate',
-                                isManual: !manualSettings.dueDate,
+                                isManual: false,
                                 onChange: setFieldValues,
                               })
                             : () => {}
@@ -510,6 +545,21 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                   autoDateField: values.dueDateBinding,
                                   ...convertBindingToSelection(values.dueDateInterval),
                                 }}
+                                onChange={({ autoDateOffset, autoDateDuration }) => {
+                                  const newDate = calculateDate({
+                                    date:
+                                      values.dueDateBinding === START_DATE
+                                        ? values.startDate
+                                        : parentValues.current &&
+                                          parentValues.current[values.dueDateBinding],
+                                    duration: autoDateDuration.metric,
+                                    offset:
+                                      autoDateOffset === 'after'
+                                        ? autoDateDuration.value
+                                        : -autoDateDuration.value,
+                                  });
+                                  setFieldValue('dueDate', newDate);
+                                }}
                               >
                                 {({
                                   value: { autoDateDuration, autoDateOffset, autoDateField },
@@ -520,7 +570,9 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                       <FormField
                                         name="autoDueDateDuration"
                                         initValue={autoDateDuration}
-                                        setFieldValue={set}
+                                        setFieldValue={(field, value) =>
+                                          set('autoDateDuration', value)
+                                        }
                                       >
                                         {({ name, ...inputHandlers }) => (
                                           <MetricInputFactory
@@ -537,7 +589,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                       </FormField>
 
                                       <FormField
-                                        name="autoDueDateOffset"
+                                        name="autoDateOffset"
                                         initValue={autoDateOffset}
                                         setFieldValue={set}
                                       >
@@ -562,14 +614,35 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                     </div>
 
                                     <FormField
-                                      name="autoDueDateField"
+                                      name="autoDateField"
                                       initValue={autoDateField}
-                                      setFieldValue={set}
+                                      setFieldValue={(field, value) => {
+                                        if (values.dueDateBinding !== value) {
+                                          set(field, value);
+                                          setFieldValue('dueDateBinding', value);
+                                          emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                            field: value,
+                                            entityId: getByPath('entity.id', task),
+                                            selectedField: 'dueDate',
+                                            autoDateDuration,
+                                            autoDateOffset,
+                                          });
+                                        }
+                                      }}
                                     >
                                       {({ ...inputHandlers }) => (
                                         <SelectInputFactory
                                           {...inputHandlers}
-                                          items={getFieldsByEntity(entity, intl)}
+                                          items={[
+                                            {
+                                              value: START_DATE,
+                                              label: intl.formatMessage({
+                                                id: 'modules.Tasks.startDate',
+                                                defaultMessage: 'START DATE',
+                                              }),
+                                            },
+                                            ...getFieldsByEntity(entity, intl),
+                                          ]}
                                           editable={editable}
                                           required
                                           hideTooltip
