@@ -34,6 +34,15 @@ const Timeline = ({
   formatters: customFormatters,
 }: Props) => {
   const ref = React.useRef(null);
+  const [didLoad, setDidLoad] = React.useState(false);
+  const [didScroll, setDidScroll] = React.useState(false);
+
+  React.useEffect(() => {
+    if (ref && ref.current && didLoad && !didScroll) {
+      ref.current.scrollTop = ref.current.scrollHeight;
+      setDidScroll(true);
+    }
+  }, [ref, didLoad, didScroll]);
 
   const variables = {
     ...baseVariables,
@@ -46,25 +55,22 @@ const Timeline = ({
     <Query
       query={query}
       variables={variables}
-      onCompleted={() => {
-        if (ref && ref.current) {
-          ref.current.scrollTop = ref.current.scrollHeight;
-        }
-      }}
+      fetchPolicy="network-only"
+      onCompleted={() => setDidLoad(true)}
     >
       {({ data, loading, fetchMore, error }) => {
         if (error) {
           return error.message;
         }
 
-        const nextPage = getByPathWithDefault(1, `${queryField}.timeline.entries.page`, data) + 1;
+        const page = getByPathWithDefault(1, `${queryField}.timeline.entries.page`, data);
         const totalPage = getByPathWithDefault(1, `${queryField}.timeline.entries.totalPage`, data);
         const items = decorateEntries(
           normalizeEntries(
             getByPathWithDefault([], `${queryField}.timeline.entries.nodes`, data)
           ).reverse()
         );
-        const hasMore = nextPage <= totalPage;
+        const hasMore = page < totalPage;
 
         return (
           <div className={TimelineWrapperStyle}>
