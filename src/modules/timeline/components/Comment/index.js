@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { StringValue } from 'react-values';
+import { clone } from 'ramda';
 import type { DocumentNode } from 'graphql/language/ast';
 import { DefaultStyle, TextAreaInput } from 'components/Form/Inputs';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -55,7 +56,23 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
         >
           {editing ? (
             <>
-              <Mutation mutation={commentUpdateMutation}>
+              <Mutation
+                mutation={commentUpdateMutation}
+                update={(store, result) => {
+                  const updatedComment = result && result.data && result.data.commentUpdate;
+                  const data = clone(store.readQuery({ query, variables }));
+
+                  if (data && data[queryField]) {
+                    data[queryField].timeline.entries.nodes = data[
+                      queryField
+                    ].timeline.entries.nodes.map(entry =>
+                      entry.id === comment.id ? updatedComment : entry
+                    );
+                  }
+
+                  store.writeQuery({ query, data, variables });
+                }}
+              >
                 {(commentUpdate, { loading }) => (
                   <StringValue defaultValue={comment.content}>
                     {({ value, set }) => (
@@ -87,21 +104,6 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
                                   content,
                                 },
                               },
-                              update: (store, result) => {
-                                const updatedComment =
-                                  result && result.data && result.data.commentUpdate;
-                                const data = store.readQuery({ query, variables });
-
-                                if (data && data[queryField]) {
-                                  data[queryField].timeline.entries.nodes = data[
-                                    queryField
-                                  ].timeline.entries.nodes.map(entry =>
-                                    entry.id === comment.id ? updatedComment : entry
-                                  );
-                                }
-
-                                store.writeQuery({ query, data, variables });
-                              },
                             }).then(() => {
                               setEditing(false);
                               setFocused(false);
@@ -113,7 +115,20 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
                   </StringValue>
                 )}
               </Mutation>
-              <Mutation mutation={commentDeleteMutation}>
+              <Mutation
+                mutation={commentDeleteMutation}
+                update={store => {
+                  const data = clone(store.readQuery({ query, variables }));
+
+                  if (data && data[queryField]) {
+                    data[queryField].timeline.entries.nodes = data[
+                      queryField
+                    ].timeline.entries.nodes.filter(entry => entry.id !== comment.id);
+                  }
+
+                  store.writeQuery({ query, data, variables });
+                }}
+              >
                 {(commentDelete, { loading }) => (
                   <button
                     ref={buttonRef}
@@ -124,17 +139,6 @@ const Comment = ({ comment, query, queryField, variables }: Props) => {
                       commentDelete({
                         variables: {
                           id: comment.id,
-                        },
-                        update: store => {
-                          const data = store.readQuery({ query, variables });
-
-                          if (data && data[queryField]) {
-                            data[queryField].timeline.entries.nodes = data[
-                              queryField
-                            ].timeline.entries.nodes.filter(entry => entry.id !== comment.id);
-                          }
-
-                          store.writeQuery({ query, data, variables });
                         },
                       });
                     }}
