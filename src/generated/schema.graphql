@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Apr 09 2019 16:46:44 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Apr 10 2019 18:17:07 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -28612,26 +28612,6 @@ enum CustomizableEntityType {
   Warehouse
 }
 
-type DateInterval {
-  years: Int!
-  months: Int!
-  days: Int!
-  hours: Int!
-  minutes: Int!
-  seconds: Int!
-  nanos: Int!
-}
-
-input DateIntervalInput {
-  years: Int
-  months: Int
-  days: Int
-  hours: Int
-  minutes: Int
-  seconds: Int
-  nanos: Int
-}
-
 input DateRangeInput {
   after: DateTime
   before: DateTime
@@ -29054,6 +29034,32 @@ type IntegrationPayloadPagination {
   totalPage: Int!
   count: Int!
   totalCount: Int!
+}
+
+type Interval {
+  years: Int!
+  months: Int!
+  weeks: Int!
+  days: Int!
+  hours: Int!
+  minutes: Int!
+  seconds: Int!
+  nanos: Int!
+}
+
+input IntervalInput {
+  years: Int
+  months: Int
+  weeks: Int
+  days: Int
+  hours: Int
+  minutes: Int
+  seconds: Int
+  nanos: Int
+}
+
+type IntervalValue {
+  interval: Interval!
 }
 
 type IntValue {
@@ -36029,10 +36035,10 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   assignedTo: [UserPayload!]!
   approvers: [UserPayload!]!
   startDate: DateTime
-  startDateInterval: DateInterval
+  startDateInterval: Interval
   startDateBinding: TaskDateBinding
   dueDate: DateTime
-  dueDateInterval: DateInterval
+  dueDateInterval: Interval
   dueDateBinding: TaskDateBinding
   inProgressBy: UserPayload
   inProgressAt: DateTime
@@ -36059,10 +36065,10 @@ input TaskCreateInput {
   name: String!
   approvable: Boolean
   startDate: DateTime
-  startDateInterval: DateIntervalInput
+  startDateInterval: IntervalInput
   startDateBinding: TaskDateBinding
   dueDate: DateTime
-  dueDateInterval: DateIntervalInput
+  dueDateInterval: IntervalInput
   dueDateBinding: TaskDateBinding
   assignedToIds: [ID!]
   approverIds: [ID!]
@@ -36099,6 +36105,7 @@ enum TaskDateBinding {
   ShipmentCustomClearance
   ShipmentWarehouseArrival
   ShipmentDeliveryReady
+  TaskStartDate
 }
 
 input TaskFilterInput {
@@ -36196,10 +36203,10 @@ input TaskTemplateTaskCreateInput {
   name: String!
   approvable: Boolean
   startDate: DateTime
-  startDateInterval: DateIntervalInput
+  startDateInterval: IntervalInput
   startDateBinding: TaskDateBinding
   dueDate: DateTime
-  dueDateInterval: DateIntervalInput
+  dueDateInterval: IntervalInput
   dueDateBinding: TaskDateBinding
   assignedToIds: [ID!]
   approverIds: [ID!]
@@ -36220,10 +36227,10 @@ input TaskTemplateTaskUpdateInput {
   name: String
   approvable: Boolean
   startDate: DateTime
-  startDateInterval: DateIntervalInput
+  startDateInterval: IntervalInput
   startDateBinding: TaskDateBinding
   dueDate: DateTime
-  dueDateInterval: DateIntervalInput
+  dueDateInterval: IntervalInput
   dueDateBinding: TaskDateBinding
   assignedToIds: [ID!]
   approverIds: [ID!]
@@ -36252,10 +36259,10 @@ input TaskUpdateInput {
   name: String
   approvable: Boolean
   startDate: DateTime
-  startDateInterval: DateIntervalInput
+  startDateInterval: IntervalInput
   startDateBinding: TaskDateBinding
   dueDate: DateTime
-  dueDateInterval: DateIntervalInput
+  dueDateInterval: IntervalInput
   dueDateBinding: TaskDateBinding
   assignedToIds: [ID!]
   approverIds: [ID!]
@@ -36364,10 +36371,10 @@ input TodoTaskInput {
   name: String
   approvable: Boolean
   startDate: DateTime
-  startDateInterval: DateIntervalInput
+  startDateInterval: IntervalInput
   startDateBinding: TaskDateBinding
   dueDate: DateTime
-  dueDateInterval: DateIntervalInput
+  dueDateInterval: IntervalInput
   dueDateBinding: TaskDateBinding
   assignedToIds: [ID!]
   approverIds: [ID!]
@@ -36475,7 +36482,7 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
-union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | MetricValueValue | SizeValue | EntityValue | Values
+union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | MetricValueValue | SizeValue | EntityValue | Values
 
 input ValueInput {
   string: String
