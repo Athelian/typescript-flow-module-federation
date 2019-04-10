@@ -196,7 +196,7 @@ const SideBar = () => {
                           isActive={`/${location.pathname.split('/')[2]}` === '/task-template'}
                           icon="TEMPLATE"
                           label={
-                            <FormattedMessage id="modules.sidebar.tasks" defaultMessage="TASKS" />
+                            <FormattedMessage id="modules.SideBar.task" defaultMessage="TASKS" />
                           }
                           onClick={() => setExpandedSubMenu(null)}
                         />

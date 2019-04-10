@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Mutation, Query } from 'react-apollo';
 import { navigate } from '@reach/router';
-import { Subscribe } from 'unstated';
+import { Subscribe, Provider } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
 import Layout from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
@@ -34,6 +34,8 @@ const defaultProps = {
   isNew: false,
   id: '',
 };
+
+const formContainer = new FormContainer();
 
 class MaskFormWrapper extends React.Component<Props> {
   static defaultProps = defaultProps;
@@ -92,147 +94,145 @@ class MaskFormWrapper extends React.Component<Props> {
     const { entityType, isNew, id, onSave, onCancel } = this.props;
 
     return (
-      <Query query={fieldDefinitionsQuery} variables={{ entityType }} fetchPolicy="network-only">
-        {({ loading, data, error }) => {
-          if (error) {
-            if (error.message && error.message.includes('403')) {
-              navigate('/403');
-            }
-            return error.message;
-          }
-
-          if (loading) return <LoadingIcon />;
-          const allFieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
-          return (
-            <Mutation
-              mutation={isNew ? createMaskMutation : updateMaskMutation}
-              onCompleted={() => onSave()}
+      <Provider inject={[formContainer]}>
+        <Subscribe to={[MaskContainer]}>
+          {maskContainer => (
+            <Query
+              query={fieldDefinitionsQuery}
+              variables={{ entityType }}
+              fetchPolicy="network-only"
             >
-              {(saveMask, { loading: isLoading, error: apiError }) => (
-                <>
-                  {apiError && <p>Error: Please try again.</p>}
-                  <Layout
-                    navBar={
-                      <SlideViewNavBar>
-                        <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                        <JumpToSection>
-                          <SectionTabs
-                            link="metadata_templateSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.metadata.template"
-                                defaultMessage="TEMPLATE"
-                              />
-                            }
-                            icon="TEMPLATE"
-                          />
-                          <SectionTabs
-                            link="metadata_customFieldsSection"
-                            label={
-                              <FormattedMessage
-                                id="modules.metadata.customFieldsSection"
-                                defaultMessage="CUSTOM FIELDS"
-                              />
-                            }
-                            icon="METADATA"
-                          />
-                        </JumpToSection>
+              {({ loading, data, error }) => {
+                if (error) {
+                  if (error.message && error.message.includes('403')) {
+                    navigate('/403');
+                  }
+                  return error.message;
+                }
 
-                        <Subscribe to={[MaskContainer, FormContainer]}>
-                          {(maskContainer, form) => (
-                            <>
+                if (loading) return <LoadingIcon />;
+                const allFieldDefinitions = getByPathWithDefault([], 'fieldDefinitions', data);
+                return (
+                  <Mutation
+                    mutation={isNew ? createMaskMutation : updateMaskMutation}
+                    onCompleted={() => onSave()}
+                  >
+                    {(saveMask, { loading: isLoading, error: apiError }) => (
+                      <>
+                        {apiError && <p>Error: Please try again.</p>}
+                        <Layout
+                          navBar={
+                            <SlideViewNavBar>
+                              <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                              <JumpToSection>
+                                <SectionTabs
+                                  link="metadata_templateSection"
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.metadata.template"
+                                      defaultMessage="TEMPLATE"
+                                    />
+                                  }
+                                  icon="TEMPLATE"
+                                />
+                                <SectionTabs
+                                  link="metadata_customFieldsSection"
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.metadata.customFieldsSection"
+                                      defaultMessage="CUSTOM FIELDS"
+                                    />
+                                  }
+                                  icon="METADATA"
+                                />
+                              </JumpToSection>
+
                               {isNew && <CancelButton onClick={() => onCancel()} />}
 
                               {!isNew && maskContainer.isDirty() && (
-                                <ResetButton onClick={() => this.onReset(maskContainer, form)} />
+                                <ResetButton
+                                  onClick={() => this.onReset(maskContainer, formContainer)}
+                                />
                               )}
 
                               {(isNew || maskContainer.isDirty()) && (
                                 <SaveButton
-                                  disabled={!form.isReady(maskContainer.state, validator)}
+                                  disabled={!formContainer.isReady(maskContainer.state, validator)}
                                   onClick={() => {
                                     this.onSave(
                                       maskContainer.state,
                                       saveMask,
                                       () => {
                                         maskContainer.onSuccess();
-                                        form.onReset();
+                                        formContainer.onReset();
                                       },
-                                      form.onErrors
+                                      formContainer.onErrors
                                     );
                                   }}
                                   isLoading={isLoading}
                                 />
                               )}
-                            </>
-                          )}
-                        </Subscribe>
-                      </SlideViewNavBar>
-                    }
-                  >
-                    {isNew ? (
-                      <Subscribe to={[MaskContainer]}>
-                        {({ initDetailValues }) => (
-                          <MaskForm
-                            isNew
-                            fieldDefinitions={allFieldDefinitions}
-                            onFormReady={() =>
-                              initDetailValues({
-                                name: '',
-                                memo: '',
-                                fieldDefinitionIDs: [],
-                              })
-                            }
-                          />
-                        )}
-                      </Subscribe>
-                    ) : (
-                      <Query query={maskQuery} variables={{ id }} fetchPolicy="network-only">
-                        {({ loading: maskLoading, data: maskData, error: maskError }) => {
-                          if (maskError) {
-                            if (maskError.message && maskError.message.includes('403')) {
-                              navigate('/403');
-                            }
-                            return maskError.message;
+                            </SlideViewNavBar>
                           }
+                        >
+                          {isNew ? (
+                            <MaskForm
+                              isNew
+                              fieldDefinitions={allFieldDefinitions}
+                              onFormReady={() =>
+                                maskContainer.initDetailValues({
+                                  name: '',
+                                  memo: '',
+                                  fieldDefinitionIDs: [],
+                                })
+                              }
+                            />
+                          ) : (
+                            <Query query={maskQuery} variables={{ id }} fetchPolicy="network-only">
+                              {({ loading: maskLoading, data: maskData, error: maskError }) => {
+                                if (maskError) {
+                                  if (maskError.message && maskError.message.includes('403')) {
+                                    navigate('/403');
+                                  }
+                                  return maskError.message;
+                                }
 
-                          if (maskLoading) return <LoadingIcon />;
+                                if (maskLoading) return <LoadingIcon />;
 
-                          const name = getByPathWithDefault({}, 'mask.name', maskData);
-                          const memo = getByPathWithDefault({}, 'mask.memo', maskData);
+                                const name = getByPathWithDefault({}, 'mask.name', maskData);
+                                const memo = getByPathWithDefault({}, 'mask.memo', maskData);
 
-                          const fieldDefinitions = getByPathWithDefault(
-                            {},
-                            'mask.fieldDefinitions',
-                            maskData
-                          );
+                                const fieldDefinitions = getByPathWithDefault(
+                                  {},
+                                  'mask.fieldDefinitions',
+                                  maskData
+                                );
 
-                          const mask = {
-                            name,
-                            memo,
-                            fieldDefinitionIDs: fieldDefinitions.map(item => item.id),
-                          };
+                                const mask = {
+                                  name,
+                                  memo,
+                                  fieldDefinitionIDs: fieldDefinitions.map(item => item.id),
+                                };
 
-                          return (
-                            <Subscribe to={[MaskContainer]}>
-                              {({ initDetailValues }) => (
-                                <MaskForm
-                                  fieldDefinitions={allFieldDefinitions}
-                                  onFormReady={() => initDetailValues(mask)}
-                                />
-                              )}
-                            </Subscribe>
-                          );
-                        }}
-                      </Query>
+                                return (
+                                  <MaskForm
+                                    fieldDefinitions={allFieldDefinitions}
+                                    onFormReady={() => maskContainer.initDetailValues(mask)}
+                                  />
+                                );
+                              }}
+                            </Query>
+                          )}
+                        </Layout>
+                      </>
                     )}
-                  </Layout>
-                </>
-              )}
-            </Mutation>
-          );
-        }}
-      </Query>
+                  </Mutation>
+                );
+              }}
+            </Query>
+          )}
+        </Subscribe>
+      </Provider>
     );
   }
 }
