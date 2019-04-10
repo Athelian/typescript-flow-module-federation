@@ -134,9 +134,6 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
     });
   }
 
-  console.warn({
-    initDuration,
-  });
   const parentValues = React.useRef(initDuration);
 
   const onChangeBinding = React.useCallback(
@@ -205,10 +202,6 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
 
   React.useEffect(() => {
     emitter.addListener('LIVE_VALUE', (field: string, value: ?Date) => {
-      console.warn({
-        parentValues,
-        initDuration,
-      });
       if (value && parentValues.current) {
         parentValues.current[field] = value;
       }
@@ -380,9 +373,6 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   ...convertBindingToSelection(values.startDateInterval),
                                 }}
                                 onChange={({ autoDateOffset, autoDateDuration }) => {
-                                  console.warn({
-                                    parentValues,
-                                  });
                                   const newDate = calculateDate({
                                     date:
                                       parentValues.current &&
