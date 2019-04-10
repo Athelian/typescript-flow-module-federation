@@ -91,6 +91,7 @@ const Tasks = ({
             <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
+                  parentEntity={type}
                   isInTemplate={isInTemplate}
                   editable={hasPermission(TASK_UPDATE)}
                   task={{ ...omit(task, ['entity']), sort: index }}

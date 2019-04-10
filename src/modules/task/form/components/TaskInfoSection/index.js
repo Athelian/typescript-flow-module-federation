@@ -4,7 +4,7 @@ import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { ObjectValue } from 'react-values';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
@@ -59,6 +59,7 @@ import {
 type OptionalProps = {
   isInTemplate: boolean,
   hideParentInfo: boolean,
+  parentEntity?: string,
 };
 
 type Props = OptionalProps & {
@@ -96,7 +97,7 @@ const getStatusState = ({
   };
 };
 
-const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) => {
+const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
@@ -200,7 +201,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
               dueDate: !values.dueDateBinding,
             };
 
-            const entity = getByPath('entity.__typename', task);
+            const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
 
             return (
               <div className={TaskSectionWrapperStyle}>
@@ -353,6 +354,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                   if (values.dueDateBinding === START_DATE) {
                                     setFieldValue('dueDate', newDate);
                                   }
+                                  setFieldValue('startDateInterval', {
+                                    [autoDateDuration.metric]:
+                                      autoDateOffset === 'after'
+                                        ? autoDateDuration.value
+                                        : -autoDateDuration.value,
+                                  });
                                 }}
                               >
                                 {({
@@ -559,6 +566,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
                                         : -autoDateDuration.value,
                                   });
                                   setFieldValue('dueDate', newDate);
+                                  setFieldValue('dueDateInterval', {
+                                    [autoDateDuration.metric]:
+                                      autoDateOffset === 'after'
+                                        ? autoDateDuration.value
+                                        : -autoDateDuration.value,
+                                  });
                                 }}
                               >
                                 {({
