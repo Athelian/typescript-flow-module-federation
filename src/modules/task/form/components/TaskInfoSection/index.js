@@ -101,7 +101,43 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
-  const parentValues = React.useRef({});
+  const initDuration = {};
+  if (task.startDateBinding) {
+    const { months, weeks, days } = task.startDateInterval;
+    let duration = 'days';
+    if (months > 0) {
+      duration = 'months';
+    } else if (weeks > 0) {
+      duration = 'weeks';
+    }
+
+    initDuration[task.startDateBinding] = calculateDate({
+      duration,
+      date: task.startDate,
+      offset: -(months || weeks || days),
+    });
+  }
+
+  if (task.dueDateBinding) {
+    const { months, weeks, days } = task.dueDateInterval;
+    let duration = 'days';
+    if (months > 0) {
+      duration = 'months';
+    } else if (weeks > 0) {
+      duration = 'weeks';
+    }
+
+    initDuration[task.dueDateBinding] = calculateDate({
+      duration,
+      date: task.dueDate,
+      offset: -(months || weeks || days),
+    });
+  }
+
+  console.warn({
+    initDuration,
+  });
+  const parentValues = React.useRef(initDuration);
 
   const onChangeBinding = React.useCallback(
     ({
@@ -169,6 +205,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
 
   React.useEffect(() => {
     emitter.addListener('LIVE_VALUE', (field: string, value: ?Date) => {
+      console.warn({
+        parentValues,
+        initDuration,
+      });
       if (value && parentValues.current) {
         parentValues.current[field] = value;
       }
@@ -340,6 +380,9 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   ...convertBindingToSelection(values.startDateInterval),
                                 }}
                                 onChange={({ autoDateOffset, autoDateDuration }) => {
+                                  console.warn({
+                                    parentValues,
+                                  });
                                   const newDate = calculateDate({
                                     date:
                                       parentValues.current &&

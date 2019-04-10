@@ -1,6 +1,6 @@
 // @flow
 import { type IntlShape } from 'react-intl';
-import { addWeeks, addMonths, addDays } from 'date-fns';
+import { addWeeks, addMonths, addDays, startOfDay } from 'date-fns';
 import { formatToGraphql } from 'utils/date';
 import { orderBinding, batchBinding, shipmentBinding } from './constants';
 
@@ -19,13 +19,13 @@ export const calculateDate = ({
 
   switch (duration) {
     case 'weeks':
-      return formatToGraphql(addWeeks(date, offset));
+      return formatToGraphql(startOfDay(addWeeks(date, offset)));
 
     case 'months':
-      return formatToGraphql(addMonths(date, offset));
+      return formatToGraphql(startOfDay(addMonths(date, offset)));
 
     default:
-      return formatToGraphql(addDays(date, offset));
+      return formatToGraphql(startOfDay(addDays(date, offset)));
   }
 };
 
