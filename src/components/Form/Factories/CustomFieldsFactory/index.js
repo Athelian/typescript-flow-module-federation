@@ -5,7 +5,6 @@ import { navigate } from '@reach/router';
 import { contains } from 'utils/fp';
 import { list2Map } from 'utils/customFields';
 import FormattedNumber from 'components/FormattedNumber';
-import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
 import { FieldItem, Label } from 'components/Form';
 import { Subscribe } from 'unstated';
@@ -48,7 +47,7 @@ const CustomFieldsFactory = ({
           }
           return error.message;
         }
-        if (loading) return <LoadingIcon />;
+        if (loading) return null;
         return (
           <FieldItem
             label={
