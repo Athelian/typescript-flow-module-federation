@@ -5,6 +5,7 @@ import { getByPath, getByPathWithDefault } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   metrics as weightMetrics,
@@ -64,6 +65,21 @@ export const orderItemColumns = [
       />,
       <FormattedMessage id="global.quantity" defaultMessage="QUANTITY" />,
       <FormattedMessage {...orderMessages.totalPrice} />,
+    ],
+  },
+];
+
+export const productColumns = [
+  {
+    id: 0,
+    group: <FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />,
+    columns: [
+      <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
+      <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
+      <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />,
+      <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />,
+      <FormattedMessage id="modules.Products.material" defaultMessage="MATERIAL" />,
+      <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />,
     ],
   },
 ];
@@ -441,6 +457,50 @@ export const orderItemColumnFields = [
         return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
       },
     },
+  },
+];
+
+export const productColumnFields = [
+  {
+    messageId: 'modules.Products.name',
+    name: 'name',
+    type: 'text',
+    meta: {
+      isRequired: true,
+    },
+  },
+  {
+    messageId: 'modules.Products.serial',
+    name: 'serial',
+    type: 'text',
+    meta: {
+      isRequired: true,
+    },
+  },
+  {
+    messageId: 'modules.Products.janCode',
+    name: 'janCode',
+    type: 'text',
+  },
+  {
+    messageId: 'modules.Products.hsCode',
+    name: 'hsCode',
+    type: 'text',
+  },
+  {
+    messageId: 'modules.Products.material',
+    name: 'material',
+    type: 'text',
+  },
+  {
+    messageId: productMessages.tags.id,
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Product',
+    },
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
+      tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
 ];
 

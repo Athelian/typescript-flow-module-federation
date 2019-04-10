@@ -27,16 +27,19 @@ import logger from 'utils/logger';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
+import productValidator from 'modules/product/form/validator';
 import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
 import {
   orderColumnFields,
   orderItemColumnFields,
   batchColumnFields,
   shipmentColumnFields,
+  productColumnFields,
   orderColumns,
   orderItemColumns,
   batchColumns,
   shipmentColumns,
+  productColumns,
   allColumnIds,
 } from 'modules/tableTemplate/constants';
 import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCustomFields';
@@ -78,6 +81,7 @@ type Props = {
     orderItemIds: Array<string>,
     batchIds: Array<string>,
     shipmentIds: Array<string>,
+    productIds: Array<string>,
   },
   orders: Array<Object>,
   shipments: Array<Object>,
@@ -205,7 +209,8 @@ const getRowCounter = (counter, type) => {
 };
 
 const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
-function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
+
+const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [errors, setErrors] = useState({});
@@ -223,6 +228,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     orderItems: {},
     batches: {},
     shipments: {},
+    products: {},
   });
   const [isChangeData, setIsChangeData] = useState(false);
 
@@ -265,6 +271,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   const { entities } = normalize(dataSource);
   const mappingObjects = formatOrders(dataSource);
   const prevEntities = usePrevious(entities);
+
   useEffect(() => {
     if (!isEqual(prevEntities, entities) || isChangeData) {
       logger.warn('copy data');
@@ -312,7 +319,8 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     return () => {};
   });
 
-  const { orderIds, orderItemIds, batchIds } = allId;
+  const { orderIds, orderItemIds, productIds, batchIds } = allId;
+
   const orderColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
@@ -338,6 +346,13 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     fields: shipmentColumnFields,
     entity: 'SHIPMENT',
   });
+  const productColumnFieldsFilter = findColumns({
+    showAll,
+    templateColumns,
+    fields: productColumnFields,
+    entity: 'PRODUCT',
+  });
+
   return (
     <QueryForAllCustomFields
       onCompleted={customFields => {
@@ -409,11 +424,14 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
         const columnBatchCustomNo = columnBatchNo + batchColumnFieldsFilter.length;
         const columnShipmentNo = columnBatchCustomNo + batchCustomFieldsFilter.length;
         const columnShipmentCustomNo = columnShipmentNo + shipmentColumnFieldsFilter.length;
+        const columnProductNo = columnShipmentCustomNo + shipmentCustomFieldsFilter.length;
+
         const allColumns = {
           orderColumnFieldsFilter,
           orderItemColumnFieldsFilter,
           batchColumnFieldsFilter,
           shipmentColumnFieldsFilter,
+          productColumnFieldsFilter,
           orderCustomFieldsFilter,
           orderItemCustomFieldsFilter,
           batchCustomFieldsFilter,
@@ -678,6 +696,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                           order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
                       );
                       const totalLines = totalLinePerOrder(orderItems, batchIds);
+
                       return (
                         <TableRow key={`order-row-${orderId}`}>
                           {/* ORDER */}
@@ -1034,6 +1053,52 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               ))}
                             </>
                           </div>
+
+                          {/* TODO: product  */}
+                          <div>
+                            {productIds.length ? (
+                              <>
+                                {orderItems.map(orderItem =>
+                                  orderItem.data.batches
+                                    .filter(batch => batchIds.includes(batch.id))
+                                    .map(batch => (
+                                      <TableItem
+                                        key={batch.id}
+                                        rowNo={getRowCounter(rowCounter, 'product')}
+                                        columnNo={columnProductNo}
+                                        cell={`products.${orderItem.data.productProvider.product}`}
+                                        fields={productColumnFieldsFilter}
+                                        values={
+                                          editData.products[
+                                            `${orderItem.data.productProvider.product}`
+                                          ]
+                                        }
+                                        editData={editData}
+                                        validator={productValidator}
+                                      />
+                                    ))
+                                )}
+                                {range(totalLines - batches.length).map(index => (
+                                  <TableEmptyItem
+                                    key={index}
+                                    rowNo={getRowCounter(rowCounter, 'product')}
+                                    columnNo={columnProductNo}
+                                    fields={productColumnFieldsFilter}
+                                  />
+                                ))}
+                              </>
+                            ) : (
+                              range(totalLines).map(index => (
+                                <TableEmptyItem
+                                  key={index}
+                                  rowNo={getRowCounter(rowCounter, 'product')}
+                                  columnNo={columnProductNo}
+                                  fields={productColumnFieldsFilter}
+                                />
+                              ))
+                            )}
+                          </div>
+                          {/* TODO: product custom fields */}
                         </TableRow>
                       );
                     })}
@@ -1095,6 +1160,13 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
+                    <TableHeader
+                      entity="PRODUCT"
+                      showAll={showAll}
+                      info={productColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
                     <div className={TableHeaderClearFixStyle} />
                   </div>
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
@@ -1139,6 +1211,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
       }}
     />
   );
-}
+};
 
 export default injectIntl(TableInlineEdit);

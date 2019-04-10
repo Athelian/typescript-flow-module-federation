@@ -1,5 +1,6 @@
 import { normalize, schema } from 'normalizr';
 
+const product = new schema.Entity('products');
 const batch = new schema.Entity('batches');
 const orderItem = new schema.Entity('orderItems');
 const shipment = new schema.Entity('shipments');
@@ -13,6 +14,7 @@ batch.define({
 orderItem.define({
   order,
   batches: [batch],
+  productProvider: { product },
 });
 
 order.define({
@@ -30,4 +32,5 @@ export default originalData =>
     shipments: [shipment],
     orderItems: [orderItem],
     batches: [batch],
+    products: [product],
   });

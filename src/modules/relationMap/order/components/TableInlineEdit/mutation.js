@@ -20,6 +20,7 @@ import {
   shipmentTableFragment,
   orderItemTableFragment,
   batchTableFragment,
+  productTableFragment,
 } from './query';
 
 export const entitiesUpdateManyMutation = gql`
@@ -46,6 +47,7 @@ export const entitiesUpdateManyMutation = gql`
         ...badRequestFragment
       }
       products {
+        ...productTableFragment
         ...badRequestFragment
       }
       batches {
@@ -74,6 +76,7 @@ export const entitiesUpdateManyMutation = gql`
   ${orderItemTableFragment}
   ${orderTableFragment}
   ${shipmentTableFragment}
+  ${productTableFragment}
 `;
 
 export default entitiesUpdateManyMutation;

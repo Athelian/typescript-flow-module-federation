@@ -64,10 +64,27 @@ const formatContainerGroups = (voyages: Array<Object>): Array<Object> =>
     deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
   }));
 
+/**
+ *
+ * @param {*} targets selected cards
+ * @param {*} entities data from API
+ */
 export const findAllPossibleIds = (
   targets: Object,
-  entities: { shipments: Object, orders: Object, orderItems: Object, batches: Object }
-) => {
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    shipments: Object,
+    products: Object,
+  }
+): {
+  orderIds: Array<Object>,
+  orderItemIds: Array<Object>,
+  batchIds: Array<Object>,
+  shipmentIds: Array<Object>,
+  productIds: Array<Object>,
+} => {
   const selected = {
     ORDER: [],
     ORDER_ITEM: [],
@@ -84,8 +101,6 @@ export const findAllPossibleIds = (
   const batchIds = selected.BATCH.slice();
   const shipmentIds = selected.SHIPMENT.slice();
 
-  // If Order is selected, the entire Order tree (Order, Items, and Batches)
-  // plus all related Shipments go to the Edit view
   (Object.values(entities.orders || {}): any).forEach(order => {
     if (selected.ORDER.includes(order.id)) {
       if (order.orderItems) {
@@ -104,8 +119,6 @@ export const findAllPossibleIds = (
     }
   });
 
-  // If Shipment is selected, the Shipment itself, all of its Batches,
-  // all of the Item parents of those Batches, and all of the Order parents of those Items go to the Edit view
   (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
     const [shipmentId, shipment] = item;
     if (selected.SHIPMENT.includes(shipmentId)) {
@@ -125,8 +138,6 @@ export const findAllPossibleIds = (
     }
   });
 
-  // If Batch is selected, the Order and Item parent and the Batch itself
-  // and the related Shipment go to the Edit view
   (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
     if (selected.BATCH.includes(batchId)) {
       if (!orderItemIds.includes(batch.orderItem)) {
@@ -142,8 +153,6 @@ export const findAllPossibleIds = (
     }
   });
 
-  // If Item is selected, the Order parent, the Item and all of its Batches
-  // with all the related Shipments, go to the Edit view
   (Object.entries(entities.orderItems || {}): Array<any>).forEach(([orderItemId, orderItem]) => {
     if (selected.ORDER_ITEM.includes(orderItemId)) {
       orderIds.push(orderItem.order);
@@ -160,9 +169,12 @@ export const findAllPossibleIds = (
     }
   });
 
+  const productIds = Object.keys(entities.products || {});
+
   return {
     orderIds: [...new Set(orderIds)],
     orderItemIds: [...new Set(orderItemIds)],
+    productIds,
     batchIds: [...new Set(batchIds)],
     shipmentIds: [...new Set(shipmentIds)],
   };
@@ -197,7 +209,13 @@ export const parseChangedData = ({
   editData,
   mappingObjects,
 }: {
-  changedData: { orders?: Object, shipments?: Object, orderItems?: Object, batches?: Object },
+  changedData: {
+    orders?: Object,
+    shipments?: Object,
+    orderItems?: Object,
+    batches?: Object,
+    products?: Object,
+  },
   editData: Object,
   mappingObjects: Object,
 }) => {
@@ -205,6 +223,7 @@ export const parseChangedData = ({
   const orders = [];
   const batches = [];
   const shipments = [];
+  const products = [];
   if (changedData.orders) {
     (Object.entries(changedData.orders || {}): any).forEach(item => {
       const [id, order] = item;
@@ -431,12 +450,31 @@ export const parseChangedData = ({
     });
   }
 
+  if (changedData.products) {
+    (Object.entries(changedData.products || {}): any).forEach(item => {
+      const [id, product] = item;
+      const keys = Object.keys(product);
+      const changedProduct = {};
+      keys.forEach(key => {
+        const updateValue = editData.products[id][key];
+        switch (key) {
+          case 'tags':
+            changedProduct.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+          default:
+            changedProduct[key] = updateValue;
+        }
+      });
+      products.push({ input: changedProduct, id });
+    });
+  }
+
   return {
     orders,
     batches,
     shipments,
     warehouses: [],
-    products: [],
+    products,
   };
 };
 
