@@ -84,6 +84,13 @@ const UserProvider = ({ children }: Props) => (
             scope.setUser({ email, id });
           });
 
+          if (window && window.smartlook) {
+            window.smartlook('identify', id, {
+              email,
+              name: `${lastName} ${firstName}`,
+            });
+          }
+
           if (isAppInProduction) {
             FullStoryAPI('identify', id, {
               name: `${lastName} ${firstName}`,
