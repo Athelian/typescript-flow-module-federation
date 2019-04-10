@@ -118,6 +118,11 @@ const Timeline = ({
                   query={query}
                   queryField={queryField}
                   variables={variables}
+                  onCompleted={() => {
+                    if (ref && ref.current) {
+                      ref.current.scrollTop = ref.current.scrollHeight;
+                    }
+                  }}
                 />
               </div>
             )}
