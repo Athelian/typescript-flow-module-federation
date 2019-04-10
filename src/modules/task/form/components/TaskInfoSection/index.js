@@ -368,7 +368,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           if (!manualSettings.startDate) {
                             return (
                               <ObjectValue
-                                defaultValue={{
+                                value={{
                                   autoDateField: values.startDateBinding,
                                   ...convertBindingToSelection(values.startDateInterval),
                                 }}
@@ -581,7 +581,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           if (!manualSettings.dueDate) {
                             return (
                               <ObjectValue
-                                defaultValue={{
+                                value={{
                                   autoDateField: values.dueDateBinding,
                                   ...convertBindingToSelection(values.dueDateInterval),
                                 }}
