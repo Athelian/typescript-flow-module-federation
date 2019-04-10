@@ -1,14 +1,29 @@
 // @flow
 import * as React from 'react';
+import Dropzone from 'react-dropzone';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { uuid } from 'utils/id';
 import { upload } from 'utils/fs';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
+import { SectionNavBar } from 'components/NavBar';
+import Tooltip from 'components/Tooltip';
 import DocumentItem from './components/DocumentItem';
 import type { Document, FileType } from './type.js.flow';
-import { DocumentListStyle, AddDocumentStyle, NoDocumentsStyle } from './style';
+import {
+  DocumentsSectionWrapperStyle,
+  DocumentsDragAndDropBodyWrapperStyle,
+  DocumentsSectionBodyStyle,
+  DocumentsDragAndDropTooltipWrapperStyle,
+  DocumentsDragAndDropWrapperStyle,
+  DocumentsDragAndDropLabelStyle,
+  DocumentsListStyle,
+  AddDocumentButtonWrapperStyle,
+  AddDocumentButtonLabelStyle,
+  AddDocumentButtonIconStyle,
+  NoDocumentsStyle,
+} from './style';
 import messages from './messages';
 
 type OptionalProps = {
@@ -96,14 +111,19 @@ class DocumentsInput extends React.Component<Props, State> {
   }
 
   handleChange = (
-    event: SyntheticInputEvent<HTMLInputElement>,
+    event: SyntheticInputEvent<HTMLInputElement> | Array<File>,
     onUpload: (Array<Object>) => any
   ) => {
-    event.preventDefault();
+    let newFiles = [];
+    if (Array.isArray(event)) {
+      newFiles = event;
+    } else {
+      event.preventDefault();
+      newFiles = Array.from(event.target.files);
+    }
     const { types } = this.props;
     const { filesState } = this.state;
 
-    const newFiles = Array.from(event.target.files);
     const basePosition = filesState.length;
     this.setState(
       prevState => ({
@@ -140,7 +160,7 @@ class DocumentsInput extends React.Component<Props, State> {
                 id,
                 name,
                 path,
-                type: types[0].type,
+                type: types[0].value,
                 status: 'Draft',
                 memo: null,
                 uploading: false,
@@ -174,66 +194,115 @@ class DocumentsInput extends React.Component<Props, State> {
   render() {
     const { name, values, onChange, onBlur, types, editable, downloadable } = this.props;
     const { filesState } = this.state;
-    if (editable) {
-      return (
-        <div className={DocumentListStyle}>
-          {filesState &&
-            filesState.map((document, index) => {
-              const documentName = `${name}[${index}]`;
 
-              return (
-                <DocumentItem
-                  name={documentName}
-                  key={document.id}
-                  value={document}
-                  types={types}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  onRemove={() => {
-                    onChange(name, values.filter(d => d.id !== document.id));
+    return (
+      <div className={DocumentsSectionWrapperStyle}>
+        <SectionNavBar>
+          {editable && (
+            <>
+              <label className={AddDocumentButtonWrapperStyle}>
+                <div className={AddDocumentButtonLabelStyle}>
+                  <FormattedMessage {...messages.newDocument} />
+                </div>
+                <div className={AddDocumentButtonIconStyle}>
+                  <Icon icon="ADD" />
+                </div>
+                <input
+                  type="file"
+                  accept="*"
+                  hidden
+                  multiple
+                  onChange={e => {
+                    this.handleChange(e, newFiles => {
+                      onChange(name, [...values, ...newFiles]);
+                    });
                   }}
-                  editable
-                  downloadable={downloadable}
-                  uploading={filesState.length > 0 ? filesState[index].uploading : false}
-                  progress={filesState.length > 0 ? filesState[index].progress : 0}
                 />
-              );
-            })}
+              </label>
+            </>
+          )}
+        </SectionNavBar>
 
-          <label className={AddDocumentStyle}>
-            <Icon icon="ADD" />
-            <input
-              type="file"
-              accept="*"
-              hidden
-              multiple
-              onChange={e => {
-                this.handleChange(e, newFiles => {
-                  onChange(name, [...values, ...newFiles]);
-                });
-              }}
-            />
-          </label>
-        </div>
-      );
-    }
+        {editable ? (
+          <Dropzone
+            onDrop={acceptedFiles => {
+              this.handleChange(acceptedFiles, newFiles => {
+                onChange(name, [...values, ...newFiles]);
+              });
+            }}
+          >
+            {({ getRootProps, isDragActive }) => (
+              <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
+                <div className={DocumentsSectionBodyStyle}>
+                  {filesState && filesState.length > 0 ? (
+                    <div className={DocumentsListStyle}>
+                      {filesState.map((document, index) => {
+                        const documentName = `${name}[${index}]`;
 
-    return values && values.length > 0 ? (
-      <div className={DocumentListStyle}>
-        {values.map(document => (
-          <DocumentItem
-            name={document.id}
-            key={document.id}
-            value={document}
-            types={types}
-            editable={false}
-            downloadable={downloadable}
-          />
-        ))}
-      </div>
-    ) : (
-      <div className={NoDocumentsStyle}>
-        <FormattedMessage {...messages.noDocuments} />
+                        return (
+                          <DocumentItem
+                            name={documentName}
+                            key={document.id}
+                            value={document}
+                            types={types}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            onRemove={() => {
+                              onChange(name, values.filter(d => d.id !== document.id));
+                            }}
+                            editable
+                            downloadable={downloadable}
+                            uploading={filesState.length > 0 ? filesState[index].uploading : false}
+                            progress={filesState.length > 0 ? filesState[index].progress : 0}
+                          />
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className={NoDocumentsStyle}>
+                      <FormattedMessage {...messages.noDocuments} />
+                    </div>
+                  )}
+                </div>
+
+                <Tooltip message={<FormattedMessage {...messages.dragAndDrop} />}>
+                  <div className={DocumentsDragAndDropTooltipWrapperStyle}>
+                    <Icon icon="INFO" />
+                  </div>
+                </Tooltip>
+
+                <div className={DocumentsDragAndDropWrapperStyle(isDragActive)}>
+                  <div className={DocumentsDragAndDropLabelStyle}>
+                    <FormattedMessage {...messages.newDocument} />
+                    <Icon icon="ADD" />
+                  </div>
+                </div>
+              </div>
+            )}
+          </Dropzone>
+        ) : (
+          <div className={DocumentsSectionBodyStyle}>
+            {values && values.length > 0 ? (
+              <div className={DocumentsListStyle}>
+                {values.map(document => (
+                  <DocumentItem
+                    name={document.id}
+                    key={document.id}
+                    value={document}
+                    types={types}
+                    editable={false}
+                    downloadable={downloadable}
+                    uploading={false}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={NoDocumentsStyle}>
+                <FormattedMessage {...messages.noDocuments} />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   }

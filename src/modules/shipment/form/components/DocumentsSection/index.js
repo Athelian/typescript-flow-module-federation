@@ -12,7 +12,6 @@ import {
 } from 'modules/permission/constants/shipment';
 import { DocumentsInput } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
-import { DocumentSectionStyle } from './style';
 
 const messages = defineMessages({
   bl: {
@@ -54,48 +53,46 @@ function DocumentsSection({ intl }: Props) {
   const allowDownload = hasPermission(SHIPMENT_DOWNLOAD_DOCUMENTS);
 
   return (
-    <div className={DocumentSectionStyle}>
-      <Subscribe to={[ShipmentFilesContainer]}>
-        {({ state: { files }, setFieldValue: changeFiles }) => (
-          <DocumentsInput
-            id="files"
-            name="files"
-            editable={allowUpdate}
-            downloadable={allowDownload}
-            values={files}
-            onChange={(field, value) => {
-              changeFiles(field, value);
-            }}
-            types={[
-              {
-                type: 'ShipmentBl',
-                label: intl.formatMessage(messages.bl),
-              },
-              {
-                type: 'ShipmentInvoice',
-                label: intl.formatMessage(messages.invoice),
-              },
-              {
-                type: 'ShipmentPackingList',
-                label: intl.formatMessage(messages.packing),
-              },
-              {
-                type: 'ShipmentImportDeclaration',
-                label: intl.formatMessage(messages.import),
-              },
-              {
-                type: 'ShipmentInspectionApplication',
-                label: intl.formatMessage(messages.inspection),
-              },
-              {
-                type: 'Document',
-                label: intl.formatMessage(messages.document),
-              },
-            ]}
-          />
-        )}
-      </Subscribe>
-    </div>
+    <Subscribe to={[ShipmentFilesContainer]}>
+      {({ state: { files }, setFieldValue: changeFiles }) => (
+        <DocumentsInput
+          id="files"
+          name="files"
+          editable={allowUpdate}
+          downloadable={allowDownload}
+          values={files}
+          onChange={(field, value) => {
+            changeFiles(field, value);
+          }}
+          types={[
+            {
+              value: 'ShipmentBl',
+              label: intl.formatMessage(messages.bl),
+            },
+            {
+              value: 'ShipmentInvoice',
+              label: intl.formatMessage(messages.invoice),
+            },
+            {
+              value: 'ShipmentPackingList',
+              label: intl.formatMessage(messages.packing),
+            },
+            {
+              value: 'ShipmentImportDeclaration',
+              label: intl.formatMessage(messages.import),
+            },
+            {
+              value: 'ShipmentInspectionApplication',
+              label: intl.formatMessage(messages.inspection),
+            },
+            {
+              value: 'Document',
+              label: intl.formatMessage(messages.document),
+            },
+          ]}
+        />
+      )}
+    </Subscribe>
   );
 }
 

@@ -15,7 +15,7 @@ import type {
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
 import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
-import { getMetrics, getConvert } from './helpers';
+import { getMetrics, getConvert, type MetricEnumType } from './helpers';
 
 type InputProps = StandardInputProps & {
   customMetrics?: Array<string>,
@@ -31,7 +31,7 @@ type Props = LabelProps &
     vertical: boolean,
     isTouched: boolean,
     label?: React.Node,
-    metricType?: 'distance' | 'area' | 'volume' | 'weight',
+    metricType?: MetricEnumType,
     showCalculator: boolean,
     onCalculate?: Function,
     showExtraToggleButton: boolean,

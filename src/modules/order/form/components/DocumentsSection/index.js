@@ -8,7 +8,6 @@ import { DocumentsInput } from 'components/Form';
 import { OrderFilesContainer } from 'modules/order/form/containers';
 import messages from 'modules/order/messages';
 import usePermission from 'hooks/usePermission';
-import { DocumentSectionStyle } from './style';
 
 type Props = {
   intl: IntlShape,
@@ -20,27 +19,25 @@ function DocumentsSection({ intl }: Props) {
   const allowDownload = hasPermission(ORDER_DOWNLOAD_DOCUMENTS);
 
   return (
-    <div className={DocumentSectionStyle}>
-      <Subscribe to={[OrderFilesContainer]}>
-        {({ state: { files }, setFieldValue: changeFiles }) => (
-          <DocumentsInput
-            editable={allowUpdate}
-            downloadable={allowDownload}
-            id="files"
-            name="files"
-            values={files}
-            onChange={(field, value) => {
-              changeFiles(field, value);
-            }}
-            types={[
-              { type: 'OrderPo', label: intl.formatMessage(messages.fileTypeOrderPO) },
-              { type: 'OrderPi', label: intl.formatMessage(messages.fileTypeOrderPI) },
-              { type: 'Document', label: intl.formatMessage(messages.fileTypeDocument) },
-            ]}
-          />
-        )}
-      </Subscribe>
-    </div>
+    <Subscribe to={[OrderFilesContainer]}>
+      {({ state: { files }, setFieldValue: changeFiles }) => (
+        <DocumentsInput
+          editable={allowUpdate}
+          downloadable={allowDownload}
+          id="files"
+          name="files"
+          values={files}
+          onChange={(field, value) => {
+            changeFiles(field, value);
+          }}
+          types={[
+            { value: 'OrderPo', label: intl.formatMessage(messages.fileTypeOrderPO) },
+            { value: 'OrderPi', label: intl.formatMessage(messages.fileTypeOrderPI) },
+            { value: 'Document', label: intl.formatMessage(messages.fileTypeDocument) },
+          ]}
+        />
+      )}
+    </Subscribe>
   );
 }
 
