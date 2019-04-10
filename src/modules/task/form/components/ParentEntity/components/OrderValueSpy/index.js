@@ -10,6 +10,7 @@ import { orderDetailQuery } from './query';
 
 type Props = {
   values: Object,
+  inForm: boolean,
   task: Object,
   setTaskValue: Function,
 };
@@ -18,7 +19,7 @@ const MappingFields = {
   OrderIssuedAt: 'issuedAt',
 };
 
-export default function OrderValueSpy({ values, task, setTaskValue }: Props) {
+export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
       'FIND_ORDER_VALUE',
@@ -41,7 +42,7 @@ export default function OrderValueSpy({ values, task, setTaskValue }: Props) {
           selectedField,
         });
 
-        if (values.id) {
+        if (inForm) {
           let date = getByPath(MappingFields[field] || 'N/A', values);
           if (autoDateDuration) {
             date = calculateDate({

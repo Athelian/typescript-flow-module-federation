@@ -8,6 +8,7 @@ type OptionalProps = {
   task?: Object,
   onFormReady?: () => void,
   parentEntity?: string,
+  hideParentInfo?: boolean,
   isInTemplate: boolean,
 };
 
@@ -35,11 +36,11 @@ export default class TaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { task, parentEntity, isInTemplate } = this.props;
+    const { task, parentEntity, hideParentInfo, isInTemplate } = this.props;
     return (
       <>
         <TaskInfoSection parentEntity={parentEntity} task={task} isInTemplate={isInTemplate} />;
-        <ParentEntity />
+        <ParentEntity inForm={!!hideParentInfo} />
       </>
     );
   }
