@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { ObjectValue } from 'react-values';
 import { getByPath } from 'utils/fp';
+import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
 import {
@@ -147,6 +148,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
               [`${field}Binding`]: orderBinding(intl).issuedAt.field,
               [`${field}Interval`]: null,
             });
+            emitter.emit(
+              'FIND_ORDER_VALUE',
+              orderBinding(intl).issuedAt.field,
+              getByPath('entity.id', task)
+            );
           } else {
             onChange({
               [`${field}Binding`]: null,
@@ -157,8 +163,20 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo }: Props) =>
         }
       }
     },
-    [intl]
+    [intl, task]
   );
+
+  React.useEffect(() => {
+    emitter.addListener('LIVE_VALUE', value => {
+      console.warn({
+        value,
+      });
+    });
+
+    return () => {
+      emitter.removeAllListeners('LIVE_VALUE');
+    };
+  });
 
   return (
     <div className={TaskFormWrapperStyle}>

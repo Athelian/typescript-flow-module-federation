@@ -2,6 +2,7 @@
 import React from 'react';
 import { isEquals } from 'utils/fp';
 import TaskInfoSection from './components/TaskInfoSection';
+import ParentEntity from './components/ParentEntity';
 
 type OptionalProps = {
   task?: Object,
@@ -34,6 +35,11 @@ export default class TaskForm extends React.Component<Props> {
 
   render() {
     const { task, isInTemplate } = this.props;
-    return <TaskInfoSection task={task} isInTemplate={isInTemplate} />;
+    return (
+      <>
+        <TaskInfoSection task={task} isInTemplate={isInTemplate} />;
+        <ParentEntity />
+      </>
+    );
   }
 }
