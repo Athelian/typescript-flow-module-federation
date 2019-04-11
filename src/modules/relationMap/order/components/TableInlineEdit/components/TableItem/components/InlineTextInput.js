@@ -20,8 +20,8 @@ const defaultProps = {
   disabled: false,
 };
 
-export default function InlineTextInput({ id, name, value, isRequired, disabled }: Props) {
-  const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
+export default function InlineTextInput({ id, name, value, isRequired, disabled, ...rest }: Props) {
+  const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { ...rest, isRequired });
   return (
     <DefaultStyle
       disabled={disabled}

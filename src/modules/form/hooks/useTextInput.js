@@ -6,11 +6,19 @@ import type { ValidationObject } from './type.js.flow';
 function useTextInput(initialValue: string = '', schema: ValidationObject) {
   const [value, setValue] = useState(initialValue || '');
   const [focus, setFocus] = useState(false);
-  const hasError = schema.isRequired
-    ? !string()
-        .required()
-        .isValidSync(value)
-    : false;
+
+  let hasError = false;
+
+  if (schema.isRequired) {
+    hasError = !string()
+      .required()
+      .isValidSync(value);
+  }
+
+  if (schema.validator) {
+    hasError = !schema.validator.isValidSync(value);
+  }
+
   const onChange = useCallback((event: Object) => {
     if (event && event.currentTarget) setValue(event.currentTarget.value);
   }, []);

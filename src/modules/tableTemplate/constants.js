@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
@@ -482,11 +483,41 @@ export const productColumnFields = [
     messageId: 'modules.Products.janCode',
     name: 'janCode',
     type: 'text',
+    meta: {
+      validator: Yup.string()
+        .test(
+          'janCode',
+          <FormattedMessage
+            id="modules.Products.janCodeValidation"
+            defaultMessage="JAN Code must be exactly 13 characters"
+          />,
+          value => {
+            if (!value || (value && value.length === 13)) return true;
+            return false;
+          }
+        )
+        .nullable(),
+    },
   },
   {
     messageId: 'modules.Products.hsCode',
     name: 'hsCode',
     type: 'text',
+    meta: {
+      validator: Yup.string()
+        .test(
+          'hsCode',
+          <FormattedMessage
+            id="modules.Products.hsCodeValidation"
+            defaultMessage="HS Code must be exactly 10 characters"
+          />,
+          value => {
+            if (!value || (value && value.length === 10)) return true;
+            return false;
+          }
+        )
+        .nullable(),
+    },
   },
   {
     messageId: 'modules.Products.material',
