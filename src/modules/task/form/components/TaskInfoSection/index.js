@@ -329,7 +329,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           </div>
 
                           {isInTemplate ? (
-                            <Display color="GRAY_LIGHT" height="30px">
+                            <Display
+                              color={manualSettings.startDate ? 'GRAY' : 'GRAY_LIGHT'}
+                              height="30px"
+                            >
                               <FormattedMessage
                                 id="modules.Tasks.datePlaceholder"
                                 defaultMessage="yyyy/mm/dd"
@@ -557,7 +560,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           </div>
 
                           {isInTemplate ? (
-                            <Display color="GRAY_LIGHT" height="30px">
+                            <Display
+                              color={manualSettings.dueDate ? 'GRAY' : 'GRAY_LIGHT'}
+                              height="30px"
+                            >
                               <FormattedMessage
                                 id="modules.Tasks.datePlaceholder"
                                 defaultMessage="yyyy/mm/dd"
