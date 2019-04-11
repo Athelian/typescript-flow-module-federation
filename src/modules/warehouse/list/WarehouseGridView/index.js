@@ -28,7 +28,7 @@ const defaultRenderItem = ({
   allowCreate: boolean,
   currentUserGroupId: string,
 }) => {
-  const allowClone = allowCreate && currentUserGroupId === item.ownedBy.id;
+  const allowClone = allowCreate && item.ownedBy && currentUserGroupId === item.ownedBy.id;
 
   return (
     <WarehouseCard
