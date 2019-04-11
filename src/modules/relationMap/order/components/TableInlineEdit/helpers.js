@@ -461,6 +461,9 @@ export const parseChangedData = ({
           case 'tags':
             changedProduct.tagIds = updateValue.map(({ id: tagId }) => tagId);
             break;
+          case 'customFields':
+            changedProduct[key] = prepareCustomFieldsData(updateValue);
+            break;
           default:
             changedProduct[key] = updateValue;
         }
