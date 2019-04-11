@@ -101,6 +101,8 @@ export const findAllPossibleIds = (
   const batchIds = selected.BATCH.slice();
   const shipmentIds = selected.SHIPMENT.slice();
 
+  // If Order is selected, the entire Order tree (Order, Items, Product, and Batches)
+  // plus all related Shipments go to the Edit view
   (Object.values(entities.orders || {}): any).forEach(order => {
     if (selected.ORDER.includes(order.id)) {
       if (order.orderItems) {
@@ -119,6 +121,9 @@ export const findAllPossibleIds = (
     }
   });
 
+  // If Shipment is selected, the Shipment itself, all of its Batches,
+  // all of the Item parents of those Batches, all of the Product base Items
+  // and all of the Order parents of those Items go to the Edit view
   (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
     const [shipmentId, shipment] = item;
     if (selected.SHIPMENT.includes(shipmentId)) {
@@ -138,6 +143,8 @@ export const findAllPossibleIds = (
     }
   });
 
+  // If Batch is selected, the Order, Item and Product parent and the Batch itself
+  // and the related Shipment go to the Edit view
   (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
     if (selected.BATCH.includes(batchId)) {
       if (!orderItemIds.includes(batch.orderItem)) {
@@ -153,6 +160,8 @@ export const findAllPossibleIds = (
     }
   });
 
+  // If Item is selected, the Order parent, the Item and its Product and all of its Batches
+  // with all the related Shipments, go to the Edit view
   (Object.entries(entities.orderItems || {}): Array<any>).forEach(([orderItemId, orderItem]) => {
     if (selected.ORDER_ITEM.includes(orderItemId)) {
       orderIds.push(orderItem.order);
