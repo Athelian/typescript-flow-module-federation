@@ -4,7 +4,7 @@ import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
 
-export const START_DATE = 'START_DATE';
+export const START_DATE = 'TaskStartDate';
 const ORDER_ISSUED_AT = 'OrderIssuedAt';
 const BATCH_DELIVERED_AT = 'BatchDeliveredAt';
 const BATCH_DESIRED_AT = 'BatchDesiredAt';
