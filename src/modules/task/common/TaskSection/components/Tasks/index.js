@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { omit } from 'lodash';
+import { upperFirst, omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
@@ -91,7 +91,7 @@ const Tasks = ({
             <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
-                  parentEntity={type}
+                  parentEntity={upperFirst(type)}
                   isInTemplate={isInTemplate}
                   editable={hasPermission(TASK_UPDATE)}
                   task={{ ...omit(task, ['entity']), sort: index }}

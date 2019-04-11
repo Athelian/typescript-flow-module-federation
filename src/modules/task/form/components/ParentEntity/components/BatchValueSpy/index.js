@@ -15,14 +15,14 @@ type Props = {
   setTaskValue: Function,
 };
 
-const MappingFields = {
+export const MappingFields = {
   BatchDeliveredAt: 'deliveredAt',
   BatchDesiredAt: 'desiredAt',
   BatchProducedAt: 'producedAt',
   BatchExpiredAt: 'expiredAt',
 };
 
-export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Props) {
+export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
       'FIND_BATCH_VALUE',

@@ -15,7 +15,7 @@ type Props = {
   setTaskValue: Function,
 };
 
-const MappingFields = {
+export const MappingFields = {
   OrderIssuedAt: 'issuedAt',
 };
 

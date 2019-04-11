@@ -9,7 +9,7 @@ const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 export const calculateDate = ({
   date: selectedDate,
   duration,
-  offset,
+  offset = 0,
 }: {
   date: ?Date | ?string,
   duration: 'days' | 'weeks' | 'months',
@@ -18,6 +18,12 @@ export const calculateDate = ({
   if (!selectedDate) return null;
 
   const date = new Date(selectedDate);
+  logger.warn('calculateDate', {
+    selectedDate,
+    date,
+    duration,
+    offset,
+  });
 
   if (!isValid(date)) {
     logger.warn('invalid date', date, selectedDate);
