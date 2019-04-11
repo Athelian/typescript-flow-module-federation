@@ -45,7 +45,12 @@ import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { orderBinding, batchBinding, shipmentBinding, START_DATE } from './constants';
-import { convertBindingToSelection, getFieldsByEntity, calculateDate } from './helpers';
+import {
+  convertBindingToSelection,
+  getFieldsByEntity,
+  calculateDate,
+  findDuration,
+} from './helpers';
 import {
   TaskFormWrapperStyle,
   TaskSectionWrapperStyle,
@@ -102,33 +107,19 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
   const { hasPermission } = usePermission(isOwner);
   const editable = hasPermission(TASK_UPDATE);
   const initDuration = {};
-  if (task.startDateBinding) {
-    const { months, weeks, days } = task.startDateInterval;
-    let duration = 'days';
-    if (months > 0) {
-      duration = 'months';
-    } else if (weeks > 0) {
-      duration = 'weeks';
-    }
-
+  if (task && task.startDateBinding) {
+    const { months = 0, weeks = 0, days = 0 } = task.startDateInterval || {};
     initDuration[task.startDateBinding] = calculateDate({
-      duration,
+      duration: findDuration({ months, weeks }),
       date: task.startDate,
       offset: -(months || weeks || days),
     });
   }
 
-  if (task.dueDateBinding) {
-    const { months, weeks, days } = task.dueDateInterval;
-    let duration = 'days';
-    if (months > 0) {
-      duration = 'months';
-    } else if (weeks > 0) {
-      duration = 'weeks';
-    }
-
+  if (task && task.dueDateBinding) {
+    const { months = 0, weeks = 0, days = 0 } = task.dueDateInterval || {};
     initDuration[task.dueDateBinding] = calculateDate({
-      duration,
+      duration: findDuration({ months, weeks }),
       date: task.dueDate,
       offset: -(months || weeks || days),
     });
@@ -328,7 +319,15 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             setFieldValue={(field, value) => {
                               setFieldValue(field, value);
                               if (values.dueDateBinding === START_DATE) {
-                                setFieldValue('dueDate', value);
+                                const { weeks, months, days } = values.dueDateInterval || {};
+                                setFieldValue(
+                                  'dueDate',
+                                  calculateDate({
+                                    date: value,
+                                    duration: findDuration({ weeks, months }),
+                                    offset: weeks || months || days,
+                                  })
+                                );
                               }
                             }}
                           >
@@ -385,7 +384,15 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   });
                                   setFieldValue('startDate', newDate);
                                   if (values.dueDateBinding === START_DATE) {
-                                    setFieldValue('dueDate', newDate);
+                                    const { weeks, months, days } = values.dueDateInterval || {};
+                                    setFieldValue(
+                                      'dueDate',
+                                      calculateDate({
+                                        date: newDate,
+                                        duration: findDuration({ weeks, months }),
+                                        offset: weeks || months || days,
+                                      })
+                                    );
                                   }
                                   setFieldValue('startDateInterval', {
                                     [autoDateDuration.metric]:

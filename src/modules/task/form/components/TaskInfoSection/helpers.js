@@ -1,15 +1,17 @@
 // @flow
 import { type IntlShape } from 'react-intl';
-import { addWeeks, addMonths, addDays, startOfDay } from 'date-fns';
-import { formatToGraphql } from 'utils/date';
+import { addWeeks, addMonths, addDays, startOfDay, format, isValid } from 'date-fns';
+import logger from 'utils/logger';
 import { orderBinding, batchBinding, shipmentBinding } from './constants';
+
+const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
 export const calculateDate = ({
   date: selectedDate,
   duration,
   offset,
 }: {
-  date: ?Date,
+  date: ?Date | ?string,
   duration: 'days' | 'weeks' | 'months',
   offset: number,
 }) => {
@@ -17,15 +19,20 @@ export const calculateDate = ({
 
   const date = new Date(selectedDate);
 
+  if (!isValid(date)) {
+    logger.warn('invalid date', date, selectedDate);
+    return null;
+  }
+
   switch (duration) {
     case 'weeks':
-      return formatToGraphql(startOfDay(addWeeks(date, offset)));
+      return format(startOfDay(addWeeks(date, offset)), DATE_FORMAT);
 
     case 'months':
-      return formatToGraphql(startOfDay(addMonths(date, offset)));
+      return format(startOfDay(addMonths(date, offset)), DATE_FORMAT);
 
     default:
-      return formatToGraphql(startOfDay(addDays(date, offset)));
+      return format(startOfDay(addDays(date, offset)), DATE_FORMAT);
   }
 };
 
@@ -102,4 +109,14 @@ export const getFieldsByEntity = (type: string, intl: IntlShape) => {
         })
       );
   }
+};
+
+export const findDuration = ({ months, weeks }: { months: number, weeks: number }) => {
+  let duration = 'days';
+  if (months > 0) {
+    duration = 'months';
+  } else if (weeks > 0) {
+    duration = 'weeks';
+  }
+  return duration;
 };

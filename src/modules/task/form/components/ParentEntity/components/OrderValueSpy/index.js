@@ -5,7 +5,7 @@ import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
-import { calculateDate } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 import { orderDetailQuery } from './query';
 
 type Props = {
@@ -71,7 +71,15 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
           // we need to set the due date if those field are binding together
           if (selectedField === 'startDate') {
             if (task.dueDateBinding === START_DATE) {
-              setTaskValue('dueDate', date);
+              const { weeks, months, days } = task.dueDateInterval || {};
+              setTaskValue(
+                'dueDate',
+                calculateDate({
+                  date,
+                  duration: findDuration({ weeks, months }),
+                  offset: weeks || months || days,
+                })
+              );
             }
           }
         } else {
@@ -114,7 +122,15 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
           // we need to set the due date if those field are binding together
           if (selectedField === 'startDate') {
             if (task.dueDateBinding === START_DATE) {
-              setTaskValue('dueDate', date);
+              const { weeks, months, days } = task.dueDateInterval || {};
+              setTaskValue(
+                'dueDate',
+                calculateDate({
+                  date,
+                  duration: findDuration({ weeks, months }),
+                  offset: weeks || months || days,
+                })
+              );
             }
           }
         }
