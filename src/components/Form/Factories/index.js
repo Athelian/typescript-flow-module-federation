@@ -12,6 +12,7 @@ import SelectInputFactory from './SelectInputFactory';
 import TextAreaInputFactory from './TextAreaInputFactory';
 import TextInputFactory from './TextInputFactory';
 import UserAssignmentInputFactory from './UserAssignmentInputFactory';
+import PasswordInputFactory from './PasswordInputFactory';
 
 export {
   AssignmentApprovalFactory,
@@ -27,4 +28,5 @@ export {
   TextAreaInputFactory,
   TextInputFactory,
   UserAssignmentInputFactory,
+  PasswordInputFactory,
 };
