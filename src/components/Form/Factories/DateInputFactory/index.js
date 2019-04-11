@@ -131,7 +131,12 @@ const DateInputFactory = ({
       );
     } else {
       renderedInput = (
-        <DateInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <DateInput
+          {...inputConfig}
+          color={inputColor}
+          readOnlyWidth={inputWidth}
+          readOnlyHeight={inputHeight}
+        />
       );
     }
   }

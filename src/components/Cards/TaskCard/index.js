@@ -285,6 +285,49 @@ const TaskCard = ({
               role="presentation"
             >
               <Label>
+                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
+              </Label>
+              {isInTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
+                  />
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.startDate`} initValue={startDate}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          startDate: inputHandlers.value ? inputHandlers.value : null,
+                        });
+                      }}
+                      editable={editable}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={startDate}
+                    />
+                  )}
+                </FormField>
+              )}
+            </div>
+
+            <div
+              className={DateInputWrapperStyle}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
+              role="presentation"
+            >
+              <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
               {isInTemplate ? (
@@ -315,51 +358,8 @@ const TaskCard = ({
                       inputColor={
                         dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
                           ? 'RED'
-                          : null
+                          : 'BLACK'
                       }
-                    />
-                  )}
-                </FormField>
-              )}
-            </div>
-
-            <div
-              className={DateInputWrapperStyle}
-              onClick={evt => {
-                if (editable) {
-                  evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-            >
-              <Label>
-                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
-              </Label>
-              {isInTemplate ? (
-                <Display color="GRAY_LIGHT">
-                  <FormattedMessage
-                    id="components.cards.datePlaceholder"
-                    defaultMessage="yyyy/mm/dd"
-                  />
-                </Display>
-              ) : (
-                <FormField name={`task.${id}.startDate`} initValue={startDate}>
-                  {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
-                      {...inputHandlers}
-                      onBlur={evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({
-                          ...task,
-                          startDate: inputHandlers.value ? inputHandlers.value : null,
-                        });
-                      }}
-                      editable={editable}
-                      inputWidth="120px"
-                      inputHeight="20px"
-                      name={fieldName}
-                      isNew={false}
-                      originalValue={startDate}
                     />
                   )}
                 </FormField>

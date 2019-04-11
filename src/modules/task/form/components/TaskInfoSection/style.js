@@ -49,3 +49,29 @@ export const ApprovalToggleWrapperStyle: string = css`
   justify-content: flex-end;
   align-items: center;
 `;
+
+export const AutoDateWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 10px;
+`;
+
+export const AutoDateBackgroundStyle = (position: 'top' | 'bottom'): string => css`
+  position: absolute;
+  width: 235px;
+  height: ${position === 'top' ? '40px' : '80px'};
+  top: ${position === 'top' ? '-5px' : '35px'};
+  right: -30px;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  border-radius: 7.5px;
+`;
+
+export const AutoDateOffsetWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 10px;
+`;
+
+export const RadioWrapperStyle = (position: 'top' | 'bottom'): string => css`
+  position: absolute;
+  right: -25px;
+  top: ${position === 'top' ? '5px' : '45px'};
+`;
