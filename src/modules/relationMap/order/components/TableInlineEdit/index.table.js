@@ -444,14 +444,15 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
 
         const allColumns = {
           orderColumnFieldsFilter,
-          orderItemColumnFieldsFilter,
-          batchColumnFieldsFilter,
-          shipmentColumnFieldsFilter,
-          productColumnFieldsFilter,
           orderCustomFieldsFilter,
+          orderItemColumnFieldsFilter,
           orderItemCustomFieldsFilter,
+          batchColumnFieldsFilter,
           batchCustomFieldsFilter,
+          shipmentColumnFieldsFilter,
           shipmentCustomFieldsFilter,
+          productColumnFieldsFilter,
+          productCustomFieldsFilter,
         };
         logger.warn({ mappingObjects, editData, entities });
         return (
@@ -1084,7 +1085,7 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                             </>
                           </div>
 
-                          {/* TODO: product  */}
+                          {/* product */}
                           <div>
                             {productIds.length ? (
                               orderItems.map(orderItem =>
@@ -1137,7 +1138,6 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                               />
                             )}
                           </div>
-                          {/* TODO: product custom fields */}
                           <div>
                             {orderItems.length ? (
                               orderItems.map(orderItem =>

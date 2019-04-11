@@ -543,6 +543,8 @@ export function getExportColumns(
     orderItemCustomFieldsFilter,
     batchCustomFieldsFilter,
     shipmentCustomFieldsFilter,
+    productColumnFieldsFilter,
+    productCustomFieldsFilter,
   }: Object
 ): Array<string> {
   const allColumns = [
@@ -554,6 +556,8 @@ export function getExportColumns(
     ...batchCustomFieldsFilter,
     ...shipmentColumnFieldsFilter,
     ...shipmentCustomFieldsFilter,
+    ...productColumnFieldsFilter,
+    ...productCustomFieldsFilter,
   ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
   return allColumns;
 }
@@ -571,6 +575,8 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       orderItemCustomFieldsFilter,
       batchCustomFieldsFilter,
       shipmentCustomFieldsFilter,
+      productColumnFieldsFilter,
+      productCustomFieldsFilter,
     },
   } = info;
   const rows = [];
@@ -587,7 +593,12 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
     const shipmentCustomValues = getCustomFieldValues(shipmentCustomFieldsFilter, shipmentData);
     const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
-    const currentRow = [...emptyRow, ...shipmentRow];
+    const emptyRowOfProduct = getEmptyValues([
+      ...productColumnFieldsFilter,
+      ...productCustomFieldsFilter,
+    ]);
+    const currentRow = [...emptyRow, ...shipmentRow, ...emptyRowOfProduct];
+
     rows.push(currentRow);
   });
   orderIds.forEach(orderId => {
@@ -608,6 +619,8 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         ...batchCustomFieldsFilter,
         ...shipmentColumnFieldsFilter,
         ...shipmentCustomFieldsFilter,
+        ...productColumnFieldsFilter,
+        ...productCustomFieldsFilter,
       ]);
       const currentRow = [...orderRow, ...emptyRow];
       return rows.push(currentRow);
@@ -621,6 +634,11 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         orderItemData
       );
       const orderItemRow = [...orderItemValues, ...orderItemCustomValues];
+      const productData = editData.products[`${orderItemData.productProvider.product}`];
+      const productValues = getFieldValues(productColumnFieldsFilter, productData, editData);
+      const productCustomValues = getCustomFieldValues(productCustomFieldsFilter, productData);
+      const productRow = [...productValues, ...productCustomValues];
+
       if (notHaveBatches) {
         const emptyRow = getEmptyValues([
           ...batchColumnFieldsFilter,
@@ -628,7 +646,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
           ...shipmentColumnFieldsFilter,
           ...shipmentCustomFieldsFilter,
         ]);
-        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow];
+        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow, ...productRow];
         return rows.push(currentRow);
       }
       return orderItem.data.batches
@@ -657,7 +675,13 @@ export function getExportRows(info: Object): Array<Array<?string>> {
             );
             shipmentRow = [...shipmentValues, ...shipmentCustomValues];
           }
-          const currentRow = [...orderRow, ...orderItemRow, ...batchRow, ...shipmentRow];
+          const currentRow = [
+            ...orderRow,
+            ...orderItemRow,
+            ...batchRow,
+            ...shipmentRow,
+            ...productRow,
+          ];
           rows.push(currentRow);
         });
     });
