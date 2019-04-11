@@ -47,7 +47,23 @@ const CustomFieldsFactory = ({
           }
           return error.message;
         }
-        if (loading) return null;
+        if (loading) {
+          return (
+            <FieldItem
+              label={
+                <Label height="30px">
+                  <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
+                </Label>
+              }
+              input={
+                <div className={ShowAllButtonStyle}>
+                  <FormattedMessage id="modules.form.showAll" defaultMessage="Show All" />
+                </div>
+              }
+            />
+          );
+        }
+
         return (
           <FieldItem
             label={
