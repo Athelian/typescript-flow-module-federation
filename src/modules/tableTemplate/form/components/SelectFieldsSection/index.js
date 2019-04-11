@@ -14,6 +14,7 @@ import {
   orderItemColumns,
   batchColumns,
   shipmentColumns,
+  productColumns,
 } from 'modules/tableTemplate/constants';
 import { ContentWrapperStyle } from './style';
 
@@ -113,11 +114,12 @@ const SelectFieldsSection = () => {
         orderItemCustomFields,
         batchCustomFields,
         shipmentCustomFields,
+        productCustomFields,
       }) => (
-        <div className={ContentWrapperStyle}>
-          <Subscribe to={[TemplateFormContainer]}>
-            {({ hasSelectField, toggleSelectField }) => (
-              <>
+        <Subscribe to={[TemplateFormContainer]}>
+          {({ hasSelectField, toggleSelectField }) => (
+            <>
+              <div className={ContentWrapperStyle}>
                 <GridColumn>
                   {renderGroup({
                     type: 'ORDER',
@@ -182,10 +184,26 @@ const SelectFieldsSection = () => {
                     editable: canCreateOrUpdate,
                   })}
                 </GridColumn>
-              </>
-            )}
-          </Subscribe>
-        </div>
+              </div>
+              <div>
+                {renderGroup({
+                  type: 'PRODUCT',
+                  groups: productColumns,
+                  hasSelectField,
+                  toggleSelectField,
+                  editable: canCreateOrUpdate,
+                })}
+                {renderCustomFields({
+                  type: 'PRODUCT',
+                  customFields: productCustomFields,
+                  hasSelectField,
+                  toggleSelectField,
+                  editable: canCreateOrUpdate,
+                })}
+              </div>
+            </>
+          )}
+        </Subscribe>
       )}
     />
   );
