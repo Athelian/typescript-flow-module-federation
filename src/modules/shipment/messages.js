@@ -222,6 +222,10 @@ export default defineMessages({
     id: 'modules.Shipments.deliveryOrderFee',
     defaultMessage: 'D/O FEE',
   },
+  deliveryReady: {
+    id: 'modules.Shipments.deliveryReady',
+    defaultMessage: 'DELIVERY READY',
+  },
   exporterMiscFee: {
     id: 'modules.Shipments.exporterMiscFee',
     defaultMessage: 'EXPORTER MISC FEE',
@@ -541,6 +545,30 @@ export default defineMessages({
   arrivalPort: {
     id: 'modules.Shipments.dischargePort',
     defaultMessage: 'DISCHARGE PORT',
+  },
+  dischargePortArrival: {
+    id: 'modules.Shipments.dischargePortArrival',
+    defaultMessage: 'DISCHARGE PORT ARRIVAL',
+  },
+  firstTransitPortArrival: {
+    id: 'modules.Shipments.firstTransitPortArrival',
+    defaultMessage: 'FIRST TRANSIT PORT ARRIVAL',
+  },
+  firstTransitPortDeparture: {
+    id: 'modules.Shipments.firstTransitPortDeparture',
+    defaultMessage: 'FIRST TRANSIT PORT DEPARTURE',
+  },
+  secondTransitPortArrival: {
+    id: 'modules.Shipments.secondTransitPortArrival',
+    defaultMessage: 'SECOND TRANSIT PORT ARRIVAL',
+  },
+  secondTransitPortDeparture: {
+    id: 'modules.Shipments.secondTransitPortDeparture',
+    defaultMessage: 'SECOND TRANSIT PORT DEPARTURE',
+  },
+  loadPortDeparture: {
+    id: 'modules.Shipments.loadPortDeparture',
+    defaultMessage: 'LOAD PORT DEPARTURE',
   },
   agreedDateLabel: {
     id: 'modules.Shipments.agreedDateLabel',
