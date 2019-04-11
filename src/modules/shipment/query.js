@@ -26,8 +26,8 @@ export const shipmentTimelineQuery = gql`
 `;
 
 export const shipmentExportQuery = gql`
-  query shipmentExport($id: ID!, $templateId: ID!, $fields: [String!]) {
-    shipmentExport(id: $id, templateId: $templateId, fields: $fields) {
+  query shipmentExport($id: ID!, $templateId: ID!) {
+    shipmentExport(id: $id, templateId: $templateId) {
       ... on File {
         path
       }
@@ -40,14 +40,8 @@ export const shipmentsExportQuery = gql`
     $filterBy: ShipmentFilterInput
     $sortBy: ShipmentSortInput
     $templateId: ID!
-    $fields: [String!]
   ) {
-    shipmentsExport(
-      filterBy: $filterBy
-      sortBy: $sortBy
-      templateId: $templateId
-      fields: $fields
-    ) {
+    shipmentsExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId) {
       ... on File {
         path
       }

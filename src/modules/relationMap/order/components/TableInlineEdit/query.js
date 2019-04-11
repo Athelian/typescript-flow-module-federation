@@ -15,16 +15,6 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 
-export const ordersByIDsExportQuery = gql`
-  query ordersByIDsExport($ids: [ID!]!, $templateId: ID!, $fields: [String!]) {
-    ordersByIDsExport(ids: $ids, templateId: $templateId, fields: $fields) {
-      ... on File {
-        path
-      }
-    }
-  }
-`;
-
 export const orderTableFragment = gql`
   fragment orderTableFragment on Order {
     id
@@ -318,5 +308,3 @@ export const editTableViewQuery = gql`
   ${maskFragment}
   ${fieldDefinitionFragment}
 `;
-
-export default ordersByIDsExportQuery;
