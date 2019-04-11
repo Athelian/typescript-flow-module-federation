@@ -58,15 +58,14 @@ export default function ResetPasswordModule({ token }: Props) {
                         />
                       )}
 
-                      {passwordChanged ||
-                        (hasError && (
-                          <Link to="/login" className={LinkStyle}>
-                            <FormattedMessage
-                              id="modules.resetPassword.login"
-                              defaultMessage="Back to login"
-                            />
-                          </Link>
-                        ))}
+                      {(passwordChanged || hasError) && (
+                        <Link to="/login" className={LinkStyle}>
+                          <FormattedMessage
+                            id="modules.resetPassword.login"
+                            defaultMessage="Back to login"
+                          />
+                        </Link>
+                      )}
 
                       {!passwordChanged && !hasError && (
                         <>
