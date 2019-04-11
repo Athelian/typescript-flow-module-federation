@@ -7,6 +7,7 @@ import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constan
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 import { MappingFields as OrderMappingField } from 'modules/task/form/components/ParentEntity/components/OrderValueSpy';
 import { MappingFields as BatchMappingField } from 'modules/task/form/components/ParentEntity/components/BatchValueSpy';
+import { findMappingFields } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy';
 
 type Props = {
   type: 'order' | 'batch' | 'shipment',
@@ -15,18 +16,17 @@ type Props = {
   setTaskValue: Function,
 };
 
-const MappingFields = {
-  order: OrderMappingField,
-  batch: BatchMappingField,
-  shipment: {},
-};
-
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {
   React.useEffect(() => {
-    emitter.addListener('AUTO_DATE', (field, value) => {
+    const mappingFields = {
+      order: OrderMappingField,
+      batch: BatchMappingField,
+      shipment: findMappingFields(values.voyages || []),
+    };
+    emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {
         ...values,
-        [field]: value,
+        ...(field ? { [field]: value } : {}),
       };
       logger.warn({
         tasks,
@@ -52,7 +52,7 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
           if (startDateBinding) {
             const { months, weeks, days } = startDateInterval || {};
             newStartDate = calculateDate({
-              date: getByPath(MappingFields[type][startDateBinding], latestValues),
+              date: getByPath(mappingFields[type][startDateBinding], latestValues),
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,
             });
@@ -63,7 +63,7 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
             newDueDate = calculateDate({
               date:
                 dueDateBinding !== START_DATE
-                  ? getByPath(MappingFields[type][dueDateBinding], latestValues)
+                  ? getByPath(mappingFields[type][dueDateBinding], latestValues)
                   : newStartDate,
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,
