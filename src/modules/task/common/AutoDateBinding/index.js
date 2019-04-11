@@ -5,6 +5,8 @@ import logger from 'utils/logger';
 import { getByPath } from 'utils/fp';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
+import { MappingFields as OrderMappingField } from 'modules/task/form/components/ParentEntity/components/OrderValueSpy';
+import { MappingFields as BatchMappingField } from 'modules/task/form/components/ParentEntity/components/BatchValueSpy';
 
 type Props = {
   type: 'order' | 'batch' | 'shipment',
@@ -14,11 +16,9 @@ type Props = {
 };
 
 const MappingFields = {
-  order: {
-    OrderIssuedAt: 'issuedAt',
-  },
+  order: OrderMappingField,
+  batch: BatchMappingField,
   shipment: {},
-  batch: {},
 };
 
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {

@@ -1,9 +1,12 @@
 // @flow
 import React, { lazy, Suspense } from 'react';
 import { navigate } from '@reach/router';
+import { Subscribe } from 'unstated';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import LoadingIcon from 'components/LoadingIcon';
+import AutoDateBinding from 'modules/task/common/AutoDateBinding';
+import { BatchInfoContainer, BatchTasksContainer } from './containers';
 import { BatchFormWrapperStyle } from './style';
 
 const AsyncBatchSection = lazy(() => import('./components/BatchSection'));
@@ -64,6 +67,24 @@ export default class BatchForm extends React.Component<Props> {
           <AsyncShipmentSection shipment={batch.shipment} />
           <AsyncContainerSection container={batch.container} />
           <AsyncOrderSection />
+          <Subscribe to={[BatchTasksContainer, BatchInfoContainer]}>
+            {(
+              {
+                state: {
+                  todo: { tasks },
+                },
+                setFieldValue,
+              },
+              { state }
+            ) => (
+              <AutoDateBinding
+                type="batch"
+                values={state}
+                tasks={tasks}
+                setTaskValue={setFieldValue}
+              />
+            )}
+          </Subscribe>
         </div>
       </Suspense>
     );

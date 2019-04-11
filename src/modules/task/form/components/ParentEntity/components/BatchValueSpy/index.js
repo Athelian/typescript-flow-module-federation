@@ -6,7 +6,7 @@ import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
-import { orderDetailQuery } from './query';
+import { batchDetailQuery } from './query';
 
 type Props = {
   values: Object,
@@ -16,13 +16,16 @@ type Props = {
 };
 
 export const MappingFields = {
-  OrderIssuedAt: 'issuedAt',
+  BatchDeliveredAt: 'deliveredAt',
+  BatchDesiredAt: 'desiredAt',
+  BatchProducedAt: 'producedAt',
+  BatchExpiredAt: 'expiredAt',
 };
 
-export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Props) {
+export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
-      'FIND_ORDER_VALUE',
+      'FIND_BATCH_VALUE',
       async ({
         field,
         entityId,
@@ -83,17 +86,17 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
             }
           }
         } else {
-          logger.warn('query order data for id', client);
+          logger.warn('query batch data for id', client);
           // TODO: This flag will be used for showing loading on UI
           emitter.emit('LIVE_VALUE_PROCESS', true);
           const { data } = await client.query({
-            query: orderDetailQuery,
+            query: batchDetailQuery,
             variables: { id: entityId },
             fetchPolicy: 'cache-first',
           });
           emitter.emit('LIVE_VALUE_PROCESS', false);
 
-          let date = getByPath(MappingFields[field] || 'N/A', data.order);
+          let date = getByPath(MappingFields[field] || 'N/A', data.batch);
           if (autoDateDuration) {
             date = calculateDate({
               date,
@@ -138,7 +141,7 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
     );
 
     return () => {
-      emitter.removeAllListeners('FIND_ORDER_VALUE');
+      emitter.removeAllListeners('FIND_BATCH_VALUE');
     };
   });
   return null;
