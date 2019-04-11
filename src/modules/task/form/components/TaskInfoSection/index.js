@@ -229,17 +229,18 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
 
             return (
               <div className={TaskSectionWrapperStyle}>
-                {!hideParentInfo && entity === 'Shipment' && (
-                  <FieldItem
-                    label={
-                      <Label>
-                        <FormattedMessage id="modules.Tasks.shipment" defaultMessage="SHIPMENT" />
-                      </Label>
-                    }
-                    vertical
-                    input={<ShipmentCard shipment={task.entity} />}
-                  />
-                )}
+                {!hideParentInfo &&
+                  getByPathWithDefault('', 'entity.__typename', task) === 'Shipment' && (
+                    <FieldItem
+                      label={
+                        <Label>
+                          <FormattedMessage id="modules.Tasks.shipment" defaultMessage="SHIPMENT" />
+                        </Label>
+                      }
+                      vertical
+                      input={<ShipmentCard shipment={task.entity} />}
+                    />
+                  )}
 
                 <div className={MainFieldsWrapperStyle}>
                   <GridColumn>
@@ -787,29 +788,31 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                   </GridColumn>
 
                   <GridColumn>
-                    {!hideParentInfo && entity === 'Order' && (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage id="modules.Tasks.order" defaultMessage="ORDER" />
-                          </Label>
-                        }
-                        vertical
-                        input={<OrderCard order={task.entity} />}
-                      />
-                    )}
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage id="modules.Tasks.order" defaultMessage="ORDER" />
+                            </Label>
+                          }
+                          vertical
+                          input={<OrderCard order={task.entity} />}
+                        />
+                      )}
 
-                    {!hideParentInfo && entity === 'Batch' && (
-                      <FieldItem
-                        label={
-                          <Label>
-                            <FormattedMessage id="modules.Tasks.batch" defaultMessage="BATCH" />
-                          </Label>
-                        }
-                        vertical
-                        input={<BatchCard batch={task.entity} />}
-                      />
-                    )}
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage id="modules.Tasks.batch" defaultMessage="BATCH" />
+                            </Label>
+                          }
+                          vertical
+                          input={<BatchCard batch={task.entity} />}
+                        />
+                      )}
                   </GridColumn>
                 </div>
 
