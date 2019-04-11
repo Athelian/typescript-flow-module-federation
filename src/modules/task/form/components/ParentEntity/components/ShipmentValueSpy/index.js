@@ -3,10 +3,11 @@ import * as React from 'react';
 import client from 'apollo';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
+import { getLatestDate } from 'utils/shipment';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
-import { batchAutoDateQuery } from './query';
+import { shipmentAutoDateQuery } from './query';
 
 type Props = {
   values: Object,
@@ -15,17 +16,34 @@ type Props = {
   setTaskValue: Function,
 };
 
-export const MappingFields = {
-  BatchDeliveredAt: 'deliveredAt',
-  BatchDesiredAt: 'desiredAt',
-  BatchProducedAt: 'producedAt',
-  BatchExpiredAt: 'expiredAt',
+export const findMappingFields = (voyages: Array<Object>) => ({
+  ShipmentBlDate: 'blDate',
+  ShipmentBookingDate: 'bookingDate',
+  ShipmentCargoReady: 'cargoReady',
+  ShipmentLoadPortDeparture: 'voyages.0.departure',
+  ShipmentFirstTransitPortArrival: voyages.length > 1 ? 'voyages.0.arrival' : 'shouldNotAvailable',
+  ShipmentFirstTransitPortDeparture:
+    voyages.length > 1 ? 'voyages.1.departure' : 'shouldNotAvailable',
+  ShipmentSecondTransitPortArrival: voyages.length > 2 ? 'voyages.1.arrival' : 'shouldNotAvailable',
+  ShipmentSecondTransitPortDeparture:
+    voyages.length > 2 ? 'voyages.2.departure' : 'shouldNotAvailable',
+  ShipmentDischargePortArrival: `voyages.${voyages.length - 1}.arrival`,
+  ShipmentCustomClearance: 'containerGroups.0.customClearance',
+  ShipmentWarehouseArrival: 'containerGroups.0.warehouseArrival',
+  ShipmentDeliveryReady: 'containerGroups.0.deliveryReady',
+});
+
+const getValueBy = (field: string, values: Object) => {
+  if (field.toLowerCase().includes('date')) {
+    return getByPath(field, values);
+  }
+  return getLatestDate(getByPath(field, values));
 };
 
-export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Props) {
+export default function ShipmentValueSpy({ values, task, inForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
-      'FIND_BATCH_VALUE',
+      'FIND_SHIPMENT_VALUE',
       async ({
         field,
         entityId,
@@ -45,8 +63,9 @@ export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Pr
           selectedField,
         });
 
+        const mappingFields = findMappingFields(values.voyages || []);
         if (inForm) {
-          let date = getByPath(MappingFields[field] || 'N/A', values);
+          let date = getValueBy(mappingFields[field] || 'N/A', values);
           if (autoDateDuration) {
             date = calculateDate({
               date,
@@ -86,17 +105,17 @@ export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Pr
             }
           }
         } else {
-          logger.warn('query batch data for id', client);
+          logger.warn('query shipment data for id', client);
           // TODO: This flag will be used for showing loading on UI
           emitter.emit('LIVE_VALUE_PROCESS', true);
           const { data } = await client.query({
-            query: batchAutoDateQuery,
+            query: shipmentAutoDateQuery,
             variables: { id: entityId },
             fetchPolicy: 'cache-first',
           });
           emitter.emit('LIVE_VALUE_PROCESS', false);
 
-          let date = getByPath(MappingFields[field] || 'N/A', data.batch);
+          let date = getValueBy(mappingFields[field] || 'N/A', data.shipment);
           if (autoDateDuration) {
             date = calculateDate({
               date,
@@ -141,7 +160,7 @@ export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Pr
     );
 
     return () => {
-      emitter.removeAllListeners('FIND_BATCH_VALUE');
+      emitter.removeAllListeners('FIND_SHIPMENT_VALUE');
     };
   });
   return null;

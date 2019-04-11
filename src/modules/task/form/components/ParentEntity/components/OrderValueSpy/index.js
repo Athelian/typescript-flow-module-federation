@@ -6,7 +6,7 @@ import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
-import { orderDetailQuery } from './query';
+import { orderAutoDateQuery } from './query';
 
 type Props = {
   values: Object,
@@ -87,7 +87,7 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
           // TODO: This flag will be used for showing loading on UI
           emitter.emit('LIVE_VALUE_PROCESS', true);
           const { data } = await client.query({
-            query: orderDetailQuery,
+            query: orderAutoDateQuery,
             variables: { id: entityId },
             fetchPolicy: 'cache-first',
           });

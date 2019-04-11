@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const orderDetailQuery = gql`
+export const orderAutoDateQuery = gql`
   query($id: ID!) {
     order(id: $id) {
       ... on Order {
@@ -12,4 +12,4 @@ export const orderDetailQuery = gql`
   }
 `;
 
-export default orderDetailQuery;
+export default orderAutoDateQuery;
