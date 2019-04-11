@@ -568,6 +568,7 @@
           { "name": "FloatValue" },
           { "name": "BooleanValue" },
           { "name": "DateTimeValue" },
+          { "name": "IntervalValue" },
           { "name": "MetricValueValue" },
           { "name": "SizeValue" },
           { "name": "EntityValue" },

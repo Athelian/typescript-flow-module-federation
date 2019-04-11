@@ -46,9 +46,6 @@ export const orderFormFragment = gql`
     tags {
       ...tagFragment
     }
-    todo {
-      ...todoFragment
-    }
     files {
       ...documentFragment
     }

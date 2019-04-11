@@ -20,8 +20,8 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
-  taskFormInSlideViewFragment,
   todoFragment,
+  taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
 } from 'graphql';
@@ -78,8 +78,8 @@ export const updateBatchMutation = gql`
   ${fieldDefinitionFragment}
   ${badRequestFragment}
   ${ownedByFragment}
-  ${taskFormInSlideViewFragment}
   ${todoFragment}
+  ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
 `;

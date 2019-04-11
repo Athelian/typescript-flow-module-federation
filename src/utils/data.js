@@ -300,6 +300,7 @@ export const parseRepresentativeBatchIndexField = (
 
   return { [key]: newRepresentativeBatchIndex };
 };
+
 type TaskType = {
   id: ?string,
   name: ?string,
@@ -325,10 +326,30 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'startDate', originalTask),
       newTask.startDate
     ),
+    ...parseGenericField(
+      'startDateInterval',
+      getByPathWithDefault(null, 'startDateInterval', originalTask),
+      newTask.startDateInterval
+    ),
+    ...parseEnumField(
+      'startDateBinding',
+      getByPathWithDefault(null, 'startDateBinding', originalTask),
+      newTask.startDateBinding
+    ),
     ...parseDateField(
       'dueDate',
       getByPathWithDefault(null, 'dueDate', originalTask),
       newTask.dueDate
+    ),
+    ...parseGenericField(
+      'dueDateInterval',
+      getByPathWithDefault(null, 'dueDateInterval', originalTask),
+      newTask.dueDateInterval
+    ),
+    ...parseEnumField(
+      'dueDateBinding',
+      getByPathWithDefault(null, 'dueDateBinding', originalTask),
+      newTask.dueDateBinding
     ),
     ...parseArrayOfIdsField(
       'assignedToIds',

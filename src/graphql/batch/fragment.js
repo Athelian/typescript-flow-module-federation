@@ -9,9 +9,6 @@ export const batchFormFragment = gql`
     autoCalculatePackageQuantity
     autoCalculatePackageVolume
     updatedAt
-    todo {
-      ...todoFragment
-    }
     updatedBy {
       ...userAvatarFragment
     }
