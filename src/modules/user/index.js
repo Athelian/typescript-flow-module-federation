@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/browser';
 import { Query } from 'react-apollo';
 import { LanguageConsumer } from 'modules/language';
 import { FullStoryAPI } from 'react-fullstory';
-import Intercom from 'react-intercom';
 import LoadingIcon from 'components/LoadingIcon';
 import { isAppInProduction } from 'utils/env';
 import { getByPathWithDefault } from 'utils/fp';
@@ -75,11 +74,7 @@ const UserProvider = ({ children }: Props) => (
           } = getByPathWithDefault({}, 'viewer', data);
 
           const { email, id, firstName, lastName } = user;
-          const userProfile = {
-            id,
-            email,
-            name: `${lastName} ${firstName}`,
-          };
+
           Sentry.configureScope(scope => {
             scope.setUser({ email, id });
           });
@@ -100,12 +95,7 @@ const UserProvider = ({ children }: Props) => (
 
           return (
             <UserContext.Provider value={{ user, permissions }}>
-              <PermissionProvider permissions={permissions}>
-                {children}
-                {isAppInProduction && (
-                  <Intercom appID={process.env.ZENPORT_INTERCOM_ID} {...userProfile} />
-                )}
-              </PermissionProvider>
+              <PermissionProvider permissions={permissions}>{children}</PermissionProvider>
             </UserContext.Provider>
           );
         }}
