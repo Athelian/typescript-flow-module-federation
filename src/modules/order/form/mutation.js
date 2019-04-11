@@ -23,7 +23,6 @@ import {
   badRequestFragment,
   ownedByFragment,
   taskFormInSlideViewFragment,
-  todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
 } from 'graphql';
@@ -85,7 +84,6 @@ export const updateOrderMutation = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskFormInSlideViewFragment}
-  ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
 `;

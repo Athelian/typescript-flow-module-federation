@@ -22,7 +22,6 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   taskFormInSlideViewFragment,
-  todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
 } from 'graphql';
@@ -55,7 +54,6 @@ export const orderFormQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskFormInSlideViewFragment}
-  ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
 `;

@@ -105,8 +105,20 @@ export const taskFormInSlideViewFragment = gql`
       ...userAvatarFragment
     }
     name
-    dueDate
     startDate
+    startDateInterval {
+      months
+      weeks
+      days
+    }
+    startDateBinding
+    dueDate
+    dueDateInterval {
+      months
+      weeks
+      days
+    }
+    dueDateBinding
     description
     inProgressAt
     inProgressBy {
@@ -155,12 +167,14 @@ export const taskFormFragment = gql`
     startDate
     startDateInterval {
       months
+      weeks
       days
     }
     startDateBinding
     dueDate
     dueDateInterval {
       months
+      weeks
       days
     }
     dueDateBinding
