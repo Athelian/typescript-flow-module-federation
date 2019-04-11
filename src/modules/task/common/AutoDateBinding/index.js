@@ -28,12 +28,7 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
         ...values,
         ...(field ? { [field]: value } : {}),
       };
-      logger.warn({
-        tasks,
-        values,
-        latestValues,
-        setTaskValue,
-      });
+      logger.warn('auto calculate binding data');
       setTaskValue(
         'todo.tasks',
         tasks.map(task => {
