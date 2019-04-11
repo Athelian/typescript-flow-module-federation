@@ -17,6 +17,7 @@ export const DisplayWrapperStyle = ({
   color,
   fontSize,
 }: DisplayWrapperType): string => css`
+  position: relative;
   ${fontSizesWithHeights[fontSize]};
   font-weight: bold;
   color: ${colors[color]};
