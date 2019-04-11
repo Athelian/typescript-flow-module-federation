@@ -693,6 +693,20 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                               validator={shipmentValidator}
                             />
                           </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={productColumnFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'product')}
+                              columnNo={columnProductNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={productCustomFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'productCustom')}
+                              columnNo={columnProductCustomNo}
+                            />
+                          </div>
                         </TableRow>
                       )
                     )}
@@ -1073,89 +1087,104 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                           {/* TODO: product  */}
                           <div>
                             {productIds.length ? (
-                              <>
-                                {orderItems.map(orderItem =>
-                                  orderItem.data.batches
-                                    .filter(batch => batchIds.includes(batch.id))
-                                    .map(batch => (
-                                      <TableItem
-                                        key={batch.id}
-                                        rowNo={getRowCounter(rowCounter, 'product')}
-                                        columnNo={columnProductNo}
-                                        cell={`products.${orderItem.data.productProvider.product}`}
-                                        fields={productColumnFieldsFilter}
-                                        values={
-                                          editData.products[
-                                            `${orderItem.data.productProvider.product}`
-                                          ]
-                                        }
-                                        editData={editData}
-                                        validator={productValidator}
-                                      />
-                                    ))
-                                )}
-                                {range(totalLines - batches.length).map(index => (
-                                  <TableEmptyItem
-                                    key={index}
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
+                                  <TableItem
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                    fields={productColumnFieldsFilter}
                                     rowNo={getRowCounter(rowCounter, 'product')}
                                     columnNo={columnProductNo}
-                                    fields={productColumnFieldsFilter}
+                                    cell={`products.${orderItem.data.productProvider.product}`}
+                                    values={
+                                      editData.products[`${orderItem.data.productProvider.product}`]
+                                    }
+                                    editData={editData}
+                                    validator={productValidator}
                                   />
-                                ))}
-                              </>
+                                ) : (
+                                  <React.Fragment
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                  >
+                                    {Object.keys(orderItem.relation.batch || {})
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(batchId => (
+                                        <TableItem
+                                          key={`orderItem.${counter +
+                                            1}.duplication.${batchId}.product`}
+                                          fields={productColumnFieldsFilter}
+                                          rowNo={getRowCounter(rowCounter, 'product')}
+                                          columnNo={columnProductNo}
+                                          cell={`products.${
+                                            orderItem.data.productProvider.product
+                                          }`}
+                                          values={
+                                            editData.products[
+                                              `${orderItem.data.productProvider.product}`
+                                            ]
+                                          }
+                                          editData={editData}
+                                          validator={productValidator}
+                                        />
+                                      ))}
+                                  </React.Fragment>
+                                )
+                              )
                             ) : (
-                              range(totalLines).map(index => (
-                                <TableEmptyItem
-                                  key={index}
-                                  rowNo={getRowCounter(rowCounter, 'product')}
-                                  columnNo={columnProductNo}
-                                  fields={productColumnFieldsFilter}
-                                />
-                              ))
+                              <TableEmptyItem
+                                fields={productColumnFieldsFilter}
+                                rowNo={getRowCounter(rowCounter, 'product')}
+                                columnNo={columnProductNo}
+                              />
                             )}
                           </div>
                           {/* TODO: product custom fields */}
                           <div>
-                            {batchIds.length ? (
-                              <>
-                                {orderItems.map(orderItem =>
-                                  orderItem.data.batches
-                                    .filter(batch => batchIds.includes(batch.id))
-                                    .map(batch => (
-                                      <TableItemForCustomFields
-                                        key={`products.customFields.${batch.id}`}
-                                        fields={productCustomFieldsFilter}
-                                        rowNo={getRowCounter(rowCounter, 'productCustom')}
-                                        columnNo={columnProductCustomNo}
-                                        cell={`products.${orderItem.data.productProvider.product}`}
-                                        values={
-                                          editData.products[
-                                            `${orderItem.data.productProvider.product}`
-                                          ]
-                                        }
-                                        // FIXME: optional
-                                        validator={productValidator}
-                                      />
-                                    ))
-                                )}
-                                {range(totalLines - batches.length).map(index => (
-                                  <TableEmptyItem
-                                    key={index}
+                            {orderItems.length ? (
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
+                                  <TableItemForCustomFields
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
                                     fields={productCustomFieldsFilter}
                                     rowNo={getRowCounter(rowCounter, 'productCustom')}
                                     columnNo={columnProductCustomNo}
+                                    cell={`products.${orderItem.data.productProvider.product}`}
+                                    values={
+                                      editData.products[`${orderItem.data.productProvider.product}`]
+                                    }
+                                    validator={productValidator}
                                   />
-                                ))}
-                              </>
+                                ) : (
+                                  <React.Fragment
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                  >
+                                    {Object.keys(orderItem.relation.batch || {})
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(batchId => (
+                                        <TableItemForCustomFields
+                                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                                          fields={productCustomFieldsFilter}
+                                          rowNo={getRowCounter(rowCounter, 'productCustom')}
+                                          columnNo={columnProductCustomNo}
+                                          cell={`products.${
+                                            orderItem.data.productProvider.product
+                                          }`}
+                                          values={
+                                            editData.products[
+                                              `${orderItem.data.productProvider.product}`
+                                            ]
+                                          }
+                                          validator={productValidator}
+                                        />
+                                      ))}
+                                  </React.Fragment>
+                                )
+                              )
                             ) : (
-                              range(totalLines).map(index => (
-                                <TableEmptyItem
-                                  key={index}
-                                  fields={productCustomFieldsFilter}
-                                  rowNo={getRowCounter(rowCounter, 'productCustom')}
-                                  columnNo={columnProductCustomNo}
-                                />
-                              ))
+                              <TableEmptyItem
+                                fields={productCustomFieldsFilter}
+                                rowNo={getRowCounter(rowCounter, 'productCustom')}
+                                columnNo={columnProductCustomNo}
+                              />
                             )}
                           </div>
                         </TableRow>
@@ -1220,17 +1249,17 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                       templateColumns={templateColumns}
                     />
                     <TableHeader
-                      entity="PRODUCT"
                       showAll={showAll}
+                      entity="PRODUCT"
                       info={productColumns}
                       templateColumns={templateColumns}
                       onToggle={onToggle}
                     />
                     <TableHeaderForCustomFields
+                      showAll={showAll}
                       entity="PRODUCT"
                       customFields={productCustomFields}
                       onToggle={onToggle}
-                      showAll={showAll}
                       templateColumns={templateColumns}
                     />
                     <div className={TableHeaderClearFixStyle} />
