@@ -145,7 +145,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             onChange({
               [`${field}Binding`]:
                 field === 'dueDate' ? START_DATE : shipmentBinding(intl).blDate.field,
-              [`${field}Interval`]: null,
+              [`${field}Interval`]: { days: 0 },
             });
             emitter.emit('FIND_SHIPMENT_VALUE', {
               field: field === 'dueDate' ? START_DATE : shipmentBinding(intl).blDate.field,
@@ -158,7 +158,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             onChange({
               [`${field}Binding`]:
                 field === 'dueDate' ? START_DATE : batchBinding(intl).deliveredAt.field,
-              [`${field}Interval`]: null,
+              [`${field}Interval`]: { days: 0 },
             });
             emitter.emit('FIND_BATCH_VALUE', {
               field: field === 'dueDate' ? START_DATE : batchBinding(intl).deliveredAt.field,
@@ -171,7 +171,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             onChange({
               [`${field}Binding`]:
                 field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
-              [`${field}Interval`]: null,
+              [`${field}Interval`]: { days: 0 },
             });
             emitter.emit('FIND_ORDER_VALUE', {
               field: field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
@@ -386,8 +386,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   duration: autoDateDuration.metric,
                                   offset:
                                     autoDateOffset === 'after'
-                                      ? autoDateDuration.value
-                                      : -autoDateDuration.value,
+                                      ? Math.abs(autoDateDuration.value)
+                                      : -Math.abs(autoDateDuration.value),
                                 });
                                 setFieldValue('startDate', newDate);
                                 if (values.dueDateBinding === START_DATE) {
@@ -404,8 +404,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                 setFieldValue('startDateInterval', {
                                   [autoDateDuration.metric]:
                                     autoDateOffset === 'after'
-                                      ? autoDateDuration.value
-                                      : -autoDateDuration.value,
+                                      ? Math.abs(autoDateDuration.value)
+                                      : -Math.abs(autoDateDuration.value),
                                 });
                               }}
                             >
@@ -417,7 +417,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   <div className={AutoDateOffsetWrapperStyle}>
                                     <FormField
                                       name="autoStateDateDuration"
-                                      initValue={autoDateDuration}
+                                      initValue={{
+                                        ...autoDateDuration,
+                                        value: Math.abs(autoDateDuration.value),
+                                      }}
                                       setFieldValue={(field, value) =>
                                         set('autoDateDuration', value)
                                       }
@@ -613,8 +616,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   duration: autoDateDuration.metric,
                                   offset:
                                     autoDateOffset === 'after'
-                                      ? autoDateDuration.value
-                                      : -autoDateDuration.value,
+                                      ? Math.abs(autoDateDuration.value)
+                                      : -Math.abs(autoDateDuration.value),
                                 });
                                 setFieldValue('dueDate', newDate);
                                 setFieldValue('dueDateInterval', {
@@ -633,7 +636,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   <div className={AutoDateOffsetWrapperStyle}>
                                     <FormField
                                       name="autoDueDateDuration"
-                                      initValue={autoDateDuration}
+                                      initValue={{
+                                        ...autoDateDuration,
+                                        value: Math.abs(autoDateDuration.value),
+                                      }}
                                       setFieldValue={(field, value) =>
                                         set('autoDateDuration', value)
                                       }

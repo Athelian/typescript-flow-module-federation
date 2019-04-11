@@ -10,6 +10,7 @@ import messages from 'components/Form/Inputs/messages';
 
 type OptionalProps = {
   nullable: boolean,
+  nonNegative: boolean,
 };
 
 type Props = OptionalProps &
@@ -22,6 +23,7 @@ export type NumberInputProps = Props;
 const defaultProps = {
   ...defaultInputProps,
   nullable: false,
+  nonNegative: false,
 };
 
 export const defaultNumberInputProps = defaultProps;
@@ -30,12 +32,12 @@ class NumberInput extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   handleChange = (evt: any) => {
-    const { onChange, nullable } = this.props;
-
+    const { onChange, nullable, nonNegative } = this.props;
+    const value = nullable ? toFloatNullable(evt.target.value) : toFloat(evt.target.value);
     if (onChange) {
       const newValue = {
         ...evt,
-        target: { value: nullable ? toFloatNullable(evt.target.value) : toFloat(evt.target.value) },
+        target: { value: nonNegative && !Number.isNaN(value) && value < 0 ? 0 : value },
       };
       onChange(newValue);
     }
