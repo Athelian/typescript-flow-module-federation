@@ -1,7 +1,8 @@
 // @flow
 import { Container } from 'unstated';
-import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
+import { isEquals } from 'utils/fp';
+import emitter from 'utils/emitter';
 
 type FormState = {
   todo: {
@@ -36,6 +37,9 @@ export default class BatchTasksContainer extends Container<FormState> {
     const newTaskList = [...nonTemplateTasks, ...template.tasks];
 
     this.setState({ todo: { tasks: newTaskList, taskTemplate: template } });
+    setTimeout(() => {
+      emitter.emit('AUTO_DATE');
+    }, 200);
   };
 
   initDetailValues = (todo: { tasks: Array<Object> }) => {

@@ -54,6 +54,7 @@ class NumberInput extends React.Component<Props> {
       placeholder,
       nullable,
       onChange,
+      nonNegative,
       ...rest
     } = this.props;
 
