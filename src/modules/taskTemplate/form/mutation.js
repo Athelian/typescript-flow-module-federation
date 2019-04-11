@@ -12,6 +12,7 @@ import {
   parseArrayOfChildrenField,
   parseArrayOfIdsField,
   parseMemoField,
+  parseEnumField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -67,6 +68,26 @@ export const prepareParsedTaskTemplate = (originalValues: ?Object, newValues: Ob
       return {
         ...(oldTask ? { id: oldTask.id } : {}),
         ...parseGenericField('name', getByPathWithDefault(null, 'name', oldTask), newTask.name),
+        ...parseGenericField(
+          'startDateInterval',
+          getByPathWithDefault(null, 'startDateInterval', oldTask),
+          newTask.startDateInterval
+        ),
+        ...parseEnumField(
+          'startDateBinding',
+          getByPathWithDefault(null, 'startDateBinding', oldTask),
+          newTask.startDateBinding
+        ),
+        ...parseGenericField(
+          'dueDateInterval',
+          getByPathWithDefault(null, 'dueDateInterval', oldTask),
+          newTask.dueDateInterval
+        ),
+        ...parseEnumField(
+          'dueDateBinding',
+          getByPathWithDefault(null, 'dueDateBinding', oldTask),
+          newTask.dueDateBinding
+        ),
         ...parseGenericField(
           'approvable',
           getByPathWithDefault(null, 'approvable', oldTask),

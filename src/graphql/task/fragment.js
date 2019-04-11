@@ -77,6 +77,18 @@ export const taskFormInTemplateFragment = gql`
     }
     sort
     name
+    startDateInterval {
+      months
+      weeks
+      days
+    }
+    startDateBinding
+    dueDateInterval {
+      months
+      weeks
+      days
+    }
+    dueDateBinding
     description
     tags {
       ...tagFragment
