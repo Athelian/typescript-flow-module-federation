@@ -64,10 +64,27 @@ const formatContainerGroups = (voyages: Array<Object>): Array<Object> =>
     deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
   }));
 
+/**
+ *
+ * @param {*} targets selected cards
+ * @param {*} entities data from API
+ */
 export const findAllPossibleIds = (
   targets: Object,
-  entities: { shipments: Object, orders: Object, orderItems: Object, batches: Object }
-) => {
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    shipments: Object,
+    products: Object,
+  }
+): {
+  orderIds: Array<Object>,
+  orderItemIds: Array<Object>,
+  batchIds: Array<Object>,
+  shipmentIds: Array<Object>,
+  productIds: Array<Object>,
+} => {
   const selected = {
     ORDER: [],
     ORDER_ITEM: [],
@@ -84,7 +101,7 @@ export const findAllPossibleIds = (
   const batchIds = selected.BATCH.slice();
   const shipmentIds = selected.SHIPMENT.slice();
 
-  // If Order is selected, the entire Order tree (Order, Items, and Batches)
+  // If Order is selected, the entire Order tree (Order, Items, Product, and Batches)
   // plus all related Shipments go to the Edit view
   (Object.values(entities.orders || {}): any).forEach(order => {
     if (selected.ORDER.includes(order.id)) {
@@ -105,7 +122,8 @@ export const findAllPossibleIds = (
   });
 
   // If Shipment is selected, the Shipment itself, all of its Batches,
-  // all of the Item parents of those Batches, and all of the Order parents of those Items go to the Edit view
+  // all of the Item parents of those Batches, all of the Product base Items
+  // and all of the Order parents of those Items go to the Edit view
   (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
     const [shipmentId, shipment] = item;
     if (selected.SHIPMENT.includes(shipmentId)) {
@@ -125,7 +143,7 @@ export const findAllPossibleIds = (
     }
   });
 
-  // If Batch is selected, the Order and Item parent and the Batch itself
+  // If Batch is selected, the Order, Item and Product parent and the Batch itself
   // and the related Shipment go to the Edit view
   (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
     if (selected.BATCH.includes(batchId)) {
@@ -142,7 +160,7 @@ export const findAllPossibleIds = (
     }
   });
 
-  // If Item is selected, the Order parent, the Item and all of its Batches
+  // If Item is selected, the Order parent, the Item and its Product and all of its Batches
   // with all the related Shipments, go to the Edit view
   (Object.entries(entities.orderItems || {}): Array<any>).forEach(([orderItemId, orderItem]) => {
     if (selected.ORDER_ITEM.includes(orderItemId)) {
@@ -160,9 +178,12 @@ export const findAllPossibleIds = (
     }
   });
 
+  const productIds = Object.keys(entities.products || {});
+
   return {
     orderIds: [...new Set(orderIds)],
     orderItemIds: [...new Set(orderItemIds)],
+    productIds,
     batchIds: [...new Set(batchIds)],
     shipmentIds: [...new Set(shipmentIds)],
   };
@@ -197,7 +218,13 @@ export const parseChangedData = ({
   editData,
   mappingObjects,
 }: {
-  changedData: { orders?: Object, shipments?: Object, orderItems?: Object, batches?: Object },
+  changedData: {
+    orders?: Object,
+    shipments?: Object,
+    orderItems?: Object,
+    batches?: Object,
+    products?: Object,
+  },
   editData: Object,
   mappingObjects: Object,
 }) => {
@@ -205,6 +232,7 @@ export const parseChangedData = ({
   const orders = [];
   const batches = [];
   const shipments = [];
+  const products = [];
   if (changedData.orders) {
     (Object.entries(changedData.orders || {}): any).forEach(item => {
       const [id, order] = item;
@@ -431,12 +459,34 @@ export const parseChangedData = ({
     });
   }
 
+  if (changedData.products) {
+    (Object.entries(changedData.products || {}): any).forEach(item => {
+      const [id, product] = item;
+      const keys = Object.keys(product);
+      const changedProduct = {};
+      keys.forEach(key => {
+        const updateValue = editData.products[id][key];
+        switch (key) {
+          case 'tags':
+            changedProduct.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+          case 'customFields':
+            changedProduct[key] = prepareCustomFieldsData(updateValue);
+            break;
+          default:
+            changedProduct[key] = updateValue;
+        }
+      });
+      products.push({ input: changedProduct, id });
+    });
+  }
+
   return {
     orders,
     batches,
     shipments,
     warehouses: [],
-    products: [],
+    products,
   };
 };
 
@@ -502,6 +552,8 @@ export function getExportColumns(
     orderItemCustomFieldsFilter,
     batchCustomFieldsFilter,
     shipmentCustomFieldsFilter,
+    productColumnFieldsFilter,
+    productCustomFieldsFilter,
   }: Object
 ): Array<string> {
   const allColumns = [
@@ -513,6 +565,8 @@ export function getExportColumns(
     ...batchCustomFieldsFilter,
     ...shipmentColumnFieldsFilter,
     ...shipmentCustomFieldsFilter,
+    ...productColumnFieldsFilter,
+    ...productCustomFieldsFilter,
   ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
   return allColumns;
 }
@@ -530,6 +584,8 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       orderItemCustomFieldsFilter,
       batchCustomFieldsFilter,
       shipmentCustomFieldsFilter,
+      productColumnFieldsFilter,
+      productCustomFieldsFilter,
     },
   } = info;
   const rows = [];
@@ -546,7 +602,12 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
     const shipmentCustomValues = getCustomFieldValues(shipmentCustomFieldsFilter, shipmentData);
     const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
-    const currentRow = [...emptyRow, ...shipmentRow];
+    const emptyRowOfProduct = getEmptyValues([
+      ...productColumnFieldsFilter,
+      ...productCustomFieldsFilter,
+    ]);
+    const currentRow = [...emptyRow, ...shipmentRow, ...emptyRowOfProduct];
+
     rows.push(currentRow);
   });
   orderIds.forEach(orderId => {
@@ -567,6 +628,8 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         ...batchCustomFieldsFilter,
         ...shipmentColumnFieldsFilter,
         ...shipmentCustomFieldsFilter,
+        ...productColumnFieldsFilter,
+        ...productCustomFieldsFilter,
       ]);
       const currentRow = [...orderRow, ...emptyRow];
       return rows.push(currentRow);
@@ -580,6 +643,11 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         orderItemData
       );
       const orderItemRow = [...orderItemValues, ...orderItemCustomValues];
+      const productData = editData.products[`${orderItemData.productProvider.product}`];
+      const productValues = getFieldValues(productColumnFieldsFilter, productData, editData);
+      const productCustomValues = getCustomFieldValues(productCustomFieldsFilter, productData);
+      const productRow = [...productValues, ...productCustomValues];
+
       if (notHaveBatches) {
         const emptyRow = getEmptyValues([
           ...batchColumnFieldsFilter,
@@ -587,7 +655,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
           ...shipmentColumnFieldsFilter,
           ...shipmentCustomFieldsFilter,
         ]);
-        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow];
+        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow, ...productRow];
         return rows.push(currentRow);
       }
       return orderItem.data.batches
@@ -616,7 +684,13 @@ export function getExportRows(info: Object): Array<Array<?string>> {
             );
             shipmentRow = [...shipmentValues, ...shipmentCustomValues];
           }
-          const currentRow = [...orderRow, ...orderItemRow, ...batchRow, ...shipmentRow];
+          const currentRow = [
+            ...orderRow,
+            ...orderItemRow,
+            ...batchRow,
+            ...shipmentRow,
+            ...productRow,
+          ];
           rows.push(currentRow);
         });
     });

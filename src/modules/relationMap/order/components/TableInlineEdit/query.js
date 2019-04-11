@@ -62,6 +62,15 @@ export const orderItemTableFragment = gql`
             id
             name
             serial
+            janCode
+            hsCode
+            material
+            customFields {
+              ...customFieldsFragment
+            }
+            tags {
+              ...tagFragment
+            }
           }
         }
         exporter {
@@ -210,6 +219,16 @@ export const findIdsQuery = gql`
                 }
               }
             }
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                  }
+                }
+              }
+            }
           }
         }
         shipments {
@@ -237,6 +256,16 @@ export const findIdsQuery = gql`
             id
           }
         }
+        productProvider {
+          ... on ProductProvider {
+            id
+            product {
+              ... on Product {
+                id
+              }
+            }
+          }
+        }
       }
     }
     batchesByIDs(ids: $batchIds) {
@@ -253,6 +282,16 @@ export const findIdsQuery = gql`
             order {
               ... on Order {
                 id
+              }
+            }
+            productProvider {
+              ... on ProductProvider {
+                id
+                product {
+                  ... on Product {
+                    id
+                  }
+                }
               }
             }
           }
@@ -273,11 +312,38 @@ export const findIdsQuery = gql`
                     id
                   }
                 }
+                productProvider {
+                  ... on ProductProvider {
+                    id
+                    product {
+                      ... on Product {
+                        id
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
       }
+    }
+  }
+`;
+
+export const productTableFragment = gql`
+  fragment productTableFragment on Product {
+    id
+    name
+    serial
+    janCode
+    hsCode
+    material
+    customFields {
+      ...customFieldsFragment
+    }
+    tags {
+      ...tagFragment
     }
   }
 `;

@@ -36,11 +36,13 @@ const QueryForAllCustomFieldDefinitions = ({ render, onCompleted }: Props) => (
         const orderItemCustomFields = getByPathWithDefault([], 'orderItem', data);
         const batchCustomFields = getByPathWithDefault([], 'batch', data);
         const shipmentCustomFields = getByPathWithDefault([], 'shipment', data);
+        const productCustomFields = getByPathWithDefault([], 'product', data);
         return render({
           orderCustomFields,
           orderItemCustomFields,
           batchCustomFields,
           shipmentCustomFields,
+          productCustomFields,
         });
       }
       return <LoadingIcon />;
