@@ -16,7 +16,7 @@ import {
   shipmentColumns,
   productColumns,
 } from 'modules/tableTemplate/constants';
-import { ContentWrapperStyle } from './style';
+import { ContentWrapperStyle, FirstBlockStyle, SecondBlockStyle } from './style';
 
 const renderGroup = ({
   type,
@@ -118,8 +118,8 @@ const SelectFieldsSection = () => {
       }) => (
         <Subscribe to={[TemplateFormContainer]}>
           {({ hasSelectField, toggleSelectField }) => (
-            <>
-              <div className={ContentWrapperStyle}>
+            <div className={ContentWrapperStyle}>
+              <div className={FirstBlockStyle}>
                 <GridColumn>
                   {renderGroup({
                     type: 'ORDER',
@@ -185,23 +185,25 @@ const SelectFieldsSection = () => {
                   })}
                 </GridColumn>
               </div>
-              <div>
-                {renderGroup({
-                  type: 'PRODUCT',
-                  groups: productColumns,
-                  hasSelectField,
-                  toggleSelectField,
-                  editable: canCreateOrUpdate,
-                })}
-                {renderCustomFields({
-                  type: 'PRODUCT',
-                  customFields: productCustomFields,
-                  hasSelectField,
-                  toggleSelectField,
-                  editable: canCreateOrUpdate,
-                })}
+              <div className={SecondBlockStyle}>
+                <GridColumn>
+                  {renderGroup({
+                    type: 'PRODUCT',
+                    groups: productColumns,
+                    hasSelectField,
+                    toggleSelectField,
+                    editable: canCreateOrUpdate,
+                  })}
+                  {renderCustomFields({
+                    type: 'PRODUCT',
+                    customFields: productCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
+                    editable: canCreateOrUpdate,
+                  })}
+                </GridColumn>
               </div>
-            </>
+            </div>
           )}
         </Subscribe>
       )}
