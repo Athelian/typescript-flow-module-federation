@@ -50,6 +50,11 @@ const CustomFieldsFactory = ({
         if (loading) {
           return (
             <FieldItem
+              tooltip={
+                <div className={CustomFieldsIconStyle}>
+                  <Icon icon="METADATA" />
+                </div>
+              }
               label={
                 <Label height="30px">
                   <FormattedMessage id="modules.form.customFields" defaultMessage="CUSTOM FIELDS" />
