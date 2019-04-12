@@ -18,12 +18,6 @@ export const calculateDate = ({
   if (!selectedDate) return null;
 
   const date = new Date(selectedDate);
-  logger.warn('calculateDate', {
-    selectedDate,
-    date,
-    duration,
-    offset,
-  });
 
   if (!isValid(date)) {
     logger.warn('invalid date', date, selectedDate);

@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const batchDetailQuery = gql`
+export const batchAutoDateQuery = gql`
   query($id: ID!) {
     batch(id: $id) {
       ... on Batch {
@@ -15,4 +15,4 @@ export const batchDetailQuery = gql`
   }
 `;
 
-export default batchDetailQuery;
+export default batchAutoDateQuery;

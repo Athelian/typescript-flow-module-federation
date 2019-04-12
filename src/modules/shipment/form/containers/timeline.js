@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls } from 'utils/data';
+import emitter from 'utils/emitter';
 
 type ActionDetail = {
   approvedAt?: ?Date,
@@ -59,6 +60,12 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
       set(cloneState, path, value);
       return cloneState;
     });
+
+    if (path.toLowerCase().includes('date')) {
+      setTimeout(() => {
+        emitter.emit('AUTO_DATE');
+      }, 200);
+    }
   };
 
   cleanDataAfterChangeTransport = () => {

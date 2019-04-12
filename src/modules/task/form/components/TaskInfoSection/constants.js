@@ -62,17 +62,9 @@ export const shipmentBinding = (intl: IntlShape) => ({
     field: SHIPMENT_CARGO_READY,
     description: intl.formatMessage(shipmentMessages.cargoReady),
   },
-  customClearance: {
-    field: SHIPMENT_CUSTOM_CLEARANCE,
-    description: intl.formatMessage(shipmentMessages.customClearance),
-  },
-  deliveryReady: {
-    field: SHIPMENT_DELIVERY_READY,
-    description: intl.formatMessage(shipmentMessages.deliveryReady),
-  },
-  dischargePortArrival: {
-    field: SHIPMENT_DISCHARGE_PORT_ARRIVAL,
-    description: intl.formatMessage(shipmentMessages.dischargePortArrival),
+  loadPortDeparture: {
+    field: SHIPMENT_LOAD_PORT_DEPARTURE,
+    description: intl.formatMessage(shipmentMessages.loadPortDeparture),
   },
   firstTransitPortArrival: {
     field: SHIPMENT_FIRST_TRANSIT_PORT_ARRIVAL,
@@ -90,9 +82,17 @@ export const shipmentBinding = (intl: IntlShape) => ({
     field: SHIPMENT_SECOND_TRANSIT_PORT_DEPARTURE,
     description: intl.formatMessage(shipmentMessages.secondTransitPortDeparture),
   },
-  loadPortDeparture: {
-    field: SHIPMENT_LOAD_PORT_DEPARTURE,
-    description: intl.formatMessage(shipmentMessages.loadPortDeparture),
+  dischargePortArrival: {
+    field: SHIPMENT_DISCHARGE_PORT_ARRIVAL,
+    description: intl.formatMessage(shipmentMessages.dischargePortArrival),
+  },
+  customClearance: {
+    field: SHIPMENT_CUSTOM_CLEARANCE,
+    description: intl.formatMessage(shipmentMessages.customClearance),
+  },
+  deliveryReady: {
+    field: SHIPMENT_DELIVERY_READY,
+    description: intl.formatMessage(shipmentMessages.deliveryReady),
   },
   warehouseArrival: {
     field: SHIPMENT_WAREHOUSE_ARRIVAL,

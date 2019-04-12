@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
+import emitter from 'utils/emitter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
@@ -554,6 +555,9 @@ function ContainersArea({
                     if (containers.length === 0) {
                       setTimelineState('containerGroups.0.warehouse', null);
                       setTimelineState('containerGroups.0.warehouseArrival', {});
+                      setTimeout(() => {
+                        emitter.emit('AUTO_DATE');
+                      }, 200);
                     }
                     setFieldValue('containers', [
                       ...clonedContainers,
