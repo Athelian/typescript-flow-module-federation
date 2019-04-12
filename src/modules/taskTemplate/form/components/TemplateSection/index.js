@@ -1,11 +1,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { StringValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import { TASK_TEMPLATE_UPDATE } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import TemplateFormContainer from 'modules/taskTemplate/form/container';
 import validator from 'modules/taskTemplate/form/validator';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import {
@@ -17,9 +19,9 @@ import {
   RadioInput,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
+import { hasAutoDate } from 'modules/taskTemplate/form/helpers';
 import {
   TableTemplateSectionWrapperStyle,
-  DescriptionLabelWrapperStyle,
   EntityTypeStyle,
   EntityTypesWrapperStyle,
   EntityIconStyle,
@@ -32,11 +34,12 @@ type Props = {
 const TableTemplateSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(TASK_TEMPLATE_UPDATE);
+
   return (
     <div className={TableTemplateSectionWrapperStyle}>
       <GridColumn>
         <Subscribe to={[TemplateFormContainer]}>
-          {({ originalValues, state, setFieldValue }) => {
+          {({ originalValues, state, setFieldValue, setAllTasksManualDates }) => {
             const values = { ...originalValues, ...state };
 
             return (
@@ -76,12 +79,10 @@ const TableTemplateSection = ({ isNew }: Props) => {
                       isNew={isNew}
                       originalValue={originalValues[name]}
                       label={
-                        <div className={DescriptionLabelWrapperStyle}>
-                          <FormattedMessage
-                            id="modules.TaskTemplates.description"
-                            defaultMessage="DESCRIPTION"
-                          />
-                        </div>
+                        <FormattedMessage
+                          id="modules.TaskTemplates.description"
+                          defaultMessage="DESCRIPTION"
+                        />
                       }
                       editable={allowUpdate}
                       vertical={false}
@@ -95,12 +96,13 @@ const TableTemplateSection = ({ isNew }: Props) => {
                   name="entityType"
                   initValue={values.entityType}
                   setFieldValue={setFieldValue}
+                  values={values}
                 >
                   {({ name, isTouched, errorMessage, ...inputHandlers }) => (
                     <FieldItem
                       vertical
                       label={
-                        <Label required>
+                        <Label height="30px" required>
                           <FormattedMessage id="modules.TaskTemplates.type" defaultMessage="TYPE" />
                         </Label>
                       }
@@ -115,61 +117,109 @@ const TableTemplateSection = ({ isNew }: Props) => {
                         />
                       }
                       input={
-                        <div className={EntityTypesWrapperStyle}>
-                          <RadioInput
-                            data-testid="orderRadio"
-                            selected={inputHandlers.value === 'Order'}
-                            onToggle={() => setFieldValue(name, 'Order')}
-                            editable={allowUpdate}
-                          >
-                            <div className={EntityTypeStyle}>
-                              <div className={EntityIconStyle('ORDER')}>
-                                <Icon icon="ORDER" />
-                              </div>
-                              <Label>
-                                <FormattedMessage
-                                  id="modules.TaskTemplates.order"
-                                  defaultMessage="ORDER"
-                                />
-                              </Label>
-                            </div>
-                          </RadioInput>
-                          <RadioInput
-                            selected={inputHandlers.value === 'Batch'}
-                            onToggle={() => setFieldValue(name, 'Batch')}
-                            editable={allowUpdate}
-                          >
-                            <div className={EntityTypeStyle}>
-                              <div className={EntityIconStyle('BATCH')}>
-                                <Icon icon="BATCH" />
-                              </div>
-                              <Label>
-                                <FormattedMessage
-                                  id="modules.TaskTemplates.batch"
-                                  defaultMessage="BATCH"
-                                />
-                              </Label>
-                            </div>
-                          </RadioInput>
+                        <StringValue>
+                          {({ value: dialogIsOpen, set: setDialog }) => (
+                            <>
+                              <div className={EntityTypesWrapperStyle}>
+                                <RadioInput
+                                  data-testid="orderRadio"
+                                  selected={inputHandlers.value === 'Order'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'Order') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('Order');
+                                      } else {
+                                        setFieldValue(name, 'Order');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('ORDER')}>
+                                      <Icon icon="ORDER" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.order"
+                                        defaultMessage="ORDER"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
 
-                          <RadioInput
-                            selected={inputHandlers.value === 'Shipment'}
-                            onToggle={() => setFieldValue(name, 'Shipment')}
-                            editable={allowUpdate}
-                          >
-                            <div className={EntityTypeStyle}>
-                              <div className={EntityIconStyle('SHIPMENT')}>
-                                <Icon icon="SHIPMENT" />
+                                <RadioInput
+                                  selected={inputHandlers.value === 'Batch'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'Batch') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('Batch');
+                                      } else {
+                                        setFieldValue(name, 'Batch');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('BATCH')}>
+                                      <Icon icon="BATCH" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.batch"
+                                        defaultMessage="BATCH"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
+                                  selected={inputHandlers.value === 'Shipment'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'Shipment') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('Shipment');
+                                      } else {
+                                        setFieldValue(name, 'Shipment');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('SHIPMENT')}>
+                                      <Icon icon="SHIPMENT" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.shipment"
+                                        defaultMessage="SHIPMENT"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
                               </div>
-                              <Label>
-                                <FormattedMessage
-                                  id="modules.TaskTemplates.shipment"
-                                  defaultMessage="SHIPMENT"
-                                />
-                              </Label>
-                            </div>
-                          </RadioInput>
-                        </div>
+
+                              <ConfirmDialog
+                                isOpen={!!dialogIsOpen}
+                                onRequestClose={() => setDialog(null)}
+                                onCancel={() => setDialog(null)}
+                                onConfirm={() => {
+                                  setFieldValue(name, dialogIsOpen);
+                                  setAllTasksManualDates();
+                                  setDialog(null);
+                                }}
+                                message={
+                                  <FormattedMessage
+                                    id="modules.TaskTemplate.entityTypeDialogMessage"
+                                    defaultMessage="Changing the Type will reset all Start Dates and Due Dates back to manual input. Are you sure you want to proceed?"
+                                  />
+                                }
+                              />
+                            </>
+                          )}
+                        </StringValue>
                       }
                     />
                   )}
