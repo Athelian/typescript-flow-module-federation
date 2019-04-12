@@ -333,11 +333,7 @@ const parseDateFieldForTask = (key: string, originalTask: ?TaskType, newTask: Ta
   }
 
   return {
-    ...parseDateField(
-      key,
-      getByPathWithDefault(null, 'startDate', originalTask),
-      newTask.startDate
-    ),
+    ...parseDateField(key, getByPathWithDefault(null, key, originalTask), newTask[key]),
   };
 };
 
