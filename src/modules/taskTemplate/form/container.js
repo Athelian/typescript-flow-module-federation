@@ -36,6 +36,20 @@ export default class TaskTemplateFormContainer extends Container<FormState> {
     this.setState(values);
   };
 
+  setAllTasksManualDates = () => {
+    const { tasks } = this.state;
+
+    this.setState({
+      tasks: tasks.map(task => ({
+        ...task,
+        startDateBinding: null,
+        startDateInterval: null,
+        dueDateBinding: null,
+        dueDateInterval: null,
+      })),
+    });
+  };
+
   initDetailValues = (values: Object) => {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);

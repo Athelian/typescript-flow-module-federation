@@ -10,10 +10,6 @@ export const TableTemplateSectionWrapperStyle: string = css`
   justify-content: center;
 `;
 
-export const DescriptionLabelWrapperStyle: string = css`
-  height: 90px;
-`;
-
 export const EntityTypesWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 200px 200px;
