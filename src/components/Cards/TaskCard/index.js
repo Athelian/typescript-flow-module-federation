@@ -40,6 +40,7 @@ import {
   TaskPositionWrapperStyle,
   DragButtonWrapperStyle,
   DateInputWrapperStyle,
+  AutoDateSyncIconStyle,
   DividerStyle,
   TaskStatusWrapperStyle,
   TaskTagsWrapperStyle,
@@ -142,6 +143,8 @@ const TaskCard = ({
     approvedAt,
     rejectedBy,
     rejectedAt,
+    startDateBinding,
+    dueDateBinding,
   } = task;
 
   const validation = validator({
@@ -276,7 +279,7 @@ const TaskCard = ({
             </div>
 
             <div
-              className={DateInputWrapperStyle}
+              className={DateInputWrapperStyle(editable && !isInTemplate && !startDateBinding)}
               onClick={evt => {
                 if (editable) {
                   evt.stopPropagation();
@@ -287,6 +290,7 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
               </Label>
+
               {isInTemplate ? (
                 <Display color="GRAY_LIGHT">
                   <FormattedMessage
@@ -306,7 +310,7 @@ const TaskCard = ({
                           startDate: inputHandlers.value ? inputHandlers.value : null,
                         });
                       }}
-                      editable={editable}
+                      editable={editable && !startDateBinding}
                       inputWidth="120px"
                       inputHeight="20px"
                       name={fieldName}
@@ -316,10 +320,16 @@ const TaskCard = ({
                   )}
                 </FormField>
               )}
+
+              {startDateBinding && (
+                <div className={AutoDateSyncIconStyle}>
+                  <Icon icon="SYNC" />
+                </div>
+              )}
             </div>
 
             <div
-              className={DateInputWrapperStyle}
+              className={DateInputWrapperStyle(editable && !isInTemplate && !dueDateBinding)}
               onClick={evt => {
                 if (editable) {
                   evt.stopPropagation();
@@ -330,6 +340,7 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
+
               {isInTemplate ? (
                 <Display color="GRAY_LIGHT">
                   <FormattedMessage
@@ -349,7 +360,7 @@ const TaskCard = ({
                           dueDate: inputHandlers.value || null,
                         });
                       }}
-                      editable={editable}
+                      editable={editable && !dueDateBinding}
                       inputWidth="120px"
                       inputHeight="20px"
                       name={fieldName}
@@ -363,6 +374,12 @@ const TaskCard = ({
                     />
                   )}
                 </FormField>
+              )}
+
+              {dueDateBinding && (
+                <div className={AutoDateSyncIconStyle}>
+                  <Icon icon="SYNC" />
+                </div>
               )}
             </div>
 

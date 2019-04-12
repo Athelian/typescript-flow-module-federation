@@ -92,11 +92,21 @@ export const DragButtonWrapperStyle: string = css`
   }
 `;
 
-export const DateInputWrapperStyle: string = css`
+export const DateInputWrapperStyle = (editable: boolean): string => css`
   display: grid;
-  grid-template-columns: 65px 120px;
+  grid-template-columns: ${editable ? '65px 120px' : '65px 100px 20px'};
   width: 100%;
   padding: 0 5px;
+`;
+
+export const AutoDateSyncIconStyle: string = css`
+  width: 20px;
+  height: 20px;
+  color: ${colors.GRAY_VERY_LIGHT};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${fontSizes.SMALL};
 `;
 
 export const DividerStyle: string = css`

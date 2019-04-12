@@ -305,14 +305,36 @@ type TaskType = {
   id: ?string,
   name: ?string,
   startDate: ?string,
+  startDateInterval: ?{ months?: number, weeks?: number, days?: number },
+  startDateBinding: ?string,
   dueDate: ?string,
+  dueDateInterval: ?{ months?: number, weeks?: number, days?: number },
+  dueDateBinding: ?string,
   assignedTo: Array<UserAvatarType>,
   inProgressBy: ?UserAvatarType,
   inProgressAt: ?string,
   completedBy: ?UserAvatarType,
   completedAt: ?string,
+  approvers: Array<UserAvatarType>,
+  approvable: ?Boolean,
+  rejectedBy: ?UserAvatarType,
+  rejectedAt: ?string,
+  approvedBy: ?UserAvatarType,
+  approvedAt: ?string,
   memo: ?string,
   description: ?string,
+  tags: Array<{ id: string }>,
+  taskTemplate: ?{ id: string },
+};
+
+const parseDateFieldForTask = (key: string, originalTask: ?TaskType, newTask: TaskType): Object => {
+  if (newTask[`${key}Interval`] || newTask[`${key}Binding`]) {
+    return {};
+  }
+
+  return {
+    ...parseDateField(key, getByPathWithDefault(null, key, originalTask), newTask[key]),
+  };
 };
 
 // Used only in Task Form. For tasks inside other entities, use parseTodoField function.
@@ -321,11 +343,7 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
 
   return {
     ...parseGenericField('name', getByPathWithDefault(null, 'name', originalTask), newTask.name),
-    ...parseDateField(
-      'startDate',
-      getByPathWithDefault(null, 'startDate', originalTask),
-      newTask.startDate
-    ),
+    ...parseDateFieldForTask('startDate', originalTask, newTask),
     ...parseGenericField(
       'startDateInterval',
       getByPathWithDefault(null, 'startDateInterval', originalTask),
@@ -336,11 +354,7 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'startDateBinding', originalTask),
       newTask.startDateBinding
     ),
-    ...parseDateField(
-      'dueDate',
-      getByPathWithDefault(null, 'dueDate', originalTask),
-      newTask.dueDate
-    ),
+    ...parseDateFieldForTask('dueDate', originalTask, newTask),
     ...parseGenericField(
       'dueDateInterval',
       getByPathWithDefault(null, 'dueDateInterval', originalTask),

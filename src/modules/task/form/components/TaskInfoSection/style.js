@@ -50,11 +50,6 @@ export const ApprovalToggleWrapperStyle: string = css`
   align-items: center;
 `;
 
-export const AutoDateWrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  grid-gap: 10px;
-`;
-
 export const AutoDateBackgroundStyle = (position: 'top' | 'bottom'): string => css`
   position: absolute;
   width: 235px;
@@ -65,13 +60,32 @@ export const AutoDateBackgroundStyle = (position: 'top' | 'bottom'): string => c
   border-radius: 7.5px;
 `;
 
+export const RadioWrapperStyle = (position: 'top' | 'bottom'): string => css`
+  position: absolute;
+  right: -25px;
+  top: ${position === 'top' ? '5px' : '45px'};
+`;
+
+export const AutoDateWrapperStyle: string = css`
+  position: relative;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 10px;
+`;
+
 export const AutoDateOffsetWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 10px;
 `;
 
-export const RadioWrapperStyle = (position: 'top' | 'bottom'): string => css`
+export const AutoDateSyncIconStyle: string = css`
   position: absolute;
+  bottom: 5px;
   right: -25px;
-  top: ${position === 'top' ? '5px' : '45px'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  ${fontSizes.SMALL};
+  color: ${colors.GRAY_LIGHT};
 `;

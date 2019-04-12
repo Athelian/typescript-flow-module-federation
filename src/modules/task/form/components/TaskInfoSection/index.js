@@ -55,10 +55,11 @@ import {
   TaskStatusWrapperStyle,
   AssignedToStyle,
   ApprovalToggleWrapperStyle,
-  AutoDateWrapperStyle,
   AutoDateBackgroundStyle,
-  AutoDateOffsetWrapperStyle,
   RadioWrapperStyle,
+  AutoDateWrapperStyle,
+  AutoDateOffsetWrapperStyle,
+  AutoDateSyncIconStyle,
 } from './style';
 
 type OptionalProps = {
@@ -414,6 +415,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                 set,
                               }) => (
                                 <div className={AutoDateWrapperStyle}>
+                                  <div className={AutoDateSyncIconStyle}>
+                                    <Icon icon="SYNC" />
+                                  </div>
+
                                   <div className={AutoDateOffsetWrapperStyle}>
                                     <FormField
                                       name="autoStateDateDuration"
@@ -633,6 +638,10 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                 set,
                               }) => (
                                 <div className={AutoDateWrapperStyle}>
+                                  <div className={AutoDateSyncIconStyle}>
+                                    <Icon icon="SYNC" />
+                                  </div>
+
                                   <div className={AutoDateOffsetWrapperStyle}>
                                     <FormField
                                       name="autoDueDateDuration"
@@ -793,9 +802,9 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                     />
                   </GridColumn>
 
-                  <GridColumn>
-                    {!hideParentInfo &&
-                      getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
+                  {!hideParentInfo &&
+                    getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
+                      <GridColumn>
                         <FieldItem
                           label={
                             <Label>
@@ -805,10 +814,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           vertical
                           input={<OrderCard order={task.entity} />}
                         />
-                      )}
+                      </GridColumn>
+                    )}
 
-                    {!hideParentInfo &&
-                      getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
+                  {!hideParentInfo &&
+                    getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
+                      <GridColumn>
                         <FieldItem
                           label={
                             <Label>
@@ -818,8 +829,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           vertical
                           input={<BatchCard batch={task.entity} />}
                         />
-                      )}
-                  </GridColumn>
+                      </GridColumn>
+                    )}
                 </div>
 
                 <div className={MemoWrapperStyle}>
