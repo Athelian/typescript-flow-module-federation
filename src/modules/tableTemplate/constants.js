@@ -374,9 +374,24 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.Products.name',
     name: 'productProvider',
-    type: 'productProvider',
-    getExportValue: ({ productProvider }: { productProvider: Object } = {}) =>
-      getByPathWithDefault('', 'product.name', productProvider),
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.name`, products);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.name`, products);
+    },
   },
   {
     messageId: 'modules.Products.serial',
@@ -384,6 +399,20 @@ export const orderItemColumnFields = [
     type: 'text',
     meta: {
       disabled: true,
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.serial`, products);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.serial`, products);
     },
   },
   {
