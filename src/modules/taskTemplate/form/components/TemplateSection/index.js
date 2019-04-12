@@ -19,7 +19,7 @@ import {
   RadioInput,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import { hasAutoDate } from '../../helpers';
+import { hasAutoDate } from 'modules/taskTemplate/form/helpers';
 import {
   TableTemplateSectionWrapperStyle,
   EntityTypeStyle,
