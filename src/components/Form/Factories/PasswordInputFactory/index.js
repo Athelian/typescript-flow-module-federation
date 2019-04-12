@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FieldItem, Label, DefaultStyle, PasswordInput } from 'components/Form';
+import { FieldItem, Label, DefaultStyle, PasswordInput, Blackout } from 'components/Form';
 import FormTooltip from 'components/Form/FormTooltip';
 import type {
   LabelProps,
@@ -44,6 +44,7 @@ const PasswordInputFactory = ({
   required,
   disabled,
   editable,
+  blackout,
   labelAlign,
   labelWidth,
   labelHeight,
@@ -92,20 +93,31 @@ const PasswordInputFactory = ({
     readOnly: !editable,
   };
 
+  const blackoutConfig = {
+    width: inputWidth,
+    height: inputHeight,
+  };
+
   return (
     <FieldItem
       vertical={vertical}
       label={<Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
       input={
-        <DefaultStyle {...inputWrapperConfig}>
-          <PasswordInput
-            data-testid="password"
-            {...inputConfig}
-            readOnlyWidth={inputWidth}
-            readOnlyHeight={inputHeight}
-          />
-        </DefaultStyle>
+        // eslint-disable-next-line no-nested-ternary
+        blackout ? (
+          <Blackout {...blackoutConfig} />
+        ) : editable ? (
+          <DefaultStyle {...inputWrapperConfig}>
+            <PasswordInput
+              {...inputConfig}
+              readOnlyWidth={inputWidth}
+              readOnlyHeight={inputHeight}
+            />
+          </DefaultStyle>
+        ) : (
+          <PasswordInput {...inputConfig} />
+        )
       }
     />
   );
