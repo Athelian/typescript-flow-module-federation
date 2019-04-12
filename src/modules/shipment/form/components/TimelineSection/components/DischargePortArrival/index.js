@@ -131,70 +131,73 @@ const DischargePortArrival = (props: Props) => {
               />
             )}
           </div>
-          {timelineDateRevisions.reverse().map(
-            (adjustment, index) =>
-              adjustment && (
-                <DischargePortArrivalAdjustmentWrapper
-                  isNew={isNew}
-                  editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
-                  index={timelineDateRevisions.length - 1 - index}
-                  adjustment={adjustment}
-                  key={adjustment.id}
-                  setFieldArrayValue={setFieldDeepValue}
-                  shipmentContainers={shipmentContainers}
-                  setShipmentContainers={setShipmentContainers}
-                  removeArrayItem={removeArrayItem}
-                  values={timelineDate}
-                  enumType="TimelineDateRevisionType"
-                  targetName={`${sourceName}.timelineDateRevisions`}
-                  typeName="type"
-                  memoName="memo"
-                  valueInput={
-                    <FormField
-                      name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
-                        1 -
-                        index}.date`}
-                      initValue={adjustment.date}
-                      setFieldValue={setFieldDeepValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          isNew={isNew}
-                          originalValue={adjustment.date}
-                          editable={hasPermission([
-                            SHIPMENT_UPDATE,
-                            SHIPMENT_SET_REVISE_TIMELINE_DATE,
-                          ])}
-                          required
-                          hideTooltip
-                          {...{
-                            ...inputHandlers,
-                            onBlur: evt => {
-                              inputHandlers.onBlur(evt);
-                              setFieldDeepValue(name, inputHandlers.value);
-                              if (index === 0) {
-                                setShipmentContainers(
-                                  'containers',
-                                  shipmentContainers.map(container =>
-                                    container.autoCalculatedFreeTimeStartDate
-                                      ? {
-                                          ...container,
-                                          freeTimeStartDate: inputHandlers.value,
-                                        }
-                                      : container
-                                  )
-                                );
-                              }
-                            },
-                          }}
-                        />
-                      )}
-                    </FormField>
-                  }
-                />
-              )
-          )}
+          {timelineDateRevisions
+            .slice()
+            .reverse()
+            .map(
+              (adjustment, index) =>
+                adjustment && (
+                  <DischargePortArrivalAdjustmentWrapper
+                    isNew={isNew}
+                    editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
+                    index={timelineDateRevisions.length - 1 - index}
+                    adjustment={adjustment}
+                    key={adjustment.id}
+                    setFieldArrayValue={setFieldDeepValue}
+                    shipmentContainers={shipmentContainers}
+                    setShipmentContainers={setShipmentContainers}
+                    removeArrayItem={removeArrayItem}
+                    values={timelineDate}
+                    enumType="TimelineDateRevisionType"
+                    targetName={`${sourceName}.timelineDateRevisions`}
+                    typeName="type"
+                    memoName="memo"
+                    valueInput={
+                      <FormField
+                        name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
+                          1 -
+                          index}.date`}
+                        initValue={adjustment.date}
+                        setFieldValue={setFieldDeepValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            name={name}
+                            isNew={isNew}
+                            originalValue={adjustment.date}
+                            editable={hasPermission([
+                              SHIPMENT_UPDATE,
+                              SHIPMENT_SET_REVISE_TIMELINE_DATE,
+                            ])}
+                            required
+                            hideTooltip
+                            {...{
+                              ...inputHandlers,
+                              onBlur: evt => {
+                                inputHandlers.onBlur(evt);
+                                setFieldDeepValue(name, inputHandlers.value);
+                                if (index === 0) {
+                                  setShipmentContainers(
+                                    'containers',
+                                    shipmentContainers.map(container =>
+                                      container.autoCalculatedFreeTimeStartDate
+                                        ? {
+                                            ...container,
+                                            freeTimeStartDate: inputHandlers.value,
+                                          }
+                                        : container
+                                    )
+                                  );
+                                }
+                              },
+                            }}
+                          />
+                        )}
+                      </FormField>
+                    }
+                  />
+                )
+            )}
           <FormField
             name={`${sourceName}.date`}
             initValue={timelineDate && timelineDate.date}

@@ -116,49 +116,52 @@ const TimelineInfoSection = (props: Props) => {
               />
             )}
           </div>
-          {timelineDateRevisions.reverse().map(
-            (adjustment, index) =>
-              adjustment && (
-                <DefaultAdjustmentStyle
-                  isNew={isNew}
-                  editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
-                  index={timelineDateRevisions.length - 1 - index}
-                  adjustment={adjustment}
-                  key={adjustment.id}
-                  setFieldArrayValue={setFieldDeepValue}
-                  removeArrayItem={removeArrayItem}
-                  values={timelineDate}
-                  enumType="TimelineDateRevisionType"
-                  targetName={`${sourceName}.timelineDateRevisions`}
-                  typeName="type"
-                  memoName="memo"
-                  valueInput={
-                    <FormField
-                      name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
-                        1 -
-                        index}.date`}
-                      initValue={adjustment.date}
-                      setFieldValue={setFieldDeepValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          {...inputHandlers}
-                          name={name}
-                          isNew={isNew}
-                          originalValue={adjustment.date}
-                          editable={hasPermission([
-                            SHIPMENT_UPDATE,
-                            SHIPMENT_SET_REVISE_TIMELINE_DATE,
-                          ])}
-                          required
-                          hideTooltip
-                        />
-                      )}
-                    </FormField>
-                  }
-                />
-              )
-          )}
+          {timelineDateRevisions
+            .slice()
+            .reverse()
+            .map(
+              (adjustment, index) =>
+                adjustment && (
+                  <DefaultAdjustmentStyle
+                    isNew={isNew}
+                    editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
+                    index={timelineDateRevisions.length - 1 - index}
+                    adjustment={adjustment}
+                    key={adjustment.id}
+                    setFieldArrayValue={setFieldDeepValue}
+                    removeArrayItem={removeArrayItem}
+                    values={timelineDate}
+                    enumType="TimelineDateRevisionType"
+                    targetName={`${sourceName}.timelineDateRevisions`}
+                    typeName="type"
+                    memoName="memo"
+                    valueInput={
+                      <FormField
+                        name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
+                          1 -
+                          index}.date`}
+                        initValue={adjustment.date}
+                        setFieldValue={setFieldDeepValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            {...inputHandlers}
+                            name={name}
+                            isNew={isNew}
+                            originalValue={adjustment.date}
+                            editable={hasPermission([
+                              SHIPMENT_UPDATE,
+                              SHIPMENT_SET_REVISE_TIMELINE_DATE,
+                            ])}
+                            required
+                            hideTooltip
+                          />
+                        )}
+                      </FormField>
+                    }
+                  />
+                )
+            )}
           <FormField
             name={`${sourceName}.date`}
             initValue={timelineDate && timelineDate.date}
