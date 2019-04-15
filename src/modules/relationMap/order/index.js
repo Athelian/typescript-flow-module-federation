@@ -17,10 +17,10 @@ import useFilter from 'hooks/useFilter';
 import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import AdvancedFilter from '../common/SortFilter/AdvancedFilter';
 import messages from '../messages';
 import SortFilter from '../common/SortFilter';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from '../constants';
 import {
   OrderFocusGridWrapperStyle,
   OrderFocusEntityHeaderWrapperStyle,

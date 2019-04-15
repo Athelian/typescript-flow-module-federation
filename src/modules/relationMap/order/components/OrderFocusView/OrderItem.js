@@ -9,7 +9,7 @@ import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
-import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import { ORDER_ITEM, BATCH } from 'constants/keywords';
 import type { OrderItemProps } from 'modules/relationMap/order/type.js.flow';
 import Badge from '../Badge';
 

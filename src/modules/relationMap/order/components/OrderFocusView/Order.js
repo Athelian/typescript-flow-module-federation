@@ -10,7 +10,7 @@ import type { OrderProps } from 'modules/relationMap/order/type.js.flow';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import ActionCard, { Action, DisabledAction } from 'modules/relationMap/common/ActionCard';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
-import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH } from 'constants/keywords';
 import SelectedOrder from './SelectedOrder';
 import Badge from '../Badge';
 
