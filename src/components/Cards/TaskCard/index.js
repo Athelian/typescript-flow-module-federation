@@ -155,6 +155,8 @@ const TaskCard = ({
   const values = {
     [`task.${id}.name`]: name,
     [`task.${id}.completedBy`]: completedBy,
+    startDateBinding,
+    dueDateBinding,
   };
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
@@ -300,7 +302,7 @@ const TaskCard = ({
                   />
                 </Display>
               ) : (
-                <FormField name={`task.${id}.startDate`} initValue={startDate}>
+                <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
                   {({ name: fieldName, ...inputHandlers }) => (
                     <DateInputFactory
                       {...inputHandlers}

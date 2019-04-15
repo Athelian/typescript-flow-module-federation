@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import emitter from 'utils/emitter';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
@@ -185,6 +186,9 @@ class VoyageSelector extends React.PureComponent<Props> {
             : container
         )
       );
+      setTimeout(() => {
+        emitter.emit('AUTO_DATE');
+      }, 200);
     }
     if (toggle) toggle();
   };
