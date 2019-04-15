@@ -914,6 +914,7 @@
   "modules.SideBar.container": "CONTAINERS",
   "modules.SideBar.settings": "SETTINGS",
   "modules.SideBar.taskTemplate": "TASK TEMPLATES",
+  "modules.SideBar.task": "TASKS",
   "modules.SideBar.tags": "TAGS",
   "modules.SideBar.metadata": "CUSTOM FIELDS",
   "modules.SideBar.template": "RELATION TABLE",
