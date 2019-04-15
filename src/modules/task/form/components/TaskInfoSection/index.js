@@ -448,6 +448,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       name="autoDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={set}
+                                      saveOnChange
                                     >
                                       {({ ...inputHandlers }) => (
                                         <SelectInputFactory
@@ -485,6 +486,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                         });
                                       }
                                     }}
+                                    saveOnChange
                                   >
                                     {({ ...inputHandlers }) => (
                                       <SelectInputFactory
@@ -671,6 +673,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       name="autoDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={set}
+                                      saveOnChange
                                     >
                                       {({ ...inputHandlers }) => (
                                         <SelectInputFactory
@@ -708,6 +711,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                         });
                                       }
                                     }}
+                                    saveOnChange
                                   >
                                     {({ ...inputHandlers }) => (
                                       <SelectInputFactory

@@ -69,6 +69,7 @@ storiesOf('Form/Inputs/Auto Date Input', module).add('Auto Date Input Factory', 
                           name="autoDateOffset"
                           initValue={values.autoDateOffset}
                           setFieldValue={set}
+                          saveOnChange
                         >
                           {({ name, ...inputHandlers }) => (
                             <SelectInputFactory
