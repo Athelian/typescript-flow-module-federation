@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
+import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { FormField } from 'modules/form';
@@ -309,6 +310,9 @@ const TaskCard = ({
                           ...task,
                           startDate: inputHandlers.value ? inputHandlers.value : null,
                         });
+                        setTimeout(() => {
+                          emitter.emit('AUTO_DATE');
+                        }, 200);
                       }}
                       editable={editable && !startDateBinding}
                       inputWidth="120px"
@@ -359,6 +363,9 @@ const TaskCard = ({
                           ...task,
                           dueDate: inputHandlers.value || null,
                         });
+                        setTimeout(() => {
+                          emitter.emit('AUTO_DATE');
+                        }, 200);
                       }}
                       editable={editable && !dueDateBinding}
                       inputWidth="120px"
