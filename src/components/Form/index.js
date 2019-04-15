@@ -64,6 +64,7 @@ import {
   TextAreaInputFactory,
   TextInputFactory,
   UserAssignmentInputFactory,
+  PasswordInputFactory,
 } from './Factories';
 
 export {
@@ -130,4 +131,5 @@ export {
   TextAreaInputFactory,
   TextInputFactory,
   UserAssignmentInputFactory,
+  PasswordInputFactory,
 };

@@ -37,6 +37,9 @@ import {
   faFileSpreadsheet as TEMPLATE,
   faClipboardCheck as TASK,
   faTable as EDIT_TABLE,
+  faShieldAlt as SECURITY,
+  faKey as PASSWORD,
+  faRedo as FORGOT,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -181,6 +184,9 @@ export default {
   STAR,
   STOPWATCH,
   EDIT_TABLE,
+  SECURITY,
+  PASSWORD,
+  FORGOT,
 
   RELATION_MAP,
   CONNECT,

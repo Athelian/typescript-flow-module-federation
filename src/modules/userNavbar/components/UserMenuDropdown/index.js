@@ -29,6 +29,12 @@ class UserMenuDropdown extends React.Component<Props> {
     toggleUserMenu();
   };
 
+  handleProfile = () => {
+    const { toggleUserMenu } = this.props;
+    navigate('/profile');
+    toggleUserMenu();
+  };
+
   render() {
     const { isOpen } = this.props;
 
@@ -37,6 +43,19 @@ class UserMenuDropdown extends React.Component<Props> {
         <BooleanValue>
           {({ value: isLogoutDialogOpen, set: logoutDialogToggle }) => (
             <>
+              <button
+                className={UserMenuItemWrapperStyle}
+                onClick={() => this.handleProfile()}
+                type="button"
+              >
+                <div className={UserMenuItemStyle}>
+                  <FormattedMessage {...messages.profile} />
+                </div>
+                <div className={UserMenuItemIconStyle}>
+                  <Icon icon="PROFILE" />
+                </div>
+              </button>
+
               <button
                 className={UserMenuItemWrapperStyle}
                 onClick={() => this.handleLogout(logoutDialogToggle)}

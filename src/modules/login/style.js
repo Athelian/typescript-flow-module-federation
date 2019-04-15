@@ -1,27 +1,19 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, shadows, borderRadiuses, transitions, colors, fontSizes } from 'styles/common';
+import {
+  layout,
+  shadows,
+  borderRadiuses,
+  colors,
+  fontSizes,
+  fontSizesWithHeights,
+} from 'styles/common';
 
 export const LoginContainerStyle: string = css`
-  @keyframes gradient {
-    0% {
-      background-position: 50% 0%;
-    }
-    50% {
-      background-position: 50% 100%;
-    }
-    100% {
-      background-position: 50% 0%;
-    }
-  }
   ${layout.FIT};
   ${layout.VERTICAL};
   ${layout.CENTER};
   justify-content: space-between;
-  background: linear-gradient(0deg, ${colors.BLUE}, ${colors.TEAL});
-  background-size: 400% 400%;
-  animation: gradient 60s ease infinite;
-  ${transitions.EXPAND};
   overflow: hidden;
 `;
 
@@ -56,6 +48,17 @@ export const LoginBoxStyle: string = css`
   grid-auto-rows: min-content;
   grid-gap: 40px;
   justify-items: center;
+`;
+
+export const LoginButtonsStyle: string = css`
+  ${layout.VERTICAL};
+  align-items: center;
+`;
+
+export const ForgotPasswordStyle: string = css`
+  ${fontSizesWithHeights.MAIN};
+  color: ${colors.TEAL};
+  margin-top: 20px;
 `;
 
 export const LoginFormWrapperStyle: string = css`

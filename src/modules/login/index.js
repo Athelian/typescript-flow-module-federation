@@ -5,6 +5,7 @@ import { Provider } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import GradientContainer from 'components/GradientContainer';
 import { LanguageConsumer } from 'modules/language';
 import { AuthenticationConsumer } from 'modules/authentication';
 import loginIcon from 'media/icon_white.png';
@@ -35,7 +36,7 @@ const Login = ({ redirectUrl = '/' }: Props) => (
           {({ location }) => <Redirect from={location.pathname} to={redirectUrl} noThrow />}
         </Location>
       ) : (
-        <div className={LoginContainerStyle}>
+        <GradientContainer className={LoginContainerStyle}>
           <Mutation
             mutation={loginMutation}
             onCompleted={({ login }) => {
@@ -77,7 +78,7 @@ const Login = ({ redirectUrl = '/' }: Props) => (
               </LanguageConsumer>
             </span>
           </footer>
-        </div>
+        </GradientContainer>
       )
     }
   </AuthenticationConsumer>
