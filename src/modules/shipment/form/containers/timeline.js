@@ -90,6 +90,11 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     this.setState(prevState => {
       const cloneState = cloneDeep(prevState);
       unset(cloneState, path);
+      if (path.toLowerCase().includes('date')) {
+        setTimeout(() => {
+          emitter.emit('AUTO_DATE');
+        }, 200);
+      }
       return removeNulls(cloneState);
     });
   };
