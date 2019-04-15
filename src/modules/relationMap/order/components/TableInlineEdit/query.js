@@ -191,6 +191,12 @@ export const shipmentEntityFragment = gql`
     }
   }
 `;
+export const containerEntityFragment = gql`
+  fragment containerEntityFragment on Container {
+    id
+    no
+  }
+`;
 
 export const editTableViewQuery = gql`
   query ordersAndShipments($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
@@ -203,6 +209,9 @@ export const editTableViewQuery = gql`
             batches {
               ... on Batch {
                 ...batchEntityFragment
+                container {
+                  ...containerEntityFragment
+                }
                 orderItem {
                   ... on OrderItem {
                     id
@@ -235,6 +244,9 @@ export const editTableViewQuery = gql`
     shipmentsByIDs(ids: $shipmentIds) {
       ... on Shipment {
         ...shipmentEntityFragment
+        containers {
+          ...containerEntityFragment
+        }
         batches {
           ... on Batch {
             ...batchEntityFragment
@@ -255,6 +267,7 @@ export const editTableViewQuery = gql`
   ${orderItemEntityFragment}
   ${batchEntityFragment}
   ${shipmentEntityFragment}
+  ${containerEntityFragment}
   ${productEntityFragment}
   ${timelineDateFullFragment}
   ${tagFragment}

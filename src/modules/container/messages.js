@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  containerNo: {
+    id: 'modules.container.containerNo',
+    defaultMessage: 'CONTAINER NO',
+  },
   warehouseName: {
     id: 'modules.container.warehouseName',
     defaultMessage: 'Warehouse Name',

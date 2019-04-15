@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, isEqual, cloneDeep } from 'lodash';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT, CONTAINER } from 'constants/keywords';
 import { usePrevious } from 'modules/form/hooks';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -34,11 +34,13 @@ import {
   orderColumnFields,
   orderItemColumnFields,
   batchColumnFields,
+  containerColumnFields,
   shipmentColumnFields,
   productColumnFields,
   orderColumns,
   orderItemColumns,
   batchColumns,
+  containerColumns,
   shipmentColumns,
   productColumns,
   allColumnIds,
@@ -83,6 +85,7 @@ type Props = {
     batchIds: Array<string>,
     shipmentIds: Array<string>,
     productIds: Array<string>,
+    containerIds: Array<string>,
   },
   orders: Array<Object>,
   shipments: Array<Object>,
@@ -230,6 +233,7 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
     batches: {},
     shipments: {},
     products: {},
+    containers: {},
   });
   const [isChangeData, setIsChangeData] = useState(false);
 
@@ -341,6 +345,12 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
     fields: batchColumnFields,
     entity: BATCH,
   });
+  const containerColumnFieldsFilter = findColumns({
+    showAll,
+    templateColumns,
+    fields: containerColumnFields,
+    entity: CONTAINER,
+  });
   const shipmentColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
@@ -437,7 +447,8 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
         const columnOrderItemCustomNo = columnOrderItemNo + orderItemColumnFieldsFilter.length;
         const columnBatchNo = columnOrderItemCustomNo + orderItemCustomFieldsFilter.length;
         const columnBatchCustomNo = columnBatchNo + batchColumnFieldsFilter.length;
-        const columnShipmentNo = columnBatchCustomNo + batchCustomFieldsFilter.length;
+        const columnContainerNo = columnBatchCustomNo + containerColumnFieldsFilter.length;
+        const columnShipmentNo = columnContainerNo + batchCustomFieldsFilter.length;
         const columnShipmentCustomNo = columnShipmentNo + shipmentColumnFieldsFilter.length;
         const columnProductNo = columnShipmentCustomNo + shipmentCustomFieldsFilter.length;
         const columnProductCustomNo = columnProductNo + productColumnFieldsFilter.length;
@@ -996,6 +1007,51 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                               ))
                             )}
                           </div>
+
+                          {/* Container */}
+                          <div>
+                            <>
+                              {orderItems.map(orderItem =>
+                                orderItem.data.batches
+                                  .filter(batch => batchIds.includes(batch.id))
+                                  .map(batch => {
+                                    const containerId = batch.container;
+
+                                    if (!containerId) {
+                                      return (
+                                        <TableEmptyItem
+                                          key={batch.id}
+                                          rowNo={getRowCounter(rowCounter, 'container')}
+                                          fields={containerColumnFieldsFilter}
+                                          columnNo={columnContainerNo}
+                                        />
+                                      );
+                                    }
+                                    return (
+                                      <TableItem
+                                        key={batch.id}
+                                        rowNo={getRowCounter(rowCounter, 'container')}
+                                        fields={containerColumnFieldsFilter}
+                                        columnNo={columnContainerNo}
+                                        cell={`containers.${containerId}`}
+                                        values={editData.containers[containerId]}
+                                        editData={editData}
+                                        validator={shipmentValidator}
+                                      />
+                                    );
+                                  })
+                              )}
+                              {range(totalLines - batches.length).map(index => (
+                                <TableEmptyItem
+                                  key={index}
+                                  rowNo={getRowCounter(rowCounter, 'container')}
+                                  fields={containerColumnFieldsFilter}
+                                  columnNo={columnContainerNo}
+                                />
+                              ))}
+                            </>
+                          </div>
+
                           {/* SHIPMENT */}
                           <div>
                             <>
@@ -1233,6 +1289,13 @@ const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
                       onToggle={onToggle}
                       showAll={showAll}
                       templateColumns={templateColumns}
+                    />
+                    <TableHeader
+                      entity="CONTAINER"
+                      showAll={showAll}
+                      info={containerColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
                     />
                     <TableHeader
                       entity="SHIPMENT"
