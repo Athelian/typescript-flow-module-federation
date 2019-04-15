@@ -1,11 +1,14 @@
 // @flow
 import * as React from 'react';
+import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import emitter from 'utils/emitter';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import { injectUid } from 'utils/id';
+import { getByPathWithDefault } from 'utils/fp';
 import { getLatestDate } from 'utils/shipment';
 import { getTransportIcon } from '../Timeline/helpers';
 import {
@@ -59,35 +62,52 @@ type RenderIconOptions = {
   editable: boolean,
 };
 
-const voyagesGenerator = (voyages: Array<Object>, total: number) => {
-  if (total === voyages.length) return voyages;
-  if (voyages.length > total) {
-    return [...voyages.slice(0, total), ...voyages.slice(total + voyages.length - total + 1)];
+const generateVoyages = (currentVoyages: Array<Object>, newNumOfVoyages: number) => {
+  const currentNumOfVoyages = currentVoyages.length;
+
+  if (newNumOfVoyages === currentNumOfVoyages) {
+    return currentVoyages;
   }
-  const {
-    arrivalPort = {
-      seaport: '',
-      airport: '',
-    },
-  } = voyages[voyages.length - 1] || {};
-  const newVoyages = [];
-  for (let counter = 0; counter < total - voyages.length; counter += 1) {
-    newVoyages.push(
-      injectUid({
-        arrivalPort: {
-          seaport: '',
-          airport: '',
-        },
-        departurePort: counter
-          ? {
-              seaport: '',
-              airport: '',
-            }
-          : arrivalPort,
-      })
-    );
+
+  const dischargePort = getByPathWithDefault(
+    {},
+    'arrivalPort',
+    currentVoyages[currentNumOfVoyages - 1]
+  );
+  const dischargePortArrival = getByPathWithDefault(
+    {},
+    'arrival',
+    currentVoyages[currentNumOfVoyages - 1]
+  );
+
+  if (newNumOfVoyages < currentVoyages.length) {
+    const newVoyages = cloneDeep(currentVoyages).slice(0, newNumOfVoyages);
+
+    newVoyages[newVoyages.length - 1].arrivalPort = dischargePort;
+    newVoyages[newVoyages.length - 1].arrival = dischargePortArrival;
+
+    return newVoyages;
   }
-  return [...voyages, ...newVoyages];
+
+  const newVoyages = cloneDeep(currentVoyages);
+
+  for (let counter = currentNumOfVoyages; counter < newNumOfVoyages; counter += 1) {
+    if (counter === newNumOfVoyages - 1) {
+      newVoyages[currentNumOfVoyages - 1].arrivalPort = {};
+      newVoyages[currentNumOfVoyages - 1].arrival = {};
+
+      newVoyages.push(
+        injectUid({
+          arrivalPort: dischargePort,
+          arrival: dischargePortArrival,
+        })
+      );
+    } else {
+      newVoyages.push(injectUid({}));
+    }
+  }
+
+  return newVoyages;
 };
 
 class VoyageSelector extends React.PureComponent<Props> {
@@ -153,7 +173,7 @@ class VoyageSelector extends React.PureComponent<Props> {
 
     const { voyages } = shipment;
     if (isOptionsOpen) {
-      const newVoyages = voyagesGenerator(voyages, numOfIcons);
+      const newVoyages = generateVoyages(voyages, numOfIcons);
       setFieldDeepValue('voyages', newVoyages);
       setShipmentContainers(
         'containers',
@@ -166,6 +186,9 @@ class VoyageSelector extends React.PureComponent<Props> {
             : container
         )
       );
+      setTimeout(() => {
+        emitter.emit('AUTO_DATE');
+      }, 200);
     }
     if (toggle) toggle();
   };

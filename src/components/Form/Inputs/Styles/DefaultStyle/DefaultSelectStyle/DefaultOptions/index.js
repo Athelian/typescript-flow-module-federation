@@ -8,6 +8,7 @@ type OptionalProps = {
   type: 'standard' | 'label',
   width: string,
   height: string,
+  dropDirection: 'down' | 'up',
 };
 
 type Props = OptionalProps &
@@ -22,6 +23,7 @@ const defaultProps = {
   type: 'standard',
   width: '100%',
   height: '200px',
+  dropDirection: 'down',
 };
 
 const removePx = (size: string) => {
@@ -40,9 +42,10 @@ function DefaultOptions({
   align,
   width,
   height,
+  dropDirection,
 }: Props) {
   return (
-    <div className={OptionWrapperStyle(width, height)}>
+    <div className={OptionWrapperStyle({ width, height, dropDirection })}>
       {items.length > 0 ? (
         <VirtualList
           height={removePx(height)}

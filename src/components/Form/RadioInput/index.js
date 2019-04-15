@@ -5,6 +5,7 @@ import { RadioButtonWrapperStyle, RadioButtonStyle } from './style';
 type OptionalProps = {
   onToggle: Function,
   editable: boolean,
+  align: 'left' | 'right',
 };
 
 type Props = OptionalProps & {
@@ -15,23 +16,31 @@ type Props = OptionalProps & {
 const defaultProps = {
   onToggle: () => {},
   editable: true,
+  align: 'left',
 };
 
-export default class RadioInput extends React.PureComponent<Props> {
-  static defaultProps = defaultProps;
+const RadioInput = ({ align, selected, onToggle, children, editable, ...rest }: Props) => {
+  return (
+    <div
+      className={RadioButtonWrapperStyle(selected, editable)}
+      onClick={editable ? onToggle : () => {}}
+      role="presentation"
+    >
+      {align === 'left' ? (
+        <>
+          <button className={RadioButtonStyle(editable)} type="button" {...rest} />
+          {children}
+        </>
+      ) : (
+        <>
+          {children}
+          <button className={RadioButtonStyle(editable)} type="button" {...rest} />
+        </>
+      )}
+    </div>
+  );
+};
 
-  render() {
-    const { selected, onToggle, children, editable, ...rest } = this.props;
+RadioInput.defaultProps = defaultProps;
 
-    return (
-      <div
-        className={RadioButtonWrapperStyle(selected, editable)}
-        onClick={editable ? onToggle : () => {}}
-        role="presentation"
-      >
-        <button className={RadioButtonStyle(editable)} type="button" {...rest} />
-        {children}
-      </div>
-    );
-  }
-}
+export default RadioInput;

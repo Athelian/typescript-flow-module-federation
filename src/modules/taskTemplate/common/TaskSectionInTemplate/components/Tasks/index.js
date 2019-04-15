@@ -92,6 +92,7 @@ const Tasks = ({
               {opened && (
                 <TaskFormInSlide
                   isInTemplate={isInTemplate}
+                  parentEntity={type}
                   editable={hasPermission(TASK_UPDATE)}
                   task={{ ...omit(task, ['entity']), sort: index }}
                   onSave={value => {

@@ -9,7 +9,7 @@ type Props = {
 };
 
 const FormattedDate = ({ value, mode = 'date' }: Props) => {
-  if (!value) return '';
+  if (!value) return 'N/A';
   switch (mode) {
     case 'date':
       return <FormattedDateIntl value={isDataType(Date, value) ? value : new Date(value)} />;

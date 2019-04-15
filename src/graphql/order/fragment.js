@@ -30,6 +30,7 @@ export const orderFormFragment = gql`
       ...customFieldsFragment
     }
     todo {
+      ...todoFragment
       tasks {
         ...taskFormInSlideViewFragment
       }
@@ -45,9 +46,6 @@ export const orderFormFragment = gql`
     }
     tags {
       ...tagFragment
-    }
-    todo {
-      ...todoFragment
     }
     files {
       ...documentFragment

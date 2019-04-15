@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import apolloClient from 'apollo';
 import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
@@ -28,6 +29,12 @@ class UserMenuDropdown extends React.Component<Props> {
     toggleUserMenu();
   };
 
+  handleProfile = () => {
+    const { toggleUserMenu } = this.props;
+    navigate('/profile');
+    toggleUserMenu();
+  };
+
   render() {
     const { isOpen } = this.props;
 
@@ -36,6 +43,19 @@ class UserMenuDropdown extends React.Component<Props> {
         <BooleanValue>
           {({ value: isLogoutDialogOpen, set: logoutDialogToggle }) => (
             <>
+              <button
+                className={UserMenuItemWrapperStyle}
+                onClick={() => this.handleProfile()}
+                type="button"
+              >
+                <div className={UserMenuItemStyle}>
+                  <FormattedMessage {...messages.profile} />
+                </div>
+                <div className={UserMenuItemIconStyle}>
+                  <Icon icon="PROFILE" />
+                </div>
+              </button>
+
               <button
                 className={UserMenuItemWrapperStyle}
                 onClick={() => this.handleLogout(logoutDialogToggle)}
@@ -56,6 +76,12 @@ class UserMenuDropdown extends React.Component<Props> {
                     mutation={logOutMutation}
                     onCompleted={() => {
                       setAuthenticated(false);
+                      // clear all cache after logout
+                      if (window.localStorage) {
+                        window.localStorage.clear();
+                      }
+                      // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
+                      apolloClient.resetStore();
                     }}
                   >
                     {logout => (

@@ -77,6 +77,18 @@ export const taskFormInTemplateFragment = gql`
     }
     sort
     name
+    startDateInterval {
+      months
+      weeks
+      days
+    }
+    startDateBinding
+    dueDateInterval {
+      months
+      weeks
+      days
+    }
+    dueDateBinding
     description
     tags {
       ...tagFragment
@@ -105,8 +117,20 @@ export const taskFormInSlideViewFragment = gql`
       ...userAvatarFragment
     }
     name
-    dueDate
     startDate
+    startDateInterval {
+      months
+      weeks
+      days
+    }
+    startDateBinding
+    dueDate
+    dueDateInterval {
+      months
+      weeks
+      days
+    }
+    dueDateBinding
     description
     inProgressAt
     inProgressBy {
@@ -152,8 +176,20 @@ export const taskFormFragment = gql`
     }
     name
     approvable
-    dueDate
     startDate
+    startDateInterval {
+      months
+      weeks
+      days
+    }
+    startDateBinding
+    dueDate
+    dueDateInterval {
+      months
+      weeks
+      days
+    }
+    dueDateBinding
     description
     inProgressAt
     inProgressBy {

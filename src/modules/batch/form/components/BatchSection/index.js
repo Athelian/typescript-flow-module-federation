@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
@@ -181,6 +182,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         <DateInputFactory
                           name={name}
                           {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                          }}
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.deliveredAt} />}
@@ -200,6 +205,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         <DateInputFactory
                           name={name}
                           {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                          }}
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.desiredAt} />}
@@ -219,6 +228,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         <DateInputFactory
                           name={name}
                           {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                          }}
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.expiredAt} />}
@@ -238,6 +251,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         <DateInputFactory
                           name={name}
                           {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                          }}
                           isNew={isNew}
                           originalValue={initialValues[name]}
                           label={<FormattedMessage {...messages.producedAt} />}

@@ -1,10 +1,13 @@
 // @flow
 import * as React from 'react';
+import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
+import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   metrics as weightMetrics,
@@ -64,6 +67,21 @@ export const orderItemColumns = [
       />,
       <FormattedMessage id="global.quantity" defaultMessage="QUANTITY" />,
       <FormattedMessage {...orderMessages.totalPrice} />,
+    ],
+  },
+];
+
+export const productColumns = [
+  {
+    id: 0,
+    group: <FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />,
+    columns: [
+      <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
+      <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
+      <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />,
+      <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />,
+      <FormattedMessage id="modules.Products.material" defaultMessage="MATERIAL" />,
+      <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />,
     ],
   },
 ];
@@ -356,9 +374,24 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.Products.name',
     name: 'productProvider',
-    type: 'productProvider',
-    getExportValue: ({ productProvider }: { productProvider: Object } = {}) =>
-      getByPathWithDefault('', 'product.name', productProvider),
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.name`, products);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.name`, products);
+    },
   },
   {
     messageId: 'modules.Products.serial',
@@ -366,6 +399,20 @@ export const orderItemColumnFields = [
     type: 'text',
     meta: {
       disabled: true,
+    },
+    getFieldValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.serial`, products);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const {
+        productProvider: { product: productId },
+      } = values;
+      const { products } = editData;
+      return getByPathWithDefault('', `${productId}.serial`, products);
     },
   },
   {
@@ -416,8 +463,9 @@ export const orderItemColumnFields = [
       const { id: orderItemId } = values;
       const { price, quantity } = editData.orderItems[orderItemId];
       const [, order] =
-        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
-          currentOrder.orderItems.includes(orderItemId)
+        (Object.entries(editData.orders || {}): Array<any>).find(
+          ([, currentOrder]) =>
+            currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
         ) || [];
       return `${price.amount * quantity}${order.currency}`;
     },
@@ -425,8 +473,9 @@ export const orderItemColumnFields = [
       const { id: orderItemId } = values;
       const { price, quantity } = editData.orderItems[orderItemId];
       const [, order] =
-        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
-          currentOrder.orderItems.includes(orderItemId)
+        (Object.entries(editData.orders || {}): Array<any>).find(
+          ([, currentOrder]) =>
+            currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
         ) || [];
       return `${price.amount * quantity}${order.currency}`;
     },
@@ -435,12 +484,87 @@ export const orderItemColumnFields = [
         const { id: orderItemId } = values;
         const { price, quantity } = editData.orderItems[orderItemId];
         const [, order] =
-          (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
-            currentOrder.orderItems.includes(orderItemId)
+          (Object.entries(editData.orders || {}): Array<any>).find(
+            ([, currentOrder]) =>
+              currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
           ) || [];
         return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
       },
     },
+  },
+];
+
+export const productColumnFields = [
+  {
+    messageId: 'modules.Products.name',
+    name: 'name',
+    type: 'text',
+    meta: {
+      isRequired: true,
+    },
+  },
+  {
+    messageId: 'modules.Products.serial',
+    name: 'serial',
+    type: 'text',
+    meta: {
+      isRequired: true,
+    },
+  },
+  {
+    messageId: 'modules.Products.janCode',
+    name: 'janCode',
+    type: 'text',
+    meta: {
+      validator: Yup.string()
+        .test(
+          'janCode',
+          <FormattedMessage
+            id="modules.Products.janCodeValidation"
+            defaultMessage="JAN Code must be exactly 13 characters"
+          />,
+          value => {
+            if (!value || (value && value.length === 13)) return true;
+            return false;
+          }
+        )
+        .nullable(),
+    },
+  },
+  {
+    messageId: 'modules.Products.hsCode',
+    name: 'hsCode',
+    type: 'text',
+    meta: {
+      validator: Yup.string()
+        .test(
+          'hsCode',
+          <FormattedMessage
+            id="modules.Products.hsCodeValidation"
+            defaultMessage="HS Code must be exactly 10 characters"
+          />,
+          value => {
+            if (!value || (value && value.length === 10)) return true;
+            return false;
+          }
+        )
+        .nullable(),
+    },
+  },
+  {
+    messageId: 'modules.Products.material',
+    name: 'material',
+    type: 'text',
+  },
+  {
+    messageId: productMessages.tags.id,
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Product',
+    },
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
+      tags && tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
 ];
 
@@ -889,19 +1013,20 @@ export const shipmentColumnFields = [
   },
 ];
 
-export const orderColumnIds: Array<string> = orderColumnFields.map(mapColumnId('ORDER'));
+export const orderColumnIds: Array<string> = orderColumnFields.map(mapColumnId(ORDER));
 
-export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(
-  mapColumnId('ORDER_ITEM')
-);
+export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(mapColumnId(ORDER_ITEM));
 
-export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId('BATCH'));
+export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId(BATCH));
 
-export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId('SHIPMENT'));
+export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId(SHIPMENT));
+
+export const productColumnIds: Array<string> = productColumnFields.map(mapColumnId(PRODUCT));
 
 export const allColumnIds = [
   ...orderColumnIds,
   ...orderItemColumnIds,
   ...batchColumnIds,
   ...shipmentColumnIds,
+  ...productColumnIds,
 ];

@@ -37,6 +37,9 @@ import {
   faFileSpreadsheet as TEMPLATE,
   faClipboardCheck as TASK,
   faTable as EDIT_TABLE,
+  faShieldAlt as SECURITY,
+  faKey as PASSWORD,
+  faRedo as FORGOT,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -118,7 +121,7 @@ import {
   faIndustryAlt as IMPORTER,
   faIndustry as SUPPLIER,
   faWarehouse as WAREHOUSER,
-  faCube as PROVIDER,
+  faCube as PRODUCT_PROVIDER,
   // Common UI
   faThList as TABLE,
   faList as LIST,
@@ -170,7 +173,7 @@ export default {
   CARGO,
   PACKAGING,
   QUANTITY_ADJUSTMENTS,
-  PROVIDER,
+  PRODUCT_PROVIDER,
   SPECIFICATIONS,
   PHOTO,
   LOGS,
@@ -181,6 +184,9 @@ export default {
   STAR,
   STOPWATCH,
   EDIT_TABLE,
+  SECURITY,
+  PASSWORD,
+  FORGOT,
 
   RELATION_MAP,
   CONNECT,

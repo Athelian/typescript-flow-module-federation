@@ -2,12 +2,13 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { Link } from '@reach/router';
 import { FormContainer, FormField } from 'modules/form';
 import LoginFormContainer from 'modules/login/container';
 import messages from 'modules/login/messages';
 import validator from 'modules/login/validator';
 import GridColumn from 'components/GridColumn';
-import { LoginBoxStyle } from 'modules/login/style';
+import { LoginBoxStyle, LoginButtonsStyle, ForgotPasswordStyle } from 'modules/login/style';
 import {
   FieldItem,
   DefaultStyle,
@@ -102,20 +103,28 @@ function LoginForm({ onLogin }: Props) {
                 )}
               </FormField>
             </GridColumn>
-            <Subscribe to={[FormContainer]}>
-              {form => (
-                <BaseButton
-                  data-testid="submitButton"
-                  icon="LOGIN"
-                  label={<FormattedMessage {...messages.login} />}
-                  backgroundColor="TEAL"
-                  hoverBackgroundColor="TEAL_DARK"
-                  disabled={!form.isReady(loginFormState.state, validator)}
-                  type="submit"
-                  onClick={() => onLogin(loginFormState.state)}
+            <div className={LoginButtonsStyle}>
+              <Subscribe to={[FormContainer]}>
+                {form => (
+                  <BaseButton
+                    data-testid="submitButton"
+                    icon="LOGIN"
+                    label={<FormattedMessage {...messages.login} />}
+                    backgroundColor="TEAL"
+                    hoverBackgroundColor="TEAL_DARK"
+                    disabled={!form.isReady(loginFormState.state, validator)}
+                    type="submit"
+                    onClick={() => onLogin(loginFormState.state)}
+                  />
+                )}
+              </Subscribe>
+              <Link to="/forgot-password" className={ForgotPasswordStyle}>
+                <FormattedMessage
+                  id="modules.login.forgotPassword"
+                  defaultMessage="forgot password"
                 />
-              )}
-            </Subscribe>
+              </Link>
+            </div>
           </div>
         </form>
       )}

@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, isEqual, cloneDeep } from 'lodash';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { usePrevious } from 'modules/form/hooks';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -27,16 +28,19 @@ import logger from 'utils/logger';
 import orderValidator from 'modules/order/form/validator';
 import batchValidator from 'modules/batch/form/validator';
 import shipmentValidator from 'modules/shipment/form/validator';
+import productValidator from 'modules/product/form/validator';
 import SelectTemplate from 'modules/tableTemplate/common/SelectTemplate';
 import {
   orderColumnFields,
   orderItemColumnFields,
   batchColumnFields,
   shipmentColumnFields,
+  productColumnFields,
   orderColumns,
   orderItemColumns,
   batchColumns,
   shipmentColumns,
+  productColumns,
   allColumnIds,
 } from 'modules/tableTemplate/constants';
 import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCustomFields';
@@ -78,6 +82,7 @@ type Props = {
     orderItemIds: Array<string>,
     batchIds: Array<string>,
     shipmentIds: Array<string>,
+    productIds: Array<string>,
   },
   orders: Array<Object>,
   shipments: Array<Object>,
@@ -204,8 +209,9 @@ const getRowCounter = (counter, type) => {
   return counter[type];
 };
 
-const mapCustomField = entity => (_, index) => `${entity}-customFields-${index}`;
-function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
+const mapCustomField = (entity: string) => (_, index) => `${entity}-customFields-${index}`;
+
+const TableInlineEdit = ({ allId, onCancel, intl, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [errors, setErrors] = useState({});
@@ -223,6 +229,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     orderItems: {},
     batches: {},
     shipments: {},
+    products: {},
   });
   const [isChangeData, setIsChangeData] = useState(false);
 
@@ -265,6 +272,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
   const { entities } = normalize(dataSource);
   const mappingObjects = formatOrders(dataSource);
   const prevEntities = usePrevious(entities);
+
   useEffect(() => {
     if (!isEqual(prevEntities, entities) || isChangeData) {
       logger.warn('copy data');
@@ -312,32 +320,40 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
     return () => {};
   });
 
-  const { orderIds, orderItemIds, batchIds } = allId;
+  const { orderIds, orderItemIds, productIds, batchIds } = allId;
+
   const orderColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: orderColumnFields,
-    entity: 'ORDER',
+    entity: ORDER,
   });
 
   const orderItemColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: orderItemColumnFields,
-    entity: 'ORDER_ITEM',
+    entity: ORDER_ITEM,
   });
   const batchColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: batchColumnFields,
-    entity: 'BATCH',
+    entity: BATCH,
   });
   const shipmentColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: shipmentColumnFields,
-    entity: 'SHIPMENT',
+    entity: SHIPMENT,
   });
+  const productColumnFieldsFilter = findColumns({
+    showAll,
+    templateColumns,
+    fields: productColumnFields,
+    entity: PRODUCT,
+  });
+
   return (
     <QueryForAllCustomFields
       onCompleted={customFields => {
@@ -345,28 +361,34 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
           setIsReady(true);
         }
         const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
-          mapCustomField('ORDER')
+          mapCustomField(ORDER)
         );
         const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
-          mapCustomField('ORDER_ITEM')
+          mapCustomField(ORDER_ITEM)
         );
         const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
-          mapCustomField('BATCH')
+          mapCustomField(BATCH)
         );
         const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
-          mapCustomField('SHIPMENT')
+          mapCustomField(SHIPMENT)
+        );
+        const productCustomFieldIds = getByPathWithDefault([], 'product', customFields).map(
+          mapCustomField(PRODUCT)
         );
         const allCustomColumnIds = [
           ...orderCustomFieldIds,
           ...orderItemCustomFieldIds,
           ...batchCustomFieldIds,
           ...shipmentCustomFieldIds,
+          ...productCustomFieldIds,
         ];
         const haveCustomFields =
           orderCustomFieldIds.length > 0 ||
           orderItemCustomFieldIds.length > 0 ||
           batchCustomFieldIds.length > 0 ||
-          shipmentCustomFieldIds.length > 0;
+          shipmentCustomFieldIds.length > 0 ||
+          productCustomFieldIds.length > 0;
+
         if (haveCustomFields && templateColumns.length === allColumnIds.length) {
           setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
         }
@@ -376,31 +398,39 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
         orderItemCustomFields,
         batchCustomFields,
         shipmentCustomFields,
+        productCustomFields,
       }) => {
         const orderCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: orderCustomFields,
           templateColumns,
-          entity: 'ORDER',
+          entity: ORDER,
         });
         const orderItemCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: orderItemCustomFields,
           templateColumns,
-          entity: 'ORDER_ITEM',
+          entity: ORDER_ITEM,
         });
         const batchCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: batchCustomFields,
           templateColumns,
-          entity: 'BATCH',
+          entity: BATCH,
         });
         const shipmentCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: shipmentCustomFields,
           templateColumns,
-          entity: 'SHIPMENT',
+          entity: SHIPMENT,
         });
+        const productCustomFieldsFilter = findColumnsForCustomFields({
+          showAll,
+          fields: productCustomFields,
+          templateColumns,
+          entity: PRODUCT,
+        });
+
         const rowCounter = {};
         const columnOrderCustomNo = orderColumnFieldsFilter.length;
         const columnOrderItemNo = columnOrderCustomNo + orderCustomFieldsFilter.length;
@@ -409,15 +439,20 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
         const columnBatchCustomNo = columnBatchNo + batchColumnFieldsFilter.length;
         const columnShipmentNo = columnBatchCustomNo + batchCustomFieldsFilter.length;
         const columnShipmentCustomNo = columnShipmentNo + shipmentColumnFieldsFilter.length;
+        const columnProductNo = columnShipmentCustomNo + shipmentCustomFieldsFilter.length;
+        const columnProductCustomNo = columnProductNo + productColumnFieldsFilter.length;
+
         const allColumns = {
           orderColumnFieldsFilter,
-          orderItemColumnFieldsFilter,
-          batchColumnFieldsFilter,
-          shipmentColumnFieldsFilter,
           orderCustomFieldsFilter,
+          orderItemColumnFieldsFilter,
           orderItemCustomFieldsFilter,
+          batchColumnFieldsFilter,
           batchCustomFieldsFilter,
+          shipmentColumnFieldsFilter,
           shipmentCustomFieldsFilter,
+          productColumnFieldsFilter,
+          productCustomFieldsFilter,
         };
         logger.warn({ mappingObjects, editData, entities });
         return (
@@ -659,6 +694,20 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               validator={shipmentValidator}
                             />
                           </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={productColumnFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'product')}
+                              columnNo={columnProductNo}
+                            />
+                          </div>
+                          <div>
+                            <TableEmptyItem
+                              fields={productCustomFieldsFilter}
+                              rowNo={getRowCounter(rowCounter, 'productCustom')}
+                              columnNo={columnProductCustomNo}
+                            />
+                          </div>
                         </TableRow>
                       )
                     )}
@@ -678,6 +727,7 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                           order.relation.batch[item.data.id] && batchIds.includes(item.data.id)
                       );
                       const totalLines = totalLinePerOrder(orderItems, batchIds);
+
                       return (
                         <TableRow key={`order-row-${orderId}`}>
                           {/* ORDER */}
@@ -1034,6 +1084,109 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                               ))}
                             </>
                           </div>
+
+                          {/* product */}
+                          <div>
+                            {productIds.length ? (
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
+                                  <TableItem
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                    fields={productColumnFieldsFilter}
+                                    rowNo={getRowCounter(rowCounter, 'product')}
+                                    columnNo={columnProductNo}
+                                    cell={`products.${orderItem.data.productProvider.product}`}
+                                    values={
+                                      editData.products[`${orderItem.data.productProvider.product}`]
+                                    }
+                                    editData={editData}
+                                    validator={productValidator}
+                                  />
+                                ) : (
+                                  <React.Fragment
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                  >
+                                    {Object.keys(orderItem.relation.batch || {})
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(batchId => (
+                                        <TableItem
+                                          key={`orderItem.${counter +
+                                            1}.duplication.${batchId}.product`}
+                                          fields={productColumnFieldsFilter}
+                                          rowNo={getRowCounter(rowCounter, 'product')}
+                                          columnNo={columnProductNo}
+                                          cell={`products.${
+                                            orderItem.data.productProvider.product
+                                          }`}
+                                          values={
+                                            editData.products[
+                                              `${orderItem.data.productProvider.product}`
+                                            ]
+                                          }
+                                          editData={editData}
+                                          validator={productValidator}
+                                        />
+                                      ))}
+                                  </React.Fragment>
+                                )
+                              )
+                            ) : (
+                              <TableEmptyItem
+                                fields={productColumnFieldsFilter}
+                                rowNo={getRowCounter(rowCounter, 'product')}
+                                columnNo={columnProductNo}
+                              />
+                            )}
+                          </div>
+                          <div>
+                            {orderItems.length ? (
+                              orderItems.map(orderItem =>
+                                Object.keys(orderItem.relation.batch || {}).length === 0 ? (
+                                  <TableItemForCustomFields
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                    fields={productCustomFieldsFilter}
+                                    rowNo={getRowCounter(rowCounter, 'productCustom')}
+                                    columnNo={columnProductCustomNo}
+                                    cell={`products.${orderItem.data.productProvider.product}`}
+                                    values={
+                                      editData.products[`${orderItem.data.productProvider.product}`]
+                                    }
+                                    validator={productValidator}
+                                  />
+                                ) : (
+                                  <React.Fragment
+                                    key={`orderItem.${counter + 1}.${orderItem.data.id}`}
+                                  >
+                                    {Object.keys(orderItem.relation.batch || {})
+                                      .filter(batchId => batchIds.includes(batchId))
+                                      .map(batchId => (
+                                        <TableItemForCustomFields
+                                          key={`orderItem.${counter + 1}.duplication.${batchId}`}
+                                          fields={productCustomFieldsFilter}
+                                          rowNo={getRowCounter(rowCounter, 'productCustom')}
+                                          columnNo={columnProductCustomNo}
+                                          cell={`products.${
+                                            orderItem.data.productProvider.product
+                                          }`}
+                                          values={
+                                            editData.products[
+                                              `${orderItem.data.productProvider.product}`
+                                            ]
+                                          }
+                                          validator={productValidator}
+                                        />
+                                      ))}
+                                  </React.Fragment>
+                                )
+                              )
+                            ) : (
+                              <TableEmptyItem
+                                fields={productCustomFieldsFilter}
+                                rowNo={getRowCounter(rowCounter, 'productCustom')}
+                                columnNo={columnProductCustomNo}
+                              />
+                            )}
+                          </div>
                         </TableRow>
                       );
                     })}
@@ -1095,6 +1248,20 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
                       showAll={showAll}
                       templateColumns={templateColumns}
                     />
+                    <TableHeader
+                      showAll={showAll}
+                      entity="PRODUCT"
+                      info={productColumns}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
+                    />
+                    <TableHeaderForCustomFields
+                      showAll={showAll}
+                      entity="PRODUCT"
+                      customFields={productCustomFields}
+                      onToggle={onToggle}
+                      templateColumns={templateColumns}
+                    />
                     <div className={TableHeaderClearFixStyle} />
                   </div>
                   <div className={SidebarWrapperStyle} ref={sidebarRef}>
@@ -1139,6 +1306,6 @@ function TableInlineEdit({ allId, onCancel, intl, ...dataSource }: Props) {
       }}
     />
   );
-}
+};
 
 export default injectIntl(TableInlineEdit);

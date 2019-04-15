@@ -87,6 +87,7 @@ export default class MetricInput extends React.Component<Props> {
           value={value}
           onChange={this.handleChangeInput}
           align={align}
+          nonNegative
         />
         <SelectInput
           {...rest}

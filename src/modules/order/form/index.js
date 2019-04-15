@@ -12,10 +12,16 @@ import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
+import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { PermissionConsumer } from 'modules/permission';
 import OrderSection from './components/OrderSection';
 import OrderFormWrapperStyle from './style';
-import { OrderItemsContainer, OrderInfoContainer, OrderFilesContainer } from './containers';
+import {
+  OrderItemsContainer,
+  OrderInfoContainer,
+  OrderFilesContainer,
+  OrderTasksContainer,
+} from './containers';
 
 const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
@@ -165,6 +171,24 @@ export default class OrderForm extends React.Component<Props> {
                     )}
                   </Subscribe>
                 </SectionWrapper>
+                <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
+                  {(
+                    {
+                      state: {
+                        todo: { tasks },
+                      },
+                      setFieldValue,
+                    },
+                    { state }
+                  ) => (
+                    <AutoDateBinding
+                      type="order"
+                      values={state}
+                      tasks={tasks}
+                      setTaskValue={setFieldValue}
+                    />
+                  )}
+                </Subscribe>
               </div>
             );
           }}

@@ -33,6 +33,7 @@ const filterItems = (query: string, items: Array<any>) => {
 
 type InputWrapperProps = StandardInputWrapperProps & {
   type?: 'standard' | 'label',
+  dropDirection?: 'down' | 'up',
   hideClearButton?: boolean,
 };
 
@@ -76,6 +77,7 @@ const EnumSearchSelectInputFactory = ({
   infoMessage,
   originalValue,
   type,
+  dropDirection,
   hideClearButton,
   isFocused,
   disabled,
@@ -122,6 +124,7 @@ const EnumSearchSelectInputFactory = ({
 
       const optionsConfig = {
         width: inputWidth,
+        dropDirection,
       };
 
       const selectConfig = {

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { isNullOrUndefined } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -72,8 +72,13 @@ const TimelineInfoSection = (props: Props) => {
   const { user } = useUser();
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  if (isNullOrUndefined(timelineDate)) return null;
-  const { timelineDateRevisions = [] } = timelineDate;
+
+  const assignedTo = getByPathWithDefault([], 'assignedTo', timelineDate);
+  const approvedAt = getByPathWithDefault(null, 'assignedAt', timelineDate);
+  const approvedBy = getByPathWithDefault(null, 'approvedBy', timelineDate);
+  const timelineDateRevisions = getByPathWithDefault([], 'timelineDateRevisions', timelineDate);
+  const date = getByPathWithDefault(null, 'date', timelineDate);
+
   return (
     <div className={TimelineInfoSectionWrapperStyle} {...rest}>
       <GridColumn gap="10px">
@@ -83,11 +88,11 @@ const TimelineInfoSection = (props: Props) => {
 
         <AssignmentApprovalFactory
           assignmentsName={`${sourceName}.assignedTo`}
-          assignments={timelineDate && timelineDate.assignedTo}
+          assignments={assignedTo}
           approvedAtName={`${sourceName}.approvedAt`}
-          approvedAt={timelineDate && timelineDate.approvedAt}
+          approvedAt={approvedAt}
           approvedByName={`${sourceName}.approvedBy`}
-          approvedBy={timelineDate && timelineDate.approvedBy}
+          approvedBy={approvedBy}
           setFieldValue={setFieldDeepValue}
           approvable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_APPROVE_TIMELINE_DATE])}
           assignable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_ASSIGN_TIMELINE_DATE])}
@@ -106,7 +111,7 @@ const TimelineInfoSection = (props: Props) => {
                     injectUid({
                       isNew: true,
                       type: 'Other',
-                      date: (timelineDate && timelineDate.date) || todayForDateInput(),
+                      date: date || todayForDateInput(),
                       memo: null,
                       updatedAt: new Date(),
                       updatedBy: user,
@@ -116,60 +121,57 @@ const TimelineInfoSection = (props: Props) => {
               />
             )}
           </div>
-          {timelineDateRevisions.reverse().map(
-            (adjustment, index) =>
-              adjustment && (
-                <DefaultAdjustmentStyle
-                  isNew={isNew}
-                  editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
-                  index={timelineDateRevisions.length - 1 - index}
-                  adjustment={adjustment}
-                  key={adjustment.id}
-                  setFieldArrayValue={setFieldDeepValue}
-                  removeArrayItem={removeArrayItem}
-                  values={timelineDate}
-                  enumType="TimelineDateRevisionType"
-                  targetName={`${sourceName}.timelineDateRevisions`}
-                  typeName="type"
-                  memoName="memo"
-                  valueInput={
-                    <FormField
-                      name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
-                        1 -
-                        index}.date`}
-                      initValue={adjustment.date}
-                      setFieldValue={setFieldDeepValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          {...inputHandlers}
-                          name={name}
-                          isNew={isNew}
-                          originalValue={adjustment.date}
-                          editable={hasPermission([
-                            SHIPMENT_UPDATE,
-                            SHIPMENT_SET_REVISE_TIMELINE_DATE,
-                          ])}
-                          required
-                          hideTooltip
-                        />
-                      )}
-                    </FormField>
-                  }
-                />
-              )
-          )}
-          <FormField
-            name={`${sourceName}.date`}
-            initValue={timelineDate && timelineDate.date}
-            setFieldValue={setFieldDeepValue}
-          >
+          {timelineDateRevisions
+            .slice()
+            .reverse()
+            .map(
+              (adjustment, index) =>
+                adjustment && (
+                  <DefaultAdjustmentStyle
+                    isNew={isNew}
+                    editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_REVISE_TIMELINE_DATE])}
+                    index={timelineDateRevisions.length - 1 - index}
+                    adjustment={adjustment}
+                    key={adjustment.id}
+                    setFieldArrayValue={setFieldDeepValue}
+                    removeArrayItem={removeArrayItem}
+                    values={timelineDate}
+                    enumType="TimelineDateRevisionType"
+                    targetName={`${sourceName}.timelineDateRevisions`}
+                    typeName="type"
+                    memoName="memo"
+                    valueInput={
+                      <FormField
+                        name={`${sourceName}.timelineDateRevisions.${timelineDateRevisions.length -
+                          1 -
+                          index}.date`}
+                        initValue={adjustment.date}
+                        setFieldValue={setFieldDeepValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            {...inputHandlers}
+                            name={name}
+                            isNew={isNew}
+                            editable={hasPermission([
+                              SHIPMENT_UPDATE,
+                              SHIPMENT_SET_REVISE_TIMELINE_DATE,
+                            ])}
+                            required
+                            hideTooltip
+                          />
+                        )}
+                      </FormField>
+                    }
+                  />
+                )
+            )}
+          <FormField name={`${sourceName}.date`} initValue={date} setFieldValue={setFieldDeepValue}>
             {({ name, ...inputHandlers }) => (
               <DateInputFactory
                 {...inputHandlers}
                 name={name}
                 isNew={isNew}
-                originalValue={timelineDate && timelineDate.date}
                 editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TIMELINE_DATE])}
                 label={
                   <FormattedMessage

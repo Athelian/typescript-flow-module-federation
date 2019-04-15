@@ -10,6 +10,7 @@ import Layout from 'components/Layout';
 import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
+import Timeline from 'modules/timeline/components/Timeline';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
@@ -17,8 +18,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
-import { OrderEventsList } from 'modules/history';
-import { orderExportQuery } from './query';
+import { orderExportQuery, orderTimelineQuery } from './query';
 import OrderForm from './form';
 import validator from './form/validator';
 import {
@@ -313,7 +313,16 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     }
                                   >
                                     {orderId && opened ? (
-                                      <OrderEventsList id={decodeId(orderId)} perPage={10} />
+                                      <Timeline
+                                        query={orderTimelineQuery}
+                                        queryField="order"
+                                        variables={{
+                                          id: decodeId(orderId),
+                                        }}
+                                        entity={{
+                                          orderId: decodeId(orderId),
+                                        }}
+                                      />
                                     ) : null}
                                   </Layout>
                                 </SlideView>
@@ -321,7 +330,6 @@ class OrderFormModule extends React.PureComponent<Props> {
                             )
                           }
                         </BooleanValue>
-
                         <>
                           {(isNewOrClone ||
                             orderItemState.isDirty() ||

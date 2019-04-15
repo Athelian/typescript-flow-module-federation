@@ -35,8 +35,6 @@ const defaultProps = {
   id: '',
 };
 
-const formContainer = new FormContainer();
-
 class MaskFormWrapper extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -94,9 +92,9 @@ class MaskFormWrapper extends React.Component<Props> {
     const { entityType, isNew, id, onSave, onCancel } = this.props;
 
     return (
-      <Provider inject={[formContainer]}>
-        <Subscribe to={[MaskContainer]}>
-          {maskContainer => (
+      <Provider>
+        <Subscribe to={[MaskContainer, FormContainer]}>
+          {(maskContainer, formContainer) => (
             <Query
               query={fieldDefinitionsQuery}
               variables={{ entityType }}

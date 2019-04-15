@@ -4,19 +4,23 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   warehouseName: {
     id: 'modules.container.warehouseName',
-    defaultMessage: 'WAREHOUSE NAME',
+    defaultMessage: 'Warehouse Name',
+  },
+  warehouseArrivalAgreedDate: {
+    id: 'modules.container.warehouseArrivalAgreedDate',
+    defaultMessage: 'Agreed Arrival Date',
   },
   warehouseArrivalActualDate: {
     id: 'modules.container.warehouseArrivalActualDate',
-    defaultMessage: 'ARRIVAL DATE',
+    defaultMessage: 'Actual Arrival Date',
   },
   createdAt: {
     id: 'modules.container.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.container.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   noContainerFound: {
     id: 'modules.container.noContainerFound',

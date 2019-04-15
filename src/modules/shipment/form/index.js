@@ -5,8 +5,14 @@ import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
+import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { ShipmentBatchesContainer } from './containers';
+import {
+  ShipmentBatchesContainer,
+  ShipmentTasksContainer,
+  ShipmentInfoContainer,
+  ShipmentTimelineContainer,
+} from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
@@ -107,6 +113,27 @@ class ShipmentForm extends React.Component<Props> {
           </SectionWrapper>
           <AsyncTaskSection type="shipment" />
           <AsyncOrdersSection />
+          <Subscribe
+            to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}
+          >
+            {(
+              {
+                state: {
+                  todo: { tasks },
+                },
+                setFieldValue,
+              },
+              { state: info },
+              { state: timeline }
+            ) => (
+              <AutoDateBinding
+                type="shipment"
+                values={{ ...info, ...timeline }}
+                tasks={tasks}
+                setTaskValue={setFieldValue}
+              />
+            )}
+          </Subscribe>
         </div>
       </Suspense>
     );

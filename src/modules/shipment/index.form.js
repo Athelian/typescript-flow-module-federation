@@ -3,23 +3,23 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { toast } from 'react-toastify';
-import { BooleanValue } from 'react-values';
 import { Mutation } from 'react-apollo';
+import { BooleanValue } from 'react-values';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import SlideView from 'components/SlideView';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
-import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
+import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
+import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
-import { ShipmentEventsList } from 'modules/history';
-import { shipmentExportQuery } from './query';
+import Timeline from 'modules/timeline/components/Timeline';
+import { shipmentExportQuery, shipmentTimelineQuery } from './query';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
@@ -415,10 +415,16 @@ class ShipmentFormModule extends React.Component<Props> {
                                         </SlideViewNavBar>
                                       }
                                     >
-                                      {opened && shipmentId ? (
-                                        <ShipmentEventsList
-                                          id={decodeId(shipmentId)}
-                                          perPage={10}
+                                      {shipmentId && opened ? (
+                                        <Timeline
+                                          query={shipmentTimelineQuery}
+                                          queryField="shipment"
+                                          variables={{
+                                            id: decodeId(shipmentId),
+                                          }}
+                                          entity={{
+                                            shipmentId: decodeId(shipmentId),
+                                          }}
                                         />
                                       ) : null}
                                     </Layout>

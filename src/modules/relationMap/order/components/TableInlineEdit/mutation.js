@@ -16,10 +16,11 @@ import {
   badRequestFragment,
 } from 'graphql';
 import {
-  orderTableFragment,
-  shipmentTableFragment,
-  orderItemTableFragment,
-  batchTableFragment,
+  orderEntityFragment,
+  orderItemEntityFragment,
+  shipmentEntityFragment,
+  batchEntityFragment,
+  productEntityFragment,
 } from './query';
 
 export const entitiesUpdateManyMutation = gql`
@@ -38,18 +39,24 @@ export const entitiesUpdateManyMutation = gql`
       warehouses: $warehouses
     ) {
       orders {
-        ...orderTableFragment
+        ... on Order {
+          ...orderEntityFragment
+          orderItems {
+            ...orderItemEntityFragment
+          }
+        }
         ...badRequestFragment
       }
       shipments {
-        ...shipmentTableFragment
+        ...shipmentEntityFragment
         ...badRequestFragment
       }
       products {
+        ...productEntityFragment
         ...badRequestFragment
       }
       batches {
-        ...batchTableFragment
+        ...batchEntityFragment
         ...badRequestFragment
       }
       warehouses {
@@ -64,16 +71,17 @@ export const entitiesUpdateManyMutation = gql`
   ${partnerNameFragment}
   ${timelineDateFullFragment}
   ${portFragment}
-  ${batchTableFragment}
+  ${batchEntityFragment}
   ${metricFragment}
   ${sizeFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
-  ${orderItemTableFragment}
-  ${orderTableFragment}
-  ${shipmentTableFragment}
+  ${orderItemEntityFragment}
+  ${orderEntityFragment}
+  ${shipmentEntityFragment}
+  ${productEntityFragment}
 `;
 
 export default entitiesUpdateManyMutation;

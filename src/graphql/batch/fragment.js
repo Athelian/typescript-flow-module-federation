@@ -9,9 +9,6 @@ export const batchFormFragment = gql`
     autoCalculatePackageQuantity
     autoCalculatePackageVolume
     updatedAt
-    todo {
-      ...todoFragment
-    }
     updatedBy {
       ...userAvatarFragment
     }
@@ -29,6 +26,7 @@ export const batchFormFragment = gql`
       ...metricFragment
     }
     todo {
+      ...todoFragment
       tasks {
         ...taskFormInSlideViewFragment
       }

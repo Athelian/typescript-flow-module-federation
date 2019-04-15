@@ -54,7 +54,13 @@ const ProductProviderCard = ({
       ];
 
   return (
-    <BaseCard icon="PROVIDER" color="PROVIDER" selectable={selectable} actions={actions} {...rest}>
+    <BaseCard
+      icon="PRODUCT_PROVIDER"
+      color="PRODUCT_PROVIDER"
+      selectable={selectable}
+      actions={actions}
+      {...rest}
+    >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ExporterStyle}>
           <Icon icon="EXPORTER" />
@@ -74,6 +80,6 @@ ProductProviderCard.defaultProps = defaultProps;
 export default withForbiddenCard(ProductProviderCard, 'productProvider', {
   width: '195px',
   height: '100px',
-  entityIcon: 'PROVIDER',
-  entityColor: 'PROVIDER',
+  entityIcon: 'PRODUCT_PROVIDER',
+  entityColor: 'PRODUCT_PROVIDER',
 });

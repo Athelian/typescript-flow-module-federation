@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue, ObjectValue } from 'react-values';
 import { Link } from '@reach/router';
 import { isBefore } from 'date-fns';
+import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { FormField } from 'modules/form';
@@ -40,6 +41,7 @@ import {
   TaskPositionWrapperStyle,
   DragButtonWrapperStyle,
   DateInputWrapperStyle,
+  AutoDateSyncIconStyle,
   DividerStyle,
   TaskStatusWrapperStyle,
   TaskTagsWrapperStyle,
@@ -142,6 +144,8 @@ const TaskCard = ({
     approvedAt,
     rejectedBy,
     rejectedAt,
+    startDateBinding,
+    dueDateBinding,
   } = task;
 
   const validation = validator({
@@ -151,6 +155,8 @@ const TaskCard = ({
   const values = {
     [`task.${id}.name`]: name,
     [`task.${id}.completedBy`]: completedBy,
+    startDateBinding,
+    dueDateBinding,
   };
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
@@ -276,7 +282,60 @@ const TaskCard = ({
             </div>
 
             <div
-              className={DateInputWrapperStyle}
+              className={DateInputWrapperStyle(editable && !isInTemplate && !startDateBinding)}
+              onClick={evt => {
+                if (editable) {
+                  evt.stopPropagation();
+                }
+              }}
+              role="presentation"
+            >
+              <Label>
+                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
+              </Label>
+
+              {isInTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
+                  />
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          startDate: inputHandlers.value ? inputHandlers.value : null,
+                        });
+                        setTimeout(() => {
+                          emitter.emit('AUTO_DATE');
+                        }, 200);
+                      }}
+                      editable={editable && !startDateBinding}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      originalValue={startDate}
+                    />
+                  )}
+                </FormField>
+              )}
+
+              {startDateBinding && (
+                <div className={AutoDateSyncIconStyle}>
+                  <Icon icon="SYNC" />
+                </div>
+              )}
+            </div>
+
+            <div
+              className={DateInputWrapperStyle(editable && !isInTemplate && !dueDateBinding)}
               onClick={evt => {
                 if (editable) {
                   evt.stopPropagation();
@@ -287,6 +346,7 @@ const TaskCard = ({
               <Label>
                 <FormattedMessage id="components.cards.dueDate" defaultMessage="DUE" />
               </Label>
+
               {isInTemplate ? (
                 <Display color="GRAY_LIGHT">
                   <FormattedMessage
@@ -305,8 +365,11 @@ const TaskCard = ({
                           ...task,
                           dueDate: inputHandlers.value || null,
                         });
+                        setTimeout(() => {
+                          emitter.emit('AUTO_DATE');
+                        }, 200);
                       }}
-                      editable={editable}
+                      editable={editable && !dueDateBinding}
                       inputWidth="120px"
                       inputHeight="20px"
                       name={fieldName}
@@ -315,54 +378,17 @@ const TaskCard = ({
                       inputColor={
                         dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
                           ? 'RED'
-                          : null
+                          : 'BLACK'
                       }
                     />
                   )}
                 </FormField>
               )}
-            </div>
 
-            <div
-              className={DateInputWrapperStyle}
-              onClick={evt => {
-                if (editable) {
-                  evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-            >
-              <Label>
-                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
-              </Label>
-              {isInTemplate ? (
-                <Display color="GRAY_LIGHT">
-                  <FormattedMessage
-                    id="components.cards.datePlaceholder"
-                    defaultMessage="yyyy/mm/dd"
-                  />
-                </Display>
-              ) : (
-                <FormField name={`task.${id}.startDate`} initValue={startDate}>
-                  {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
-                      {...inputHandlers}
-                      onBlur={evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({
-                          ...task,
-                          startDate: inputHandlers.value ? inputHandlers.value : null,
-                        });
-                      }}
-                      editable={editable}
-                      inputWidth="120px"
-                      inputHeight="20px"
-                      name={fieldName}
-                      isNew={false}
-                      originalValue={startDate}
-                    />
-                  )}
-                </FormField>
+              {dueDateBinding && (
+                <div className={AutoDateSyncIconStyle}>
+                  <Icon icon="SYNC" />
+                </div>
               )}
             </div>
 

@@ -4,6 +4,7 @@ import * as React from 'react';
 type OptionalProps = {
   ignoreElements: Array<Node>,
   ignoreClick: boolean,
+  className: string,
 };
 
 type Props = OptionalProps & {
@@ -14,6 +15,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   ignoreElements: [],
   ignoreClick: true,
+  className: '',
 };
 
 export default class OutsideClickHandler extends React.Component<Props> {
@@ -56,7 +58,11 @@ export default class OutsideClickHandler extends React.Component<Props> {
   wrapperRef: HTMLDivElement;
 
   render() {
-    const { children } = this.props;
-    return <div ref={this.setChildNodeRef}>{children}</div>;
+    const { children, className } = this.props;
+    return (
+      <div ref={this.setChildNodeRef} className={className}>
+        {children}
+      </div>
+    );
   }
 }

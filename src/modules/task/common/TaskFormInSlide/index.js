@@ -14,6 +14,7 @@ import TaskForm from 'modules/task/form';
 
 type OptionalProps = {
   isInTemplate: boolean,
+  parentEntity?: string,
 };
 
 type Props = OptionalProps & {
@@ -28,7 +29,7 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-const TaskFormInSlide = ({ editable, onSave, task, isInTemplate }: Props) => {
+const TaskFormInSlide = ({ editable, onSave, task, parentEntity, isInTemplate }: Props) => {
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[TaskContainer]}>
@@ -64,6 +65,7 @@ const TaskFormInSlide = ({ editable, onSave, task, isInTemplate }: Props) => {
             <TaskForm
               task={task}
               hideParentInfo
+              parentEntity={parentEntity}
               isInTemplate={isInTemplate}
               onFormReady={() => taskContainer.initDetailValues(task)}
             />

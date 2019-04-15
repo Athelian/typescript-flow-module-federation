@@ -9,10 +9,16 @@ import { AuthenticationConsumer } from 'modules/authentication';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
 import DashBoard from './modules/dashboard';
-import Order from './modules/order';
-import Login from './modules/login';
 import SideBar from './modules/sidebar';
 import Authorized from './components/Authorized';
+
+const AsyncLogin = lazy(() => import('./modules/login'));
+
+const AsyncForgotPassword = lazy(() => import('./modules/forgotPassword'));
+
+const AsyncResetPassword = lazy(() => import('./modules/resetPassword'));
+
+const AsyncOrder = lazy(() => import('./modules/order'));
 
 const AsyncTags = lazy(() => import('./modules/tags'));
 
@@ -42,6 +48,8 @@ const AsyncTask = lazy(() => import('./modules/task'));
 
 const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
 
+const AsyncProfile = lazy(() => import('./modules/profile'));
+
 const Routes: StatelessFunctionalComponent<{}> = () => (
   <>
     <AuthenticationConsumer>
@@ -57,7 +65,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
       <Router>
         <Authorized path="/">
           <DashBoard path="/" />
-          <Order path="order/*" />
+          <AsyncOrder path="order/*" />
           <AsyncBatch path="batch/*" />
           <AsyncShipment path="shipment/*" />
           <AsyncContainer path="container/*" />
@@ -72,9 +80,12 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncMetadata path="settings/metadata/*" />
           <AsyncTableTemplate path="settings/table-template/*" />
           <AsyncTaskTemplate path="settings/task-template/*" />
+          <AsyncProfile path="profile/*" />
           <PageNotFound default />
         </Authorized>
-        <Login path="/login" />
+        <AsyncLogin path="/login" />
+        <AsyncForgotPassword path="/forgot-password" />
+        <AsyncResetPassword path="/reset-password/:token" />
         <PageNotFound path="/403" />
         <PageNotFound default />
       </Router>

@@ -2,17 +2,32 @@
 import { css } from 'react-emotion';
 import { colors, borderRadiuses, presets, fontSizes, scrollbars, shadows } from 'styles/common';
 
-export const OptionWrapperStyle = (width: string, height: string): string => css`
+type OptionWrapperType = {
+  width: string,
+  height: string,
+  dropDirection: 'down' | 'up',
+};
+
+export const OptionWrapperStyle = ({
+  width,
+  height,
+  dropDirection,
+}: OptionWrapperType): string => css`
   & > div {
     list-style-type: none;
     position: absolute;
+    ${dropDirection === 'down'
+      ? `
+      top: calc(100% + 5px)
+    `
+      : `
+      bottom: calc(100% + 5px)
+    `};
     right: 0;
     margin: 0;
     padding: 0;
-    margin-top: 5px;
     overflow: hidden;
     z-index: 1;
-    min-width: min-content;
     ${shadows.INPUT};
     min-width: ${width};
     max-width: ${width};

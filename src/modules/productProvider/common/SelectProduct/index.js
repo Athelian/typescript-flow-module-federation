@@ -85,7 +85,7 @@ function SelectProduct({ intl, onCancel, onSelect, exporter, selected }: Props) 
                     navBar={
                       <SlideViewNavBar>
                         <FilterToolBar
-                          icon="PROVIDER"
+                          icon="PRODUCT_PROVIDER"
                           sortFields={sortFields}
                           filtersAndSort={filtersAndSort}
                           onChange={onChange}

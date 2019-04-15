@@ -14,8 +14,9 @@ import {
   orderItemColumns,
   batchColumns,
   shipmentColumns,
+  productColumns,
 } from 'modules/tableTemplate/constants';
-import { ContentWrapperStyle } from './style';
+import { ContentWrapperStyle, FirstBlockStyle, SecondBlockStyle } from './style';
 
 const renderGroup = ({
   type,
@@ -113,11 +114,12 @@ const SelectFieldsSection = () => {
         orderItemCustomFields,
         batchCustomFields,
         shipmentCustomFields,
+        productCustomFields,
       }) => (
-        <div className={ContentWrapperStyle}>
-          <Subscribe to={[TemplateFormContainer]}>
-            {({ hasSelectField, toggleSelectField }) => (
-              <>
+        <Subscribe to={[TemplateFormContainer]}>
+          {({ hasSelectField, toggleSelectField }) => (
+            <div className={ContentWrapperStyle}>
+              <div className={FirstBlockStyle}>
                 <GridColumn>
                   {renderGroup({
                     type: 'ORDER',
@@ -182,10 +184,28 @@ const SelectFieldsSection = () => {
                     editable: canCreateOrUpdate,
                   })}
                 </GridColumn>
-              </>
-            )}
-          </Subscribe>
-        </div>
+              </div>
+              <div className={SecondBlockStyle}>
+                <GridColumn>
+                  {renderGroup({
+                    type: 'PRODUCT',
+                    groups: productColumns,
+                    hasSelectField,
+                    toggleSelectField,
+                    editable: canCreateOrUpdate,
+                  })}
+                  {renderCustomFields({
+                    type: 'PRODUCT',
+                    customFields: productCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
+                    editable: canCreateOrUpdate,
+                  })}
+                </GridColumn>
+              </div>
+            </div>
+          )}
+        </Subscribe>
       )}
     />
   );

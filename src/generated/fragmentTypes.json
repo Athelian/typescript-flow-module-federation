@@ -13,6 +13,16 @@
       },
       {
         "kind": "UNION",
+        "name": "CommentPayload",
+        "possibleTypes": [
+          { "name": "Comment" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "EmptyPayload",
         "possibleTypes": [{ "name": "BadRequest" }, { "name": "Forbidden" }, { "name": "NotFound" }]
       },
@@ -161,17 +171,6 @@
       },
       {
         "kind": "UNION",
-        "name": "EventUnion",
-        "possibleTypes": [
-          { "name": "EventChange" },
-          { "name": "EventComment" },
-          { "name": "BadRequest" },
-          { "name": "Forbidden" },
-          { "name": "NotFound" }
-        ]
-      },
-      {
-        "kind": "UNION",
         "name": "ExportExtensionPayload",
         "possibleTypes": [
           { "name": "ExportExtension" },
@@ -312,8 +311,6 @@
           { "name": "Container" },
           { "name": "ContainerGroup" },
           { "name": "Event" },
-          { "name": "EventChange" },
-          { "name": "EventComment" },
           { "name": "ExportTemplate" },
           { "name": "FieldDefinition" },
           { "name": "File" },
@@ -382,8 +379,6 @@
           { "name": "Container" },
           { "name": "ContainerGroup" },
           { "name": "Event" },
-          { "name": "EventChange" },
-          { "name": "EventComment" },
           { "name": "FieldDefinition" },
           { "name": "File" },
           { "name": "Integration" },
@@ -573,6 +568,7 @@
           { "name": "FloatValue" },
           { "name": "BooleanValue" },
           { "name": "DateTimeValue" },
+          { "name": "IntervalValue" },
           { "name": "MetricValueValue" },
           { "name": "SizeValue" },
           { "name": "EntityValue" },

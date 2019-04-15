@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
@@ -184,6 +185,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         {...inputHandlers}
+                        onBlur={evt => {
+                          inputHandlers.onBlur(evt);
+                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                        }}
                         editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
                         name={name}
                         isNew={isNew}
@@ -220,6 +225,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <DateInputFactory
                         {...inputHandlers}
+                        onBlur={evt => {
+                          inputHandlers.onBlur(evt);
+                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                        }}
                         editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
                         name={name}
                         isNew={isNew}

@@ -1,24 +1,12 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import EnumProvider from 'providers/enum';
-import {
-  parseEnumDescriptionOrValue,
-  convertValueToFormFieldFormat,
-} from 'components/Form/Factories/helpers';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import GridRow from 'components/GridRow';
 import { FormField } from 'modules/form';
-import {
-  Label,
-  Display,
-  SelectInput,
-  DefaultSelect,
-  DefaultOptions,
-  TextAreaInputFactory,
-} from 'components/Form';
+import { Label, Display, EnumSelectInputFactory, TextAreaInputFactory } from 'components/Form';
 import {
   AdjustmentWrapperStyle,
   AdjustmentFieldsWrapperStyle,
@@ -101,38 +89,19 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             name={`${targetName}.${index}.${typeName}`}
             initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
+            saveOnChange
           >
-            {({ name, onChange, ...inputHandlers }) => (
-              <EnumProvider enumType={enumType}>
-                {({ loading, error, data }) => {
-                  const itemToString = parseEnumDescriptionOrValue;
-                  const itemToValue = item => (item ? item.name : '');
-
-                  return error ? (
-                    `Error!: ${error}`
-                  ) : (
-                    <SelectInput
-                      {...inputHandlers}
-                      onChange={newValue =>
-                        onChange(convertValueToFormFieldFormat(itemToValue(newValue)))
-                      }
-                      name={name}
-                      items={loading ? [] : data}
-                      renderSelect={({ ...rest }) => (
-                        <DefaultSelect required width="200px" height="30px" {...rest} />
-                      )}
-                      renderOptions={({ ...rest }) => <DefaultOptions width="200px" {...rest} />}
-                      itemToString={itemToString}
-                      itemToValue={itemToValue}
-                      type="label"
-                      align="left"
-                      readOnlyWidth="200px"
-                      readOnlyHeight="30px"
-                      readOnly={!editable}
-                    />
-                  );
-                }}
-              </EnumProvider>
+            {({ name, ...inputHandlers }) => (
+              <EnumSelectInputFactory
+                {...inputHandlers}
+                enumType={enumType}
+                editable={editable}
+                name={name}
+                type="label"
+                inputAlign="left"
+                hideTooltip
+                required
+              />
             )}
           </FormField>
 

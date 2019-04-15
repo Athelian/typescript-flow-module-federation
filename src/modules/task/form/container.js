@@ -4,9 +4,13 @@ import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
 type FormState = {
-  name?: string,
-  dueDate?: ?string,
+  name: ?string,
   startDate?: ?string,
+  startDateInterval?: ?Object,
+  startDateBinding?: ?string,
+  dueDate?: ?string,
+  dueDateInterval?: ?Object,
+  dueDateBinding?: ?string,
   description?: ?string,
   tags?: Array<Object>,
   memo?: ?string,
@@ -23,10 +27,14 @@ type FormState = {
   approvedAt?: ?string,
 };
 
-export const initValues = {
+export const initValues: FormState = {
   name: null,
-  dueDate: null,
   startDate: null,
+  startDateInterval: null,
+  startDateBinding: null,
+  dueDate: null,
+  dueDateInterval: null,
+  dueDateBinding: null,
   description: null,
   tags: [],
   memo: null,

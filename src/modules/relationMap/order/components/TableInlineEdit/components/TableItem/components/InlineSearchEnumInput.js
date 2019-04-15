@@ -22,7 +22,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   name: string,
   value: string,
-  enumType: string,
+  enumType: 'Currency' | 'Incoterm' | 'LoadType' | 'TransportType',
   id: string,
 };
 
@@ -33,12 +33,12 @@ const defaultProps = {
 
 export default function InlineSearchEnumInput({ name, value, enumType, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
+
   return (
     <EnumProvider enumType={enumType}>
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) return `Error!: ${error}`;
-
         return (
           <FieldItem
             input={

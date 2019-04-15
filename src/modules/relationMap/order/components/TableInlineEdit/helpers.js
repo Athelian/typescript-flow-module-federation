@@ -1,5 +1,5 @@
 // @flow
-import { intersection } from 'lodash';
+import { cloneDeep, intersection } from 'lodash';
 import type { IntlShape } from 'react-intl';
 // $FlowFixMe missing define for partialRight
 import { partialRight } from 'ramda';
@@ -64,30 +64,41 @@ const formatContainerGroups = (voyages: Array<Object>): Array<Object> =>
     deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
   }));
 
+/**
+ *
+ * @param {*} targets selected cards
+ * @param {*} entities data from API
+ */
 export const findAllPossibleIds = (
-  targets: Object,
-  entities: { shipments: Object, orders: Object, orderItems: Object, batches: Object }
-) => {
-  const selected = {
-    ORDER: [],
-    ORDER_ITEM: [],
-    BATCH: [],
-    SHIPMENT: [],
-  };
-  targets.forEach(target => {
-    const [entityType, entityId] = target.split('-');
-    selected[entityType].push(entityId);
+  selected: {
+    orderIds: Array<string>,
+    orderItemIds: Array<string>,
+    batchIds: Array<string>,
+    shipmentIds: Array<string>,
+  },
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    shipments: Object,
+    products: Object,
+  }
+): {
+  orderIds: Array<Object>,
+  orderItemIds: Array<Object>,
+  batchIds: Array<Object>,
+  shipmentIds: Array<Object>,
+  productIds: Array<Object>,
+} => {
+  logger.warn({
+    selected,
+    entities,
   });
-
-  const orderIds = selected.ORDER.slice();
-  const orderItemIds = selected.ORDER_ITEM.slice();
-  const batchIds = selected.BATCH.slice();
-  const shipmentIds = selected.SHIPMENT.slice();
-
-  // If Order is selected, the entire Order tree (Order, Items, and Batches)
+  const { orderIds, orderItemIds, batchIds, shipmentIds } = cloneDeep(selected);
+  // If Order is selected, the entire Order tree (Order, Items, Product, and Batches)
   // plus all related Shipments go to the Edit view
   (Object.values(entities.orders || {}): any).forEach(order => {
-    if (selected.ORDER.includes(order.id)) {
+    if (selected.orderIds.includes(order.id)) {
       if (order.orderItems) {
         orderItemIds.push(...order.orderItems);
         order.orderItems.forEach(orderItemId => {
@@ -105,10 +116,11 @@ export const findAllPossibleIds = (
   });
 
   // If Shipment is selected, the Shipment itself, all of its Batches,
-  // all of the Item parents of those Batches, and all of the Order parents of those Items go to the Edit view
+  // all of the Item parents of those Batches, all of the Product base Items
+  // and all of the Order parents of those Items go to the Edit view
   (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
     const [shipmentId, shipment] = item;
-    if (selected.SHIPMENT.includes(shipmentId)) {
+    if (selected.shipmentIds.includes(shipmentId)) {
       if (shipment.batches) {
         batchIds.push(...shipment.batches);
         shipment.batches.forEach(batchId => {
@@ -125,27 +137,10 @@ export const findAllPossibleIds = (
     }
   });
 
-  // If Batch is selected, the Order and Item parent and the Batch itself
-  // and the related Shipment go to the Edit view
-  (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
-    if (selected.BATCH.includes(batchId)) {
-      if (!orderItemIds.includes(batch.orderItem)) {
-        orderItemIds.push(batch.orderItem);
-        const orderItem = entities.orderItems[batch.orderItem];
-        if (orderItem && orderItem.order) {
-          orderIds.push(orderItem.order);
-        }
-      }
-      if (batch.shipment && !shipmentIds.includes(batch.shipment)) {
-        shipmentIds.push(batch.shipment);
-      }
-    }
-  });
-
-  // If Item is selected, the Order parent, the Item and all of its Batches
+  // If Item is selected, the Order parent, the Item and its Product and all of its Batches
   // with all the related Shipments, go to the Edit view
   (Object.entries(entities.orderItems || {}): Array<any>).forEach(([orderItemId, orderItem]) => {
-    if (selected.ORDER_ITEM.includes(orderItemId)) {
+    if (selected.orderItemIds.includes(orderItemId)) {
       orderIds.push(orderItem.order);
       if (orderItem && orderItem.batches) {
         batchIds.push(...orderItem.batches);
@@ -160,13 +155,163 @@ export const findAllPossibleIds = (
     }
   });
 
+  // If Batch is selected, the Order, Item and Product parent and the Batch itself
+  // and the related Shipment go to the Edit view
+  (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
+    if (selected.batchIds.includes(batchId)) {
+      if (!orderItemIds.includes(batch.orderItem)) {
+        orderItemIds.push(batch.orderItem);
+        const orderItem = entities.orderItems[batch.orderItem];
+        if (orderItem && orderItem.order) {
+          orderIds.push(orderItem.order);
+        }
+      }
+      if (batch.shipment && !shipmentIds.includes(batch.shipment)) {
+        shipmentIds.push(batch.shipment);
+      }
+    }
+  });
+
+  const productIds = Object.keys(entities.products || {});
   return {
+    productIds,
     orderIds: [...new Set(orderIds)],
     orderItemIds: [...new Set(orderItemIds)],
     batchIds: [...new Set(batchIds)],
     shipmentIds: [...new Set(shipmentIds)],
   };
 };
+
+export function findOrderAndShipmentIds(
+  selectedItem: {
+    type: 'orderItem' | 'batch' | 'order' | 'shipment',
+    selectedId: string,
+  },
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    shipments: Object,
+  }
+) {
+  const result = {
+    orders: [],
+    shipments: [],
+  };
+  switch (selectedItem.type) {
+    case 'order': {
+      const { orders } = entities;
+
+      const selectedOrder = orders[selectedItem.selectedId];
+
+      result.shipments.push(...(selectedOrder.shipments || []));
+
+      if (selectedOrder && selectedOrder.orderItems) {
+        selectedOrder.orderItems.forEach(id => {
+          const orderItemResult = findOrderAndShipmentIds(
+            {
+              type: 'orderItem',
+              selectedId: id,
+            },
+            entities
+          );
+          result.orders.push(...orderItemResult.orders);
+          result.shipments.push(...orderItemResult.shipments);
+        });
+      }
+      break;
+    }
+
+    case 'shipment': {
+      const { orderItems, shipments, batches } = entities;
+
+      const selectedShipment = shipments[selectedItem.selectedId];
+
+      if (selectedShipment && selectedShipment.batches) {
+        selectedShipment.batches.forEach(id => {
+          const selectedBatch = batches[id];
+          if (selectedBatch.orderItem) {
+            const selectedOrderItem = orderItems[selectedBatch.orderItem];
+            result.orders.push(selectedOrderItem.order);
+          }
+
+          const batchResult = findOrderAndShipmentIds(
+            {
+              type: 'batch',
+              selectedId: id,
+            },
+            entities
+          );
+          result.orders.push(...batchResult.orders);
+          result.shipments.push(...batchResult.shipments);
+        });
+      }
+      break;
+    }
+
+    case 'orderItem': {
+      const { orders, orderItems } = entities;
+
+      const [orderId] =
+        (Object.entries(orders || {}): Array<any>).find(
+          ([, order]) => order.orderItems && order.orderItems.includes(selectedItem.selectedId)
+        ) || [];
+      if (orderId) result.orders.push(orderId);
+
+      const selectedOrderItem = orderItems[selectedItem.selectedId];
+      if (selectedOrderItem && selectedOrderItem.batches) {
+        selectedOrderItem.batches.forEach(batchId => {
+          const batchResult = findOrderAndShipmentIds(
+            {
+              type: 'batch',
+              selectedId: batchId,
+            },
+            entities
+          );
+          result.orders.push(...batchResult.orders);
+          result.shipments.push(...batchResult.shipments);
+        });
+      }
+
+      break;
+    }
+
+    case 'batch': {
+      const { shipments, orders, orderItems, batches } = entities;
+      const selectedBatch = batches[selectedItem.selectedId];
+      if (selectedBatch && selectedBatch.shipment) {
+        const {
+          shipment: { id: shipmentId },
+        } = selectedBatch;
+        if (shipmentId) result.shipments.push(shipmentId);
+      }
+
+      const [shipmentId] =
+        (Object.entries(shipments || {}): Array<any>).find(
+          ([, shipment]) => shipment.batches && shipment.batches.includes(selectedItem.selectedId)
+        ) || [];
+      if (shipmentId) result.shipments.push(shipmentId);
+      const [orderItemId] =
+        (Object.entries(orderItems || {}): Array<any>).find(
+          ([, orderItem]) =>
+            orderItem.batches && orderItem.batches.includes(selectedItem.selectedId)
+        ) || [];
+      if (orderItemId) {
+        const [orderId] =
+          (Object.entries(orders || {}): Array<any>).find(
+            ([, order]) => order.orderItems && order.orderItems.includes(orderItemId)
+          ) || [];
+        if (orderId) result.orders.push(orderId);
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+
+  return result;
+}
 
 export const getOrderItemIdsByOrderId = (
   orderId: string,
@@ -197,7 +342,13 @@ export const parseChangedData = ({
   editData,
   mappingObjects,
 }: {
-  changedData: { orders?: Object, shipments?: Object, orderItems?: Object, batches?: Object },
+  changedData: {
+    orders?: Object,
+    shipments?: Object,
+    orderItems?: Object,
+    batches?: Object,
+    products?: Object,
+  },
   editData: Object,
   mappingObjects: Object,
 }) => {
@@ -205,6 +356,7 @@ export const parseChangedData = ({
   const orders = [];
   const batches = [];
   const shipments = [];
+  const products = [];
   if (changedData.orders) {
     (Object.entries(changedData.orders || {}): any).forEach(item => {
       const [id, order] = item;
@@ -431,12 +583,34 @@ export const parseChangedData = ({
     });
   }
 
+  if (changedData.products) {
+    (Object.entries(changedData.products || {}): any).forEach(item => {
+      const [id, product] = item;
+      const keys = Object.keys(product);
+      const changedProduct = {};
+      keys.forEach(key => {
+        const updateValue = editData.products[id][key];
+        switch (key) {
+          case 'tags':
+            changedProduct.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+          case 'customFields':
+            changedProduct[key] = prepareCustomFieldsData(updateValue);
+            break;
+          default:
+            changedProduct[key] = updateValue;
+        }
+      });
+      products.push({ input: changedProduct, id });
+    });
+  }
+
   return {
     orders,
     batches,
     shipments,
     warehouses: [],
-    products: [],
+    products,
   };
 };
 
@@ -502,6 +676,8 @@ export function getExportColumns(
     orderItemCustomFieldsFilter,
     batchCustomFieldsFilter,
     shipmentCustomFieldsFilter,
+    productColumnFieldsFilter,
+    productCustomFieldsFilter,
   }: Object
 ): Array<string> {
   const allColumns = [
@@ -513,6 +689,8 @@ export function getExportColumns(
     ...batchCustomFieldsFilter,
     ...shipmentColumnFieldsFilter,
     ...shipmentCustomFieldsFilter,
+    ...productColumnFieldsFilter,
+    ...productCustomFieldsFilter,
   ].map(column => (column.messageId ? intl.formatMessage({ id: column.messageId }) : column.name));
   return allColumns;
 }
@@ -530,6 +708,8 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       orderItemCustomFieldsFilter,
       batchCustomFieldsFilter,
       shipmentCustomFieldsFilter,
+      productColumnFieldsFilter,
+      productCustomFieldsFilter,
     },
   } = info;
   const rows = [];
@@ -546,7 +726,12 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
     const shipmentCustomValues = getCustomFieldValues(shipmentCustomFieldsFilter, shipmentData);
     const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
-    const currentRow = [...emptyRow, ...shipmentRow];
+    const emptyRowOfProduct = getEmptyValues([
+      ...productColumnFieldsFilter,
+      ...productCustomFieldsFilter,
+    ]);
+    const currentRow = [...emptyRow, ...shipmentRow, ...emptyRowOfProduct];
+
     rows.push(currentRow);
   });
   orderIds.forEach(orderId => {
@@ -567,6 +752,8 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         ...batchCustomFieldsFilter,
         ...shipmentColumnFieldsFilter,
         ...shipmentCustomFieldsFilter,
+        ...productColumnFieldsFilter,
+        ...productCustomFieldsFilter,
       ]);
       const currentRow = [...orderRow, ...emptyRow];
       return rows.push(currentRow);
@@ -580,6 +767,11 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         orderItemData
       );
       const orderItemRow = [...orderItemValues, ...orderItemCustomValues];
+      const productData = editData.products[`${orderItemData.productProvider.product}`];
+      const productValues = getFieldValues(productColumnFieldsFilter, productData, editData);
+      const productCustomValues = getCustomFieldValues(productCustomFieldsFilter, productData);
+      const productRow = [...productValues, ...productCustomValues];
+
       if (notHaveBatches) {
         const emptyRow = getEmptyValues([
           ...batchColumnFieldsFilter,
@@ -587,7 +779,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
           ...shipmentColumnFieldsFilter,
           ...shipmentCustomFieldsFilter,
         ]);
-        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow];
+        const currentRow = [...orderRow, ...orderItemRow, ...emptyRow, ...productRow];
         return rows.push(currentRow);
       }
       return orderItem.data.batches
@@ -616,7 +808,13 @@ export function getExportRows(info: Object): Array<Array<?string>> {
             );
             shipmentRow = [...shipmentValues, ...shipmentCustomValues];
           }
-          const currentRow = [...orderRow, ...orderItemRow, ...batchRow, ...shipmentRow];
+          const currentRow = [
+            ...orderRow,
+            ...orderItemRow,
+            ...batchRow,
+            ...shipmentRow,
+            ...productRow,
+          ];
           rows.push(currentRow);
         });
     });
