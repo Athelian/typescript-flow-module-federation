@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -79,7 +80,7 @@ const generateVoyages = (currentVoyages: Array<Object>, newNumOfVoyages: number)
   );
 
   if (newNumOfVoyages < currentVoyages.length) {
-    const newVoyages = currentVoyages.slice(0, newNumOfVoyages);
+    const newVoyages = cloneDeep(currentVoyages).slice(0, newNumOfVoyages);
 
     newVoyages[newVoyages.length - 1].arrivalPort = dischargePort;
     newVoyages[newVoyages.length - 1].arrival = dischargePortArrival;
@@ -87,7 +88,7 @@ const generateVoyages = (currentVoyages: Array<Object>, newNumOfVoyages: number)
     return newVoyages;
   }
 
-  const newVoyages = [...currentVoyages];
+  const newVoyages = cloneDeep(currentVoyages);
 
   for (let counter = currentNumOfVoyages; counter < newNumOfVoyages; counter += 1) {
     if (counter === newNumOfVoyages - 1) {
