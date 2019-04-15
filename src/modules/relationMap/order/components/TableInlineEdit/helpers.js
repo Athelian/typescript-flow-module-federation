@@ -184,7 +184,7 @@ export const findAllPossibleIds = (
 
 export function findOrderAndShipmentIds(
   selectedItem: {
-    type: 'orderItem' | 'batch',
+    type: 'orderItem' | 'batch' | 'order' | 'shipment',
     selectedId: string,
   },
   entities: {
@@ -199,6 +199,26 @@ export function findOrderAndShipmentIds(
     shipments: [],
   };
   switch (selectedItem.type) {
+    case 'order': {
+      const { orders } = entities;
+
+      const selectedOrder = orders[selectedItem.selectedId];
+
+      if (selectedOrder && selectedOrder.orderItems) {
+        selectedOrder.orderItems.forEach(id => {
+          const orderItemResult = findOrderAndShipmentIds(
+            {
+              type: 'orderItem',
+              selectedId: id,
+            },
+            entities
+          );
+          result.orders.push(...orderItemResult.orders);
+          result.shipments.push(...orderItemResult.shipments);
+        });
+      }
+      break;
+    }
     case 'orderItem': {
       const { orders, orderItems } = entities;
 

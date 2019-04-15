@@ -35,6 +35,18 @@ const TableView = (props: Props) => {
   const orderIdsQuery = [...orderIds];
   const shipmentIdsQuery = [...shipmentIds];
 
+  orderIds.forEach(selectedId => {
+    const { orders, shipments } = findOrderAndShipmentIds(
+      {
+        type: 'order',
+        selectedId,
+      },
+      sourceEntities
+    );
+    orderIdsQuery.push(...orders);
+    shipmentIdsQuery.push(...shipments);
+  });
+
   orderItemIds.forEach(selectedId => {
     const { orders, shipments } = findOrderAndShipmentIds(
       {
@@ -47,7 +59,6 @@ const TableView = (props: Props) => {
     shipmentIdsQuery.push(...shipments);
   });
 
-  // FIXME: fix the shipment inside the batch
   batchIds.forEach(selectedId => {
     const { orders, shipments } = findOrderAndShipmentIds(
       {
