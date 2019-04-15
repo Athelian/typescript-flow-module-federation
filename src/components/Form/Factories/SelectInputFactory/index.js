@@ -19,6 +19,7 @@ import type {
 
 type InputWrapperProps = StandardInputWrapperProps & {
   type?: 'standard' | 'label',
+  dropDirection?: 'down' | 'up',
 };
 
 type Props = LabelProps &
@@ -63,6 +64,7 @@ const SelectInputFactory = ({
   infoMessage,
   originalValue,
   type,
+  dropDirection,
   isFocused,
   disabled,
   forceHoverStyle,
@@ -108,6 +110,7 @@ const SelectInputFactory = ({
 
   const optionsConfig = {
     width: inputWidth,
+    dropDirection,
   };
 
   const selectConfig = {

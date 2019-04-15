@@ -157,6 +157,7 @@ const DocumentItem = ({
                   inputAlign="center"
                   required
                   hideDropdownArrow
+                  dropDirection="up"
                 />
               </span>
             )}
