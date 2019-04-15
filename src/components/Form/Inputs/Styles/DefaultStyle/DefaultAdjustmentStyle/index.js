@@ -89,6 +89,7 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
             name={`${targetName}.${index}.${typeName}`}
             initValue={adjustment[typeName]}
             setFieldValue={setFieldArrayValue}
+            saveOnChange
           >
             {({ name, ...inputHandlers }) => (
               <EnumSelectInputFactory
