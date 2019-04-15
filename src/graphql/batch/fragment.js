@@ -26,6 +26,7 @@ export const batchFormFragment = gql`
       ...metricFragment
     }
     todo {
+      ...todoFragment
       tasks {
         ...taskFormInSlideViewFragment
       }
