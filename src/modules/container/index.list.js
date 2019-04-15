@@ -36,11 +36,15 @@ function OrderModule(props: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.warehouseName), value: 'warehouseName' },
     {
+      title: intl.formatMessage(messages.warehouseArrivalAgreedDate),
+      value: 'warehouseArrivalAgreedDate',
+    },
+    {
       title: intl.formatMessage(messages.warehouseArrivalActualDate),
       value: 'warehouseArrivalActualDate',
     },
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
