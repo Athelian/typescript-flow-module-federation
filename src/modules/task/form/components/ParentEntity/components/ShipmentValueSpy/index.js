@@ -2,12 +2,11 @@
 import * as React from 'react';
 import client from 'apollo';
 import emitter from 'utils/emitter';
-import { getByPath } from 'utils/fp';
-import { getLatestDate } from 'utils/shipment';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 import { shipmentAutoDateQuery } from './query';
+import { getValueBy } from './helper';
 
 type Props = {
   values: Object,
@@ -32,13 +31,6 @@ export const findMappingFields = (voyages: Array<Object>) => ({
   ShipmentWarehouseArrival: 'containerGroups.0.warehouseArrival',
   ShipmentDeliveryReady: 'containerGroups.0.deliveryReady',
 });
-
-const getValueBy = (field: string, values: Object) => {
-  if (field.toLowerCase().includes('date')) {
-    return getByPath(field, values);
-  }
-  return getLatestDate(getByPath(field, values));
-};
 
 export default function ShipmentValueSpy({ values, task, inForm, setTaskValue }: Props) {
   React.useEffect(() => {
