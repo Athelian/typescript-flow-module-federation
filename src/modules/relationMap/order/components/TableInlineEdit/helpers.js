@@ -204,6 +204,8 @@ export function findOrderAndShipmentIds(
 
       const selectedOrder = orders[selectedItem.selectedId];
 
+      result.shipments.push(...(selectedOrder.shipments || []));
+
       if (selectedOrder && selectedOrder.orderItems) {
         selectedOrder.orderItems.forEach(id => {
           const orderItemResult = findOrderAndShipmentIds(
@@ -219,6 +221,34 @@ export function findOrderAndShipmentIds(
       }
       break;
     }
+
+    case 'shipment': {
+      const { orderItems, shipments, batches } = entities;
+
+      const selectedShipment = shipments[selectedItem.selectedId];
+
+      if (selectedShipment && selectedShipment.batches) {
+        selectedShipment.batches.forEach(id => {
+          const selectedBatch = batches[id];
+          if (selectedBatch.orderItem) {
+            const selectedOrderItem = orderItems[selectedBatch.orderItem];
+            result.orders.push(selectedOrderItem.order);
+          }
+
+          const batchResult = findOrderAndShipmentIds(
+            {
+              type: 'batch',
+              selectedId: id,
+            },
+            entities
+          );
+          result.orders.push(...batchResult.orders);
+          result.shipments.push(...batchResult.shipments);
+        });
+      }
+      break;
+    }
+
     case 'orderItem': {
       const { orders, orderItems } = entities;
 

@@ -47,6 +47,18 @@ const TableView = (props: Props) => {
     shipmentIdsQuery.push(...shipments);
   });
 
+  shipmentIds.forEach(selectedId => {
+    const { orders, shipments } = findOrderAndShipmentIds(
+      {
+        type: 'shipment',
+        selectedId,
+      },
+      sourceEntities
+    );
+    orderIdsQuery.push(...orders);
+    shipmentIdsQuery.push(...shipments);
+  });
+
   orderItemIds.forEach(selectedId => {
     const { orders, shipments } = findOrderAndShipmentIds(
       {
