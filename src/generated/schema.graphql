@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Apr 11 2019 16:35:09 GMT+0900 (Tokyo Standard Time)
+# timestamp: Fri Apr 12 2019 11:48:45 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30667,17 +30667,19 @@ type Query {
   partnerships(page: Int! = 1, perPage: Int! = 10, filterBy: PartnerFilterInput, sortBy: PartnerSortInput): PartnershipPayloadPagination!
   product(id: ID!): ProductPayload!
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
-  productExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
-  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput, fields: [String!]): FilePayload!
-  productsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
+  productsByIDs(ids: [ID!]!): [ProductPayload!]!
+  productExport(id: ID!, templateId: ID!): FilePayload!
+  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput): FilePayload!
+  productsByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
   productProvider(id: ID!): ProductProviderPayload!
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
+  productProvidersByIDs(ids: [ID!]!): [ProductProviderPayload!]!
   order(id: ID!): OrderPayload!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
   ordersByIDs(ids: [ID!]!): [OrderPayload!]!
-  orderExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
-  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput, fields: [String!]): FilePayload!
-  ordersByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
+  orderExport(id: ID!, templateId: ID!): FilePayload!
+  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput): FilePayload!
+  ordersByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
   orderItem(id: ID!): OrderItemPayload!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
   orderItemsByIDs(ids: [ID!]!): [OrderItemPayload!]!
@@ -30687,14 +30689,15 @@ type Query {
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
-  shipmentExport(id: ID!, templateId: ID!, fields: [String!]): FilePayload!
-  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput, fields: [String!]): FilePayload!
-  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!, fields: [String!]): FilePayload!
+  shipmentExport(id: ID!, templateId: ID!): FilePayload!
+  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): FilePayload!
+  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
   containersByIDs(ids: [ID!]!): [ContainerPayload!]!
   warehouse(id: ID!): WarehousePayload!
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPagination!
+  warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPagination!
   task(id: ID!): TaskPayload!

@@ -30,8 +30,7 @@ export default class DeployNotifier extends React.Component<Props> {
       }
 
       const currentRevision = snapshot.val();
-      const currentVersion = window.localStorage.getItem('version');
-      if (revision !== currentRevision && (!currentVersion || currentVersion !== currentRevision)) {
+      if (revision !== currentRevision) {
         toast(
           <button
             className={ToastButtonWrapperStyle}

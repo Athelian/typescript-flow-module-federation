@@ -463,8 +463,9 @@ export const orderItemColumnFields = [
       const { id: orderItemId } = values;
       const { price, quantity } = editData.orderItems[orderItemId];
       const [, order] =
-        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
-          currentOrder.orderItems.includes(orderItemId)
+        (Object.entries(editData.orders || {}): Array<any>).find(
+          ([, currentOrder]) =>
+            currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
         ) || [];
       return `${price.amount * quantity}${order.currency}`;
     },
@@ -472,8 +473,9 @@ export const orderItemColumnFields = [
       const { id: orderItemId } = values;
       const { price, quantity } = editData.orderItems[orderItemId];
       const [, order] =
-        (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
-          currentOrder.orderItems.includes(orderItemId)
+        (Object.entries(editData.orders || {}): Array<any>).find(
+          ([, currentOrder]) =>
+            currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
         ) || [];
       return `${price.amount * quantity}${order.currency}`;
     },
@@ -482,8 +484,9 @@ export const orderItemColumnFields = [
         const { id: orderItemId } = values;
         const { price, quantity } = editData.orderItems[orderItemId];
         const [, order] =
-          (Object.entries(editData.orders || {}): Array<any>).find(([, currentOrder]) =>
-            currentOrder.orderItems.includes(orderItemId)
+          (Object.entries(editData.orders || {}): Array<any>).find(
+            ([, currentOrder]) =>
+              currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
           ) || [];
         return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
       },
