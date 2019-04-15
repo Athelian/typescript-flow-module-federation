@@ -103,22 +103,25 @@ const PasswordInputFactory = ({
       vertical={vertical}
       label={<Label {...labelConfig}>{label}</Label>}
       tooltip={!hideTooltip ? <FormTooltip {...tooltipConfig} /> : null}
-      input={
-        // eslint-disable-next-line no-nested-ternary
-        blackout ? (
-          <Blackout {...blackoutConfig} />
-        ) : editable ? (
-          <DefaultStyle {...inputWrapperConfig}>
-            <PasswordInput
-              {...inputConfig}
-              readOnlyWidth={inputWidth}
-              readOnlyHeight={inputHeight}
-            />
-          </DefaultStyle>
-        ) : (
-          <PasswordInput {...inputConfig} />
-        )
-      }
+      input={(() => {
+        if (blackout) {
+          return <Blackout {...blackoutConfig} />;
+        }
+
+        if (editable) {
+          return (
+            <DefaultStyle {...inputWrapperConfig}>
+              <PasswordInput
+                {...inputConfig}
+                readOnlyWidth={inputWidth}
+                readOnlyHeight={inputHeight}
+              />
+            </DefaultStyle>
+          );
+        }
+
+        return <PasswordInput {...inputConfig} />;
+      })()}
     />
   );
 };
