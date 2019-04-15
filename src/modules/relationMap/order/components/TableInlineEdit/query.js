@@ -15,8 +15,8 @@ import {
   fieldDefinitionFragment,
 } from 'graphql';
 
-export const orderTableFragment = gql`
-  fragment orderTableFragment on Order {
+export const orderEntityFragment = gql`
+  fragment orderEntityFragment on Order {
     id
     poNo
     piNo
@@ -36,16 +36,11 @@ export const orderTableFragment = gql`
     tags {
       ...tagFragment
     }
-    orderItems {
-      ...orderItemTableFragment
-    }
-    shipments {
-      ...shipmentTableFragment
-    }
   }
 `;
-export const orderItemTableFragment = gql`
-  fragment orderItemTableFragment on OrderItem {
+
+export const orderItemEntityFragment = gql`
+  fragment orderItemEntityFragment on OrderItem {
     id
     quantity
     price {
@@ -58,20 +53,7 @@ export const orderItemTableFragment = gql`
       ... on ProductProvider {
         id
         product {
-          ... on Product {
-            id
-            name
-            serial
-            janCode
-            hsCode
-            material
-            customFields {
-              ...customFieldsFragment
-            }
-            tags {
-              ...tagFragment
-            }
-          }
+          ...productEntityFragment
         }
         exporter {
           ...partnerNameFragment
@@ -81,14 +63,28 @@ export const orderItemTableFragment = gql`
         }
       }
     }
-    batches {
-      ...batchTableFragment
+  }
+`;
+
+export const productEntityFragment = gql`
+  fragment productEntityFragment on Product {
+    id
+    name
+    serial
+    janCode
+    hsCode
+    material
+    customFields {
+      ...customFieldsFragment
+    }
+    tags {
+      ...tagFragment
     }
   }
 `;
 
-export const batchTableFragment = gql`
-  fragment batchTableFragment on Batch {
+export const batchEntityFragment = gql`
+  fragment batchEntityFragment on Batch {
     id
     no
     quantity
@@ -122,16 +118,11 @@ export const batchTableFragment = gql`
     packageSize {
       ...sizeFragment
     }
-    shipment {
-      ... on Shipment {
-        id
-      }
-    }
   }
 `;
 
-export const shipmentTableFragment = gql`
-  fragment shipmentTableFragment on Shipment {
+export const shipmentEntityFragment = gql`
+  fragment shipmentEntityFragment on Shipment {
     id
     no
     blNo
@@ -201,17 +192,27 @@ export const shipmentTableFragment = gql`
   }
 `;
 
-export const findIdsQuery = gql`
-  query($orderIds: [ID!]!, $orderItemIds: [ID!]!, $batchIds: [ID!]!, $shipmentIds: [ID!]!) {
+export const editTableViewQuery = gql`
+  query ordersAndShipments($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
     ordersByIDs(ids: $orderIds) {
       ... on Order {
-        id
+        ...orderEntityFragment
         orderItems {
           ... on OrderItem {
-            id
+            ...orderItemEntityFragment
             batches {
               ... on Batch {
-                id
+                ...batchEntityFragment
+                orderItem {
+                  ... on OrderItem {
+                    id
+                    order {
+                      ... on Order {
+                        id
+                      }
+                    }
+                  }
+                }
                 shipment {
                   ... on Shipment {
                     id
@@ -219,108 +220,29 @@ export const findIdsQuery = gql`
                 }
               }
             }
-            productProvider {
-              ... on ProductProvider {
-                id
-                product {
-                  ... on Product {
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
-        shipments {
-          ... on Shipment {
-            id
-          }
-        }
-      }
-    }
-    orderItemsByIDs(ids: $orderItemIds) {
-      ... on OrderItem {
-        id
-        batches {
-          ... on Batch {
-            id
-            shipment {
-              ... on Shipment {
-                id
-              }
-            }
-          }
-        }
-        order {
-          ... on Order {
-            id
-          }
-        }
-        productProvider {
-          ... on ProductProvider {
-            id
-            product {
-              ... on Product {
-                id
-              }
-            }
-          }
-        }
-      }
-    }
-    batchesByIDs(ids: $batchIds) {
-      ... on Batch {
-        id
-        shipment {
-          ... on Shipment {
-            id
-          }
-        }
-        orderItem {
-          ... on OrderItem {
-            id
             order {
               ... on Order {
                 id
               }
             }
-            productProvider {
-              ... on ProductProvider {
-                id
-                product {
-                  ... on Product {
-                    id
-                  }
-                }
-              }
-            }
           }
+        }
+        shipments {
+          ...shipmentEntityFragment
         }
       }
     }
     shipmentsByIDs(ids: $shipmentIds) {
       ... on Shipment {
-        id
+        ...shipmentEntityFragment
         batches {
           ... on Batch {
-            id
+            ...batchEntityFragment
             orderItem {
               ... on OrderItem {
-                id
+                ...orderItemEntityFragment
                 order {
-                  ... on Order {
-                    id
-                  }
-                }
-                productProvider {
-                  ... on ProductProvider {
-                    id
-                    product {
-                      ... on Product {
-                        id
-                      }
-                    }
-                  }
+                  ...orderEntityFragment
                 }
               }
             }
@@ -329,38 +251,11 @@ export const findIdsQuery = gql`
       }
     }
   }
-`;
-
-export const productTableFragment = gql`
-  fragment productTableFragment on Product {
-    id
-    name
-    serial
-    janCode
-    hsCode
-    material
-    customFields {
-      ...customFieldsFragment
-    }
-    tags {
-      ...tagFragment
-    }
-  }
-`;
-
-export const editTableViewQuery = gql`
-  query($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
-    ordersByIDs(ids: $orderIds) {
-      ...orderTableFragment
-    }
-    shipmentsByIDs(ids: $shipmentIds) {
-      ...shipmentTableFragment
-    }
-  }
-  ${orderTableFragment}
-  ${orderItemTableFragment}
-  ${batchTableFragment}
-  ${shipmentTableFragment}
+  ${orderEntityFragment}
+  ${orderItemEntityFragment}
+  ${batchEntityFragment}
+  ${shipmentEntityFragment}
+  ${productEntityFragment}
   ${timelineDateFullFragment}
   ${tagFragment}
   ${portFragment}
