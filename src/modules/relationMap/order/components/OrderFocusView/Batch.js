@@ -8,7 +8,7 @@ import { actionCreators } from 'modules/relationMap/order/store';
 import { RMBatchCard } from 'components/Cards';
 import { Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
-import { BATCH } from 'modules/relationMap/constants';
+import { BATCH } from 'constants/keywords';
 import type { BatchProps } from 'modules/relationMap/order/type.js.flow';
 import Badge from '../Badge';
 

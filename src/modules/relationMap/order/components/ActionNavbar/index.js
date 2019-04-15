@@ -25,7 +25,7 @@ import { BaseButton } from 'components/Buttons';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import { orderDetailQuery } from 'modules/relationMap/order/query';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
 import { calculateBatchQuantity } from 'utils/batch';

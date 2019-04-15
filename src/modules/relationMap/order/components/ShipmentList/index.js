@@ -13,7 +13,7 @@ import ActionDispatch from 'modules/relationMap/order/provider';
 import { ShipmentListBodyStyle, ItemWrapperStyle } from 'modules/relationMap/order/style';
 import { shipmentListQuery, shipmentDetailQuery } from 'modules/relationMap/order/query';
 import { hasMoreItems } from 'modules/relationMap/order/helpers';
-import { SHIPMENT } from 'modules/relationMap/constants';
+import { SHIPMENT } from 'constants/keywords';
 import { selectors } from 'modules/relationMap/order/store';
 import Shipment from '../Shipment';
 

@@ -1,6 +1,6 @@
 // @flow
 import { uniq, intersection } from 'lodash';
-import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
+import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'constants/keywords';
 import type { UIState } from './type.js.flow';
 
 const entitySelector = ({

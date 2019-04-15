@@ -1,6 +1,6 @@
 // @flow
 import logger from 'utils/logger';
-import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'modules/relationMap/constants';
+import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'constants/keywords';
 import { getByPathWithDefault } from 'utils/fp';
 import type { UIState } from './type.js.flow';
 
