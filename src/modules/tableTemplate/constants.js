@@ -86,6 +86,34 @@ export const productColumns = [
   },
 ];
 
+export const containerColumns = [
+  {
+    id: 0,
+    group: <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />,
+    columns: [
+      <FormattedMessage id="modules.container.containerNo" defaultMessage="CONTAINER NO" />,
+      <FormattedMessage id="module.container.agreedArrival" defaultMessage="AGREED ARRIVAL" />,
+      <FormattedMessage
+        id="modules.container.agreedArrivalAssignedTo"
+        defaultMessage="AGREED ARRIVAL ASSIGNED TO"
+      />,
+      <FormattedMessage id="module.container.actualArrival" defaultMessage="ACTUAL ARRIVAL" />,
+      <FormattedMessage
+        id="modules.container.actualArrivalAssignedTo"
+        defaultMessage="ACTUAL ARRIVAL ASSIGNED TO"
+      />,
+      <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />,
+      <FormattedMessage id="modules.container.tags" defaultMessage="TAGS" />,
+      <FormattedMessage id="modules.container.totalPackages" defaultMessage="TOTAL PACKAGES" />,
+      <FormattedMessage id="modules.container.totalBatchQuantity" defaultMessage="BATCHED QTY" />,
+      <FormattedMessage id="modules.container.totalUniqueItems" defaultMessage="UNIQUE ITEMS" />,
+      <FormattedMessage id="modules.container.totalVolume" defaultMessage="TOTAL VOLUME" />,
+      <FormattedMessage id="modules.container.totalWeight" defaultMessage="TOTAL WEIGHT" />,
+      <FormattedMessage id="modules.container.totalPrice" defaultMessage="TOTAL PRICE" />,
+    ],
+  },
+];
+
 export const batchColumns = [
   {
     id: 0,
