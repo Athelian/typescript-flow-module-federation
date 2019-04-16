@@ -3,7 +3,14 @@ import React from 'react';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard, { CardAction } from '../BaseCard';
-import { ProductProviderCardWrapperStyle, ExporterStyle, SupplierStyle } from './style';
+import {
+  ProductProviderCardWrapperStyle,
+  InfoWrapperStyle,
+  WrapperStyle,
+  NameStyle,
+  ExporterStyle,
+  SupplierStyle,
+} from './style';
 
 type OptionalProps = {
   onClick: Function,
@@ -36,7 +43,7 @@ const ProductProviderCard = ({
   selectable,
   ...rest
 }: Props) => {
-  const { exporter, supplier, referenced } = productProvider;
+  const { name, exporter, supplier, referenced } = productProvider;
 
   const actions = selectable
     ? []
@@ -62,13 +69,18 @@ const ProductProviderCard = ({
       {...rest}
     >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
-        <div className={ExporterStyle}>
-          <Icon icon="EXPORTER" />
-          {exporter && exporter.name}
-        </div>
-        <div className={SupplierStyle}>
-          <Icon icon="SUPPLIER" />
-          {supplier && supplier.name}
+        <div className={InfoWrapperStyle}>
+          <div className={NameStyle}>{name}</div>
+          <div className={WrapperStyle}>
+            <div className={ExporterStyle}>
+              <Icon icon="EXPORTER" />
+              {exporter && exporter.name}
+            </div>
+            <div className={SupplierStyle}>
+              <Icon icon="SUPPLIER" />
+              {supplier && supplier.name}
+            </div>
+          </div>
         </div>
       </div>
     </BaseCard>
