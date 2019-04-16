@@ -35,6 +35,7 @@ type FormState = {
   inspectionFee: Price,
   packageGrossWeight: Metric,
   packageVolume: Metric,
+  autoCalculatePackageVolume: boolean,
   packageSize: {
     width: Metric,
     height: Metric,
@@ -89,6 +90,7 @@ export const initValues = {
     metric: 'm³',
     value: 0,
   },
+  autoCalculatePackageVolume: true,
   packageSize: {
     width: {
       metric: 'cm',
@@ -166,6 +168,20 @@ export default class ProductProviderContainer extends Container<FormState> {
       );
       return newState;
     });
+  };
+
+  toggleAutoCalculatePackageVolume = () => {
+    const { autoCalculatePackageVolume } = this.state;
+    if (!autoCalculatePackageVolume) {
+      this.setState(prevState => ({
+        packageVolume: calculatePackageVolume(prevState),
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      }));
+    } else {
+      this.setState({
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      });
+    }
   };
 
   calculatePackageVolume = () => {

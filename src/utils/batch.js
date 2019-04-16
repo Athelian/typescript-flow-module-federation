@@ -1,5 +1,6 @@
 // @flow
 import { injectUid } from './id';
+import { isNullOrUndefined } from './fp';
 
 export const findBatchQuantity = ({
   quantity = 0,
@@ -36,15 +37,33 @@ export function convertVolume(
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
 
-export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => ({
-  metric: packageVolume.metric,
-  value: convertVolume(
-    packageVolume.metric,
-    packageSize.height,
-    packageSize.width,
-    packageSize.length
-  ),
-});
+const isBadMetricData = (data: Object): boolean =>
+  isNullOrUndefined(data.metric) || isNullOrUndefined(data.value);
+
+export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => {
+  if (
+    isNullOrUndefined(packageVolume) ||
+    isBadMetricData(packageVolume) ||
+    isNullOrUndefined(packageSize) ||
+    isNullOrUndefined(packageSize.height) ||
+    isBadMetricData(packageSize.height) ||
+    isNullOrUndefined(packageSize.width) ||
+    isBadMetricData(packageSize.width) ||
+    isNullOrUndefined(packageSize.length) ||
+    isBadMetricData(packageSize.length)
+  ) {
+    return packageVolume;
+  }
+  return {
+    metric: packageVolume.metric,
+    value: convertVolume(
+      packageVolume.metric,
+      packageSize.height,
+      packageSize.width,
+      packageSize.length
+    ),
+  };
+};
 
 export function calculateBatchQuantity(batches: Array<Object>): number {
   let total = 0;

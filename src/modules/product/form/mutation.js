@@ -200,6 +200,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'packageSize', oldProductProvider),
         newProductProvider.packageSize
       ),
+      ...parseGenericField(
+        'autoCalculatePackageVolume',
+        getByPathWithDefault(null, 'autoCalculatePackageVolume', oldProductProvider),
+        newProductProvider.autoCalculatePackageVolume
+      ),
       ...parseFilesField(
         'files',
         getByPathWithDefault([], 'files', oldProductProvider),

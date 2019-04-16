@@ -23,7 +23,6 @@ export {
   pipe,
   when,
   reject,
-  isNil,
   isEmpty,
   omit,
   pick,
