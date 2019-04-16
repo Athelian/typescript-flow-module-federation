@@ -104,6 +104,9 @@ export const orderFormFragment = gql`
     shipments {
       ...shipmentCardFragment
     }
+    containers {
+      ...containerCardFragment
+    }
   }
 `;
 

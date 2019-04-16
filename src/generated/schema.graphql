@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Apr 12 2019 11:48:45 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Apr 16 2019 11:20:36 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27287,6 +27287,7 @@ input ContainerSortInput {
   updatedAt: SortOrder
   warehouseName: SortOrder
   warehouseArrivalActualDate: SortOrder
+  warehouseArrivalAgreedDate: SortOrder
 }
 
 input ContainerUpdateInput {
@@ -30056,6 +30057,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   timeline: Timeline!
   todo: Todo!
   shipments: [ShipmentPayload!]!
+  containers: [ContainerPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30149,9 +30151,11 @@ input OrderFilterInput {
   shipmentArchived: Boolean
 }
 
-type OrderItem implements Model & Owned & Sortable & Customizable {
+type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Customizable {
   order: OrderPayload!
   productProvider: ProductProviderPayload!
+  archived: Boolean!
+  no: String!
   price: Price!
   quantity: Float!
   totalPrice: Price!
@@ -30161,6 +30165,7 @@ type OrderItem implements Model & Owned & Sortable & Customizable {
   batchShippedCount: Int!
   shipmentCount: Int!
   batches: [BatchPayload!]!
+  shipments: [ShipmentPayload!]!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -30171,6 +30176,8 @@ type OrderItem implements Model & Owned & Sortable & Customizable {
   deletedBy: UserPayload
   ownedBy: GroupPayload!
   sort: Int!
+  tags: [TagPayload!]!
+  files: [FilePayload!]!
   customFields: CustomFields!
 }
 
@@ -30227,9 +30234,12 @@ input OrderItemBatchUpdateInput {
 
 input OrderItemCreateInput {
   productProviderId: ID!
+  no: String!
   price: PriceInput!
   quantity: Float!
+  tagIds: [ID!]
   batches: [OrderItemBatchCreateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID!
@@ -30263,9 +30273,12 @@ input OrderItemSortInput {
 input OrderItemUpdateInput {
   id: ID
   productProviderId: ID
+  no: String
   price: PriceInput
   quantity: Float
+  tagIds: [ID!]
   batches: [OrderItemBatchUpdateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID
@@ -30278,9 +30291,12 @@ input OrderItemUpdateWrapperInput {
 
 input OrderOrderItemCreateInput {
   productProviderId: ID!
+  no: String!
   price: PriceInput!
   quantity: Float!
+  tagIds: [ID!]
   batches: [OrderItemBatchCreateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30288,9 +30304,12 @@ input OrderOrderItemCreateInput {
 input OrderOrderItemUpdateInput {
   id: ID
   productProviderId: ID
+  no: String
   price: PriceInput
   quantity: Float
+  tagIds: [ID!]
   batches: [OrderItemBatchUpdateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30531,6 +30550,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   supplier: GroupPayload
   unitType: String
   unitVolume: MetricValue
+  autoCalculatePackageVolume: Boolean!
   unitWeight: MetricValue
   unitPrice: Price
   unitSize: Size
@@ -30550,7 +30570,6 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
-  autoCalculatePackageVolume: Boolean!
   packageSize: Size
   packageCapacity: Float
   files: [FilePayload!]!
@@ -30563,6 +30582,7 @@ input ProductProviderCreateInput {
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
+  autoCalculateUnitVolume: Boolean
   unitWeight: MetricValueInput
   unitPrice: PriceInput
   unitSize: SizeInput
@@ -30616,6 +30636,7 @@ input ProductProviderUpdateInput {
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
+  autoCalculateUnitVolume: Boolean
   unitWeight: MetricValueInput
   unitPrice: PriceInput
   unitSize: SizeInput

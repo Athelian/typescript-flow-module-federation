@@ -295,6 +295,16 @@ class OrderFormModule extends React.PureComponent<Props> {
                             }
                             icon="SHIPMENT"
                           />
+                          <SectionTabs
+                            link="order_containersSection"
+                            label={
+                              <FormattedMessage
+                                id="modules.Orders.containers"
+                                defaultMessage="CONTAINERS"
+                              />
+                            }
+                            icon="CONTAINER"
+                          />
                         </JumpToSection>
                         <BooleanValue>
                           {({ value: opened, set: slideToggle }) =>
