@@ -59,7 +59,8 @@ export function findHighLightEntities(
     case ORDER: {
       const { orders, orderItems } = entities;
       highLightIds.push(`${ORDER}-${highlight.selectedId}`);
-      const { orderItems: orderItemIds, shipments: shipmentsIds } = orders[highlight.selectedId];
+      const { orderItems: orderItemIds = [], shipments: shipmentsIds = [] } =
+        orders[highlight.selectedId] || {};
       orderItemIds.forEach(orderItemId => {
         const orderItem = orderItems[orderItemId];
         highLightIds.push(`${ORDER_ITEM}-${orderItem.id}`);
@@ -78,7 +79,7 @@ export function findHighLightEntities(
       const { orders, orderItems, shipments } = entities;
       highLightIds.push(`${ORDER_ITEM}-${highlight.selectedId}`);
       const orderItem = orderItems[highlight.selectedId];
-      const { batches } = orderItem;
+      const { batches = [] } = orderItem || {};
       batches.forEach(id => {
         highLightIds.push(`${BATCH}-${id}`);
         const [shipmentId] =
