@@ -35,6 +35,7 @@ type FormState = {
   inspectionFee: Price,
   packageGrossWeight: Metric,
   packageVolume: Metric,
+  autoCalculatePackageVolume: boolean,
   packageSize: {
     width: Metric,
     height: Metric,
@@ -89,6 +90,7 @@ export const initValues = {
     metric: 'm³',
     value: 0,
   },
+  autoCalculatePackageVolume: true,
   packageSize: {
     width: {
       metric: 'cm',

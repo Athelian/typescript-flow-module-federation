@@ -103,6 +103,7 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                 name="packageVolume"
                 initValue={getByPath('packageVolume', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('packageVolume', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -117,9 +118,18 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PKG VOLUME"
                       />
                     }
+                    showExtraToggleButton={canCreateOrUpdate}
+                    autoCalculateIsToggled={values.autoCalculatePackageVolume}
+                    onToggleAutoCalculate={() => {
+                      setFieldValue(
+                        'autoCalculatePackageVolume',
+                        !values.autoCalculatePackageVolume
+                      );
+                      if (!values.autoCalculatePackageVolume) {
+                        calculatePackageVolume();
+                      }
+                    }}
                     editable={canCreateOrUpdate}
-                    showCalculator
-                    onCalculate={calculatePackageVolume}
                   />
                 )}
               </FormField>
@@ -127,7 +137,12 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
               <FormField
                 name="packageSize.length"
                 initValue={getByPath('packageSize.length', values)}
-                setFieldValue={(field, value) => setFieldArrayValue('packageSize.length', value)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('packageSize.length', value);
+                  if (canCreateOrUpdate && values.autoCalculatePackageVolume) {
+                    calculatePackageVolume();
+                  }
+                }}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -150,7 +165,13 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
               <FormField
                 name="packageSize.width"
                 initValue={getByPath('packageSize.width', values)}
-                setFieldValue={(field, value) => setFieldArrayValue('packageSize.width', value)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('packageSize.width', value);
+
+                  if (canCreateOrUpdate && values.autoCalculatePackageVolume) {
+                    calculatePackageVolume();
+                  }
+                }}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -173,7 +194,12 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
               <FormField
                 name="packageSize.height"
                 initValue={getByPath('packageSize.height', values)}
-                setFieldValue={(field, value) => setFieldArrayValue('packageSize.height', value)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('packageSize.height', value);
+                  if (canCreateOrUpdate && values.autoCalculatePackageVolume) {
+                    calculatePackageVolume();
+                  }
+                }}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
