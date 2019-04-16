@@ -124,6 +124,7 @@
         "name": "Documented",
         "possibleTypes": [
           { "name": "Order" },
+          { "name": "OrderItem" },
           { "name": "Product" },
           { "name": "ProductProvider" },
           { "name": "Shipment" }
@@ -503,6 +504,7 @@
           { "name": "Batch" },
           { "name": "Container" },
           { "name": "Order" },
+          { "name": "OrderItem" },
           { "name": "Product" },
           { "name": "Shipment" },
           { "name": "Task" },

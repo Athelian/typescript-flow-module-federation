@@ -27,6 +27,7 @@ const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
+const AsyncContainersSection = lazy(() => import('./components/ContainersSection'));
 
 type OptionalProps = {
   isNew: boolean,
@@ -171,6 +172,29 @@ export default class OrderForm extends React.Component<Props> {
                     )}
                   </Subscribe>
                 </SectionWrapper>
+
+                <SectionWrapper id="order_containersSection">
+                  <Subscribe to={[OrderInfoContainer]}>
+                    {({ state: { containers } }) => (
+                      <>
+                        <SectionHeader
+                          icon="CONTAINER"
+                          title={
+                            <>
+                              <FormattedMessage
+                                id="modules.Orders.containers"
+                                defaultMessage="CONTAINERS"
+                              />{' '}
+                              ({containers.length})
+                            </>
+                          }
+                        />
+                        <AsyncContainersSection containers={containers} />
+                      </>
+                    )}
+                  </Subscribe>
+                </SectionWrapper>
+
                 <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
                   {(
                     {
