@@ -108,6 +108,7 @@ const PackagingSection = ({ isNew }: Props) => {
             setFieldArrayValue,
             calculatePackageQuantity,
             triggerCalculatePackageQuantity,
+            toggleAutoCalculatePackageVolume,
             calculatePackageVolume,
           }) => {
             const values = { ...originalValues, ...state };
@@ -248,15 +249,7 @@ const PackagingSection = ({ isNew }: Props) => {
                       }
                       showExtraToggleButton={allowAutoCalculatePackageVolume}
                       autoCalculateIsToggled={values.autoCalculatePackageVolume}
-                      onToggleAutoCalculate={() => {
-                        setFieldValue(
-                          'autoCalculatePackageVolume',
-                          !values.autoCalculatePackageVolume
-                        );
-                        if (!values.autoCalculatePackageVolume) {
-                          calculatePackageVolume();
-                        }
-                      }}
+                      onToggleAutoCalculate={() => toggleAutoCalculatePackageVolume()}
                       editable={allowAutoCalculatePackageVolume}
                     />
                   )}

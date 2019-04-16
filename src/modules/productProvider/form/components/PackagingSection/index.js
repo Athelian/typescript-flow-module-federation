@@ -27,7 +27,14 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
   return (
     <div className={PackagingSectionWrapperStyle}>
       <Subscribe to={[ProductProviderContainer]}>
-        {({ originalValues, state, setFieldValue, setFieldArrayValue, calculatePackageVolume }) => {
+        {({
+          originalValues,
+          state,
+          setFieldValue,
+          setFieldArrayValue,
+          toggleAutoCalculatePackageVolume,
+          calculatePackageVolume,
+        }) => {
           const values = { ...originalValues, ...state };
 
           return (
@@ -120,15 +127,7 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                     }
                     showExtraToggleButton={canCreateOrUpdate}
                     autoCalculateIsToggled={values.autoCalculatePackageVolume}
-                    onToggleAutoCalculate={() => {
-                      setFieldValue(
-                        'autoCalculatePackageVolume',
-                        !values.autoCalculatePackageVolume
-                      );
-                      if (!values.autoCalculatePackageVolume) {
-                        calculatePackageVolume();
-                      }
-                    }}
+                    onToggleAutoCalculate={() => toggleAutoCalculatePackageVolume()}
                     editable={canCreateOrUpdate}
                   />
                 )}

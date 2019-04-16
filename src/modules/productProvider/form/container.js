@@ -170,6 +170,20 @@ export default class ProductProviderContainer extends Container<FormState> {
     });
   };
 
+  toggleAutoCalculatePackageVolume = () => {
+    const { autoCalculatePackageVolume } = this.state;
+    if (!autoCalculatePackageVolume) {
+      this.setState(prevState => ({
+        packageVolume: calculatePackageVolume(prevState),
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      }));
+    } else {
+      this.setState({
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      });
+    }
+  };
+
   calculatePackageVolume = () => {
     this.setState(prevState => ({
       packageVolume: calculatePackageVolume(prevState),

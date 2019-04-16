@@ -37,39 +37,33 @@ export function convertVolume(
   return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
 }
 
-const isBadSizeData = (packageSize: Object): boolean => {
-  if (
-    packageSize &&
-    packageSize.height &&
-    packageSize.height.metric &&
-    !isNullOrUndefined(packageSize.height.value) &&
-    packageSize.width &&
-    packageSize.width.metric &&
-    !isNullOrUndefined(packageSize.width.value) &&
-    packageSize.length &&
-    packageSize.length.metric &&
-    !isNullOrUndefined(packageSize.length.value)
-  ) {
-    return false;
-  }
-  return true;
-};
+const isBadMetricData = (data: Object): boolean =>
+  isNullOrUndefined(data.metric) || isNullOrUndefined(data.value);
 
-export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object =>
-  isBadSizeData(packageSize)
-    ? {
-        metric: packageVolume.metric,
-        value: 0,
-      }
-    : {
-        metric: packageVolume.metric,
-        value: convertVolume(
-          packageVolume.metric,
-          packageSize.height,
-          packageSize.width,
-          packageSize.length
-        ),
-      };
+export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => {
+  if (
+    isNullOrUndefined(packageVolume) ||
+    isBadMetricData(packageVolume) ||
+    isNullOrUndefined(packageSize) ||
+    isNullOrUndefined(packageSize.height) ||
+    isBadMetricData(packageSize.height) ||
+    isNullOrUndefined(packageSize.width) ||
+    isBadMetricData(packageSize.width) ||
+    isNullOrUndefined(packageSize.length) ||
+    isBadMetricData(packageSize.length)
+  ) {
+    return packageVolume;
+  }
+  return {
+    metric: packageVolume.metric,
+    value: convertVolume(
+      packageVolume.metric,
+      packageSize.height,
+      packageSize.width,
+      packageSize.length
+    ),
+  };
+};
 
 export function calculateBatchQuantity(batches: Array<Object>): number {
   let total = 0;
