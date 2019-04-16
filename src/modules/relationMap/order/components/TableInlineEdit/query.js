@@ -211,6 +211,13 @@ export const editTableViewQuery = gql`
                 ...batchEntityFragment
                 container {
                   ...containerEntityFragment
+                  ... on Container {
+                    batches {
+                      ... on Batch {
+                        id
+                      }
+                    }
+                  }
                 }
                 orderItem {
                   ... on OrderItem {
@@ -246,10 +253,22 @@ export const editTableViewQuery = gql`
         ...shipmentEntityFragment
         containers {
           ...containerEntityFragment
+          ... on Container {
+            batches {
+              ... on Batch {
+                id
+              }
+            }
+          }
         }
         batches {
           ... on Batch {
             ...batchEntityFragment
+            container {
+              ... on Container {
+                id
+              }
+            }
             orderItem {
               ... on OrderItem {
                 ...orderItemEntityFragment

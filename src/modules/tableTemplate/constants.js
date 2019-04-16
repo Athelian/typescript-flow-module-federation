@@ -144,14 +144,6 @@ export const batchColumns = [
   },
 ];
 
-export const containerColumns = [
-  {
-    id: 0,
-    group: <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />,
-    columns: [<FormattedMessage {...containerMessages.containerNo} />],
-  },
-];
-
 export const shipmentColumns = [
   {
     id: 0,
