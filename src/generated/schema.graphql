@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Apr 16 2019 11:20:36 GMT+0900 (Tokyo Standard Time)
+# timestamp: Tue Apr 16 2019 16:38:48 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27143,26 +27143,19 @@ input CommentUpdateInput {
 }
 
 type Container implements Model & Owned & Tagged & Sortable & Memorizable {
+  archived: Boolean!
   no: String!
+  representativeBatch: BatchPayload
+  warehouse: WarehousePayload
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedBy: UserPayload
   warehouseArrivalAgreedDateApprovedAt: DateTime
+  warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
   warehouseArrivalActualDate: DateTime
   warehouseArrivalActualDateApprovedBy: UserPayload
   warehouseArrivalActualDateApprovedAt: DateTime
   shipment: ShipmentPayload!
-  warehouse: WarehousePayload
-  representativeBatch: BatchPayload
-  batches: [BatchPayload!]!
-  totalVolume: MetricValue!
-  totalWeight: MetricValue!
-  totalPrice: Price
-  totalBatchQuantity: Int!
-  totalBatchPackages: Int!
-  totalNumberOfUniqueOrderItems: Int!
-  warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
   warehouseArrivalActualDateAssignedTo: [UserPayload!]!
-  archived: Boolean!
   freeTimeStartDate: DateTime
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean!
@@ -27171,6 +27164,15 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   departureDateAssignedTo: [UserPayload!]!
   departureDateApprovedBy: UserPayload
   departureDateApprovedAt: DateTime
+  containerType: String
+  containerOption: ContainerOption
+  totalVolume: MetricValue!
+  totalWeight: MetricValue!
+  totalPrice: Price
+  totalBatchQuantity: Int!
+  totalBatchPackages: Int!
+  totalNumberOfUniqueOrderItems: Int!
+  batches: [BatchPayload!]!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -27229,6 +27231,8 @@ input ContainerCreateInput {
   yardName: String
   representativeBatchId: ID
   representativeBatchIndex: Int
+  containerType: String
+  containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
@@ -27271,6 +27275,11 @@ input ContainerGroupNestedInput {
 
 union ContainerGroupPayload = ContainerGroup | BadRequest | Forbidden | NotFound
 
+enum ContainerOption {
+  """Hanger"""
+  Hanger
+}
+
 union ContainerPayload = Container | BadRequest | Forbidden | NotFound
 
 type ContainerPayloadPagination {
@@ -27308,6 +27317,8 @@ input ContainerUpdateInput {
   yardName: String
   representativeBatchId: ID
   representativeBatchIndex: Int
+  containerType: String
+  containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
@@ -30545,12 +30556,13 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   Determined if the ProductProvider is referenced by at least one OrderItem or not
   """
   referenced: Boolean!
+  name: String!
   product: ProductPayload!
   exporter: GroupPayload!
   supplier: GroupPayload
   unitType: String
   unitVolume: MetricValue
-  autoCalculatePackageVolume: Boolean!
+  autoCalculateUnitVolume: Boolean!
   unitWeight: MetricValue
   unitPrice: Price
   unitSize: Size
@@ -30570,6 +30582,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   packageName: String
   packageGrossWeight: MetricValue
   packageVolume: MetricValue
+  autoCalculatePackageVolume: Boolean!
   packageSize: Size
   packageCapacity: Float
   files: [FilePayload!]!
@@ -30578,6 +30591,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
 }
 
 input ProductProviderCreateInput {
+  name: String!
   exporterId: ID!
   supplierId: ID
   unitType: String
@@ -30632,6 +30646,7 @@ input ProductProviderSortInput {
 input ProductProviderUpdateInput {
   id: ID
   archived: Boolean
+  name: String
   exporterId: ID
   supplierId: ID
   unitType: String
@@ -35846,7 +35861,6 @@ input ShipmentCreateInput {
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
-  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: TimelineDateNestedInput
@@ -35916,7 +35930,6 @@ input ShipmentUpdateInput {
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
-  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: TimelineDateNestedInput
@@ -36010,17 +36023,20 @@ enum TagEntityType {
   """Order"""
   Order
 
+  """OrderItem"""
+  OrderItem
+
   """Batch"""
   Batch
 
   """Shipment"""
   Shipment
 
-  """User"""
-  User
-
   """Container"""
   Container
+
+  """User"""
+  User
 
   """Task"""
   Task
