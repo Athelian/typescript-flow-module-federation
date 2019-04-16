@@ -18,10 +18,6 @@ export default defineMessages({
     id: 'modules.SideBar.batch',
     defaultMessage: 'BATCHES',
   },
-  batchGroup: {
-    id: 'modules.SideBar.batchGroup',
-    defaultMessage: 'BATCHGROUPS',
-  },
   order: {
     id: 'modules.SideBar.order',
     defaultMessage: 'ORDERS',
@@ -36,7 +32,7 @@ export default defineMessages({
   },
   relationMap: {
     id: 'modules.SideBar.relationMap',
-    defaultMessage: 'RELATION MAP',
+    defaultMessage: 'RELATIONAL MAP',
   },
   network: {
     id: 'modules.SideBar.network',
@@ -58,9 +54,9 @@ export default defineMessages({
     id: 'modules.SideBar.container',
     defaultMessage: 'CONTAINERS',
   },
-  settings: {
-    id: 'modules.SideBar.settings',
-    defaultMessage: 'SETTINGS',
+  templates: {
+    id: 'modules.SideBar.templates',
+    defaultMessage: 'TEMPLATES',
   },
   taskTemplate: {
     id: 'modules.SideBar.taskTemplate',
@@ -80,6 +76,6 @@ export default defineMessages({
   },
   template: {
     id: 'modules.SideBar.template',
-    defaultMessage: 'RELATION TABLE',
+    defaultMessage: 'RELATIONAL TABLE',
   },
 });

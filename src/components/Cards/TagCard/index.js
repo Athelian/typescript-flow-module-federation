@@ -45,7 +45,7 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
 
   return (
     <BaseCard icon="TAG" color="TAG" actions={actions} {...rest}>
-      <Link className={TagCardWrapperStyle} to={`/settings/tags/${encodeId(tag.id)}`}>
+      <Link className={TagCardWrapperStyle} to={`/tags/${encodeId(tag.id)}`}>
         <div className={TagWrapperStyle}>
           <Tag tag={tag} />
         </div>
