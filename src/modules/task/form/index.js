@@ -39,7 +39,7 @@ export default class TaskForm extends React.Component<Props> {
     const { task, parentEntity, hideParentInfo, isInTemplate } = this.props;
     return (
       <>
-        <TaskInfoSection parentEntity={parentEntity} task={task} isInTemplate={isInTemplate} />;
+        <TaskInfoSection parentEntity={parentEntity} task={task} isInTemplate={isInTemplate} />
         <ParentEntity inForm={!!hideParentInfo} />
       </>
     );
