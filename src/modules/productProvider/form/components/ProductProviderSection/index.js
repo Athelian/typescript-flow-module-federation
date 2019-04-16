@@ -182,7 +182,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       ? {
                           errorMessage: (
                             <FormattedMessage
-                              id="modules.productProvider.unique"
+                              id="modules.productProvider.mustBeUniqueName"
                               defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
                             />
                           ),
