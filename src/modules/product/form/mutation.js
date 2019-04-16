@@ -130,6 +130,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'supplier', oldProductProvider),
         newProductProvider.supplier
       ),
+      ...parseGenericField(
+        'name',
+        getByPathWithDefault(null, 'name', oldProductProvider),
+        newProductProvider.name
+      ),
       ...parseEnumField(
         'origin',
         getByPathWithDefault(null, 'origin', oldProductProvider),
