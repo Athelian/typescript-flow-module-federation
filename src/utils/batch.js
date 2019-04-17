@@ -65,6 +65,26 @@ export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): 
   };
 };
 
+export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object => {
+  if (
+    isNullOrUndefined(unitVolume) ||
+    isBadMetricData(unitVolume) ||
+    isNullOrUndefined(unitSize) ||
+    isNullOrUndefined(unitSize.height) ||
+    isBadMetricData(unitSize.height) ||
+    isNullOrUndefined(unitSize.width) ||
+    isBadMetricData(unitSize.width) ||
+    isNullOrUndefined(unitSize.length) ||
+    isBadMetricData(unitSize.length)
+  ) {
+    return unitVolume;
+  }
+  return {
+    metric: unitVolume.metric,
+    value: convertVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
+  };
+};
+
 export function calculateBatchQuantity(batches: Array<Object>): number {
   let total = 0;
   batches.forEach(batch => {

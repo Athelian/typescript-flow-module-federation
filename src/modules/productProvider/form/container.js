@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
-import { convertVolume, calculatePackageVolume } from 'utils/batch';
+import { calculatePackageVolume, calculateUnitVolume } from 'utils/batch';
 
 type Price = {
   amount: number,
@@ -37,6 +37,7 @@ type FormState = {
   packageGrossWeight: Metric,
   packageVolume: Metric,
   autoCalculatePackageVolume: boolean,
+  autoCalculateUnitVolume: boolean,
   packageSize: {
     width: Metric,
     height: Metric,
@@ -93,6 +94,7 @@ export const initValues = {
     value: 0,
   },
   autoCalculatePackageVolume: true,
+  autoCalculateUnitVolume: true,
   packageSize: {
     width: {
       metric: 'cm',
@@ -156,20 +158,23 @@ export default class ProductProviderContainer extends Container<FormState> {
   };
 
   calculateUnitVolume = () => {
-    // TODO: use https://github.com/ben-ng/convert-units for converting unit
-    this.setState(prevState => {
-      const newState = set(
-        cloneDeep(prevState),
-        'unitVolume.value',
-        convertVolume(
-          prevState.unitVolume.metric,
-          prevState.unitSize.height,
-          prevState.unitSize.width,
-          prevState.unitSize.length
-        )
-      );
-      return newState;
-    });
+    this.setState(prevState => ({
+      unitVolume: calculateUnitVolume(prevState),
+    }));
+  };
+
+  toggleAutoCalculateUnitVolume = () => {
+    const { autoCalculateUnitVolume } = this.state;
+    if (!autoCalculateUnitVolume) {
+      this.setState(prevState => ({
+        unitVolume: calculateUnitVolume(prevState),
+        autoCalculateUnitVolume: !autoCalculateUnitVolume,
+      }));
+    } else {
+      this.setState({
+        autoCalculateUnitVolume: !autoCalculateUnitVolume,
+      });
+    }
   };
 
   toggleAutoCalculatePackageVolume = () => {
