@@ -1,6 +1,5 @@
 // @flow
-import { divide } from 'number-precision';
-import { calculateBatchQuantity } from 'utils/batch';
+import { calculateBatchQuantity, totalVolume } from 'utils/batch';
 
 export const mapColumnId: Function = (entity: string) => (_: any, index: number): string =>
   `${entity}-${index}`;
@@ -15,12 +14,7 @@ export function calculateOrderTotalVolume(orderItems: Array<string>, editData: O
   });
   const orderTotalVolume = allBatchIds.reduce((total, batchId) => {
     const { packageQuantity, packageVolume } = editData.batches[batchId] || {};
-    if (!packageVolume || !packageQuantity) return total;
-    return (
-      total +
-      packageQuantity *
-        (packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume, 1000000))
-    );
+    return totalVolume(total, packageQuantity, packageVolume);
   }, 0);
   return orderTotalVolume;
 }
@@ -39,15 +33,7 @@ export function calculateShipmentTotalVolume(shipmentId: string, editData: Objec
 
   const shipmentTotalBatchQuantity = allBatches.reduce((total, [, batch]) => {
     const { packageQuantity, packageVolume } = batch;
-    if (!packageVolume || !packageQuantity) return total;
-
-    return (
-      total +
-      packageQuantity *
-        (packageVolume.metric !== 'cm³'
-          ? packageVolume.value
-          : divide(packageVolume.value, 1000000))
-    );
+    return totalVolume(total, packageQuantity, packageVolume);
   }, 0);
 
   return shipmentTotalBatchQuantity;

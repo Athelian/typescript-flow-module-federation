@@ -1,8 +1,7 @@
 // @flow
 import { cloneDeep } from 'lodash';
 import { totalAdjustQuantity } from 'components/Cards/utils';
-import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
-import { convert as convertWeight } from 'modules/form/helpers/metricInput/weightInput';
+import { volumeConvert, weightConvert } from 'utils/metric';
 import { getByPath, isNullOrUndefined } from 'utils/fp';
 
 const findBatchQuantity = (batch: Object) => {
@@ -30,7 +29,7 @@ const findVolume = (batch: Object) => {
   } = batch;
   const volume = isNullOrUndefined(packageVolume)
     ? 0
-    : convertVolume(packageVolume.value, packageVolume.metric, 'm³');
+    : volumeConvert(packageVolume.value, packageVolume.metric, 'm³');
   return packageQuantity * volume;
 };
 
@@ -43,7 +42,7 @@ const findWeight = (batch: Object) => {
     packageGrossWeight: Object,
   } = batch;
   return packageGrossWeight
-    ? packageQuantity * convertWeight(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
+    ? packageQuantity * weightConvert(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
     : 0;
 };
 

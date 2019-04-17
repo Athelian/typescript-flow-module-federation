@@ -10,19 +10,16 @@ import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
-import {
-  metrics as weightMetrics,
-  convert as weightConvert,
-} from 'modules/form/helpers/metricInput/weightInput';
 import Tooltip from 'components/Tooltip';
 import {
-  metrics as volumeMetrics,
-  convert as volumeConvert,
-} from 'modules/form/helpers/metricInput/volumeInput';
-import {
-  metrics as distanceMetrics,
-  convert as distanceConvert,
-} from 'modules/form/helpers/metricInput/distanceInput';
+  distanceConvert,
+  volumeConvert,
+  weightConvert,
+  distanceMetrics,
+  volumeMetrics,
+  weightMetrics,
+} from 'utils/metric';
+
 import {
   mapColumnId,
   calculateOrderTotalVolume,

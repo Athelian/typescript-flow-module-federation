@@ -24,7 +24,7 @@ type Metric = {
   metric: string,
 };
 
-export function convertVolume(
+export function volumeConvert(
   volumeMetric: string,
   height: Metric,
   width: Metric,
@@ -57,7 +57,7 @@ export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): 
   }
   return {
     metric: packageVolume.metric,
-    value: convertVolume(
+    value: volumeConvert(
       packageVolume.metric,
       packageSize.height,
       packageSize.width,
@@ -82,7 +82,7 @@ export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object =>
   }
   return {
     metric: unitVolume.metric,
-    value: convertVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
+    value: volumeConvert(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
   };
 };
 
@@ -160,3 +160,10 @@ export const generateBatchByOrderItem = (orderItem: Object) => {
     },
   });
 };
+
+export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
+  !packageVolume || !packageQuantity
+    ? total
+    : total +
+      packageQuantity *
+        (packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume, 1000000));
