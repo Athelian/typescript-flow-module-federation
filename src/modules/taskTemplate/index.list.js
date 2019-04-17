@@ -77,13 +77,13 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                   active={activeType === 'Order'}
                   icon="ORDER"
                   label={<FormattedMessage id="module.TaskTemplate.order" defaultMessage="ORDER" />}
-                  onClick={() => navigate('/settings/task-template/order')}
+                  onClick={() => navigate('/templates/task-template/order')}
                 />
                 <TabItem
                   active={activeType === 'Batch'}
                   icon="BATCH"
                   label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
-                  onClick={() => navigate('/settings/task-template/batch')}
+                  onClick={() => navigate('/templates/task-template/batch')}
                 />
                 <TabItem
                   active={activeType === 'Shipment'}
@@ -91,7 +91,7 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                   label={
                     <FormattedMessage id="module.TaskTemplate.shipment" defaultMessage="SHIPMENT" />
                   }
-                  onClick={() => navigate('/settings/task-template/shipment')}
+                  onClick={() => navigate('/templates/task-template/shipment')}
                 />
 
                 <BooleanValue>

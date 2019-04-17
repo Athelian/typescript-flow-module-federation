@@ -1,18 +1,21 @@
 // @flow
 import { css } from 'react-emotion';
-import { transitions, fontSizes } from 'styles/common';
+import { transitions, fontSizes, colors, presets, borderRadiuses } from 'styles/common';
 
-export const SubMenuStyle: string = css`
+export const SubMenuWrapperStyle: string = css`
   overflow: hidden;
   min-height: min-content;
 `;
 
-export const SubMenuItemStyle = (isExpanded: boolean): string => css`
+export const SubMenuItemWrapperStyle = (
+  isExpanded: boolean,
+  hasActiveChild: boolean
+): string => css`
   display: flex;
   align-items: center;
   flex-shrink: 0;
   white-space: nowrap;
-  color: #fff;
+  color: ${colors.WHITE};
   width: 100%;
   height: 50px;
   ${fontSizes.MAIN};
@@ -25,7 +28,7 @@ export const SubMenuItemStyle = (isExpanded: boolean): string => css`
   }
   & > span {
     min-width: 5px;
-    height: ${isExpanded ? '50px' : '0px'};
+    height: ${hasActiveChild ? '50px' : '0px'};
     background-color: rgba(255, 255, 255, 0.5);
     ${transitions.MAIN};
   }
@@ -36,10 +39,26 @@ export const SubMenuItemStyle = (isExpanded: boolean): string => css`
   }
 `;
 
-export const ChevronStyle = (isExpanded: boolean): string => css`
-  margin: 0 10px 0 auto;
-  ${transitions.MAIN};
-  ${isExpanded && 'transform: rotate(90deg)'};
+export const SubMenuItemStyle: string = css`
+  display: flex;
+  flex: 1;
+  align-items: center;
+`;
+
+export const ChevronButtonStyle = (isExpanded: boolean, hasActiveChild: boolean): string => css`
+  ${presets.BUTTON};
+  ${borderRadiuses.CIRCLE};
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  ${isExpanded && 'transform: rotate(180deg)'};
+  margin: 5px;
+  ${!hasActiveChild &&
+    `
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  `};
 `;
 
 export const SubMenuBodyStyle = (isExpanded: boolean, menuItemCount: number): string => css`
