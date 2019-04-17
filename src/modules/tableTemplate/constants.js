@@ -990,7 +990,7 @@ export const containerColumnFields = [
       const { id: containerId } = values;
       const { total, allCurrencies } = calculateContainerTotalPrice(containerId, editData);
       if (total < 0) return 'Invalid';
-      return `${total}${allCurrencies[0]}`;
+      return `${total}${allCurrencies[0] || 'USD'}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
@@ -1190,7 +1190,7 @@ export const shipmentColumnFields = [
       const { id: shipmentId } = values;
       const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);
       if (total < 0) return 'Invalid';
-      return `${total}${allCurrencies[0]}`;
+      return `${total}${allCurrencies[0] || 'USD'}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {

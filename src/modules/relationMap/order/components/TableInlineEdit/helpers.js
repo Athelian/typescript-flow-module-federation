@@ -747,6 +747,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   const {
     data: { editData, mappingObjects },
     ids: { orderIds, orderItemIds, batchIds },
+    targetIds,
     columns: {
       orderColumnFieldsFilter,
       orderItemColumnFieldsFilter,
@@ -786,6 +787,43 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     rows.push(currentRow);
   });
   // render the empty container row
+  (Object.entries(mappingObjects.shipment || {}): any)
+    .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
+    .forEach(([shipmentId]) => {
+      mappingObjects.shipment[shipmentId].data.containers
+        .filter(item => item.batches.length === 0)
+        .forEach(container => {
+          const emptyRow = getEmptyValues([
+            ...orderColumnFieldsFilter,
+            ...orderCustomFieldsFilter,
+            ...orderItemColumnFieldsFilter,
+            ...orderItemCustomFieldsFilter,
+            ...batchColumnFieldsFilter,
+            ...batchCustomFieldsFilter,
+          ]);
+          const containerData = editData.containers[container.id];
+          const containerValues = getFieldValues(
+            containerColumnFieldsFilter,
+            containerData,
+            editData
+          );
+          const containerRow = [...containerValues];
+          const shipmentData = editData.shipments[shipmentId];
+          const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
+          const shipmentCustomValues = getCustomFieldValues(
+            shipmentCustomFieldsFilter,
+            shipmentData
+          );
+          const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+          const emptyRowOfProduct = getEmptyValues([
+            ...productColumnFieldsFilter,
+            ...productCustomFieldsFilter,
+          ]);
+          const currentRow = [...emptyRow, ...containerRow, ...shipmentRow, ...emptyRowOfProduct];
+
+          rows.push(currentRow);
+        });
+    });
 
   // render order rows
   orderIds.forEach(orderId => {
