@@ -36,7 +36,7 @@ const SubMenu = ({ hasActiveChild, icon, label, children }: Props) => {
           <div
             className={SubMenuItemWrapperStyle(isExpanded || hasActiveChild, hasActiveChild)}
             onClick={() => {
-              changeExpand(!(isExpanded && !hasActiveChild));
+              changeExpand(true);
               navigate(firstChildPath);
             }}
             role="presentation"
@@ -47,10 +47,7 @@ const SubMenu = ({ hasActiveChild, icon, label, children }: Props) => {
               className={SubMenuItemStyle}
               onMouseEnter={() => {
                 if (!isExpanded && !hasActiveChild) {
-                  debounceHover = setTimeout(
-                    () => changeExpand(!(isExpanded && !hasActiveChild)),
-                    700
-                  );
+                  debounceHover = setTimeout(() => changeExpand(true), 700);
                 }
               }}
               onMouseLeave={() => {
