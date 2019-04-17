@@ -165,5 +165,7 @@ export const totalVolume = (total: number, packageQuantity: number, packageVolum
   !packageVolume || !packageQuantity
     ? total
     : total +
-      packageQuantity *
-        (packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume, 1000000));
+      times(
+        packageQuantity,
+        packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume, 1000000)
+      );
