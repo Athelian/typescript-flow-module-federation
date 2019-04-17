@@ -259,8 +259,10 @@ export const orderColumnFields = [
       max: 5,
     },
     getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
-      inCharges &&
-      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
   },
   {
     messageId: orderMessages.tags.id,
@@ -741,9 +743,13 @@ export const containerColumnFields = [
     meta: {
       max: 5,
     },
-    getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
-      inCharges &&
-      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+    getExportValue: ({
+      warehouseArrivalAgreedDateAssignedTo: inCharges,
+    }: { warehouseArrivalAgreedDateAssignedTo: Array<Object> } = {}) =>
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
   },
   {
     messageId: containerMessages.warehouseArrivalActualDate.id,
@@ -764,9 +770,13 @@ export const containerColumnFields = [
     meta: {
       max: 5,
     },
-    getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
-      inCharges &&
-      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+    getExportValue: ({
+      warehouseArrivalActualDateAssignedTo: inCharges,
+    }: { warehouseArrivalActualDateAssignedTo: Array<Object> } = {}) =>
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
   },
   {
     messageId: containerMessages.warehouseName.id,
@@ -1089,8 +1099,10 @@ export const shipmentColumnFields = [
       max: 5,
     },
     getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
-      inCharges &&
-      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
   },
   {
     messageId: shipmentMessages.tags.id,
