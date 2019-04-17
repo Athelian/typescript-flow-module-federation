@@ -30,6 +30,7 @@ import {
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
   parseGenericField,
+  parseEnumField,
   parseMemoField,
   parseDateField,
   parseArrayOfIdsField,
@@ -102,6 +103,16 @@ export const prepareParsedContainerInput = ({
   return {
     ...(!inContainerForm && originalValues ? { id: originalValues.id } : {}),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
+    ...parseGenericField(
+      'containerType',
+      getByPathWithDefault(null, 'containerType', originalValues),
+      newValues.containerType
+    ),
+    ...parseEnumField(
+      'containerOption',
+      getByPathWithDefault(null, 'containerOption', originalValues),
+      newValues.containerOption
+    ),
     ...parseDateField(
       'warehouseArrivalAgreedDate',
       getByPathWithDefault(null, 'warehouseArrivalAgreedDate', originalValues),

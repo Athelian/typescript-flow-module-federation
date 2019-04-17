@@ -20,6 +20,8 @@ import {
   CONTAINER_SET_ACTUAL_ARRIVAL_DATE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_SET_NO,
+  CONTAINER_SET_CONTAINER_TYPE,
+  CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_FREE_TIME_START_DATE,
   CONTAINER_SET_FREE_TIME_DURATION,
   CONTAINER_SET_YARD_NAME,
@@ -42,6 +44,8 @@ import {
   DateTimeInputFactory,
   DateInputFactory,
   DayInputFactory,
+  SelectInputFactory,
+  EnumSelectInputFactory,
   Display,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
@@ -53,6 +57,7 @@ import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
 import { calculateDueDate } from 'modules/container/utils';
+import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import ContainerSummary from './ContainerSummary';
 import {
   ContainerSectionWrapperStyle,
@@ -152,6 +157,56 @@ const ContainerSection = () => {
                           />
                         }
                         editable={allowUpdate || hasPermission(CONTAINER_SET_NO)}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="containerType"
+                    initValue={values.containerType}
+                    setFieldValue={setDeepFieldValue}
+                    validator={validator}
+                    values={values}
+                    saveOnChange
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <SelectInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        items={CONTAINER_TYPE_ITEMS}
+                        label={
+                          <FormattedMessage
+                            id="module.container.containerType"
+                            defaultMessage="CONTAINER TYPE"
+                          />
+                        }
+                        editable={allowUpdate || hasPermission(CONTAINER_SET_CONTAINER_TYPE)}
+                      />
+                    )}
+                  </FormField>
+
+                  <FormField
+                    name="containerOption"
+                    initValue={values.containerOption}
+                    setFieldValue={setDeepFieldValue}
+                    validator={validator}
+                    values={values}
+                    saveOnChange
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <EnumSelectInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        originalValue={originalValues[name]}
+                        enumType="ContainerOption"
+                        label={
+                          <FormattedMessage
+                            id="module.container.containerOption"
+                            defaultMessage="CONTAINER OPTION"
+                          />
+                        }
+                        editable={allowUpdate || hasPermission(CONTAINER_SET_CONTAINER_OPTION)}
                       />
                     )}
                   </FormField>
