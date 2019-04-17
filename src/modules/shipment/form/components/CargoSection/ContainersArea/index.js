@@ -13,6 +13,8 @@ import {
   CONTAINER_DELETE,
   CONTAINER_UPDATE,
   CONTAINER_SET_NO,
+  CONTAINER_SET_CONTAINER_TYPE,
+  CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_WAREHOUSE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
@@ -362,6 +364,14 @@ function ContainersArea({
                                                 no: hasPermission([
                                                   CONTAINER_UPDATE,
                                                   CONTAINER_SET_NO,
+                                                ]),
+                                                containerType: hasPermission([
+                                                  CONTAINER_UPDATE,
+                                                  CONTAINER_SET_CONTAINER_TYPE,
+                                                ]),
+                                                containerOption: hasPermission([
+                                                  CONTAINER_UPDATE,
+                                                  CONTAINER_SET_CONTAINER_OPTION,
                                                 ]),
                                                 warehouse:
                                                   hasPermission(WAREHOUSE_LIST) &&

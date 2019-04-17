@@ -65,6 +65,8 @@ export const containerCardFragment = gql`
   fragment containerCardFragment on Container {
     id
     no
+    containerType
+    containerOption
     representativeBatch {
       ... on Batch {
         id
