@@ -44,6 +44,7 @@ export const productProviderFormFragment = gql`
       ...metricFragment
     }
     autoCalculatePackageVolume
+    autoCalculateUnitVolume
     packageSize {
       ...sizeFragment
     }

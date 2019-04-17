@@ -34,7 +34,14 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
   return (
     <div className={SpecificationsSectionWrapperStyle}>
       <Subscribe to={[ProductProviderContainer]}>
-        {({ originalValues, state, setFieldValue, setFieldArrayValue, calculateUnitVolume }) => {
+        {({
+          originalValues,
+          state,
+          setFieldValue,
+          setFieldArrayValue,
+          toggleAutoCalculateUnitVolume,
+          calculateUnitVolume,
+        }) => {
           const values = { ...originalValues, ...state };
 
           return (
@@ -133,6 +140,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 name="unitVolume"
                 initValue={getByPath('unitVolume', values)}
                 setFieldValue={(field, value) => setFieldArrayValue('unitVolume', value)}
+                values={values}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -148,8 +156,9 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                       />
                     }
                     editable={canCreateOrUpdate}
-                    showCalculator
-                    onCalculate={calculateUnitVolume}
+                    showExtraToggleButton={canCreateOrUpdate}
+                    autoCalculateIsToggled={values.autoCalculateUnitVolume}
+                    onToggleAutoCalculate={() => toggleAutoCalculateUnitVolume()}
                   />
                 )}
               </FormField>
@@ -157,7 +166,12 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
               <FormField
                 name="unitSize.length"
                 initValue={getByPath('unitSize.length', values)}
-                setFieldValue={(field, value) => setFieldArrayValue('unitSize.length', value)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('unitSize.length', value);
+                  if (canCreateOrUpdate && values.autoCalculateUnitVolume) {
+                    calculateUnitVolume();
+                  }
+                }}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -180,7 +194,12 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
               <FormField
                 name="unitSize.width"
                 initValue={getByPath('unitSize.width', values)}
-                setFieldValue={(field, value) => setFieldArrayValue('unitSize.width', value)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('unitSize.width', value);
+                  if (canCreateOrUpdate && values.autoCalculateUnitVolume) {
+                    calculateUnitVolume();
+                  }
+                }}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
@@ -203,7 +222,12 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
               <FormField
                 name="unitSize.height"
                 initValue={getByPath('unitSize.height', values)}
-                setFieldValue={(field, value) => setFieldArrayValue('unitSize.height', value)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('unitSize.height', value);
+                  if (canCreateOrUpdate && values.autoCalculateUnitVolume) {
+                    calculateUnitVolume();
+                  }
+                }}
               >
                 {({ name, ...inputHandlers }) => (
                   <MetricInputFactory
