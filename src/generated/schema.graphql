@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Apr 16 2019 16:38:48 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Apr 17 2019 13:32:35 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30177,6 +30177,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   shipmentCount: Int!
   batches: [BatchPayload!]!
   shipments: [ShipmentPayload!]!
+  timeline: Timeline!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -36140,6 +36141,7 @@ input TaskCreateInput {
 
 enum TaskDateBinding {
   OrderIssuedAt
+  OrderItemOrderIssuedAt
   BatchDeliveredAt
   BatchDesiredAt
   BatchProducedAt
