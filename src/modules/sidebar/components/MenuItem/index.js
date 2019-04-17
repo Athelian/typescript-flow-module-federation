@@ -5,19 +5,20 @@ import Icon from 'components/Icon';
 import { MenuItemStyle, IconStyle } from './style';
 
 type Props = {
-  isActive: boolean,
-  onClick: () => void,
   path: string,
+  isActive: boolean,
   icon: string,
   label: React.Node,
 };
 
-const MenuItem = ({ isActive, onClick, path, icon, label }: Props): React.Node => (
-  <Link tabIndex={-1} to={path} onClick={onClick} className={MenuItemStyle(isActive)}>
+const MenuItem = ({ path, isActive, icon, label }: Props): React.Node => (
+  <Link tabIndex={-1} to={path} className={MenuItemStyle(isActive)}>
     <span />
+
     <div className={IconStyle}>
       <Icon icon={icon} />
     </div>
+
     {label}
   </Link>
 );
