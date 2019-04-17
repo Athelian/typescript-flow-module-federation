@@ -174,11 +174,7 @@ const ShipmentContainerCard = ({
                 </Label>
                 <Display align="right">
                   {totalVolume && (
-                    <FormattedNumber
-                      value={totalVolume.value}
-                      suffix={totalVolume.metric}
-                      minimumFractionDigits={6}
-                    />
+                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
                 </Display>
               </div>

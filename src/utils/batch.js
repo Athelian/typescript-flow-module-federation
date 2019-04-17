@@ -1,4 +1,5 @@
 // @flow
+import { times, divide } from 'number-precision';
 import { injectUid } from './id';
 import { isNullOrUndefined } from './fp';
 
@@ -29,12 +30,12 @@ export function convertVolume(
   width: Metric,
   length: Metric
 ): number {
-  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
-  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
-  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
+  const heightValue = height.metric === 'cm' ? height.value : times(height.value, 100);
+  const widthValue = width.metric === 'cm' ? width.value : times(width.value, 100);
+  const lengthValue = length.metric === 'cm' ? length.value : times(length.value, 100);
   const volumeValue = heightValue * widthValue * lengthValue;
 
-  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
+  return volumeMetric === 'cm³' ? volumeValue : divide(volumeValue, 1000000);
 }
 
 const isBadMetricData = (data: Object): boolean =>

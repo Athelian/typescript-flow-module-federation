@@ -1,4 +1,5 @@
 // @flow
+import { divide } from 'number-precision';
 import { calculateBatchQuantity } from 'utils/batch';
 
 export const mapColumnId: Function = (entity: string) => (_: any, index: number): string =>
@@ -18,7 +19,7 @@ export function calculateOrderTotalVolume(orderItems: Array<string>, editData: O
     return (
       total +
       packageQuantity *
-        (packageVolume.metric !== 'cm³' ? packageVolume.value : packageVolume.value / 1e6)
+        (packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume, 1000000))
     );
   }, 0);
   return orderTotalVolume;
@@ -43,7 +44,9 @@ export function calculateShipmentTotalVolume(shipmentId: string, editData: Objec
     return (
       total +
       packageQuantity *
-        (packageVolume.metric !== 'cm³' ? packageVolume.value : packageVolume.value / 1e6)
+        (packageVolume.metric !== 'cm³'
+          ? packageVolume.value
+          : divide(packageVolume.value, 1000000))
     );
   }, 0);
 

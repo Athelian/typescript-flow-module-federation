@@ -1,4 +1,5 @@
 // @flow
+import { times, divide } from 'number-precision';
 
 export type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight' | 'duration';
 
@@ -28,30 +29,30 @@ export const getConvert = (metricType?: MetricEnumType): Function => {
     switch (metricType) {
       case 'distance':
         return (value: number, metric: string, newMetric: string) => {
-          if (metric === 'm' && newMetric === 'cm') return value * 100;
-          if (metric === 'cm' && newMetric === 'm') return value / 100;
+          if (metric === 'm' && newMetric === 'cm') return times(value, 100);
+          if (metric === 'cm' && newMetric === 'm') return divide(value, 100);
           return value;
         };
       case 'area':
         return (value: number, metric: string, newMetric: string) => {
-          if (metric === 'm²' && newMetric === 'cm²') return value * 1e4;
-          if (metric === 'cm²' && newMetric === 'm²') return value / 1e4;
+          if (metric === 'm²' && newMetric === 'cm²') return times(value, 10000);
+          if (metric === 'cm²' && newMetric === 'm²') return divide(value, 10000);
           return value;
         };
       case 'volume':
         return (value: number, metric: string, newMetric: string) => {
-          if (metric === 'm³' && newMetric === 'cm³') return value * 1e6;
-          if (metric === 'cm³' && newMetric === 'm³') return value / 1e6;
+          if (metric === 'm³' && newMetric === 'cm³') return times(value, 1000000);
+          if (metric === 'cm³' && newMetric === 'm³') return divide(value, 1000000);
           return value;
         };
       case 'weight':
         return (value: number, metric: string, newMetric: string) => {
           if ((metric === 'g' && newMetric === 'kg') || (metric === 'kg' && newMetric === 'ton'))
-            return value / 1e3;
+            return divide(value, 1000);
           if ((metric === 'kg' && newMetric === 'g') || (metric === 'ton' && newMetric === 'kg'))
-            return value * 1e3;
-          if (metric === 'g' && newMetric === 'ton') return value / 1e6;
-          if (metric === 'ton' && newMetric === 'g') return value * 1e6;
+            return times(value, 1000);
+          if (metric === 'g' && newMetric === 'ton') return divide(value, 1000000);
+          if (metric === 'ton' && newMetric === 'g') return times(value, 1000000);
           return value;
         };
       case 'duration':
