@@ -619,12 +619,29 @@ export const parseChangedData = ({
       keys.forEach(key => {
         const updateValue = editData.containers[id][key];
         switch (key) {
+          case 'warehouseArrivalAgreedDateApprovedBy':
+            changedContainer.warehouseArrivalAgreedDateApprovedById = updateValue && updateValue.id;
+            break;
+          case 'warehouseArrivalActualDateApprovedBy':
+            changedContainer.warehouseArrivalActualDateApprovedById = updateValue && updateValue.id;
+            break;
+          case 'warehouseArrivalAgreedDateAssignedTo':
+            changedContainer.warehouseArrivalAgreedDateAssignedToIds = updateValue.map(
+              ({ id: userId }) => userId
+            );
+            break;
+          case 'warehouseArrivalActualDateAssignedTo':
+            changedContainer.warehouseArrivalActualDateAssignedToIds = updateValue.map(
+              ({ id: userId }) => userId
+            );
+            break;
           case 'tags':
             changedContainer.tagIds = updateValue.map(({ id: tagId }) => tagId);
             break;
-          case 'customFields':
-            changedContainer[key] = prepareCustomFieldsData(updateValue);
+          case 'warehouse':
+            changedContainer.warehouseId = updateValue && updateValue.id;
             break;
+
           default:
             changedContainer[key] = updateValue;
         }

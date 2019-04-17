@@ -89,25 +89,19 @@ export const containerColumns = [
     id: 0,
     group: <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />,
     columns: [
-      <FormattedMessage id="modules.container.containerNo" defaultMessage="CONTAINER NO" />,
-      <FormattedMessage id="module.container.agreedArrival" defaultMessage="AGREED ARRIVAL" />,
-      <FormattedMessage
-        id="modules.container.agreedArrivalAssignedTo"
-        defaultMessage="AGREED ARRIVAL ASSIGNED TO"
-      />,
-      <FormattedMessage id="module.container.actualArrival" defaultMessage="ACTUAL ARRIVAL" />,
-      <FormattedMessage
-        id="modules.container.actualArrivalAssignedTo"
-        defaultMessage="ACTUAL ARRIVAL ASSIGNED TO"
-      />,
-      <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />,
-      <FormattedMessage id="modules.container.tags" defaultMessage="TAGS" />,
-      <FormattedMessage id="modules.container.totalPackages" defaultMessage="TOTAL PACKAGES" />,
-      <FormattedMessage id="modules.container.totalBatchQuantity" defaultMessage="BATCHED QTY" />,
-      <FormattedMessage id="modules.container.totalUniqueItems" defaultMessage="UNIQUE ITEMS" />,
-      <FormattedMessage id="modules.container.totalVolume" defaultMessage="TOTAL VOLUME" />,
-      <FormattedMessage id="modules.container.totalWeight" defaultMessage="TOTAL WEIGHT" />,
-      <FormattedMessage id="modules.container.totalPrice" defaultMessage="TOTAL PRICE" />,
+      <FormattedMessage {...containerMessages.containerNo} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
+      <FormattedMessage {...containerMessages.warehouseName} />,
+      <FormattedMessage {...containerMessages.tags} />,
+      <FormattedMessage {...containerMessages.totalPackages} />,
+      <FormattedMessage {...containerMessages.totalBatchQuantity} />,
+      <FormattedMessage {...containerMessages.totalUniqueItems} />,
+      <FormattedMessage {...containerMessages.totalVolume} />,
+      <FormattedMessage {...containerMessages.totalWeight} />,
+      <FormattedMessage {...containerMessages.totalPrice} />,
     ],
   },
 ];
@@ -726,6 +720,67 @@ export const containerColumnFields = [
     meta: {
       isRequired: true,
     },
+  },
+  {
+    messageId: containerMessages.warehouseArrivalAgreedDate.id,
+    name: 'warehouseArrivalAgreedDate',
+    type: 'datetimeWithApproval',
+    getFieldValue: (values: Object) => {
+      return {
+        approvedBy: getByPath(`warehouseArrivalAgreedDateApprovedBy`, values),
+        approvedAt: getByPath(`warehouseArrivalAgreedDateApprovedAt`, values),
+        date: getByPath(`warehouseArrivalAgreedDate`, values),
+      };
+    },
+  },
+  {
+    messageId: containerMessages.warehouseArrivalAgreedDateAssignedTo.id,
+    name: 'warehouseArrivalAgreedDateAssignedTo',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+    getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
+      inCharges &&
+      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+  },
+  {
+    messageId: containerMessages.warehouseArrivalActualDate.id,
+    name: 'warehouseArrivalActualDate',
+    type: 'datetimeWithApproval',
+    getFieldValue: (values: Object) => {
+      return {
+        approvedBy: getByPath(`warehouseArrivalActualDateApprovedBy`, values),
+        approvedAt: getByPath(`warehouseArrivalActualDateApprovedAt`, values),
+        date: getByPath(`warehouseArrivalActualDate`, values),
+      };
+    },
+  },
+  {
+    messageId: containerMessages.warehouseArrivalActualDateAssignedTo.id,
+    name: 'warehouseArrivalActualDateAssignedTo',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+    getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
+      inCharges &&
+      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+  },
+  {
+    messageId: containerMessages.warehouseName.id,
+    name: 'warehouse',
+    type: 'warehouse',
+  },
+  {
+    messageId: containerMessages.tags.id,
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Container',
+    },
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
+      tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
 ];
 
