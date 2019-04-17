@@ -2,10 +2,11 @@
 import * as React from 'react';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
+import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
+import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
@@ -720,6 +721,17 @@ export const batchColumnFields = [
   },
 ];
 
+export const containerColumnFields = [
+  {
+    messageId: containerMessages.containerNo.id,
+    name: 'no',
+    type: 'text',
+    meta: {
+      isRequired: true,
+    },
+  },
+];
+
 export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.shipmentId.id,
@@ -1047,6 +1059,8 @@ export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(mapCo
 
 export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId(BATCH));
 
+export const containerColumnIds: Array<string> = containerColumnFields.map(mapColumnId(CONTAINER));
+
 export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId(SHIPMENT));
 
 export const productColumnIds: Array<string> = productColumnFields.map(mapColumnId(PRODUCT));
@@ -1055,6 +1069,7 @@ export const allColumnIds = [
   ...orderColumnIds,
   ...orderItemColumnIds,
   ...batchColumnIds,
+  ...containerColumnIds,
   ...shipmentColumnIds,
   ...productColumnIds,
 ];

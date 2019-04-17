@@ -21,6 +21,7 @@ import {
   shipmentEntityFragment,
   batchEntityFragment,
   productEntityFragment,
+  containerEntityFragment,
 } from './query';
 
 export const entitiesUpdateManyMutation = gql`
@@ -30,6 +31,7 @@ export const entitiesUpdateManyMutation = gql`
     $products: [ProductUpdateWrapperInput!]
     $batches: [BatchUpdateWrapperInput!]
     $warehouses: [WarehouseUpdateWrapperInput!]
+    $containers: [ContainerUpdateWrapperInput!]
   ) {
     entitiesUpdateMany(
       orders: $orders
@@ -37,6 +39,7 @@ export const entitiesUpdateManyMutation = gql`
       products: $products
       batches: $batches
       warehouses: $warehouses
+      containers: $containers
     ) {
       orders {
         ... on Order {
@@ -62,6 +65,10 @@ export const entitiesUpdateManyMutation = gql`
       warehouses {
         ...badRequestFragment
       }
+      containers {
+        ...containerEntityFragment
+        ...badRequestFragment
+      }
     }
   }
   ${badRequestFragment}
@@ -82,6 +89,7 @@ export const entitiesUpdateManyMutation = gql`
   ${orderEntityFragment}
   ${shipmentEntityFragment}
   ${productEntityFragment}
+  ${containerEntityFragment}
 `;
 
 export default entitiesUpdateManyMutation;

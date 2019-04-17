@@ -82,6 +82,7 @@ export const findAllPossibleIds = (
     batches: Object,
     shipments: Object,
     products: Object,
+    containers: Object,
   }
 ): {
   orderIds: Array<Object>,
@@ -89,6 +90,7 @@ export const findAllPossibleIds = (
   batchIds: Array<Object>,
   shipmentIds: Array<Object>,
   productIds: Array<Object>,
+  containerIds: Array<Object>,
 } => {
   logger.warn({
     selected,
@@ -173,12 +175,14 @@ export const findAllPossibleIds = (
   });
 
   const productIds = Object.keys(entities.products || {});
+  const containerIds = Object.keys(entities.containers || {});
   return {
     productIds,
     orderIds: [...new Set(orderIds)],
     orderItemIds: [...new Set(orderItemIds)],
     batchIds: [...new Set(batchIds)],
     shipmentIds: [...new Set(shipmentIds)],
+    containerIds,
   };
 };
 
@@ -348,6 +352,7 @@ export const parseChangedData = ({
     orderItems?: Object,
     batches?: Object,
     products?: Object,
+    containers?: Object,
   },
   editData: Object,
   mappingObjects: Object,
@@ -357,6 +362,7 @@ export const parseChangedData = ({
   const batches = [];
   const shipments = [];
   const products = [];
+  const containers = [];
   if (changedData.orders) {
     (Object.entries(changedData.orders || {}): any).forEach(item => {
       const [id, order] = item;
@@ -605,12 +611,35 @@ export const parseChangedData = ({
     });
   }
 
+  if (changedData.containers) {
+    (Object.entries(changedData.containers || {}): any).forEach(item => {
+      const [id, container] = item;
+      const keys = Object.keys(container);
+      const changedContainer = {};
+      keys.forEach(key => {
+        const updateValue = editData.containers[id][key];
+        switch (key) {
+          case 'tags':
+            changedContainer.tagIds = updateValue.map(({ id: tagId }) => tagId);
+            break;
+          case 'customFields':
+            changedContainer[key] = prepareCustomFieldsData(updateValue);
+            break;
+          default:
+            changedContainer[key] = updateValue;
+        }
+      });
+      containers.push({ input: changedContainer, id });
+    });
+  }
+
   return {
     orders,
     batches,
     shipments,
     warehouses: [],
     products,
+    containers,
   };
 };
 
