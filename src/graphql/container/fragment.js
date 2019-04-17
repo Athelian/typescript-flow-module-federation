@@ -6,6 +6,8 @@ export const containerFormFragment = gql`
     archived
     updatedAt
     no
+    containerType
+    containerOption
     memo
     ownedBy {
       ...ownedByFragment
