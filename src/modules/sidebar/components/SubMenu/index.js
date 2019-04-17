@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react';
+import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import Icon from 'components/Icon';
 import {
@@ -13,16 +14,13 @@ import {
 import { IconStyle } from '../MenuItem/style';
 
 type Props = {
-  isExpanded: boolean,
   hasActiveChild: boolean,
-  onClick: (?string) => void,
-  id: string,
   icon: string,
   label: React.Node,
   children: React.Node,
 };
 
-const SubMenu = ({ isExpanded, hasActiveChild, onClick, id, icon, label, children }: Props) => {
+const SubMenu = ({ hasActiveChild, icon, label, children }: Props) => {
   const menuItems = React.Children.toArray(children);
 
   const menuItemCount = menuItems.filter(child => React.isValidElement(child)).length;
@@ -32,53 +30,60 @@ const SubMenu = ({ isExpanded, hasActiveChild, onClick, id, icon, label, childre
   let debounceHover = null;
 
   return (
-    <div className={SubMenuWrapperStyle}>
-      <div
-        className={SubMenuItemWrapperStyle(isExpanded || hasActiveChild)}
-        onClick={() => {
-          onClick(isExpanded && !hasActiveChild ? null : id);
-          navigate(firstChildPath);
-        }}
-        role="presentation"
-      >
-        <span />
+    <BooleanValue>
+      {({ value: isExpanded, set: changeExpand }) => (
+        <div className={SubMenuWrapperStyle}>
+          <div
+            className={SubMenuItemWrapperStyle(isExpanded || hasActiveChild, hasActiveChild)}
+            onClick={() => {
+              changeExpand(!(isExpanded && !hasActiveChild));
+              navigate(firstChildPath);
+            }}
+            role="presentation"
+          >
+            <span />
 
-        <div
-          className={SubMenuItemStyle}
-          onMouseEnter={() => {
-            if (!isExpanded && !hasActiveChild) {
-              debounceHover = setTimeout(() => onClick(id), 700);
-            }
-          }}
-          onMouseLeave={() => {
-            if (debounceHover) {
-              clearTimeout(debounceHover);
-            }
-          }}
-        >
-          <div className={IconStyle}>
-            <Icon icon={icon} />
+            <div
+              className={SubMenuItemStyle}
+              onMouseEnter={() => {
+                if (!isExpanded && !hasActiveChild) {
+                  debounceHover = setTimeout(
+                    () => changeExpand(!(isExpanded && !hasActiveChild)),
+                    700
+                  );
+                }
+              }}
+              onMouseLeave={() => {
+                if (debounceHover) {
+                  clearTimeout(debounceHover);
+                }
+              }}
+            >
+              <div className={IconStyle}>
+                <Icon icon={icon} />
+              </div>
+
+              {label}
+            </div>
+
+            <div
+              className={ChevronButtonStyle(isExpanded || hasActiveChild, hasActiveChild)}
+              onClick={evt => {
+                evt.stopPropagation();
+                changeExpand(!(isExpanded && !hasActiveChild));
+              }}
+              role="presentation"
+            >
+              <Icon icon="CHEVRON_DOWN" />
+            </div>
           </div>
 
-          {label}
+          <div className={SubMenuBodyStyle(isExpanded || hasActiveChild, menuItemCount)}>
+            {children}
+          </div>
         </div>
-
-        <div
-          className={ChevronButtonStyle(isExpanded || hasActiveChild, hasActiveChild)}
-          onClick={evt => {
-            evt.stopPropagation();
-            onClick(isExpanded && !hasActiveChild ? null : id);
-          }}
-          role="presentation"
-        >
-          <Icon icon="CHEVRON_DOWN" />
-        </div>
-      </div>
-
-      <div className={SubMenuBodyStyle(isExpanded || hasActiveChild, menuItemCount)}>
-        {children}
-      </div>
-    </div>
+      )}
+    </BooleanValue>
   );
 };
 
