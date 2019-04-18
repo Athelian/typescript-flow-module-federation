@@ -5,8 +5,7 @@ import MetadataForm from './index.form';
 
 const MetadataModule = () => (
   <Router>
-    <MetadataForm path="/" redirectUrl="/order" />
-    <MetadataForm path="/:entityType" />
+    <MetadataForm path="/" />
   </Router>
 );
 
