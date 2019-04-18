@@ -19,7 +19,6 @@ type Props = {
 
 export default class DeployNotifier extends React.Component<Props> {
   componentDidMount() {
-    // TODO: remove revision and try to use localStorage for tracking latest version which they already have on their PC
     const { revision, revisionKey } = this.props;
 
     const docRef = firebase.database().ref(`/${revisionKey}`);
@@ -42,8 +41,8 @@ export default class DeployNotifier extends React.Component<Props> {
             type="button"
           >
             <FormattedMessage
-              id="components.deployNotifier.message"
-              defaultMessage={`There has been an update.\nPlease refresh your browser.`}
+              id="components.deployNotifier.newVersionMessage"
+              defaultMessage="An update is available. Please close all other Zenport tabs and click here."
             />
             <div className={ToastButtonIconStyle}>
               <Icon icon="RELOAD" />
