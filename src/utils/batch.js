@@ -1,7 +1,8 @@
 // @flow
-import { isNullOrUndefined } from './fp';
+import { times, divide } from 'number-precision';
 import { injectUid } from './id';
-import { convertVolumeUnit, convertWeightUnit } from './unit';
+import { convertVolume, weightConvert } from './metric';
+import { isNullOrUndefined } from './fp';
 
 export const findWeight = (batch: Object) => {
   const {
@@ -12,7 +13,7 @@ export const findWeight = (batch: Object) => {
     packageGrossWeight: Object,
   } = batch;
   return packageGrossWeight
-    ? packageQuantity * convertVolumeUnit(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
+    ? packageQuantity * convertVolume(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
     : 0;
 };
 
@@ -26,7 +27,7 @@ export const findVolume = (batch: Object) => {
   } = batch;
   const volume = isNullOrUndefined(packageVolume)
     ? 0
-    : convertWeightUnit(packageVolume.value, packageVolume.metric, 'm³');
+    : weightConvert(packageVolume.value, packageVolume.metric, 'm³');
   return packageQuantity * volume;
 };
 
@@ -51,18 +52,18 @@ type Metric = {
   metric: string,
 };
 
-export function convertVolume(
+export function calculateVolume(
   volumeMetric: string,
   height: Metric,
   width: Metric,
   length: Metric
 ): number {
-  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
-  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
-  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
-  const volumeValue = heightValue * widthValue * lengthValue;
+  const heightValue = height.metric === 'cm' ? height.value : times(height.value, 100);
+  const widthValue = width.metric === 'cm' ? width.value : times(width.value, 100);
+  const lengthValue = length.metric === 'cm' ? length.value : times(length.value, 100);
+  const volumeValue = times(heightValue, widthValue, lengthValue);
 
-  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
+  return volumeMetric === 'cm³' ? volumeValue : divide(volumeValue, 1000000);
 }
 
 const isBadMetricData = (data: Object): boolean =>
@@ -84,7 +85,7 @@ export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): 
   }
   return {
     metric: packageVolume.metric,
-    value: convertVolume(
+    value: calculateVolume(
       packageVolume.metric,
       packageSize.height,
       packageSize.width,
@@ -109,7 +110,7 @@ export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object =>
   }
   return {
     metric: unitVolume.metric,
-    value: convertVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
+    value: calculateVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
   };
 };
 
@@ -187,3 +188,12 @@ export const generateBatchByOrderItem = (orderItem: Object) => {
     },
   });
 };
+
+export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
+  !packageVolume || !packageQuantity
+    ? total
+    : total +
+      times(
+        packageQuantity,
+        packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume.value, 1000000)
+      );

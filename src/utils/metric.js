@@ -7,19 +7,19 @@ export const volumeMetrics = ['cm³', 'm³'];
 export const weightMetrics = ['g', 'kg', 'ton'];
 export const durationMetrics = ['days', 'weeks', 'months'];
 
-export const distanceConvert = (value: number, metric: string, newMetric: string) => {
+export const convertDistance = (value: number, metric: string, newMetric: string) => {
   if (metric === 'm' && newMetric === 'cm') return times(value, 100);
   if (metric === 'cm' && newMetric === 'm') return divide(value, 100);
   return value;
 };
 
-export const areaConvert = (value: number, metric: string, newMetric: string) => {
+export const convertArea = (value: number, metric: string, newMetric: string) => {
   if (metric === 'm²' && newMetric === 'cm²') return times(value, 10000);
   if (metric === 'cm²' && newMetric === 'm²') return divide(value, 10000);
   return value;
 };
 
-export const volumeConvert = (value: number, metric: string, newMetric: string) => {
+export const convertVolume = (value: number, metric: string, newMetric: string) => {
   if (metric === 'm³' && newMetric === 'cm³') return times(value, 1000000);
   if (metric === 'cm³' && newMetric === 'm³') return divide(value, 1000000);
   return value;

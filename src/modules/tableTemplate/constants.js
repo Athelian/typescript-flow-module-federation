@@ -6,13 +6,13 @@ import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT } from 'constant
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
 import {
-  convertDistanceUnit,
-  convertVolumeUnit,
-  convertWeightUnit,
+  convertDistance,
+  convertVolume,
+  weightConvert,
   weightMetrics,
   volumeMetrics,
   distanceMetrics,
-} from 'utils/unit';
+} from 'utils/metric';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
@@ -654,7 +654,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: weightMetrics,
-      convert: convertWeightUnit,
+      convert: weightConvert,
     },
     getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) =>
       packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`,
@@ -665,7 +665,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: volumeMetrics,
-      convert: convertVolumeUnit,
+      convert: convertVolume,
     },
     getExportValue: ({ packageVolume }: { packageVolume: Object } = {}) =>
       packageVolume && `${packageVolume.value} ${packageVolume.metric}`,
@@ -676,7 +676,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
-      convert: convertDistanceUnit,
+      convert: convertDistance,
       sourcePath: 'packageSize',
       destPath: 'width',
     },
@@ -689,7 +689,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
-      convert: convertDistanceUnit,
+      convert: convertDistance,
       sourcePath: 'packageSize',
       destPath: 'height',
     },
@@ -704,7 +704,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
-      convert: convertDistanceUnit,
+      convert: convertDistance,
       sourcePath: 'packageSize',
       destPath: 'length',
     },

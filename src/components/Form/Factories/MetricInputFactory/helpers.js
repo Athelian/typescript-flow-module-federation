@@ -1,9 +1,9 @@
 // @flow
 import {
-  distanceConvert,
-  areaConvert,
+  convertDistance,
+  convertArea,
   weightConvert,
-  volumeConvert,
+  convertVolume,
   distanceMetrics,
   areaMetrics,
   volumeMetrics,
@@ -38,11 +38,11 @@ export const getConvert = (metricType?: MetricEnumType): Function => {
   if (metricType) {
     switch (metricType) {
       case 'distance':
-        return distanceConvert;
+        return convertDistance;
       case 'area':
-        return areaConvert;
+        return convertArea;
       case 'volume':
-        return volumeConvert;
+        return convertVolume;
       case 'weight':
         return weightConvert;
       case 'duration':
