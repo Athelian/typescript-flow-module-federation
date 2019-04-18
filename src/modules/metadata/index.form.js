@@ -6,6 +6,7 @@ import { UIConsumer } from 'modules/ui';
 import withCache from 'hoc/withCache';
 import Layout from 'components/Layout';
 import useFilter from 'hooks/useFilter';
+import { getByPathWithDefault } from 'utils/fp';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import FieldDefinitionsFormWrapper from 'modules/metadata/components/FieldDefinitionsFormWrapper';
@@ -29,7 +30,7 @@ const MetadataForm = () => {
     initFilter,
     `filterCustomFieldsTemplate`
   );
-  const activeType = filterAndSort.filter.entityTypes[0];
+  const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
   return (
     <Provider>

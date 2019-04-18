@@ -12,6 +12,7 @@ import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
+import { getByPathWithDefault } from 'utils/fp';
 import { TASK_TEMPLATE_CREATE } from 'modules/permission/constants/task';
 import TaskTemplateList from './list';
 import TaskTemplateFormWrapper from './common/TaskTemplateFormWrapper';
@@ -34,7 +35,9 @@ const TaskTemplateListModule = () => {
     initFilter,
     `filterTaskTemplate`
   );
-  const activeType = filterAndSort.filter.entityTypes[0];
+  const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
+
+  console.warn(activeType);
 
   return (
     <Provider>
