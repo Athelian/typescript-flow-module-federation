@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import emitter from 'utils/emitter';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
 import validator from 'modules/taskTemplate/form/validator';
 import JumpToSection from 'components/JumpToSection';
@@ -20,6 +21,7 @@ import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { removeTypename } from 'utils/data';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 
 type OptionalProps = {
   template: Object,
@@ -93,7 +95,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       }
     } else if (template.id) {
       const { data } = await saveTaskTemplate({
-        variables: { id: template.id, input },
+        variables: { input, id: template.id },
       });
       const {
         taskTemplateUpdate: { violations },
@@ -101,6 +103,11 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
+        if (
+          !isEquals(getByPathWithDefault(null, 'entityType', originalValues), values.entityType)
+        ) {
+          emitter.emit('REFETCH_TASK_TEMPLATES');
+        }
         closeSlideView();
         onSuccess();
       }
