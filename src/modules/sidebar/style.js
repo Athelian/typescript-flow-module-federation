@@ -35,9 +35,7 @@ export const SideBarBodyStyle: string = css`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 80px);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: overlay;
   ${scrollbars.SMALL_WHITE};
-  &:hover {
-    overflow-y: overlay;
-  }
 `;

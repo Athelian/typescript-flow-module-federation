@@ -17,7 +17,7 @@ type Props = {
 };
 
 function onClone(tagId: string) {
-  navigate(`/settings/tags/clone/${encodeId(tagId)}`);
+  navigate(`/tags/clone/${encodeId(tagId)}`);
 }
 
 const defaultRenderItem = (item: Object, allowCreate: boolean) => (
