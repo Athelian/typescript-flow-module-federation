@@ -43,7 +43,7 @@ import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
-import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
@@ -252,7 +252,7 @@ function BatchesArea({
                                     onRequestClose={() => batchSlideToggle(false)}
                                   >
                                     {opened && (
-                                      <BatchFormWrapper
+                                      <BatchFormInSlide
                                         batch={batch}
                                         onSave={value => {
                                           batchSlideToggle(false);

@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
@@ -20,7 +20,11 @@ type Props = {
 
 const formContainer = new FormContainer();
 
-const BatchFormWrapper = ({ batch, onSave }: Props) => {
+const BatchFormInSlide = ({ batch, onSave }: Props) => {
+  useEffect(() => {
+    return () => formContainer.onReset();
+  });
+
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
@@ -128,4 +132,4 @@ const BatchFormWrapper = ({ batch, onSave }: Props) => {
   );
 };
 
-export default BatchFormWrapper;
+export default BatchFormInSlide;

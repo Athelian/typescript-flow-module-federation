@@ -6,7 +6,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import { type UserAvatarType } from 'types';
-import { IN_PROGRESS, COMPLETED } from './constants';
+import { IN_PROGRESS } from './constants';
 import {
   TaskStatusInputWrapperStyle,
   UserAvatarWrapperStyle,
@@ -15,8 +15,7 @@ import {
   TaskStatusInputLabelStyle,
   StatusLabelStyle,
 } from './style';
-
-export type TaskStatusType = typeof IN_PROGRESS | typeof COMPLETED;
+import { type TaskStatusType } from './type';
 
 type OptionalProps = {
   width: string,

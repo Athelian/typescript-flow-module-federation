@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
-import { type TaskStatusType } from '..';
+import { type TaskStatusType } from './type';
 
 type TaskStatusInputWrapperStyleType = {
   status: TaskStatusType,

@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import ProductProviderContainer from 'modules/productProvider/form/container';
@@ -67,6 +67,9 @@ const ProductProviderFormWrapper = ({
   isAddedProvider,
   onCancel,
 }: Props) => {
+  useEffect(() => {
+    return () => formContainer.onReset();
+  });
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[ProductProviderContainer]}>

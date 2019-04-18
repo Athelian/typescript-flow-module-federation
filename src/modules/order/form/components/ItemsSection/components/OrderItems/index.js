@@ -11,7 +11,7 @@ import SlideView from 'components/SlideView';
 import { OrderItemCard, OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
-import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import { generateBatchForClone } from 'utils/batch';
 import {
   ItemGridStyle,
@@ -124,7 +124,7 @@ const OrderItems = ({
                             <>
                               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                                 {opened && (
-                                  <BatchFormWrapper
+                                  <BatchFormInSlide
                                     batch={batch}
                                     onSave={value => {
                                       slideToggle(false);

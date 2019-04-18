@@ -25,7 +25,6 @@ import { getLatestDate } from 'utils/shipment';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import ContainerFormContainer from 'modules/container/form/container';
 import Action from 'modules/shipment/form/components/Action';
 import {
   ShipmentContainersContainer,
@@ -497,38 +496,30 @@ function ContainersArea({
                                   onRequestClose={() => toggleContainerForm(false)}
                                 >
                                   {isOpenContainerForm && (
-                                    <Subscribe to={[ContainerFormContainer]}>
-                                      {({ initDetailValues }) => (
-                                        <ContainerFormInSlide
-                                          container={container}
-                                          onCancel={() => toggleContainerForm(false)}
-                                          onSave={newContainer => {
-                                            const { batches: newBatches } = newContainer;
-                                            setBatchesState('batches', [
-                                              ...batches.filter(
-                                                ({ container: batchContainer }) =>
-                                                  isNullOrUndefined(batchContainer) ||
-                                                  batchContainer.id !== container.id
-                                              ),
-                                              ...newBatches.map(batch => ({
-                                                ...batch,
-                                                container: newContainer,
-                                              })),
-                                            ]);
-                                            setDeepFieldValue(`containers.${index}`, newContainer);
-                                            toggleContainerForm(false);
-                                          }}
-                                          onFormReady={() =>
-                                            initDetailValues({
-                                              ...container,
-                                              shipment: {
-                                                voyages,
-                                              },
-                                            })
-                                          }
-                                        />
-                                      )}
-                                    </Subscribe>
+                                    <ContainerFormInSlide
+                                      container={{
+                                        ...container,
+                                        shipment: {
+                                          voyages,
+                                        },
+                                      }}
+                                      onSave={newContainer => {
+                                        const { batches: newBatches } = newContainer;
+                                        setBatchesState('batches', [
+                                          ...batches.filter(
+                                            ({ container: batchContainer }) =>
+                                              isNullOrUndefined(batchContainer) ||
+                                              batchContainer.id !== container.id
+                                          ),
+                                          ...newBatches.map(batch => ({
+                                            ...batch,
+                                            container: newContainer,
+                                          })),
+                                        ]);
+                                        setDeepFieldValue(`containers.${index}`, newContainer);
+                                        toggleContainerForm(false);
+                                      }}
+                                    />
                                   )}
                                 </SlideView>
                               </>

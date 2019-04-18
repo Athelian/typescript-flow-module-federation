@@ -7,7 +7,7 @@ import { encodeId } from 'utils/id';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { BatchInfoContainer, BatchTasksContainer } from './containers';
-import { BatchFormWrapperStyle } from './style';
+import { BatchFormInSlideStyle } from './style';
 
 const AsyncBatchSection = lazy(() => import('./components/BatchSection'));
 const AsyncQuantityAdjustmentsSection = lazy(() =>
@@ -59,7 +59,7 @@ export default class BatchForm extends React.Component<Props> {
     const { batch, isNew, isClone } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
-        <div className={BatchFormWrapperStyle}>
+        <div className={BatchFormInSlideStyle}>
           <AsyncBatchSection isNew={isNew} isClone={isClone} batch={batch} />
           <AsyncQuantityAdjustmentsSection isNew={isNew} />
           <AsyncPackagingSection isNew={isNew} />
