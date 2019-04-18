@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import emitter from 'utils/emitter';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
 import validator from 'modules/taskTemplate/form/validator';
 import JumpToSection from 'components/JumpToSection';
@@ -93,7 +94,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       }
     } else if (template.id) {
       const { data } = await saveTaskTemplate({
-        variables: { id: template.id, input },
+        variables: { input, id: template.id },
       });
       const {
         taskTemplateUpdate: { violations },
@@ -102,6 +103,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
         onErrors(violations);
       } else {
         closeSlideView();
+
+        emitter.emit('REFETCH_TASK_TEMPLATES');
+
         onSuccess();
       }
     }
