@@ -10,7 +10,6 @@ import { CUSTOM_FIELD_MASKS_CREATE } from 'modules/permission/constants/customFi
 import { PermissionConsumer } from 'modules/permission';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
-import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import MaskFormWrapper from 'modules/metadata/components/MaskFormWrapper';
@@ -20,9 +19,10 @@ import { TemplatesListWrapperStyle, TemplatesHeaderStyle, TemplatesBodyStyle } f
 
 type Props = {
   entityType: string,
+  queryVariables: Object,
 };
 
-const MaskList = ({ entityType }: Props) => (
+const MaskList = ({ entityType, queryVariables }: Props) => (
   <PermissionConsumer>
     {hasPermission => {
       const allowCreate = hasPermission(CUSTOM_FIELD_MASKS_CREATE);
@@ -30,19 +30,14 @@ const MaskList = ({ entityType }: Props) => (
       return (
         <Query
           query={masksQuery}
-          variables={{
-            page: 1,
-            perPage: 10,
-            filter: { entityTypes: entityType },
-          }}
+          key={entityType}
+          variables={queryVariables}
           fetchPolicy="network-only"
         >
           {({ loading, data, fetchMore, error, refetch }) => {
             if (error) {
               return error.message;
             }
-
-            if (loading) return <LoadingIcon />;
 
             const nextPage = getByPathWithDefault(1, 'masks.page', data) + 1;
             const totalPage = getByPathWithDefault(1, 'masks.totalPage', data);
@@ -58,7 +53,7 @@ const MaskList = ({ entityType }: Props) => (
                     <BooleanValue>
                       {({ value: isOpen, set: toggle }) => (
                         <>
-                          <NewButton onClick={() => toggle(true)} />
+                          <NewButton onClick={() => toggle(true)} disabled={loading} />
                           <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                             {isOpen && (
                               <MaskFormWrapper
@@ -81,13 +76,7 @@ const MaskList = ({ entityType }: Props) => (
                   <MaskGridView
                     entityType={entityType}
                     items={getByPathWithDefault([], 'masks.nodes', data)}
-                    onLoadMore={() =>
-                      loadMore(
-                        { fetchMore, data },
-                        { filter: { entityTypes: entityType } },
-                        'masks'
-                      )
-                    }
+                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'masks')}
                     hasMore={hasMore}
                     isLoading={loading}
                     renderItem={mask => (

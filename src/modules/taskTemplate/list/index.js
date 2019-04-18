@@ -9,21 +9,15 @@ import { taskTemplateListQuery } from './query';
 
 type Props = {
   entityType: string,
-  sortBy: {
-    [field: string]: string,
-  },
-  perPage: number,
+  queryVariables: Object,
 };
 
-const TaskTemplateList = ({ entityType, ...filtersAndSort }: Props) => {
+const TaskTemplateList = ({ entityType, queryVariables }: Props) => {
   return (
     <Query
       query={taskTemplateListQuery}
       key={entityType}
-      variables={{
-        ...filtersAndSort,
-        page: 1,
-      }}
+      variables={queryVariables}
       fetchPolicy="network-only"
       onCompleted={logger.warn}
       onError={logger.error}
@@ -39,7 +33,7 @@ const TaskTemplateList = ({ entityType, ...filtersAndSort }: Props) => {
         return (
           <TaskTemplateGridView
             items={getByPathWithDefault([], 'taskTemplates.nodes', data)}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'taskTemplates')}
+            onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'taskTemplates')}
             hasMore={hasMore}
             isLoading={loading}
           />
