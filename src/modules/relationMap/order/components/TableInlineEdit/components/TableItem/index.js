@@ -19,6 +19,7 @@ import {
   InlineDateTimeApprovalInput,
   InlineWarehouse,
   AutoCalculate,
+  InlineSelectInput,
 } from './components';
 
 type OptionalProps = {
@@ -95,6 +96,9 @@ function renderItem({
 
     case 'metric':
       return <InlineMetricInput name={name} value={value} values={values} {...meta} id={id} />;
+
+    case 'select':
+      return <InlineSelectInput name={name} value={value} {...meta} id={id} />;
 
     case 'enum':
       return <InlineSearchEnumInput name={name} value={value} {...meta} id={id} />;

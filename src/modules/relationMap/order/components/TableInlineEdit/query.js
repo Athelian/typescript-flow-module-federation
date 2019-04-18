@@ -201,6 +201,8 @@ export const containerEntityFragment = gql`
         name
       }
     }
+    containerType
+    containerOption
     warehouseArrivalAgreedDate
     warehouseArrivalActualDate
     warehouseArrivalAgreedDateApprovedAt
