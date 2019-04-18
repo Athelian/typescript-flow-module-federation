@@ -1,4 +1,5 @@
 // @flow
+import { times, divide } from 'number-precision';
 import { injectUid } from './id';
 import { isNullOrUndefined } from './fp';
 
@@ -23,18 +24,18 @@ type Metric = {
   metric: string,
 };
 
-export function convertVolume(
+export function volumeConvert(
   volumeMetric: string,
   height: Metric,
   width: Metric,
   length: Metric
 ): number {
-  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
-  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
-  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
+  const heightValue = height.metric === 'cm' ? height.value : times(height.value, 100);
+  const widthValue = width.metric === 'cm' ? width.value : times(width.value, 100);
+  const lengthValue = length.metric === 'cm' ? length.value : times(length.value, 100);
   const volumeValue = heightValue * widthValue * lengthValue;
 
-  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
+  return volumeMetric === 'cm³' ? volumeValue : divide(volumeValue, 1000000);
 }
 
 const isBadMetricData = (data: Object): boolean =>
@@ -56,7 +57,7 @@ export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): 
   }
   return {
     metric: packageVolume.metric,
-    value: convertVolume(
+    value: volumeConvert(
       packageVolume.metric,
       packageSize.height,
       packageSize.width,
@@ -81,7 +82,7 @@ export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object =>
   }
   return {
     metric: unitVolume.metric,
-    value: convertVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
+    value: volumeConvert(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
   };
 };
 
@@ -159,3 +160,12 @@ export const generateBatchByOrderItem = (orderItem: Object) => {
     },
   });
 };
+
+export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
+  !packageVolume || !packageQuantity
+    ? total
+    : total +
+      times(
+        packageQuantity,
+        packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume.value, 1000000)
+      );

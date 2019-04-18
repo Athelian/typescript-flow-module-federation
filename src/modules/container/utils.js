@@ -1,7 +1,7 @@
 // @flow
 import { uniqBy } from 'lodash';
 import { isNullOrUndefined } from 'utils/fp';
-import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
+import { volumeConvert } from 'utils/metric';
 import { addDays } from 'date-fns';
 
 type BatchProp = {
@@ -30,7 +30,7 @@ const calculateBatchTotalVolume = (batch: Object): Metric => {
   } = batch;
   const volume = isNullOrUndefined(packageVolume)
     ? 0
-    : convertVolume(packageVolume.value, packageVolume.metric, 'm³');
+    : volumeConvert(packageVolume.value, packageVolume.metric, 'm³');
 
   return {
     metric: 'm³',
