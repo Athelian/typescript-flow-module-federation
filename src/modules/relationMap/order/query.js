@@ -329,8 +329,8 @@ export const orderListQuery = gql`
 `;
 
 export const shipmentListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filter: ShipmentFilterInput, $sort: ShipmentSortInput) {
-    shipments(page: $page, perPage: $perPage, filterBy: $filter, sortBy: $sort) {
+  query($page: Int!, $perPage: Int!, $filterBy: ShipmentFilterInput, $sortBy: ShipmentSortInput) {
+    shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ... on Shipment {
           id

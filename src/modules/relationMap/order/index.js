@@ -17,6 +17,7 @@ import useFilter from 'hooks/useFilter';
 import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
+import { SearchInput } from 'components/NavBar';
 import AdvancedFilter from '../common/SortFilter/AdvancedFilter';
 import messages from '../messages';
 import SortFilter from '../common/SortFilter';
@@ -54,11 +55,24 @@ type Props = {
   intl: IntlShape,
 };
 
-const initFilter = {
+const initOrderFilter = {
   page: 1,
   perPage: 10,
   filter: {
+    query: '',
     archived: false,
+  },
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+};
+
+const initShipmentFilter = {
+  page: 1,
+  perPage: 10,
+  filter: {
+    query: '',
   },
   sort: {
     field: 'updatedAt',
@@ -122,25 +136,34 @@ function manualSortByAction(shipments: Object = {}, state: Object = {}) {
 }
 
 const Order = ({ intl }: Props) => {
-  const { queryVariables, filterAndSort, onChangeFilter: onChange } = useFilter(
-    initFilter,
-    'filterRelationMap'
-  );
-  const lastFilter = usePrevious(filterAndSort);
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
 
+  const {
+    queryVariables: queryOrderVariables,
+    filterAndSort: orderFilterAndSort,
+    onChangeFilter: onChangeOrderFilter,
+  } = useFilter(initOrderFilter, 'filterRelationMap');
+
+  const {
+    queryVariables: queryShipmentVariables,
+    filterAndSort: shipmentFilterAndSort,
+    onChangeFilter: onChangeShipmentFilter,
+  } = useFilter(initShipmentFilter, 'allShipmentFilter');
+
+  const lastOrderFilter = usePrevious(orderFilterAndSort);
+
   React.useEffect(() => {
-    if (!isEquals(lastFilter, filterAndSort)) {
+    if (!isEquals(lastOrderFilter, orderFilterAndSort)) {
       actions.reset();
     }
   });
 
   return (
     <DispatchProvider value={{ dispatch, state }}>
-      <Query query={orderListQuery} variables={queryVariables} fetchPolicy="network-only">
+      <Query query={orderListQuery} variables={queryOrderVariables} fetchPolicy="network-only">
         {({ loading, data, refetch, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;
@@ -151,7 +174,7 @@ const Order = ({ intl }: Props) => {
           }
 
           if (state.refetchAll) {
-            refetch(queryVariables)
+            refetch(queryOrderVariables)
               .then(() => actions.setRefetchAll(false))
               .catch(logger.error);
           }
@@ -308,7 +331,7 @@ const Order = ({ intl }: Props) => {
           return (
             <>
               <SortFilter
-                sort={filterAndSort.sort}
+                sort={orderFilterAndSort.sort}
                 sortInputs={[
                   {
                     title: intl.formatMessage(messages.poNoSort),
@@ -347,11 +370,14 @@ const Order = ({ intl }: Props) => {
                     value: 'createdAt',
                   },
                 ]}
-                filter={filterAndSort.filter}
-                onChange={onChange}
+                filter={orderFilterAndSort.filter}
+                onChange={onChangeOrderFilter}
                 onToggle={actions.toggleTag}
                 renderAdvanceFilter={({ onChange: onApplyFilter }) => (
-                  <AdvancedFilter initialFilter={filterAndSort.filter} onApply={onApplyFilter} />
+                  <AdvancedFilter
+                    initialFilter={orderFilterAndSort.filter}
+                    onApply={onApplyFilter}
+                  />
                 )}
               />
               <ActionNavbar highLightEntities={highLightEntities} entities={entities} />
@@ -441,6 +467,12 @@ const Order = ({ intl }: Props) => {
                         <ToggleInput
                           toggled={state.toggleShipmentList}
                           onToggle={() => {
+                            if (state.toggleShipmentList) {
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: '' },
+                              });
+                            }
                             actions.toggleShipmentList();
                             if (window.localStorage) {
                               window.localStorage.setItem(
@@ -451,12 +483,30 @@ const Order = ({ intl }: Props) => {
                           }}
                         />
                       </div>
+                      {state.toggleShipmentList && (
+                        <SearchInput
+                          value={shipmentFilterAndSort.filter.query}
+                          name="search"
+                          onClear={() =>
+                            onChangeShipmentFilter({
+                              ...shipmentFilterAndSort,
+                              filter: { ...shipmentFilterAndSort.filter, query: '' },
+                            })
+                          }
+                          onChange={newQuery =>
+                            onChangeShipmentFilter({
+                              ...shipmentFilterAndSort,
+                              filter: { ...shipmentFilterAndSort.filter, query: newQuery },
+                            })
+                          }
+                        />
+                      )}
                     </EntityHeader>
                   </div>
                   <div className={OrderListWrapperStyle}>
                     <InfiniteScroll
                       className={OrderListBodyStyle}
-                      loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'orders')}
+                      loadMore={() => loadMore({ fetchMore, data }, queryOrderVariables, 'orders')}
                       hasMore={hasMoreItems(data)}
                       loader={<LoadingIcon key="loading" />}
                       useWindow={false}
@@ -488,6 +538,7 @@ const Order = ({ intl }: Props) => {
                             ? actions.countShipment(allShipments.length, allShipments)
                             : null
                         }
+                        queryVariables={queryShipmentVariables}
                       />
                     ) : (
                       <div className={ShipmentListBodyStyle}>

@@ -8,7 +8,6 @@ import { getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import { Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
-import useFilter from 'hooks/useFilter';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { ShipmentListBodyStyle, ItemWrapperStyle } from 'modules/relationMap/order/style';
 import { shipmentListQuery, shipmentDetailQuery } from 'modules/relationMap/order/query';
@@ -20,29 +19,18 @@ import Shipment from '../Shipment';
 type Props = {
   onCountShipment: (Array<Object>) => any,
   highLightEntities: Array<string>,
+  queryVariables: Object,
 };
 
-function ShipmentList({ onCountShipment, highLightEntities }: Props) {
+function ShipmentList({ onCountShipment, highLightEntities, queryVariables }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state } = context;
   const { highlight } = state;
   const uiSelectors = selectors(state);
-  const { queryVariables } = useFilter(
-    {
-      page: 1,
-      perPage: 10,
-      filter: {
-        archived: false,
-      },
-      sort: {
-        field: 'updatedAt',
-        direction: 'DESCENDING',
-      },
-    },
-    'allShipmentFilter'
-  );
+
   return (
     <Query
+      key={JSON.stringify(queryVariables)}
       query={shipmentListQuery}
       variables={queryVariables}
       onCompleted={result => onCountShipment(result.shipments.nodes)}
@@ -75,40 +63,34 @@ function ShipmentList({ onCountShipment, highLightEntities }: Props) {
         }
 
         return (
-          <>
-            {loading ? (
-              <LoadingIcon />
-            ) : (
-              <InfiniteScroll
-                className={ShipmentListBodyStyle}
-                loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'shipments')}
-                hasMore={hasMoreItems(data, 'shipments')}
-                loader={<LoadingIcon key="loadingShipment" />}
-                useWindow={false}
-                threshold={500}
-              >
-                {getByPathWithDefault([], 'shipments.nodes', data).map(shipment => (
-                  <Shipment
-                    wrapperClassName={ItemWrapperStyle(
-                      highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
-                      uiSelectors.isTarget(SHIPMENT, shipment.id),
-                      highlight.type === SHIPMENT && highlight.selectedId === shipment.id
-                    )}
-                    key={shipment.id}
-                    {...shipment}
-                  />
-                ))}
-                {Object.entries(getByPathWithDefault([], 'shipments.nodes', data)).length === 0 && (
-                  <Display>
-                    <FormattedMessage
-                      id="modules.Shipments.noItem"
-                      defaultMessage="No shipments found"
-                    />
-                  </Display>
+          <InfiniteScroll
+            className={ShipmentListBodyStyle}
+            loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'shipments')}
+            hasMore={hasMoreItems(data, 'shipments')}
+            loader={<LoadingIcon key="loadingShipment" />}
+            useWindow={false}
+            threshold={500}
+          >
+            {getByPathWithDefault([], 'shipments.nodes', data).map(shipment => (
+              <Shipment
+                wrapperClassName={ItemWrapperStyle(
+                  highLightEntities.includes(`${SHIPMENT}-${shipment.id}`),
+                  uiSelectors.isTarget(SHIPMENT, shipment.id),
+                  highlight.type === SHIPMENT && highlight.selectedId === shipment.id
                 )}
-              </InfiniteScroll>
+                key={shipment.id}
+                {...shipment}
+              />
+            ))}
+            {Object.entries(getByPathWithDefault([], 'shipments.nodes', data)).length === 0 && (
+              <Display>
+                <FormattedMessage
+                  id="modules.Shipments.noItem"
+                  defaultMessage="No shipments found"
+                />
+              </Display>
             )}
-          </>
+          </InfiniteScroll>
         );
       }}
     </Query>
