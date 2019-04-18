@@ -2,7 +2,7 @@
 import {
   convertDistance,
   convertArea,
-  weightConvert,
+  convertWeight,
   convertVolume,
   distanceMetrics,
   areaMetrics,
@@ -44,7 +44,7 @@ export const getConvert = (metricType?: MetricEnumType): Function => {
       case 'volume':
         return convertVolume;
       case 'weight':
-        return weightConvert;
+        return convertWeight;
       case 'duration':
         // No conversion
         return (value: number) => value;

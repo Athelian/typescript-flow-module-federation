@@ -25,7 +25,7 @@ export const convertVolume = (value: number, metric: string, newMetric: string) 
   return value;
 };
 
-export const weightConvert = (value: number, metric: string, newMetric: string) => {
+export const convertWeight = (value: number, metric: string, newMetric: string) => {
   if ((metric === 'g' && newMetric === 'kg') || (metric === 'kg' && newMetric === 'ton'))
     return divide(value, 1000);
   if ((metric === 'kg' && newMetric === 'g') || (metric === 'ton' && newMetric === 'kg'))

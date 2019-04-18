@@ -1,7 +1,7 @@
 // @flow
 import { times, divide } from 'number-precision';
 import { injectUid } from './id';
-import { convertVolume, weightConvert } from './metric';
+import { convertVolume, convertWeight } from './metric';
 import { isNullOrUndefined } from './fp';
 
 export const findWeight = (batch: Object) => {
@@ -27,7 +27,7 @@ export const findVolume = (batch: Object) => {
   } = batch;
   const volume = isNullOrUndefined(packageVolume)
     ? 0
-    : weightConvert(packageVolume.value, packageVolume.metric, 'm³');
+    : convertWeight(packageVolume.value, packageVolume.metric, 'm³');
   return packageQuantity * volume;
 };
 

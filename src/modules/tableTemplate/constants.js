@@ -8,7 +8,7 @@ import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
 import {
   convertDistance,
   convertVolume,
-  weightConvert,
+  convertWeight,
   weightMetrics,
   volumeMetrics,
   distanceMetrics,
@@ -654,7 +654,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: weightMetrics,
-      convert: weightConvert,
+      convert: convertWeight,
     },
     getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) =>
       packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`,
