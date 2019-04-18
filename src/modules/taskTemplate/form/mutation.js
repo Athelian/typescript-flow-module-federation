@@ -16,12 +16,10 @@ import {
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
-export const createTaskTemplateMutation = gql`
+export const createTaskTemplateMutation: Object = gql`
   mutation taskTemplateCreate($input: TaskTemplateCreateInput!) {
     taskTemplateCreate(input: $input) {
-      ... on TaskTemplate {
-        ...taskTemplateFormFragment
-      }
+      ...taskTemplateFormFragment
       ...badRequestFragment
     }
   }
@@ -32,12 +30,10 @@ export const createTaskTemplateMutation = gql`
   ${badRequestFragment}
 `;
 
-export const updateTaskTemplateMutation = gql`
+export const updateTaskTemplateMutation: Object = gql`
   mutation taskTemplateUpdate($id: ID!, $input: TaskTemplateUpdateInput!) {
     taskTemplateUpdate(id: $id, input: $input) {
-      ... on TaskTemplate {
-        ...taskTemplateFormFragment
-      }
+      ...taskTemplateFormFragment
       ...badRequestFragment
     }
   }

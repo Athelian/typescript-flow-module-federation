@@ -51,8 +51,6 @@ const FieldDefinitionsFormWrapper = ({ entityType }: Props) => (
             return error.message;
           }
 
-          if (loading) return <LoadingIcon />;
-
           return (
             <Mutation mutation={updateFieldDefinitionsMutation} onCompleted={() => refetch()}>
               {(saveFieldDefinitions, { loading: isLoading, error: apiError }) => (
@@ -108,10 +106,14 @@ const FieldDefinitionsFormWrapper = ({ entityType }: Props) => (
                       )}
                     </div>
                     <div className={FieldDefinitionsBodyStyle}>
-                      <FieldDefinitionsForm
-                        {...fieldHelpers}
-                        fieldDefinitions={state.fieldDefinitions}
-                      />
+                      {loading ? (
+                        <LoadingIcon />
+                      ) : (
+                        <FieldDefinitionsForm
+                          {...fieldHelpers}
+                          fieldDefinitions={state.fieldDefinitions}
+                        />
+                      )}
                     </div>
                   </div>
                 </>

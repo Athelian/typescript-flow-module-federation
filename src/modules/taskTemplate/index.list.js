@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
-import { upperFirst } from 'lodash';
 import { BooleanValue } from 'react-values';
-import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import withCache from 'hoc/withCache';
@@ -13,56 +11,31 @@ import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import usePermission from 'hooks/usePermission';
-import usePrevious from 'hooks/usePrevious';
 import useFilter from 'hooks/useFilter';
+import { getByPathWithDefault } from 'utils/fp';
 import { TASK_TEMPLATE_CREATE } from 'modules/permission/constants/task';
 import TaskTemplateList from './list';
 import TaskTemplateFormWrapper from './common/TaskTemplateFormWrapper';
 
-type OptionalProps = {
-  entityType: string,
+const initFilter = {
+  filter: {
+    entityTypes: ['Order'],
+  },
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+  perPage: 10,
+  page: 1,
 };
 
-type Props = OptionalProps & {};
-
-const getInitFilter = (entityType: string) => {
-  const state = {
-    filter: {
-      entityTypes: [entityType],
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
-};
-
-const defaultProps = {
-  entityType: 'order',
-};
-
-const TaskTemplateListModule = ({ entityType }: Props) => {
-  const activeType = upperFirst(entityType);
-  const lastEntityType = usePrevious(activeType);
-
+const TaskTemplateListModule = () => {
   const { hasPermission } = usePermission();
-  const { queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(activeType),
-    `filterTaskTemplate${activeType}`
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    initFilter,
+    `filterTaskTemplate`
   );
-
-  React.useEffect(() => {
-    if (lastEntityType !== activeType) {
-      onChangeFilter({
-        filter: {
-          entityTypes: [activeType],
-        },
-      });
-    }
-  }, [lastEntityType, activeType, onChangeFilter]);
+  const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
   return (
     <Provider>
@@ -77,13 +50,27 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                   active={activeType === 'Order'}
                   icon="ORDER"
                   label={<FormattedMessage id="module.TaskTemplate.order" defaultMessage="ORDER" />}
-                  onClick={() => navigate('/templates/task-template/order')}
+                  onClick={() => {
+                    if (activeType !== 'Order') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Order'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
                   active={activeType === 'Batch'}
                   icon="BATCH"
                   label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
-                  onClick={() => navigate('/templates/task-template/batch')}
+                  onClick={() => {
+                    if (activeType !== 'Batch') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Batch'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
                   active={activeType === 'Shipment'}
@@ -91,7 +78,14 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
                   label={
                     <FormattedMessage id="module.TaskTemplate.shipment" defaultMessage="SHIPMENT" />
                   }
-                  onClick={() => navigate('/templates/task-template/shipment')}
+                  onClick={() => {
+                    if (activeType !== 'Shipment') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Shipment'] },
+                      });
+                    }
+                  }}
                 />
 
                 <BooleanValue>
@@ -120,14 +114,12 @@ const TaskTemplateListModule = ({ entityType }: Props) => {
               </NavBar>
             }
           >
-            <TaskTemplateList {...queryVariables} entityType={activeType} />
+            <TaskTemplateList queryVariables={queryVariables} entityType={activeType} />
           </Layout>
         )}
       </UIConsumer>
     </Provider>
   );
 };
-
-TaskTemplateListModule.defaultProps = defaultProps;
 
 export default withCache(TaskTemplateListModule, ['entityType']);

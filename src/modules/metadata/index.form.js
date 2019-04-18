@@ -1,39 +1,37 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
 import { Provider } from 'unstated';
 import { UIConsumer } from 'modules/ui';
 import withCache from 'hoc/withCache';
 import Layout from 'components/Layout';
+import useFilter from 'hooks/useFilter';
+import { getByPathWithDefault } from 'utils/fp';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import FieldDefinitionsFormWrapper from 'modules/metadata/components/FieldDefinitionsFormWrapper';
 import MaskList from 'modules/metadata/components/MaskList';
 import { MainContentWrapperStyle } from './style';
 
-type OptionalProps = {
-  entityType: string,
+const initFilter = {
+  filter: {
+    entityTypes: ['Order'],
+  },
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+  perPage: 10,
+  page: 1,
 };
 
-type Props = OptionalProps & {};
+const MetadataForm = () => {
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    initFilter,
+    `filterCustomFieldsTemplate`
+  );
+  const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
-const defaultProps = {
-  entityType: 'order',
-};
-
-const EntityTypeMap = {
-  order: 'Order',
-  item: 'OrderItem',
-  batch: 'Batch',
-  shipment: 'Shipment',
-  product: 'Product',
-  end_product: 'ProductProvider',
-  warehouse: 'Warehouse',
-};
-
-const MetadataForm = ({ entityType: entity }: Props) => {
-  const entityType = EntityTypeMap[entity];
   return (
     <Provider>
       <UIConsumer>
@@ -44,59 +42,78 @@ const MetadataForm = ({ entityType: entity }: Props) => {
               <NavBar>
                 <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
                 <TabItem
-                  active={entityType === 'Order'}
+                  active={activeType === 'Order'}
                   label={<FormattedMessage id="modules.metadata.orders" defaultMessage="ORDERS" />}
                   icon="ORDER"
-                  onClick={
-                    entityType === 'Order' ? () => {} : () => navigate('/templates/metadata/order')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'Order') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Order'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
-                  active={entityType === 'OrderItem'}
+                  active={activeType === 'OrderItem'}
                   label={<FormattedMessage id="modules.metadata.items" defaultMessage="ITEMS" />}
                   icon="ORDER_ITEM"
-                  onClick={
-                    entityType === 'OrderItem'
-                      ? () => {}
-                      : () => navigate('/templates/metadata/item')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'OrderItem') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['OrderItem'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
-                  active={entityType === 'Batch'}
+                  active={activeType === 'Batch'}
                   label={
                     <FormattedMessage id="modules.metadata.batches" defaultMessage="BATCHES" />
                   }
                   icon="BATCH"
-                  onClick={
-                    entityType === 'Batch' ? () => {} : () => navigate('/templates/metadata/batch')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'Batch') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Batch'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
-                  active={entityType === 'Shipment'}
+                  active={activeType === 'Shipment'}
                   label={
                     <FormattedMessage id="modules.metadata.shipments" defaultMessage="SHIPMENTS" />
                   }
                   icon="SHIPMENT"
-                  onClick={
-                    entityType === 'Shipment'
-                      ? () => {}
-                      : () => navigate('/templates/metadata/shipment')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'Shipment') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Shipment'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
-                  active={entityType === 'Product'}
+                  active={activeType === 'Product'}
                   label={
                     <FormattedMessage id="modules.metadata.products" defaultMessage="PRODUCTS" />
                   }
                   icon="PRODUCT"
-                  onClick={
-                    entityType === 'Product'
-                      ? () => {}
-                      : () => navigate('/templates/metadata/product')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'Product') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Product'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
-                  active={entityType === 'ProductProvider'}
+                  active={activeType === 'ProductProvider'}
                   label={
                     <FormattedMessage
                       id="modules.metadata.endProducts"
@@ -104,30 +121,36 @@ const MetadataForm = ({ entityType: entity }: Props) => {
                     />
                   }
                   icon="PRODUCT_PROVIDER"
-                  onClick={
-                    entityType === 'ProductProvider'
-                      ? () => {}
-                      : () => navigate('/templates/metadata/end_product')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'ProductProvider') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['ProductProvider'] },
+                      });
+                    }
+                  }}
                 />
                 <TabItem
-                  active={entityType === 'Warehouse'}
+                  active={activeType === 'Warehouse'}
                   label={
                     <FormattedMessage id="modules.metadata.warehouse" defaultMessage="WAREHOUSE" />
                   }
                   icon="WAREHOUSE"
-                  onClick={
-                    entityType === 'Warehouse'
-                      ? () => {}
-                      : () => navigate('/templates/metadata/warehouse')
-                  }
+                  onClick={() => {
+                    if (activeType !== 'Warehouse') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Warehouse'] },
+                      });
+                    }
+                  }}
                 />
               </NavBar>
             }
           >
             <div className={MainContentWrapperStyle}>
-              <FieldDefinitionsFormWrapper entityType={entityType} />
-              <MaskList entityType={entityType} />
+              <FieldDefinitionsFormWrapper entityType={activeType} />
+              <MaskList queryVariables={queryVariables} entityType={activeType} />
             </div>
           </Layout>
         )}
@@ -135,7 +158,5 @@ const MetadataForm = ({ entityType: entity }: Props) => {
     </Provider>
   );
 };
-
-MetadataForm.defaultProps = defaultProps;
 
 export default withCache(MetadataForm, ['entityType']);

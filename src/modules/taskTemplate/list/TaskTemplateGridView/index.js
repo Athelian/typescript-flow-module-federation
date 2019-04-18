@@ -20,29 +20,37 @@ type Props = OptionalProps & {
   isLoading: boolean,
 };
 
-const defaultRenderItem = (item: Object, hasPermission: Function) => (
-  <BooleanValue key={`wrapper-${item.id}`}>
-    {({ value: isOpen, set: toggleTaskTemplateForm }) => (
-      <React.Fragment key={item.id}>
-        <TemplateCard
-          type="TASK"
-          template={{
-            id: item.id,
-            title: item.name,
-            description: item.description,
-            count: item.tasks.length,
-          }}
-          onClick={() =>
-            hasPermission([TASK_TEMPLATE_FORM]) ? toggleTaskTemplateForm(true) : null
-          }
-        />
-        <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
-          {isOpen && <TaskTemplateFormWrapper template={item} />}
-        </SlideView>
-      </React.Fragment>
-    )}
-  </BooleanValue>
-);
+const defaultRenderItem = (item: Object, hasPermission: Function) =>
+  item && item.id ? (
+    <BooleanValue key={`wrapper-${item.id}`}>
+      {({ value: isOpen, set: toggleTaskTemplateForm }) => (
+        <React.Fragment key={item.id}>
+          <TemplateCard
+            type="TASK"
+            template={{
+              id: item.id,
+              title: item.name,
+              description: item.description,
+              count: item.tasks.length,
+            }}
+            onClick={() =>
+              hasPermission([TASK_TEMPLATE_FORM]) ? toggleTaskTemplateForm(true) : null
+            }
+          />
+          <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
+            {isOpen && (
+              <TaskTemplateFormWrapper
+                template={item}
+                onCancel={() => toggleTaskTemplateForm(false)}
+              />
+            )}
+          </SlideView>
+        </React.Fragment>
+      )}
+    </BooleanValue>
+  ) : (
+    <TemplateCard type="TASK" template={{}} />
+  );
 
 const TaskTemplateGridView = ({
   items,
