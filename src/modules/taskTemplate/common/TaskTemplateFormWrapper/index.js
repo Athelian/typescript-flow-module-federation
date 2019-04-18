@@ -21,6 +21,7 @@ import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { removeTypename } from 'utils/data';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 
 type OptionalProps = {
   template: Object,
@@ -102,10 +103,12 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
+        if (
+          !isEquals(getByPathWithDefault(null, 'entityType', originalValues), values.entityType)
+        ) {
+          emitter.emit('REFETCH_TASK_TEMPLATES');
+        }
         closeSlideView();
-
-        emitter.emit('REFETCH_TASK_TEMPLATES');
-
         onSuccess();
       }
     }

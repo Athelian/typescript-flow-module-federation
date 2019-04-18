@@ -37,8 +37,6 @@ const TaskTemplateListModule = () => {
   );
   const activeType = getByPathWithDefault('Order', 'filter.entityTypes.0', filterAndSort);
 
-  console.warn(activeType);
-
   return (
     <Provider>
       <UIConsumer>
