@@ -466,6 +466,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           orderItemCustomFieldsFilter,
           batchColumnFieldsFilter,
           batchCustomFieldsFilter,
+          containerColumnFieldsFilter,
           shipmentColumnFieldsFilter,
           shipmentCustomFieldsFilter,
           productColumnFieldsFilter,
@@ -561,6 +562,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                       columns={() => getExportColumns(intl, allColumns)}
                       rows={() =>
                         getExportRows({
+                          targetIds,
                           data: { editData, mappingObjects },
                           ids: allId,
                           columns: allColumns,

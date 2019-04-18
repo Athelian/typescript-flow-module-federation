@@ -619,12 +619,29 @@ export const parseChangedData = ({
       keys.forEach(key => {
         const updateValue = editData.containers[id][key];
         switch (key) {
+          case 'warehouseArrivalAgreedDateApprovedBy':
+            changedContainer.warehouseArrivalAgreedDateApprovedById = updateValue && updateValue.id;
+            break;
+          case 'warehouseArrivalActualDateApprovedBy':
+            changedContainer.warehouseArrivalActualDateApprovedById = updateValue && updateValue.id;
+            break;
+          case 'warehouseArrivalAgreedDateAssignedTo':
+            changedContainer.warehouseArrivalAgreedDateAssignedToIds = updateValue.map(
+              ({ id: userId }) => userId
+            );
+            break;
+          case 'warehouseArrivalActualDateAssignedTo':
+            changedContainer.warehouseArrivalActualDateAssignedToIds = updateValue.map(
+              ({ id: userId }) => userId
+            );
+            break;
           case 'tags':
             changedContainer.tagIds = updateValue.map(({ id: tagId }) => tagId);
             break;
-          case 'customFields':
-            changedContainer[key] = prepareCustomFieldsData(updateValue);
+          case 'warehouse':
+            changedContainer.warehouseId = updateValue && updateValue.id;
             break;
+
           default:
             changedContainer[key] = updateValue;
         }
@@ -703,6 +720,7 @@ export function getExportColumns(
     shipmentColumnFieldsFilter,
     orderCustomFieldsFilter,
     orderItemCustomFieldsFilter,
+    containerColumnFieldsFilter,
     batchCustomFieldsFilter,
     shipmentCustomFieldsFilter,
     productColumnFieldsFilter,
@@ -716,6 +734,7 @@ export function getExportColumns(
     ...orderItemCustomFieldsFilter,
     ...batchColumnFieldsFilter,
     ...batchCustomFieldsFilter,
+    ...containerColumnFieldsFilter,
     ...shipmentColumnFieldsFilter,
     ...shipmentCustomFieldsFilter,
     ...productColumnFieldsFilter,
@@ -728,10 +747,12 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   const {
     data: { editData, mappingObjects },
     ids: { orderIds, orderItemIds, batchIds },
+    targetIds,
     columns: {
       orderColumnFieldsFilter,
       orderItemColumnFieldsFilter,
       batchColumnFieldsFilter,
+      containerColumnFieldsFilter,
       shipmentColumnFieldsFilter,
       orderCustomFieldsFilter,
       orderItemCustomFieldsFilter,
@@ -742,6 +763,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     },
   } = info;
   const rows = [];
+  // Shipment which has no relation
   (Object.entries(mappingObjects.shipmentNoRelation): Array<any>).forEach(([shipmentId]) => {
     const emptyRow = getEmptyValues([
       ...orderColumnFieldsFilter,
@@ -750,6 +772,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       ...orderItemCustomFieldsFilter,
       ...batchColumnFieldsFilter,
       ...batchCustomFieldsFilter,
+      ...containerColumnFieldsFilter,
     ]);
     const shipmentData = editData.shipments[shipmentId];
     const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
@@ -763,6 +786,46 @@ export function getExportRows(info: Object): Array<Array<?string>> {
 
     rows.push(currentRow);
   });
+  // render the empty container row
+  (Object.entries(mappingObjects.shipment || {}): any)
+    .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
+    .forEach(([shipmentId]) => {
+      mappingObjects.shipment[shipmentId].data.containers
+        .filter(item => item.batches.length === 0)
+        .forEach(container => {
+          const emptyRow = getEmptyValues([
+            ...orderColumnFieldsFilter,
+            ...orderCustomFieldsFilter,
+            ...orderItemColumnFieldsFilter,
+            ...orderItemCustomFieldsFilter,
+            ...batchColumnFieldsFilter,
+            ...batchCustomFieldsFilter,
+          ]);
+          const containerData = editData.containers[container.id];
+          const containerValues = getFieldValues(
+            containerColumnFieldsFilter,
+            containerData,
+            editData
+          );
+          const containerRow = [...containerValues];
+          const shipmentData = editData.shipments[shipmentId];
+          const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
+          const shipmentCustomValues = getCustomFieldValues(
+            shipmentCustomFieldsFilter,
+            shipmentData
+          );
+          const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+          const emptyRowOfProduct = getEmptyValues([
+            ...productColumnFieldsFilter,
+            ...productCustomFieldsFilter,
+          ]);
+          const currentRow = [...emptyRow, ...containerRow, ...shipmentRow, ...emptyRowOfProduct];
+
+          rows.push(currentRow);
+        });
+    });
+
+  // render order rows
   orderIds.forEach(orderId => {
     const order = mappingObjects.order[orderId];
     if (!order) return null;
@@ -779,6 +842,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         ...orderItemCustomFieldsFilter,
         ...batchColumnFieldsFilter,
         ...batchCustomFieldsFilter,
+        ...containerColumnFieldsFilter,
         ...shipmentColumnFieldsFilter,
         ...shipmentCustomFieldsFilter,
         ...productColumnFieldsFilter,
@@ -805,6 +869,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
         const emptyRow = getEmptyValues([
           ...batchColumnFieldsFilter,
           ...batchCustomFieldsFilter,
+          ...containerColumnFieldsFilter,
           ...shipmentColumnFieldsFilter,
           ...shipmentCustomFieldsFilter,
         ]);
@@ -818,12 +883,24 @@ export function getExportRows(info: Object): Array<Array<?string>> {
           const batchValues = getFieldValues(batchColumnFieldsFilter, batchData, editData);
           const batchCustomValues = getCustomFieldValues(batchCustomFieldsFilter, batchData);
           const batchRow = [...batchValues, ...batchCustomValues];
-          let shipmentRow = [];
+          const containerRow = [];
+          if (batch.container) {
+            const containerData = editData.containers[batch.container];
+            const containerValues = getFieldValues(
+              containerColumnFieldsFilter,
+              containerData,
+              editData
+            );
+            containerRow.push(...containerValues);
+          } else {
+            containerRow.push(...getEmptyValues([...containerColumnFieldsFilter]));
+          }
+
+          const shipmentRow = [];
           if (!batch.shipment) {
-            shipmentRow = getEmptyValues([
-              ...shipmentColumnFieldsFilter,
-              ...shipmentCustomFieldsFilter,
-            ]);
+            shipmentRow.push(
+              ...getEmptyValues([...shipmentColumnFieldsFilter, ...shipmentCustomFieldsFilter])
+            );
           } else {
             const shipmentData = editData.shipments[batch.shipment.id];
             const shipmentValues = getFieldValues(
@@ -835,12 +912,13 @@ export function getExportRows(info: Object): Array<Array<?string>> {
               shipmentCustomFieldsFilter,
               shipmentData
             );
-            shipmentRow = [...shipmentValues, ...shipmentCustomValues];
+            shipmentRow.push(...shipmentValues, ...shipmentCustomValues);
           }
           const currentRow = [
             ...orderRow,
             ...orderItemRow,
             ...batchRow,
+            ...containerRow,
             ...shipmentRow,
             ...productRow,
           ];

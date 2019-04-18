@@ -1,7 +1,35 @@
 // @flow
 import { times, divide } from 'number-precision';
 import { injectUid } from './id';
+import { convertVolume, convertWeight } from './metric';
 import { isNullOrUndefined } from './fp';
+
+export const findWeight = (batch: Object) => {
+  const {
+    packageQuantity = 0,
+    packageGrossWeight = {},
+  }: {
+    packageQuantity: number,
+    packageGrossWeight: Object,
+  } = batch;
+  return packageGrossWeight
+    ? packageQuantity * convertVolume(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
+    : 0;
+};
+
+export const findVolume = (batch: Object) => {
+  const {
+    packageQuantity = 0,
+    packageVolume,
+  }: {
+    packageQuantity: number,
+    packageVolume: Object,
+  } = batch;
+  const volume = isNullOrUndefined(packageVolume)
+    ? 0
+    : convertWeight(packageVolume.value, packageVolume.metric, 'm³');
+  return packageQuantity * volume;
+};
 
 export const findBatchQuantity = ({
   quantity = 0,
@@ -24,7 +52,7 @@ type Metric = {
   metric: string,
 };
 
-export function volumeConvert(
+export function calculateVolume(
   volumeMetric: string,
   height: Metric,
   width: Metric,
@@ -33,7 +61,7 @@ export function volumeConvert(
   const heightValue = height.metric === 'cm' ? height.value : times(height.value, 100);
   const widthValue = width.metric === 'cm' ? width.value : times(width.value, 100);
   const lengthValue = length.metric === 'cm' ? length.value : times(length.value, 100);
-  const volumeValue = heightValue * widthValue * lengthValue;
+  const volumeValue = times(heightValue, widthValue, lengthValue);
 
   return volumeMetric === 'cm³' ? volumeValue : divide(volumeValue, 1000000);
 }
@@ -57,7 +85,7 @@ export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): 
   }
   return {
     metric: packageVolume.metric,
-    value: volumeConvert(
+    value: calculateVolume(
       packageVolume.metric,
       packageSize.height,
       packageSize.width,
@@ -82,7 +110,7 @@ export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object =>
   }
   return {
     metric: unitVolume.metric,
-    value: volumeConvert(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
+    value: calculateVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
   };
 };
 

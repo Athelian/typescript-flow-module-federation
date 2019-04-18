@@ -39,40 +39,47 @@ export function calculateShipmentTotalVolume(shipmentId: string, editData: Objec
   return shipmentTotalBatchQuantity;
 }
 
+const totalBatchesPrice = (allBatches: Array<Object>, editData: Object) => {
+  const allCurrencies = allBatches.reduce((currencies, [, batch]) => {
+    if (batch.orderItem) {
+      const orderItem = editData.orderItems[batch.orderItem];
+
+      if (orderItem) {
+        const order = editData.orders[orderItem.order];
+        return currencies.includes(order.currency) ? currencies : [...currencies, order.currency];
+      }
+    }
+
+    return currencies;
+  }, []);
+
+  if (allCurrencies.length > 1) return { total: -1, allCurrencies };
+
+  const totalPrice = allBatches.reduce((total, [, batch]) => {
+    const { quantity } = batch;
+    const orderItem = editData.orderItems[batch.orderItem];
+    if (orderItem && orderItem.price) {
+      return total + quantity * orderItem.price.amount;
+    }
+
+    return total;
+  }, 0);
+
+  return { total: totalPrice, allCurrencies };
+};
+
 export function calculateShipmentTotalPrice(shipmentId: string, editData: Object) {
   const allBatches = (Object.entries(editData.batches || {}): Array<any>).filter(
     ([, batch]) => batch.shipment === shipmentId
   );
 
-  const allCurrencies = allBatches.reduce((currencies, [, batch]) => {
-    const { id: batchId } = batch;
-    const [, orderItem] =
-      (Object.entries(editData.orderItems || {}): Array<any>).find(
-        ([, currentOrderItem]) =>
-          currentOrderItem.batches && currentOrderItem.batches.includes(batchId)
-      ) || [];
+  return totalBatchesPrice(allBatches, editData);
+}
 
-    const [, order] =
-      (Object.entries(editData.orders || {}): Array<any>).find(
-        ([, currentOrder]) =>
-          currentOrder.orderItems && currentOrder.orderItems.includes(orderItem.id)
-      ) || [];
+export function calculateContainerTotalPrice(containerId: string, editData: Object) {
+  const allBatches = (Object.entries(editData.batches || {}): Array<any>).filter(
+    ([, batch]) => batch.container === containerId
+  );
 
-    return currencies.includes(order.currency) ? currencies : [...currencies, order.currency];
-  }, []);
-
-  if (allCurrencies.length > 1) return { total: -1, allCurrencies };
-
-  const shipmentTotalPrice = allBatches.reduce((total, [, batch]) => {
-    const { quantity, id: batchId } = batch;
-    const [, orderItem] =
-      (Object.entries(editData.orderItems || {}): Array<any>).find(
-        ([, currentOrderItem]) =>
-          currentOrderItem.batches && currentOrderItem.batches.includes(batchId)
-      ) || [];
-
-    return total + quantity * orderItem.price.amount;
-  }, 0);
-
-  return { total: shipmentTotalPrice, allCurrencies };
+  return totalBatchesPrice(allBatches, editData);
 }

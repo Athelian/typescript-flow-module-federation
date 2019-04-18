@@ -195,6 +195,31 @@ export const containerEntityFragment = gql`
   fragment containerEntityFragment on Container {
     id
     no
+    warehouse {
+      ... on Warehouse {
+        id
+        name
+      }
+    }
+    warehouseArrivalAgreedDate
+    warehouseArrivalActualDate
+    warehouseArrivalAgreedDateApprovedAt
+    warehouseArrivalActualDateApprovedAt
+    warehouseArrivalAgreedDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateApprovedBy {
+      ...userAvatarFragment
+    }
+    warehouseArrivalAgreedDateAssignedTo {
+      ...userAvatarFragment
+    }
+    warehouseArrivalActualDateAssignedTo {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
   }
 `;
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormField } from 'modules/form';
 import { getByPath } from 'utils/fp';
-import { TableDisableCell } from '..';
+import TableDisableCell from '../TableDisableCell';
 import { WrapperStyle, ItemStyle } from './style';
 import {
   InlineTextInput,
@@ -16,6 +16,8 @@ import {
   InlineMetricInput,
   InlineForwarderInput,
   InlineTimeLineInput,
+  InlineDateTimeApprovalInput,
+  InlineWarehouse,
   AutoCalculate,
 } from './components';
 
@@ -87,6 +89,10 @@ function renderItem({
       return <InlineTimeLineInput name={name} value={value} {...meta} id={id} />;
     }
 
+    case 'datetimeWithApproval': {
+      return <InlineDateTimeApprovalInput name={name} value={value} {...meta} id={id} />;
+    }
+
     case 'metric':
       return <InlineMetricInput name={name} value={value} values={values} {...meta} id={id} />;
 
@@ -112,6 +118,9 @@ function renderItem({
           id={id}
         />
       );
+
+    case 'warehouse':
+      return <InlineWarehouse name={name} value={value} {...meta} id={id} />;
 
     default:
       return <InlineTextInput id={id} name={name} value={value} {...meta} />;

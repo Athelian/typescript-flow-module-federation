@@ -4,6 +4,15 @@ import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
+import {
+  convertDistance,
+  convertVolume,
+  convertWeight,
+  weightMetrics,
+  volumeMetrics,
+  distanceMetrics,
+} from 'utils/metric';
 import orderMessages from 'modules/order/messages';
 import batchMessages from 'modules/batch/messages';
 import containerMessages from 'modules/container/messages';
@@ -12,20 +21,12 @@ import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
 import Tooltip from 'components/Tooltip';
 import {
-  distanceConvert,
-  volumeConvert,
-  weightConvert,
-  distanceMetrics,
-  volumeMetrics,
-  weightMetrics,
-} from 'utils/metric';
-
-import {
   mapColumnId,
   calculateOrderTotalVolume,
   calculateShipmentTotalVolume,
   calculateShipmentTotalBatchQuantity,
   calculateShipmentTotalPrice,
+  calculateContainerTotalPrice,
 } from './helpers';
 
 export const orderColumns = [
@@ -89,25 +90,19 @@ export const containerColumns = [
     id: 0,
     group: <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />,
     columns: [
-      <FormattedMessage id="modules.container.containerNo" defaultMessage="CONTAINER NO" />,
-      <FormattedMessage id="module.container.agreedArrival" defaultMessage="AGREED ARRIVAL" />,
-      <FormattedMessage
-        id="modules.container.agreedArrivalAssignedTo"
-        defaultMessage="AGREED ARRIVAL ASSIGNED TO"
-      />,
-      <FormattedMessage id="module.container.actualArrival" defaultMessage="ACTUAL ARRIVAL" />,
-      <FormattedMessage
-        id="modules.container.actualArrivalAssignedTo"
-        defaultMessage="ACTUAL ARRIVAL ASSIGNED TO"
-      />,
-      <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />,
-      <FormattedMessage id="modules.container.tags" defaultMessage="TAGS" />,
-      <FormattedMessage id="modules.container.totalPackages" defaultMessage="TOTAL PACKAGES" />,
-      <FormattedMessage id="modules.container.totalBatchQuantity" defaultMessage="BATCHED QTY" />,
-      <FormattedMessage id="modules.container.totalUniqueItems" defaultMessage="UNIQUE ITEMS" />,
-      <FormattedMessage id="modules.container.totalVolume" defaultMessage="TOTAL VOLUME" />,
-      <FormattedMessage id="modules.container.totalWeight" defaultMessage="TOTAL WEIGHT" />,
-      <FormattedMessage id="modules.container.totalPrice" defaultMessage="TOTAL PRICE" />,
+      <FormattedMessage {...containerMessages.containerNo} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
+      <FormattedMessage {...containerMessages.warehouseArrivalActualDateAssignedTo} />,
+      <FormattedMessage {...containerMessages.warehouseName} />,
+      <FormattedMessage {...containerMessages.tags} />,
+      <FormattedMessage {...containerMessages.totalPackages} />,
+      <FormattedMessage {...containerMessages.totalBatchQuantity} />,
+      <FormattedMessage {...containerMessages.totalUniqueItems} />,
+      <FormattedMessage {...containerMessages.totalVolume} />,
+      <FormattedMessage {...containerMessages.totalWeight} />,
+      <FormattedMessage {...containerMessages.totalPrice} />,
     ],
   },
 ];
@@ -264,8 +259,10 @@ export const orderColumnFields = [
       max: 5,
     },
     getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
-      inCharges &&
-      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
   },
   {
     messageId: orderMessages.tags.id,
@@ -657,7 +654,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: weightMetrics,
-      convert: weightConvert,
+      convert: convertWeight,
     },
     getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) =>
       packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`,
@@ -668,7 +665,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: volumeMetrics,
-      convert: volumeConvert,
+      convert: convertVolume,
     },
     getExportValue: ({ packageVolume }: { packageVolume: Object } = {}) =>
       packageVolume && `${packageVolume.value} ${packageVolume.metric}`,
@@ -679,7 +676,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
-      convert: distanceConvert,
+      convert: convertDistance,
       sourcePath: 'packageSize',
       destPath: 'width',
     },
@@ -692,7 +689,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
-      convert: distanceConvert,
+      convert: convertDistance,
       sourcePath: 'packageSize',
       destPath: 'height',
     },
@@ -707,7 +704,7 @@ export const batchColumnFields = [
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
-      convert: distanceConvert,
+      convert: convertDistance,
       sourcePath: 'packageSize',
       destPath: 'length',
     },
@@ -725,6 +722,298 @@ export const containerColumnFields = [
     type: 'text',
     meta: {
       isRequired: true,
+    },
+  },
+  {
+    messageId: containerMessages.warehouseArrivalAgreedDate.id,
+    name: 'warehouseArrivalAgreedDate',
+    type: 'datetimeWithApproval',
+    getFieldValue: (values: Object) => {
+      return {
+        approvedBy: getByPath(`warehouseArrivalAgreedDateApprovedBy`, values),
+        approvedAt: getByPath(`warehouseArrivalAgreedDateApprovedAt`, values),
+        date: getByPath(`warehouseArrivalAgreedDate`, values),
+      };
+    },
+  },
+  {
+    messageId: containerMessages.warehouseArrivalAgreedDateAssignedTo.id,
+    name: 'warehouseArrivalAgreedDateAssignedTo',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+    getExportValue: ({
+      warehouseArrivalAgreedDateAssignedTo: inCharges,
+    }: { warehouseArrivalAgreedDateAssignedTo: Array<Object> } = {}) =>
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
+  },
+  {
+    messageId: containerMessages.warehouseArrivalActualDate.id,
+    name: 'warehouseArrivalActualDate',
+    type: 'datetimeWithApproval',
+    getFieldValue: (values: Object) => {
+      return {
+        approvedBy: getByPath(`warehouseArrivalActualDateApprovedBy`, values),
+        approvedAt: getByPath(`warehouseArrivalActualDateApprovedAt`, values),
+        date: getByPath(`warehouseArrivalActualDate`, values),
+      };
+    },
+  },
+  {
+    messageId: containerMessages.warehouseArrivalActualDateAssignedTo.id,
+    name: 'warehouseArrivalActualDateAssignedTo',
+    type: 'inCharges',
+    meta: {
+      max: 5,
+    },
+    getExportValue: ({
+      warehouseArrivalActualDateAssignedTo: inCharges,
+    }: { warehouseArrivalActualDateAssignedTo: Array<Object> } = {}) =>
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
+  },
+  {
+    messageId: containerMessages.warehouseName.id,
+    name: 'warehouse',
+    type: 'warehouse',
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      return getByPathWithDefault('', `containers.${containerId}.warehouse.name`, editData);
+    },
+  },
+  {
+    messageId: containerMessages.tags.id,
+    name: 'tags',
+    type: 'tags',
+    meta: {
+      tagType: 'Container',
+    },
+    getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
+      tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
+  },
+  {
+    messageId: containerMessages.totalPackages.id,
+    name: 'containerTotalPackages',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((total, batch) => {
+        return total + getByPathWithDefault(0, `batches.${batch.id}.packageQuantity`, editData);
+      }, 0);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((total, batch) => {
+        return total + getByPathWithDefault(0, `batches.${batch.id}.packageQuantity`, editData);
+      }, 0);
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: containerId } = values;
+        const container = editData.containers[containerId];
+
+        const totalPackages = (container.batches || []).reduce((total, batch) => {
+          return total + getByPathWithDefault(0, `batches.${batch.id}.packageQuantity`, editData);
+        }, 0);
+        return <FormattedNumber value={totalPackages} />;
+      },
+    },
+  },
+  {
+    messageId: containerMessages.totalBatchQuantity.id,
+    name: 'containerTotalBatchQuantity',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((total, batch) => {
+        return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+      }, 0);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((total, batch) => {
+        return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+      }, 0);
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: containerId } = values;
+        const container = editData.containers[containerId];
+
+        const totalBatchQuantity = (container.batches || []).reduce((total, batch) => {
+          return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+        }, 0);
+        return <FormattedNumber value={totalBatchQuantity} />;
+      },
+    },
+  },
+  {
+    messageId: containerMessages.totalUniqueItems.id,
+    name: 'containerTotalUniqueItems',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((orderItems, batch) => {
+        const currentBatch = getByPath(`batches.${batch.id}`, editData);
+        if (
+          currentBatch &&
+          currentBatch.orderItem &&
+          !orderItems.includes(currentBatch.orderItem)
+        ) {
+          orderItems.push(currentBatch.orderItem);
+        }
+
+        return orderItems;
+      }, []).length;
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((orderItems, batch) => {
+        const currentBatch = getByPath(`batches.${batch.id}`, editData);
+        if (
+          currentBatch &&
+          currentBatch.orderItem &&
+          !orderItems.includes(currentBatch.orderItem)
+        ) {
+          orderItems.push(currentBatch.orderItem);
+        }
+
+        return orderItems;
+      }, []).length;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: containerId } = values;
+        const container = editData.containers[containerId];
+
+        const totalUniqueItems = (container.batches || []).reduce((orderItems, batch) => {
+          const currentBatch = getByPath(`batches.${batch.id}`, editData);
+          if (
+            currentBatch &&
+            currentBatch.orderItem &&
+            !orderItems.includes(currentBatch.orderItem)
+          ) {
+            orderItems.push(currentBatch.orderItem);
+          }
+
+          return orderItems;
+        }, []).length;
+        return <FormattedNumber value={totalUniqueItems} />;
+      },
+    },
+  },
+  {
+    messageId: containerMessages.totalVolume.id,
+    name: 'containerTotalVolume',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((total, batch) => {
+        return total + findVolume(getByPath(`batches.${batch.id}`, editData));
+      }, 0);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return `${container.batches.reduce((total, batch) => {
+        return total + findVolume(getByPath(`batches.${batch.id}`, editData));
+      }, 0)}m³`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: containerId } = values;
+        const container = editData.containers[containerId];
+
+        const totalVolume = (container.batches || []).reduce((total, batch) => {
+          return total + findVolume(getByPath(`batches.${batch.id}`, editData));
+        }, 0);
+
+        return <FormattedNumber value={totalVolume} suffix="m³" />;
+      },
+    },
+  },
+  {
+    messageId: containerMessages.totalWeight.id,
+    name: 'containerTotalWeight',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return container.batches.reduce((total, batch) => {
+        return total + findWeight(getByPath(`batches.${batch.id}`, editData));
+      }, 0);
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const container = editData.containers[containerId];
+      return `${container.batches.reduce((total, batch) => {
+        return total + findWeight(getByPath(`batches.${batch.id}`, editData));
+      }, 0)}kg`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: containerId } = values;
+        const container = editData.containers[containerId];
+
+        const totalWeight = (container.batches || []).reduce((total, batch) => {
+          return total + findWeight(getByPath(`batches.${batch.id}`, editData));
+        }, 0);
+
+        return <FormattedNumber value={totalWeight} suffix="kg" />;
+      },
+    },
+  },
+  {
+    messageId: containerMessages.totalPrice.id,
+    name: 'containerTotalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const { total } = calculateContainerTotalPrice(containerId, editData);
+      if (total < 0) return 'Invalid';
+      return total;
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: containerId } = values;
+      const { total, allCurrencies } = calculateContainerTotalPrice(containerId, editData);
+      if (total < 0) return 'Invalid';
+      return `${total}${allCurrencies[0] || 'USD'}`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: containerId } = values;
+        const { total, allCurrencies } = calculateContainerTotalPrice(containerId, editData);
+        if (total < 0) {
+          return (
+            <Tooltip
+              message={
+                <FormattedMessage
+                  id="modules.Containers.invalidCurrency"
+                  defaultMessage="Cannot compute this field because this Container contains Batches with different Currencies"
+                />
+              }
+            >
+              <div>
+                <FormattedMessage id="global.invalid" defaultMessage="Invalid" />
+              </div>
+            </Tooltip>
+          );
+        }
+        return <FormattedNumber value={total} suffix={allCurrencies[0]} />;
+      },
     },
   },
 ];
@@ -810,8 +1099,10 @@ export const shipmentColumnFields = [
       max: 5,
     },
     getExportValue: ({ inCharges }: { inCharges: Array<Object> } = {}) =>
-      inCharges &&
-      inCharges.reduce((field, value) => `${field}${value.firstName} ${value.lastName}, `, ''),
+      (inCharges || []).reduce(
+        (field, value) => `${field}${value.firstName} ${value.lastName}, `,
+        ''
+      ),
   },
   {
     messageId: shipmentMessages.tags.id,
@@ -899,7 +1190,7 @@ export const shipmentColumnFields = [
       const { id: shipmentId } = values;
       const { total, allCurrencies } = calculateShipmentTotalPrice(shipmentId, editData);
       if (total < 0) return 'Invalid';
-      return `${total}${allCurrencies[0]}`;
+      return `${total}${allCurrencies[0] || 'USD'}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
