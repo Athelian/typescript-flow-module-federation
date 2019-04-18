@@ -14,7 +14,7 @@ export const CardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 418px;
+  height: 448px;
 `;
 
 export const ImagePartWrapperStyle: string = css`
@@ -81,6 +81,14 @@ export const InfoPartWrapperStyle: string = css`
 `;
 
 export const InputStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+`;
+
+export const ContainerTypeWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 100px 80px;
+  grid-gap: 5px;
   width: 100%;
   padding: 0 5px;
 `;

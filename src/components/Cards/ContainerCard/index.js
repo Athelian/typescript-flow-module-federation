@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { getSelectLabel } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -12,6 +13,7 @@ import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'modules/container/utils';
+import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {
   CardWrapperStyle,
@@ -23,6 +25,7 @@ import {
   SerialStyle,
   InfoPartWrapperStyle,
   InputStyle,
+  ContainerTypeWrapperStyle,
   LabelInputStyle,
   DividerStyle,
   IconInputStyle,
@@ -60,6 +63,8 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
     shipment,
     id,
     no,
+    containerType,
+    containerOption,
     totalVolume,
     batches,
     warehouse,
@@ -97,6 +102,11 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
         <div className={InfoPartWrapperStyle}>
           <div className={InputStyle}>
             <Display align="left">{no}</Display>
+          </div>
+
+          <div className={ContainerTypeWrapperStyle}>
+            <Display align="left">{getSelectLabel(containerType, CONTAINER_TYPE_ITEMS)}</Display>
+            <Display align="left">{containerOption}</Display>
           </div>
 
           <div className={LabelInputStyle}>
@@ -242,7 +252,7 @@ ContainerCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerCard, 'container', {
   width: '195px',
-  height: '418px',
+  height: '448px',
   entityIcon: 'CONTAINER',
   entityColor: 'CONTAINER',
 });

@@ -17,7 +17,6 @@ import ShipmentBatchCard from './ShipmentBatchCard';
 import ContainerBatchCard from './ContainerBatchCard';
 import ContainerCard from './ContainerCard';
 import ShipmentContainerCard from './ShipmentContainerCard';
-import ShipmentContainerBatchCard from './ShipmentContainerBatchCard';
 import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
@@ -47,7 +46,6 @@ export {
   ShipmentBatchCard,
   ShipmentWarehouseCard,
   ShipmentContainerCard,
-  ShipmentContainerBatchCard,
   StaffCard,
   TagCard,
   TaskCard,
