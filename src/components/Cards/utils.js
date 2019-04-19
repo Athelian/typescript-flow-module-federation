@@ -1,9 +1,13 @@
 // @flow
+import { getByPathWithDefault } from 'utils/fp';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 
-export const getProductImage = (product: Object): any => {
-  if (!product) return FALLBACK_IMAGE;
-  return product.files && product.files.length > 0 ? product.files[0].pathMedium : FALLBACK_IMAGE;
+export const getProductImage = (product: ?Object): any => {
+  const images = getByPathWithDefault([], 'files', product);
+  if (images.length > 0) {
+    return images[0].pathMedium;
+  }
+  return FALLBACK_IMAGE;
 };
 
 export const totalAdjustQuantity = (batchAdjustments: Array<{ quantity: number }>): number =>

@@ -26,6 +26,7 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   containerCardFragment,
+  itemInOrderFormFragment,
 } from 'graphql';
 
 export const orderFormQuery = gql`
@@ -60,6 +61,7 @@ export const orderFormQuery = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${containerCardFragment}
+  ${itemInOrderFormFragment}
 `;
 
 export default orderFormQuery;
