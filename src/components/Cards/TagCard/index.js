@@ -29,15 +29,18 @@ const defaultProps = {
 };
 
 const getEntityType = (entityType: ?string) => {
-  if (entityType) {
-    if (entityType === 'Product') return 'PRODUCT';
-    if (entityType === 'Order') return 'ORDER';
-    if (entityType === 'Batch') return 'BATCH';
-    if (entityType === 'Shipment') return 'SHIPMENT';
-    if (entityType === 'Task') return 'TASK';
-    if (entityType === 'Container') return 'CONTAINER';
-  }
-  return 'GRAY_VERY_LIGHT';
+  const colorsMapping = {
+    Product: 'PRODUCT',
+    Order: 'ORDER',
+    OrderItem: 'ORDER_ITEM',
+    Batch: 'BATCH',
+    Shipment: 'SHIPMENT',
+    Container: 'CONTAINER',
+    Task: 'TASK',
+    User: 'STAFF',
+  };
+
+  return entityType ? colorsMapping[entityType] : 'GRAY_VERY_LIGHT';
 };
 
 const TagCard = ({ tag, actions, ...rest }: Props) => {
@@ -67,6 +70,13 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
             )}
           >
             <Icon icon="ORDER" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'OrderItem'))
+            )}
+          >
+            <Icon icon="ORDER_ITEM" />
           </div>
           <div
             className={TagTypeStyle(
