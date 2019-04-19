@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Apr 17 2019 13:32:35 GMT+0900 (Tokyo Standard Time)
+# timestamp: Thu Apr 18 2019 18:52:01 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -35821,6 +35821,8 @@ input ShipmentContainerCreateInput {
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean
   yardName: String
+  containerType: String
+  containerOption: ContainerOption
   memo: String
   tagIds: [ID!]
   todo: TodoInput
@@ -35847,6 +35849,8 @@ input ShipmentContainerUpdateInput {
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean
   yardName: String
+  containerType: String
+  containerOption: ContainerOption
   memo: String
   tagIds: [ID!]
   todo: TodoInput

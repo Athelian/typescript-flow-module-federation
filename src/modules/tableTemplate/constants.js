@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
+import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import {
   convertDistance,
   convertVolume,
@@ -91,6 +92,8 @@ export const containerColumns = [
     group: <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />,
     columns: [
       <FormattedMessage {...containerMessages.containerNo} />,
+      <FormattedMessage {...containerMessages.containerType} />,
+      <FormattedMessage {...containerMessages.containerOption} />,
       <FormattedMessage {...containerMessages.warehouseArrivalAgreedDate} />,
       <FormattedMessage {...containerMessages.warehouseArrivalAgreedDateAssignedTo} />,
       <FormattedMessage {...containerMessages.warehouseArrivalActualDate} />,
@@ -725,6 +728,22 @@ export const containerColumnFields = [
     },
   },
   {
+    messageId: containerMessages.containerType.id,
+    name: 'containerType',
+    type: 'select',
+    meta: {
+      items: CONTAINER_TYPE_ITEMS,
+    },
+  },
+  {
+    messageId: containerMessages.containerOption.id,
+    name: 'containerOption',
+    type: 'enumSelect',
+    meta: {
+      enumType: 'ContainerOption',
+    },
+  },
+  {
     messageId: containerMessages.warehouseArrivalAgreedDate.id,
     name: 'warehouseArrivalAgreedDate',
     type: 'datetimeWithApproval',
@@ -1055,7 +1074,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.transportType.id,
     name: 'transportType',
-    type: 'enum',
+    type: 'enumSelect',
     meta: {
       enumType: 'TransportType',
     },
@@ -1063,7 +1082,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.loadType.id,
     name: 'loadType',
-    type: 'enum',
+    type: 'enumSelect',
     meta: {
       enumType: 'LoadType',
     },

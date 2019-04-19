@@ -642,6 +642,10 @@ export const parseChangedData = ({
             changedContainer.warehouseId = updateValue && updateValue.id;
             break;
 
+          case 'containerOption':
+            changedContainer[key] = updateValue && updateValue.length > 0 ? updateValue : null;
+            break;
+
           default:
             changedContainer[key] = updateValue;
         }
