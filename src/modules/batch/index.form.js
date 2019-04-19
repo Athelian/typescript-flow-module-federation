@@ -41,8 +41,13 @@ const defaultProps = {
   isSlideView: false,
 };
 
+const formContainer = new FormContainer();
 class BatchFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
+
+  componentWillUnmount() {
+    formContainer.onReset();
+  }
 
   isNew = () => {
     const { path } = this.props;
@@ -57,20 +62,6 @@ class BatchFormModule extends React.PureComponent<Props> {
   isNewOrClone = () => this.isNew() || this.isClone();
 
   onCancel = () => navigate(`/batch`);
-
-  onReset = ({
-    batchInfoContainer,
-    batchTasksContainer,
-    form,
-  }: {
-    batchInfoContainer: Object,
-    batchTasksContainer: Object,
-    form: Object,
-  }) => {
-    resetFormState(batchInfoContainer);
-    resetFormState(batchTasksContainer, 'todo');
-    form.onReset();
-  };
 
   onSave = async (
     originalValues: Object,
@@ -174,11 +165,11 @@ class BatchFormModule extends React.PureComponent<Props> {
 
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     return (
-      <Provider>
+      <Provider inject={[formContainer]}>
         <UIConsumer>
           {uiState => (
-            <Subscribe to={[BatchInfoContainer, BatchTasksContainer, FormContainer]}>
-              {(batchInfoContainer, batchTasksContainer, form) => (
+            <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
+              {(batchInfoContainer, batchTasksContainer) => (
                 <Mutation
                   mutation={isNewOrClone ? createBatchMutation : updateBatchMutation}
                   onCompleted={this.onMutationCompleted({
@@ -271,14 +262,16 @@ class BatchFormModule extends React.PureComponent<Props> {
                                 <CancelButton onClick={() => this.onCancel()} />
                               ) : (
                                 <ResetButton
-                                  onClick={() =>
-                                    this.onReset({ batchInfoContainer, batchTasksContainer, form })
-                                  }
+                                  onClick={() => {
+                                    resetFormState(batchInfoContainer);
+                                    resetFormState(batchTasksContainer, 'todo');
+                                    formContainer.onReset();
+                                  }}
                                 />
                               )}
                               <SaveButton
                                 disabled={
-                                  !form.isReady(
+                                  !formContainer.isReady(
                                     { ...batchInfoContainer.state, ...batchTasksContainer.state },
                                     validator
                                   )
@@ -295,9 +288,9 @@ class BatchFormModule extends React.PureComponent<Props> {
                                     () => {
                                       batchInfoContainer.onSuccess();
                                       batchTasksContainer.onSuccess();
-                                      form.onReset();
+                                      formContainer.onReset();
                                     },
-                                    form.onErrors
+                                    formContainer.onErrors
                                   )
                                 }
                               />

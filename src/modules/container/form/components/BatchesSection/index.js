@@ -41,7 +41,7 @@ import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
-import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import SelectOrderItems from 'providers/SelectOrderItems';
 
 import {
@@ -197,7 +197,7 @@ function BatchesSection() {
                       <>
                         <SlideView isOpen={opened} onRequestClose={() => batchSlideToggle(false)}>
                           {opened && (
-                            <BatchFormWrapper
+                            <BatchFormInSlide
                               batch={batch}
                               onSave={value => {
                                 batchSlideToggle(false);

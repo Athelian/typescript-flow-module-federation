@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
@@ -30,6 +30,10 @@ const defaultProps = {
 const formContainer = new FormContainer();
 
 const TaskFormInSlide = ({ editable, onSave, task, parentEntity, isInTemplate }: Props) => {
+  useEffect(() => {
+    return () => formContainer.onReset();
+  });
+
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[TaskContainer]}>
