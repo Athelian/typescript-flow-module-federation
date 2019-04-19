@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
-import { Provider, Subscribe } from 'unstated';
+import { Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
@@ -51,14 +51,16 @@ const defaultProps = {
   redirectAfterSuccess: true,
 };
 
-const formContainer = new FormContainer();
+type OrderFormState = {
+  orderInfoState: Object,
+  orderItemState: Object,
+  orderTagsState: Object,
+  orderFilesState: Object,
+  orderTasksState: Object,
+};
 
 class OrderFormModule extends React.PureComponent<Props> {
   static defaultProps = defaultProps;
-
-  componentWillUnmount() {
-    formContainer.onReset();
-  }
 
   isNew = () => {
     const { path } = this.props;
@@ -73,6 +75,22 @@ class OrderFormModule extends React.PureComponent<Props> {
   isNewOrClone = () => this.isNew() || this.isClone();
 
   onCancel = () => navigate('/order');
+
+  onReset = ({
+    orderInfoState,
+    orderItemState,
+    orderTagsState,
+    orderFilesState,
+    orderTasksState,
+    form,
+  }: OrderFormState & { form: Object }) => {
+    resetFormState(orderInfoState);
+    resetFormState(orderItemState, 'orderItems');
+    resetFormState(orderTagsState, 'tags');
+    resetFormState(orderFilesState, 'files');
+    resetFormState(orderTasksState, 'todo');
+    form.onReset();
+  };
 
   onSave = async (
     originalValues: Object,
@@ -200,241 +218,247 @@ class OrderFormModule extends React.PureComponent<Props> {
     return (
       <UIConsumer>
         {uiState => (
-          <Provider inject={[formContainer]}>
-            <Subscribe
-              to={[
-                OrderItemsContainer,
-                OrderInfoContainer,
-                OrderTagsContainer,
-                OrderFilesContainer,
-                OrderTasksContainer,
-              ]}
-            >
-              {(
-                orderItemState,
-                orderInfoState,
-                orderTagsState,
-                orderFilesState,
-                orderTasksState
-              ) => (
-                <Mutation
-                  mutation={isNewOrClone ? createOrderMutation : updateOrder}
-                  onCompleted={this.onMutationCompleted({
-                    orderItemState,
-                    orderInfoState,
-                    orderTagsState,
-                    orderFilesState,
-                    orderTasksState,
-                  })}
-                  {...mutationKey}
-                >
-                  {(saveOrder, { loading: isLoading, error: apiError }) => (
-                    <Layout
-                      {...(isSlideView ? {} : uiState)}
-                      navBar={
-                        <CurrentNavBar>
-                          <EntityIcon icon="ORDER" color="ORDER" />
-                          <JumpToSection>
-                            <SectionTabs
-                              link="order_orderSection"
-                              label={
-                                <FormattedMessage
-                                  id="modules.Orders.order"
-                                  defaultMessage="ORDER"
-                                />
-                              }
-                              icon="ORDER"
-                            />
-                            <SectionTabs
-                              link="order_itemsSection"
-                              label={
-                                <FormattedMessage
-                                  id="modules.Orders.items"
-                                  defaultMessage="ITEMS"
-                                />
-                              }
-                              icon="ORDER_ITEM"
-                            />
-                            <SectionTabs
-                              link="order_documentsSection"
-                              label={
-                                <FormattedMessage
-                                  id="modules.Orders.documents"
-                                  defaultMessage="DOCUMENTS"
-                                />
-                              }
-                              icon="DOCUMENT"
-                            />
-                            <SectionTabs
-                              link="order_taskSection"
-                              label={
-                                <FormattedMessage id="modules.Orders.task" defaultMessage="TASK" />
-                              }
-                              icon="TASK"
-                            />
-                            <SectionTabs
-                              link="order_shipmentsSection"
-                              label={
-                                <FormattedMessage
-                                  id="modules.Orders.shipments"
-                                  defaultMessage="SHIPMENTS"
-                                />
-                              }
-                              icon="SHIPMENT"
-                            />
-                          </JumpToSection>
-                          <BooleanValue>
-                            {({ value: opened, set: slideToggle }) =>
-                              !isNewOrClone && (
-                                <>
-                                  <LogsButton onClick={() => slideToggle(true)} />
-                                  <SlideView
-                                    isOpen={opened}
-                                    onRequestClose={() => slideToggle(false)}
-                                  >
-                                    <Layout
-                                      navBar={
-                                        <SlideViewNavBar>
-                                          <EntityIcon icon="LOGS" color="LOGS" />
-                                        </SlideViewNavBar>
-                                      }
-                                    >
-                                      {orderId && opened ? (
-                                        <Timeline
-                                          query={orderTimelineQuery}
-                                          queryField="order"
-                                          variables={{
-                                            id: decodeId(orderId),
-                                          }}
-                                          entity={{
-                                            orderId: decodeId(orderId),
-                                          }}
-                                        />
-                                      ) : null}
-                                    </Layout>
-                                  </SlideView>
-                                </>
-                              )
+          <Subscribe
+            to={[
+              OrderItemsContainer,
+              OrderInfoContainer,
+              OrderTagsContainer,
+              OrderFilesContainer,
+              OrderTasksContainer,
+              FormContainer,
+            ]}
+          >
+            {(
+              orderItemState,
+              orderInfoState,
+              orderTagsState,
+              orderFilesState,
+              orderTasksState,
+              form
+            ) => (
+              <Mutation
+                mutation={isNewOrClone ? createOrderMutation : updateOrder}
+                onCompleted={this.onMutationCompleted({
+                  orderItemState,
+                  orderInfoState,
+                  orderTagsState,
+                  orderFilesState,
+                  orderTasksState,
+                })}
+                {...mutationKey}
+              >
+                {(saveOrder, { loading: isLoading, error: apiError }) => (
+                  <Layout
+                    {...(isSlideView ? {} : uiState)}
+                    navBar={
+                      <CurrentNavBar>
+                        <EntityIcon icon="ORDER" color="ORDER" />
+                        <JumpToSection>
+                          <SectionTabs
+                            link="order_orderSection"
+                            label={
+                              <FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />
                             }
-                          </BooleanValue>
-                          <>
-                            {(isNewOrClone ||
-                              orderItemState.isDirty() ||
-                              orderInfoState.isDirty() ||
-                              orderTagsState.isDirty() ||
-                              orderFilesState.isDirty() ||
-                              orderTasksState.isDirty()) && (
+                            icon="ORDER"
+                          />
+                          <SectionTabs
+                            link="order_itemsSection"
+                            label={
+                              <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />
+                            }
+                            icon="ORDER_ITEM"
+                          />
+                          <SectionTabs
+                            link="order_documentsSection"
+                            label={
+                              <FormattedMessage
+                                id="modules.Orders.documents"
+                                defaultMessage="DOCUMENTS"
+                              />
+                            }
+                            icon="DOCUMENT"
+                          />
+                          <SectionTabs
+                            link="order_taskSection"
+                            label={
+                              <FormattedMessage id="modules.Orders.task" defaultMessage="TASK" />
+                            }
+                            icon="TASK"
+                          />
+                          <SectionTabs
+                            link="order_shipmentsSection"
+                            label={
+                              <FormattedMessage
+                                id="modules.Orders.shipments"
+                                defaultMessage="SHIPMENTS"
+                              />
+                            }
+                            icon="SHIPMENT"
+                          />
+                          <SectionTabs
+                            link="order_containersSection"
+                            label={
+                              <FormattedMessage
+                                id="modules.Orders.containers"
+                                defaultMessage="CONTAINERS"
+                              />
+                            }
+                            icon="CONTAINER"
+                          />
+                        </JumpToSection>
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) =>
+                            !isNewOrClone && (
                               <>
-                                {this.isNewOrClone() ? (
-                                  <CancelButton
-                                    onClick={() => (onCancel ? onCancel() : this.onCancel())}
-                                  />
-                                ) : (
-                                  <ResetButton
-                                    onClick={() => {
-                                      resetFormState(orderInfoState);
-                                      resetFormState(orderItemState, 'orderItems');
-                                      resetFormState(orderTagsState, 'tags');
-                                      resetFormState(orderFilesState, 'files');
-                                      resetFormState(orderTasksState, 'todo');
-                                      formContainer.onReset();
-                                    }}
-                                  />
-                                )}
-
-                                <SaveButton
-                                  disabled={
-                                    !formContainer.isReady(
-                                      {
-                                        ...orderItemState.state,
-                                        ...orderInfoState.state,
-                                        ...orderTagsState.state,
-                                        ...orderFilesState.state,
-                                        ...orderTasksState.state,
-                                      },
-                                      validator
-                                    )
-                                  }
-                                  isLoading={isLoading}
-                                  onClick={() =>
-                                    this.onSave(
-                                      {
-                                        ...orderItemState.originalValues,
-                                        ...orderInfoState.originalValues,
-                                        ...orderTagsState.originalValues,
-                                        ...orderFilesState.originalValues,
-                                        ...orderTasksState.originalValues,
-                                      },
-                                      {
-                                        ...orderItemState.state,
-                                        ...orderInfoState.state,
-                                        ...orderTagsState.state,
-                                        ...orderFilesState.state,
-                                        ...orderTasksState.state,
-                                      },
-                                      saveOrder,
-                                      () => {
-                                        orderItemState.onSuccess();
-                                        orderInfoState.onSuccess();
-                                        orderTagsState.onSuccess();
-                                        orderFilesState.onSuccess();
-                                        orderTasksState.onSuccess();
-                                        formContainer.onReset();
-                                      },
-                                      formContainer.onErrors
-                                    )
-                                  }
-                                />
+                                <LogsButton onClick={() => slideToggle(true)} />
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => slideToggle(false)}
+                                >
+                                  <Layout
+                                    navBar={
+                                      <SlideViewNavBar>
+                                        <EntityIcon icon="LOGS" color="LOGS" />
+                                      </SlideViewNavBar>
+                                    }
+                                  >
+                                    {orderId && opened ? (
+                                      <Timeline
+                                        query={orderTimelineQuery}
+                                        queryField="order"
+                                        variables={{
+                                          id: decodeId(orderId),
+                                        }}
+                                        entity={{
+                                          orderId: decodeId(orderId),
+                                        }}
+                                      />
+                                    ) : null}
+                                  </Layout>
+                                </SlideView>
                               </>
-                            )}
-                            {orderId &&
-                              !isNewOrClone &&
-                              !orderItemState.isDirty() &&
-                              !orderInfoState.isDirty() &&
-                              !orderTagsState.isDirty() &&
-                              !orderFilesState.isDirty() &&
-                              !orderTasksState.isDirty() && (
-                                <ExportButton
-                                  type="Order"
-                                  exportQuery={orderExportQuery}
-                                  variables={{ id: decodeId(orderId) }}
+                            )
+                          }
+                        </BooleanValue>
+                        <>
+                          {(isNewOrClone ||
+                            orderItemState.isDirty() ||
+                            orderInfoState.isDirty() ||
+                            orderTagsState.isDirty() ||
+                            orderFilesState.isDirty() ||
+                            orderTasksState.isDirty()) && (
+                            <>
+                              {this.isNewOrClone() ? (
+                                <CancelButton
+                                  onClick={() => (onCancel ? onCancel() : this.onCancel())}
+                                />
+                              ) : (
+                                <ResetButton
+                                  onClick={() =>
+                                    this.onReset({
+                                      orderItemState,
+                                      orderInfoState,
+                                      orderTagsState,
+                                      orderFilesState,
+                                      orderTasksState,
+                                      form,
+                                    })
+                                  }
                                 />
                               )}
-                          </>
-                        </CurrentNavBar>
-                      }
-                    >
-                      {apiError && <p>Error: Please try again.</p>}
-                      {this.isNew() || !orderId ? (
-                        <OrderForm isNew />
-                      ) : (
-                        <QueryForm
-                          query={orderFormQuery}
-                          entityId={orderId}
-                          entityType="order"
-                          render={order => (
-                            <OrderForm
-                              order={order}
-                              isClone={this.isClone()}
-                              onFormReady={() => {
-                                this.onFormReady({
-                                  orderItemState,
-                                  orderInfoState,
-                                  orderTagsState,
-                                  orderFilesState,
-                                  orderTasksState,
-                                })(order);
-                              }}
-                            />
+
+                              <SaveButton
+                                disabled={
+                                  !form.isReady(
+                                    {
+                                      ...orderItemState.state,
+                                      ...orderInfoState.state,
+                                      ...orderTagsState.state,
+                                      ...orderFilesState.state,
+                                      ...orderTasksState.state,
+                                    },
+                                    validator
+                                  )
+                                }
+                                isLoading={isLoading}
+                                onClick={() =>
+                                  this.onSave(
+                                    {
+                                      ...orderItemState.originalValues,
+                                      ...orderInfoState.originalValues,
+                                      ...orderTagsState.originalValues,
+                                      ...orderFilesState.originalValues,
+                                      ...orderTasksState.originalValues,
+                                    },
+                                    {
+                                      ...orderItemState.state,
+                                      ...orderInfoState.state,
+                                      ...orderTagsState.state,
+                                      ...orderFilesState.state,
+                                      ...orderTasksState.state,
+                                    },
+                                    saveOrder,
+                                    () => {
+                                      orderItemState.onSuccess();
+                                      orderInfoState.onSuccess();
+                                      orderTagsState.onSuccess();
+                                      orderFilesState.onSuccess();
+                                      orderTasksState.onSuccess();
+                                      form.onReset();
+                                    },
+                                    form.onErrors
+                                  )
+                                }
+                              />
+                            </>
                           )}
-                        />
-                      )}
-                    </Layout>
-                  )}
-                </Mutation>
-              )}
-            </Subscribe>
-          </Provider>
+                          {orderId &&
+                            !isNewOrClone &&
+                            !orderItemState.isDirty() &&
+                            !orderInfoState.isDirty() &&
+                            !orderTagsState.isDirty() &&
+                            !orderFilesState.isDirty() &&
+                            !orderTasksState.isDirty() && (
+                              <ExportButton
+                                type="Order"
+                                exportQuery={orderExportQuery}
+                                variables={{ id: decodeId(orderId) }}
+                              />
+                            )}
+                        </>
+                      </CurrentNavBar>
+                    }
+                  >
+                    {apiError && <p>Error: Please try again.</p>}
+                    {this.isNew() || !orderId ? (
+                      <OrderForm isNew />
+                    ) : (
+                      <QueryForm
+                        query={orderFormQuery}
+                        entityId={orderId}
+                        entityType="order"
+                        render={order => (
+                          <OrderForm
+                            order={order}
+                            isClone={this.isClone()}
+                            onFormReady={() => {
+                              this.onFormReady({
+                                orderItemState,
+                                orderInfoState,
+                                orderTagsState,
+                                orderFilesState,
+                                orderTasksState,
+                              })(order);
+                            }}
+                          />
+                        )}
+                      />
+                    )}
+                  </Layout>
+                )}
+              </Mutation>
+            )}
+          </Subscribe>
         )}
       </UIConsumer>
     );

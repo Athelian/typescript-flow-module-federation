@@ -114,13 +114,6 @@ export const orderCardRMFragment = gql`
         }
         batches {
           ...batchCardRMFragment
-          ... on Batch {
-            shipment {
-              ... on Shipment {
-                id
-              }
-            }
-          }
         }
       }
     }
@@ -130,6 +123,11 @@ export const orderCardRMFragment = gql`
         batches {
           ... on Batch {
             id
+            container {
+              ... on Container {
+                id
+              }
+            }
             orderItem {
               ... on OrderItem {
                 id
@@ -234,6 +232,11 @@ export const shipmentCardRMFragment = gql`
     batches {
       ... on Batch {
         id
+        container {
+          ... on Container {
+            id
+          }
+        }
         orderItem {
           ... on OrderItem {
             id
@@ -273,24 +276,6 @@ export const orderDetailQuery = gql`
 export const shipmentDetailQuery = gql`
   query($id: ID!) {
     shipment(id: $id) {
-      ... on Shipment {
-        id
-        batches {
-          ... on Batch {
-            id
-            orderItem {
-              ... on OrderItem {
-                id
-                order {
-                  ... on Order {
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
       ...shipmentCardRMFragment
     }
   }
@@ -337,6 +322,11 @@ export const shipmentListQuery = gql`
           batches {
             ... on Batch {
               id
+              container {
+                ... on Container {
+                  id
+                }
+              }
               orderItem {
                 ... on OrderItem {
                   id

@@ -1,50 +1,13 @@
 // @flow
 import { cloneDeep } from 'lodash';
-import { totalAdjustQuantity } from 'components/Cards/utils';
-import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
-import { convert as convertWeight } from 'modules/form/helpers/metricInput/weightInput';
-import { getByPath, isNullOrUndefined } from 'utils/fp';
-
-const findBatchQuantity = (batch: Object) => {
-  const {
-    quantity,
-    batchAdjustments,
-  }: { quantity: number, batchAdjustments: Array<Object> } = batch;
-  return quantity + totalAdjustQuantity(batchAdjustments);
-};
+import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
+import { getByPath } from 'utils/fp';
 
 const findPriceAmount = (batch: Object, totalBatchQuantity: number) => {
   const {
     orderItem: { price },
   }: { orderItem: { price: Object } } = batch;
   return price.amount * totalBatchQuantity;
-};
-
-const findVolume = (batch: Object) => {
-  const {
-    packageQuantity = 0,
-    packageVolume,
-  }: {
-    packageQuantity: number,
-    packageVolume: Object,
-  } = batch;
-  const volume = isNullOrUndefined(packageVolume)
-    ? 0
-    : convertVolume(packageVolume.value, packageVolume.metric, 'm³');
-  return packageQuantity * volume;
-};
-
-const findWeight = (batch: Object) => {
-  const {
-    packageQuantity = 0,
-    packageGrossWeight = {},
-  }: {
-    packageQuantity: number,
-    packageGrossWeight: Object,
-  } = batch;
-  return packageGrossWeight
-    ? packageQuantity * convertWeight(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
-    : 0;
 };
 
 export const findSummary = (values: Object) => {

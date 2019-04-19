@@ -14,7 +14,6 @@ import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { contains, getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
-  isAddedProvider: boolean,
   isOwner: boolean,
   isNew: boolean,
 };
@@ -27,33 +26,25 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  isAddedProvider: false,
   isOwner: true,
   isNew: false,
 };
 
 const formContainer = new FormContainer();
 
-const exist = (
-  productProvider: Object,
-  productProviders: Array<Object>,
-  isAddedProvider: boolean
-): boolean => {
+const exist = (productProvider: Object, productProviders: Array<Object>): boolean => {
   const provider = {
+    name: getByPathWithDefault(0, 'name', productProvider),
     exporter: getByPathWithDefault(0, 'exporter.id', productProvider),
     supplier: getByPathWithDefault(0, 'supplier.id', productProvider),
   };
-  const providers = isAddedProvider
-    ? productProviders.map(item => ({
-        exporter: getByPathWithDefault(0, 'exporter.id', item),
-        supplier: getByPathWithDefault(0, 'supplier.id', item),
-      }))
-    : productProviders
-        .filter(item => item.id !== productProvider.id)
-        .map(item => ({
-          exporter: getByPathWithDefault(0, 'exporter.id', item),
-          supplier: getByPathWithDefault(0, 'supplier.id', item),
-        }));
+  const providers = productProviders
+    .filter(item => item.id !== productProvider.id)
+    .map(item => ({
+      name: getByPathWithDefault(0, 'name', item),
+      exporter: getByPathWithDefault(0, 'exporter.id', item),
+      supplier: getByPathWithDefault(0, 'supplier.id', item),
+    }));
 
   return contains(provider, providers);
 };
@@ -64,7 +55,6 @@ const ProductProviderFormWrapper = ({
   onSave,
   productProviders,
   productProvider,
-  isAddedProvider,
   onCancel,
 }: Props) => {
   useEffect(() => {
@@ -74,7 +64,7 @@ const ProductProviderFormWrapper = ({
     <Provider inject={[formContainer]}>
       <Subscribe to={[ProductProviderContainer]}>
         {productProviderContainer => {
-          const isExist = exist(productProviderContainer.state, productProviders, isAddedProvider);
+          const isExist = exist(productProviderContainer.state, productProviders);
           const disableSaveButton =
             !productProviderContainer.isDirty() ||
             !formContainer.isReady(productProviderContainer.state, validator) ||

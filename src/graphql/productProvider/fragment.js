@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 export const productProviderFormFragment = gql`
   fragment productProviderFormFragment on ProductProvider {
     id
+    name
     archived
     updatedAt
     updatedBy {
@@ -42,6 +43,8 @@ export const productProviderFormFragment = gql`
     packageVolume {
       ...metricFragment
     }
+    autoCalculatePackageVolume
+    autoCalculateUnitVolume
     packageSize {
       ...sizeFragment
     }

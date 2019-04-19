@@ -1,7 +1,7 @@
 // @flow
 import { uniqBy } from 'lodash';
 import { isNullOrUndefined } from 'utils/fp';
-import { convert as convertVolume } from 'modules/form/helpers/metricInput/volumeInput';
+import { convertVolume } from 'utils/metric';
 import { addDays } from 'date-fns';
 
 type BatchProp = {

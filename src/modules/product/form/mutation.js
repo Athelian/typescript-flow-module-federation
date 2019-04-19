@@ -130,6 +130,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'supplier', oldProductProvider),
         newProductProvider.supplier
       ),
+      ...parseGenericField(
+        'name',
+        getByPathWithDefault(null, 'name', oldProductProvider),
+        newProductProvider.name
+      ),
       ...parseEnumField(
         'origin',
         getByPathWithDefault(null, 'origin', oldProductProvider),
@@ -199,6 +204,16 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         'packageSize',
         getByPathWithDefault(null, 'packageSize', oldProductProvider),
         newProductProvider.packageSize
+      ),
+      ...parseGenericField(
+        'autoCalculatePackageVolume',
+        getByPathWithDefault(null, 'autoCalculatePackageVolume', oldProductProvider),
+        newProductProvider.autoCalculatePackageVolume
+      ),
+      ...parseGenericField(
+        'autoCalculateUnitVolume',
+        getByPathWithDefault(null, 'autoCalculateUnitVolume', oldProductProvider),
+        newProductProvider.autoCalculateUnitVolume
       ),
       ...parseFilesField(
         'files',

@@ -26,6 +26,7 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  containerCardFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -88,6 +89,7 @@ export const updateOrderMutation = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${containerCardFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({

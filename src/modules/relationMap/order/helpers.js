@@ -1,6 +1,6 @@
 // @flow
 import { getByPathWithDefault } from 'utils/fp';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 
 /**
  * Check the result has next page or not

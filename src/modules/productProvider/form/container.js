@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
-import { convertVolume, calculatePackageVolume } from 'utils/batch';
+import { calculatePackageVolume, calculateUnitVolume } from 'utils/batch';
 
 type Price = {
   amount: number,
@@ -17,6 +17,7 @@ type Metric = {
 
 type FormState = {
   isNew?: boolean,
+  name: string,
   exporter?: ?Object,
   supplier?: ?Object,
   origin?: string,
@@ -35,6 +36,8 @@ type FormState = {
   inspectionFee: Price,
   packageGrossWeight: Metric,
   packageVolume: Metric,
+  autoCalculatePackageVolume: boolean,
+  autoCalculateUnitVolume: boolean,
   packageSize: {
     width: Metric,
     height: Metric,
@@ -47,6 +50,7 @@ type FormState = {
 export const initValues = {
   supplier: null,
   origin: null,
+  name: null,
   packageName: null,
   unitType: null,
   packageCapacity: 0,
@@ -89,6 +93,8 @@ export const initValues = {
     metric: 'm³',
     value: 0,
   },
+  autoCalculatePackageVolume: true,
+  autoCalculateUnitVolume: true,
   packageSize: {
     width: {
       metric: 'cm',
@@ -152,20 +158,37 @@ export default class ProductProviderContainer extends Container<FormState> {
   };
 
   calculateUnitVolume = () => {
-    // TODO: use https://github.com/ben-ng/convert-units for converting unit
-    this.setState(prevState => {
-      const newState = set(
-        cloneDeep(prevState),
-        'unitVolume.value',
-        convertVolume(
-          prevState.unitVolume.metric,
-          prevState.unitSize.height,
-          prevState.unitSize.width,
-          prevState.unitSize.length
-        )
-      );
-      return newState;
-    });
+    this.setState(prevState => ({
+      unitVolume: calculateUnitVolume(prevState),
+    }));
+  };
+
+  toggleAutoCalculateUnitVolume = () => {
+    const { autoCalculateUnitVolume } = this.state;
+    if (!autoCalculateUnitVolume) {
+      this.setState(prevState => ({
+        unitVolume: calculateUnitVolume(prevState),
+        autoCalculateUnitVolume: !autoCalculateUnitVolume,
+      }));
+    } else {
+      this.setState({
+        autoCalculateUnitVolume: !autoCalculateUnitVolume,
+      });
+    }
+  };
+
+  toggleAutoCalculatePackageVolume = () => {
+    const { autoCalculatePackageVolume } = this.state;
+    if (!autoCalculatePackageVolume) {
+      this.setState(prevState => ({
+        packageVolume: calculatePackageVolume(prevState),
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      }));
+    } else {
+      this.setState({
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      });
+    }
   };
 
   calculatePackageVolume = () => {

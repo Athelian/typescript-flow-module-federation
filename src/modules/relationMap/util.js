@@ -193,12 +193,6 @@ export const formatOrderFromShipment = (shipments: Array<Object>) => {
   return orderObj;
 };
 
-export const convertVolumeWeight = (batch: Object) => {
-  const { packageVolume = {}, packageQuantity = 0 } = batch;
-  const volume = packageVolume && packageVolume.value;
-  return packageQuantity * volume;
-};
-
 export const calculateTotalPackageGrossWeight = (batches: Array<Object>) => {
   if (!batches || !batches.length) {
     return 0;

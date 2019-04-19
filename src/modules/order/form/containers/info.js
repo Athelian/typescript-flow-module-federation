@@ -14,6 +14,7 @@ type FormState = {
   issuedAt: ?Date,
   memo: ?string,
   shipments: Array<Object>,
+  containers: Array<Object>,
   inCharges: Array<Object>,
   customFields: Object,
 };
@@ -27,6 +28,7 @@ const initValues = {
   issuedAt: null,
   memo: null,
   shipments: [],
+  containers: [],
   inCharges: [],
   customFields: {
     fieldValues: [],

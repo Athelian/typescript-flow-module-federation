@@ -120,11 +120,21 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                         value: '',
                       },
                     });
+                    emitter.emit('INLINE_CHANGE', {
+                      name,
+                      hasError: !!isRequired,
+                      value: '',
+                    });
                   } else {
                     inputHandlers.onChange({
                       currentTarget: {
                         value: item && item.name,
                       },
+                    });
+                    emitter.emit('INLINE_CHANGE', {
+                      name,
+                      hasError: false,
+                      value: item && item.name,
                     });
                   }
                 }}

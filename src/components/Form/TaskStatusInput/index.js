@@ -7,6 +7,7 @@ import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import { type UserAvatarType } from 'types';
 import { IN_PROGRESS } from './constants';
+import { type TaskStatusType } from './types.js.flow';
 import {
   TaskStatusInputWrapperStyle,
   UserAvatarWrapperStyle,
@@ -15,7 +16,6 @@ import {
   TaskStatusInputLabelStyle,
   StatusLabelStyle,
 } from './style';
-import { type TaskStatusType } from './type';
 
 type OptionalProps = {
   width: string,

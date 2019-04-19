@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { CONTAINER, PRODUCT, SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'constants/keywords';
 import { TEMPLATE_CREATE, TEMPLATE_UPDATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
 import GridColumn from 'components/GridColumn';
@@ -15,6 +16,7 @@ import {
   batchColumns,
   shipmentColumns,
   productColumns,
+  containerColumns,
 } from 'modules/tableTemplate/constants';
 import { ContentWrapperStyle, FirstBlockStyle, SecondBlockStyle } from './style';
 
@@ -122,14 +124,14 @@ const SelectFieldsSection = () => {
               <div className={FirstBlockStyle}>
                 <GridColumn>
                   {renderGroup({
-                    type: 'ORDER',
+                    type: ORDER,
                     groups: orderColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: 'ORDER',
+                    type: ORDER,
                     customFields: orderCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -138,14 +140,14 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: 'ORDER_ITEM',
+                    type: ORDER_ITEM,
                     groups: orderItemColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: 'ORDER_ITEM',
+                    type: ORDER_ITEM,
                     customFields: orderItemCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -154,14 +156,14 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: 'BATCH',
+                    type: BATCH,
                     groups: batchColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: 'BATCH',
+                    type: BATCH,
                     customFields: batchCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -170,14 +172,14 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: 'SHIPMENT',
+                    type: SHIPMENT,
                     groups: shipmentColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: 'SHIPMENT',
+                    type: SHIPMENT,
                     customFields: shipmentCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -188,15 +190,24 @@ const SelectFieldsSection = () => {
               <div className={SecondBlockStyle}>
                 <GridColumn>
                   {renderGroup({
-                    type: 'PRODUCT',
+                    type: PRODUCT,
                     groups: productColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: 'PRODUCT',
+                    type: PRODUCT,
                     customFields: productCustomFields,
+                    hasSelectField,
+                    toggleSelectField,
+                    editable: canCreateOrUpdate,
+                  })}
+                </GridColumn>
+                <GridColumn>
+                  {renderGroup({
+                    type: CONTAINER,
+                    groups: containerColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
