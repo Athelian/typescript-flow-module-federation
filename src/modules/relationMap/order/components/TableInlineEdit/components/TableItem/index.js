@@ -18,8 +18,9 @@ import {
   InlineTimeLineInput,
   InlineDateTimeApprovalInput,
   InlineWarehouse,
-  AutoCalculate,
   InlineSelectInput,
+  InlineEnumInput,
+  AutoCalculate,
 } from './components';
 
 type OptionalProps = {
@@ -102,6 +103,9 @@ function renderItem({
 
     case 'enum':
       return <InlineSearchEnumInput name={name} value={value} {...meta} id={id} />;
+
+    case 'enumSelect':
+      return <InlineEnumInput name={name} value={value} {...meta} id={id} />;
 
     case 'inCharges':
       return <InlineInChargeInput name={name} values={value} {...meta} id={id} />;

@@ -738,7 +738,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.containerOption.id,
     name: 'containerOption',
-    type: 'enum',
+    type: 'enumSelect',
     meta: {
       enumType: 'ContainerOption',
     },
@@ -1074,7 +1074,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.transportType.id,
     name: 'transportType',
-    type: 'enum',
+    type: 'enumSelect',
     meta: {
       enumType: 'TransportType',
     },
@@ -1082,7 +1082,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.loadType.id,
     name: 'loadType',
-    type: 'enum',
+    type: 'enumSelect',
     meta: {
       enumType: 'LoadType',
     },

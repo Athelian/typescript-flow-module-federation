@@ -1,17 +1,9 @@
 // @flow
 import * as React from 'react';
-import matchSorter from 'match-sorter';
 import { FieldItem, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useTextInput } from 'modules/form/hooks';
 import logger from 'utils/logger';
-
-const filterItems = (query: string, items: Array<any>) => {
-  if (!query) return items;
-  return matchSorter(items, query, {
-    keys: ['value', 'label'],
-  });
-};
 
 type OptionalProps = {
   isRequired: boolean,
@@ -39,7 +31,7 @@ export default function InlineSelectInput({ value, name, items, isRequired, id }
         <SelectInput
           {...inputHandlers}
           name={name}
-          items={filterItems(inputHandlers.value, items)}
+          items={items}
           itemToString={item => (item ? item.label || item.value : '')}
           itemToValue={item => (item ? item.value : '')}
           inputValue={inputHandlers.value}
@@ -57,7 +49,7 @@ export default function InlineSelectInput({ value, name, items, isRequired, id }
           renderOptions={({ ...optionProps }) => (
             <DefaultOptions
               {...optionProps}
-              items={filterItems(inputHandlers.value, items)}
+              items={items}
               itemToString={item => (item ? item.label || item.value : '')}
               itemToValue={item => (item ? item.value : '')}
               width="200px"
@@ -114,11 +106,21 @@ export default function InlineSelectInput({ value, name, items, isRequired, id }
                   value: '',
                 },
               });
+              emitter.emit('INLINE_CHANGE', {
+                name,
+                hasError: !!isRequired,
+                value: '',
+              });
             } else {
               inputHandlers.onChange({
                 currentTarget: {
                   value: item && item.value,
                 },
+              });
+              emitter.emit('INLINE_CHANGE', {
+                name,
+                hasError: false,
+                value: item && item.value,
               });
             }
           }}
