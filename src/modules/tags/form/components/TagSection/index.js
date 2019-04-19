@@ -261,6 +261,23 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   </div>
                                 </RadioInput>
                                 <RadioInput
+                                  selected={entityTypeValue.entityTypes.includes('OrderItem')}
+                                  onToggle={() => toggleSelectType('OrderItem')}
+                                  editable={allowCreateOrUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('ORDER_ITEM')}>
+                                      <Icon icon="ORDER_ITEM" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.Tags.orderItem"
+                                        defaultMessage="ORDER ITEM"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+                                <RadioInput
                                   selected={entityTypeValue.entityTypes.includes('Batch')}
                                   onToggle={() => toggleSelectType('Batch')}
                                   editable={allowCreateOrUpdate}
