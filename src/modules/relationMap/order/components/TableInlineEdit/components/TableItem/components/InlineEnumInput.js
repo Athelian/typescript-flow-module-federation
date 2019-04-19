@@ -1,18 +1,10 @@
 // @flow
 import * as React from 'react';
-import matchSorter from 'match-sorter';
 import EnumProvider from 'providers/enum';
-import { FieldItem, SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
+import { FieldItem, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useTextInput } from 'modules/form/hooks';
 import logger from 'utils/logger';
-
-const filterItems = (query: string, items: Array<any>) => {
-  if (!query) return items;
-  return matchSorter(items, query, {
-    keys: ['name', 'description'],
-  });
-};
 
 type OptionalProps = {
   isRequired: boolean,
@@ -31,7 +23,7 @@ const defaultProps = {
   disabled: false,
 };
 
-export default function InlineSearchEnumInput({ name, value, enumType, isRequired, id }: Props) {
+export default function InlineEnumInput({ name, value, enumType, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
 
   return (
@@ -42,15 +34,15 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
         return (
           <FieldItem
             input={
-              <SearchSelectInput
+              <SelectInput
                 {...inputHandlers}
                 name={name}
-                items={filterItems(inputHandlers.value, data)}
+                items={data}
                 itemToString={item => (item ? item.description || item.name : '')}
                 itemToValue={item => (item ? item.name : '')}
                 inputValue={inputHandlers.value}
                 renderSelect={({ ...selectProps }) => (
-                  <DefaultSearchSelect
+                  <DefaultSelect
                     {...selectProps}
                     id={`input-${id}`}
                     hasError={hasError}
@@ -63,7 +55,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 renderOptions={({ ...optionProps }) => (
                   <DefaultOptions
                     {...optionProps}
-                    items={filterItems(inputHandlers.value, data)}
+                    items={data}
                     itemToString={item => (item ? item.description || item.name : '')}
                     itemToValue={item => (item ? item.name : '')}
                     width="200px"
@@ -74,7 +66,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                   logger.warn('afterClearSelection');
                   inputHandlers.onChange({
                     currentTarget: {
-                      value: '',
+                      value: null,
                     },
                   });
                   setTimeout(() => {
@@ -88,7 +80,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                   }, 0);
                 }}
                 onBlur={() => {
-                  logger.warn('SearchSelectInput onBlur', inputHandlers.value);
+                  logger.warn('SelectInput onBlur', inputHandlers.value);
                   if (data.find(item => item.name === inputHandlers.value)) {
                     inputHandlers.onBlur();
                     emitter.emit('INLINE_CHANGE', {
@@ -113,7 +105,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                   }
                 }}
                 onChange={(item: ?{ name: string }) => {
-                  logger.warn('SearchSelectInput onChange', item);
+                  logger.warn('SelectInput onChange', item);
                   if (!item) {
                     inputHandlers.onChange({
                       currentTarget: {
@@ -138,14 +130,6 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                     });
                   }
                 }}
-                onSearch={newQuery => {
-                  logger.warn('onSearch', newQuery);
-                  inputHandlers.onChange({
-                    currentTarget: {
-                      value: newQuery,
-                    },
-                  });
-                }}
               />
             }
           />
@@ -155,4 +139,4 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
   );
 }
 
-InlineSearchEnumInput.defaultProps = defaultProps;
+InlineEnumInput.defaultProps = defaultProps;

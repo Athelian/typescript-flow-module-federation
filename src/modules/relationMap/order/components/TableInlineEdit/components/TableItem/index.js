@@ -18,6 +18,8 @@ import {
   InlineTimeLineInput,
   InlineDateTimeApprovalInput,
   InlineWarehouse,
+  InlineSelectInput,
+  InlineEnumInput,
   AutoCalculate,
 } from './components';
 
@@ -96,8 +98,14 @@ function renderItem({
     case 'metric':
       return <InlineMetricInput name={name} value={value} values={values} {...meta} id={id} />;
 
+    case 'select':
+      return <InlineSelectInput name={name} value={value} {...meta} id={id} />;
+
     case 'enum':
       return <InlineSearchEnumInput name={name} value={value} {...meta} id={id} />;
+
+    case 'enumSelect':
+      return <InlineEnumInput name={name} value={value} {...meta} id={id} />;
 
     case 'inCharges':
       return <InlineInChargeInput name={name} values={value} {...meta} id={id} />;
