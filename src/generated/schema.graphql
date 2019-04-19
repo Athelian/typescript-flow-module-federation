@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Apr 18 2019 18:52:01 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Apr 19 2019 18:51:47 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -29747,6 +29747,11 @@ type MaskPayloadPagination {
   totalCount: Int!
 }
 
+input MaskSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
 input MaskUpdateInput {
   name: String
   entityType: CustomizableEntityType
@@ -30746,9 +30751,11 @@ type Query {
   fieldDefinition(id: ID!): FieldDefinitionPayload!
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
   mask(id: ID!): MaskPayload!
-  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPayloadPagination!
+  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput, sortBy: MaskSortInput): MaskPayloadPagination!
+  masksByIDs(ids: [ID!]!): [MaskPayload!]!
   maskEdit(id: ID!): MaskEditPayload!
   maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPagination!
+  maskEditsByIDs(ids: [ID!]!): [MaskEditPayload!]!
   integration(id: ID!): IntegrationPayload!
   integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPayloadPagination!
   integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPayloadPagination!

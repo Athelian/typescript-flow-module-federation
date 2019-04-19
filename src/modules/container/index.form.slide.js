@@ -1,5 +1,6 @@
 // @flow
-import React, { useEffect } from 'react';
+import React from 'react';
+import { isEquals } from 'utils/fp';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import Layout from 'components/Layout';
@@ -25,74 +26,80 @@ const defaultProps = {
 };
 
 const formContainer = new FormContainer();
+export default class ContainerFormInSlide extends React.Component<Props> {
+  static defaultProps = defaultProps;
 
-const ContainerFormInSlide = ({ container, onSave }: Props) => {
-  useEffect(() => {
-    return () => formContainer.onReset();
-  }, [container]);
-  return (
-    <Provider inject={[formContainer]}>
-      <Subscribe to={[ContainerFormContainer]}>
-        {containerContainer => (
-          <Layout
-            navBar={
-              <NavBar>
-                <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                <JumpToSection>
-                  <SectionTabs
-                    link="container_containerSection"
-                    label={
-                      <FormattedMessage
-                        id="modules.container.container"
-                        defaultMessage="CONTAINER"
+  shouldComponentUpdate(nextProps: Props) {
+    const { container } = this.props;
+    return !isEquals(container, nextProps.container);
+  }
+
+  componentWillUnmount() {
+    formContainer.onReset();
+  }
+
+  render() {
+    const { container, onSave } = this.props;
+    return (
+      <Provider inject={[formContainer]}>
+        <Subscribe to={[ContainerFormContainer]}>
+          {containerContainer => (
+            <Layout
+              navBar={
+                <NavBar>
+                  <EntityIcon icon="CONTAINER" color="CONTAINER" />
+                  <JumpToSection>
+                    <SectionTabs
+                      link="container_containerSection"
+                      label={
+                        <FormattedMessage
+                          id="modules.container.container"
+                          defaultMessage="CONTAINER"
+                        />
+                      }
+                      icon="CONTAINER"
+                    />
+                    <SectionTabs
+                      link="container_batchesSection"
+                      label={
+                        <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />
+                      }
+                      icon="BATCH"
+                    />
+                    <SectionTabs
+                      link="container_ordersSection"
+                      label={
+                        <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />
+                      }
+                      icon="ORDER"
+                    />
+                  </JumpToSection>
+                  {containerContainer.isDirty() && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(containerContainer);
+                          formContainer.onReset();
+                        }}
                       />
-                    }
-                    icon="CONTAINER"
-                  />
-                  <SectionTabs
-                    link="container_batchesSection"
-                    label={
-                      <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />
-                    }
-                    icon="BATCH"
-                  />
-                  <SectionTabs
-                    link="container_ordersSection"
-                    label={
-                      <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />
-                    }
-                    icon="ORDER"
-                  />
-                </JumpToSection>
-                {containerContainer.isDirty() && (
-                  <>
-                    <ResetButton
-                      onClick={() => {
-                        resetFormState(containerContainer);
-                        formContainer.onReset();
-                      }}
-                    />
-                    <SaveButton
-                      disabled={!formContainer.isReady(containerContainer.state, validator)}
-                      onClick={() => onSave(containerContainer.state)}
-                    />
-                  </>
-                )}
-              </NavBar>
-            }
-          >
-            <ContainerForm
-              inShipmentForm
-              container={container}
-              onFormReady={() => containerContainer.initDetailValues(container)}
-            />
-          </Layout>
-        )}
-      </Subscribe>
-    </Provider>
-  );
-};
-
-ContainerFormInSlide.defaultProps = defaultProps;
-
-export default ContainerFormInSlide;
+                      <SaveButton
+                        disabled={!formContainer.isReady(containerContainer.state, validator)}
+                        onClick={() => onSave(containerContainer.state)}
+                      />
+                    </>
+                  )}
+                </NavBar>
+              }
+            >
+              <ContainerForm
+                inShipmentForm
+                container={container}
+                onFormReady={() => containerContainer.initDetailValues(container)}
+              />
+            </Layout>
+          )}
+        </Subscribe>
+      </Provider>
+    );
+  }
+}
