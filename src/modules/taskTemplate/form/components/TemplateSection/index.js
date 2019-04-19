@@ -149,6 +149,32 @@ const TableTemplateSection = ({ isNew }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
+                                  selected={inputHandlers.value === 'OrderItem'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'OrderItem') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('OrderItem');
+                                      } else {
+                                        setFieldValue(name, 'OrderItem');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('ORDER_ITEM')}>
+                                      <Icon icon="ORDER_ITEM" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.orderItem"
+                                        defaultMessage="ITEM"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
                                   selected={inputHandlers.value === 'Batch'}
                                   onToggle={() => {
                                     if (values.entityType !== 'Batch') {
