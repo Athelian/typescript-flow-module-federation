@@ -85,6 +85,11 @@ export const orderCardRMFragment = gql`
       ... on OrderItem {
         id
         quantity
+        todo {
+          completedCount
+          inProgressCount
+          remainingCount
+        }
         price {
           ...priceFragment
         }

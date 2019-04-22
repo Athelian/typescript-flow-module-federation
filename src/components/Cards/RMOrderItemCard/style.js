@@ -42,3 +42,9 @@ export const ChartWrapperStyle: string = css`
   width: 115px;
   padding: 0 5px 0 0;
 `;
+
+export const TaskRingWrapperStyle: string = css`
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+`;
