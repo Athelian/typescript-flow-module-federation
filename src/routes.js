@@ -20,6 +20,8 @@ const AsyncResetPassword = lazy(() => import('./modules/resetPassword'));
 
 const AsyncOrder = lazy(() => import('./modules/order'));
 
+const AsyncOrderItem = lazy(() => import('./modules/orderItem'));
+
 const AsyncTags = lazy(() => import('./modules/tags'));
 
 const AsyncStaff = lazy(() => import('./modules/staff'));
@@ -66,6 +68,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
         <Authorized path="/">
           <DashBoard path="/" />
           <AsyncOrder path="order/*" />
+          <AsyncOrderItem path="order-item/*" />
           <AsyncBatch path="batch/*" />
           <AsyncShipment path="shipment/*" />
           <AsyncContainer path="container/*" />

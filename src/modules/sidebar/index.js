@@ -6,6 +6,7 @@ import {
   RM_PRODUCT_FOCUS_LIST,
 } from 'modules/permission/constants/relationMap';
 import { ORDER_LIST } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
 import { BATCH_LIST } from 'modules/permission/constants/batch';
 import { SHIPMENT_LIST } from 'modules/permission/constants/shipment';
 import { CONTAINER_LIST } from 'modules/permission/constants/container';
@@ -26,6 +27,7 @@ import messages from './messages';
 import {
   PATH_RM,
   PATH_ORDER,
+  PATH_ORDER_ITEM,
   PATH_BATCH,
   PATH_SHIPMENT,
   PATH_CONTAINER,
@@ -43,17 +45,17 @@ import {
 const SideBar = () => {
   const { hasPermission } = usePermission();
 
-  const hasOrdersMenu = hasPermission(ORDER_LIST) || hasPermission(BATCH_LIST);
+  const hasOrdersMenu = hasPermission([ORDER_LIST, BATCH_LIST, ORDER_ITEMS_LIST]);
 
-  const hasShipmentsMenu = hasPermission(SHIPMENT_LIST) || hasPermission(CONTAINER_LIST);
+  const hasShipmentsMenu = hasPermission([SHIPMENT_LIST, CONTAINER_LIST]);
 
-  const hasNetworkMenu =
-    hasPermission(WAREHOUSE_LIST) || hasPermission(PARTNER_LIST) || hasPermission(STAFF_LIST);
+  const hasNetworkMenu = hasPermission([WAREHOUSE_LIST, PARTNER_LIST, STAFF_LIST]);
 
-  const hasTemplatesMenu =
-    hasPermission(CUSTOM_FIELD_DEFINITIONS_LIST) ||
-    hasPermission(TEMPLATE_LIST) ||
-    hasPermission(TASK_TEMPLATE_LIST);
+  const hasTemplatesMenu = hasPermission([
+    CUSTOM_FIELD_DEFINITIONS_LIST,
+    TEMPLATE_LIST,
+    TASK_TEMPLATE_LIST,
+  ]);
 
   return (
     <Location>
@@ -91,6 +93,14 @@ const SideBar = () => {
                             isActive={pathnameSplit[1] === PATH_ORDER}
                             icon="ORDER"
                             label={<FormattedMessage {...messages.order} />}
+                          />
+                        )}
+                        {hasPermission(ORDER_ITEMS_LIST) && (
+                          <MenuItem
+                            path={`/${PATH_ORDER_ITEM}`}
+                            isActive={pathnameSplit[1] === PATH_ORDER_ITEM}
+                            icon="ORDER_ITEM"
+                            label={<FormattedMessage {...messages.orderItem} />}
                           />
                         )}
                         {hasPermission(BATCH_LIST) && (

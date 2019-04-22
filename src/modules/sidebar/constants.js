@@ -2,6 +2,7 @@
 
 export const PATH_RM = 'relation-map';
 export const PATH_ORDER = 'order';
+export const PATH_ORDER_ITEM = 'order-item';
 export const PATH_BATCH = 'batch';
 export const PATH_SHIPMENT = 'shipment';
 export const PATH_CONTAINER = 'container';
