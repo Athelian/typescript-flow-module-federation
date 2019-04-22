@@ -15,7 +15,6 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -64,7 +63,6 @@ export const updateContainerMutation = gql`
   ${orderCardFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}

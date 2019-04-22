@@ -15,7 +15,6 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -49,7 +48,6 @@ export const containerFormQuery = gql`
   ${orderCardFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
