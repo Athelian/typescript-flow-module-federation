@@ -15,7 +15,6 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -26,6 +25,7 @@ import {
   todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -63,7 +63,6 @@ export const updateContainerMutation = gql`
   ${orderCardFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -74,6 +73,7 @@ export const updateContainerMutation = gql`
   ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 type UpdateContainerInputType = {

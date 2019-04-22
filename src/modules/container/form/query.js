@@ -15,7 +15,6 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -25,6 +24,7 @@ import {
   todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
@@ -48,7 +48,6 @@ export const containerFormQuery = gql`
   ${orderCardFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -58,6 +57,7 @@ export const containerFormQuery = gql`
   ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export default containerFormQuery;

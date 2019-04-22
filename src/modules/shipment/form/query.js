@@ -28,6 +28,7 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
@@ -64,6 +65,7 @@ export const shipmentFormQuery = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export default shipmentFormQuery;
