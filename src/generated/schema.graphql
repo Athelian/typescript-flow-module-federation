@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Apr 19 2019 18:51:47 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Apr 22 2019 17:16:15 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -28639,6 +28639,16 @@ interface Documented {
   files: [FilePayload!]!
 }
 
+type Duration {
+  seconds: Long!
+  nanos: Int!
+}
+
+input DurationInput {
+  seconds: Long!
+  nanos: Int
+}
+
 union EmptyPayload = BadRequest | Forbidden | NotFound
 
 type EntitiesMany {
@@ -28653,6 +28663,7 @@ type EntitiesMany {
 
 input EntityInput {
   productId: ID
+  productProviderId: ID
   orderId: ID
   orderItemId: ID
   batchId: ID
@@ -28966,7 +28977,7 @@ type Integration implements Model & Owned {
 type IntegrationConfiguration implements Model & Owned {
   integration: IntegrationPayload!
   automated: Boolean!
-  interval: Long!
+  interval: Duration!
   integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPagination!
   id: ID!
   createdAt: DateTime!
@@ -28976,6 +28987,13 @@ type IntegrationConfiguration implements Model & Owned {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: GroupPayload!
+}
+
+input IntegrationConfigurationCreateInput {
+  integrationId: ID!
+  automated: Boolean
+  interval: DurationInput!
+  key: String
 }
 
 union IntegrationConfigurationPayload = IntegrationConfiguration | BadRequest | Forbidden | NotFound
@@ -28989,13 +29007,20 @@ type IntegrationConfigurationPayloadPagination {
   totalCount: Int!
 }
 
+input IntegrationConfigurationUpdateInput {
+  integrationId: ID
+  automated: Boolean
+  interval: DurationInput
+  key: String
+}
+
 type IntegrationLink implements Model & Owned {
   configuration: IntegrationConfigurationPayload!
   status: IntegrationLinkStatus!
   entity: EntityPayload!
   externalId: ID!
   automated: Boolean!
-  interval: Long!
+  interval: Duration!
   lastRunAt: DateTime
   nextRunAt: DateTime
   lastError: String
@@ -29007,6 +29032,14 @@ type IntegrationLink implements Model & Owned {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: GroupPayload!
+}
+
+input IntegrationLinkCreateInput {
+  configurationId: ID!
+  entity: EntityInput!
+  externalId: ID!
+  automated: Boolean
+  interval: DurationInput!
 }
 
 union IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound
@@ -29035,6 +29068,12 @@ enum IntegrationLinkStatus {
 
   """Stop"""
   Stop
+}
+
+input IntegrationLinkUpdateInput {
+  externalId: ID
+  automated: Boolean
+  interval: DurationInput
 }
 
 union IntegrationPayload = Integration | BadRequest | Forbidden | NotFound
@@ -29859,6 +29898,13 @@ type Mutation {
   taskTemplateCreate(input: TaskTemplateCreateInput!): TaskTemplatePayload!
   taskTemplateUpdate(id: ID!, input: TaskTemplateUpdateInput!): TaskTemplatePayload!
   taskTemplateDelete(id: ID!): EmptyPayload
+  integrationConfigurationCreate(input: IntegrationConfigurationCreateInput!): IntegrationConfigurationPayload!
+  integrationConfigurationUpdate(id: ID!, input: IntegrationConfigurationUpdateInput!): IntegrationConfigurationPayload!
+  integrationConfigurationDelete(id: ID!): EmptyPayload
+  integrationLinkCreate(input: IntegrationLinkCreateInput!): IntegrationLinkPayload!
+  integrationLinkUpdate(id: ID!, input: IntegrationLinkUpdateInput!): IntegrationLinkPayload!
+  integrationLinkDelete(id: ID!): EmptyPayload
+  integrationLinkReset(id: ID!): EmptyPayload
 }
 
 type NotFound {
@@ -30505,6 +30551,7 @@ type Product implements Model & Owned & Tagged & Documented & Customizable {
   material: String
   productProviders: [ProductProviderPayload!]!
   timeline: Timeline!
+  todo: Todo!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
@@ -30532,6 +30579,7 @@ input ProductCreateInput {
   productProviders: [ProductProviderCreateInput!]!
   files: [FileInput!]
   customFields: CustomFieldsInput
+  todo: TodoInput
 }
 
 input ProductFilterInput {
@@ -30575,6 +30623,7 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   inspectionFee: Price
   origin: Country
   productionLeadTime: Int
+  todo: Todo!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
   id: ID!
   createdAt: DateTime!
@@ -30618,6 +30667,7 @@ input ProductProviderCreateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
+  todo: TodoInput
 }
 
 input ProductProviderFilterInput {
@@ -30673,6 +30723,7 @@ input ProductProviderUpdateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
+  todo: TodoInput
 }
 
 input ProductSortInput {
@@ -30693,6 +30744,7 @@ input ProductUpdateInput {
   productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
   customFields: CustomFieldsInput
+  todo: TodoInput
 }
 
 input ProductUpdateWrapperInput {
@@ -36224,6 +36276,12 @@ input TaskTemplateCreateInput {
 }
 
 enum TaskTemplateEntityType {
+  """Product"""
+  Product
+
+  """ProductProvider"""
+  ProductProvider
+
   """Order"""
   Order
 

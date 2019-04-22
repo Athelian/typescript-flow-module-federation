@@ -52,6 +52,9 @@ export const productCardFragment = gql`
     tags {
       ...tagFragment
     }
+    todo {
+      ...todoFragment
+    }
     files {
       ...imageFragment
     }
