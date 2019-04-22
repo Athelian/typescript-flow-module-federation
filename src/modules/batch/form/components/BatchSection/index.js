@@ -9,6 +9,8 @@ import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   BATCH_CREATE,
@@ -364,6 +366,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                                 editable={editable}
                                 viewable={viewable}
                                 config={config}
+                                navigate={{
+                                  order: hasPermission(ORDER_FORM),
+                                  product: hasPermission(PRODUCT_FORM),
+                                }}
                                 onClick={() => slideToggle(true)}
                               />
                             )}
@@ -416,6 +422,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         order={compiledOrder}
                         editable={editable}
                         viewable={viewable}
+                        navigate={{
+                          order: hasPermission(ORDER_FORM),
+                          product: hasPermission(PRODUCT_FORM),
+                        }}
                         config={config}
                         readOnly
                       />
