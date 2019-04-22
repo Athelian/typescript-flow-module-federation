@@ -5,7 +5,8 @@ import { BooleanValue, ArrayValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import scrollIntoView from 'utils/scrollIntoView';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_FORM, ORDER_UPDATE } from 'modules/permission/constants/order';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { getBatchByFillBatch, generateBatchItem } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
@@ -204,6 +205,10 @@ const OrderItems = ({
               index={index}
               actions={actions}
               setFieldValue={setFieldValue}
+              navigate={{
+                order: hasPermission(ORDER_FORM),
+                product: hasPermission(PRODUCT_FORM),
+              }}
               onClick={() => {
                 scrollIntoView({
                   targetId: `orderItem_${item.id}`,

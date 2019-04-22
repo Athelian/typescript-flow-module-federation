@@ -59,6 +59,10 @@ type OptionalProps = {
   viewable: {
     price: boolean,
   },
+  navigate: {
+    product: boolean,
+    order: boolean,
+  },
   config: {
     hideOrder: boolean,
   },
@@ -131,6 +135,10 @@ const defaultProps = {
   selected: false,
   onSelect: () => {},
   readOnly: false,
+  navigate: {
+    product: true,
+    order: true,
+  },
 };
 
 const editableDefault = {
@@ -161,6 +169,7 @@ const ItemCard = ({
   editable,
   viewable,
   config,
+  navigate,
   ...rest
 }: Props) => {
   const { no, quantity, price, tags, todo } = orderItem;
@@ -208,15 +217,19 @@ const ItemCard = ({
           <button className={ProductIconLinkStyle} type="button">
             <Icon icon="PRODUCT" />
           </button>
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(productId)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
+          {navigate.product ? (
+            <Link
+              className={ProductIconLinkStyle}
+              to={`/product/${encodeId(productId)}`}
+              onClick={evt => {
+                evt.stopPropagation();
+              }}
+            >
+              <Icon icon="PRODUCT" />
+            </Link>
+          ) : (
             <Icon icon="PRODUCT" />
-          </Link>
+          )}
         </div>
 
         <div className={BodyWrapperStyle}>
@@ -340,15 +353,19 @@ const ItemCard = ({
 
           {!mergedConfig.hideOrder && (
             <div className={OrderWrapperStyle}>
-              <Link
-                className={OrderIconStyle}
-                to={`/order/${encodeId(orderId)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
+              {navigate.order ? (
+                <Link
+                  className={OrderIconStyle}
+                  to={`/order/${encodeId(orderId)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="ORDER" />
+                </Link>
+              ) : (
                 <Icon icon="ORDER" />
-              </Link>
+              )}
 
               <Display align="left">{poNo}</Display>
             </div>

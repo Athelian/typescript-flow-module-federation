@@ -11,7 +11,9 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { ItemCard } from 'components/Cards';
 import usePermission from 'hooks/usePermission';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 
 type Props = {
@@ -137,6 +139,10 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                           editable={editable}
                           viewable={viewable}
                           config={config}
+                          navigate={{
+                            order: hasPermission(ORDER_FORM),
+                            product: hasPermission(PRODUCT_FORM),
+                          }}
                           selectable
                           selected={value && item.id === value.id}
                           onSelect={() => set(item)}

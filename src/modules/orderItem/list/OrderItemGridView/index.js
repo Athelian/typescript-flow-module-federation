@@ -3,7 +3,9 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE, ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ItemCard } from 'components/Cards';
 import GridView from 'components/GridView';
 import usePermission from 'hooks/usePermission';
@@ -28,7 +30,7 @@ const defaultRenderItem = (item: Object) => {
     batchShippedCount,
     productProvider,
     order,
-    viewable,
+    hasPermission,
   } = item;
   const compiledOrderItem = {
     id,
@@ -63,10 +65,14 @@ const defaultRenderItem = (item: Object) => {
     poNo,
   };
 
+  const viewable = {
+    price: hasPermission(ORDER_ITEMS_GET_PRICE),
+  };
+
   return (
     <ItemCard
       onClick={() =>
-        item.navigate.orderItem ? navigate(`/order-item/${encodeId(item.id)}`) : () => {}
+        hasPermission(ORDER_ITEMS_FORM) ? navigate(`/order-item/${encodeId(item.id)}`) : () => {}
       }
       viewable={viewable}
       orderItem={compiledOrderItem}
@@ -76,6 +82,10 @@ const defaultRenderItem = (item: Object) => {
       actions={[]}
       config={{
         hideOrder: false,
+      }}
+      navigate={{
+        order: hasPermission(ORDER_FORM),
+        product: hasPermission(PRODUCT_FORM),
       }}
       key={item.id}
     />
@@ -108,12 +118,7 @@ const OrderItemGridView = ({
       {items.map(item =>
         renderItem({
           ...item,
-          navigate: {
-            orderItem: hasPermission(ORDER_ITEMS_FORM),
-          },
-          viewable: {
-            price: hasPermission(ORDER_ITEMS_GET_PRICE),
-          },
+          hasPermission,
         })
       )}
     </GridView>
