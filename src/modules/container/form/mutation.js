@@ -26,6 +26,7 @@ import {
   todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -74,6 +75,7 @@ export const updateContainerMutation = gql`
   ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 type UpdateContainerInputType = {

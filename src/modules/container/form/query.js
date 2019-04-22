@@ -25,6 +25,7 @@ import {
   todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
@@ -58,6 +59,7 @@ export const containerFormQuery = gql`
   ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export default containerFormQuery;
