@@ -163,3 +163,11 @@ export const ProductTagsWrapperStyle: string = css`
   margin: 0 5px;
   overflow: hidden;
 `;
+
+export const TagsAndTaskWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 155px 20px;
+  grid-gap: 5px;
+  align-items: center;
+  padding: 5px 0 0 0;
+`;

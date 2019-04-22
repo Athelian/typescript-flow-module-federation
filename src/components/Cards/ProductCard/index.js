@@ -5,6 +5,7 @@ import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import BaseCard from '../BaseCard';
@@ -23,6 +24,7 @@ import {
   ProductSupplierStyle,
   MoreProviderBadge,
   ProductTagsWrapperStyle,
+  TagsAndTaskWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -64,7 +66,7 @@ class ProductCard extends React.PureComponent<Props, State> {
   render() {
     const { product, actions, ...rest } = this.props;
     const { activeImage } = this.state;
-    const { id, name, serial, tags, files, productProviders } = product;
+    const { id, name, serial, tags, files, productProviders, todo } = product;
 
     const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
@@ -129,8 +131,11 @@ class ProductCard extends React.PureComponent<Props, State> {
                 </div>
               )}
             </div>
-            <div className={ProductTagsWrapperStyle}>
-              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+            <div className={TagsAndTaskWrapperStyle}>
+              <div className={ProductTagsWrapperStyle}>
+                {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              </div>
+              <TaskRing {...todo} />
             </div>
           </div>
         </Link>
