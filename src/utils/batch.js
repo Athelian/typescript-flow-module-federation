@@ -6,29 +6,31 @@ import { isNullOrUndefined } from './fp';
 
 export const findWeight = (batch: Object) => {
   const {
-    packageQuantity = 0,
-    packageGrossWeight = {},
+    packageQuantity,
+    packageGrossWeight,
   }: {
     packageQuantity: number,
     packageGrossWeight: Object,
   } = batch;
-  return packageGrossWeight
-    ? packageQuantity * convertVolume(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
+  return packageQuantity && packageGrossWeight
+    ? times(
+        packageQuantity,
+        convertWeight(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
+      )
     : 0;
 };
 
 export const findVolume = (batch: Object) => {
   const {
-    packageQuantity = 0,
+    packageQuantity,
     packageVolume,
   }: {
     packageQuantity: number,
     packageVolume: Object,
   } = batch;
-  const volume = isNullOrUndefined(packageVolume)
-    ? 0
-    : convertWeight(packageVolume.value, packageVolume.metric, 'm³');
-  return packageQuantity * volume;
+  return packageQuantity && packageVolume
+    ? times(packageQuantity, convertVolume(packageVolume.value, packageVolume.metric, 'm³'))
+    : 0;
 };
 
 export const findBatchQuantity = ({
@@ -40,7 +42,7 @@ export const findBatchQuantity = ({
 }) => {
   const batchQuantity = batchAdjustments
     ? batchAdjustments.reduce(
-        (totalAdjustment, adjustment) => totalAdjustment + adjustment.quantity,
+        (totalAdjustment, adjustment) => plus(totalAdjustment, adjustment.quantity),
         quantity
       )
     : quantity;
