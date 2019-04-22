@@ -27,6 +27,8 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   containerCardFragment,
+  itemInOrderFormFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -90,6 +92,8 @@ export const updateOrderMutation = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${containerCardFragment}
+  ${itemInOrderFormFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({
@@ -147,6 +151,7 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         getByPathWithDefault(null, 'productProvider', oldItem),
         newItem.productProvider
       ),
+      ...parseGenericField('no', getByPathWithDefault(null, 'no', oldItem), newItem.no),
       ...parseGenericField(
         'quantity',
         getByPathWithDefault(null, 'quantity', oldItem),

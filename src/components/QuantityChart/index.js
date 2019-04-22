@@ -54,6 +54,26 @@ const QuantityChart = ({
 
   return (
     <div className={QuantityChartWrapperStyle}>
+      {hasLabel && (
+        <FieldItem
+          label={
+            <Label>
+              <FormattedMessage {...messages.batchedQuantity} />
+            </Label>
+          }
+          input={
+            <GridRow gap="0px">
+              <Display color="BATCH">
+                <FormattedNumber value={batchedQuantity} />
+              </Display>
+              <Display color="GRAY_LIGHT">
+                <FormattedNumber value={orderedQuantity - batchedQuantity} />
+              </Display>
+            </GridRow>
+          }
+        />
+      )}
+
       <div className={BarWrapperStyle}>
         <div className={ProgressBarStyle('BATCH', batchProgress)} />
         <div className={IconStyle}>
@@ -80,38 +100,7 @@ const QuantityChart = ({
         )}
       </div>
 
-      {hasLabel ? (
-        <FieldItem
-          label={
-            <Label>
-              <FormattedMessage {...messages.batchedQuantity} />
-            </Label>
-          }
-          input={
-            <GridRow gap="0px">
-              <Display color="BATCH">
-                <FormattedNumber value={batchedQuantity} />
-              </Display>
-              <Display color="GRAY_LIGHT">
-                <FormattedNumber value={orderedQuantity - batchedQuantity} />
-              </Display>
-            </GridRow>
-          }
-        />
-      ) : (
-        <div className={FloatingQuantityWrapperStyle('top')}>
-          <GridRow gap="0px">
-            <Display color="BATCH" fontSize="SMALL" height="16px">
-              <FormattedNumber value={batchedQuantity} />
-            </Display>
-            <Display color="GRAY_LIGHT" fontSize="SMALL" height="16px">
-              <FormattedNumber value={orderedQuantity - batchedQuantity} />
-            </Display>
-          </GridRow>
-        </div>
-      )}
-
-      {hasLabel ? (
+      {hasLabel && (
         <FieldItem
           label={
             <Label>
@@ -129,17 +118,32 @@ const QuantityChart = ({
             </GridRow>
           }
         />
-      ) : (
-        <div className={FloatingQuantityWrapperStyle('bottom')}>
-          <GridRow gap="0px">
-            <Display color="SHIPMENT" fontSize="SMALL" height="16px">
-              <FormattedNumber value={shippedQuantity} />
-            </Display>
-            <Display color="GRAY_LIGHT" fontSize="SMALL" height="16px">
-              <FormattedNumber value={orderedQuantity - shippedQuantity} />
-            </Display>
-          </GridRow>
-        </div>
+      )}
+
+      {!hasLabel && (
+        <>
+          <div className={FloatingQuantityWrapperStyle('top')}>
+            <GridRow gap="0px">
+              <Display color="BATCH" fontSize="SMALL" height="16px">
+                <FormattedNumber value={batchedQuantity} />
+              </Display>
+              <Display color="GRAY_LIGHT" fontSize="SMALL" height="16px">
+                <FormattedNumber value={orderedQuantity - batchedQuantity} />
+              </Display>
+            </GridRow>
+          </div>
+
+          <div className={FloatingQuantityWrapperStyle('bottom')}>
+            <GridRow gap="0px">
+              <Display color="SHIPMENT" fontSize="SMALL" height="16px">
+                <FormattedNumber value={shippedQuantity} />
+              </Display>
+              <Display color="GRAY_LIGHT" fontSize="SMALL" height="16px">
+                <FormattedNumber value={orderedQuantity - shippedQuantity} />
+              </Display>
+            </GridRow>
+          </div>
+        </>
       )}
     </div>
   );

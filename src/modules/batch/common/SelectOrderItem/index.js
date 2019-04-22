@@ -9,7 +9,7 @@ import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import OrderGridView from 'modules/order/list/OrderGridView';
-import { OrderItemCard } from 'components/Cards';
+import { ItemCard } from 'components/Cards';
 import usePermission from 'hooks/usePermission';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -69,16 +69,81 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                     isLoading={loading}
                     onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
                     items={getByPathWithDefault([], 'orderItems.nodes', data)}
-                    renderItem={item => (
-                      <OrderItemCard
-                        item={item}
-                        onSelect={() => set(item)}
-                        selectable
-                        viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                        selected={value && item.id === value.id}
-                        key={item.id}
-                      />
-                    )}
+                    renderItem={item => {
+                      const {
+                        id,
+                        no,
+                        quantity,
+                        price,
+                        totalBatched,
+                        totalShipped,
+                        batchCount,
+                        batchShippedCount,
+                        productProvider,
+                        order,
+                      } = item;
+                      const compiledOrderItem = {
+                        id,
+                        no,
+                        quantity,
+                        price,
+                        totalBatched,
+                        totalShipped,
+                        batchCount,
+                        batchShippedCount,
+                      };
+
+                      const { exporter, supplier, product } = productProvider;
+                      const compiledProductProvider = {
+                        exporter,
+                        supplier,
+                      };
+
+                      const { id: productId, name, serial, tags, files } = product;
+                      const compiledProduct = {
+                        id: productId,
+                        name,
+                        serial,
+                        tags,
+                        files,
+                      };
+
+                      const { id: orderId, poNo } = order;
+                      const compiledOrder = {
+                        id: orderId,
+                        poNo,
+                      };
+
+                      const editable = {
+                        no: false,
+                        quantity: false,
+                        price: false,
+                      };
+
+                      const viewable = {
+                        price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                      };
+
+                      const config = {
+                        hideOrder: false,
+                      };
+
+                      return (
+                        <ItemCard
+                          orderItem={compiledOrderItem}
+                          productProvider={compiledProductProvider}
+                          product={compiledProduct}
+                          order={compiledOrder}
+                          editable={editable}
+                          viewable={viewable}
+                          config={config}
+                          selectable
+                          selected={value && item.id === value.id}
+                          onSelect={() => set(item)}
+                          key={compiledOrderItem.id}
+                        />
+                      );
+                    }}
                   />
                 </Layout>
               )}

@@ -14,12 +14,11 @@ export const OrderItemCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 217px;
 `;
 
 export const ProductWrapperStyle: string = css`
   position: relative;
-  height: 80px;
+  height: 100px;
   width: 195px;
 `;
 
@@ -28,7 +27,7 @@ export const ProductImageStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   width: 100%;
-  height: 80px;
+  height: 100px;
   object-fit: contain;
 `;
 
@@ -40,7 +39,7 @@ export const ProductInfoWrapperStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  height: 80px;
+  height: 100px;
   width: 195px;
 `;
 
@@ -61,7 +60,7 @@ export const ProductSerialStyle: string = css`
   width: 175px;
 `;
 
-export const ProductSupplierStyle: string = css`
+export const ProductPartnerStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
@@ -97,6 +96,11 @@ export const BodyWrapperStyle: string = css`
   grid-gap: 5px;
   padding: 5px 0;
   width: 195px;
+`;
+
+export const NoWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
 `;
 
 export const QuantityWrapperStyle: string = css`
@@ -150,4 +154,43 @@ export const ChartWrapperStyle: string = css`
 export const TotalPriceWrapperStyle: string = css`
   width: 100%;
   padding: 0 5px;
+`;
+
+export const OrderWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 140px;
+  width: 100%;
+  padding: 0 10px;
+  align-items: center;
+  grid-gap: 5px;
+`;
+
+export const OrderIconStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${colors.TEAL};
+  color: ${colors.WHITE};
+  font-size: 11px;
+  &:hover,
+  :focus {
+    background-color: ${colors.TEAL_DARK};
+  }
+`;
+
+export const TagsAndTaskWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 160px 20px;
+  grid-gap: 5px;
+  align-items: center;
+`;
+
+export const ItemTagsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  ${borderRadiuses.MAIN};
+  grid-gap: 5px;
+  width: 160px;
+  padding: 0 0 0 10px;
+  overflow: hidden;
 `;

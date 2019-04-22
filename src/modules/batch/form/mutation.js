@@ -14,7 +14,6 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -24,6 +23,7 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -71,17 +71,16 @@ export const updateBatchMutation = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
-  ${badRequestFragment}
   ${ownedByFragment}
   ${todoFragment}
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export const prepareParsedBatchInput = (

@@ -171,11 +171,12 @@ function ItemSection({ intl, isNew }: Props) {
                     { setFieldTouched }
                   ) => (
                     <OrderItems
+                      orderItems={orderItems}
+                      order={{ currency }}
+                      setFieldValue={setFieldValue}
                       selected={selected}
                       arrayHelpers={{ push, set }}
                       allItemsExpanded={allItemsExpanded}
-                      currency={currency}
-                      orderItems={orderItems}
                       onClone={({ id, ...rest }) => {
                         setFieldValue('orderItems', [
                           ...orderItems,
