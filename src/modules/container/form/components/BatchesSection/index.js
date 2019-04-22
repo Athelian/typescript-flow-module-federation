@@ -17,11 +17,8 @@ import {
 } from 'modules/permission/constants/container';
 import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import {
-  ORDER_ITEMS_LIST,
-  ORDER_FORM,
-  ORDER_ITEMS_GET_PRICE,
-} from 'modules/permission/constants/order';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   BATCH_CREATE,
   BATCH_LIST,

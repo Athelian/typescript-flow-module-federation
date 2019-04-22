@@ -1,16 +1,12 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
-import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
 import OrderItemList from './list';
 import messages from './messages';
 
@@ -41,8 +37,6 @@ function OrderItemModule(props: Props) {
     'filterOrderItem'
   );
 
-  const { hasPermission } = usePermission();
-
   return (
     <UIConsumer>
       {uiState => (
@@ -56,11 +50,6 @@ function OrderItemModule(props: Props) {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
-              {hasPermission(ORDER_ITEMS_CREATE) && (
-                <Link to="new">
-                  <NewButton />
-                </Link>
-              )}
             </NavBar>
           }
         >

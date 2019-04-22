@@ -28,11 +28,8 @@ import {
   BATCH_UPDATE,
   BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
-import {
-  ORDER_FORM,
-  ORDER_ITEMS_LIST,
-  ORDER_ITEMS_GET_PRICE,
-} from 'modules/permission/constants/order';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   calculatePackageQuantity,
   generateBatchForClone,

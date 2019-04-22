@@ -11,7 +11,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import OrderGridView from 'modules/order/list/OrderGridView';
 import { ItemCard } from 'components/Cards';
 import usePermission from 'hooks/usePermission';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 
 type Props = {

@@ -1,6 +1,58 @@
 // @flow
 import gql from 'graphql-tag';
 
+export const itemCardFragment = gql`
+  fragment itemCardFragment on OrderItem {
+    id
+    no
+    quantity
+    price {
+      ...priceFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    todo {
+      ...todoFragment
+    }
+    order {
+      ... on Order {
+        id
+        poNo
+        currency
+      }
+    }
+    totalBatched
+    totalShipped
+    batchCount
+    batchShippedCount
+    productProvider {
+      ... on ProductProvider {
+        id
+        exporter {
+          ...partnerNameFragment
+        }
+        supplier {
+          ...partnerNameFragment
+        }
+        unitPrice {
+          ...priceFragment
+        }
+        product {
+          ... on Product {
+            id
+            name
+            serial
+            files {
+              ...imageFragment
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const itemFormFragment = gql`
   fragment itemFormFragment on OrderItem {
     id
