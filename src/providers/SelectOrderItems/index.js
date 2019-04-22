@@ -3,7 +3,7 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
-import { ArrayValue, NumberValue } from 'react-values';
+import { ArrayValue } from 'react-values';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
@@ -214,16 +214,19 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                     return (
                       <div key={item.id} className={ItemWrapperStyle}>
                         {selected.includes(item) && (
-                          <NumberValue
-                            defaultValue={1}
-                            onChange={total =>
-                              onChangeProductQuantity({ total, set, selected, item })
+                          <IncrementInput
+                            value={
+                              selected.filter(selectedItem => selectedItem.id === item.id).length
                             }
-                          >
-                            {({ value: num, set: changeNumber }) => (
-                              <IncrementInput value={num} onChange={changeNumber} />
-                            )}
-                          </NumberValue>
+                            onChange={total =>
+                              onChangeProductQuantity({
+                                total,
+                                selected,
+                                item,
+                                set,
+                              })
+                            }
+                          />
                         )}
                         <ItemCard
                           orderItem={compiledOrderItem}
