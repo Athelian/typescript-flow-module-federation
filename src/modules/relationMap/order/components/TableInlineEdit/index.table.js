@@ -8,7 +8,7 @@ import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, isEqual, cloneDeep } from 'lodash';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT, CONTAINER } from 'constants/keywords';
-import { usePrevious } from 'modules/form/hooks';
+import usePrevious from 'hooks/usePrevious';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
@@ -690,7 +690,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                             />
                           </div>
                           <div>
-                            {/* TODO: render the row base on container or batches of shipment */}
+                            {/* render the row base on container or batches of shipment */}
                             <TableEmptyItem
                               fields={containerColumnFieldsFilter}
                               rowNo={getRowCounter(rowCounter, 'container')}

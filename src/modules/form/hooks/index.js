@@ -1,6 +1,5 @@
 // @flow
 import useTextInput from './useTextInput';
-import usePrevious from './usePrevious';
 import useNumberInput from './useNumberInput';
 import useDateInput from './useDateInput';
 import useInChargeInput from './useInChargeInput';
@@ -12,7 +11,6 @@ import useEnumInput from './useEnumInput';
 
 export {
   useTextInput,
-  usePrevious,
   useNumberInput,
   useDateInput,
   useInChargeInput,

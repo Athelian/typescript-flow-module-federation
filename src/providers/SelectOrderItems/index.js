@@ -19,7 +19,7 @@ import type { OrderItem } from 'modules/order/type.js.flow';
 import useFilter from 'hooks/useFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { ItemWrapperStyle } from './style';
 
 type Props = {

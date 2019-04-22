@@ -7,7 +7,7 @@ import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
 import usePermission from 'hooks/usePermission';
-import { usePrevious } from 'modules/form/hooks';
+import usePrevious from 'hooks/usePrevious';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';

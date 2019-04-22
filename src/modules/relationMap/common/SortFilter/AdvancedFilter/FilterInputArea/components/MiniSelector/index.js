@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import Icon from 'components/Icon';
 import { SearchInput } from 'components/NavBar';
-import { usePrevious } from 'modules/form/hooks';
+import usePrevious from 'hooks/usePrevious';
 import ToggleButton from 'modules/relationMap/common/SortFilter/AdvancedFilter/ToggleButton';
 import {
   MiniSelectorWrapperStyle,
