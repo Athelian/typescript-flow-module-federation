@@ -278,7 +278,7 @@ const OrderItems = ({
                                   onRequestClose={() => slideToggle(false)}
                                 >
                                   {opened && (
-                                    <BatchFormWrapper
+                                    <BatchFormInSlide
                                       batch={batch}
                                       onSave={value => {
                                         slideToggle(false);
