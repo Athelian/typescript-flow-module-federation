@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { timelineDateMinimalFragment, todoFragment } from 'graphql';
+import { timelineDateMinimalFragment } from 'graphql';
 
 export const productListQuery = gql`
   query(
@@ -34,9 +34,6 @@ export const productListQuery = gql`
                 }
               }
             }
-          }
-          todo {
-            ...todoFragment
           }
           batches(page: $batchPage, perPage: $batchPerPage, sortBy: $batchSort) {
             nodes {
@@ -126,7 +123,6 @@ export const productListQuery = gql`
   }
 
   ${timelineDateMinimalFragment}
-  ${todoFragment}
 `;
 
 export default productListQuery;
