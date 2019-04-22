@@ -99,6 +99,12 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
                   toggle={toggle}
                   onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
                 />
+                <Action
+                  icon="DOCUMENT"
+                  targeted={targeted}
+                  toggle={toggle}
+                  onClick={() => actions.showEditForm(ORDER_ITEM, id)}
+                />
                 {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                   <>
                     <Action

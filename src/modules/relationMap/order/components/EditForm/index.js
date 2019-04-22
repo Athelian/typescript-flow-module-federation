@@ -5,6 +5,7 @@ import { Provider } from 'unstated';
 import { orderDetailQuery } from 'modules/relationMap/order/query';
 import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
+import OrderItemForm from 'modules/orderItem/index.form';
 import BatchForm from 'modules/batch/index.form';
 import ShipmentForm from 'modules/shipment/index.form';
 import ActionDispatch from 'modules/relationMap/order/provider';
@@ -108,6 +109,10 @@ const EditForm = ({ type, selectedId: id, onClose }: Props) => {
           }}
         />
       );
+      break;
+    }
+    case 'ORDER_ITEM': {
+      form = <OrderItemForm orderItemId={encodeId(id)} isSlideView />;
       break;
     }
     case 'BATCH': {
