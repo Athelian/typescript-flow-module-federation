@@ -3,7 +3,7 @@ import * as React from 'react';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { ORDER_ITEMS_GET_PRICE, ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import { ItemCard } from 'components/Cards';
 import GridView from 'components/GridView';
 import usePermission from 'hooks/usePermission';
@@ -65,7 +65,9 @@ const defaultRenderItem = (item: Object) => {
 
   return (
     <ItemCard
-      onClick={() => navigate(`/order-item/${encodeId(item.id)}`)}
+      onClick={() =>
+        item.navigate.orderItem ? navigate(`/order-item/${encodeId(item.id)}`) : () => {}
+      }
       viewable={viewable}
       orderItem={compiledOrderItem}
       productProvider={compiledProductProvider}
@@ -106,6 +108,9 @@ const OrderItemGridView = ({
       {items.map(item =>
         renderItem({
           ...item,
+          navigate: {
+            orderItem: hasPermission(ORDER_ITEMS_FORM),
+          },
           viewable: {
             price: hasPermission(ORDER_ITEMS_GET_PRICE),
           },
