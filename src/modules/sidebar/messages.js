@@ -24,7 +24,7 @@ export default defineMessages({
   },
   orderItem: {
     id: 'modules.SideBar.orderItem',
-    defaultMessage: 'ORDER ITEMS',
+    defaultMessage: 'ITEMS',
   },
   product: {
     id: 'modules.SideBar.product',

@@ -81,9 +81,9 @@ const SideBar = () => {
 
                     {hasOrdersMenu && (
                       <SubMenu
-                        hasActiveChild={
-                          pathnameSplit[1] === PATH_ORDER || pathnameSplit[1] === PATH_BATCH
-                        }
+                        hasActiveChild={[PATH_ORDER, PATH_ORDER_ITEM, PATH_BATCH].includes(
+                          pathnameSplit[1]
+                        )}
                         icon="ORDER"
                         label={<FormattedMessage {...messages.order} />}
                       >
