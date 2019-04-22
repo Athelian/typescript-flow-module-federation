@@ -3,7 +3,8 @@ import * as React from 'react';
 import matchSorter from 'match-sorter';
 import Icon from 'components/Icon';
 import { SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
-import { useEnumInput, usePrevious } from 'modules/form/hooks';
+import usePrevious from 'hooks/usePrevious';
+import { useEnumInput } from 'modules/form/hooks';
 
 import { EnumInputStyle, DeleteButtonStyle } from './style';
 

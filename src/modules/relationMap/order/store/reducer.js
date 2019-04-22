@@ -470,7 +470,6 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
     case 'TOGGLE_EDIT_FORM':
       return { ...state, edit: action.payload };
     case 'TOGGLE_SELECT_ALL': {
-      // TODO: Need to check target all action for split and move to order
       const { payload } = action;
       const {
         select: { entities },
@@ -534,7 +533,6 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       };
     }
     case 'SELECT_BRANCH': {
-      // TODO: Need to check target all action for split and move to order
       const { payload } = action;
       const {
         targets,
