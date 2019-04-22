@@ -4,20 +4,23 @@ import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
 import { ORDER_ITEMS_CREATE, ORDER_ITEMS_LIST } from 'modules/permission/constants/orderItem';
-import OrderListModule from './index.list';
-import OrderFormModule from './index.form';
+import OrderItemListModule from './index.list';
+import OrderItemFormModule from './index.form';
 
-const OrderFormModuleWrapper = withNotFound(OrderFormModule, 'orderItemId');
-const OrderFormModuleCreationWrapper = withForbidden(OrderFormModuleWrapper, ORDER_ITEMS_CREATE);
-const OrderModuleListWrapper = withForbidden(OrderListModule, ORDER_ITEMS_LIST);
+const OrderItemFormModuleWrapper = withNotFound(OrderItemFormModule, 'orderItemId');
+const OrderItemFormModuleCreationWrapper = withForbidden(
+  OrderItemFormModuleWrapper,
+  ORDER_ITEMS_CREATE
+);
+const OrderItemModuleListWrapper = withForbidden(OrderItemListModule, ORDER_ITEMS_LIST);
 
-const OrderApp = () => (
+const OrderItemApp = () => (
   <Router>
-    <OrderModuleListWrapper path="/" />
-    <OrderFormModuleCreationWrapper path="new" />
-    <OrderFormModuleCreationWrapper path="clone/:orderItemId" />
-    <OrderFormModuleWrapper path=":orderItemId" />
+    <OrderItemModuleListWrapper path="/" />
+    <OrderItemFormModuleCreationWrapper path="new" />
+    <OrderItemFormModuleCreationWrapper path="clone/:orderItemId" />
+    <OrderItemFormModuleWrapper path=":orderItemId" />
   </Router>
 );
 
-export default OrderApp;
+export default OrderItemApp;
