@@ -136,8 +136,8 @@ const defaultProps = {
   onSelect: () => {},
   readOnly: false,
   navigate: {
-    product: true,
-    order: true,
+    product: false,
+    order: false,
   },
 };
 
