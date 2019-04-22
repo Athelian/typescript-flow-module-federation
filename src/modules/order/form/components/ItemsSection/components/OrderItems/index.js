@@ -29,10 +29,6 @@ import {
 type Props = {
   orderItems: Array<Object>,
   order: {
-    exporter: {
-      id: string,
-      name: string,
-    },
     currency: string,
   },
   setFieldValue: Function,
@@ -85,8 +81,7 @@ const OrderItems = ({
           batchShippedCount,
         };
 
-        const { supplier, unitPrice, product } = productProvider;
-        const { exporter } = order;
+        const { exporter, supplier, unitPrice, product } = productProvider;
         const compiledProductProvider = {
           exporter,
           supplier,

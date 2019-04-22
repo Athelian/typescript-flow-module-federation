@@ -166,16 +166,13 @@ function ItemSection({ intl, isNew }: Props) {
               <div id="orderItemsSection" className={ItemsSectionBodyStyle}>
                 <Subscribe to={[OrderInfoContainer, OrderItemsContainer, FormContainer]}>
                   {(
-                    { state: { exporter, currency } },
+                    { state: { currency } },
                     { state: { orderItems }, setFieldValue, setFieldArrayValue },
                     { setFieldTouched }
                   ) => (
                     <OrderItems
                       orderItems={orderItems}
-                      order={{
-                        currency,
-                        exporter,
-                      }}
+                      order={{ currency }}
                       setFieldValue={setFieldValue}
                       selected={selected}
                       arrayHelpers={{ push, set }}

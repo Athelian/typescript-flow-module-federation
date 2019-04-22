@@ -153,6 +153,9 @@ export const itemInOrderFormFragment = gql`
     productProvider {
       ... on ProductProvider {
         id
+        exporter {
+          ...partnerNameFragment
+        }
         supplier {
           ...partnerNameFragment
         }

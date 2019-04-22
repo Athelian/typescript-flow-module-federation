@@ -291,6 +291,7 @@ const ItemCard = ({
                   label={<FormattedMessage id="components.cards.price" defaultMessage="PRICE" />}
                   labelWidth="90px"
                   labelHeight="20px"
+                  suffix={orderCurrency}
                 />
               )}
             </FormField>
