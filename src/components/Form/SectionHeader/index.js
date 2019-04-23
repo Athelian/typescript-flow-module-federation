@@ -3,17 +3,21 @@ import * as React from 'react';
 import Icon from 'components/Icon';
 import { SectionHeaderWrapperStyle, TitleWrapperStyle, TitleStyle, IconStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  actionToolBar: ?React.Node,
+};
+
+type Props = OptionalProps & {
   icon: string,
   title: string,
   children: React.Node,
 };
 
 const defaultProps = {
-  children: null,
+  actionToolBar: null,
 };
 
-function SectionHeader({ icon, title, children }: Props) {
+function SectionHeader({ icon, title, children, actionToolBar }: Props) {
   return (
     <div className={SectionHeaderWrapperStyle}>
       <div className={TitleWrapperStyle}>
@@ -21,6 +25,7 @@ function SectionHeader({ icon, title, children }: Props) {
           <Icon icon={icon} />
         </div>
         <div className={TitleStyle}>{title}</div>
+        {actionToolBar}
       </div>
       {children}
     </div>

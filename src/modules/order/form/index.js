@@ -15,7 +15,7 @@ import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Di
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { PermissionConsumer } from 'modules/permission';
 import OrderSection from './components/OrderSection';
-import OrderFormWrapperStyle from './style';
+import { OrderFormWrapperStyle, ToolBarStyle } from './style';
 import {
   OrderItemsContainer,
   OrderInfoContainer,
@@ -23,7 +23,7 @@ import {
   OrderTasksContainer,
 } from './containers';
 
-const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
+const AsyncItemsSection = lazy(() => import('./components/ItemsSectionV2'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
@@ -126,6 +126,7 @@ export default class OrderForm extends React.Component<Props> {
                             {values.orderItems ? values.orderItems.length : 0})
                           </>
                         }
+                        actionToolBar={<div className={ToolBarStyle}>Test</div>}
                       />
                     )}
                   </Subscribe>

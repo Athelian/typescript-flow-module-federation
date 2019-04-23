@@ -2,10 +2,14 @@
 import { css } from 'react-emotion';
 import { layout } from 'styles/common';
 
-const OrderFormWrapperStyle: string = css`
+export const OrderFormWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 40px;
   padding: 50px 0;
 `;
 
-export default OrderFormWrapperStyle;
+export const ToolBarStyle: string = css`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
