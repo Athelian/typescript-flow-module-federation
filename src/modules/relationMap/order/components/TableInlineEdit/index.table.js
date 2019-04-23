@@ -208,6 +208,16 @@ function findColumnsForCustomFields({ showAll, fields: customFields, templateCol
   return customFields;
 }
 
+const isModifyPort = (field: string) => {
+  const ports = [
+    'voyages.0.arrivalPort',
+    'voyages.1.departurePort',
+    'voyages.1.arrivalPort',
+    'voyages.2.departurePort',
+  ];
+  return ports.some(port => field.includes(port));
+};
+
 const getRowCounter = (counter, type) => {
   if (!counter[type]) {
     // eslint-disable-next-line no-param-reassign
@@ -299,13 +309,76 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
         const { name, value, hasError } = newData;
 
         let newEditData = cloneDeep(editData);
-        const [entityType, id, field] = name.split('.');
+        const [entityType, id, ...fields] = name.split('.');
+        const [field] = fields || [];
         if (entityType === 'orders' && field === 'currency') {
+          logger.warn({ field });
           const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
           orderItemIds.forEach(orderItemId => {
             newEditData = set(newEditData, `orderItems.${orderItemId}.price.currency`, value);
           });
         }
+
+        if (entityType === 'shipments' && field === 'transportType') {
+          const currentShipment = newEditData.shipments[id];
+          logger.warn({ currentShipment, field });
+          currentShipment.voyages.forEach((voyage, counter) => {
+            newEditData = set(newEditData, `shipments.${id}.voyages.${counter}.arrivalPort`, {
+              airport: null,
+              seaport: null,
+              __typename: 'Port',
+            });
+            newEditData = set(newEditData, `shipments.${id}.voyages.${counter}.departurePort`, {
+              airport: null,
+              seaport: null,
+              __typename: 'Port',
+            });
+          });
+        }
+
+        const editField = fields.join('.');
+        if (entityType === 'shipments' && isModifyPort(editField)) {
+          const currentShipment = newEditData.shipments[id];
+          logger.warn({ field: fields.join('.'), currentShipment });
+          if (
+            currentShipment.voyages.length > 1 &&
+            ['voyages.0.arrivalPort', 'voyages.1.departurePort'].some(port =>
+              editField.includes(port)
+            )
+          ) {
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.0.arrivalPort.${fields[fields.length - 1]}`,
+              value
+            );
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.1.departurePort.${fields[fields.length - 1]}`,
+              value
+            );
+          }
+
+          if (
+            currentShipment.voyages.length > 2 &&
+            ['voyages.1.arrivalPort', 'voyages.2.departurePort'].some(port =>
+              editField.includes(port)
+            )
+          ) {
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.1.arrivalPort.${fields[fields.length - 1]}`,
+              value
+            );
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.2.departurePort.${fields[fields.length - 1]}`,
+              value
+            );
+          }
+        }
+
+        // custom logic for voyages
+
         newEditData = set(newEditData, name, value);
         setEditData(newEditData);
 
