@@ -10,19 +10,13 @@ import LoadingIcon from 'components/LoadingIcon';
 import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
-import Icon from 'components/Icon';
 import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'components/Form';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { PermissionConsumer } from 'modules/permission';
 import OrderSection from './components/OrderSection';
-import { OrderFormWrapperStyle, ItemsUIWrapperStyle, ItemsUIStyle } from './style';
-import {
-  OrderItemsContainer,
-  OrderInfoContainer,
-  OrderFilesContainer,
-  OrderTasksContainer,
-} from './containers';
+import { OrderFormWrapperStyle } from './style';
+import { OrderInfoContainer, OrderFilesContainer, OrderTasksContainer } from './containers';
 
 const AsyncItemsSection = lazy(() => import('./components/ItemsSectionV2'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
@@ -117,60 +111,7 @@ export default class OrderForm extends React.Component<Props> {
                   <OrderSection isNew={isNew} />
                 </SectionWrapper>
 
-                {/* TODO: Switch from booleanvalue to preserving in localstorage */}
-                <BooleanValue>
-                  {({ value: itemsIsExpanded, set: setItemsUI }) => (
-                    <SectionWrapper id="order_itemsSection">
-                      <Subscribe to={[OrderItemsContainer]}>
-                        {({ state: { orderItems }, setFieldValue }) => (
-                          <>
-                            <SectionHeader
-                              icon="ORDER_ITEM"
-                              title={
-                                <>
-                                  <FormattedMessage
-                                    id="modules.Orders.items"
-                                    defaultMessage="ITEMS"
-                                  />{' '}
-                                  ({orderItems ? orderItems.length : 0})
-                                </>
-                              }
-                            >
-                              <div className={ItemsUIWrapperStyle}>
-                                <button
-                                  className={ItemsUIStyle({
-                                    isActive: !itemsIsExpanded,
-                                    flipped: false,
-                                  })}
-                                  onClick={() => setItemsUI(false)}
-                                  type="button"
-                                >
-                                  <Icon icon="TH_LIST" />
-                                </button>
-                                <button
-                                  className={ItemsUIStyle({
-                                    isActive: itemsIsExpanded,
-                                    flipped: true,
-                                  })}
-                                  onClick={() => setItemsUI(true)}
-                                  type="button"
-                                >
-                                  <Icon icon="TH_LIST" />
-                                </button>
-                              </div>
-                            </SectionHeader>
-                            <AsyncItemsSection
-                              isNew={isNew}
-                              itemsIsExpanded={itemsIsExpanded}
-                              orderItems={orderItems}
-                              setFieldValue={setFieldValue}
-                            />
-                          </>
-                        )}
-                      </Subscribe>
-                    </SectionWrapper>
-                  )}
-                </BooleanValue>
+                <AsyncItemsSection isNew={isNew} />
 
                 <SectionWrapper id="order_documentsSection">
                   <Subscribe to={[OrderFilesContainer]}>
