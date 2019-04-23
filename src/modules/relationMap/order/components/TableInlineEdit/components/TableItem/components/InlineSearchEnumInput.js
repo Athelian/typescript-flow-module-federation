@@ -40,6 +40,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) return `Error!: ${error}`;
+        const selectedItem = data.find(item => item.name === inputHandlers.value);
         return (
           <FieldItem
             input={
@@ -49,7 +50,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 items={filterItems(inputHandlers.value, data)}
                 itemToString={parseEnumDescriptionOrValue}
                 itemToValue={parseEnumValue}
-                inputValue={inputHandlers.value}
+                inputValue={parseEnumDescriptionOrValue(selectedItem)}
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSearchSelect
                     {...selectProps}
