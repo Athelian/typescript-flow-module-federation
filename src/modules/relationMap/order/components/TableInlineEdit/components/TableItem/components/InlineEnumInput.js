@@ -4,6 +4,7 @@ import EnumProvider from 'providers/enum';
 import { FieldItem, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useTextInput } from 'modules/form/hooks';
+import { parseEnumValue, parseEnumDescriptionOrValue } from 'components/Form/Factories/helpers';
 import logger from 'utils/logger';
 
 type OptionalProps = {
@@ -38,8 +39,8 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, id 
                 {...inputHandlers}
                 name={name}
                 items={data}
-                itemToString={item => (item ? item.description || item.name : '')}
-                itemToValue={item => (item ? item.name : '')}
+                itemToString={parseEnumDescriptionOrValue}
+                itemToValue={parseEnumValue}
                 inputValue={inputHandlers.value}
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSelect
@@ -47,20 +48,12 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, id 
                     id={`input-${id}`}
                     hasError={hasError}
                     isOpen={isFocused}
-                    itemToString={item => (item ? item.description || item.name : '')}
                     width="200px"
                     align="left"
                   />
                 )}
                 renderOptions={({ ...optionProps }) => (
-                  <DefaultOptions
-                    {...optionProps}
-                    items={data}
-                    itemToString={item => (item ? item.description || item.name : '')}
-                    itemToValue={item => (item ? item.name : '')}
-                    width="200px"
-                    align="left"
-                  />
+                  <DefaultOptions {...optionProps} items={data} width="200px" align="left" />
                 )}
                 afterClearSelection={() => {
                   logger.warn('afterClearSelection');

@@ -18,6 +18,10 @@ export default defineMessages({
     id: 'modules.container.warehouseName',
     defaultMessage: 'Warehouse Name'.toUpperCase(),
   },
+  warehouse: {
+    id: 'modules.container.warehouse',
+    defaultMessage: 'WAREHOUSE',
+  },
   warehouseArrivalAgreedDate: {
     id: 'modules.container.warehouseArrivalAgreedDate',
     defaultMessage: 'Agreed Arrival Date'.toUpperCase(),
