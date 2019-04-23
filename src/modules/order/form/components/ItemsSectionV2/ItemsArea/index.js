@@ -11,7 +11,7 @@ import { ItemCard, CardAction } from 'components/Cards';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
-import { ORDER_FORM, ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
@@ -185,8 +185,10 @@ function ItemsArea({
                         'orderItems',
                         orderItems.filter(({ id: itemId }) => id !== itemId)
                       );
-
                       setFieldTouched(`orderItems.${id}`);
+                      if (focusedItemIndex === index) {
+                        onFocusItem(index);
+                      }
                     };
 
                     return batches.length > 0 ? (
@@ -255,7 +257,6 @@ function ItemsArea({
             };
 
             const navigable = {
-              order: hasPermission(ORDER_FORM),
               product: hasPermission(PRODUCT_FORM),
             };
 
@@ -283,7 +284,9 @@ function ItemsArea({
                   index={index}
                   actions={actions}
                   setFieldValue={setFieldValue}
-                  onClick={() => console.log('Open slideview')}
+                  onClick={() => {
+                    // TODO: Open slideview form
+                  }}
                   editable={editable}
                   viewable={viewable}
                   navigable={navigable}
@@ -298,7 +301,9 @@ function ItemsArea({
       <div className={ItemsFooterWrapperStyle}>
         <NewButton
           label={<FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />}
-          onClick={() => console.log('Generate new item')}
+          onClick={() => {
+            // TODO: Generate new item
+          }}
         />
       </div>
     </div>

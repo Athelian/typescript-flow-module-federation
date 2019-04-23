@@ -1,10 +1,13 @@
 // @flow
 import * as React from 'react';
+import { flatten } from 'lodash';
 import { StringValue } from 'react-values';
 import { Subscribe } from 'unstated';
 import { OrderInfoContainer } from 'modules/order/form/containers';
 import { FormContainer } from 'modules/form';
+import { isNullOrUndefined } from 'utils/fp';
 import ItemsArea from './ItemsArea';
+import BatchesArea from './BatchesArea';
 import { ItemsSectionWrapperStyle } from './style';
 
 type Props = {
@@ -20,8 +23,15 @@ const ItemsSection = ({ isNew, itemsIsExpanded, orderItems, setFieldValue }: Pro
   return (
     <Subscribe to={[OrderInfoContainer, FormContainer]}>
       {({ state: order }, { setFieldTouched }) => (
-        <StringValue>
+        <StringValue defaultValue={null}>
           {({ value: focusedItemIndex, set: changeFocusedItem }) => {
+            let batches = [];
+            if (isNullOrUndefined(focusedItemIndex)) {
+              batches = flatten(orderItems.map(({ batches: itemBatches }) => itemBatches));
+            } else {
+              batches = [...orderItems[focusedItemIndex].batches];
+            }
+
             return (
               <div className={ItemsSectionWrapperStyle}>
                 <ItemsArea
@@ -39,7 +49,13 @@ const ItemsSection = ({ isNew, itemsIsExpanded, orderItems, setFieldValue }: Pro
                     }
                   }}
                 />
-                <div>Batches</div>
+                <BatchesArea
+                  itemsIsExpanded={itemsIsExpanded}
+                  batches={batches}
+                  setFieldValue={setFieldValue}
+                  setFieldTouched={setFieldTouched}
+                  focusedItemIndex={focusedItemIndex}
+                />
               </div>
             );
           }}
