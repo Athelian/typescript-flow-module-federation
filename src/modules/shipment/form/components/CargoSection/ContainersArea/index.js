@@ -546,8 +546,8 @@ function ContainersArea({
                 })}
               </div>
             </div>
-            {!isSelectBatchesMode && hasPermission([CONTAINER_CREATE]) && (
-              <div className={ContainersFooterWrapperStyle}>
+            <div className={ContainersFooterWrapperStyle}>
+              {!isSelectBatchesMode && hasPermission([CONTAINER_CREATE]) && (
                 <NewButton
                   label={
                     <FormattedMessage
@@ -581,8 +581,8 @@ function ContainersArea({
                     ]);
                   }}
                 />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         );
       }}

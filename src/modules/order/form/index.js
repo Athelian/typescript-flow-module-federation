@@ -15,15 +15,10 @@ import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Di
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { PermissionConsumer } from 'modules/permission';
 import OrderSection from './components/OrderSection';
-import OrderFormWrapperStyle from './style';
-import {
-  OrderItemsContainer,
-  OrderInfoContainer,
-  OrderFilesContainer,
-  OrderTasksContainer,
-} from './containers';
+import { OrderFormWrapperStyle } from './style';
+import { OrderInfoContainer, OrderFilesContainer, OrderTasksContainer } from './containers';
 
-const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
+const AsyncItemsSection = lazy(() => import('./components/ItemsSectionV2'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
@@ -115,22 +110,9 @@ export default class OrderForm extends React.Component<Props> {
 
                   <OrderSection isNew={isNew} />
                 </SectionWrapper>
-                <SectionWrapper id="order_itemsSection">
-                  <Subscribe to={[OrderItemsContainer]}>
-                    {({ state: values }) => (
-                      <SectionHeader
-                        icon="ORDER_ITEM"
-                        title={
-                          <>
-                            <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
-                            {values.orderItems ? values.orderItems.length : 0})
-                          </>
-                        }
-                      />
-                    )}
-                  </Subscribe>
-                  <AsyncItemsSection isNew={isNew} />
-                </SectionWrapper>
+
+                <AsyncItemsSection isNew={isNew} />
+
                 <SectionWrapper id="order_documentsSection">
                   <Subscribe to={[OrderFilesContainer]}>
                     {({ state: values }) => (
@@ -150,7 +132,9 @@ export default class OrderForm extends React.Component<Props> {
                   </Subscribe>
                   <AsyncDocumentsSection />
                 </SectionWrapper>
+
                 <AsyncTaskSection type="order" />
+
                 <SectionWrapper id="order_shipmentsSection">
                   <Subscribe to={[OrderInfoContainer]}>
                     {({ state: { shipments } }) => (
