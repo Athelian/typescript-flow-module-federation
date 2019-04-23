@@ -23,6 +23,14 @@ import {
   BATCH_SET_TASK_TEMPLATE,
 } from 'modules/permission/constants/batch';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
+import {
+  PRODUCT_TASK_FORM,
+  PRODUCT_TASK_LIST,
+  PRODUCT_UPDATE,
+  PRODUCT_SET_TASKS,
+  PRODUCT_SET_TASK_TEMPLATE,
+} from 'modules/permission/constants/product';
+import { ProductTasksContainer } from 'modules/product/form/containers';
 import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { OrderTasksContainer } from 'modules/order/form/containers';
 import {
@@ -39,7 +47,7 @@ import { TasksSectionWrapperStyle, TasksSectionBodyStyle, TemplateItemStyle } fr
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
-type CompatibleEntityTypes = 'batch' | 'order' | 'shipment';
+type CompatibleEntityTypes = 'batch' | 'order' | 'orderItem' | 'product' | 'shipment';
 
 type Props = {
   type: CompatibleEntityTypes,
@@ -74,6 +82,23 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           (hasPermission(BATCH_UPDATE) ||
             (hasPermission(BATCH_SET_TASK_TEMPLATE) && hasPermission(BATCH_SET_TASKS))),
         tasksContainer: BatchTasksContainer,
+      };
+    case 'product':
+      return {
+        canViewList: hasPermission(PRODUCT_TASK_LIST),
+        canViewForm: hasPermission(PRODUCT_TASK_FORM),
+        canAddTasks:
+          hasPermission(TASK_CREATE) && hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canDeleteTasks:
+          hasPermission(TASK_DELETE) && hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canUpdateTasks:
+          hasPermission(TASK_UPDATE) && hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          (hasPermission(PRODUCT_UPDATE) ||
+            (hasPermission(PRODUCT_SET_TASK_TEMPLATE) && hasPermission(PRODUCT_SET_TASKS))),
+        tasksContainer: ProductTasksContainer,
       };
     default:
       return {

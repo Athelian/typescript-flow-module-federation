@@ -23,6 +23,7 @@ import {
   ProductProvidersContainer,
   ProductTagsContainer,
   ProductFilesContainer,
+  ProductTasksContainer,
 } from './form/containers';
 import ProductForm from './form';
 import validator from './form/validator';
@@ -68,6 +69,7 @@ type ProductFormState = {
   productProvidersState: Object,
   productTagsState: Object,
   productFilesState: Object,
+  productTasksState: Object,
 };
 
 class ProductFormModule extends React.Component<Props> {
@@ -92,11 +94,13 @@ class ProductFormModule extends React.Component<Props> {
     productTagsState,
     productFilesState,
     productProvidersState,
+    productTasksState,
     form,
   }: ProductFormState & { form: Object }) => {
     resetFormState(productInfoState);
     resetFormState(productTagsState, 'tags');
     resetFormState(productFilesState, 'files');
+    resetFormState(productTasksState, 'todo');
     resetFormState(productProvidersState, 'productProviders');
     form.onReset();
   };
@@ -155,14 +159,10 @@ class ProductFormModule extends React.Component<Props> {
     productInfoState,
     productTagsState,
     productFilesState,
+    productTasksState,
     productProvidersState,
-  }: {
-    productInfoState: Object,
-    productTagsState: Object,
-    productFilesState: Object,
-    productProvidersState: Object,
-  }) => (product: Object) => {
-    const { tags, productProviders, files, ...info } = product;
+  }: ProductFormState) => (product: Object) => {
+    const { tags, productProviders, files, todo, ...info } = product;
 
     if (this.isClone()) {
       productFilesState.initDetailValues([]);
@@ -176,6 +176,7 @@ class ProductFormModule extends React.Component<Props> {
     } else {
       productFilesState.initDetailValues(files);
       productProvidersState.initDetailValues(productProviders);
+      productTasksState.initDetailValues(todo);
     }
     productInfoState.initDetailValues(info);
     productTagsState.initDetailValues(tags);
@@ -215,6 +216,7 @@ class ProductFormModule extends React.Component<Props> {
               ProductProvidersContainer,
               ProductTagsContainer,
               ProductFilesContainer,
+              ProductTasksContainer,
               FormContainer,
             ]}
           >
@@ -223,6 +225,7 @@ class ProductFormModule extends React.Component<Props> {
               productProvidersState,
               productTagsState,
               productFilesState,
+              productTasksState,
               form
             ) => (
               <Mutation
@@ -246,6 +249,13 @@ class ProductFormModule extends React.Component<Props> {
                               />
                             }
                             icon="PRODUCT"
+                          />
+                          <SectionTabs
+                            link="product_taskSection"
+                            label={
+                              <FormattedMessage id="modules.Products.task" defaultMessage="TASKS" />
+                            }
+                            icon="TASK"
                           />
                           <SectionTabs
                             link="product_productProvidersSection"
@@ -297,6 +307,7 @@ class ProductFormModule extends React.Component<Props> {
                           productInfoState.isDirty() ||
                           productProvidersState.isDirty() ||
                           productTagsState.isDirty() ||
+                          productTasksState.isDirty() ||
                           productFilesState.isDirty()) && (
                           <>
                             {this.isNewOrClone() ? (
@@ -309,6 +320,7 @@ class ProductFormModule extends React.Component<Props> {
                                     productProvidersState,
                                     productTagsState,
                                     productFilesState,
+                                    productTasksState,
                                     form,
                                   });
                                 }}
@@ -324,6 +336,7 @@ class ProductFormModule extends React.Component<Props> {
                                     ...productProvidersState.state,
                                     ...productTagsState.state,
                                     ...productFilesState.state,
+                                    ...productTasksState.state,
                                   },
                                   validator
                                 )
@@ -336,12 +349,14 @@ class ProductFormModule extends React.Component<Props> {
                                     ...productProvidersState.originalValues,
                                     ...productTagsState.originalValues,
                                     ...productFilesState.originalValues,
+                                    ...productTasksState.originalValues,
                                   },
                                   {
                                     ...productInfoState.state,
                                     ...productProvidersState.state,
                                     ...productTagsState.state,
                                     ...productFilesState.state,
+                                    ...productTasksState.state,
                                   },
                                   saveProduct,
                                   () => {
@@ -349,6 +364,7 @@ class ProductFormModule extends React.Component<Props> {
                                     productProvidersState.onSuccess();
                                     productTagsState.onSuccess();
                                     productFilesState.onSuccess();
+                                    productTasksState.onSuccess();
                                     form.onReset();
                                   },
                                   form.onErrors
@@ -378,6 +394,7 @@ class ProductFormModule extends React.Component<Props> {
                                 productInfoState,
                                 productTagsState,
                                 productFilesState,
+                                productTasksState,
                                 productProvidersState,
                               })(product);
                             }}

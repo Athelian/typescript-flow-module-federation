@@ -17,6 +17,9 @@ import {
   documentFragment,
   badRequestFragment,
   ownedByFragment,
+  taskTemplateCardFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -26,6 +29,7 @@ import {
   parseArrayOfChildrenField,
   parseCustomFieldsField,
   parseFilesField,
+  parseTodoField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -79,10 +83,17 @@ export const updateProductMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskTemplateCardFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskFormInTemplateFragment}
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
   ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
+  ...parseTodoField(
+    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    newValues.todo
+  ),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'serial',
@@ -219,6 +230,10 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         'files',
         getByPathWithDefault([], 'files', oldProductProvider),
         newProductProvider.files
+      ),
+      ...parseTodoField(
+        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', oldProductProvider),
+        newProductProvider.todo
       ),
     })
   ),

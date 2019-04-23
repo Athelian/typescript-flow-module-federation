@@ -10,7 +10,7 @@ import { getValueBy } from 'modules/task/form/components/ParentEntity/components
 import { findMappingFields } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy';
 
 type Props = {
-  type: 'order' | 'batch' | 'shipment',
+  type: 'order' | 'orderItem' | 'batch' | 'shipment' | 'product',
   values: Object,
   tasks: Array<Object>,
   setTaskValue: Function,
@@ -20,8 +20,10 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
   React.useEffect(() => {
     const mappingFields = {
       order: OrderMappingField,
+      orderItem: OrderMappingField,
       batch: BatchMappingField,
       shipment: findMappingFields(values.voyages || []),
+      product: {},
     };
     emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {

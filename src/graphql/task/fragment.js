@@ -20,6 +20,9 @@ export const taskCardFragment = gql`
       ... on Batch {
         no
       }
+      ... on Product {
+        name
+      }
     }
     assignedTo {
       ...userAvatarFragment
@@ -226,6 +229,9 @@ export const taskFormFragment = gql`
       }
       ... on Shipment {
         ...shipmentCardFragment
+      }
+      ... on Product {
+        ...productCardFragment
       }
     }
   }

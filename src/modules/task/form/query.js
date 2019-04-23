@@ -7,6 +7,7 @@ import {
   tagFragment,
   orderCardFragment,
   batchCardFragment,
+  productCardFragment,
   shipmentCardFragment,
   partnerNameFragment,
   priceFragment,
@@ -29,6 +30,7 @@ export const taskFormQuery = gql`
   ${tagFragment}
   ${orderCardFragment}
   ${batchCardFragment}
+  ${productCardFragment}
   ${shipmentCardFragment}
   ${orderCardFragment}
   ${partnerNameFragment}

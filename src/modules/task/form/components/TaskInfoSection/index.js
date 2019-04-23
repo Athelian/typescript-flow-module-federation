@@ -7,7 +7,7 @@ import { ObjectValue } from 'react-values';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday } from 'utils/date';
-import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
+import { ShipmentCard, OrderCard, BatchCard, ProductCard } from 'components/Cards';
 import {
   SectionWrapper,
   SectionHeader,
@@ -168,14 +168,27 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             });
             break;
           }
-          default: {
+          case 'OrderItem':
+          case 'Order': {
             onChange({
               [`${field}Binding`]:
                 field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
               [`${field}Interval`]: { days: 0 },
             });
-            emitter.emit('FIND_ORDER_VALUE', {
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
               field: field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
+            });
+            break;
+          }
+          default: {
+            onChange({
+              [`${field}Binding`]: START_DATE,
+              [`${field}Interval`]: { days: 0 },
+            });
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
+              START_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
             });
@@ -227,6 +240,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             };
 
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
+            const manualMode = entity === 'Product';
 
             return (
               <div className={TaskSectionWrapperStyle}>
@@ -312,23 +326,25 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             />
                           </div>
 
-                          <div className={RadioWrapperStyle('bottom')}>
-                            <RadioInput
-                              align="right"
-                              selected={!manualSettings.startDate}
-                              onToggle={() =>
-                                manualSettings.startDate
-                                  ? onChangeBinding({
-                                      type: entity,
-                                      field: 'startDate',
-                                      isManual: false,
-                                      onChange: setFieldValues,
-                                    })
-                                  : () => {}
-                              }
-                              editable={editable}
-                            />
-                          </div>
+                          {!manualMode && (
+                            <div className={RadioWrapperStyle('bottom')}>
+                              <RadioInput
+                                align="right"
+                                selected={!manualSettings.startDate}
+                                onToggle={() =>
+                                  manualSettings.startDate
+                                    ? onChangeBinding({
+                                        type: entity,
+                                        field: 'startDate',
+                                        isManual: false,
+                                        onChange: setFieldValues,
+                                      })
+                                    : () => {}
+                                }
+                                editable={editable}
+                              />
+                            </div>
+                          )}
 
                           {isInTemplate ? (
                             <Display
@@ -503,17 +519,28 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </ObjectValue>
                           ) : (
                             <Display color="GRAY_LIGHT" width="200px" height="30px">
-                              {editable ? (
-                                <FormattedMessage
-                                  id="modules.Tasks.chooseDataBinding"
-                                  defaultMessage="Choose data to sync from"
-                                />
-                              ) : (
-                                <FormattedMessage
-                                  id="modules.Tasks.noEventBindingChosen"
-                                  defaultMessage="No event binding chosen"
-                                />
-                              )}
+                              {(() => {
+                                if (manualMode) {
+                                  return (
+                                    <FormattedMessage
+                                      id="modules.Tasks.dataSyncingUnavailable"
+                                      defaultMessage="Data syncing unavailable"
+                                    />
+                                  );
+                                }
+
+                                return editable ? (
+                                  <FormattedMessage
+                                    id="modules.Tasks.chooseDataBinding"
+                                    defaultMessage="Choose data to sync from"
+                                  />
+                                ) : (
+                                  <FormattedMessage
+                                    id="modules.Tasks.noEventBindingChosen"
+                                    defaultMessage="No event binding chosen"
+                                  />
+                                );
+                              })()}
                             </Display>
                           )}
                         </GridColumn>
@@ -716,16 +743,28 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                     {({ ...inputHandlers }) => (
                                       <SelectInputFactory
                                         {...inputHandlers}
-                                        items={[
-                                          {
-                                            value: START_DATE,
-                                            label: intl.formatMessage({
-                                              id: 'modules.Tasks.startDate',
-                                              defaultMessage: 'START DATE',
-                                            }),
-                                          },
-                                          ...getFieldsByEntity(entity, intl),
-                                        ]}
+                                        items={
+                                          manualMode
+                                            ? [
+                                                {
+                                                  value: START_DATE,
+                                                  label: intl.formatMessage({
+                                                    id: 'modules.Tasks.startDate',
+                                                    defaultMessage: 'START DATE',
+                                                  }),
+                                                },
+                                              ]
+                                            : [
+                                                {
+                                                  value: START_DATE,
+                                                  label: intl.formatMessage({
+                                                    id: 'modules.Tasks.startDate',
+                                                    defaultMessage: 'START DATE',
+                                                  }),
+                                                },
+                                                ...getFieldsByEntity(entity, intl),
+                                              ]
+                                        }
                                         editable={editable}
                                         required
                                         hideTooltip
@@ -817,6 +856,24 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           }
                           vertical
                           input={<OrderCard order={task.entity} />}
+                        />
+                      </GridColumn>
+                    )}
+
+                  {!hideParentInfo &&
+                    getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
+                      <GridColumn>
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage
+                                id="modules.Tasks.product"
+                                defaultMessage="PRODUCT"
+                              />
+                            </Label>
+                          }
+                          vertical
+                          input={<ProductCard product={task.entity} />}
                         />
                       </GridColumn>
                     )}
