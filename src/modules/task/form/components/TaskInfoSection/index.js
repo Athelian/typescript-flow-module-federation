@@ -7,7 +7,7 @@ import { ObjectValue } from 'react-values';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday } from 'utils/date';
-import { ShipmentCard, OrderCard, BatchCard } from 'components/Cards';
+import { ShipmentCard, OrderCard, BatchCard, ProductCard } from 'components/Cards';
 import {
   SectionWrapper,
   SectionHeader,
@@ -126,8 +126,6 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
     });
   }
 
-  const manualMode = parentEntity === 'Product';
-
   const parentValues = React.useRef(initDuration);
 
   const onChangeBinding = React.useCallback(
@@ -242,6 +240,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             };
 
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
+            const manualMode = entity === 'Product';
 
             return (
               <div className={TaskSectionWrapperStyle}>
@@ -857,6 +856,24 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           }
                           vertical
                           input={<OrderCard order={task.entity} />}
+                        />
+                      </GridColumn>
+                    )}
+
+                  {!hideParentInfo &&
+                    getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
+                      <GridColumn>
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage
+                                id="modules.Tasks.product"
+                                defaultMessage="PRODUCT"
+                              />
+                            </Label>
+                          }
+                          vertical
+                          input={<ProductCard product={task.entity} />}
                         />
                       </GridColumn>
                     )}

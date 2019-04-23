@@ -19,6 +19,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import {
   Label,
@@ -98,6 +99,13 @@ const getParentInfo = (parent: Object) => {
       parentData: parent.no,
     };
   }
+  if (__typename === 'Product') {
+    return {
+      parentType: 'product',
+      parentIcon: 'PRODUCT',
+      parentData: parent.name,
+    };
+  }
   return {};
 };
 
@@ -168,6 +176,7 @@ const TaskCard = ({
     order: hasPermission(ORDER_FORM),
     batch: hasPermission(BATCH_FORM),
     shipment: hasPermission(SHIPMENT_FORM),
+    product: hasPermission(PRODUCT_FORM),
   };
 
   hideParentInfoForHoc = hideParentInfo || isInTemplate;

@@ -1,11 +1,13 @@
 // @flow
 import React, { lazy, Suspense } from 'react';
+import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import LoadingIcon from 'components/LoadingIcon';
-import { Subscribe } from 'unstated';
 import { SectionWrapper, SectionHeader } from 'components/Form';
+import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { isEquals, isDataType } from 'utils/fp';
 import { FormContainer } from 'modules/form';
+import { ProductTasksContainer } from './containers';
 import { ProductFormWrapperStyle } from './style';
 
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
@@ -89,6 +91,21 @@ class ProductForm extends React.Component<Props> {
 
             <AsyncProductProvidersSection isOwner={isOwner} />
           </Suspense>
+          <Subscribe to={[ProductTasksContainer]}>
+            {({
+              state: {
+                todo: { tasks },
+              },
+              setFieldValue,
+            }) => (
+              <AutoDateBinding
+                type="product"
+                values={{}}
+                tasks={tasks}
+                setTaskValue={setFieldValue}
+              />
+            )}
+          </Subscribe>
         </SectionWrapper>
       </div>
     );

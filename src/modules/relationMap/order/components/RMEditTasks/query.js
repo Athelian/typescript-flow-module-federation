@@ -6,6 +6,7 @@ import {
   tagFragment,
   orderCardFragment,
   batchCardFragment,
+  productCardFragment,
   shipmentCardFragment,
   partnerNameFragment,
   priceFragment,
@@ -38,6 +39,7 @@ const editableTaskListQuery = gql`
   ${tagFragment}
   ${orderCardFragment}
   ${batchCardFragment}
+  ${productCardFragment}
   ${shipmentCardFragment}
   ${orderCardFragment}
   ${partnerNameFragment}
