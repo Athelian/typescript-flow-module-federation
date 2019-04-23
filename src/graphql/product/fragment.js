@@ -12,6 +12,14 @@ export const productFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
+    }
     name
     serial
     hsCode

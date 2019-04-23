@@ -16,6 +16,9 @@ import {
   productProviderFormFragment,
   documentFragment,
   ownedByFragment,
+  taskTemplateCardFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 
 export const productFormQuery = gql`
@@ -40,6 +43,9 @@ export const productFormQuery = gql`
   ${fieldDefinitionFragment}
   ${documentFragment}
   ${ownedByFragment}
+  ${taskTemplateCardFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskFormInTemplateFragment}
 `;
 
 export default productFormQuery;

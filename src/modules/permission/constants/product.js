@@ -14,3 +14,7 @@ export const PRODUCT_PROVIDER_CREATE = 'product.productProviders.create';
 export const PRODUCT_PROVIDER_UPDATE = 'product.productProviders.update';
 export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
+export const PRODUCT_SET_TASKS = 'batch.batches.setTasks';
+export const PRODUCT_SET_TASK_TEMPLATE = 'batch.batches.setTaskTemplate';
+export const PRODUCT_TASK_LIST = 'batch.tasks.list';
+export const PRODUCT_TASK_FORM = 'batch.tasks.form';
