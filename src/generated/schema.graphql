@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Apr 22 2019 17:16:15 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Apr 23 2019 11:45:32 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -28669,6 +28669,7 @@ input EntityInput {
   batchId: ID
   shipmentId: ID
   containerId: ID
+  taskId: ID
 }
 
 union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | File | Task | BadRequest | Forbidden | NotFound
@@ -36163,6 +36164,7 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   rejectedAt: DateTime
   approvedBy: UserPayload
   approvedAt: DateTime
+  timeline: Timeline!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!

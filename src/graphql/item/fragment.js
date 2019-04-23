@@ -19,7 +19,6 @@ export const itemCardFragment = gql`
       ... on Order {
         id
         poNo
-        currency
       }
     }
     totalBatched
@@ -34,9 +33,6 @@ export const itemCardFragment = gql`
         }
         supplier {
           ...partnerNameFragment
-        }
-        unitPrice {
-          ...priceFragment
         }
         product {
           ... on Product {

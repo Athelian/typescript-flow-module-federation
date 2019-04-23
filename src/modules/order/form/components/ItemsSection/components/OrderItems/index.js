@@ -190,6 +190,11 @@ const OrderItems = ({
           price: hasPermission(ORDER_ITEMS_GET_PRICE),
         };
 
+        const navigable = {
+          order: hasPermission(ORDER_FORM),
+          product: hasPermission(PRODUCT_FORM),
+        };
+
         const config = {
           hideOrder: true,
         };
@@ -205,10 +210,6 @@ const OrderItems = ({
               index={index}
               actions={actions}
               setFieldValue={setFieldValue}
-              navigate={{
-                order: hasPermission(ORDER_FORM),
-                product: hasPermission(PRODUCT_FORM),
-              }}
               onClick={() => {
                 scrollIntoView({
                   targetId: `orderItem_${item.id}`,
@@ -222,6 +223,7 @@ const OrderItems = ({
               }}
               editable={editable}
               viewable={viewable}
+              navigable={navigable}
               config={config}
             />
 
