@@ -165,7 +165,6 @@ function renderItem({
       const nameSplit = name.split('.');
       const portType = nameSplit[nameSplit.length - 1];
 
-      // TODO: InlineSearchEnumInput should show the port name, not the code
       return (
         <InlineSearchEnumInput
           name={name}

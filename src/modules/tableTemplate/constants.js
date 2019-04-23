@@ -1084,7 +1084,6 @@ export const shipmentColumnFields = [
     type: 'text',
   },
   {
-    // TODO: If change transport type, set all ports to null
     messageId: shipmentMessages.transportType.id,
     name: 'transportType',
     type: 'enumSelect',
@@ -1286,7 +1285,6 @@ export const shipmentColumnFields = [
       getLatestDate(getByPathWithDefault(null, `voyages.0.departure`, values)),
   },
   {
-    // TODO: also needs to set into 'voyages.1.departurePort' if voyages.length > 1
     messageId: 'modules.Shipments.firstTransitPort',
     name: 'voyages.0.arrivalPort',
     type: 'port',
@@ -1348,7 +1346,6 @@ export const shipmentColumnFields = [
     },
   },
   {
-    // TODO: also needs to set into 'voyages.2.departurePort' if voyages.length > 2
     messageId: 'modules.Shipments.secondTransitPort',
     name: 'voyages.1.arrivalPort',
     type: 'port',
