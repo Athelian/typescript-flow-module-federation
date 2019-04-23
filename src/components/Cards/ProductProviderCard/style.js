@@ -3,11 +3,16 @@ import { css } from 'react-emotion';
 import { fontSizesWithHeights, colors, presets } from 'styles/common';
 
 export const ProductProviderCardWrapperStyle: string = css`
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: 195px;
-  height: 100px;
+  height: 106px;
+`;
+
+export const NameStyle: string = css`
+  padding: 5px 5px 0 5px;
+  width: 175px;
 `;
 
 export const InfoWrapperStyle: string = css`
@@ -16,23 +21,6 @@ export const InfoWrapperStyle: string = css`
   grid-gap: 5px;
   padding: 5px;
   width: 195px;
-`;
-
-export const NameStyle: string = css`
-  ${fontSizesWithHeights.MAIN};
-  color: ${colors.BLACK};
-  font-weight: bold;
-  ${presets.ELLIPSIS};
-  padding: 0 5px;
-  width: 100%;
-`;
-
-export const WrapperStyle: string = css`
-  position: relative;
-  display: grid;
-  grid-template-columns: 185px;
-  grid-gap: 5px;
-  width: 185px;
 `;
 
 export const ExporterStyle: string = css`
@@ -57,4 +45,10 @@ export const SupplierStyle: string = css`
     margin: 0 5px 0 0;
     color: ${colors.GRAY_DARK};
   }
+`;
+
+export const TaskWrapperStyle: string = css`
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 5px;
 `;
