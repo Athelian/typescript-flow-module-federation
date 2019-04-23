@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
@@ -100,10 +101,22 @@ function BatchesArea({
       ) => {
         const isFocusedContainer = focusedContainerIndex >= 0;
         let representativeBatchId = null;
-        const containerId = isFocusedContainer ? containers[focusedContainerIndex].id : null;
+        const containerId = isFocusedContainer
+          ? getByPath(`${focusedContainerIndex}.id`, containers)
+          : null;
         const currentBatches = isFocusedBatchesPool
           ? getBatchesInPool(batches)
           : getBatchesByContainerId(batches, containerId);
+
+        const selectedBatchIds = intersection(
+          currentBatches.map(item => item.id),
+          selectedBatches.map(item => item.id)
+        );
+
+        if (selectedBatches.length !== 0 && selectedBatchIds.length === 0) {
+          onChangeSelectMode(false);
+        }
+
         if (containerId) {
           const container = containers[focusedContainerIndex];
           representativeBatchId = getByPath(`representativeBatch.id`, container);
@@ -185,7 +198,7 @@ function BatchesArea({
                                   defaultMessage="SELECTED {numOfBatches}"
                                   values={{
                                     numOfBatches: (
-                                      <FormattedNumber value={selectedBatches.length} />
+                                      <FormattedNumber value={selectedBatchIds.length} />
                                     ),
                                   }}
                                 />
@@ -236,7 +249,7 @@ function BatchesArea({
                                   : batch.id === representativeBatchId
                               }
                               selectable
-                              selected={selectedBatches.includes(batch)}
+                              selected={selectedBatchIds.includes(batch.id)}
                               onSelect={() => (allowMoveBatches ? onSelectBatch(batch) : () => {})}
                               read={{
                                 price: hasPermission(ORDER_ITEMS_GET_PRICE),

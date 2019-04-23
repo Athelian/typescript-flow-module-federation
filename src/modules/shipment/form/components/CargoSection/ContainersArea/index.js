@@ -137,9 +137,13 @@ function ContainersArea({
         { state: { voyages }, setFieldDeepValue: setTimelineState }
       ) => {
         const batchesInPool = getBatchesInPool(batches);
+        const { containers } = { ...containersOriginalValues, ...containersState };
         const isFocusedContainer = focusedContainerIndex >= 0;
 
-        const { containers } = { ...containersOriginalValues, ...containersState };
+        if (isFocusedContainer && isNullOrUndefined(containers[focusedContainerIndex])) {
+          onDeselect();
+        }
+
         return (
           <div className={ContainersWrapperStyle}>
             <div className={ContainersNavbarWrapperStyle} />
