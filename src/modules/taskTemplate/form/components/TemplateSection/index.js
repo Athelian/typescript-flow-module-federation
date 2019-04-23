@@ -175,6 +175,32 @@ const TableTemplateSection = ({ isNew }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
+                                  selected={inputHandlers.value === 'Product'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'Product') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('Product');
+                                      } else {
+                                        setFieldValue(name, 'Product');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('PRODUCT')}>
+                                      <Icon icon="PRODUCT" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.product"
+                                        defaultMessage="PRODUCT"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
                                   selected={inputHandlers.value === 'Batch'}
                                   onToggle={() => {
                                     if (values.entityType !== 'Batch') {

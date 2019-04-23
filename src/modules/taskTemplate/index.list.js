@@ -75,6 +75,21 @@ const TaskTemplateListModule = () => {
                   }}
                 />
                 <TabItem
+                  active={activeType === 'Product'}
+                  icon="PRODUCT"
+                  label={
+                    <FormattedMessage id="module.TaskTemplate.product" defaultMessage="PRODUCT" />
+                  }
+                  onClick={() => {
+                    if (activeType !== 'Product') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Product'] },
+                      });
+                    }
+                  }}
+                />
+                <TabItem
                   active={activeType === 'Batch'}
                   icon="BATCH"
                   label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
