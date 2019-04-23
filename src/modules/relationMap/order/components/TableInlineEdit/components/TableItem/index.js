@@ -1,7 +1,8 @@
 // @flow
 import * as React from 'react';
+import { capitalize } from 'lodash';
 import { FormField } from 'modules/form';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import TableDisableCell from '../TableDisableCell';
 import { WrapperStyle, ItemStyle } from './style';
 import {
@@ -127,11 +128,56 @@ function renderItem({
         />
       );
 
-    case 'warehouse':
+    case 'warehouse': {
+      if (getByPath('disableIfContainersExist', meta)) {
+        const numOfContainers = getByPathWithDefault([], 'containers', values).length;
+        if (numOfContainers > 0) {
+          return <TableDisableCell />;
+        }
+      }
       return <InlineWarehouse name={name} value={value} {...meta} id={id} />;
+    }
+
+    case 'port': {
+      const voyages = getByPathWithDefault([], 'voyages', values);
+      const isFirstTransitPort = getByPath('isFirstTransitPort', meta);
+      const isSecondTransitPort = getByPath('isSecondTransitPort', meta);
+      if (isFirstTransitPort && voyages.length < 2) {
+        return <TableDisableCell />;
+      }
+      if (isSecondTransitPort && voyages.length < 3) {
+        return <TableDisableCell />;
+      }
+
+      const transportType = getByPath('transportType', values);
+      if (!transportType) {
+        return (
+          <InlineTextInput
+            name={name}
+            value="Transport Type not selected"
+            {...meta}
+            id={id}
+            disabled
+          />
+        );
+      }
+
+      const nameSplit = name.split('.');
+      const portType = nameSplit[nameSplit.length - 1];
+
+      return (
+        <InlineSearchEnumInput
+          name={name}
+          value={value}
+          {...meta}
+          id={id}
+          enumType={capitalize(portType)}
+        />
+      );
+    }
 
     default:
-      return <InlineTextInput id={id} name={name} value={value} {...meta} />;
+      return <InlineTextInput name={name} value={value} {...meta} id={id} />;
   }
 }
 

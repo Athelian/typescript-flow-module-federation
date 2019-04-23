@@ -5,6 +5,7 @@ import EnumProvider from 'providers/enum';
 import { FieldItem, SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useTextInput } from 'modules/form/hooks';
+import { parseEnumValue, parseEnumDescriptionOrValue } from 'components/Form/Factories/helpers';
 import logger from 'utils/logger';
 
 const filterItems = (query: string, items: Array<any>) => {
@@ -39,6 +40,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) return `Error!: ${error}`;
+        const selectedItem = data.find(item => item.name === inputHandlers.value);
         return (
           <FieldItem
             input={
@@ -46,29 +48,21 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 {...inputHandlers}
                 name={name}
                 items={filterItems(inputHandlers.value, data)}
-                itemToString={item => (item ? item.description || item.name : '')}
-                itemToValue={item => (item ? item.name : '')}
-                inputValue={inputHandlers.value}
+                itemToString={parseEnumDescriptionOrValue}
+                itemToValue={parseEnumValue}
+                inputValue={parseEnumDescriptionOrValue(selectedItem)}
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSearchSelect
                     {...selectProps}
                     id={`input-${id}`}
                     hasError={hasError}
                     isOpen={isFocused}
-                    itemToString={item => (item ? item.description || item.name : '')}
                     width="200px"
                     align="left"
                   />
                 )}
                 renderOptions={({ ...optionProps }) => (
-                  <DefaultOptions
-                    {...optionProps}
-                    items={filterItems(inputHandlers.value, data)}
-                    itemToString={item => (item ? item.description || item.name : '')}
-                    itemToValue={item => (item ? item.name : '')}
-                    width="200px"
-                    align="left"
-                  />
+                  <DefaultOptions {...optionProps} width="200px" align="left" />
                 )}
                 afterClearSelection={() => {
                   logger.warn('afterClearSelection');

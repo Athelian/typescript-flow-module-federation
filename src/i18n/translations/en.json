@@ -986,6 +986,8 @@
   "modules.Batches.pkgWidth": "PKG WIDTH",
   "modules.Batches.pkgHeight": "PKG HEIGHT",
   "modules.Batches.pkgLength": "PKG LENGTH",
+  "modules.Shipments.firstTransitPort": "FIRST TRANSIT PORT",
+  "modules.Shipments.secondTransitPort": "SECOND TRANSIT PORT",
   "modules.Containers.invalidCurrency": "Cannot compute this field because this Container contains Batches with different Currencies",
   "global.invalid": "Invalid",
   "modules.Shipments.invalidCurrency": "Cannot compute this field because this Shipment contains Cargo with different Currencies",
