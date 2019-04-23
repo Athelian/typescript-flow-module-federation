@@ -1251,8 +1251,7 @@ export const shipmentColumnFields = [
     messageId: shipmentMessages.cargoReady.id,
     name: 'cargoReady',
     type: 'timeline',
-    getExportValue: (values: Object) =>
-      getLatestDate(getByPathWithDefault(null, `cargoReady`, values)),
+    getExportValue: (values: Object) => getLatestDate(getByPath(`cargoReady`, values)) || '',
   },
   {
     messageId: 'modules.Shipments.loadPort',
@@ -1282,7 +1281,7 @@ export const shipmentColumnFields = [
     name: 'voyages.0.departure',
     type: 'timeline',
     getExportValue: (values: Object) =>
-      getLatestDate(getByPathWithDefault(null, `voyages.0.departure`, values)),
+      getLatestDate(getByPath(`voyages.0.departure`, values)) || '',
   },
   {
     messageId: 'modules.Shipments.firstTransitPort',
@@ -1325,9 +1324,7 @@ export const shipmentColumnFields = [
     },
     getExportValue: (values: Object) => {
       const { voyages } = values;
-      return voyages.length > 1
-        ? getLatestDate(getByPathWithDefault(null, `voyages.0.arrival`, values))
-        : null;
+      return voyages.length > 1 ? getLatestDate(getByPath(`voyages.0.arrival`, values)) || '' : '';
     },
   },
   {
@@ -1341,8 +1338,8 @@ export const shipmentColumnFields = [
     getExportValue: (values: Object) => {
       const { voyages } = values;
       return voyages.length > 1
-        ? getLatestDate(getByPathWithDefault(null, `voyages.1.departure`, values))
-        : null;
+        ? getLatestDate(getByPath(`voyages.1.departure`, values)) || ''
+        : '';
     },
   },
   {
@@ -1365,12 +1362,13 @@ export const shipmentColumnFields = [
     getExportValue: (values: Object) => {
       const { transportType, voyages } = values;
       return voyages.length > 2
-        ? getByPathWithDefault(
-            '',
-            `voyages.1.arrivalPort.${transportType === 'Air' ? 'airport' : 'seaport'}`,
-            values
-          )
-        : null;
+        ? getLatestDate(
+            getByPath(
+              `voyages.1.arrivalPort.${transportType === 'Air' ? 'airport' : 'seaport'}`,
+              values
+            )
+          ) || ''
+        : '';
     },
     meta: {
       isSecondTransitPort: true,
@@ -1386,9 +1384,7 @@ export const shipmentColumnFields = [
     },
     getExportValue: (values: Object) => {
       const { voyages } = values;
-      return voyages.length > 2
-        ? getLatestDate(getByPathWithDefault(null, `voyages.1.arrival`, values))
-        : null;
+      return voyages.length > 2 ? getLatestDate(getByPath(`voyages.1.arrival`, values)) || '' : '';
     },
   },
   {
@@ -1402,8 +1398,8 @@ export const shipmentColumnFields = [
     getExportValue: (values: Object) => {
       const { voyages } = values;
       return voyages.length > 1
-        ? getLatestDate(getByPathWithDefault(null, `voyages.2.departure`, values))
-        : null;
+        ? getLatestDate(getByPath(`voyages.2.departure`, values)) || ''
+        : '';
     },
   },
   {
@@ -1445,23 +1441,21 @@ export const shipmentColumnFields = [
     getFieldName: ({ voyages }: { voyages: Array<Object> }) =>
       `voyages.${voyages.length - 1}.arrival`,
     getExportValue: (values: Object) =>
-      getLatestDate(
-        getByPathWithDefault(null, `voyages.${values.voyages.length - 1}.arrival`, values)
-      ),
+      getLatestDate(getByPath(`voyages.${values.voyages.length - 1}.arrival`, values)) || '',
   },
   {
     messageId: 'modules.Shipments.customsClearance',
     name: 'containerGroups.0.customClearance',
     type: 'timeline',
     getExportValue: (values: Object) =>
-      getLatestDate(getByPathWithDefault(null, 'containerGroups.0.customClearance', values)),
+      getLatestDate(getByPath('containerGroups.0.customClearance', values)) || '',
   },
   {
     messageId: 'modules.Shipments.warehouse',
     name: 'containerGroups.0.warehouse',
     type: 'warehouse',
     getExportValue: (values: Object) =>
-      getByPathWithDefault('', `containersGroups.0.warehouse.name`, values),
+      getByPath(`containersGroups.0.warehouse.name`, values) || '',
     meta: {
       disableIfContainersExist: true,
     },
@@ -1471,14 +1465,14 @@ export const shipmentColumnFields = [
     name: 'containerGroups.0.warehouseArrival',
     type: 'timeline',
     getExportValue: (values: Object) =>
-      getLatestDate(getByPathWithDefault(null, 'containerGroups.0.warehouseArrival', values)),
+      getLatestDate(getByPath('containerGroups.0.warehouseArrival', values)) || '',
   },
   {
     messageId: 'modules.Shipments.deliveryReady',
     name: 'containerGroups.0.deliveryReady',
     type: 'timeline',
     getExportValue: (values: Object) =>
-      getLatestDate(getByPathWithDefault(null, 'containerGroups.0.deliveryReady', values)),
+      getLatestDate(getByPath('containerGroups.0.deliveryReady', values)) || '',
   },
 ];
 
