@@ -43,11 +43,10 @@ const defaultRenderItem = (item: Object) => {
     batchShippedCount,
   };
 
-  const { exporter, supplier, unitPrice, product } = productProvider;
+  const { exporter, supplier, product } = productProvider;
   const compiledProductProvider = {
     exporter,
     supplier,
-    unitPrice,
   };
 
   const { id: productId, name, serial, tags, files } = product;
@@ -59,14 +58,23 @@ const defaultRenderItem = (item: Object) => {
     files,
   };
 
-  const { currency, poNo } = order;
+  const { id: orderId, poNo } = order;
   const compiledOrder = {
-    currency,
+    id: orderId,
     poNo,
   };
 
   const viewable = {
     price: hasPermission(ORDER_ITEMS_GET_PRICE),
+  };
+
+  const config = {
+    hideOrder: false,
+  };
+
+  const navigable = {
+    order: hasPermission(ORDER_FORM),
+    product: hasPermission(PRODUCT_FORM),
   };
 
   return (
@@ -80,13 +88,8 @@ const defaultRenderItem = (item: Object) => {
       product={compiledProduct}
       order={compiledOrder}
       actions={[]}
-      config={{
-        hideOrder: false,
-      }}
-      navigate={{
-        order: hasPermission(ORDER_FORM),
-        product: hasPermission(PRODUCT_FORM),
-      }}
+      config={config}
+      navigable={navigable}
       key={item.id}
     />
   );

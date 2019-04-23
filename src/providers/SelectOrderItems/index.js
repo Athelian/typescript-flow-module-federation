@@ -197,12 +197,6 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       poNo,
                     };
 
-                    const editable = {
-                      no: false,
-                      quantity: false,
-                      price: false,
-                    };
-
                     const viewable = {
                       price: hasPermission(ORDER_ITEMS_GET_PRICE),
                     };
@@ -233,7 +227,6 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                           productProvider={compiledProductProvider}
                           product={compiledProduct}
                           order={compiledOrder}
-                          editable={editable}
                           viewable={viewable}
                           config={config}
                           selectable

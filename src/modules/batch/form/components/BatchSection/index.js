@@ -182,6 +182,11 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
               price: hasPermission(ORDER_ITEMS_GET_PRICE),
             };
 
+            const navigable = {
+              order: hasPermission(ORDER_FORM),
+              product: hasPermission(PRODUCT_FORM),
+            };
+
             const config = {
               hideOrder: false,
             };
@@ -365,11 +370,8 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                                 order={compiledOrder}
                                 editable={editable}
                                 viewable={viewable}
+                                navigable={navigable}
                                 config={config}
-                                navigate={{
-                                  order: hasPermission(ORDER_FORM),
-                                  product: hasPermission(PRODUCT_FORM),
-                                }}
                                 onClick={() => slideToggle(true)}
                               />
                             )}
@@ -422,10 +424,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         order={compiledOrder}
                         editable={editable}
                         viewable={viewable}
-                        navigate={{
-                          order: hasPermission(ORDER_FORM),
-                          product: hasPermission(PRODUCT_FORM),
-                        }}
+                        navigable={navigable}
                         config={config}
                         readOnly
                       />

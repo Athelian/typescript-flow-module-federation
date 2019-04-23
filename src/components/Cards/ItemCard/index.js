@@ -59,7 +59,7 @@ type OptionalProps = {
   viewable: {
     price: boolean,
   },
-  navigate: {
+  navigable: {
     product: boolean,
     order: boolean,
   },
@@ -104,7 +104,7 @@ type Props = OptionalProps & {
     supplier: ?{
       name: string,
     },
-    unitPrice: ?{
+    unitPrice?: ?{
       amount: number,
       currency: string,
     },
@@ -135,10 +135,6 @@ const defaultProps = {
   selected: false,
   onSelect: () => {},
   readOnly: false,
-  navigate: {
-    product: false,
-    order: false,
-  },
 };
 
 const editableDefault = {
@@ -149,6 +145,11 @@ const editableDefault = {
 
 const viewableDefault = {
   price: false,
+};
+
+const navigableDefault = {
+  product: false,
+  order: false,
 };
 
 const configDefault = {
@@ -168,8 +169,8 @@ const ItemCard = ({
   onClick,
   editable,
   viewable,
+  navigable,
   config,
-  navigate,
   ...rest
 }: Props) => {
   const { no, quantity, price, tags, todo } = orderItem;
@@ -189,6 +190,7 @@ const ItemCard = ({
 
   const mergedEditable = { ...editableDefault, ...editable };
   const mergedViewable = { ...viewableDefault, ...viewable };
+  const mergedNavigable = { ...navigableDefault, ...navigable };
   const mergedConfig = { ...configDefault, ...config };
   if (!mergedConfig.hideOrder) cardHeight += 25;
 
@@ -214,10 +216,7 @@ const ItemCard = ({
             </div>
           </div>
 
-          <button className={ProductIconLinkStyle} type="button">
-            <Icon icon="PRODUCT" />
-          </button>
-          {navigate.product ? (
+          {mergedNavigable.product ? (
             <Link
               className={ProductIconLinkStyle}
               to={`/product/${encodeId(productId)}`}
@@ -228,7 +227,9 @@ const ItemCard = ({
               <Icon icon="PRODUCT" />
             </Link>
           ) : (
-            <Icon icon="PRODUCT" />
+            <div className={ProductIconLinkStyle}>
+              <Icon icon="PRODUCT" />
+            </div>
           )}
         </div>
 
@@ -353,7 +354,7 @@ const ItemCard = ({
 
           {!mergedConfig.hideOrder && (
             <div className={OrderWrapperStyle}>
-              {navigate.order ? (
+              {mergedNavigable.order ? (
                 <Link
                   className={OrderIconStyle}
                   to={`/order/${encodeId(orderId)}`}
@@ -364,7 +365,9 @@ const ItemCard = ({
                   <Icon icon="ORDER" />
                 </Link>
               ) : (
-                <Icon icon="ORDER" />
+                <div className={OrderIconStyle}>
+                  <Icon icon="ORDER" />
+                </div>
               )}
 
               <Display align="left">{poNo}</Display>
