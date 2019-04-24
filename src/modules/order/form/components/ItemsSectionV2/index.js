@@ -18,9 +18,6 @@ type Props = {
 };
 
 const ItemsSection = ({ isNew }: Props) => {
-  console.warn({
-    isNew,
-  });
   const [storedValue, setValue] = useLocalStorage('itemsIsExpanded', false);
   return (
     <BooleanValue value={storedValue} onChange={setValue}>
@@ -77,6 +74,7 @@ const ItemsSection = ({ isNew }: Props) => {
                         return (
                           <div className={ItemsSectionWrapperStyle}>
                             <ItemsArea
+                              isNew={isNew}
                               itemsIsExpanded={itemsIsExpanded}
                               order={order}
                               orderItems={orderItems}

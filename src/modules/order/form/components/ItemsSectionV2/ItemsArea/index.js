@@ -31,10 +31,12 @@ import {
 } from './style';
 
 type Props = {
+  isNew: boolean,
   itemsIsExpanded: boolean,
   orderItems: Array<Object>,
   order: {
     currency: string,
+    exporter: ?Object,
   },
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
@@ -43,6 +45,7 @@ type Props = {
 };
 
 function ItemsArea({
+  isNew,
   itemsIsExpanded,
   orderItems,
   order,
@@ -77,26 +80,28 @@ function ItemsArea({
           </div>
 
           <div className={SyncButtonWrapperStyle}>
-            <BaseButton
-              icon="SYNC"
-              label={
-                <FormattedMessage
-                  id="modules.Orders.syncAllPrice"
-                  defaultMessage="SYNC ALL PRICES"
-                />
-              }
-              onClick={() => {
-                const newOrderItems = orderItems.map(orderItem => {
-                  const unitPrice = getByPath('productProvider.unitPrice', orderItem);
-                  if (unitPrice && unitPrice.currency === currency) {
-                    return { ...orderItem, price: unitPrice };
-                  }
-                  return orderItem;
-                });
+            {orderItems.length > 0 && (
+              <BaseButton
+                icon="SYNC"
+                label={
+                  <FormattedMessage
+                    id="modules.Orders.syncAllPrice"
+                    defaultMessage="SYNC ALL PRICES"
+                  />
+                }
+                onClick={() => {
+                  const newOrderItems = orderItems.map(orderItem => {
+                    const unitPrice = getByPath('productProvider.unitPrice', orderItem);
+                    if (unitPrice && unitPrice.currency === currency) {
+                      return { ...orderItem, price: unitPrice };
+                    }
+                    return orderItem;
+                  });
 
-                setFieldValue('orderItems', newOrderItems);
-              }}
-            />
+                  setFieldValue('orderItems', newOrderItems);
+                }}
+              />
+            )}
           </div>
         </div>
 
@@ -300,6 +305,7 @@ function ItemsArea({
 
       <div className={ItemsFooterWrapperStyle}>
         <NewButton
+          disabled={!((order.exporter && order.exporter.id) || !isNew)}
           label={<FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />}
           onClick={() => {
             // TODO: Generate new item

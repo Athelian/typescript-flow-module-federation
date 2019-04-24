@@ -6,6 +6,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
+import { OrderBatchCard } from 'components/Cards';
 import Icon from 'components/Icon';
 // import { CardAction } from 'components/Cards';
 // import RemoveDialog from 'components/Dialog/RemoveDialog';
@@ -72,28 +73,29 @@ function ItemsArea({
           </div>
 
           <div className={AutofillButtonWrapperStyle}>
-            <BaseButton
-              label={
-                <FormattedMessage
-                  id="modules.Orders.autofillBatch"
-                  defaultMessage="AUTOFILL BATCH"
-                />
-              }
-              onClick={() => {
-                if (focusedItemIndex === -1) {
-                  // Autofill all items
-                } else {
-                  // Autofill in current item
+            {batches.length > 0 && (
+              <BaseButton
+                label={
+                  <FormattedMessage
+                    id="modules.Orders.autofillBatch"
+                    defaultMessage="AUTOFILL BATCH"
+                  />
                 }
-              }}
-            />
+                onClick={() => {
+                  if (focusedItemIndex === -1) {
+                    // Autofill all items
+                  } else {
+                    // Autofill in current item
+                  }
+                }}
+              />
+            )}
           </div>
         </div>
 
         <div className={BatchesGridStyle}>
-          {batches.map((batch, index) => {
-            // TODO: Replace with real batch card
-            return <div key={batch.id}>{`${index} ${batch.id}`}</div>;
+          {batches.map(batch => {
+            return <OrderBatchCard key={batch.id} batch={batch} />;
           })}
         </div>
       </div>
