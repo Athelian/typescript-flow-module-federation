@@ -69,9 +69,11 @@ const ProductProviderFormWrapper = ({
         {(productProviderInfoContainer, productProviderTasksContainer) => {
           const isExist = exist(productProviderInfoContainer.state, productProviders);
           const disableSaveButton =
-            (!productProviderInfoContainer.isDirty() && !productProviderTasksContainer.isDirty()) ||
-            !formContainer.isReady(productProviderInfoContainer.state, validator) ||
-            isExist;
+            !formContainer.isReady(
+              { ...productProviderInfoContainer.state, ...productProviderTasksContainer.state },
+              validator
+            ) || isExist;
+
           return (
             <Layout
               navBar={

@@ -35,4 +35,11 @@ export default Yup.object().shape({
   productProviders: Yup.array()
     .of(Yup.object())
     .min(1),
+  todo: Yup.object().shape({
+    tasks: Yup.array().of(
+      Yup.object().shape({
+        name: Yup.string().required(),
+      })
+    ),
+  }),
 });

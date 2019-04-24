@@ -291,7 +291,7 @@ const TaskCard = ({
                     inputAlign="left"
                     name={fieldName}
                     isNew={false}
-                    originalValue={name}
+                    hideTooltip
                   />
                 )}
               </FormField>
@@ -337,7 +337,7 @@ const TaskCard = ({
                       inputHeight="20px"
                       name={fieldName}
                       isNew={false}
-                      originalValue={startDate}
+                      hideTooltip
                     />
                   )}
                 </FormField>
@@ -390,7 +390,7 @@ const TaskCard = ({
                       inputHeight="20px"
                       name={fieldName}
                       isNew={false}
-                      originalValue={dueDate}
+                      hideTooltip
                       inputColor={
                         dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
                           ? 'RED'

@@ -296,7 +296,6 @@ function TaskSection({ type, intl }: Props) {
                 }}
                 onSave={(index, newValue) => {
                   setFieldValue(`todo.tasks.${index}`, newValue);
-                  setFieldTouched(`tasks.${index}`);
                 }}
               />
             </div>

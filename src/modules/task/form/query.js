@@ -17,6 +17,7 @@ import {
   portFragment,
   todoFragment,
   productProviderCardFragment,
+  sizeFragment,
 } from 'graphql';
 
 export const taskFormQuery = gql`
@@ -42,6 +43,7 @@ export const taskFormQuery = gql`
   ${portFragment}
   ${todoFragment}
   ${productProviderCardFragment}
+  ${sizeFragment}
 `;
 
 export default taskFormQuery;

@@ -14,6 +14,7 @@ import { ItemStyle, EmptyMessageStyle } from './style';
 type OptionalProps = {
   isInTemplate: boolean,
 };
+
 type Props = OptionalProps & {
   tasks: Array<Object>,
   onSwap: Function,
