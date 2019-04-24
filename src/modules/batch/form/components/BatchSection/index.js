@@ -488,4 +488,4 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
   );
 };
 
-export default BatchSection;
+export default React.memo<Props>(BatchSection);

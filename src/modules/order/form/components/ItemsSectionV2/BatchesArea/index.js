@@ -1,20 +1,16 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-// import { BooleanValue } from 'react-values';
+import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import { OrderBatchCard } from 'components/Cards';
 import Icon from 'components/Icon';
-// import { CardAction } from 'components/Cards';
-// import RemoveDialog from 'components/Dialog/RemoveDialog';
-// import { injectUid } from 'utils/id';
-// import { getByPath } from 'utils/fp';
+import SlideView from 'components/SlideView';
+import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
-// import { PRODUCT_FORM } from 'modules/permission/constants/product';
-// import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   BatchesAreaWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -30,7 +26,9 @@ import {
 
 type Props = {
   itemsIsExpanded: boolean,
+  order: Object,
   batches: Array<Object>,
+  orderItems: Array<Object>,
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
   focusedItemIndex: number,
@@ -39,6 +37,8 @@ type Props = {
 function ItemsArea({
   itemsIsExpanded,
   batches,
+  order,
+  orderItems,
   setFieldValue,
   setFieldTouched,
   focusedItemIndex,
@@ -46,8 +46,6 @@ function ItemsArea({
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(ORDER_UPDATE);
-
-  console.log({ allowUpdate, setFieldValue, setFieldTouched });
 
   return (
     <div className={BatchesAreaWrapperStyle(itemsIsExpanded)}>
@@ -73,7 +71,7 @@ function ItemsArea({
           </div>
 
           <div className={AutofillButtonWrapperStyle}>
-            {batches.length > 0 && (
+            {orderItems.length > 0 && (
               <BaseButton
                 label={
                   <FormattedMessage
@@ -94,18 +92,101 @@ function ItemsArea({
         </div>
 
         <div className={BatchesGridStyle}>
-          {batches.map(batch => {
-            return <OrderBatchCard key={batch.id} batch={batch} />;
+          {batches.map((batch, position) => {
+            return (
+              <BooleanValue key={batch.id}>
+                {({ value: opened, set: slideToggle }) => (
+                  <>
+                    <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                      {opened && (
+                        <BatchFormInSlide
+                          batch={batch}
+                          onSave={updatedBatch => {
+                            slideToggle(false);
+                            setFieldValue(
+                              `orderItems.${focusedItemIndex}.batches.${position}`,
+                              updatedBatch
+                            );
+                          }}
+                        />
+                      )}
+                    </SlideView>
+                    <OrderBatchCard
+                      editable={allowUpdate}
+                      currency={order && order.currency}
+                      batch={batch}
+                      onClick={() => slideToggle(true)}
+                      saveOnBlur={updatedBatch => {
+                        setFieldValue(
+                          `orderItems.${focusedItemIndex}.batches.${position}`,
+                          updatedBatch
+                        );
+                      }}
+                      onRemove={() => {
+                        batches.splice(position, 1);
+                        setFieldValue(`orderItems.${focusedItemIndex}.batches`, batches);
+                      }}
+                      onClone={newBatch => {
+                        setFieldValue(`orderItems.${focusedItemIndex}.batches`, [
+                          ...batches,
+                          {
+                            ...newBatch,
+                            no: `${newBatch.no}- clone`,
+                            id: Date.now(),
+                            batchAdjustments: [],
+                            todo: {
+                              tasks: [],
+                            },
+                          },
+                        ]);
+                      }}
+                    />
+                  </>
+                )}
+              </BooleanValue>
+            );
           })}
         </div>
       </div>
 
       <div className={BatchesFooterWrapperStyle}>
-        {focusedItemIndex >= 0 && (
+        {allowUpdate && focusedItemIndex >= 0 && (
           <NewButton
             label={<FormattedMessage id="modules.Orders.newBatch" defaultMessage="NEW BATCH" />}
             onClick={() => {
-              // Generate new batch
+              const orderItem = orderItems[focusedItemIndex];
+              const {
+                productProvider: {
+                  packageName,
+                  packageCapacity,
+                  packageGrossWeight,
+                  packageVolume,
+                  packageSize,
+                },
+              } = orderItem;
+              const newBatch = {
+                orderItem: {
+                  ...orderItem,
+                  order,
+                },
+                id: Date.now(),
+                no: `batch ${batches.length + 1}`,
+                tags: [],
+                packageName,
+                packageCapacity,
+                packageGrossWeight,
+                packageVolume,
+                packageSize,
+                quantity: 0,
+                packageQuantity: 0,
+                batchAdjustments: [],
+                autoCalculatePackageQuantity: true,
+                todo: {
+                  tasks: [],
+                },
+              };
+              setFieldValue(`orderItems.${focusedItemIndex}.batches`, [...batches, newBatch]);
+              setFieldTouched(`orderItems.${focusedItemIndex}.batches`);
             }}
           />
         )}
@@ -114,4 +195,4 @@ function ItemsArea({
   );
 }
 
-export default ItemsArea;
+export default React.memo<Props>(ItemsArea);

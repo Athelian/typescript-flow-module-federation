@@ -126,7 +126,9 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={TagsWrapperStyle}>
-              {order.tags.length > 0 && order.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              {((order && order.tags) || []).map(tag => (
+                <Tag key={tag.id} tag={tag} />
+              ))}
             </div>
             <TaskRing {...todo} />
           </div>

@@ -63,7 +63,7 @@ const ItemsSection = ({ isNew }: Props) => {
                     <NumberValue defaultValue={-1}>
                       {({ value: focusedItemIndex, set: changeFocusedItem }) => {
                         let batches = [];
-                        if (focusedItemIndex === -1) {
+                        if (focusedItemIndex === -1 || orderItems.length - 1 < focusedItemIndex) {
                           batches = flatten(
                             orderItems.map(({ batches: itemBatches }) => itemBatches)
                           );
@@ -92,6 +92,8 @@ const ItemsSection = ({ isNew }: Props) => {
                             <BatchesArea
                               itemsIsExpanded={itemsIsExpanded}
                               batches={batches}
+                              order={order}
+                              orderItems={orderItems}
                               setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched}
                               focusedItemIndex={focusedItemIndex}
