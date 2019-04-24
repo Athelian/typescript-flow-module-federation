@@ -2,7 +2,10 @@
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
-import ProductProviderContainer from 'modules/productProvider/form/container';
+import {
+  ProductProviderInfoContainer,
+  ProductProviderTasksContainer,
+} from 'modules/productProvider/form/containers';
 import validator from 'modules/productProvider/form/validator';
 import ProductProviderForm from 'modules/productProvider/form';
 import JumpToSection from 'components/JumpToSection';
@@ -62,13 +65,15 @@ const ProductProviderFormWrapper = ({
   });
   return (
     <Provider inject={[formContainer]}>
-      <Subscribe to={[ProductProviderContainer]}>
-        {productProviderContainer => {
-          const isExist = exist(productProviderContainer.state, productProviders);
+      <Subscribe to={[ProductProviderInfoContainer, ProductProviderTasksContainer]}>
+        {(productProviderInfoContainer, productProviderTasksContainer) => {
+          const isExist = exist(productProviderInfoContainer.state, productProviders);
           const disableSaveButton =
-            !productProviderContainer.isDirty() ||
-            !formContainer.isReady(productProviderContainer.state, validator) ||
-            isExist;
+            !formContainer.isReady(
+              { ...productProviderInfoContainer.state, ...productProviderTasksContainer.state },
+              validator
+            ) || isExist;
+
           return (
             <Layout
               navBar={
@@ -115,6 +120,13 @@ const ProductProviderFormWrapper = ({
                       }
                       icon="DOCUMENT"
                     />
+                    <SectionTabs
+                      link="productProvider_taskSection"
+                      label={
+                        <FormattedMessage id="modules.Products.tasks" defaultMessage="TASKS" />
+                      }
+                      icon="TASK"
+                    />
                   </JumpToSection>
                   {isNew && (
                     <>
@@ -122,31 +134,48 @@ const ProductProviderFormWrapper = ({
                       <SaveButton
                         data-testid="saveProviderButton"
                         disabled={disableSaveButton}
-                        onClick={() => onSave(productProviderContainer.state)}
+                        onClick={() =>
+                          onSave({
+                            ...productProviderInfoContainer.state,
+                            ...productProviderTasksContainer.state,
+                          })
+                        }
                       />
                     </>
                   )}
-                  {!isNew && productProviderContainer.isDirty() && (
-                    <>
-                      <ResetButton
-                        onClick={() => {
-                          resetFormState(productProviderContainer);
-                          formContainer.onReset();
-                        }}
-                      />
-                      <SaveButton
-                        data-testid="saveProviderButton"
-                        disabled={disableSaveButton}
-                        onClick={() => onSave(productProviderContainer.state)}
-                      />
-                    </>
-                  )}
+                  {!isNew &&
+                    (productProviderInfoContainer.isDirty() ||
+                      productProviderTasksContainer.isDirty()) && (
+                      <>
+                        <ResetButton
+                          onClick={() => {
+                            resetFormState(productProviderInfoContainer);
+                            resetFormState(productProviderTasksContainer, 'todo');
+                            formContainer.onReset();
+                          }}
+                        />
+                        <SaveButton
+                          data-testid="saveProviderButton"
+                          disabled={disableSaveButton}
+                          onClick={() =>
+                            onSave({
+                              ...productProviderInfoContainer.state,
+                              ...productProviderTasksContainer.state,
+                            })
+                          }
+                        />
+                      </>
+                    )}
                 </SlideViewNavBar>
               }
             >
               <ProductProviderForm
                 productProvider={productProvider}
-                initDetailValues={productProviderContainer.initDetailValues}
+                initDetailValues={(values: Object) => {
+                  const { todo, ...info } = values;
+                  productProviderInfoContainer.initDetailValues(info);
+                  productProviderTasksContainer.initDetailValues(todo);
+                }}
                 isExist={isExist}
                 isNew={isNew}
                 isOwner={isOwner}

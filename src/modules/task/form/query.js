@@ -16,6 +16,8 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   todoFragment,
+  productProviderCardFragment,
+  sizeFragment,
 } from 'graphql';
 
 export const taskFormQuery = gql`
@@ -40,6 +42,8 @@ export const taskFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
+  ${productProviderCardFragment}
+  ${sizeFragment}
 `;
 
 export default taskFormQuery;

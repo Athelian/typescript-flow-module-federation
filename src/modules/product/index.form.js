@@ -265,7 +265,7 @@ class ProductFormModule extends React.Component<Props> {
                                 defaultMessage="END PRODUCTS"
                               />
                             }
-                            icon="PROVIDER"
+                            icon="PRODUCT_PROVIDER"
                           />
                         </JumpToSection>
                         <BooleanValue>

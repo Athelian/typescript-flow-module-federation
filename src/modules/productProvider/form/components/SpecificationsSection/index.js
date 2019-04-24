@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import usePermission from 'hooks/usePermission';
-import ProductProviderContainer from 'modules/productProvider/form/container';
+import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import { FormField } from 'modules/form';
 import {
   TextInputFactory,
@@ -33,7 +33,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
 
   return (
     <div className={SpecificationsSectionWrapperStyle}>
-      <Subscribe to={[ProductProviderContainer]}>
+      <Subscribe to={[ProductProviderInfoContainer]}>
         {({
           originalValues,
           state,

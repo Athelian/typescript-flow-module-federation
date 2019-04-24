@@ -6,7 +6,7 @@ import { getByPath } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
-import ProductProviderContainer from 'modules/productProvider/form/container';
+import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
@@ -38,7 +38,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const allowUpdate = hasPermission(PRODUCT_PROVIDER_UPDATE);
 
   return (
-    <Subscribe to={[ProductProviderContainer]}>
+    <Subscribe to={[ProductProviderInfoContainer]}>
       {({ originalValues, state, setFieldValue }) => {
         const values = { ...originalValues, ...state };
 

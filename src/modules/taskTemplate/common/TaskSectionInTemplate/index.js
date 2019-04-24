@@ -86,7 +86,6 @@ function TaskSectionInTemplate() {
                 }}
                 onSave={(index, newValue) => {
                   setFieldValue(`tasks.${index}`, newValue);
-                  setFieldTouched(`tasks.${index}`);
                 }}
               />
             </div>

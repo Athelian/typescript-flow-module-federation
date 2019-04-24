@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Apr 23 2019 11:45:32 GMT+0900 (Tokyo Standard Time)
+# timestamp: Wed Apr 24 2019 11:19:47 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -36621,7 +36621,7 @@ input ValueRangeInput {
 }
 
 type Values {
-  values: [Value!]!
+  values: [Value]!
 }
 
 type Viewer {

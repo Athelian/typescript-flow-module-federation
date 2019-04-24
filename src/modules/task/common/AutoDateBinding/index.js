@@ -8,9 +8,10 @@ import { MappingFields as OrderMappingField } from 'modules/task/form/components
 import { MappingFields as BatchMappingField } from 'modules/task/form/components/ParentEntity/components/BatchValueSpy';
 import { getValueBy } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy/helper';
 import { findMappingFields } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy';
+import { type CompatibleEntityTypes } from 'modules/task/common/TaskSection';
 
 type Props = {
-  type: 'order' | 'orderItem' | 'batch' | 'shipment' | 'product',
+  type: CompatibleEntityTypes,
   values: Object,
   tasks: Array<Object>,
   setTaskValue: Function,
@@ -24,6 +25,7 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
       batch: BatchMappingField,
       shipment: findMappingFields(values.voyages || []),
       product: {},
+      productProvider: {},
     };
     emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {

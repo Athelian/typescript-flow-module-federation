@@ -95,7 +95,7 @@ function ProductProvidersSection({ isOwner }: Props) {
                                 <ProductProviderFormWrapper
                                   isOwner={isOwner}
                                   productProviders={productProviders}
-                                  productProvider={productProviders[index]}
+                                  productProvider={productProvider}
                                   onCancel={() => slideToggle(false)}
                                   onSave={newProvider => {
                                     slideToggle(false);
