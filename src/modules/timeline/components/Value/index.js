@@ -18,7 +18,7 @@ type Props = {
   },
 };
 
-export const FormattedValue = ({ value }: Props) => {
+const FormattedValue = ({ value }: Props) => {
   if (!value) {
     return null;
   }

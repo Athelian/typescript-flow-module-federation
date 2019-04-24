@@ -4,6 +4,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedName from 'components/FormattedName';
 import Tag from 'components/Tag';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import User from './components/User';
 import { ARCHIVED, CREATE, IN_CHARGES, TAGS, UNARCHIVED, UPDATE_FIELD } from './contants';
 import type { LogItem } from './types';
@@ -128,8 +129,8 @@ export const UnarchivedFormatter = (log: LogItem): * => {
 };
 
 export const TagsFormatter = (log: LogItem): * => {
-  const added = log.parameters.added ? log.parameters.added.values : [];
-  const removed = log.parameters.removed ? log.parameters.removed.values : [];
+  const added = getByPathWithDefault([], 'parameters.added.values', log);
+  const removed = getByPathWithDefault([], 'parameters.removed.values', log);
 
   let message = null;
   let values = {
@@ -137,7 +138,7 @@ export const TagsFormatter = (log: LogItem): * => {
     added: (
       <>
         {added.map(v => (
-          <React.Fragment key={v.entity.id}>
+          <React.Fragment key={getByPath('entity.id', v)}>
             <Tag tag={v.entity} />{' '}
           </React.Fragment>
         ))}
@@ -147,7 +148,7 @@ export const TagsFormatter = (log: LogItem): * => {
     removed: (
       <>
         {removed.map(v => (
-          <React.Fragment key={v.entity.id}>
+          <React.Fragment key={getByPath('entity.id', v)}>
             <Tag tag={v.entity} />{' '}
           </React.Fragment>
         ))}
@@ -184,8 +185,8 @@ export const TagsFormatter = (log: LogItem): * => {
 };
 
 export const InChargesFormatter = (log: LogItem): * => {
-  const added = log.parameters.added ? log.parameters.added.values : [];
-  const removed = log.parameters.removed ? log.parameters.removed.values : [];
+  const added = getByPathWithDefault([], 'parameters.added.values', log);
+  const removed = getByPathWithDefault([], 'parameters.removed.values', log);
 
   let message = null;
   let values = {
@@ -193,7 +194,7 @@ export const InChargesFormatter = (log: LogItem): * => {
     added: (
       <>
         {added.map(v => (
-          <React.Fragment key={v.entity.id}>
+          <React.Fragment key={getByPath('entity.id', v)}>
             <ValueWrapper>
               <FormattedName firstName={v.entity.firstName} lastName={v.entity.lastName} />
             </ValueWrapper>{' '}
@@ -204,7 +205,7 @@ export const InChargesFormatter = (log: LogItem): * => {
     removed: (
       <>
         {removed.map(v => (
-          <React.Fragment key={v.entity.id}>
+          <React.Fragment key={getByPath('entity.id', v)}>
             <ValueWrapper>
               <FormattedName firstName={v.entity.firstName} lastName={v.entity.lastName} />
             </ValueWrapper>{' '}
