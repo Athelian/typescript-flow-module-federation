@@ -2,14 +2,16 @@
 import React from 'react';
 import Icon from 'components/Icon';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import TaskRing from 'components/TaskRing';
+import { Display } from 'components/Form';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
   ProductProviderCardWrapperStyle,
   InfoWrapperStyle,
-  WrapperStyle,
   NameStyle,
   ExporterStyle,
   SupplierStyle,
+  TaskWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -43,7 +45,7 @@ const ProductProviderCard = ({
   selectable,
   ...rest
 }: Props) => {
-  const { name, exporter, supplier, referenced } = productProvider;
+  const { name, exporter, supplier, referenced, todo } = productProvider;
 
   const actions = selectable
     ? []
@@ -69,17 +71,23 @@ const ProductProviderCard = ({
       {...rest}
     >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">
+        <div className={NameStyle}>
+          <Display align="left">{name}</Display>
+        </div>
+
         <div className={InfoWrapperStyle}>
-          <div className={NameStyle}>{name}</div>
-          <div className={WrapperStyle}>
-            <div className={ExporterStyle}>
-              <Icon icon="EXPORTER" />
-              {exporter && exporter.name}
-            </div>
-            <div className={SupplierStyle}>
-              <Icon icon="SUPPLIER" />
-              {supplier && supplier.name}
-            </div>
+          <div className={ExporterStyle}>
+            <Icon icon="EXPORTER" />
+            {exporter && exporter.name}
+          </div>
+
+          <div className={SupplierStyle}>
+            <Icon icon="SUPPLIER" />
+            {supplier && supplier.name}
+          </div>
+
+          <div className={TaskWrapperStyle}>
+            <TaskRing {...todo} />
           </div>
         </div>
       </div>
@@ -91,7 +99,7 @@ ProductProviderCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ProductProviderCard, 'productProvider', {
   width: '195px',
-  height: '100px',
+  height: '106px',
   entityIcon: 'PRODUCT_PROVIDER',
   entityColor: 'PRODUCT_PROVIDER',
 });

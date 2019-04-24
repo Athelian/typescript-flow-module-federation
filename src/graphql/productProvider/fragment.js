@@ -54,6 +54,14 @@ export const productProviderFormFragment = gql`
     files {
       ...documentFragment
     }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
+    }
   }
 `;
 
@@ -92,6 +100,9 @@ export const productProviderCardFragment = gql`
     }
     unitPrice {
       ...priceFragment
+    }
+    todo {
+      ...todoFragment
     }
   }
 `;

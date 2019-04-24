@@ -146,7 +146,7 @@ class ProductCard extends React.PureComponent<Props, State> {
 
 export default withForbiddenCard(ProductCard, 'product', {
   width: '195px',
-  height: '202px',
+  height: '209px',
   entityIcon: 'PRODUCT',
   entityColor: 'PRODUCT',
 });
