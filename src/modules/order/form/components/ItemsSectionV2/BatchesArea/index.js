@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { getBatchByFillBatch } from 'modules/order/helpers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { NewButton, BaseButton } from 'components/Buttons';
@@ -81,9 +82,46 @@ function ItemsArea({
                 }
                 onClick={() => {
                   if (focusedItemIndex === -1) {
-                    // Autofill all items
+                    const newOrderItems = orderItems.map(orderItem => {
+                      const newBatch = getBatchByFillBatch(orderItem);
+                      if (newBatch) {
+                        return {
+                          ...orderItem,
+                          order,
+                          batches: [
+                            ...orderItem.batches,
+                            {
+                              ...newBatch,
+                              orderItem: {
+                                ...orderItem,
+                                order,
+                              },
+                            },
+                          ],
+                        };
+                      }
+                      return orderItem;
+                    });
+                    setFieldValue('orderItems', newOrderItems);
                   } else {
-                    // Autofill in current item
+                    const orderItem = orderItems[focusedItemIndex];
+                    const newBatch = getBatchByFillBatch(orderItem);
+                    if (newBatch) {
+                      const newOrderItem = {
+                        ...orderItem,
+                        batches: [
+                          ...orderItem.batches,
+                          {
+                            ...newBatch,
+                            orderItem: {
+                              ...orderItem,
+                              order,
+                            },
+                          },
+                        ],
+                      };
+                      setFieldValue(`orderItems.${focusedItemIndex}`, newOrderItem);
+                    }
                   }
                 }}
               />
