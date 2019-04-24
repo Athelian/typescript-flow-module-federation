@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import SelectProducts from 'modules/order/common/SelectProducts';
+import SlideView from 'components/SlideView';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import Icon from 'components/Icon';
@@ -304,13 +306,55 @@ function ItemsArea({
       </div>
 
       <div className={ItemsFooterWrapperStyle}>
-        <NewButton
-          disabled={!((order.exporter && order.exporter.id) || !isNew)}
-          label={<FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />}
-          onClick={() => {
-            // TODO: Generate new item
-          }}
-        />
+        <BooleanValue>
+          {({ value: opened, set: slideToggle }) => (
+            <>
+              {/* TODO: Show tooltip or message when new button is disabled */}
+              <NewButton
+                disabled={!((order.exporter && order.exporter.id) || !isNew)}
+                label={<FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />}
+                onClick={() => {
+                  slideToggle(true);
+                }}
+              />
+              <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                {opened && (
+                  <SelectProducts
+                    onSelect={selectedItems => {
+                      setFieldValue('orderItems', [
+                        ...orderItems,
+                        ...selectedItems.map((productProvider, position) =>
+                          injectUid({
+                            productProvider,
+                            isNew: true,
+                            batches: [],
+                            no: `${getByPath('product.name', productProvider)} - ${getByPath(
+                              'product.serial',
+                              productProvider
+                            )} - ${position + 1}`,
+                            quantity: 0,
+                            price: {
+                              amount:
+                                getByPath('unitPrice.currency', productProvider) === currency
+                                  ? getByPath('unitPrice.amount', productProvider) || 0
+                                  : 0,
+                              currency,
+                            },
+                          })
+                        ),
+                      ]);
+                      setFieldTouched('orderItems');
+                      slideToggle(false);
+                    }}
+                    exporter={(order.exporter && order.exporter.id) || ''}
+                    orderCurrency={currency}
+                    onCancel={() => slideToggle(false)}
+                  />
+                )}
+              </SlideView>
+            </>
+          )}
+        </BooleanValue>
       </div>
     </div>
   );
