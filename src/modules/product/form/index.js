@@ -91,6 +91,7 @@ class ProductForm extends React.Component<Props> {
 
             <AsyncProductProvidersSection isOwner={isOwner} />
           </Suspense>
+
           <Subscribe to={[ProductTasksContainer]}>
             {({
               state: {

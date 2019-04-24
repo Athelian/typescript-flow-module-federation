@@ -15,6 +15,7 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   todoFragment,
+  productProviderCardFragment,
 } from 'graphql';
 
 const editableTaskListQuery = gql`
@@ -49,6 +50,7 @@ const editableTaskListQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
+  ${productProviderCardFragment}
 `;
 
 export default editableTaskListQuery;

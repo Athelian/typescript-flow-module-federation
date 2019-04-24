@@ -90,10 +90,6 @@ export const updateProductMutation: Object = gql`
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
   ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
-  ...parseTodoField(
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
-    newValues.todo
-  ),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(
     'serial',
@@ -124,6 +120,10 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     'tagIds',
     getByPathWithDefault([], 'tags', originalValues),
     newValues.tags
+  ),
+  ...parseTodoField(
+    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    newValues.todo
   ),
   ...parseArrayOfChildrenField(
     'productProviders',

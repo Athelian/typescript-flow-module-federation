@@ -7,7 +7,13 @@ import { ObjectValue } from 'react-values';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday } from 'utils/date';
-import { ShipmentCard, OrderCard, BatchCard, ProductCard } from 'components/Cards';
+import {
+  ShipmentCard,
+  OrderCard,
+  BatchCard,
+  ProductCard,
+  OrderProductProviderCard,
+} from 'components/Cards';
 import {
   SectionWrapper,
   SectionHeader,
@@ -240,7 +246,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             };
 
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
-            const manualMode = entity === 'Product';
+            const startDateSyncUnavailable = entity === 'Product' || entity === 'ProductProvider';
 
             return (
               <div className={TaskSectionWrapperStyle}>
@@ -326,7 +332,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             />
                           </div>
 
-                          {!manualMode && (
+                          {!startDateSyncUnavailable && (
                             <div className={RadioWrapperStyle('bottom')}>
                               <RadioInput
                                 align="right"
@@ -520,7 +526,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           ) : (
                             <Display color="GRAY_LIGHT" width="200px" height="30px">
                               {(() => {
-                                if (manualMode) {
+                                if (startDateSyncUnavailable) {
                                   return (
                                     <FormattedMessage
                                       id="modules.Tasks.dataSyncingUnavailable"
@@ -744,7 +750,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       <SelectInputFactory
                                         {...inputHandlers}
                                         items={
-                                          manualMode
+                                          startDateSyncUnavailable
                                             ? [
                                                 {
                                                   value: START_DATE,
@@ -874,6 +880,24 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           }
                           vertical
                           input={<ProductCard product={task.entity} />}
+                        />
+                      </GridColumn>
+                    )}
+
+                  {!hideParentInfo &&
+                    getByPathWithDefault('', 'entity.__typename', task) === 'ProductProvider' && (
+                      <GridColumn>
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage
+                                id="modules.Tasks.endProduct"
+                                defaultMessage="END PRODUCT"
+                              />
+                            </Label>
+                          }
+                          vertical
+                          input={<OrderProductProviderCard productProvider={task.entity} />}
                         />
                       </GridColumn>
                     )}

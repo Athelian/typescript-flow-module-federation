@@ -116,7 +116,7 @@ export const initValues = {
   files: [],
 };
 
-export default class ProductProviderContainer extends Container<FormState> {
+export default class ProductProviderInfoContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

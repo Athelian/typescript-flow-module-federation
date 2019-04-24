@@ -29,8 +29,14 @@ import {
   PRODUCT_UPDATE,
   PRODUCT_SET_TASKS,
   PRODUCT_SET_TASK_TEMPLATE,
+  PRODUCT_PROVIDER_TASK_FORM,
+  PRODUCT_PROVIDER_TASK_LIST,
+  PRODUCT_PROVIDER_UPDATE,
+  PRODUCT_PROVIDER_SET_TASKS,
+  PRODUCT_PROVIDER_SET_TASK_TEMPLATE,
 } from 'modules/permission/constants/product';
 import { ProductTasksContainer } from 'modules/product/form/containers';
+import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
 import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { OrderTasksContainer } from 'modules/order/form/containers';
 import {
@@ -47,7 +53,13 @@ import { TasksSectionWrapperStyle, TasksSectionBodyStyle, TemplateItemStyle } fr
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
-type CompatibleEntityTypes = 'batch' | 'order' | 'orderItem' | 'product' | 'shipment';
+export type CompatibleEntityTypes =
+  | 'batch'
+  | 'order'
+  | 'orderItem'
+  | 'product'
+  | 'productProvider'
+  | 'shipment';
 
 type Props = {
   type: CompatibleEntityTypes,
@@ -99,6 +111,27 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           (hasPermission(PRODUCT_UPDATE) ||
             (hasPermission(PRODUCT_SET_TASK_TEMPLATE) && hasPermission(PRODUCT_SET_TASKS))),
         tasksContainer: ProductTasksContainer,
+      };
+    case 'productProvider':
+      return {
+        canViewList: hasPermission(PRODUCT_PROVIDER_TASK_LIST),
+        canViewForm: hasPermission(PRODUCT_PROVIDER_TASK_FORM),
+        canAddTasks:
+          hasPermission(TASK_CREATE) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canDeleteTasks:
+          hasPermission(TASK_DELETE) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canUpdateTasks:
+          hasPermission(TASK_UPDATE) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+            (hasPermission(PRODUCT_PROVIDER_SET_TASK_TEMPLATE) &&
+              hasPermission(PRODUCT_PROVIDER_SET_TASKS))),
+        tasksContainer: ProductProviderTasksContainer,
       };
     default:
       return {

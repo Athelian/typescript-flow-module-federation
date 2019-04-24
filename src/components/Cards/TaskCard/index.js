@@ -106,6 +106,13 @@ const getParentInfo = (parent: Object) => {
       parentData: parent.name,
     };
   }
+  if (__typename === 'ProductProvider') {
+    return {
+      parentType: 'product',
+      parentIcon: 'PRODUCT_PROVIDER',
+      parentData: parent.name,
+    };
+  }
   return {};
 };
 
@@ -184,8 +191,8 @@ const TaskCard = ({
   const isFromTemplate = !!taskTemplate;
 
   let nameWidth = '160px';
-  if (isFromTemplate) nameWidth = '120px';
-  else if (hideParentInfo || isInTemplate) nameWidth = '140px';
+  if (isFromTemplate || isInTemplate) nameWidth = '120px';
+  else if (hideParentInfo) nameWidth = '140px';
 
   const IS_DND_DEVELOPED = false;
 

@@ -18,11 +18,7 @@ import {
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import {
-  PRODUCT_CREATE,
-  PRODUCT_UPDATE,
-  PRODUCT_SET_TAGS,
-} from 'modules/permission/constants/product';
+import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
 import {
   SectionHeader,
   LastModified,
@@ -329,10 +325,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               changeTags(field, value);
                             }}
                             editable={{
-                              set:
-                                hasPermission(TAG_LIST) &&
-                                hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                              remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                              set: hasPermission(TAG_LIST) && hasPermission(PRODUCT_UPDATE),
+                              remove: hasPermission(PRODUCT_UPDATE),
                             }}
                           />
                         }
