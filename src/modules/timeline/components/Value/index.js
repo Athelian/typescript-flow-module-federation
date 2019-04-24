@@ -3,6 +3,14 @@ import * as React from 'react';
 import { FormattedDate } from 'react-intl';
 import { ValueStyle } from './style';
 
+type WrapperProps = {
+  children: React.Node,
+};
+
+export const ValueWrapper = ({ children }: WrapperProps) => (
+  <span className={ValueStyle}>{children}</span>
+);
+
 type Props = {
   value: {
     [val: string]: any,
@@ -10,7 +18,7 @@ type Props = {
   },
 };
 
-const FormattedValue = ({ value }: Props) => {
+export const FormattedValue = ({ value }: Props) => {
   if (!value) {
     return null;
   }
@@ -41,10 +49,10 @@ const FormattedValue = ({ value }: Props) => {
   }
 };
 
-const Value = ({ value }: Props) => (
-  <span className={ValueStyle}>
+export const Value = ({ value }: Props) => (
+  <ValueWrapper>
     <FormattedValue value={value} />
-  </span>
+  </ValueWrapper>
 );
 
 export default Value;

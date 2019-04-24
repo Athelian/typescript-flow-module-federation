@@ -2,11 +2,13 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import FormattedName from 'components/FormattedName';
+import Tag from 'components/Tag';
 import User from './components/User';
-import { ARCHIVED, CREATE, UNARCHIVED, UPDATE_FIELD } from './contants';
+import { ARCHIVED, CREATE, IN_CHARGES, TAGS, UNARCHIVED, UPDATE_FIELD } from './contants';
 import type { LogItem } from './types';
 import EntityIdentifier from './components/EntityIdentifier';
-import Value from './components/Value';
+import { Value, ValueWrapper } from './components/Value';
 import Field from './components/Field';
 import messages from './messages';
 
@@ -125,11 +127,127 @@ export const UnarchivedFormatter = (log: LogItem): * => {
   return <FormattedMessage {...message} values={values} />;
 };
 
+export const TagsFormatter = (log: LogItem): * => {
+  const added = log.parameters.added ? log.parameters.added.values : [];
+  const removed = log.parameters.removed ? log.parameters.removed.values : [];
+
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+    added: (
+      <>
+        {added.map(v => (
+          <React.Fragment key={v.entity.id}>
+            <Tag tag={v.entity} />{' '}
+          </React.Fragment>
+        ))}
+      </>
+    ),
+    addedCount: added.length,
+    removed: (
+      <>
+        {removed.map(v => (
+          <React.Fragment key={v.entity.id}>
+            <Tag tag={v.entity} />{' '}
+          </React.Fragment>
+        ))}
+      </>
+    ),
+    removedCount: removed.length,
+  };
+
+  if (log.entity.__typename !== log.parentEntity.__typename) {
+    values = {
+      ...values,
+      child: <EntityIdentifier log={log} />,
+    };
+  }
+
+  if (added.length > 0 && removed.length > 0) {
+    message =
+      log.entity.__typename !== log.parentEntity.__typename
+        ? messages.addedAndRemovedTagsChild
+        : messages.addedAndRemovedTags;
+  } else if (added.length > 0) {
+    message =
+      log.entity.__typename !== log.parentEntity.__typename
+        ? messages.addedTagsChild
+        : messages.addedTags;
+  } else {
+    message =
+      log.entity.__typename !== log.parentEntity.__typename
+        ? messages.removedTagsChild
+        : messages.removedTags;
+  }
+
+  return <FormattedMessage {...message} values={values} />;
+};
+
+export const InChargesFormatter = (log: LogItem): * => {
+  const added = log.parameters.added ? log.parameters.added.values : [];
+  const removed = log.parameters.removed ? log.parameters.removed.values : [];
+
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+    added: (
+      <>
+        {added.map(v => (
+          <React.Fragment key={v.entity.id}>
+            <ValueWrapper>
+              <FormattedName firstName={v.entity.firstName} lastName={v.entity.lastName} />
+            </ValueWrapper>{' '}
+          </React.Fragment>
+        ))}
+      </>
+    ),
+    removed: (
+      <>
+        {removed.map(v => (
+          <React.Fragment key={v.entity.id}>
+            <ValueWrapper>
+              <FormattedName firstName={v.entity.firstName} lastName={v.entity.lastName} />
+            </ValueWrapper>{' '}
+          </React.Fragment>
+        ))}
+      </>
+    ),
+  };
+
+  if (log.entity.__typename !== log.parentEntity.__typename) {
+    values = {
+      ...values,
+      child: <EntityIdentifier log={log} />,
+    };
+  }
+
+  if (added.length > 0 && removed.length > 0) {
+    message =
+      log.entity.__typename !== log.parentEntity.__typename
+        ? messages.addedAndRemovedInChargesChild
+        : messages.addedAndRemovedInCharges;
+  } else if (added.length > 0) {
+    message =
+      log.entity.__typename !== log.parentEntity.__typename
+        ? messages.addedInChargesChild
+        : messages.addedInCharges;
+  } else {
+    message =
+      log.entity.__typename !== log.parentEntity.__typename
+        ? messages.removedInChargesChild
+        : messages.removedInCharges;
+  }
+
+  return <FormattedMessage {...message} values={values} />;
+};
+
 const DefaultFormatters = {
   [CREATE]: CreateFormatter,
   [UPDATE_FIELD]: UpdateFormatter,
   [ARCHIVED]: ArchivedFormatter,
   [UNARCHIVED]: UnarchivedFormatter,
+  [TAGS]: TagsFormatter,
+  [IN_CHARGES]: InChargesFormatter,
 };
 
 export default DefaultFormatters;
