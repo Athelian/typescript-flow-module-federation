@@ -39,6 +39,7 @@ import {
   TagsAndTaskWrapperStyle,
   ItemTagsWrapperStyle,
 } from './style';
+import validator from './validator';
 
 type OptionalProps = {
   batches: Array<{
@@ -177,6 +178,18 @@ const ItemCard = ({
 
   const { id: orderId, poNo, currency: orderCurrency } = order;
 
+  const validation = validator({
+    no: `orderItems.${index}.no`,
+    quantity: `orderItems.${index}.quantity`,
+    price: `orderItems.${index}.price`,
+  });
+
+  const values = {
+    [`orderItems.${index}.no`]: no,
+    [`orderItems.${index}.quantity`]: quantity,
+    [`orderItems.${index}.price`]: price,
+  };
+
   const {
     exporter: { name: exporterName },
   } = productProvider;
@@ -239,7 +252,13 @@ const ItemCard = ({
             onClick={evt => evt.stopPropagation()}
             role="presentation"
           >
-            <FormField name={`orderItems.${index}.no`} initValue={no} setFieldValue={setFieldValue}>
+            <FormField
+              name={`orderItems.${index}.no`}
+              initValue={no}
+              setFieldValue={setFieldValue}
+              values={values}
+              validator={validation}
+            >
               {({ name, ...inputHandlers }) => (
                 <TextInputFactory
                   name={name}
@@ -264,6 +283,8 @@ const ItemCard = ({
               name={`orderItems.${index}.quantity`}
               initValue={quantity}
               setFieldValue={setFieldValue}
+              values={values}
+              validator={validation}
             >
               {({ name, ...inputHandlers }) => (
                 <NumberInputFactory
@@ -291,6 +312,8 @@ const ItemCard = ({
               name={`orderItems.${index}.price.amount`}
               initValue={price.amount}
               setFieldValue={setFieldValue}
+              values={values}
+              validator={validation}
             >
               {({ name, ...inputHandlers }) => (
                 <NumberInputFactory
