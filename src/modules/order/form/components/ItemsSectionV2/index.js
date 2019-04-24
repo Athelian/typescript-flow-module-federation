@@ -3,13 +3,12 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
-import { BooleanValue, StringValue } from 'react-values';
+import { BooleanValue, NumberValue } from 'react-values';
 import useLocalStorage from 'hooks/useLocalStorage';
 import Icon from 'components/Icon';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import { FormContainer } from 'modules/form';
-import { isNullOrUndefined } from 'utils/fp';
 import ItemsArea from './ItemsArea';
 import BatchesArea from './BatchesArea';
 import { ItemsSectionWrapperStyle, ItemsUIWrapperStyle, ItemsUIStyle } from './style';
@@ -34,8 +33,8 @@ const ItemsSection = ({ isNew }: Props) => {
                   icon="ORDER_ITEM"
                   title={
                     <>
-                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
-                      {orderItems ? orderItems.length : 0})
+                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />(
+                      {(orderItems || []).length})
                     </>
                   }
                 >
@@ -64,10 +63,10 @@ const ItemsSection = ({ isNew }: Props) => {
                 </SectionHeader>
                 <Subscribe to={[OrderInfoContainer, FormContainer]}>
                   {({ state: order }, { setFieldTouched }) => (
-                    <StringValue defaultValue={null}>
+                    <NumberValue defaultValue={-1}>
                       {({ value: focusedItemIndex, set: changeFocusedItem }) => {
                         let batches = [];
-                        if (isNullOrUndefined(focusedItemIndex)) {
+                        if (focusedItemIndex === -1) {
                           batches = flatten(
                             orderItems.map(({ batches: itemBatches }) => itemBatches)
                           );
@@ -86,7 +85,7 @@ const ItemsSection = ({ isNew }: Props) => {
                               focusedItemIndex={focusedItemIndex}
                               onFocusItem={(index: number) => {
                                 if (focusedItemIndex === index) {
-                                  changeFocusedItem(null);
+                                  changeFocusedItem(-1);
                                 } else {
                                   changeFocusedItem(index);
                                 }
@@ -102,7 +101,7 @@ const ItemsSection = ({ isNew }: Props) => {
                           </div>
                         );
                       }}
-                    </StringValue>
+                    </NumberValue>
                   )}
                 </Subscribe>
               </>

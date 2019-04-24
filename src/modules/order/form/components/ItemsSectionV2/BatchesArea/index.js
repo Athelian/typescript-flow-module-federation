@@ -11,7 +11,6 @@ import Icon from 'components/Icon';
 // import RemoveDialog from 'components/Dialog/RemoveDialog';
 // import { injectUid } from 'utils/id';
 // import { getByPath } from 'utils/fp';
-import { isNullOrUndefined } from 'utils/fp';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 // import { PRODUCT_FORM } from 'modules/permission/constants/product';
 // import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -33,7 +32,7 @@ type Props = {
   batches: Array<Object>,
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
-  focusedItemIndex: ?number,
+  focusedItemIndex: number,
 };
 
 function ItemsArea({
@@ -47,7 +46,7 @@ function ItemsArea({
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(ORDER_UPDATE);
 
-  console.log(allowUpdate, setFieldValue, setFieldTouched);
+  console.log({ allowUpdate, setFieldValue, setFieldTouched });
 
   return (
     <div className={BatchesAreaWrapperStyle(itemsIsExpanded)}>
@@ -61,7 +60,7 @@ function ItemsArea({
             </div>
 
             <div className={TitleStyle}>
-              {isNullOrUndefined(focusedItemIndex) ? (
+              {focusedItemIndex === -1 ? (
                 <FormattedMessage id="modules.Orders.allBatches" defaultMessage="ALL BATCHES" />
               ) : (
                 <FormattedMessage id="modules.Orders.batches" defaultMessage="BATCHES" />
@@ -81,7 +80,7 @@ function ItemsArea({
                 />
               }
               onClick={() => {
-                if (isNullOrUndefined(focusedItemIndex)) {
+                if (focusedItemIndex === -1) {
                   // Autofill all items
                 } else {
                   // Autofill in current item
@@ -100,7 +99,7 @@ function ItemsArea({
       </div>
 
       <div className={BatchesFooterWrapperStyle}>
-        {!isNullOrUndefined(focusedItemIndex) && (
+        {focusedItemIndex >= 0 && (
           <NewButton
             label={<FormattedMessage id="modules.Orders.newBatch" defaultMessage="NEW BATCH" />}
             onClick={() => {

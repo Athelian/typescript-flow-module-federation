@@ -38,7 +38,7 @@ type Props = {
   },
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
-  focusedItemIndex: ?number,
+  focusedItemIndex: number,
   onFocusItem: number => void,
 };
 
