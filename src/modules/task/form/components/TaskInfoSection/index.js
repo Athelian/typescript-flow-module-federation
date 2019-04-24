@@ -246,7 +246,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             };
 
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
-            const startDateSyncUnavailable = entity === 'Product' || entity === 'ProductProvider';
+            const startDateSyncUnavailable = ['Product', 'ProductProvider'].includes(entity);
 
             return (
               <div className={TaskSectionWrapperStyle}>
