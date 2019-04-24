@@ -36,27 +36,13 @@ import { getByPathWithDefault } from 'utils/fp';
 export const createProductMutation: Object = gql`
   mutation productCreate($input: ProductCreateInput!) {
     productCreate(input: $input) {
-      __typename
-      ...productFormFragment
+      ... on Product {
+        id
+      }
       ...badRequestFragment
     }
   }
   ${badRequestFragment}
-  ${productFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
-  ${imageFragment}
-  ${partnerCardFragment}
-  ${priceFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${productProviderFormFragment}
-  ${documentFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
 `;
 
 export const updateProductMutation: Object = gql`
