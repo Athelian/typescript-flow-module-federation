@@ -7,7 +7,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { generateBatchByOrderItem, generateBatchForClone } from 'utils/batch';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
-import { ItemBatchCard } from 'components/Cards';
+import { OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
@@ -99,7 +99,7 @@ function BatchesSection() {
                               )}
                             </SlideView>
                             <div className={ItemStyle}>
-                              <ItemBatchCard
+                              <OrderBatchCard
                                 editable
                                 batch={batch}
                                 // FIXME:
