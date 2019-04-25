@@ -4,7 +4,7 @@ import {
   path,
   pathOr,
   /* $FlowFixMe: useWith is not exist */
-  useWith as doWith,
+  useWith,
   split,
   range,
   identity,
@@ -59,8 +59,7 @@ export const mapOver = map;
 /**
  * Return value from object with path
  */
-export const getByPath = (valuePath: string, object: *) =>
-  doWith(path, [split('.')])(valuePath, object);
+export const getByPath = useWith(path, [split('.')]);
 
 export const pickByProps = pick;
 
@@ -70,8 +69,7 @@ export const isNullOrUndefined = isNil;
 /**
  * Return value from object with path, return default value if undefined
  */
-export const getByPathWithDefault = (defaultValue: *, valuePath: string, object: *) =>
-  doWith(pathOr, [identity, split('.')])(defaultValue, valuePath, object);
+export const getByPathWithDefault = useWith(pathOr, [identity, split('.')]);
 
 export const isValuable = (val: any) => val != null;
 export const isValuables = (...arr: Array<any>) => arr.every(val => val != null);
