@@ -3,13 +3,12 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
-import { BooleanValue, StringValue } from 'react-values';
+import { BooleanValue, NumberValue } from 'react-values';
 import useLocalStorage from 'hooks/useLocalStorage';
 import Icon from 'components/Icon';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import { FormContainer } from 'modules/form';
-import { isNullOrUndefined } from 'utils/fp';
 import ItemsArea from './ItemsArea';
 import BatchesArea from './BatchesArea';
 import { ItemsSectionWrapperStyle, ItemsUIWrapperStyle, ItemsUIStyle } from './style';
@@ -19,9 +18,6 @@ type Props = {
 };
 
 const ItemsSection = ({ isNew }: Props) => {
-  console.warn({
-    isNew,
-  });
   const [storedValue, setValue] = useLocalStorage('itemsIsExpanded', false);
   return (
     <BooleanValue value={storedValue} onChange={setValue}>
@@ -34,8 +30,8 @@ const ItemsSection = ({ isNew }: Props) => {
                   icon="ORDER_ITEM"
                   title={
                     <>
-                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" /> (
-                      {orderItems ? orderItems.length : 0})
+                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />(
+                      {(orderItems || []).length})
                     </>
                   }
                 >
@@ -64,10 +60,10 @@ const ItemsSection = ({ isNew }: Props) => {
                 </SectionHeader>
                 <Subscribe to={[OrderInfoContainer, FormContainer]}>
                   {({ state: order }, { setFieldTouched }) => (
-                    <StringValue defaultValue={null}>
+                    <NumberValue defaultValue={-1}>
                       {({ value: focusedItemIndex, set: changeFocusedItem }) => {
                         let batches = [];
-                        if (isNullOrUndefined(focusedItemIndex)) {
+                        if (focusedItemIndex === -1 || orderItems.length - 1 < focusedItemIndex) {
                           batches = flatten(
                             orderItems.map(({ batches: itemBatches }) => itemBatches)
                           );
@@ -78,6 +74,7 @@ const ItemsSection = ({ isNew }: Props) => {
                         return (
                           <div className={ItemsSectionWrapperStyle}>
                             <ItemsArea
+                              isNew={isNew}
                               itemsIsExpanded={itemsIsExpanded}
                               order={order}
                               orderItems={orderItems}
@@ -86,7 +83,7 @@ const ItemsSection = ({ isNew }: Props) => {
                               focusedItemIndex={focusedItemIndex}
                               onFocusItem={(index: number) => {
                                 if (focusedItemIndex === index) {
-                                  changeFocusedItem(null);
+                                  changeFocusedItem(-1);
                                 } else {
                                   changeFocusedItem(index);
                                 }
@@ -95,6 +92,8 @@ const ItemsSection = ({ isNew }: Props) => {
                             <BatchesArea
                               itemsIsExpanded={itemsIsExpanded}
                               batches={batches}
+                              order={order}
+                              orderItems={orderItems}
                               setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched}
                               focusedItemIndex={focusedItemIndex}
@@ -102,7 +101,7 @@ const ItemsSection = ({ isNew }: Props) => {
                           </div>
                         );
                       }}
-                    </StringValue>
+                    </NumberValue>
                   )}
                 </Subscribe>
               </>
