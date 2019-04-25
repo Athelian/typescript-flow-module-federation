@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
 import { BooleanValue, NumberValue } from 'react-values';
+import FormattedNumber from 'components/FormattedNumber';
 import useLocalStorage from 'hooks/useLocalStorage';
 import Icon from 'components/Icon';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
@@ -32,7 +33,7 @@ const ItemsSection = ({ isNew }: Props) => {
                     <>
                       <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />
                       {' ('}
-                      {(orderItems || []).length}
+                      {<FormattedNumber value={(orderItems || []).length} />}
                       {')'}
                     </>
                   }
