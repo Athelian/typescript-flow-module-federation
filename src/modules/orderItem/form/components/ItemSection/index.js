@@ -17,7 +17,10 @@ import {
   TagsInput,
   TextAreaInputFactory,
 } from 'components/Form';
-import { OrderItemInfoContainer } from 'modules/orderItem/form/containers';
+import {
+  OrderItemInfoContainer,
+  OrderItemBatchesContainer,
+} from 'modules/orderItem/form/containers';
 import validator from 'modules/orderItem/form/validator';
 
 import { ItemSectionWrapperStyle, MainFieldsWrapperStyle, DividerStyle } from './style';
@@ -25,11 +28,11 @@ import OrderItemSummaryChart from './components/OrderItemSummaryChart';
 
 const ItemSection = () => (
   <div className={ItemSectionWrapperStyle}>
-    <Subscribe to={[OrderItemInfoContainer]}>
-      {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
+    <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
+      {({ originalValues, state, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
         const values = { ...originalValues, ...state };
 
-        const { batches, price, quantity } = values;
+        const { price, quantity } = values;
         const { orderedQuantity, batchedQuantity, shippedQuantity } = getItemQuantityChartData({
           orderItem: values,
           batches,

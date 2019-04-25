@@ -34,7 +34,7 @@ export default function OrderItemSummaryChart({
         }
         input={
           <Display>
-            <FormattedNumber value={totalPrice.amount} prefix={totalPrice.currency} />
+            <FormattedNumber value={totalPrice.amount} suffix={totalPrice.currency} />
           </Display>
         }
       />
