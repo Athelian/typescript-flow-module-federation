@@ -177,6 +177,7 @@ export const generateBatchByOrderItem = (orderItem: Object) => {
     tags: [],
     packageName,
     packageCapacity,
+    packageQuantity: 0,
     packageGrossWeight,
     packageVolume,
     packageSize,

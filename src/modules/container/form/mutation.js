@@ -230,9 +230,7 @@ export const prepareParsedContainerInput = ({
       (oldBatch: ?Object, newBatch: Object) => ({
         ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm,
-          inOrderForm: false,
           inContainerForm,
-          inBatchForm: false,
         }),
       }),
       forceSendBatchIds

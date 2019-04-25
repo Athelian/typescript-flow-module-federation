@@ -77,9 +77,6 @@ class BatchFormModule extends React.PureComponent<Props> {
       isNewOrClone ? null : removeTypename(originalValues),
       removeTypename(formData),
       {
-        inShipmentForm: false,
-        inOrderForm: false,
-        inContainerForm: false,
         inBatchForm: true,
       }
     );

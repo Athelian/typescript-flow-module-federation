@@ -168,9 +168,6 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         (oldBatch: ?Object, newBatch: Object) =>
           prepareParsedBatchInput(oldBatch, newBatch, {
             inOrderForm: true,
-            inBatchForm: false,
-            inContainerForm: false,
-            inShipmentForm: false,
           })
       ),
     })

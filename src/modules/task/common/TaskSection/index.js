@@ -22,7 +22,6 @@ import {
   BATCH_SET_TASKS,
   BATCH_SET_TASK_TEMPLATE,
 } from 'modules/permission/constants/batch';
-import { BatchTasksContainer } from 'modules/batch/form/containers';
 import {
   PRODUCT_TASK_FORM,
   PRODUCT_TASK_LIST,
@@ -38,7 +37,6 @@ import {
 import { ProductTasksContainer } from 'modules/product/form/containers';
 import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
 import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
-import { OrderTasksContainer } from 'modules/order/form/containers';
 import {
   SHIPMENT_TASK_FORM,
   SHIPMENT_TASK_LIST,
@@ -46,6 +44,9 @@ import {
   SHIPMENT_SET_TASK_TEMPLATE,
   SHIPMENT_SET_TASKS,
 } from 'modules/permission/constants/shipment';
+import { OrderTasksContainer } from 'modules/order/form/containers';
+import { ItemTasksContainer } from 'modules/orderItem/form/containers';
+import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
@@ -79,6 +80,17 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_CREATE) && hasPermission(TASK_DELETE) && hasPermission(ORDER_UPDATE),
         tasksContainer: OrderTasksContainer,
       };
+    case 'orderItem': {
+      return {
+        canViewList: true,
+        canViewForm: true,
+        canAddTasks: true,
+        canDeleteTasks: true,
+        canUpdateTasks: true,
+        canUpdateTaskTemplate: true,
+        tasksContainer: ItemTasksContainer,
+      };
+    }
     case 'batch':
       return {
         canViewList: hasPermission(BATCH_TASK_LIST),
