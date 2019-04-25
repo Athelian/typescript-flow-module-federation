@@ -30,8 +30,10 @@ const ItemsSection = ({ isNew }: Props) => {
                   icon="ORDER_ITEM"
                   title={
                     <>
-                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />(
-                      {(orderItems || []).length})
+                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />
+                      {' ('}
+                      {(orderItems || []).length}
+                      {')'}
                     </>
                   }
                 >

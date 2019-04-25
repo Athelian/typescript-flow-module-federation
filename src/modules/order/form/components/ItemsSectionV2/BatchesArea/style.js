@@ -83,15 +83,24 @@ export const AutofillButtonWrapperStyle: string = css`
   height: 40px;
 `;
 
+export const NoBatchesFoundStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
+
 export const BatchesGridStyle: string = css`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  grid-template-columns: repeat(auto-fit, 195px);
   grid-auto-rows: auto;
+  grid-gap: 10px;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.SMALL};
   height: 100%;
   width: 100%;
+  padding: 30px 20px;
 `;
 
 export const BatchesFooterWrapperStyle: string = css`
