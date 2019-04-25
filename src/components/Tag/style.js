@@ -9,6 +9,7 @@ export const TagStyle = (color: string): string => css`
   ${presets.ELLIPSIS};
   ${layout.HORIZONTAL};
   ${layout.CENTER};
+  display: inline-flex;
   background-color: ${color};
   padding: 0 5px;
   font-weight: bold;

@@ -79,6 +79,14 @@ const valueFragment = gql`
         ... on Model {
           id
         }
+        ... on Tag {
+          name
+          color
+        }
+        ... on User {
+          firstName
+          lastName
+        }
       }
     }
   }
