@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
-import { flatten } from 'lodash';
 import { BooleanValue, NumberValue } from 'react-values';
 import FormattedNumber from 'components/FormattedNumber';
 import useLocalStorage from 'hooks/useLocalStorage';
@@ -65,15 +64,6 @@ const ItemsSection = ({ isNew }: Props) => {
                   {({ state: order }, { setFieldTouched }) => (
                     <NumberValue defaultValue={-1}>
                       {({ value: focusedItemIndex, set: changeFocusedItem }) => {
-                        let batches = [];
-                        if (focusedItemIndex === -1 || orderItems.length - 1 < focusedItemIndex) {
-                          batches = flatten(
-                            orderItems.map(({ batches: itemBatches }) => itemBatches)
-                          );
-                        } else {
-                          batches = [...orderItems[focusedItemIndex].batches];
-                        }
-
                         return (
                           <div className={ItemsSectionWrapperStyle}>
                             <ItemsArea
@@ -94,7 +84,6 @@ const ItemsSection = ({ isNew }: Props) => {
                             />
                             <BatchesArea
                               itemsIsExpanded={itemsIsExpanded}
-                              batches={batches}
                               order={order}
                               orderItems={orderItems}
                               setFieldValue={setFieldValue}

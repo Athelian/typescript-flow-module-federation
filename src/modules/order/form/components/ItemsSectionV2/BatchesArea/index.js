@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { flatten } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -30,7 +31,6 @@ import {
 type Props = {
   itemsIsExpanded: boolean,
   order: Object,
-  batches: Array<Object>,
   orderItems: Array<Object>,
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
@@ -52,16 +52,17 @@ function findOrderItemPosition({
   let batchPosition = batches.findIndex(item => item.id === batch.id);
   if (orderItemPosition === -1) {
     orderItemPosition = orderItems.findIndex(orderItem =>
-      (orderItem.batches || []).map(({ id }) => id).includes(batch.id)
+      orderItem.batches.map(({ id }) => id).includes(batch.id)
     );
-    batchPosition = orderItems[orderItemPosition].batches.findIndex(item => item.id === batch.id);
+    if (orderItemPosition >= 0) {
+      batchPosition = orderItems[orderItemPosition].batches.findIndex(item => item.id === batch.id);
+    }
   }
   return { orderItemPosition, batchPosition };
 }
 
-function ItemsArea({
+function BatchesArea({
   itemsIsExpanded,
-  batches,
   order,
   orderItems,
   setFieldValue,
@@ -71,6 +72,11 @@ function ItemsArea({
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(ORDER_UPDATE);
+
+  const batches =
+    focusedItemIndex === -1
+      ? flatten(orderItems.map(({ batches: itemBatches }) => itemBatches))
+      : orderItems[focusedItemIndex].batches;
 
   return (
     <div className={BatchesAreaWrapperStyle(itemsIsExpanded)}>
@@ -163,7 +169,7 @@ function ItemsArea({
         {batches.length > 0 ? (
           <div className={BatchesGridStyle}>
             {batches.map(batch => {
-              const { orderItemPosition, batchPosition: position } = findOrderItemPosition({
+              const { orderItemPosition, batchPosition } = findOrderItemPosition({
                 focusedItemIndex,
                 batches,
                 orderItems,
@@ -180,7 +186,7 @@ function ItemsArea({
                             onSave={updatedBatch => {
                               slideToggle(false);
                               setFieldValue(
-                                `orderItems.${orderItemPosition}.batches.${position}`,
+                                `orderItems.${orderItemPosition}.batches.${batchPosition}`,
                                 updatedBatch
                               );
                             }}
@@ -195,17 +201,19 @@ function ItemsArea({
                         onClick={() => slideToggle(true)}
                         saveOnBlur={updatedBatch => {
                           setFieldValue(
-                            `orderItems.${orderItemPosition}.batches.${position}`,
+                            `orderItems.${orderItemPosition}.batches.${batchPosition}`,
                             updatedBatch
                           );
                         }}
                         onRemove={() => {
-                          batches.splice(batches.findIndex(item => item.id === batch.id), 1);
-                          setFieldValue(`orderItems.${orderItemPosition}.batches`, batches);
+                          const remainBatches = orderItems[orderItemPosition].batches.filter(
+                            item => item.id !== batch.id
+                          );
+                          setFieldValue(`orderItems.${orderItemPosition}.batches`, remainBatches);
                         }}
                         onClone={newBatch => {
                           setFieldValue(`orderItems.${orderItemPosition}.batches`, [
-                            ...batches,
+                            ...(orderItems[orderItemPosition].batches || []),
                             {
                               ...newBatch,
                               no: `${newBatch.no}- clone`,
@@ -282,4 +290,4 @@ function ItemsArea({
   );
 }
 
-export default React.memo<Props>(ItemsArea);
+export default React.memo<Props>(BatchesArea);
