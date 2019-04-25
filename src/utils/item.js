@@ -9,7 +9,7 @@ type GetItemQuantityChartDataProps = {
     batchCount?: number,
     batchShippedCount?: number,
   },
-  batches?: Array<{
+  batches: Array<{
     quantity: number,
     batchAdjustments: Array<{
       quantity: number,
@@ -25,7 +25,7 @@ export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantity
   let batched = 0;
   let shipped = 0;
 
-  if (batches) {
+  if (batches && batches.length > 0) {
     batches.forEach(({ quantity, batchAdjustments, shipment }) => {
       const currentQuantity = findBatchQuantity({ quantity, batchAdjustments });
       batchedQuantity += currentQuantity;
