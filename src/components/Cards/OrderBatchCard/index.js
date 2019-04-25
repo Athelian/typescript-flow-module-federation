@@ -181,8 +181,7 @@ const OrderBatchCard = ({
                 inputHeight="20px"
                 inputAlign="left"
                 name={fieldName}
-                isNew={false}
-                originalValue={no}
+                hideTooltip
               />
             )}
           </FormField>
@@ -227,8 +226,7 @@ const OrderBatchCard = ({
                   },
                 }}
                 name={fieldName}
-                isNew={false}
-                originalValue={quantity + totalAdjustment}
+                hideTooltip
               />
             )}
           </FormField>
@@ -248,9 +246,8 @@ const OrderBatchCard = ({
                 inputWidth="120px"
                 inputHeight="20px"
                 name={fieldName}
-                isNew={false}
-                originalValue={deliveredAt}
                 editable={editable}
+                hideTooltip
                 {...{
                   ...inputHandlers,
                   onBlur: evt => {
@@ -280,9 +277,8 @@ const OrderBatchCard = ({
                 inputWidth="120px"
                 inputHeight="20px"
                 name={fieldName}
-                isNew={false}
-                originalValue={desiredAt}
                 editable={editable}
+                hideTooltip
                 {...{
                   ...inputHandlers,
                   onBlur: evt => {

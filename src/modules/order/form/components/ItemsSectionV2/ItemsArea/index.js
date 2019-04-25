@@ -14,6 +14,7 @@ import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { Display } from 'components/Form';
+import Tooltip from 'components/Tooltip';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -320,14 +321,36 @@ function ItemsArea({
         <BooleanValue>
           {({ value: opened, set: slideToggle }) => (
             <>
-              {/* TODO: Show tooltip or message when new button is disabled */}
-              <NewButton
-                disabled={!((order.exporter && order.exporter.id) || !isNew)}
-                label={<FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />}
-                onClick={() => {
-                  slideToggle(true);
-                }}
-              />
+              {!((order.exporter && order.exporter.id) || !isNew) ? (
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.Orders.chooseExporterFirst"
+                      defaultMessage="Please choose an Exporter first"
+                    />
+                  }
+                >
+                  <div>
+                    <NewButton
+                      disabled
+                      label={
+                        <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                      }
+                    />
+                  </div>
+                </Tooltip>
+              ) : (
+                <NewButton
+                  disabled={!((order.exporter && order.exporter.id) || !isNew)}
+                  label={
+                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                  }
+                  onClick={() => {
+                    slideToggle(true);
+                  }}
+                />
+              )}
+
               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                 {opened && (
                   <SelectProducts
