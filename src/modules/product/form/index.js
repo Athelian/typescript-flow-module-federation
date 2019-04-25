@@ -17,7 +17,6 @@ const AsyncProductProvidersSection = lazy(() => import('./components/ProductProv
 type OptionalProps = {
   isNewOrClone: boolean,
   isOwner: boolean,
-  onFormReady: () => void,
 };
 
 type Props = OptionalProps & {
@@ -27,17 +26,10 @@ type Props = OptionalProps & {
 const defaultProps = {
   isNewOrClone: false,
   isOwner: true,
-  onFormReady: () => {},
 };
 
 class ProductForm extends React.Component<Props> {
   static defaultProps = defaultProps;
-
-  componentDidMount() {
-    const { onFormReady } = this.props;
-
-    if (onFormReady) onFormReady();
-  }
 
   shouldComponentUpdate(nextProps: Props) {
     const { product, isOwner } = this.props;
@@ -45,29 +37,19 @@ class ProductForm extends React.Component<Props> {
     return !isEquals(product, nextProps.product) || nextProps.isOwner !== isOwner;
   }
 
-  componentDidUpdate() {
-    const { onFormReady } = this.props;
-
-    if (onFormReady) onFormReady();
-  }
-
   render() {
     const { isNewOrClone, isOwner, product } = this.props;
 
     return (
-      <div className={ProductFormWrapperStyle}>
-        <SectionWrapper id="product_productSection">
-          <Suspense fallback={<LoadingIcon />}>
+      <Suspense fallback={<LoadingIcon />}>
+        <div className={ProductFormWrapperStyle}>
+          <SectionWrapper id="product_productSection">
             <AsyncProductSection isOwner={isOwner} isNew={isNewOrClone} product={product} />
-          </Suspense>
-        </SectionWrapper>
+          </SectionWrapper>
 
-        <Suspense fallback={<LoadingIcon />}>
           <AsyncTaskSection type="product" />
-        </Suspense>
 
-        <SectionWrapper id="product_productProvidersSection">
-          <Suspense fallback={<LoadingIcon />}>
+          <SectionWrapper id="product_productProvidersSection">
             <SectionHeader
               icon="PRODUCT_PROVIDER"
               title={
@@ -90,25 +72,25 @@ class ProductForm extends React.Component<Props> {
             </Subscribe>
 
             <AsyncProductProvidersSection isOwner={isOwner} />
-          </Suspense>
 
-          <Subscribe to={[ProductTasksContainer]}>
-            {({
-              state: {
-                todo: { tasks },
-              },
-              setFieldValue,
-            }) => (
-              <AutoDateBinding
-                type="product"
-                values={{}}
-                tasks={tasks}
-                setTaskValue={setFieldValue}
-              />
-            )}
-          </Subscribe>
-        </SectionWrapper>
-      </div>
+            <Subscribe to={[ProductTasksContainer]}>
+              {({
+                state: {
+                  todo: { tasks },
+                },
+                setFieldValue,
+              }) => (
+                <AutoDateBinding
+                  type="product"
+                  values={{}}
+                  tasks={tasks}
+                  setTaskValue={setFieldValue}
+                />
+              )}
+            </Subscribe>
+          </SectionWrapper>
+        </div>
+      </Suspense>
     );
   }
 }
