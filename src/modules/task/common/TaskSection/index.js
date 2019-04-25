@@ -45,7 +45,7 @@ import {
   SHIPMENT_SET_TASKS,
 } from 'modules/permission/constants/shipment';
 import { OrderTasksContainer } from 'modules/order/form/containers';
-import { TasksContainer as OrderItemTasksContainer } from 'modules/orderItem/form/containers';
+import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';

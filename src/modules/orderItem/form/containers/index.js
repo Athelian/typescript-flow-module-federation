@@ -1,9 +1,15 @@
 // @flow
 
-import InfoContainer from './info';
-import TasksContainer from './tasks';
-import BatchesContainer from './batches';
-import FilesContainer from './files';
-import ShipmentsContainer from './shipments';
+import OrderItemInfoContainer from './info';
+import OrderItemBatchesContainer from './batches';
+import OrderItemFilesContainer from './files';
+import OrderItemTasksContainer from './tasks';
+import OrderItemShipmentsContainer from './shipments';
 
-export { InfoContainer, BatchesContainer, FilesContainer, TasksContainer, ShipmentsContainer };
+export {
+  OrderItemInfoContainer,
+  OrderItemBatchesContainer,
+  OrderItemFilesContainer,
+  OrderItemTasksContainer,
+  OrderItemShipmentsContainer,
+};

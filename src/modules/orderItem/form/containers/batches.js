@@ -12,7 +12,7 @@ export const initValues = {
   batches: [],
 };
 
-export default class BatchesContainer extends Container<State> {
+export default class OrderItemBatchesContainer extends Container<State> {
   state = initValues;
 
   originalValues = initValues;

@@ -12,7 +12,7 @@ export const initValues = {
   files: [],
 };
 
-export default class FilesContainer extends Container<State> {
+export default class OrderItemFilesContainer extends Container<State> {
   state = initValues;
 
   originalValues = initValues;

@@ -18,7 +18,7 @@ const initValues = {
   },
 };
 
-export default class TasksContainer extends Container<FormState> {
+export default class OrderItemTasksContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

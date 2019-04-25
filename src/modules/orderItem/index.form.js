@@ -21,11 +21,11 @@ import Timeline from 'modules/timeline/components/Timeline';
 import ItemForm from './form';
 import { orderItemFormQuery, orderItemTimelineQuery } from './form/query';
 import {
-  InfoContainer,
-  TasksContainer,
-  BatchesContainer,
-  FilesContainer,
-  ShipmentsContainer,
+  OrderItemInfoContainer,
+  OrderItemBatchesContainer,
+  OrderItemFilesContainer,
+  OrderItemTasksContainer,
+  OrderItemShipmentsContainer,
 } from './form/containers';
 import validator from './form/validator';
 import { updateOrderItemMutation, prepareParseOrderItemInput } from './form/mutation';
@@ -121,11 +121,11 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
           {uiState => (
             <Subscribe
               to={[
-                InfoContainer,
-                BatchesContainer,
-                FilesContainer,
-                TasksContainer,
-                ShipmentsContainer,
+                OrderItemInfoContainer,
+                OrderItemBatchesContainer,
+                OrderItemFilesContainer,
+                OrderItemTasksContainer,
+                OrderItemShipmentsContainer,
                 FormContainer,
               ]}
             >

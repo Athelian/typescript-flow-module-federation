@@ -6,7 +6,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { ShipmentsContainer } from 'modules/orderItem/form/containers';
+import { OrderItemShipmentsContainer } from 'modules/orderItem/form/containers';
 import {
   ShipmentsSectionWrapperStyle,
   ShipmentsSectionBodyStyle,
@@ -15,7 +15,7 @@ import {
 
 const ShipmentsSection = () => (
   <SectionWrapper id="orderItem_shipmentsSection">
-    <Subscribe to={[ShipmentsContainer]}>
+    <Subscribe to={[OrderItemShipmentsContainer]}>
       {({ state: { shipments = [] } }) => (
         <>
           <SectionHeader

@@ -12,7 +12,7 @@ export const initValues = {
   shipments: [],
 };
 
-export default class ShipmentsContainer extends Container<State> {
+export default class OrderItemShipmentsContainer extends Container<State> {
   state = initValues;
 
   originalValues = initValues;

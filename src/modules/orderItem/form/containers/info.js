@@ -57,7 +57,7 @@ export const initValues = {
   order: null,
 };
 
-export default class InfoContainer extends Container<State> {
+export default class OrderItemInfoContainer extends Container<State> {
   state = initValues;
 
   originalValues = initValues;

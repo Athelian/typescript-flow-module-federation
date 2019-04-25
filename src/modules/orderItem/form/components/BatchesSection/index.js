@@ -11,7 +11,10 @@ import { OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
-import { InfoContainer, BatchesContainer } from 'modules/orderItem/form/containers';
+import {
+  OrderItemInfoContainer,
+  OrderItemBatchesContainer,
+} from 'modules/orderItem/form/containers';
 
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 
@@ -25,7 +28,7 @@ import {
 
 function BatchesSection() {
   return (
-    <Subscribe to={[InfoContainer, BatchesContainer]}>
+    <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
       {({ state: infoState }, { state: { batches }, setFieldValue, setDeepFieldValue }) => {
         const values = { ...infoState, batches };
         return (
