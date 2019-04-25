@@ -17,7 +17,7 @@ import {
   TagsInput,
   TextAreaInputFactory,
 } from 'components/Form';
-import { OrderItemContainer } from 'modules/orderItem/form/containers';
+import { InfoContainer } from 'modules/orderItem/form/containers';
 import validator from 'modules/orderItem/form/validator';
 
 import { ItemSectionWrapperStyle, MainFieldsWrapperStyle, DividerStyle } from './style';
@@ -25,7 +25,7 @@ import OrderItemSummaryChart from './components/OrderItemSummaryChart';
 
 const ItemSection = () => (
   <div className={ItemSectionWrapperStyle}>
-    <Subscribe to={[OrderItemContainer]}>
+    <Subscribe to={[InfoContainer]}>
       {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
         const values = { ...originalValues, ...state };
 

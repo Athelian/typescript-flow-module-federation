@@ -70,6 +70,7 @@ export const itemFormFragment = gql`
     tags {
       ...tagFragment
     }
+    memo
     todo {
       ...todoFragment
       tasks {

@@ -11,7 +11,7 @@ import { OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
-import { OrderItemContainer } from 'modules/orderItem/form/containers';
+import { InfoContainer, BatchesContainer } from 'modules/orderItem/form/containers';
 
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 
@@ -25,9 +25,9 @@ import {
 
 function BatchesSection() {
   return (
-    <Subscribe to={[OrderItemContainer]}>
-      {({ state: values, setFieldValue, setDeepFieldValue }) => {
-        const { price, batches = [] } = values;
+    <Subscribe to={[InfoContainer, BatchesContainer]}>
+      {({ state: infoState }, { state: { batches }, setFieldValue, setDeepFieldValue }) => {
+        const values = { ...infoState, batches };
         return (
           <SectionWrapper id="orderItem_batchesSection">
             <SectionHeader
@@ -102,8 +102,8 @@ function BatchesSection() {
                               <OrderBatchCard
                                 editable
                                 batch={batch}
-                                currency={price.currency}
-                                price={price}
+                                currency={infoState.price.currency}
+                                price={infoState.price}
                                 onClick={() => batchSlideToggle(true)}
                                 saveOnBlur={value => setDeepFieldValue(`batches.${index}`, value)}
                                 onRemove={() =>

@@ -20,7 +20,13 @@ import { FormContainer, resetFormState } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import ItemForm from './form';
 import { orderItemFormQuery, orderItemTimelineQuery } from './form/query';
-import { OrderItemContainer, ItemTasksContainer } from './form/containers';
+import {
+  InfoContainer,
+  TasksContainer,
+  BatchesContainer,
+  FilesContainer,
+  ShipmentsContainer,
+} from './form/containers';
 import validator from './form/validator';
 import { updateOrderItemMutation, prepareParseOrderItemInput } from './form/mutation';
 
@@ -31,15 +37,24 @@ type Props = {
 
 export default class OrderItemFormModule extends React.PureComponent<Props> {
   onFormReady = ({
-    orderItemContainer,
-    itemTasksContainer,
+    infoContainer,
+    batchesContainer,
+    filesContainer,
+    tasksContainer,
+    shipmentsContainer,
   }: {
-    orderItemContainer: Object,
-    itemTasksContainer: Object,
+    infoContainer: Object,
+    batchesContainer: Object,
+    filesContainer: Object,
+    tasksContainer: Object,
+    shipmentsContainer: Object,
   }) => (orderItem: Object) => {
-    const { todo, ...rest } = orderItem;
-    orderItemContainer.initDetailValues(rest);
-    itemTasksContainer.initDetailValues(todo);
+    const { batches, files, todo, shipments, ...rest } = orderItem;
+    infoContainer.initDetailValues(rest);
+    batchesContainer.initDetailValues({ batches });
+    filesContainer.initDetailValues({ files });
+    tasksContainer.initDetailValues(todo);
+    shipmentsContainer.initDetailValues({ shipments });
   };
 
   onSave = async (
@@ -67,19 +82,28 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = ({
-    orderItemContainer,
-    itemTasksContainer,
+    infoContainer,
+    batchesContainer,
+    filesContainer,
+    tasksContainer,
+    shipmentsContainer,
   }: {
-    orderItemContainer: Object,
-    itemTasksContainer: Object,
+    infoContainer: Object,
+    batchesContainer: Object,
+    filesContainer: Object,
+    tasksContainer: Object,
+    shipmentsContainer: Object,
   }) => (result: Object) => {
     if (!result) {
       toast.error('There was an error. Please try again later');
       return;
     }
     this.onFormReady({
-      orderItemContainer,
-      itemTasksContainer,
+      infoContainer,
+      batchesContainer,
+      filesContainer,
+      tasksContainer,
+      shipmentsContainer,
     })(result.orderItemUpdate);
   };
 
@@ -95,11 +119,33 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
       <Provider>
         <UIConsumer>
           {uiState => (
-            <Subscribe to={[OrderItemContainer, ItemTasksContainer, FormContainer]}>
-              {(orderItemContainer, itemTasksContainer, formContainer) => (
+            <Subscribe
+              to={[
+                InfoContainer,
+                BatchesContainer,
+                FilesContainer,
+                TasksContainer,
+                ShipmentsContainer,
+                FormContainer,
+              ]}
+            >
+              {(
+                infoContainer,
+                batchesContainer,
+                filesContainer,
+                tasksContainer,
+                shipmentsContainer,
+                formContainer
+              ) => (
                 <Mutation
                   mutation={updateOrderItemMutation}
-                  onCompleted={this.onMutationCompleted({ orderItemContainer, itemTasksContainer })}
+                  onCompleted={this.onMutationCompleted({
+                    infoContainer,
+                    batchesContainer,
+                    filesContainer,
+                    shipmentsContainer,
+                    tasksContainer,
+                  })}
                   {...mutationKey}
                 >
                   {(saveOrderItem, { loading, error }) => (
@@ -184,12 +230,17 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                             )}
                           </BooleanValue>
 
-                          {(orderItemContainer.isDirty() || itemTasksContainer.isDirty()) && (
+                          {(infoContainer.isDirty() ||
+                            batchesContainer.isDirty() ||
+                            filesContainer.isDirty() ||
+                            tasksContainer.isDirty()) && (
                             <>
                               <ResetButton
                                 onClick={() => {
-                                  resetFormState(orderItemContainer);
-                                  resetFormState(itemTasksContainer, 'todo');
+                                  resetFormState(infoContainer);
+                                  resetFormState(batchesContainer);
+                                  resetFormState(filesContainer);
+                                  resetFormState(tasksContainer, 'todo');
                                   formContainer.onReset();
                                 }}
                               />
@@ -197,8 +248,10 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                                 disabled={
                                   !formContainer.isReady(
                                     {
-                                      ...orderItemContainer.state,
-                                      ...itemTasksContainer.state,
+                                      ...infoContainer.state,
+                                      ...batchesContainer.state,
+                                      ...filesContainer.state,
+                                      ...tasksContainer.state,
                                     },
                                     validator
                                   )
@@ -207,17 +260,23 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                                 onClick={() =>
                                   this.onSave(
                                     {
-                                      ...orderItemContainer.originalValues,
-                                      ...itemTasksContainer.originalValues,
+                                      ...infoContainer.originalValues,
+                                      ...batchesContainer.originalValues,
+                                      ...filesContainer.originalValues,
+                                      ...tasksContainer.originalValues,
                                     },
                                     {
-                                      ...orderItemContainer.state,
-                                      ...itemTasksContainer.state,
+                                      ...infoContainer.state,
+                                      ...batchesContainer.state,
+                                      ...filesContainer.state,
+                                      ...tasksContainer.state,
                                     },
                                     saveOrderItem,
                                     () => {
-                                      orderItemContainer.onSuccess();
-                                      itemTasksContainer.onSuccess();
+                                      infoContainer.onSuccess();
+                                      batchesContainer.onSuccess();
+                                      filesContainer.onSuccess();
+                                      tasksContainer.onSuccess();
                                     },
                                     formContainer.onErrors
                                   )
@@ -237,9 +296,13 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                           <ItemForm
                             orderItem={orderItem}
                             onFormReady={() => {
-                              this.onFormReady({ orderItemContainer, itemTasksContainer })(
-                                orderItem
-                              );
+                              this.onFormReady({
+                                infoContainer,
+                                batchesContainer,
+                                filesContainer,
+                                shipmentsContainer,
+                                tasksContainer,
+                              })(orderItem);
                             }}
                           />
                         )}

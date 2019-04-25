@@ -2,10 +2,11 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionWrapper, SectionHeader } from 'components/Form';
-import { OrderItemContainer } from 'modules/orderItem/form/containers';
+import { ShipmentsContainer } from 'modules/orderItem/form/containers';
 import {
   ShipmentsSectionWrapperStyle,
   ShipmentsSectionBodyStyle,
@@ -14,7 +15,7 @@ import {
 
 const ShipmentsSection = () => (
   <SectionWrapper id="orderItem_shipmentsSection">
-    <Subscribe to={[OrderItemContainer]}>
+    <Subscribe to={[ShipmentsContainer]}>
       {({ state: { shipments = [] } }) => (
         <>
           <SectionHeader
@@ -22,7 +23,7 @@ const ShipmentsSection = () => (
             title={
               <>
                 <FormattedMessage id="modules.orderItem.shipments" defaultMessage="SHIPMENTS" /> (
-                {shipments.length})
+                <FormattedNumber value={shipments.length} />)
               </>
             }
           />

@@ -30,18 +30,12 @@ export type State = {
   no?: ?string,
   quantity: number,
   price: Price,
-  batches: Array<Object>,
-  files?: Array<Document>,
+
   customFields: ?Object,
   tags?: Array<Object>,
   memo?: string,
   productProvider?: Object,
   order?: Object,
-
-  todo: {
-    tasks: Array<Object>,
-  },
-  shipments?: Array<Object>,
 };
 
 export const initValues = {
@@ -58,15 +52,12 @@ export const initValues = {
   },
   tags: [],
   memo: null,
-  batches: [],
-  shipments: [],
-  files: [],
 
   productProvider: null,
   order: null,
 };
 
-export default class OrderItemContainer extends Container<State> {
+export default class InfoContainer extends Container<State> {
   state = initValues;
 
   originalValues = initValues;

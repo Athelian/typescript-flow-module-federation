@@ -11,14 +11,14 @@ type FormState = {
   },
 };
 
-export const initValues = {
+const initValues = {
   todo: {
     taskTemplate: null,
     tasks: [],
   },
 };
 
-export default class ItemTasksContainer extends Container<FormState> {
+export default class TasksContainer extends Container<FormState> {
   state = initValues;
 
   originalValues = initValues;

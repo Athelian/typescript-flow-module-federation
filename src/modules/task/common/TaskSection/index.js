@@ -45,7 +45,7 @@ import {
   SHIPMENT_SET_TASKS,
 } from 'modules/permission/constants/shipment';
 import { OrderTasksContainer } from 'modules/order/form/containers';
-import { ItemTasksContainer } from 'modules/orderItem/form/containers';
+import { TasksContainer as OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
@@ -88,7 +88,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
         canDeleteTasks: true,
         canUpdateTasks: true,
         canUpdateTaskTemplate: true,
-        tasksContainer: ItemTasksContainer,
+        tasksContainer: OrderItemTasksContainer,
       };
     }
     case 'batch':

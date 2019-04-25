@@ -4,7 +4,7 @@ import { Subscribe } from 'unstated';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { DocumentsInput, SectionWrapper, SectionHeader } from 'components/Form';
-import { OrderItemContainer } from 'modules/orderItem/form/containers';
+import { FilesContainer } from 'modules/orderItem/form/containers';
 import FormattedNumber from 'components/FormattedNumber';
 
 const messages = defineMessages({
@@ -21,7 +21,7 @@ type Props = {
 function DocumentsSection({ intl }: Props) {
   return (
     <SectionWrapper id="orderItem_documentsSection">
-      <Subscribe to={[OrderItemContainer]}>
+      <Subscribe to={[FilesContainer]}>
         {({ state: { files = [] }, setDeepFieldValue: changeFiles }) => (
           <>
             <SectionHeader
