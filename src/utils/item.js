@@ -19,7 +19,13 @@ type GetItemQuantityChartDataProps = {
 };
 
 export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantityChartDataProps) => {
-  const orderedQuantity = orderItem.quantity;
+  const {
+    quantity: orderedQuantity = 0,
+    totalBatched = 0,
+    totalShipped = 0,
+    batchCount = 0,
+    batchShippedCount = 0,
+  } = orderItem;
   let batchedQuantity = 0;
   let shippedQuantity = 0;
   let batched = 0;
@@ -36,10 +42,10 @@ export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantity
       }
     });
   } else {
-    batchedQuantity += orderItem.totalBatched;
-    shippedQuantity += orderItem.totalShipped;
-    batched += orderItem.batchCount;
-    shipped += orderItem.batchShippedCount;
+    batchedQuantity += totalBatched;
+    shippedQuantity += totalShipped;
+    batched += batchCount;
+    shipped += batchShippedCount;
   }
 
   return {
