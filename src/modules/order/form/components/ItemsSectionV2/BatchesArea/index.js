@@ -149,6 +149,11 @@ function ItemsArea({
 
         <div className={BatchesGridStyle}>
           {batches.map((batch, position) => {
+            const orderItemPosition = findOrderItemPosition({
+              focusedItemIndex,
+              orderItems,
+              batch,
+            });
             return (
               <BooleanValue key={batch.id}>
                 {({ value: opened, set: slideToggle }) => (
@@ -159,12 +164,6 @@ function ItemsArea({
                           batch={batch}
                           onSave={updatedBatch => {
                             slideToggle(false);
-                            let orderItemPosition = focusedItemIndex;
-                            if (orderItemPosition === -1) {
-                              orderItemPosition = orderItems.findIndex(orderItem =>
-                                orderItem.batches.map(({ id }) => id).includes(batch.id)
-                              );
-                            }
                             setFieldValue(
                               `orderItems.${orderItemPosition}.batches.${position}`,
                               updatedBatch
@@ -174,16 +173,12 @@ function ItemsArea({
                       )}
                     </SlideView>
                     <OrderBatchCard
+                      price={orderItems[orderItemPosition].price}
                       editable={allowUpdate}
                       currency={order && order.currency}
                       batch={batch}
                       onClick={() => slideToggle(true)}
                       saveOnBlur={updatedBatch => {
-                        const orderItemPosition = findOrderItemPosition({
-                          focusedItemIndex,
-                          orderItems,
-                          batch,
-                        });
                         setFieldValue(
                           `orderItems.${orderItemPosition}.batches.${position}`,
                           updatedBatch
@@ -191,19 +186,9 @@ function ItemsArea({
                       }}
                       onRemove={() => {
                         batches.splice(batches.findIndex(item => item.id === batch.id), 1);
-                        const orderItemPosition = findOrderItemPosition({
-                          focusedItemIndex,
-                          orderItems,
-                          batch,
-                        });
                         setFieldValue(`orderItems.${orderItemPosition}.batches`, batches);
                       }}
                       onClone={newBatch => {
-                        const orderItemPosition = findOrderItemPosition({
-                          focusedItemIndex,
-                          orderItems,
-                          batch,
-                        });
                         setFieldValue(`orderItems.${orderItemPosition}.batches`, [
                           ...batches,
                           {
