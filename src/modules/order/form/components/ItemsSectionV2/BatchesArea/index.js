@@ -40,19 +40,23 @@ type Props = {
 function findOrderItemPosition({
   focusedItemIndex,
   orderItems,
+  batches,
   batch,
 }: {
   focusedItemIndex: number,
   orderItems: Array<Object>,
+  batches: Array<Object>,
   batch: Object,
 }) {
   let orderItemPosition = focusedItemIndex;
+  let batchPosition = batches.findIndex(item => item.id === batch.id);
   if (orderItemPosition === -1) {
     orderItemPosition = orderItems.findIndex(orderItem =>
-      orderItem.batches.map(({ id }) => id).includes(batch.id)
+      (orderItem.batches || []).map(({ id }) => id).includes(batch.id)
     );
+    batchPosition = orderItems[orderItemPosition].batches.findIndex(item => item.id === batch.id);
   }
-  return orderItemPosition;
+  return { orderItemPosition, batchPosition };
 }
 
 function ItemsArea({
@@ -158,9 +162,10 @@ function ItemsArea({
 
         {batches.length > 0 ? (
           <div className={BatchesGridStyle}>
-            {batches.map((batch, position) => {
-              const orderItemPosition = findOrderItemPosition({
+            {batches.map(batch => {
+              const { orderItemPosition, batchPosition: position } = findOrderItemPosition({
                 focusedItemIndex,
+                batches,
                 orderItems,
                 batch,
               });
