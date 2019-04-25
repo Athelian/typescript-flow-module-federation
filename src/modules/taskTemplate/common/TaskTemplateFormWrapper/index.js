@@ -106,7 +106,7 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
         if (
           !isEquals(getByPathWithDefault(null, 'entityType', originalValues), values.entityType)
         ) {
-          emitter.emit('REFETCH_TASK_TEMPLATES');
+          emitter.emit('REFETCH_TASK_TEMPLATES', values.entityType);
         }
         closeSlideView();
         onSuccess();

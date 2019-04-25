@@ -31,8 +31,11 @@ const TaskTemplateList = ({ entityType, queryVariables }: Props) => {
         const totalPage = getByPathWithDefault(1, 'taskTemplates.totalPage', data);
         const hasMore = nextPage <= totalPage;
 
-        emitter.once('REFETCH_TASK_TEMPLATES', () => {
-          refetch(queryVariables);
+        emitter.removeAllListeners('REFETCH_TASK_TEMPLATES');
+        emitter.addListener('REFETCH_TASK_TEMPLATES', type => {
+          if (entityType !== type) {
+            refetch(queryVariables);
+          }
         });
 
         return (
