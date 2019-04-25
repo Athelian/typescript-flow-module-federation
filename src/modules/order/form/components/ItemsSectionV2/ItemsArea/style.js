@@ -82,10 +82,17 @@ export const SyncButtonWrapperStyle: string = css`
   height: 40px;
 `;
 
+export const NoItemsFoundStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+`;
+
 export const ItemsGridStyle: string = css`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-  grid-auto-rows: auto;
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  grid-auto-rows: min-content;
   overflow-x: hidden;
   overflow-y: overlay;
   ${scrollbars.SMALL};
@@ -98,7 +105,9 @@ export const ItemCardFocusWrapperStyle: string = css`
   justify-content: center;
   position: relative;
   width: 100%;
+  max-width: 235px;
   padding: 30px 0;
+  height: min-content;
 `;
 
 export const ItemCardFocusBackgroundStyle = (isSelected: boolean): string => css`

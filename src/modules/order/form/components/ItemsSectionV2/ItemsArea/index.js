@@ -13,6 +13,8 @@ import { ItemCard, CardAction } from 'components/Cards';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
+import { Display } from 'components/Form';
+import Tooltip from 'components/Tooltip';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -25,6 +27,7 @@ import {
   IconStyle,
   TitleStyle,
   SyncButtonWrapperStyle,
+  NoItemsFoundStyle,
   ItemsGridStyle,
   ItemCardFocusWrapperStyle,
   ItemCardFocusBackgroundStyle,
@@ -107,216 +110,247 @@ function ItemsArea({
           </div>
         </div>
 
-        <div className={ItemsGridStyle}>
-          {orderItems.map((item, index) => {
-            const isFocused = focusedItemIndex === index;
+        {orderItems.length > 0 ? (
+          <div className={ItemsGridStyle}>
+            {orderItems.map((item, index) => {
+              const isFocused = focusedItemIndex === index;
 
-            const {
-              id,
-              no,
-              quantity,
-              price,
-              totalBatched,
-              totalShipped,
-              batchCount,
-              batchShippedCount,
-              productProvider,
-              batches,
-            } = item;
-            const compiledOrderItem = {
-              id,
-              no,
-              quantity,
-              price,
-              totalBatched,
-              totalShipped,
-              batchCount,
-              batchShippedCount,
-            };
+              const {
+                id,
+                no,
+                quantity,
+                price,
+                totalBatched,
+                totalShipped,
+                batchCount,
+                batchShippedCount,
+                productProvider,
+                batches,
+              } = item;
+              const compiledOrderItem = {
+                id,
+                no,
+                quantity,
+                price,
+                totalBatched,
+                totalShipped,
+                batchCount,
+                batchShippedCount,
+              };
 
-            const { exporter, supplier, unitPrice, product } = productProvider;
-            const compiledProductProvider = {
-              exporter,
-              supplier,
-              unitPrice,
-            };
+              const { exporter, supplier, unitPrice, product } = productProvider;
+              const compiledProductProvider = {
+                exporter,
+                supplier,
+                unitPrice,
+              };
 
-            const { id: productId, name, serial, tags, files } = product;
-            const compiledProduct = {
-              id: productId,
-              name,
-              serial,
-              tags,
-              files,
-            };
+              const { id: productId, name, serial, tags, files } = product;
+              const compiledProduct = {
+                id: productId,
+                name,
+                serial,
+                tags,
+                files,
+              };
 
-            const compiledOrder = {
-              currency,
-            };
+              const compiledOrder = {
+                currency,
+              };
 
-            const compiledBatches = batches.map(
-              ({ quantity: batchQuantity, batchAdjustments, shipment }) => ({
-                quantity: batchQuantity,
-                batchAdjustments: batchAdjustments.map(({ quantity: adjustmentQuantity }) => ({
-                  quantity: adjustmentQuantity,
-                })),
-                shipment,
-              })
-            );
+              const compiledBatches = batches.map(
+                ({ quantity: batchQuantity, batchAdjustments, shipment }) => ({
+                  quantity: batchQuantity,
+                  batchAdjustments: batchAdjustments.map(({ quantity: adjustmentQuantity }) => ({
+                    quantity: adjustmentQuantity,
+                  })),
+                  shipment,
+                })
+              );
 
-            const actions = [
-              allowUpdate && (
-                <CardAction
-                  icon="CLONE"
-                  onClick={() => {
-                    const { id: itemId, ...rest } = item;
+              const actions = [
+                allowUpdate && (
+                  <CardAction
+                    icon="CLONE"
+                    onClick={() => {
+                      const { id: itemId, ...rest } = item;
 
-                    setFieldValue('orderItems', [
-                      ...orderItems,
-                      injectUid({
-                        ...rest,
-                        isNew: true,
-                        batches: [],
-                      }),
-                    ]);
+                      setFieldValue('orderItems', [
+                        ...orderItems,
+                        injectUid({
+                          ...rest,
+                          isNew: true,
+                          batches: [],
+                        }),
+                      ]);
 
-                    setFieldTouched(`orderItems.${id}`);
-                  }}
-                />
-              ),
-              allowUpdate && (
-                <BooleanValue>
-                  {({ value: isOpen, set: dialogToggle }) => {
-                    const onRemove = () => {
-                      setFieldValue(
-                        'orderItems',
-                        orderItems.filter(({ id: itemId }) => id !== itemId)
-                      );
                       setFieldTouched(`orderItems.${id}`);
-                      if (focusedItemIndex === index) {
-                        onFocusItem(index);
-                      }
-                    };
+                    }}
+                  />
+                ),
+                allowUpdate && (
+                  <BooleanValue>
+                    {({ value: isOpen, set: dialogToggle }) => {
+                      const onRemove = () => {
+                        setFieldValue(
+                          'orderItems',
+                          orderItems.filter(({ id: itemId }) => id !== itemId)
+                        );
+                        setFieldTouched(`orderItems.${id}`);
+                        if (focusedItemIndex === index) {
+                          onFocusItem(index);
+                        }
+                      };
 
-                    return batches.length > 0 ? (
-                      <>
-                        <RemoveDialog
-                          isOpen={isOpen}
-                          onRequestClose={() => dialogToggle(false)}
-                          onCancel={() => dialogToggle(false)}
-                          onRemove={() => {
-                            onRemove();
-                            dialogToggle(false);
-                          }}
-                          message={
-                            <div>
+                      return batches.length > 0 ? (
+                        <>
+                          <RemoveDialog
+                            isOpen={isOpen}
+                            onRequestClose={() => dialogToggle(false)}
+                            onCancel={() => dialogToggle(false)}
+                            onRemove={() => {
+                              onRemove();
+                              dialogToggle(false);
+                            }}
+                            message={
                               <div>
-                                <FormattedMessage
-                                  id="components.cards.deleteOrderItem"
-                                  defaultMessage="Are you sure you want to delete this Item?"
-                                />
-                              </div>
-                              <div>
-                                <FormattedMessage
-                                  id="components.cards.deleteOrderItemBatches"
-                                  defaultMessage="This will delete all {batches} of its Batches as well."
-                                  values={{ batches: item.batches.length }}
-                                />
-                              </div>
-                              {item.batches.filter(batch => batch.shipment).length > 0 && (
                                 <div>
                                   <FormattedMessage
-                                    id="components.cards.deleteOrderItemShipments"
-                                    defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
-                                    values={{
-                                      shipment: item.batches.filter(batch => batch.shipment).length,
-                                    }}
+                                    id="components.cards.deleteOrderItem"
+                                    defaultMessage="Are you sure you want to delete this Item?"
                                   />
                                 </div>
-                              )}
-                            </div>
-                          }
-                        />
-                        <CardAction
-                          icon="REMOVE"
-                          hoverColor="RED"
-                          onClick={() => {
-                            dialogToggle(true);
-                          }}
-                        />
-                      </>
-                    ) : (
-                      <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />
-                    );
-                  }}
-                </BooleanValue>
-              ),
-            ].filter(Boolean);
+                                <div>
+                                  <FormattedMessage
+                                    id="components.cards.deleteOrderItemBatches"
+                                    defaultMessage="This will delete all {batches} of its Batches as well."
+                                    values={{ batches: item.batches.length }}
+                                  />
+                                </div>
+                                {item.batches.filter(batch => batch.shipment).length > 0 && (
+                                  <div>
+                                    <FormattedMessage
+                                      id="components.cards.deleteOrderItemShipments"
+                                      defaultMessage="Warning: {shipment} of the Batches are in a Shipment."
+                                      values={{
+                                        shipment: item.batches.filter(batch => batch.shipment)
+                                          .length,
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            }
+                          />
+                          <CardAction
+                            icon="REMOVE"
+                            hoverColor="RED"
+                            onClick={() => {
+                              dialogToggle(true);
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <CardAction icon="REMOVE" hoverColor="RED" onClick={onRemove} />
+                      );
+                    }}
+                  </BooleanValue>
+                ),
+              ].filter(Boolean);
 
-            const editable = {
-              no: allowUpdate,
-              quantity: allowUpdate,
-              price: allowUpdate,
-            };
+              const editable = {
+                no: allowUpdate,
+                quantity: allowUpdate,
+                price: allowUpdate,
+              };
 
-            const viewable = {
-              price: hasPermission(ORDER_ITEMS_GET_PRICE),
-            };
+              const viewable = {
+                price: hasPermission(ORDER_ITEMS_GET_PRICE),
+              };
 
-            const navigable = {
-              product: hasPermission(PRODUCT_FORM),
-            };
+              const navigable = {
+                product: hasPermission(PRODUCT_FORM),
+              };
 
-            const config = {
-              hideOrder: true,
-            };
+              const config = {
+                hideOrder: true,
+              };
 
-            return (
-              <div key={id} className={ItemCardFocusWrapperStyle}>
-                <button
-                  className={ItemCardFocusBackgroundStyle(isFocused)}
-                  type="button"
-                  onClick={() => onFocusItem(index)}
-                >
-                  <div className={EyeballIconStyle}>
-                    <Icon icon={isFocused ? 'INVISIBLE' : 'VISIBLE'} />
-                  </div>
-                </button>
-                <ItemCard
-                  orderItem={compiledOrderItem}
-                  productProvider={compiledProductProvider}
-                  product={compiledProduct}
-                  order={compiledOrder}
-                  batches={compiledBatches}
-                  index={index}
-                  actions={actions}
-                  setFieldValue={setFieldValue}
-                  onClick={() => {
-                    // TODO: Open slideview form
-                  }}
-                  editable={editable}
-                  viewable={viewable}
-                  navigable={navigable}
-                  config={config}
-                />
-              </div>
-            );
-          })}
-        </div>
+              return (
+                <div key={id} className={ItemCardFocusWrapperStyle}>
+                  <button
+                    className={ItemCardFocusBackgroundStyle(isFocused)}
+                    type="button"
+                    onClick={() => onFocusItem(index)}
+                  >
+                    <div className={EyeballIconStyle}>
+                      <Icon icon={isFocused ? 'INVISIBLE' : 'VISIBLE'} />
+                    </div>
+                  </button>
+                  <ItemCard
+                    orderItem={compiledOrderItem}
+                    productProvider={compiledProductProvider}
+                    product={compiledProduct}
+                    order={compiledOrder}
+                    batches={compiledBatches}
+                    index={index}
+                    actions={actions}
+                    setFieldValue={setFieldValue}
+                    onClick={() => {
+                      // TODO: Open slideview form
+                    }}
+                    editable={editable}
+                    viewable={viewable}
+                    navigable={navigable}
+                    config={config}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={NoItemsFoundStyle}>
+            <Display align="center">
+              <FormattedMessage id="modules.Orders.noItemsFound" defaultMessage="No items found" />
+            </Display>
+          </div>
+        )}
       </div>
 
       <div className={ItemsFooterWrapperStyle}>
         <BooleanValue>
           {({ value: opened, set: slideToggle }) => (
             <>
-              {/* TODO: Show tooltip or message when new button is disabled */}
-              <NewButton
-                disabled={!((order.exporter && order.exporter.id) || !isNew)}
-                label={<FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />}
-                onClick={() => {
-                  slideToggle(true);
-                }}
-              />
+              {!((order.exporter && order.exporter.id) || !isNew) ? (
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="modules.Orders.chooseExporterFirst"
+                      defaultMessage="Please choose an Exporter first"
+                    />
+                  }
+                >
+                  <div>
+                    <NewButton
+                      disabled
+                      label={
+                        <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                      }
+                    />
+                  </div>
+                </Tooltip>
+              ) : (
+                <NewButton
+                  disabled={!((order.exporter && order.exporter.id) || !isNew)}
+                  label={
+                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                  }
+                  onClick={() => {
+                    slideToggle(true);
+                  }}
+                />
+              )}
+
               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                 {opened && (
                   <SelectProducts

@@ -10,6 +10,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { OrderBatchCard } from 'components/Cards';
 import Icon from 'components/Icon';
 import SlideView from 'components/SlideView';
+import { Display } from 'components/Form';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import {
@@ -21,6 +22,7 @@ import {
   IconStyle,
   TitleStyle,
   AutofillButtonWrapperStyle,
+  NoBatchesFoundStyle,
   BatchesGridStyle,
   BatchesFooterWrapperStyle,
 } from './style';
@@ -93,10 +95,17 @@ function ItemsArea({
             {orderItems.length > 0 && (
               <BaseButton
                 label={
-                  <FormattedMessage
-                    id="modules.Orders.autofillBatch"
-                    defaultMessage="AUTOFILL BATCH"
-                  />
+                  focusedItemIndex === -1 ? (
+                    <FormattedMessage
+                      id="modules.Orders.autofillBatches"
+                      defaultMessage="AUTOFILL BATCHES"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="modules.Orders.autofillBatch"
+                      defaultMessage="AUTOFILL BATCH"
+                    />
+                  )
                 }
                 onClick={() => {
                   if (focusedItemIndex === -1) {
@@ -147,68 +156,79 @@ function ItemsArea({
           </div>
         </div>
 
-        <div className={BatchesGridStyle}>
-          {batches.map((batch, position) => {
-            const orderItemPosition = findOrderItemPosition({
-              focusedItemIndex,
-              orderItems,
-              batch,
-            });
-            return (
-              <BooleanValue key={batch.id}>
-                {({ value: opened, set: slideToggle }) => (
-                  <>
-                    <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                      {opened && (
-                        <BatchFormInSlide
-                          batch={batch}
-                          onSave={updatedBatch => {
-                            slideToggle(false);
-                            setFieldValue(
-                              `orderItems.${orderItemPosition}.batches.${position}`,
-                              updatedBatch
-                            );
-                          }}
-                        />
-                      )}
-                    </SlideView>
-                    <OrderBatchCard
-                      price={orderItems[orderItemPosition].price}
-                      editable={allowUpdate}
-                      currency={order && order.currency}
-                      batch={batch}
-                      onClick={() => slideToggle(true)}
-                      saveOnBlur={updatedBatch => {
-                        setFieldValue(
-                          `orderItems.${orderItemPosition}.batches.${position}`,
-                          updatedBatch
-                        );
-                      }}
-                      onRemove={() => {
-                        batches.splice(batches.findIndex(item => item.id === batch.id), 1);
-                        setFieldValue(`orderItems.${orderItemPosition}.batches`, batches);
-                      }}
-                      onClone={newBatch => {
-                        setFieldValue(`orderItems.${orderItemPosition}.batches`, [
-                          ...batches,
-                          {
-                            ...newBatch,
-                            no: `${newBatch.no}- clone`,
-                            id: Date.now(),
-                            batchAdjustments: [],
-                            todo: {
-                              tasks: [],
+        {batches.length > 0 ? (
+          <div className={BatchesGridStyle}>
+            {batches.map((batch, position) => {
+              const orderItemPosition = findOrderItemPosition({
+                focusedItemIndex,
+                orderItems,
+                batch,
+              });
+              return (
+                <BooleanValue key={batch.id}>
+                  {({ value: opened, set: slideToggle }) => (
+                    <>
+                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                        {opened && (
+                          <BatchFormInSlide
+                            batch={batch}
+                            onSave={updatedBatch => {
+                              slideToggle(false);
+                              setFieldValue(
+                                `orderItems.${orderItemPosition}.batches.${position}`,
+                                updatedBatch
+                              );
+                            }}
+                          />
+                        )}
+                      </SlideView>
+                      <OrderBatchCard
+                        price={orderItems[orderItemPosition].price}
+                        editable={allowUpdate}
+                        currency={order && order.currency}
+                        batch={batch}
+                        onClick={() => slideToggle(true)}
+                        saveOnBlur={updatedBatch => {
+                          setFieldValue(
+                            `orderItems.${orderItemPosition}.batches.${position}`,
+                            updatedBatch
+                          );
+                        }}
+                        onRemove={() => {
+                          batches.splice(batches.findIndex(item => item.id === batch.id), 1);
+                          setFieldValue(`orderItems.${orderItemPosition}.batches`, batches);
+                        }}
+                        onClone={newBatch => {
+                          setFieldValue(`orderItems.${orderItemPosition}.batches`, [
+                            ...batches,
+                            {
+                              ...newBatch,
+                              no: `${newBatch.no}- clone`,
+                              id: Date.now(),
+                              batchAdjustments: [],
+                              todo: {
+                                tasks: [],
+                              },
                             },
-                          },
-                        ]);
-                      }}
-                    />
-                  </>
-                )}
-              </BooleanValue>
-            );
-          })}
-        </div>
+                          ]);
+                        }}
+                      />
+                    </>
+                  )}
+                </BooleanValue>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={NoBatchesFoundStyle}>
+            <Display align="center">
+              <FormattedMessage
+                id="modules.Orders.noBatchesFound"
+                defaultMessage="No batches found"
+              />
+            </Display>
+          </div>
+        )}
       </div>
 
       <div className={BatchesFooterWrapperStyle}>
