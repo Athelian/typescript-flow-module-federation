@@ -3,6 +3,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import usePermission from 'hooks/usePermission';
 import FormattedNumber from 'components/FormattedNumber';
 import { generateBatchByOrderItem, generateBatchForClone } from 'utils/batch';
 import { SectionWrapper, SectionHeader } from 'components/Form';
@@ -27,6 +29,9 @@ import {
 } from './style';
 
 function BatchesSection() {
+  const { hasPermission } = usePermission();
+  const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
+
   return (
     <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
       {({ state: infoState }, { state: { batches }, setFieldValue, setDeepFieldValue }) => {
@@ -44,34 +49,41 @@ function BatchesSection() {
             />
             <div className={BatchesSectionWrapperStyle}>
               <SectionNavBar>
-                <NewButton
-                  label={
-                    <FormattedMessage id="modules.orderItem.newBatch" defaultMessage="NEW BATCH" />
-                  }
-                  onClick={() => {
-                    setFieldValue('batches', [
-                      ...batches,
-                      {
-                        ...generateBatchByOrderItem(values),
-                        no: `batch no ${batches.length + 1}`,
-                      },
-                    ]);
-                  }}
-                />
-                <BaseButton
-                  label={
-                    <FormattedMessage
-                      id="modules.orderItem.autoFillBatch"
-                      defaultMessage="AUTOFILL BATCH"
+                {allowUpdate && (
+                  <>
+                    <NewButton
+                      label={
+                        <FormattedMessage
+                          id="modules.orderItem.newBatch"
+                          defaultMessage="NEW BATCH"
+                        />
+                      }
+                      onClick={() => {
+                        setFieldValue('batches', [
+                          ...batches,
+                          {
+                            ...generateBatchByOrderItem(values),
+                            no: `batch no ${batches.length + 1}`,
+                          },
+                        ]);
+                      }}
                     />
-                  }
-                  onClick={() => {
-                    const newBatch = getBatchByFillBatch(values);
-                    if (newBatch) {
-                      setFieldValue('batches', [...batches, newBatch]);
-                    }
-                  }}
-                />
+                    <BaseButton
+                      label={
+                        <FormattedMessage
+                          id="modules.orderItem.autoFillBatch"
+                          defaultMessage="AUTOFILL BATCH"
+                        />
+                      }
+                      onClick={() => {
+                        const newBatch = getBatchByFillBatch(values);
+                        if (newBatch) {
+                          setFieldValue('batches', [...batches, newBatch]);
+                        }
+                      }}
+                    />
+                  </>
+                )}
               </SectionNavBar>
               <div className={BatchesSectionBodyStyle}>
                 {batches.length === 0 ? (
@@ -103,7 +115,7 @@ function BatchesSection() {
                             </SlideView>
                             <div className={ItemStyle}>
                               <OrderBatchCard
-                                editable
+                                editable={allowUpdate}
                                 batch={batch}
                                 currency={infoState.price.currency}
                                 price={infoState.price}

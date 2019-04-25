@@ -8,5 +8,6 @@ export const ORDER_ITEMS_DELETE = 'order.orderItems.delete';
 export const ORDER_ITEMS_CREATE = 'order.orderItems.create';
 export const ORDER_ITEMS_GET_PRICE = 'order.orderItems.getPrice';
 // TODO: not confirm yet
-export const ORDER_ITEMS_TASK_LIST = 'orderItem.tasks.list';
-export const ORDER_ITEMS_TASK_FORM = 'orderItem.tasks.form';
+export const ORDER_ITEMS_TASK_LIST = 'order.orderItemTasks.list';
+export const ORDER_ITEMS_TASK_FORM = 'order.orderItemTasks.form';
+export const ORDER_ITEMS_BATCHES_LIST = 'order.orderItemBatches.list';

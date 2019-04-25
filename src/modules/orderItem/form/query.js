@@ -63,7 +63,7 @@ export const orderItemFormQuery = gql`
 `;
 
 export const orderItemTimelineQuery = gql`
-  query orderTimeline($id: ID!, $page: Int!, $perPage: Int!) {
+  query orderItemTimeline($id: ID!, $page: Int!, $perPage: Int!) {
     orderItem(id: $id) {
       ... on OrderItem {
         id
