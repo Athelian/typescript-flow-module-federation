@@ -15,7 +15,6 @@ import {
   updateTaskTemplateMutation,
   prepareParsedTaskTemplate,
 } from 'modules/taskTemplate/form/mutation';
-import query from 'modules/taskTemplate/list/query';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -62,27 +61,27 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     if (isNew) {
       const { data } = await saveTaskTemplate({
         variables: { input },
-        update: (store, { data: { taskTemplateCreate } }) => {
-          const collections = store.readQuery({
-            query,
-            variables: {
-              page: 1,
-              perPage: 10,
-              filterBy: {
-                entityTypes: [input.entityType],
-              },
-              sortBy: {
-                updatedAt: 'DESCENDING',
-              },
-            },
-          });
-          collections.taskTemplates.nodes.unshift(taskTemplateCreate);
-          collections.taskTemplates.totalCount += 1;
-          if (collections.taskTemplates.totalCount % collections.taskTemplates.perPage === 1) {
-            collections.taskTemplates.totalPage += 1;
-          }
-          store.writeQuery({ query, data: collections });
-        },
+        // update: (store, { data: { taskTemplateCreate } }) => {
+        //   const collections = store.readQuery({
+        //     query,
+        //     variables: {
+        //       page: 1,
+        //       perPage: 10,
+        //       filterBy: {
+        //         entityTypes: [input.entityType],
+        //       },
+        //       sortBy: {
+        //         updatedAt: 'DESCENDING',
+        //       },
+        //     },
+        //   });
+        //   collections.taskTemplates.nodes.unshift(taskTemplateCreate);
+        //   collections.taskTemplates.totalCount += 1;
+        //   if (collections.taskTemplates.totalCount % collections.taskTemplates.perPage === 1) {
+        //     collections.taskTemplates.totalPage += 1;
+        //   }
+        //   store.writeQuery({ query, data: collections });
+        // },
       });
       const {
         taskTemplateCreate: { violations },
@@ -106,7 +105,9 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
         if (
           !isEquals(getByPathWithDefault(null, 'entityType', originalValues), values.entityType)
         ) {
-          emitter.emit('REFETCH_TASK_TEMPLATES', values.entityType);
+          setTimeout(() => {
+            emitter.emit('REFETCH_TASK_TEMPLATES', values.entityType);
+          }, 200);
         }
         closeSlideView();
         onSuccess();
@@ -117,6 +118,12 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
   onMutationCompleted = (result: Object) => {
     if (!result) {
       toast.error('There was an error. Please try again later');
+    }
+
+    if (result.taskTemplateCreate) {
+      setTimeout(() => {
+        emitter.emit('REFETCH_TASK_TEMPLATES', Date.now());
+      }, 200);
     }
   };
 
