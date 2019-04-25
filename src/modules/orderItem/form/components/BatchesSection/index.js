@@ -102,7 +102,6 @@ function BatchesSection() {
                               <OrderBatchCard
                                 editable
                                 batch={batch}
-                                // FIXME:
                                 currency={price.currency}
                                 price={price}
                                 onClick={() => batchSlideToggle(true)}
