@@ -188,6 +188,7 @@ const ItemCard = ({
     [`orderItems.${index}.no`]: no,
     [`orderItems.${index}.quantity`]: quantity,
     [`orderItems.${index}.price`]: price,
+    orderCurrency,
   };
 
   const {
