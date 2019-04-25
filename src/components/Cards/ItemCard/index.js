@@ -250,7 +250,11 @@ const ItemCard = ({
         <div className={BodyWrapperStyle}>
           <div
             className={NoWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
+            onClick={evt => {
+              if (mergedEditable.no) {
+                evt.stopPropagation();
+              }
+            }}
             role="presentation"
           >
             <FormField
@@ -277,7 +281,11 @@ const ItemCard = ({
 
           <div
             className={QuantityWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
+            onClick={evt => {
+              if (mergedEditable.quantity) {
+                evt.stopPropagation();
+              }
+            }}
             role="presentation"
           >
             <FormField
@@ -306,7 +314,11 @@ const ItemCard = ({
 
           <div
             className={UnitPriceWrapperStyle}
-            onClick={evt => evt.stopPropagation()}
+            onClick={evt => {
+              if (mergedEditable.price) {
+                evt.stopPropagation();
+              }
+            }}
             role="presentation"
           >
             <FormField
