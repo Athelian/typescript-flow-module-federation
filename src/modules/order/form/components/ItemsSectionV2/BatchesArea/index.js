@@ -35,6 +35,24 @@ type Props = {
   focusedItemIndex: number,
 };
 
+function findOrderItemPosition({
+  focusedItemIndex,
+  orderItems,
+  batch,
+}: {
+  focusedItemIndex: number,
+  orderItems: Array<Object>,
+  batch: Object,
+}) {
+  let orderItemPosition = focusedItemIndex;
+  if (orderItemPosition === -1) {
+    orderItemPosition = orderItems.findIndex(orderItem =>
+      orderItem.batches.map(({ id }) => id).includes(batch.id)
+    );
+  }
+  return orderItemPosition;
+}
+
 function ItemsArea({
   itemsIsExpanded,
   batches,
@@ -141,8 +159,14 @@ function ItemsArea({
                           batch={batch}
                           onSave={updatedBatch => {
                             slideToggle(false);
+                            let orderItemPosition = focusedItemIndex;
+                            if (orderItemPosition === -1) {
+                              orderItemPosition = orderItems.findIndex(orderItem =>
+                                orderItem.batches.map(({ id }) => id).includes(batch.id)
+                              );
+                            }
                             setFieldValue(
-                              `orderItems.${focusedItemIndex}.batches.${position}`,
+                              `orderItems.${orderItemPosition}.batches.${position}`,
                               updatedBatch
                             );
                           }}
@@ -155,17 +179,32 @@ function ItemsArea({
                       batch={batch}
                       onClick={() => slideToggle(true)}
                       saveOnBlur={updatedBatch => {
+                        const orderItemPosition = findOrderItemPosition({
+                          focusedItemIndex,
+                          orderItems,
+                          batch,
+                        });
                         setFieldValue(
-                          `orderItems.${focusedItemIndex}.batches.${position}`,
+                          `orderItems.${orderItemPosition}.batches.${position}`,
                           updatedBatch
                         );
                       }}
                       onRemove={() => {
-                        batches.splice(position, 1);
-                        setFieldValue(`orderItems.${focusedItemIndex}.batches`, batches);
+                        batches.splice(batches.findIndex(item => item.id === batch.id), 1);
+                        const orderItemPosition = findOrderItemPosition({
+                          focusedItemIndex,
+                          orderItems,
+                          batch,
+                        });
+                        setFieldValue(`orderItems.${orderItemPosition}.batches`, batches);
                       }}
                       onClone={newBatch => {
-                        setFieldValue(`orderItems.${focusedItemIndex}.batches`, [
+                        const orderItemPosition = findOrderItemPosition({
+                          focusedItemIndex,
+                          orderItems,
+                          batch,
+                        });
+                        setFieldValue(`orderItems.${orderItemPosition}.batches`, [
                           ...batches,
                           {
                             ...newBatch,
