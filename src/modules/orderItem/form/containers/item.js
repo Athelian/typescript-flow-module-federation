@@ -51,8 +51,8 @@ export const initValues = {
     currency: 'JPY',
     amount: 0,
   },
-  // FIXME: mask?
   customFields: {
+    mask: null,
     fieldValues: [],
     fieldDefinitions: [],
   },
@@ -61,9 +61,6 @@ export const initValues = {
   batches: [],
   shipments: [],
   files: [],
-  todo: {
-    tasks: [],
-  },
 
   productProvider: null,
   order: null,

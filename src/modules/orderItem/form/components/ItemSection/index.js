@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { getItemQuantityChartData } from 'utils/item';
-import { ItemProductProviderCard, OrderCard } from 'components/Cards';
+import { OrderProductProviderCard, OrderCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
 import { FormField } from 'modules/form';
 import {
@@ -185,7 +185,7 @@ const ItemSection = () => (
                     defaultMessage="END PRODUCT"
                   />
                 </Label>
-                <ItemProductProviderCard
+                <OrderProductProviderCard
                   productProvider={originalValues.productProvider}
                   onClick={() =>
                     navigate(`/product/${encodeId(originalValues.productProvider.product.id)}`)

@@ -16,7 +16,7 @@ import { countMaskFieldDefinitions } from 'utils/customFields';
 type OptionalProps = {
   selected: ?{
     id: string,
-    name: String,
+    name: string,
   },
 };
 

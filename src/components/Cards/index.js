@@ -5,7 +5,6 @@ import ContainerBatchCard from './ContainerBatchCard';
 import ContainerCard from './ContainerCard';
 import GrayCard from './GrayCard';
 import ItemCard from './ItemCard';
-import ItemProductProviderCard from './ItemProductProviderCard';
 import OrderBatchCard from './OrderBatchCard';
 import OrderCard from './OrderCard';
 import OrderProductProviderCard from './OrderProductProviderCard';
@@ -36,7 +35,6 @@ export {
   ContainerCard,
   GrayCard,
   ItemCard,
-  ItemProductProviderCard,
   OrderBatchCard,
   OrderCard,
   OrderProductProviderCard,

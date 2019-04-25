@@ -69,11 +69,12 @@ export default class ItemForm extends React.Component<Props> {
               )}
             </SectionHeader>
             <ItemSection />
-            <BatchesSection />
-            <DocumentsSection />
-            <AsyncTaskSection type="orderItem" />
-            <ShipmentsSection />
           </SectionWrapper>
+
+          <BatchesSection />
+          <DocumentsSection />
+          <AsyncTaskSection type="orderItem" />
+          <ShipmentsSection />
         </div>
       </Suspense>
     );

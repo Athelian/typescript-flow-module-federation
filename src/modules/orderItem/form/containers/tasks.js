@@ -6,12 +6,14 @@ import emitter from 'utils/emitter';
 
 type FormState = {
   todo: {
+    taskTemplate?: ?Object,
     tasks?: Array<Object>,
   },
 };
 
 export const initValues = {
   todo: {
+    taskTemplate: null,
     tasks: [],
   },
 };
