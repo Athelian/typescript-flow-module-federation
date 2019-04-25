@@ -61,27 +61,6 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
     if (isNew) {
       const { data } = await saveTaskTemplate({
         variables: { input },
-        // update: (store, { data: { taskTemplateCreate } }) => {
-        //   const collections = store.readQuery({
-        //     query,
-        //     variables: {
-        //       page: 1,
-        //       perPage: 10,
-        //       filterBy: {
-        //         entityTypes: [input.entityType],
-        //       },
-        //       sortBy: {
-        //         updatedAt: 'DESCENDING',
-        //       },
-        //     },
-        //   });
-        //   collections.taskTemplates.nodes.unshift(taskTemplateCreate);
-        //   collections.taskTemplates.totalCount += 1;
-        //   if (collections.taskTemplates.totalCount % collections.taskTemplates.perPage === 1) {
-        //     collections.taskTemplates.totalPage += 1;
-        //   }
-        //   store.writeQuery({ query, data: collections });
-        // },
       });
       const {
         taskTemplateCreate: { violations },
