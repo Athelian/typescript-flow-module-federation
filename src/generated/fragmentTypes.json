@@ -572,6 +572,7 @@
           { "name": "BooleanValue" },
           { "name": "DateTimeValue" },
           { "name": "IntervalValue" },
+          { "name": "Duration" },
           { "name": "MetricValueValue" },
           { "name": "SizeValue" },
           { "name": "EntityValue" },

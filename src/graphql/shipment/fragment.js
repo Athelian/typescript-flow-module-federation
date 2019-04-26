@@ -123,6 +123,10 @@ export const shipmentCardFragment = gql`
     totalVolume {
       ...metricFragment
     }
+    containerTypeCounts {
+      containerType
+      count
+    }
     importer {
       ... on Group {
         id
