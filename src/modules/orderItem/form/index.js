@@ -5,7 +5,6 @@ import { FormattedMessage } from 'react-intl';
 import { isEquals } from 'utils/fp';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper, SectionHeader, LastModified, FormTooltip } from 'components/Form';
-import { OrderInfoContainer } from 'modules/order/form/containers';
 import { OrderItemInfoContainer, OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
@@ -92,19 +91,16 @@ export default class ItemForm extends React.Component<Props> {
           <AsyncDocumentsSection />
           <AsyncTaskSection type="orderItem" />
           <AsyncShipmentsSection />
-          <Subscribe to={[OrderItemTasksContainer, OrderInfoContainer]}>
-            {(
-              {
-                state: {
-                  todo: { tasks },
-                },
-                setFieldValue,
+          <Subscribe to={[OrderItemTasksContainer]}>
+            {({
+              state: {
+                todo: { tasks },
               },
-              { state }
-            ) => (
+              setFieldValue,
+            }) => (
               <AutoDateBinding
-                type="order"
-                values={state}
+                type="orderItem"
+                values={orderItem.order || {}}
                 tasks={tasks}
                 setTaskValue={setFieldValue}
               />
