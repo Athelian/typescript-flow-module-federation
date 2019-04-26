@@ -16,6 +16,7 @@ import {
   portFragment,
   todoFragment,
   productProviderCardFragment,
+  sizeFragment,
 } from 'graphql';
 
 const editableTaskListQuery = gql`
@@ -51,6 +52,7 @@ const editableTaskListQuery = gql`
   ${portFragment}
   ${todoFragment}
   ${productProviderCardFragment}
+  ${sizeFragment}
 `;
 
 export default editableTaskListQuery;
