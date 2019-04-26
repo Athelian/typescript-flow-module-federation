@@ -92,8 +92,8 @@ export default class OrderItemFormModule extends React.Component<Props> {
   onSave = async (
     originalValues: Object,
     formData: Object,
-    saveOrderItem: Function,
-    onSuccess: Function,
+    updateOrderItem: Function,
+    onSuccess: Object => void,
     onErrors: Function
   ) => {
     const { orderItemId } = this.props;
@@ -101,14 +101,14 @@ export default class OrderItemFormModule extends React.Component<Props> {
       originalValues: removeTypename(originalValues),
       newValues: removeTypename(formData),
     });
-    const result = await saveOrderItem({ variables: { id: decodeId(orderItemId), input } });
+    const result = await updateOrderItem({ variables: { id: decodeId(orderItemId), input } });
     if (result && result.data) {
       const { data } = result;
       const violations = getByPath('orderItemUpdate.violations', data);
       if (violations && violations.length) {
         onErrors(violations);
       } else {
-        onSuccess();
+        onSuccess(getByPath('orderItemUpdate', data));
       }
     }
   };
@@ -135,7 +135,7 @@ export default class OrderItemFormModule extends React.Component<Props> {
             onCompleted={this.onMutationCompleted}
             {...mutationKey}
           >
-            {(saveOrderItem, { loading, error }) => (
+            {(updateOrderItem, { loading, error }) => (
               <Layout
                 {...(isSlideView ? {} : uiState)}
                 navBar={
@@ -273,12 +273,20 @@ export default class OrderItemFormModule extends React.Component<Props> {
                                       ...orderItemFilesContainer.state,
                                       ...orderItemTasksContainer.state,
                                     },
-                                    saveOrderItem,
-                                    () => {
-                                      orderItemInfoContainer.onSuccess();
-                                      orderItemBatchesContainer.onSuccess();
-                                      orderItemFilesContainer.onSuccess();
-                                      orderItemTasksContainer.onSuccess();
+                                    updateOrderItem,
+                                    updateData => {
+                                      const {
+                                        batches,
+                                        files,
+                                        todo,
+                                        shipments,
+                                        ...rest
+                                      } = updateData;
+                                      orderItemInfoContainer.initDetailValues(rest);
+                                      orderItemBatchesContainer.initDetailValues({ batches });
+                                      orderItemFilesContainer.initDetailValues({ files });
+                                      orderItemTasksContainer.initDetailValues(todo);
+                                      orderItemShipmentsContainer.initDetailValues({ shipments });
                                       formContainer.onReset();
                                     },
                                     formContainer.onErrors

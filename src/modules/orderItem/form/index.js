@@ -1,8 +1,10 @@
 // @flow
 import React, { Suspense, lazy } from 'react';
+import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { isEquals } from 'utils/fp';
 import { SectionWrapper, SectionHeader, LastModified, FormTooltip } from 'components/Form';
+import { OrderItemInfoContainer } from 'modules/orderItem/form/containers';
 import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
 import ItemSection from './components/ItemSection';
@@ -82,8 +84,9 @@ export default class ItemForm extends React.Component<Props> {
             </SectionHeader>
             <ItemSection isSlideView={isSlideView} />
           </SectionWrapper>
-
-          <AsyncBatchesSection price={orderItem.price} />
+          <Subscribe to={[OrderItemInfoContainer]}>
+            {({ state: itemInfo }) => <AsyncBatchesSection itemInfo={itemInfo} />}
+          </Subscribe>
           <AsyncDocumentsSection />
           <AsyncTaskSection type="orderItem" />
           <AsyncShipmentsSection />

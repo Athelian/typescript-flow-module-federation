@@ -6,7 +6,7 @@ import { BooleanValue } from 'react-values';
 import { isNullOrUndefined } from 'utils/fp';
 import {
   calculatePackageQuantity,
-  generateBatchForClone,
+  generateCloneBatch,
   generateBatchByOrderItem,
 } from 'utils/batch';
 import {
@@ -257,7 +257,7 @@ function BatchesSection() {
                               }
                             }}
                             onClone={value => {
-                              const clonedBatch = generateBatchForClone(value);
+                              const clonedBatch = generateCloneBatch(value);
 
                               setFieldValue('batches', [...batches, clonedBatch]);
                               addExistingBatches([clonedBatch]);

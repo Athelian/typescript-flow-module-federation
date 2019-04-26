@@ -23,6 +23,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & OrderItemProps;
 
+// TODO: try to use from util
 function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;

@@ -52,7 +52,7 @@ type Metric = {
   metric: string,
 };
 
-export function calculateVolume(
+function calculateVolume(
   volumeMetric: string,
   height: Metric,
   width: Metric,
@@ -142,7 +142,7 @@ export const calculatePackageQuantity = ({
   return 0;
 };
 
-export const generateBatchForClone = ({
+export const generateCloneBatch = ({
   id,
   deliveredAt,
   desired,
@@ -161,35 +161,6 @@ export const generateBatchForClone = ({
     },
   });
 
-export const generateBatchByOrderItem = (orderItem: Object) => {
-  const {
-    productProvider: {
-      packageName,
-      packageCapacity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    },
-  } = orderItem;
-  return injectUid({
-    isNew: true,
-    orderItem,
-    tags: [],
-    packageName,
-    packageCapacity,
-    packageQuantity: 0,
-    packageGrossWeight,
-    packageVolume,
-    packageSize,
-    quantity: 0,
-    batchAdjustments: [],
-    autoCalculatePackageQuantity: true,
-    todo: {
-      tasks: [],
-    },
-  });
-};
-
 export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
   !packageVolume || !packageQuantity
     ? total
@@ -198,3 +169,40 @@ export const totalVolume = (total: number, packageQuantity: number, packageVolum
         packageQuantity,
         packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume.value, 1000000)
       );
+
+export const findTotalAutoFillBatches = ({
+  batches,
+  quantity,
+}: {
+  batches: Array<Object>,
+  quantity: number,
+}): Object => {
+  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
+  return quantity - totalBatchQuantity;
+};
+
+export const generateBatchByOrderItem = ({ productProvider }: { productProvider: Object }) => {
+  const {
+    packageName,
+    packageCapacity,
+    packageGrossWeight,
+    packageVolume,
+    packageSize,
+  } = productProvider;
+  return injectUid({
+    tags: [],
+    packageName,
+    packageCapacity,
+    packageGrossWeight,
+    packageVolume,
+    packageSize,
+    quantity: 0,
+    packageQuantity: 0,
+    isNew: true,
+    batchAdjustments: [],
+    autoCalculatePackageQuantity: true,
+    todo: {
+      tasks: [],
+    },
+  });
+};
