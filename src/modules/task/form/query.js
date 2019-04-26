@@ -28,13 +28,11 @@ export const taskFormQuery = gql`
   }
 
   ${taskFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
   ${orderCardFragment}
   ${batchCardFragment}
-  ${productCardFragment}
   ${shipmentCardFragment}
-  ${orderCardFragment}
+  ${productCardFragment}
+  ${productProviderCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
   ${metricFragment}
@@ -42,7 +40,8 @@ export const taskFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
-  ${productProviderCardFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
   ${sizeFragment}
 `;
 
