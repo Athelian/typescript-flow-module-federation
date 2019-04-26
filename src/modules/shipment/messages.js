@@ -595,3 +595,34 @@ export default defineMessages({
     defaultMessage: 'TOTAL BATCH QUANTITY',
   },
 });
+
+export const shipmentSortMessages = defineMessages({
+  updatedAt: {
+    id: 'modules.Shipments.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAt: {
+    id: 'modules.Shipments.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
+  shipmentId: {
+    id: 'modules.Shipments.sort.no',
+    defaultMessage: 'Shipment ID',
+  },
+  blNo: {
+    id: 'modules.Shipments.sort.blNo',
+    defaultMessage: 'B/L No',
+  },
+  warehouseArrival: {
+    id: 'modules.Shipments.sort.warehouseArrival',
+    defaultMessage: 'Warehouse Arrival',
+  },
+  dischargePortArrival: {
+    id: 'modules.Shipments.sort.dischargePortArrival',
+    defaultMessage: 'Discharge Port Arrival',
+  },
+  loadPortDeparture: {
+    id: 'modules.Shipments.sort.loadPortDeparture',
+    defaultMessage: 'Load Port Departure',
+  },
+});

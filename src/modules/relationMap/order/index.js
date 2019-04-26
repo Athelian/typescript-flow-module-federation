@@ -20,7 +20,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import { SearchInput, SortInput } from 'components/NavBar';
 import { currentSort } from 'components/common/FilterToolBar';
-// import { FilterToolBar } from 'components/common';
+import { shipmentSortMessages } from 'modules/shipment/messages';
 import AdvancedFilter from '../common/SortFilter/AdvancedFilter';
 import messages from '../messages';
 import SortFilter from '../common/SortFilter';
@@ -144,8 +144,19 @@ const Order = ({ intl }: Props) => {
   const { hasPermission } = usePermission();
 
   const shipmentSortFields = [
-    { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(shipmentSortMessages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(shipmentSortMessages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(shipmentSortMessages.shipmentId), value: 'no' },
+    { title: intl.formatMessage(shipmentSortMessages.blNo), value: 'blNo' },
+    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
+    {
+      title: intl.formatMessage(shipmentSortMessages.dischargePortArrival),
+      value: 'dischargePortArrival',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
+      value: 'loadPortDeparture',
+    },
   ];
 
   const {
