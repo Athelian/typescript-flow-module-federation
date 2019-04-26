@@ -30,6 +30,7 @@ import {
   parseCustomFieldsField,
   parseFilesField,
   parseTodoField,
+  parseMemoField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -151,6 +152,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         'customFields',
         getByPathWithDefault(null, 'customFields', oldProductProvider),
         newProductProvider.customFields
+      ),
+      ...parseMemoField(
+        'memo',
+        getByPathWithDefault(null, 'memo', oldProductProvider),
+        newProductProvider.memo
       ),
       ...parseGenericField(
         'unitType',

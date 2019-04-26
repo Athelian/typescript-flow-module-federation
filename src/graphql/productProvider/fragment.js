@@ -51,6 +51,7 @@ export const productProviderFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    memo
     files {
       ...documentFragment
     }
