@@ -27,7 +27,7 @@ function DocumentsSection({ intl }: Props) {
               icon="DOCUMENT"
               title={
                 <>
-                  <FormattedMessage id="modules.orderItem.document" defaultMessage="DOCUMENTS" /> (
+                  <FormattedMessage id="modules.OrderItems.document" defaultMessage="DOCUMENTS" /> (
                   <FormattedNumber value={files.length} />)
                 </>
               }

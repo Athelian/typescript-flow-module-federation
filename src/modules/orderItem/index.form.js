@@ -36,25 +36,28 @@ type Props = {
 };
 
 export default class OrderItemFormModule extends React.PureComponent<Props> {
-  onFormReady = ({
-    infoContainer,
-    batchesContainer,
-    filesContainer,
-    tasksContainer,
-    shipmentsContainer,
-  }: {
-    infoContainer: Object,
-    batchesContainer: Object,
-    filesContainer: Object,
-    tasksContainer: Object,
-    shipmentsContainer: Object,
-  }) => (orderItem: Object) => {
+  onFormReady = (
+    {
+      orderItemInfoContainer,
+      orderItemBatchesContainer,
+      orderItemFilesContainer,
+      orderItemTasksContainer,
+      orderItemShipmentsContainer,
+    }: {
+      orderItemInfoContainer: Object,
+      orderItemBatchesContainer: Object,
+      orderItemFilesContainer: Object,
+      orderItemTasksContainer: Object,
+      orderItemShipmentsContainer: Object,
+    },
+    orderItem: Object
+  ) => {
     const { batches, files, todo, shipments, ...rest } = orderItem;
-    infoContainer.initDetailValues(rest);
-    batchesContainer.initDetailValues({ batches });
-    filesContainer.initDetailValues({ files });
-    tasksContainer.initDetailValues(todo);
-    shipmentsContainer.initDetailValues({ shipments });
+    orderItemInfoContainer.initDetailValues(rest);
+    orderItemBatchesContainer.initDetailValues({ batches });
+    orderItemFilesContainer.initDetailValues({ files });
+    orderItemTasksContainer.initDetailValues(todo);
+    orderItemShipmentsContainer.initDetailValues({ shipments });
   };
 
   onSave = async (
@@ -81,30 +84,10 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
     }
   };
 
-  onMutationCompleted = ({
-    infoContainer,
-    batchesContainer,
-    filesContainer,
-    tasksContainer,
-    shipmentsContainer,
-  }: {
-    infoContainer: Object,
-    batchesContainer: Object,
-    filesContainer: Object,
-    tasksContainer: Object,
-    shipmentsContainer: Object,
-  }) => (result: Object) => {
+  onMutationCompleted = (result: Object) => {
     if (!result) {
       toast.error('There was an error. Please try again later');
-      return;
     }
-    this.onFormReady({
-      infoContainer,
-      batchesContainer,
-      filesContainer,
-      tasksContainer,
-      shipmentsContainer,
-    })(result.orderItemUpdate);
   };
 
   render() {
@@ -130,22 +113,16 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
               ]}
             >
               {(
-                infoContainer,
-                batchesContainer,
-                filesContainer,
-                tasksContainer,
-                shipmentsContainer,
+                orderItemInfoContainer,
+                orderItemBatchesContainer,
+                orderItemFilesContainer,
+                orderItemTasksContainer,
+                orderItemShipmentsContainer,
                 formContainer
               ) => (
                 <Mutation
                   mutation={updateOrderItemMutation}
-                  onCompleted={this.onMutationCompleted({
-                    infoContainer,
-                    batchesContainer,
-                    filesContainer,
-                    shipmentsContainer,
-                    tasksContainer,
-                  })}
+                  onCompleted={this.onMutationCompleted}
                   {...mutationKey}
                 >
                   {(saveOrderItem, { loading, error }) => (
@@ -230,17 +207,17 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                             )}
                           </BooleanValue>
 
-                          {(infoContainer.isDirty() ||
-                            batchesContainer.isDirty() ||
-                            filesContainer.isDirty() ||
-                            tasksContainer.isDirty()) && (
+                          {(orderItemInfoContainer.isDirty() ||
+                            orderItemBatchesContainer.isDirty() ||
+                            orderItemFilesContainer.isDirty() ||
+                            orderItemTasksContainer.isDirty()) && (
                             <>
                               <ResetButton
                                 onClick={() => {
-                                  resetFormState(infoContainer);
-                                  resetFormState(batchesContainer);
-                                  resetFormState(filesContainer);
-                                  resetFormState(tasksContainer, 'todo');
+                                  resetFormState(orderItemInfoContainer);
+                                  resetFormState(orderItemBatchesContainer);
+                                  resetFormState(orderItemFilesContainer);
+                                  resetFormState(orderItemTasksContainer, 'todo');
                                   formContainer.onReset();
                                 }}
                               />
@@ -248,10 +225,10 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                                 disabled={
                                   !formContainer.isReady(
                                     {
-                                      ...infoContainer.state,
-                                      ...batchesContainer.state,
-                                      ...filesContainer.state,
-                                      ...tasksContainer.state,
+                                      ...orderItemInfoContainer.state,
+                                      ...orderItemBatchesContainer.state,
+                                      ...orderItemFilesContainer.state,
+                                      ...orderItemTasksContainer.state,
                                     },
                                     validator
                                   )
@@ -260,23 +237,23 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                                 onClick={() =>
                                   this.onSave(
                                     {
-                                      ...infoContainer.originalValues,
-                                      ...batchesContainer.originalValues,
-                                      ...filesContainer.originalValues,
-                                      ...tasksContainer.originalValues,
+                                      ...orderItemInfoContainer.originalValues,
+                                      ...orderItemBatchesContainer.originalValues,
+                                      ...orderItemFilesContainer.originalValues,
+                                      ...orderItemTasksContainer.originalValues,
                                     },
                                     {
-                                      ...infoContainer.state,
-                                      ...batchesContainer.state,
-                                      ...filesContainer.state,
-                                      ...tasksContainer.state,
+                                      ...orderItemInfoContainer.state,
+                                      ...orderItemBatchesContainer.state,
+                                      ...orderItemFilesContainer.state,
+                                      ...orderItemTasksContainer.state,
                                     },
                                     saveOrderItem,
                                     () => {
-                                      infoContainer.onSuccess();
-                                      batchesContainer.onSuccess();
-                                      filesContainer.onSuccess();
-                                      tasksContainer.onSuccess();
+                                      orderItemInfoContainer.onSuccess();
+                                      orderItemBatchesContainer.onSuccess();
+                                      orderItemFilesContainer.onSuccess();
+                                      orderItemTasksContainer.onSuccess();
                                     },
                                     formContainer.onErrors
                                   )
@@ -296,13 +273,16 @@ export default class OrderItemFormModule extends React.PureComponent<Props> {
                           <ItemForm
                             orderItem={orderItem}
                             onFormReady={() => {
-                              this.onFormReady({
-                                infoContainer,
-                                batchesContainer,
-                                filesContainer,
-                                shipmentsContainer,
-                                tasksContainer,
-                              })(orderItem);
+                              this.onFormReady(
+                                {
+                                  orderItemInfoContainer,
+                                  orderItemBatchesContainer,
+                                  orderItemFilesContainer,
+                                  orderItemShipmentsContainer,
+                                  orderItemTasksContainer,
+                                },
+                                orderItem
+                              );
                             }}
                           />
                         )}

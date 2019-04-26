@@ -38,7 +38,7 @@ export default class ItemForm extends React.Component<Props> {
           <SectionWrapper id="orderItem_itemSection">
             <SectionHeader
               icon="ORDER_ITEM"
-              title={<FormattedMessage id="modules.orderItem.item" defaultMessage="ITEM" />}
+              title={<FormattedMessage id="modules.OrderItems.orderItem" defaultMessage="ITEM" />}
             >
               {orderItem.updatedAt && (
                 <>
@@ -48,17 +48,17 @@ export default class ItemForm extends React.Component<Props> {
                     <div className={StatusLabelStyle}>
                       {orderItem.order.archived ? (
                         <FormattedMessage
-                          id="modules.orderItem.archived"
+                          id="modules.OrderItems.archived"
                           defaultMessage="Archived"
                         />
                       ) : (
-                        <FormattedMessage id="modules.orderItem.active" defaultMessage="Active" />
+                        <FormattedMessage id="modules.OrderItems.active" defaultMessage="Active" />
                       )}
                     </div>
                     <FormTooltip
                       infoMessage={
                         <FormattedMessage
-                          id="modules.orderItem.order.archived.tooltip.infoMessage"
+                          id="modules.OrderItems.order.archived.tooltip.infoMessage"
                           defaultMessage="The status is the same as the Order's status"
                         />
                       }

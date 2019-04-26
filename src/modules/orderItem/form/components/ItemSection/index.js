@@ -135,7 +135,7 @@ const ItemSection = () => {
                     vertical
                     label={
                       <Label height="30px">
-                        <FormattedMessage id="modules.orderItem.tags" defaultMessage="TAGS" />
+                        <FormattedMessage id="modules.OrderItems.tags" defaultMessage="TAGS" />
                       </Label>
                     }
                     input={
@@ -168,7 +168,7 @@ const ItemSection = () => {
                         {...inputHandlers}
                         originalValue={originalValues[name]}
                         label={
-                          <FormattedMessage id="modules.orderItem.memo" defaultMessage="MEMO" />
+                          <FormattedMessage id="modules.OrderItems.memo" defaultMessage="MEMO" />
                         }
                         editable={allowUpdate}
                         vertical
@@ -191,7 +191,7 @@ const ItemSection = () => {
                 <GridColumn>
                   <Label>
                     <FormattedMessage
-                      id="modules.orderItem.endProduct"
+                      id="modules.OrderItems.endProduct"
                       defaultMessage="END PRODUCT"
                     />
                   </Label>
@@ -202,7 +202,7 @@ const ItemSection = () => {
                     }
                   />
                   <Label>
-                    <FormattedMessage id="modules.orderItem.order" defaultMessage="ORDER" />
+                    <FormattedMessage id="modules.OrderItems.order" defaultMessage="ORDER" />
                   </Label>
                   <OrderCard
                     order={originalValues.order}

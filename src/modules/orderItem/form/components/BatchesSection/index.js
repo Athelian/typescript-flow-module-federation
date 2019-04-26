@@ -42,7 +42,7 @@ function BatchesSection() {
               icon="BATCH"
               title={
                 <>
-                  <FormattedMessage id="modules.orderItem.batches" defaultMessage="BATCHES" /> (
+                  <FormattedMessage id="modules.OrderItems.batches" defaultMessage="BATCHES" /> (
                   <FormattedNumber value={batches.length} />)
                 </>
               }
@@ -54,7 +54,7 @@ function BatchesSection() {
                     <NewButton
                       label={
                         <FormattedMessage
-                          id="modules.orderItem.newBatch"
+                          id="modules.OrderItems.newBatch"
                           defaultMessage="NEW BATCH"
                         />
                       }
@@ -71,7 +71,7 @@ function BatchesSection() {
                     <BaseButton
                       label={
                         <FormattedMessage
-                          id="modules.orderItem.autoFillBatch"
+                          id="modules.OrderItems.autoFillBatch"
                           defaultMessage="AUTOFILL BATCH"
                         />
                       }
