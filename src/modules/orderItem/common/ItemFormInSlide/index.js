@@ -13,7 +13,7 @@ import {
 import JumpToSection from 'components/JumpToSection';
 import validator from 'modules/orderItem/form/validator';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import OrderItemForm from 'modules/orderItem/form';
+import ItemForm from 'modules/orderItem/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
@@ -25,7 +25,7 @@ type Props = {
 
 const formContainer = new FormContainer();
 
-const OrderItemFormInSlide = ({ orderItem, onSave }: Props) => {
+const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -139,7 +139,7 @@ const OrderItemFormInSlide = ({ orderItem, onSave }: Props) => {
                 </SlideViewNavBar>
               }
             >
-              <OrderItemForm
+              <ItemForm
                 orderItem={orderItem}
                 onFormReady={() => {
                   const { batches, files, todo, shipments, ...rest } = orderItem;
@@ -158,4 +158,4 @@ const OrderItemFormInSlide = ({ orderItem, onSave }: Props) => {
   );
 };
 
-export default OrderItemFormInSlide;
+export default ItemFormInSlide;

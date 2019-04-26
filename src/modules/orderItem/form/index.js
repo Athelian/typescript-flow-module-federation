@@ -5,21 +5,29 @@ import { isEquals } from 'utils/fp';
 import { SectionWrapper, SectionHeader, LastModified, FormTooltip } from 'components/Form';
 import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
-
 import ItemSection from './components/ItemSection';
-import BatchesSection from './components/BatchesSection';
 import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
-import DocumentsSection from './components/DocumentsSection';
-import ShipmentsSection from './components/ShipmentsSection';
 
-type Props = {
-  orderItem: Object,
+type OptionalProps = {
   onFormReady: () => void,
 };
 
+type Props = OptionalProps & {
+  orderItem: Object,
+};
+
+const defaultProps = {
+  onFormReady: () => {},
+};
+
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
+const AsyncBatchesSection = lazy(() => import('./components/BatchesSection'));
+const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
+const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 
 export default class ItemForm extends React.Component<Props> {
+  static defaultProps = defaultProps;
+
   componentDidMount() {
     const { onFormReady } = this.props;
     if (onFormReady) onFormReady();
@@ -71,10 +79,10 @@ export default class ItemForm extends React.Component<Props> {
             <ItemSection />
           </SectionWrapper>
 
-          <BatchesSection />
-          <DocumentsSection />
+          <AsyncBatchesSection />
+          <AsyncDocumentsSection />
           <AsyncTaskSection type="orderItem" />
-          <ShipmentsSection />
+          <AsyncShipmentsSection />
         </div>
       </Suspense>
     );
