@@ -28,17 +28,15 @@ export const itemCardFragment = gql`
     productProvider {
       ... on ProductProvider {
         id
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
-        }
+        name
         product {
           ... on Product {
             id
             name
             serial
+            tags {
+              ...tagFragment
+            }
             files {
               ...imageFragment
             }
@@ -122,12 +120,7 @@ export const itemInSelectorFragment = gql`
     productProvider {
       ... on ProductProvider {
         id
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
-        }
+        name
         packageName
         packageCapacity
         packageGrossWeight {
@@ -180,12 +173,7 @@ export const itemInOrderFormFragment = gql`
     productProvider {
       ... on ProductProvider {
         id
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
-        }
+        name
         packageName
         packageCapacity
         packageGrossWeight {
@@ -245,12 +233,7 @@ export const itemInBatchFormFragment = gql`
     productProvider {
       ... on ProductProvider {
         id
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
-        }
+        name
         packageName
         packageCapacity
         packageGrossWeight {
