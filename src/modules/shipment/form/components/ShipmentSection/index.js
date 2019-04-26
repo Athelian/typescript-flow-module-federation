@@ -80,6 +80,7 @@ import {
   ExporterLabelStyle,
   ExporterSeeMoreButtonStyle,
   DividerStyle,
+  BookedInputWrapperStyle,
   BookedStyle,
 } from './style';
 
@@ -230,35 +231,29 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       />
                     )}
                   </FormField>
-                  <FieldItem
-                    label={<Label> </Label>}
-                    input={
-                      <ToggleInput
-                        name="booked"
-                        toggled={values.booked}
-                        onToggle={() => {
-                          setFieldValue('booked', !values.booked);
-                        }}
-                        editable={SHIPMENT_UPDATE}
-                      >
-                        {values.booked ? (
-                          <div className={BookedStyle(true)}>
-                            <FormattedMessage
-                              id="modules.Shipments.booked"
-                              defaultMessage="Booked"
-                            />
-                          </div>
-                        ) : (
-                          <div className={BookedStyle(false)}>
-                            <FormattedMessage
-                              id="modules.Shipments.unbooked"
-                              defaultMessage="Unbooked"
-                            />
-                          </div>
-                        )}
-                      </ToggleInput>
-                    }
-                  />
+                  <div className={BookedInputWrapperStyle}>
+                    <ToggleInput
+                      name="booked"
+                      toggled={values.booked}
+                      onToggle={() => {
+                        setFieldValue('booked', !values.booked);
+                      }}
+                      editable={SHIPMENT_UPDATE}
+                    >
+                      {values.booked ? (
+                        <div className={BookedStyle(true)}>
+                          <FormattedMessage id="modules.Shipments.booked" defaultMessage="Booked" />
+                        </div>
+                      ) : (
+                        <div className={BookedStyle(false)}>
+                          <FormattedMessage
+                            id="modules.Shipments.unbooked"
+                            defaultMessage="Unbooked"
+                          />
+                        </div>
+                      )}
+                    </ToggleInput>
+                  </div>
                   <FormField
                     name="bookingDate"
                     initValue={values.bookingDate}

@@ -43,6 +43,14 @@ export const DividerStyle: string = css`
   width: 100%;
 `;
 
+export const BookedInputWrapperStyle: string = css`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
 export const BookedStyle = (booked: boolean) => css`
+  ${fontSizes.MAIN};
+  font-weight: bold;
   color: ${booked ? colors.TEAL : colors.GRAY_LIGHT};
 `;

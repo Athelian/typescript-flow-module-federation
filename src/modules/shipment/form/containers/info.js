@@ -24,7 +24,7 @@ const initValues = {
   forwarders: [],
   importer: {},
   inCharges: [],
-  booked: null,
+  booked: false,
   customFields: {
     fieldValues: [],
     fieldDefinitions: [],
