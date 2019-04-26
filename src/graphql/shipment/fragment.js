@@ -116,6 +116,7 @@ export const shipmentCardFragment = gql`
     archived
     no
     blNo
+    booked
     transportType
     batchCount
     orderItemCount

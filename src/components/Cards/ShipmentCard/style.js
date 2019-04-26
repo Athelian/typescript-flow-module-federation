@@ -128,3 +128,11 @@ export const DividerStyle: string = css`
   width: 840px;
   margin: 0 20px;
 `;
+
+export const ShipmentBookedStyle = (booked: boolean) => css`
+  ${borderRadiuses.MAIN};
+  ${fontSizesWithHeights.SMALL};
+  width: 60px;
+  text-align: center;
+  background-color: ${booked ? colors.TEAL : colors.GRAY_LIGHT};
+`;
