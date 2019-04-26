@@ -369,9 +369,6 @@ export const prepareParsedShipmentInput = ({
       (oldBatch: ?Object, newBatch: Object) => ({
         ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm: true,
-          inOrderForm: false,
-          inContainerForm: false,
-          inBatchForm: false,
         }),
       }),
       forceSendBatchIdsForPool

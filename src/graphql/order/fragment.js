@@ -165,5 +165,6 @@ export const orderCardFragment = gql`
     inCharges {
       ...userAvatarFragment
     }
+    currency
   }
 `;

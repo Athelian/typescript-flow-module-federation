@@ -52,14 +52,25 @@ export const itemCardFragment = gql`
 export const itemFormFragment = gql`
   fragment itemFormFragment on OrderItem {
     id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
     no
     quantity
     price {
       ...priceFragment
     }
+    customFields {
+      ...customFieldsFragment
+    }
     tags {
       ...tagFragment
     }
+    memo
     todo {
       ...todoFragment
       tasks {
@@ -70,51 +81,19 @@ export const itemFormFragment = gql`
       }
     }
     order {
-      ... on Order {
-        id
-        poNo
-        currency
-      }
+      ...orderCardFragment
     }
     productProvider {
-      ... on ProductProvider {
-        exporter {
-          ...partnerNameFragment
-        }
-        supplier {
-          ...partnerNameFragment
-        }
-        packageName
-        packageCapacity
-        packageGrossWeight {
-          ...metricFragment
-        }
-        packageVolume {
-          ...metricFragment
-        }
-        packageSize {
-          ...sizeFragment
-        }
-        unitPrice {
-          ...priceFragment
-        }
-        product {
-          ... on Product {
-            id
-            name
-            serial
-            tags {
-              ...tagFragment
-            }
-            files {
-              ...imageFragment
-            }
-          }
-        }
-      }
+      ...productProviderCardFragment
     }
     batches {
       ...batchFormFragment
+    }
+    files {
+      ...documentFragment
+    }
+    shipments {
+      ...shipmentCardFragment
     }
   }
 `;

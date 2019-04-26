@@ -30,4 +30,8 @@ export default defineMessages({
     id: 'modules.OrderItems.list.sort.updatedAt',
     defaultMessage: 'Updated At',
   },
+  fileTypeDocument: {
+    id: 'modules.orderItems.fileType.document',
+    defaultMessage: 'Document',
+  },
 });

@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Apr 24 2019 11:19:47 GMT+0900 (Tokyo Standard Time)
+# timestamp: Thu Apr 25 2019 15:59:22 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27214,7 +27214,6 @@ input ContainerBatchInput {
 
 input ContainerCreateInput {
   no: String!
-  shipmentId: ID!
   warehouseId: ID
   departureDate: DateTime
   departureDateApprovedById: ID
@@ -27237,6 +27236,7 @@ input ContainerCreateInput {
   memo: String
   tagIds: [ID!]
   todo: TodoInput
+  shipmentId: ID!
 }
 
 input ContainerFilterInput {
@@ -27323,6 +27323,7 @@ input ContainerUpdateInput {
   memo: String
   tagIds: [ID!]
   todo: TodoInput
+  shipmentId: ID
 }
 
 input ContainerUpdateWrapperInput {
@@ -30144,11 +30145,11 @@ input OrderCreateInput {
   currency: Currency!
   incoterm: Incoterm
   deliveryPlace: String
+  memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
   orderItems: [OrderOrderItemCreateInput!]
   files: [FileInput!]
-  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30214,7 +30215,7 @@ input OrderFilterInput {
   shipmentArchived: Boolean
 }
 
-type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Customizable {
+type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Customizable & Memorizable {
   order: OrderPayload!
   productProvider: ProductProviderPayload!
   archived: Boolean!
@@ -30243,6 +30244,7 @@ type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Custo
   tags: [TagPayload!]!
   files: [FilePayload!]!
   customFields: CustomFields!
+  memo: String
 }
 
 input OrderItemBatchCreateInput {
@@ -30301,6 +30303,7 @@ input OrderItemCreateInput {
   no: String!
   price: PriceInput!
   quantity: Float!
+  memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchCreateInput!]
   files: [FileInput!]
@@ -30340,6 +30343,7 @@ input OrderItemUpdateInput {
   no: String
   price: PriceInput
   quantity: Float
+  memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchUpdateInput!]
   files: [FileInput!]
@@ -30358,6 +30362,7 @@ input OrderOrderItemCreateInput {
   no: String!
   price: PriceInput!
   quantity: Float!
+  memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchCreateInput!]
   files: [FileInput!]
@@ -30371,6 +30376,7 @@ input OrderOrderItemUpdateInput {
   no: String
   price: PriceInput
   quantity: Float
+  memo: String
   tagIds: [ID!]
   batches: [OrderItemBatchUpdateInput!]
   files: [FileInput!]
@@ -30410,11 +30416,11 @@ input OrderUpdateInput {
   currency: Currency
   incoterm: Incoterm
   deliveryPlace: String
+  memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
   orderItems: [OrderOrderItemUpdateInput!]
   files: [FileInput!]
-  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -35799,6 +35805,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   no: String!
   blNo: String
   blDate: DateTime
+  booked: Boolean
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
@@ -35815,12 +35822,12 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   orderCount: Int!
   batchCount: Int!
   orderItemCount: Int!
-  timeline: Timeline!
-  todo: Todo!
   batches: [BatchPayload!]!
   batchesWithoutContainer: [BatchPayload!]!
   integrationLinks: [IntegrationLinkPayload!]!
   containers: [ContainerPayload!]!
+  timeline: Timeline!
+  todo: Todo!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -35863,57 +35870,55 @@ input ShipmentBatchInput {
 
 input ShipmentContainerCreateInput {
   no: String!
+  warehouseId: ID
   departureDate: DateTime
-  departureDateAssignedToIds: [ID!]
   departureDateApprovedById: ID
-  departureDateApprovedAt: DateTime
+  departureDateAssignedToIds: [ID!]
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedById: ID
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDate: DateTime
   warehouseArrivalActualDateApprovedById: ID
   warehouseArrivalActualDateAssignedToIds: [ID!]
-  warehouseId: ID
-  representativeBatchId: ID
-  representativeBatchIndex: Int
-  batches: [ShipmentBatchInput!]
   freeTimeStartDate: DateTime
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean
   yardName: String
+  representativeBatchId: ID
+  representativeBatchIndex: Int
   containerType: String
   containerOption: ContainerOption
+  batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
   todo: TodoInput
 }
 
 input ShipmentContainerUpdateInput {
-  id: ID
   no: String
+  warehouseId: ID
   departureDate: DateTime
-  departureDateAssignedToIds: [ID!]
   departureDateApprovedById: ID
-  departureDateApprovedAt: DateTime
+  departureDateAssignedToIds: [ID!]
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedById: ID
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDate: DateTime
   warehouseArrivalActualDateApprovedById: ID
   warehouseArrivalActualDateAssignedToIds: [ID!]
-  warehouseId: ID
-  representativeBatchId: ID
-  representativeBatchIndex: Int
-  batches: [ShipmentBatchInput!]
   freeTimeStartDate: DateTime
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean
   yardName: String
+  representativeBatchId: ID
+  representativeBatchIndex: Int
   containerType: String
   containerOption: ContainerOption
+  batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
   todo: TodoInput
+  id: ID
 }
 
 input ShipmentCreateInput {
@@ -35921,6 +35926,7 @@ input ShipmentCreateInput {
   no: String!
   blNo: String
   blDate: DateTime
+  booked: Boolean
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
@@ -35990,6 +35996,7 @@ input ShipmentUpdateInput {
   no: String
   blNo: String
   blDate: DateTime
+  booked: Boolean
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
