@@ -93,7 +93,7 @@ export default defineMessages({
      } {removed} and added {addedCount, plural,
       one {the tag}
       other {tags}
-     } {added} to child`,
+     } {added} to {child}`,
   },
   addedInCharges: {
     id: 'modules.timeline.addedInCharges',
@@ -117,7 +117,7 @@ export default defineMessages({
   },
   addedAndRemovedInChargesChild: {
     id: 'modules.timeline.addedAndRemovedInChargesChild',
-    defaultMessage: `{user} has unassigned {removed} and assigned {added} to child`,
+    defaultMessage: `{user} has unassigned {removed} and assigned {added} to {child}`,
   },
   // OTHER
   message: {
