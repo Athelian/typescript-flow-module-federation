@@ -294,7 +294,7 @@ function ItemsArea({
                         <SlideView isOpen={opened} onRequestClose={() => itemSlideToggle(false)}>
                           {opened && (
                             <ItemFormInSlide
-                              orderItem={item}
+                              orderItem={{ ...item, order }}
                               onSave={updateItem => {
                                 itemSlideToggle(false);
                                 setFieldValue(`orderItems.${index}`, updateItem);

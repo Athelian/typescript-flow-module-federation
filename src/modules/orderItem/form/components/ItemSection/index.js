@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
@@ -27,7 +28,11 @@ import validator from 'modules/orderItem/form/validator';
 import { ItemSectionWrapperStyle, MainFieldsWrapperStyle, DividerStyle } from './style';
 import OrderItemSummaryChart from './components/OrderItemSummaryChart';
 
-const ItemSection = () => {
+type Props = {
+  isSlideView: boolean,
+};
+
+const ItemSection = ({ isSlideView }: Props) => {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
   return (
@@ -209,13 +214,17 @@ const ItemSection = () => {
                       navigate(`/product/${encodeId(originalValues.productProvider.product.id)}`)
                     }
                   />
-                  <Label>
-                    <FormattedMessage id="modules.OrderItems.order" defaultMessage="ORDER" />
-                  </Label>
-                  <OrderCard
-                    order={originalValues.order}
-                    onClick={() => navigate(`/order/${encodeId(originalValues.order.id)}`)}
-                  />
+                  {!isSlideView && (
+                    <>
+                      <Label>
+                        <FormattedMessage id="modules.OrderItems.order" defaultMessage="ORDER" />
+                      </Label>
+                      <OrderCard
+                        order={originalValues.order}
+                        onClick={() => navigate(`/order/${encodeId(originalValues.order.id)}`)}
+                      />
+                    </>
+                  )}
                 </GridColumn>
               </div>
             </>

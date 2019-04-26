@@ -89,7 +89,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                       icon="TASK"
                     />
                     <SectionTabs
-                      link="orderItem_shipmentSection"
+                      link="orderItem_shipmentsSection"
                       label={
                         <FormattedMessage
                           id="modules.OrderItems.shipment"
@@ -140,9 +140,16 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
               }
             >
               <ItemForm
+                isSlideView
                 orderItem={orderItem}
                 onFormReady={() => {
-                  const { batches, files, todo, shipments, ...rest } = orderItem;
+                  const {
+                    batches = [],
+                    files = [],
+                    todo = { tasks: [] },
+                    shipments = [],
+                    ...rest
+                  } = orderItem;
                   orderItemInfoContainer.initDetailValues(rest);
                   orderItemBatchesContainer.initDetailValues({ batches });
                   orderItemFilesContainer.initDetailValues({ files });

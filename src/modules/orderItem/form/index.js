@@ -10,6 +10,7 @@ import { FormWrapperStyle, StatusStyle, StatusLabelStyle } from './style';
 
 type OptionalProps = {
   onFormReady: () => void,
+  isSlideView: boolean,
 };
 
 type Props = OptionalProps & {
@@ -18,6 +19,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onFormReady: () => {},
+  isSlideView: false,
 };
 
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
@@ -34,12 +36,14 @@ export default class ItemForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { orderItem } = this.props;
-    return !isEquals(orderItem, nextProps.orderItem);
+    const { orderItem, isSlideView } = this.props;
+    return (
+      !isEquals(orderItem, nextProps.orderItem) || !isEquals(isSlideView, nextProps.isSlideView)
+    );
   }
 
   render() {
-    const { orderItem } = this.props;
+    const { orderItem, isSlideView } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={FormWrapperStyle}>
@@ -76,7 +80,7 @@ export default class ItemForm extends React.Component<Props> {
                 </>
               )}
             </SectionHeader>
-            <ItemSection />
+            <ItemSection isSlideView={isSlideView} />
           </SectionWrapper>
 
           <AsyncBatchesSection price={orderItem.price} />
