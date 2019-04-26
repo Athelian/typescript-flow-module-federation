@@ -18,7 +18,9 @@ import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
-import { SearchInput } from 'components/NavBar';
+import { SearchInput, SortInput } from 'components/NavBar';
+import { currentSort } from 'components/common/FilterToolBar';
+// import { FilterToolBar } from 'components/common';
 import AdvancedFilter from '../common/SortFilter/AdvancedFilter';
 import messages from '../messages';
 import SortFilter from '../common/SortFilter';
@@ -140,6 +142,11 @@ const Order = ({ intl }: Props) => {
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
+
+  const shipmentSortFields = [
+    { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+  ];
 
   const {
     queryVariables: queryOrderVariables,
@@ -483,23 +490,48 @@ const Order = ({ intl }: Props) => {
                           }}
                         />
                       </div>
+
                       {state.toggleShipmentList && (
-                        <SearchInput
-                          value={shipmentFilterAndSort.filter.query}
-                          name="search"
-                          onClear={() =>
-                            onChangeShipmentFilter({
-                              ...shipmentFilterAndSort,
-                              filter: { ...shipmentFilterAndSort.filter, query: '' },
-                            })
-                          }
-                          onChange={newQuery =>
-                            onChangeShipmentFilter({
-                              ...shipmentFilterAndSort,
-                              filter: { ...shipmentFilterAndSort.filter, query: newQuery },
-                            })
-                          }
-                        />
+                        <>
+                          {/* <FilterToolBar
+                            icon="SHIPMENT"
+                            sortFields={shipmentSortFields}
+                            filtersAndSort={shipmentFilterAndSort}
+                            onChange={onChangeShipmentFilter}
+                          /> */}
+                          <SortInput
+                            sort={currentSort(shipmentSortFields, shipmentFilterAndSort.sort)}
+                            ascending={shipmentFilterAndSort.sort.direction !== 'DESCENDING'}
+                            fields={shipmentSortFields}
+                            onChange={({ field: { value }, ascending }) => {
+                              console.log({ value, ascending });
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                sort: {
+                                  field: value,
+                                  direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                                },
+                              });
+                            }}
+                          />
+
+                          <SearchInput
+                            value={shipmentFilterAndSort.filter.query}
+                            name="search"
+                            onClear={() =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: '' },
+                              })
+                            }
+                            onChange={newQuery =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: newQuery },
+                              })
+                            }
+                          />
+                        </>
                       )}
                     </EntityHeader>
                   </div>
