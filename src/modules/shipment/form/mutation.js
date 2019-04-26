@@ -236,6 +236,11 @@ export const prepareParsedShipmentInput = ({
       newValues.blDate
     ),
     ...parseGenericField(
+      'booked',
+      getByPathWithDefault(null, 'booked', originalValues),
+      newValues.booked
+    ),
+    ...parseGenericField(
       'bookingNo',
       getByPathWithDefault(null, 'bookingNo', originalValues),
       newValues.bookingNo
