@@ -69,6 +69,7 @@ export const productProviderFormFragment = gql`
 export const productProviderCardFragment = gql`
   fragment productProviderCardFragment on ProductProvider {
     id
+    name
     exporter {
       ...partnerNameFragment
     }
