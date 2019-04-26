@@ -132,6 +132,14 @@ export default defineMessages({
     id: 'modules.timeline.order',
     defaultMessage: 'order',
   },
+  orderItem: {
+    id: 'modules.timeline.orderItem',
+    defaultMessage: 'item',
+  },
+  batch: {
+    id: 'modules.timeline.batch',
+    defaultMessage: 'batch',
+  },
   shipment: {
     id: 'modules.timeline.shipment',
     defaultMessage: 'shipment',
@@ -143,5 +151,9 @@ export default defineMessages({
   productProvider: {
     id: 'modules.timeline.productProvider',
     defaultMessage: 'end product',
+  },
+  task: {
+    id: 'modules.timeline.task',
+    defaultMessage: 'task',
   },
 });
