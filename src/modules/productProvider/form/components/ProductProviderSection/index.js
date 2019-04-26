@@ -22,6 +22,7 @@ import {
   CustomFieldsFactory,
   DayInputFactory,
   TextInputFactory,
+  TextAreaInputFactory,
 } from 'components/Form';
 import { PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
 import SelectSupplier from '../SelectSupplier';
@@ -294,6 +295,29 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                   mask: allowUpdate,
                 }}
               />
+              <FormField
+                name="memo"
+                initValue={values.memo}
+                values={values}
+                validator={validator}
+                setFieldValue={setFieldValue}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <TextAreaInputFactory
+                    {...inputHandlers}
+                    editable={allowUpdate}
+                    name={name}
+                    isNew={isNew}
+                    originalValue={originalValues[name]}
+                    label={
+                      <FormattedMessage id="modules.ProductProviders.memo" defaultMessage="MEMO" />
+                    }
+                    inputWidth="400px"
+                    inputHeight="120px"
+                  />
+                )}
+              </FormField>
+
               <div className={DividerStyle} />
             </GridColumn>
           </div>

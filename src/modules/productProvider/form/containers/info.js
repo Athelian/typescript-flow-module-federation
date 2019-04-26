@@ -44,6 +44,7 @@ type FormState = {
     length: Metric,
   },
   customFields: Object,
+  memo: string,
   files?: Array<Document>,
 };
 
@@ -113,6 +114,7 @@ export const initValues = {
     fieldValues: [],
     fieldDefinitions: [],
   },
+  memo: null,
   files: [],
 };
 
