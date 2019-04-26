@@ -493,26 +493,19 @@ const Order = ({ intl }: Props) => {
 
                       {state.toggleShipmentList && (
                         <>
-                          {/* <FilterToolBar
-                            icon="SHIPMENT"
-                            sortFields={shipmentSortFields}
-                            filtersAndSort={shipmentFilterAndSort}
-                            onChange={onChangeShipmentFilter}
-                          /> */}
                           <SortInput
                             sort={currentSort(shipmentSortFields, shipmentFilterAndSort.sort)}
                             ascending={shipmentFilterAndSort.sort.direction !== 'DESCENDING'}
                             fields={shipmentSortFields}
-                            onChange={({ field: { value }, ascending }) => {
-                              console.log({ value, ascending });
+                            onChange={({ field: { value }, ascending }) =>
                               onChangeShipmentFilter({
                                 ...shipmentFilterAndSort,
                                 sort: {
                                   field: value,
                                   direction: ascending ? 'ASCENDING' : 'DESCENDING',
                                 },
-                              });
-                            }}
+                              })
+                            }
                           />
 
                           <SearchInput
