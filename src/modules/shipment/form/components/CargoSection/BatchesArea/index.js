@@ -248,7 +248,7 @@ function BatchesArea({
                               selectable
                               selected={selectedBatchIds.includes(batch.id)}
                               onSelect={() => (allowMoveBatches ? onSelectBatch(batch) : () => {})}
-                              read={{
+                              viewable={{
                                 price: hasPermission(ORDER_ITEMS_GET_PRICE),
                                 tasks: hasPermission(BATCH_TASK_LIST),
                               }}
@@ -312,14 +312,14 @@ function BatchesArea({
                                         CONTAINER_BATCHES_REMOVE,
                                       ]),
                                     }}
-                                    navigate={{
+                                    viewable={{
+                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                      tasks: hasPermission(BATCH_TASK_LIST),
+                                    }}
+                                    navigable={{
                                       order: hasPermission(ORDER_FORM),
                                       product: hasPermission(PRODUCT_FORM),
                                       container: hasPermission(CONTAINER_FORM),
-                                    }}
-                                    read={{
-                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                                      tasks: hasPermission(BATCH_TASK_LIST),
                                     }}
                                     batch={batch}
                                     isRepresented={
