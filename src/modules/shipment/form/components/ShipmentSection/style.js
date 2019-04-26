@@ -42,3 +42,7 @@ export const DividerStyle: string = css`
   background-color: ${colors.GRAY_VERY_LIGHT};
   width: 100%;
 `;
+
+export const BookedStyle = (booked: boolean) => css`
+  color: ${booked ? colors.TEAL : colors.GRAY_LIGHT};
+`;

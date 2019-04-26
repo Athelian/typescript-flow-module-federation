@@ -5,6 +5,7 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
+import { isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
@@ -64,6 +65,7 @@ import {
   CustomFieldsFactory,
   UserAssignmentInputFactory,
   DashedPlusButton,
+  ToggleInput,
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
@@ -78,6 +80,7 @@ import {
   ExporterLabelStyle,
   ExporterSeeMoreButtonStyle,
   DividerStyle,
+  BookedStyle,
 } from './style';
 
 type Props = {
@@ -206,7 +209,19 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                   >
                     {({ name, ...inputHandlers }) => (
                       <TextInputFactory
-                        {...inputHandlers}
+                        {...{
+                          ...inputHandlers,
+                          onBlur: evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldValue(name, inputHandlers.value);
+                            if (
+                              isNullOrUndefined(initialValues[name]) &&
+                              inputHandlers.value !== ''
+                            ) {
+                              setFieldValue('booked', true);
+                            }
+                          },
+                        }}
                         editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_NO])}
                         name={name}
                         isNew={isNew}
@@ -215,6 +230,35 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       />
                     )}
                   </FormField>
+                  <FieldItem
+                    label={<Label> </Label>}
+                    input={
+                      <ToggleInput
+                        name="booked"
+                        toggled={values.booked}
+                        onToggle={() => {
+                          setFieldValue('booked', !values.booked);
+                        }}
+                        editable={SHIPMENT_UPDATE}
+                      >
+                        {values.booked ? (
+                          <div className={BookedStyle(true)}>
+                            <FormattedMessage
+                              id="modules.Shipments.booked"
+                              defaultMessage="Booked"
+                            />
+                          </div>
+                        ) : (
+                          <div className={BookedStyle(false)}>
+                            <FormattedMessage
+                              id="modules.Shipments.unbooked"
+                              defaultMessage="Unbooked"
+                            />
+                          </div>
+                        )}
+                      </ToggleInput>
+                    }
+                  />
                   <FormField
                     name="bookingDate"
                     initValue={values.bookingDate}

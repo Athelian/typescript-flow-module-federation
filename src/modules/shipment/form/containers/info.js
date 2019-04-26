@@ -7,6 +7,7 @@ type FormState = {
   no?: string,
   blNo?: string,
   blDate?: Date,
+  booked: boolean,
   bookingNo?: string,
   bookingDate?: Date,
   invoiceNo?: string,
@@ -23,6 +24,7 @@ const initValues = {
   forwarders: [],
   importer: {},
   inCharges: [],
+  booked: null,
   customFields: {
     fieldValues: [],
     fieldDefinitions: [],
