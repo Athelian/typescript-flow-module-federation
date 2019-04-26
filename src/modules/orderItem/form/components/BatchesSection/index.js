@@ -6,17 +6,17 @@ import { BooleanValue } from 'react-values';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
 import usePermission from 'hooks/usePermission';
 import FormattedNumber from 'components/FormattedNumber';
-import { generateBatchByOrderItem, generateBatchForClone } from 'utils/batch';
+import {
+  findTotalAutoFillBatches,
+  generateBatchByOrderItem,
+  generateCloneBatch,
+} from 'utils/batch';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 import { OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
-import { getBatchByFillBatch } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
-import {
-  OrderItemInfoContainer,
-  OrderItemBatchesContainer,
-} from 'modules/orderItem/form/containers';
+import { OrderItemBatchesContainer } from 'modules/orderItem/form/containers';
 
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 
@@ -28,21 +28,29 @@ import {
   EmptyMessageStyle,
 } from './style';
 
-function BatchesSection() {
+type Props = {
+  itemInfo: {
+    quantity: ?number,
+    price: ?Object,
+    productProvider: ?Object,
+  },
+};
+
+function BatchesSection({ itemInfo }: Props) {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
 
   return (
-    <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
-      {({ state: infoState }, { state: { batches }, setFieldValue, setDeepFieldValue }) => {
-        const values = { ...infoState, batches };
+    <Subscribe to={[OrderItemBatchesContainer]}>
+      {({ state: { batches }, setFieldValue, setDeepFieldValue }) => {
+        const values = { ...itemInfo, batches };
         return (
           <SectionWrapper id="orderItem_batchesSection">
             <SectionHeader
               icon="BATCH"
               title={
                 <>
-                  <FormattedMessage id="modules.orderItem.batches" defaultMessage="BATCHES" /> (
+                  <FormattedMessage id="modules.OrderItems.batches" defaultMessage="BATCHES" /> (
                   <FormattedNumber value={batches.length} />)
                 </>
               }
@@ -54,7 +62,7 @@ function BatchesSection() {
                     <NewButton
                       label={
                         <FormattedMessage
-                          id="modules.orderItem.newBatch"
+                          id="modules.OrderItems.newBatch"
                           defaultMessage="NEW BATCH"
                         />
                       }
@@ -71,13 +79,22 @@ function BatchesSection() {
                     <BaseButton
                       label={
                         <FormattedMessage
-                          id="modules.orderItem.autoFillBatch"
+                          id="modules.OrderItems.autoFillBatch"
                           defaultMessage="AUTOFILL BATCH"
                         />
                       }
                       onClick={() => {
-                        const newBatch = getBatchByFillBatch(values);
-                        if (newBatch) {
+                        const quantity = findTotalAutoFillBatches({
+                          batches,
+                          quantity: itemInfo.quantity || 0,
+                        });
+                        if (quantity > 0) {
+                          const newBatch = {
+                            ...generateBatchByOrderItem(itemInfo),
+                            orderItem: itemInfo,
+                            no: `batch no ${batches.length + 1}`,
+                            quantity,
+                          };
                           setFieldValue('batches', [...batches, newBatch]);
                         }
                       }}
@@ -117,8 +134,8 @@ function BatchesSection() {
                               <OrderBatchCard
                                 editable={allowUpdate}
                                 batch={batch}
-                                currency={infoState.price.currency}
-                                price={infoState.price}
+                                currency={itemInfo.price && itemInfo.price.currency}
+                                price={itemInfo.price}
                                 onClick={() => batchSlideToggle(true)}
                                 saveOnBlur={value => setDeepFieldValue(`batches.${index}`, value)}
                                 onRemove={() =>
@@ -128,10 +145,7 @@ function BatchesSection() {
                                   )
                                 }
                                 onClone={value =>
-                                  setFieldValue('batches', [
-                                    ...batches,
-                                    generateBatchForClone(value),
-                                  ])
+                                  setFieldValue('batches', [...batches, generateCloneBatch(value)])
                                 }
                               />
                             </div>

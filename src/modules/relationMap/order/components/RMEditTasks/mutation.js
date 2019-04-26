@@ -4,11 +4,12 @@ import {
   taskFormFragment,
   userAvatarFragment,
   tagFragment,
-  orderCardFragment,
-  batchCardFragment,
-  shipmentCardFragment,
   productCardFragment,
   productProviderCardFragment,
+  orderCardFragment,
+  itemCardFragment,
+  batchCardFragment,
+  shipmentCardFragment,
   partnerNameFragment,
   priceFragment,
   metricFragment,
@@ -30,11 +31,15 @@ export const taskUpdateManyMutation = gql`
     }
   }
   ${taskFormFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
   ${orderCardFragment}
-  ${batchCardFragment}
-  ${shipmentCardFragment}
   ${productCardFragment}
   ${productProviderCardFragment}
+  ${batchCardFragment}
+  ${shipmentCardFragment}
+  ${orderCardFragment}
+  ${itemCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
   ${metricFragment}
@@ -42,8 +47,6 @@ export const taskUpdateManyMutation = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
   ${sizeFragment}
 `;
 

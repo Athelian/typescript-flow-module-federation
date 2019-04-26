@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
@@ -24,24 +25,23 @@ import {
   OrderItemBatchesContainer,
 } from 'modules/orderItem/form/containers';
 import validator from 'modules/orderItem/form/validator';
-
 import { ItemSectionWrapperStyle, MainFieldsWrapperStyle, DividerStyle } from './style';
 import OrderItemSummaryChart from './components/OrderItemSummaryChart';
 
-const ItemSection = () => {
+type Props = {
+  isSlideView: boolean,
+};
+
+const ItemSection = ({ isSlideView }: Props) => {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
   return (
     <div className={ItemSectionWrapperStyle}>
-      <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
-        {({ originalValues, state, setFieldValue, setDeepFieldValue }, { state: { batches } }) => {
+      <Subscribe to={[OrderItemInfoContainer]}>
+        {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
           const values = { ...originalValues, ...state };
 
           const { price, quantity } = values;
-          const { orderedQuantity, batchedQuantity, shippedQuantity } = getItemQuantityChartData({
-            orderItem: values,
-            batches,
-          });
 
           const totalPrice = {
             amount: price.amount * quantity,
@@ -65,7 +65,7 @@ const ItemSection = () => {
                         required
                         originalValue={originalValues[name]}
                         label={
-                          <FormattedMessage id="module.orderItem.itemNO" defaultMessage="ITEM NO" />
+                          <FormattedMessage id="module.OrderItems.no" defaultMessage="ITEM NO" />
                         }
                         editable={allowUpdate}
                       />
@@ -87,7 +87,7 @@ const ItemSection = () => {
                         originalValue={originalValues[name]}
                         label={
                           <FormattedMessage
-                            id="module.orderItem.quantity"
+                            id="modules.OrderItems.quantity"
                             defaultMessage="QUANTITY"
                           />
                         }
@@ -111,7 +111,7 @@ const ItemSection = () => {
                         originalValue={getByPath('price.amount', originalValues)}
                         label={
                           <FormattedMessage
-                            id="module.orderItem.unitPrice"
+                            id="modules.OrderItems.unitPrice"
                             defaultMessage="UNIT PRICE"
                           />
                         }
@@ -135,7 +135,7 @@ const ItemSection = () => {
                     vertical
                     label={
                       <Label height="30px">
-                        <FormattedMessage id="modules.orderItem.tags" defaultMessage="TAGS" />
+                        <FormattedMessage id="modules.OrderItems.tags" defaultMessage="TAGS" />
                       </Label>
                     }
                     input={
@@ -168,7 +168,7 @@ const ItemSection = () => {
                         {...inputHandlers}
                         originalValue={originalValues[name]}
                         label={
-                          <FormattedMessage id="modules.orderItem.memo" defaultMessage="MEMO" />
+                          <FormattedMessage id="modules.OrderItems.memo" defaultMessage="MEMO" />
                         }
                         editable={allowUpdate}
                         vertical
@@ -179,19 +179,32 @@ const ItemSection = () => {
                   </FormField>
 
                   <div className={DividerStyle} />
-
-                  <OrderItemSummaryChart
-                    orderedQuantity={orderedQuantity}
-                    batchedQuantity={batchedQuantity}
-                    shippedQuantity={shippedQuantity}
-                    totalPrice={totalPrice}
-                  />
+                  <Subscribe to={[OrderItemBatchesContainer]}>
+                    {({ state: { batches } }) => {
+                      const {
+                        orderedQuantity,
+                        batchedQuantity,
+                        shippedQuantity,
+                      } = getItemQuantityChartData({
+                        orderItem: values,
+                        batches,
+                      });
+                      return (
+                        <OrderItemSummaryChart
+                          orderedQuantity={orderedQuantity}
+                          batchedQuantity={batchedQuantity}
+                          shippedQuantity={shippedQuantity}
+                          totalPrice={totalPrice}
+                        />
+                      );
+                    }}
+                  </Subscribe>
                 </GridColumn>
 
                 <GridColumn>
                   <Label>
                     <FormattedMessage
-                      id="modules.orderItem.endProduct"
+                      id="modules.OrderItems.endProduct"
                       defaultMessage="END PRODUCT"
                     />
                   </Label>
@@ -201,13 +214,17 @@ const ItemSection = () => {
                       navigate(`/product/${encodeId(originalValues.productProvider.product.id)}`)
                     }
                   />
-                  <Label>
-                    <FormattedMessage id="modules.orderItem.order" defaultMessage="ORDER" />
-                  </Label>
-                  <OrderCard
-                    order={originalValues.order}
-                    onClick={() => navigate(`/order/${encodeId(originalValues.order.id)}`)}
-                  />
+                  {!isSlideView && (
+                    <>
+                      <Label>
+                        <FormattedMessage id="modules.OrderItems.order" defaultMessage="ORDER" />
+                      </Label>
+                      <OrderCard
+                        order={originalValues.order}
+                        onClick={() => navigate(`/order/${encodeId(originalValues.order.id)}`)}
+                      />
+                    </>
+                  )}
                 </GridColumn>
               </div>
             </>

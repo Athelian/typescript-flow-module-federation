@@ -14,6 +14,9 @@ export const taskCardFragment = gql`
       ... on Order {
         poNo
       }
+      ... on OrderItem {
+        no
+      }
       ... on Shipment {
         no
       }
@@ -226,6 +229,9 @@ export const taskFormFragment = gql`
     entity {
       ... on Order {
         ...orderCardFragment
+      }
+      ... on OrderItem {
+        ...itemCardFragment
       }
       ... on Batch {
         ...batchCardFragment

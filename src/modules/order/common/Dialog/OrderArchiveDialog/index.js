@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import FormattedNumber from 'components/FormattedNumber';
 import ArchiveDialog from 'components/Dialog/ArchiveDialog';
 import { updateOrderMutation } from 'modules/order/form/mutation';
-import { getBatchesSummary } from 'modules/order/helpers';
+import { calculateBatchesFromOrder } from 'modules/order/helpers';
 import { spanWithColor } from 'utils/color';
 import emitter from 'utils/emitter';
 import messages from './messages';
@@ -14,7 +14,7 @@ import { MessageStyle } from '../style';
 
 const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderDialogProps) => {
   const { totalBatches = 0, unshippedBatches = 0, shippedBatches = 0 } = order
-    ? getBatchesSummary(order)
+    ? calculateBatchesFromOrder(order)
     : {};
   const { id: orderId = '' } = order || {};
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY_DARK');

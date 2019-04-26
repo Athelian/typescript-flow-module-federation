@@ -46,7 +46,13 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { orderBinding, batchBinding, shipmentBinding, START_DATE } from './constants';
+import {
+  orderBinding,
+  orderItemBinding,
+  batchBinding,
+  shipmentBinding,
+  START_DATE,
+} from './constants';
 import {
   convertBindingToSelection,
   getFieldsByEntity,
@@ -174,7 +180,6 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             });
             break;
           }
-          case 'OrderItem':
           case 'Order': {
             onChange({
               [`${field}Binding`]:
@@ -183,6 +188,19 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             });
             emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
               field: field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
+            });
+            break;
+          }
+          case 'OrderItem': {
+            onChange({
+              [`${field}Binding`]:
+                field === 'dueDate' ? START_DATE : orderItemBinding(intl).issuedAt.field,
+              [`${field}Interval`]: { days: 0 },
+            });
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
+              field: field === 'dueDate' ? START_DATE : orderItemBinding(intl).issuedAt.field,
               entityId: getByPath('entity.id', task),
               selectedField: field,
             });

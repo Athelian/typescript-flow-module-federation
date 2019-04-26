@@ -163,6 +163,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       batchCount,
                       batchShippedCount,
                       productProvider,
+                      todo,
                       order,
                     } = item;
                     const compiledOrderItem = {
@@ -174,6 +175,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       totalShipped,
                       batchCount,
                       batchShippedCount,
+                      todo,
                     };
 
                     const { exporter, supplier, product } = productProvider;

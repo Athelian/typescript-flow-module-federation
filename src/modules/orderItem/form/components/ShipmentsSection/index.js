@@ -22,7 +22,7 @@ const ShipmentsSection = () => (
             icon="SHIPMENT"
             title={
               <>
-                <FormattedMessage id="modules.orderItem.shipments" defaultMessage="SHIPMENTS" /> (
+                <FormattedMessage id="modules.OrderItems.shipments" defaultMessage="SHIPMENTS" /> (
                 <FormattedNumber value={shipments.length} />)
               </>
             }
@@ -35,7 +35,7 @@ const ShipmentsSection = () => (
               {shipments.length === 0 ? (
                 <div className={EmptyMessageStyle}>
                   <FormattedMessage
-                    id="modules.orderItem.noShipmentFound"
+                    id="modules.OrderItems.noShipmentFound"
                     defaultMessage="No shipments found"
                   />
                 </div>

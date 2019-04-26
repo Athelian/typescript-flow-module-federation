@@ -74,6 +74,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                         id,
                         no,
                         quantity,
+                        todo,
                         price,
                         totalBatched,
                         totalShipped,
@@ -85,6 +86,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                       const compiledOrderItem = {
                         id,
                         no,
+                        todo,
                         quantity,
                         price,
                         totalBatched,

@@ -19,6 +19,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import {
@@ -83,6 +84,13 @@ const getParentInfo = (parent: Object) => {
       parentType: 'order',
       parentIcon: 'ORDER',
       parentData: parent.poNo,
+    };
+  }
+  if (__typename === 'OrderItem') {
+    return {
+      parentType: 'orderItem',
+      parentIcon: 'ORDER_ITEM',
+      parentData: parent.no,
     };
   }
   if (__typename === 'Batch') {
@@ -181,6 +189,7 @@ const TaskCard = ({
 
   const viewPermissions = {
     order: hasPermission(ORDER_FORM),
+    orderItem: hasPermission(ORDER_ITEMS_FORM),
     batch: hasPermission(BATCH_FORM),
     shipment: hasPermission(SHIPMENT_FORM),
     product: hasPermission(PRODUCT_FORM),

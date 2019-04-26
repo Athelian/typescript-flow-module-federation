@@ -5,6 +5,7 @@ import {
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
+  itemCardFragment,
   batchCardFragment,
   productCardFragment,
   shipmentCardFragment,
@@ -31,10 +32,13 @@ const editableTaskListQuery = gql`
   }
 
   ${taskFormFragment}
+  ${tagFragment}
+  ${userAvatarFragment}
   ${orderCardFragment}
+  ${itemCardFragment}
   ${batchCardFragment}
-  ${shipmentCardFragment}
   ${productCardFragment}
+  ${shipmentCardFragment}
   ${productProviderCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
@@ -43,8 +47,6 @@ const editableTaskListQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
   ${sizeFragment}
 `;
 

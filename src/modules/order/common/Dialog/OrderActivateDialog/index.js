@@ -5,7 +5,7 @@ import { ApolloConsumer } from 'react-apollo';
 import FormattedNumber from 'components/FormattedNumber';
 import ActivateDialog from 'components/Dialog/ActivateDialog';
 import { updateOrderMutation } from 'modules/order/form/mutation';
-import { getBatchesSummary } from 'modules/order/helpers';
+import { calculateBatchesFromOrder } from 'modules/order/helpers';
 import { spanWithColor } from 'utils/color';
 import emitter from 'utils/emitter';
 import messages from './messages';
@@ -13,7 +13,7 @@ import { type OrderDialogProps, defaultProps } from '../type';
 import { MessageStyle } from '../style';
 
 const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderDialogProps) => {
-  const { totalBatches, unshippedBatches, shippedBatches } = getBatchesSummary(order);
+  const { totalBatches, unshippedBatches, shippedBatches } = calculateBatchesFromOrder(order);
   const { id: orderId } = order;
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY');
   const batchesMsg = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');

@@ -161,6 +161,8 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         amount: newItem.price.amount,
         currency: newValues.currency,
       }),
+      ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldItem), newItem.tags),
+      ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldItem), newItem.memo),
       ...parseArrayOfChildrenField(
         'batches',
         getByPathWithDefault([], 'batches', oldItem),
@@ -169,6 +171,16 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
           prepareParsedBatchInput(oldBatch, newBatch, {
             inOrderForm: true,
           })
+      ),
+      ...parseFilesField('files', getByPathWithDefault([], 'files', oldItem), newItem.files),
+      ...parseCustomFieldsField(
+        'customFields',
+        getByPathWithDefault(null, 'customFields', oldItem),
+        newItem.customFields
+      ),
+      ...parseTodoField(
+        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', oldItem),
+        newItem.todo
       ),
     })
   ),

@@ -5,6 +5,7 @@ import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SelectProducts from 'modules/order/common/SelectProducts';
+import ItemFormInSlide from 'modules/orderItem/common/ItemFormInSlide';
 import SlideView from 'components/SlideView';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
@@ -126,6 +127,7 @@ function ItemsArea({
                 batchShippedCount,
                 productProvider,
                 batches,
+                todo,
               } = item;
               const compiledOrderItem = {
                 id,
@@ -136,6 +138,7 @@ function ItemsArea({
                 totalShipped,
                 batchCount,
                 batchShippedCount,
+                todo,
               };
 
               const { exporter, supplier, unitPrice, product } = productProvider;
@@ -287,23 +290,38 @@ function ItemsArea({
                       <Icon icon={isFocused ? 'INVISIBLE' : 'VISIBLE'} />
                     </div>
                   </button>
-                  <ItemCard
-                    orderItem={compiledOrderItem}
-                    productProvider={compiledProductProvider}
-                    product={compiledProduct}
-                    order={compiledOrder}
-                    batches={compiledBatches}
-                    index={index}
-                    actions={actions}
-                    setFieldValue={setFieldValue}
-                    onClick={() => {
-                      // TODO: Open slideview form
-                    }}
-                    editable={editable}
-                    viewable={viewable}
-                    navigable={navigable}
-                    config={config}
-                  />
+                  <BooleanValue key={item.id}>
+                    {({ value: opened, set: itemSlideToggle }) => (
+                      <>
+                        <SlideView isOpen={opened} onRequestClose={() => itemSlideToggle(false)}>
+                          {opened && (
+                            <ItemFormInSlide
+                              orderItem={{ ...item, order }}
+                              onSave={updateItem => {
+                                itemSlideToggle(false);
+                                setFieldValue(`orderItems.${index}`, updateItem);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                        <ItemCard
+                          orderItem={compiledOrderItem}
+                          productProvider={compiledProductProvider}
+                          product={compiledProduct}
+                          order={compiledOrder}
+                          batches={compiledBatches}
+                          index={index}
+                          actions={actions}
+                          setFieldValue={setFieldValue}
+                          onClick={() => itemSlideToggle(true)}
+                          editable={editable}
+                          viewable={viewable}
+                          navigable={navigable}
+                          config={config}
+                        />
+                      </>
+                    )}
+                  </BooleanValue>
                 </div>
               );
             })}

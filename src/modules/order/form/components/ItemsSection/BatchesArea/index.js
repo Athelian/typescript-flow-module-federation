@@ -3,7 +3,11 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
 import { BooleanValue } from 'react-values';
-import { getBatchByFillBatch } from 'modules/order/helpers';
+import {
+  findTotalAutoFillBatches,
+  generateBatchByOrderItem,
+  generateCloneBatch,
+} from 'utils/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { NewButton, BaseButton } from 'components/Buttons';
@@ -120,8 +124,14 @@ function BatchesArea({
                 onClick={() => {
                   if (focusedItemIndex === -1) {
                     const newOrderItems = orderItems.map(orderItem => {
-                      const newBatch = getBatchByFillBatch(orderItem);
-                      if (newBatch) {
+                      const quantity = findTotalAutoFillBatches(orderItem);
+                      if (quantity > 0) {
+                        const newBatch = {
+                          ...generateBatchByOrderItem(orderItem),
+                          orderItem,
+                          no: `batch no ${orderItem.batches.length + 1}`,
+                          quantity,
+                        };
                         return {
                           ...orderItem,
                           order,
@@ -142,8 +152,14 @@ function BatchesArea({
                     setFieldValue('orderItems', newOrderItems);
                   } else {
                     const orderItem = orderItems[focusedItemIndex];
-                    const newBatch = getBatchByFillBatch(orderItem);
-                    if (newBatch) {
+                    const quantity = findTotalAutoFillBatches(orderItem);
+                    if (quantity > 0) {
+                      const newBatch = {
+                        ...generateBatchByOrderItem(orderItem),
+                        orderItem,
+                        no: `batch no ${orderItem.batches.length + 1}`,
+                        quantity,
+                      };
                       const newOrderItem = {
                         ...orderItem,
                         batches: [
@@ -214,15 +230,7 @@ function BatchesArea({
                         onClone={newBatch => {
                           setFieldValue(`orderItems.${orderItemPosition}.batches`, [
                             ...(orderItems[orderItemPosition].batches || []),
-                            {
-                              ...newBatch,
-                              no: `${newBatch.no}- clone`,
-                              id: Date.now(),
-                              batchAdjustments: [],
-                              todo: {
-                                tasks: [],
-                              },
-                            },
+                            generateCloneBatch(newBatch),
                           ]);
                         }}
                       />
@@ -250,35 +258,13 @@ function BatchesArea({
             label={<FormattedMessage id="modules.Orders.newBatch" defaultMessage="NEW BATCH" />}
             onClick={() => {
               const orderItem = orderItems[focusedItemIndex];
-              const {
-                productProvider: {
-                  packageName,
-                  packageCapacity,
-                  packageGrossWeight,
-                  packageVolume,
-                  packageSize,
-                },
-              } = orderItem;
               const newBatch = {
+                ...generateBatchByOrderItem(orderItem),
                 orderItem: {
                   ...orderItem,
                   order,
                 },
-                id: Date.now(),
                 no: `batch ${batches.length + 1}`,
-                tags: [],
-                packageName,
-                packageCapacity,
-                packageGrossWeight,
-                packageVolume,
-                packageSize,
-                quantity: 0,
-                packageQuantity: 0,
-                batchAdjustments: [],
-                autoCalculatePackageQuantity: true,
-                todo: {
-                  tasks: [],
-                },
               };
               setFieldValue(`orderItems.${focusedItemIndex}.batches`, [...batches, newBatch]);
               setFieldTouched(`orderItems.${focusedItemIndex}.batches`);
