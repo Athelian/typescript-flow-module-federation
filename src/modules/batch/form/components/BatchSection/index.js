@@ -138,6 +138,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                 batchShippedCount,
                 productProvider,
                 order,
+                todo,
               } = orderItem;
               const { exporter, supplier, product } = productProvider;
               compiledProductProvider = {
@@ -163,6 +164,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                 totalShipped,
                 batchCount,
                 batchShippedCount,
+                todo,
               };
 
               const { id: orderId, poNo } = order;

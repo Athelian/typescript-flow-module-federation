@@ -3,8 +3,10 @@ import React, { Suspense, lazy } from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { isEquals } from 'utils/fp';
+import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper, SectionHeader, LastModified, FormTooltip } from 'components/Form';
-import { OrderItemInfoContainer } from 'modules/orderItem/form/containers';
+import { OrderInfoContainer } from 'modules/order/form/containers';
+import { OrderItemInfoContainer, OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import Icon from 'components/Icon';
 import LoadingIcon from 'components/LoadingIcon';
 import ItemSection from './components/ItemSection';
@@ -90,6 +92,24 @@ export default class ItemForm extends React.Component<Props> {
           <AsyncDocumentsSection />
           <AsyncTaskSection type="orderItem" />
           <AsyncShipmentsSection />
+          <Subscribe to={[OrderItemTasksContainer, OrderInfoContainer]}>
+            {(
+              {
+                state: {
+                  todo: { tasks },
+                },
+                setFieldValue,
+              },
+              { state }
+            ) => (
+              <AutoDateBinding
+                type="order"
+                values={state}
+                tasks={tasks}
+                setTaskValue={setFieldValue}
+              />
+            )}
+          </Subscribe>
         </div>
       </Suspense>
     );

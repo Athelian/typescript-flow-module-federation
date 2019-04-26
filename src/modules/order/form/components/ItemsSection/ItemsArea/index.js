@@ -127,6 +127,7 @@ function ItemsArea({
                 batchShippedCount,
                 productProvider,
                 batches,
+                todo,
               } = item;
               const compiledOrderItem = {
                 id,
@@ -137,6 +138,7 @@ function ItemsArea({
                 totalShipped,
                 batchCount,
                 batchShippedCount,
+                todo,
               };
 
               const { exporter, supplier, unitPrice, product } = productProvider;
