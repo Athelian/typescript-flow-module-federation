@@ -18,7 +18,7 @@ import OrderSection from './components/OrderSection';
 import { OrderFormWrapperStyle } from './style';
 import { OrderInfoContainer, OrderFilesContainer, OrderTasksContainer } from './containers';
 
-const AsyncItemsSection = lazy(() => import('./components/ItemsSectionV2'));
+const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));

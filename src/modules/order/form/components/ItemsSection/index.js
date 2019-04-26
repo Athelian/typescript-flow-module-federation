@@ -1,214 +1,108 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue, ArrayValue } from 'react-values';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import type { IntlShape } from 'react-intl';
-import { injectUid } from 'utils/id';
-import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { SectionNavBar } from 'components/NavBar';
-import { NewButton, BaseButton } from 'components/Buttons';
-import SlideView from 'components/SlideView';
-import messages from 'modules/order/messages';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import { FormattedMessage } from 'react-intl';
+import { BooleanValue, NumberValue } from 'react-values';
+import FormattedNumber from 'components/FormattedNumber';
+import useLocalStorage from 'hooks/useLocalStorage';
+import Icon from 'components/Icon';
 import { OrderInfoContainer, OrderItemsContainer } from 'modules/order/form/containers';
+import { SectionHeader, SectionWrapper } from 'components/Form';
 import { FormContainer } from 'modules/form';
-import SelectProducts from 'modules/order/common/SelectProducts';
-import usePermission from 'hooks/usePermission';
-import { getBatchByFillBatch } from 'modules/order/helpers';
-import ExpandButtons from './components/ExpandButtons';
-import OrderItems from './components/OrderItems';
-import { ItemsSectionWrapperStyle, ItemsSectionBodyStyle } from './style';
+import ItemsArea from './ItemsArea';
+import BatchesArea from './BatchesArea';
+import { ItemsSectionWrapperStyle, ItemsUIWrapperStyle, ItemsUIStyle } from './style';
 
 type Props = {
-  intl: IntlShape,
   isNew: boolean,
 };
 
-function ItemSection({ intl, isNew }: Props) {
-  const { hasPermission } = usePermission();
-
-  const allowUpdate = hasPermission(ORDER_UPDATE);
-
+const ItemsSection = ({ isNew }: Props) => {
+  const [storedValue, setValue] = useLocalStorage('itemsIsExpanded', false);
   return (
-    <ArrayValue defaultValue={[]}>
-      {({ value: selected, push, set }) => (
-        <BooleanValue>
-          {({ value: allItemsExpanded, set: toggleExpand }) => (
-            <div className={ItemsSectionWrapperStyle}>
-              <SectionNavBar>
-                <ExpandButtons
-                  type="COMPRESS"
-                  onClick={() => {
-                    toggleExpand(false);
-                    set([]);
-                  }}
-                />
-                <Subscribe to={[OrderItemsContainer]}>
-                  {({ state: { orderItems } }) => (
-                    <ExpandButtons
-                      type="EXPAND"
-                      onClick={() => {
-                        toggleExpand(true);
-                        set(orderItems.map(({ id }) => id));
-                      }}
-                    />
-                  )}
-                </Subscribe>
-                {allowUpdate && (
-                  <Subscribe to={[OrderInfoContainer]}>
-                    {({ state: { exporter, currency } }) => (
-                      <BooleanValue>
-                        {({ value: opened, set: slideToggle }) => (
-                          <>
-                            <Subscribe to={[OrderItemsContainer]}>
-                              {({ state: { orderItems }, setFieldValue }) => (
-                                <>
-                                  <BaseButton
-                                    icon="SYNC"
-                                    label={
-                                      <FormattedMessage
-                                        id="modules.order.syncAllPrice"
-                                        defaultMessage="SYNC ALL PRICE"
-                                      />
-                                    }
-                                    onClick={() => {
-                                      const newOrderItems = orderItems.map(orderItem => {
-                                        const unitPrice = getByPath(
-                                          'productProvider.unitPrice',
-                                          orderItem
-                                        );
-                                        if (unitPrice && unitPrice.currency === currency) {
-                                          return { ...orderItem, ...{ price: unitPrice } };
-                                        }
-                                        return orderItem;
-                                      });
-                                      setFieldValue('orderItems', newOrderItems);
-                                    }}
-                                  />
-                                  <NewButton
-                                    label={intl.formatMessage(messages.newItems)}
-                                    disabled={!((exporter && exporter.id) || !isNew)}
-                                    onClick={() => slideToggle(true)}
-                                  />
-                                  <BaseButton
-                                    label={intl.formatMessage(messages.autoFillBatch)}
-                                    onClick={() => {
-                                      const newOrderItems = orderItems.map(orderItem => {
-                                        const { batches } = orderItem;
-                                        const newBatch = getBatchByFillBatch(orderItem);
-                                        if (newBatch) {
-                                          return {
-                                            ...orderItem,
-                                            batches: [...batches, newBatch],
-                                          };
-                                        }
-                                        return orderItem;
-                                      });
-                                      setFieldValue('orderItems', newOrderItems);
-                                    }}
-                                  />
-                                </>
-                              )}
-                            </Subscribe>
-                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                              {opened && (
-                                <Subscribe to={[OrderItemsContainer, FormContainer]}>
-                                  {(
-                                    { state: { orderItems }, setFieldValue },
-                                    { setFieldTouched }
-                                  ) => (
-                                    <SelectProducts
-                                      onSelect={selectedItems => {
-                                        setFieldValue('orderItems', [
-                                          ...orderItems,
-                                          ...selectedItems.map(productProvider =>
-                                            injectUid({
-                                              productProvider,
-                                              isNew: true,
-                                              batches: [],
-                                              quantity: 0,
-                                              price: {
-                                                amount:
-                                                  getByPath(
-                                                    'unitPrice.currency',
-                                                    productProvider
-                                                  ) === currency
-                                                    ? getByPathWithDefault(
-                                                        0,
-                                                        'unitPrice.amount',
-                                                        productProvider
-                                                      )
-                                                    : 0,
-                                                currency,
-                                              },
-                                            })
-                                          ),
-                                        ]);
-                                        setFieldTouched('orderItems');
-                                        slideToggle(false);
-                                      }}
-                                      exporter={exporter && exporter.id}
-                                      orderCurrency={currency}
-                                      onCancel={() => slideToggle(false)}
-                                    />
-                                  )}
-                                </Subscribe>
-                              )}
-                            </SlideView>
-                          </>
-                        )}
-                      </BooleanValue>
-                    )}
-                  </Subscribe>
-                )}
-              </SectionNavBar>
-              <div id="orderItemsSection" className={ItemsSectionBodyStyle}>
-                <Subscribe to={[OrderInfoContainer, OrderItemsContainer, FormContainer]}>
-                  {(
-                    { state: { currency } },
-                    { state: { orderItems }, setFieldValue, setFieldArrayValue },
-                    { setFieldTouched }
-                  ) => (
-                    <OrderItems
-                      orderItems={orderItems}
-                      order={{ currency }}
-                      setFieldValue={setFieldValue}
-                      selected={selected}
-                      arrayHelpers={{ push, set }}
-                      allItemsExpanded={allItemsExpanded}
-                      onClone={({ id, ...rest }) => {
-                        setFieldValue('orderItems', [
-                          ...orderItems,
-                          injectUid({
-                            ...rest,
-                            isNew: true,
-                            batches: [],
-                          }),
-                        ]);
-                        setFieldTouched(`orderItems.${id}`);
-                      }}
-                      onRemove={({ id }) => {
-                        setFieldValue(
-                          'orderItems',
-                          orderItems.filter(({ id: itemId }) => id !== itemId)
+    <BooleanValue value={storedValue} onChange={setValue}>
+      {({ value: itemsIsExpanded, set: setItemsUI }) => (
+        <SectionWrapper id="order_itemsSection">
+          <Subscribe to={[OrderItemsContainer]}>
+            {({ state: { orderItems }, setFieldValue }) => (
+              <>
+                <SectionHeader
+                  icon="ORDER_ITEM"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Orders.items" defaultMessage="ITEMS" />
+                      {' ('}
+                      {<FormattedNumber value={(orderItems || []).length} />}
+                      {')'}
+                    </>
+                  }
+                >
+                  <div className={ItemsUIWrapperStyle}>
+                    <button
+                      className={ItemsUIStyle({
+                        isActive: !itemsIsExpanded,
+                        flipped: false,
+                      })}
+                      onClick={() => setItemsUI(false)}
+                      type="button"
+                    >
+                      <Icon icon="TH_LIST" />
+                    </button>
+                    <button
+                      className={ItemsUIStyle({
+                        isActive: itemsIsExpanded,
+                        flipped: true,
+                      })}
+                      onClick={() => setItemsUI(true)}
+                      type="button"
+                    >
+                      <Icon icon="TH_LIST" />
+                    </button>
+                  </div>
+                </SectionHeader>
+                <Subscribe to={[OrderInfoContainer, FormContainer]}>
+                  {({ state: order }, { setFieldTouched }) => (
+                    <NumberValue defaultValue={-1}>
+                      {({ value: focusedItemIndex, set: changeFocusedItem }) => {
+                        return (
+                          <div className={ItemsSectionWrapperStyle}>
+                            <ItemsArea
+                              isNew={isNew}
+                              itemsIsExpanded={itemsIsExpanded}
+                              order={order}
+                              orderItems={orderItems}
+                              setFieldValue={setFieldValue}
+                              setFieldTouched={setFieldTouched}
+                              focusedItemIndex={focusedItemIndex}
+                              onFocusItem={(index: number) => {
+                                if (focusedItemIndex === index) {
+                                  changeFocusedItem(-1);
+                                } else {
+                                  changeFocusedItem(index);
+                                }
+                              }}
+                            />
+                            <BatchesArea
+                              itemsIsExpanded={itemsIsExpanded}
+                              order={order}
+                              orderItems={orderItems}
+                              setFieldValue={setFieldValue}
+                              setFieldTouched={setFieldTouched}
+                              focusedItemIndex={focusedItemIndex}
+                            />
+                          </div>
                         );
-                        setFieldTouched(`orderItems.${id}`);
                       }}
-                      onSave={(index, newValue) => {
-                        setFieldArrayValue(index, newValue);
-                        setFieldTouched(`orderItems.${index}`);
-                      }}
-                    />
+                    </NumberValue>
                   )}
                 </Subscribe>
-              </div>
-            </div>
-          )}
-        </BooleanValue>
+              </>
+            )}
+          </Subscribe>
+        </SectionWrapper>
       )}
-    </ArrayValue>
+    </BooleanValue>
   );
-}
+};
 
-export default injectIntl(ItemSection);
+export default ItemsSection;
