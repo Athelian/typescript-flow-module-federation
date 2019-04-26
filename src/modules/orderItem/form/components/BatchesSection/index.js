@@ -13,10 +13,7 @@ import { OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import { getBatchByFillBatch } from 'modules/order/helpers';
 import SlideView from 'components/SlideView';
-import {
-  OrderItemInfoContainer,
-  OrderItemBatchesContainer,
-} from 'modules/orderItem/form/containers';
+import { OrderItemBatchesContainer } from 'modules/orderItem/form/containers';
 
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 
@@ -28,14 +25,18 @@ import {
   EmptyMessageStyle,
 } from './style';
 
-function BatchesSection() {
+type Props = {
+  price: Object,
+};
+
+function BatchesSection({ price }: Props) {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
 
   return (
-    <Subscribe to={[OrderItemInfoContainer, OrderItemBatchesContainer]}>
-      {({ state: infoState }, { state: { batches }, setFieldValue, setDeepFieldValue }) => {
-        const values = { ...infoState, batches };
+    <Subscribe to={[OrderItemBatchesContainer]}>
+      {({ state: { batches }, setFieldValue, setDeepFieldValue }) => {
+        const values = { price, batches };
         return (
           <SectionWrapper id="orderItem_batchesSection">
             <SectionHeader
@@ -117,8 +118,8 @@ function BatchesSection() {
                               <OrderBatchCard
                                 editable={allowUpdate}
                                 batch={batch}
-                                currency={infoState.price.currency}
-                                price={infoState.price}
+                                currency={price.currency}
+                                price={price}
                                 onClick={() => batchSlideToggle(true)}
                                 saveOnBlur={value => setDeepFieldValue(`batches.${index}`, value)}
                                 onRemove={() =>

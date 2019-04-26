@@ -79,7 +79,7 @@ export default class ItemForm extends React.Component<Props> {
             <ItemSection />
           </SectionWrapper>
 
-          <AsyncBatchesSection />
+          <AsyncBatchesSection price={orderItem.price} />
           <AsyncDocumentsSection />
           <AsyncTaskSection type="orderItem" />
           <AsyncShipmentsSection />
