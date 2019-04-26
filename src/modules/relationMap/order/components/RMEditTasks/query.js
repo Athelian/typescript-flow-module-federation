@@ -31,19 +31,11 @@ const editableTaskListQuery = gql`
   }
 
   ${taskFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
   ${orderCardFragment}
   ${batchCardFragment}
   ${shipmentCardFragment}
-  ${partnerNameFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
-  ${orderCardFragment}
-  ${batchCardFragment}
   ${productCardFragment}
-  ${shipmentCardFragment}
-  ${orderCardFragment}
+  ${productProviderCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
   ${metricFragment}
@@ -51,7 +43,8 @@ const editableTaskListQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
-  ${productProviderCardFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
   ${sizeFragment}
 `;
 
