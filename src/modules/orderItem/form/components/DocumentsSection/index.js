@@ -1,20 +1,14 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import usePermission from 'hooks/usePermission';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
 import { DocumentsInput, SectionWrapper, SectionHeader } from 'components/Form';
 import { OrderItemFilesContainer } from 'modules/orderItem/form/containers';
 import FormattedNumber from 'components/FormattedNumber';
-
-const messages = defineMessages({
-  document: {
-    id: 'global.upload.types.item.document',
-    defaultMessage: 'Document',
-  },
-});
+import messages from 'modules/orderItem/messages';
 
 type Props = {
   intl: IntlShape,
@@ -50,7 +44,7 @@ function DocumentsSection({ intl }: Props) {
               types={[
                 {
                   value: 'Document',
-                  label: intl.formatMessage(messages.document),
+                  label: intl.formatMessage(messages.fileTypeDocument),
                 },
               ]}
             />

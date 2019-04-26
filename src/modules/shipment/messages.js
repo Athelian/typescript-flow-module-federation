@@ -130,6 +130,14 @@ export default defineMessages({
     id: 'modules.Shipments.productVolume',
     defaultMessage: 'VOLUME PER UNIT',
   },
+  inspectionApplication: {
+    id: 'modules.Shipments.inspectionApplication',
+    defaultMessage: 'Inspection Application',
+  },
+  document: {
+    id: 'modules.Shipments.document',
+    defaultMessage: 'Document',
+  },
   inspectionFee: {
     id: 'modules.Shipments.inspectionFee',
     defaultMessage: 'INSPECTION FEE',

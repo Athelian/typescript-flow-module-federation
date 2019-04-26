@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -12,33 +12,7 @@ import {
 } from 'modules/permission/constants/shipment';
 import { DocumentsInput } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
-
-const messages = defineMessages({
-  bl: {
-    id: 'global.upload.types.shipment.bl',
-    defaultMessage: 'B/L',
-  },
-  invoice: {
-    id: 'global.upload.types.shipment.invoice',
-    defaultMessage: 'Invoice',
-  },
-  packing: {
-    id: 'global.upload.types.shipment.packing',
-    defaultMessage: 'Packing List',
-  },
-  import: {
-    id: 'global.upload.types.shipment.import',
-    defaultMessage: 'Import Declaration',
-  },
-  inspection: {
-    id: 'global.upload.types.shipment.inspection',
-    defaultMessage: 'Inspection Application',
-  },
-  document: {
-    id: 'global.upload.types.shipment.document',
-    defaultMessage: 'Document',
-  },
-});
+import messages from 'modules/shipment/messages';
 
 type Props = {
   intl: IntlShape,
@@ -75,15 +49,15 @@ function DocumentsSection({ intl }: Props) {
             },
             {
               value: 'ShipmentPackingList',
-              label: intl.formatMessage(messages.packing),
+              label: intl.formatMessage(messages.packingList),
             },
             {
               value: 'ShipmentImportDeclaration',
-              label: intl.formatMessage(messages.import),
+              label: intl.formatMessage(messages.importDeclaration),
             },
             {
               value: 'ShipmentInspectionApplication',
-              label: intl.formatMessage(messages.inspection),
+              label: intl.formatMessage(messages.inspectionApplication),
             },
             {
               value: 'Document',
