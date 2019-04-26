@@ -16,6 +16,8 @@ import {
   ShipmentCardWrapperStyle,
   ShipmentInfoWrapperStyle,
   ShipmentLeftWrapperStyle,
+  ShipmentNoWrapperStyle,
+  ShipmentBookedStyle,
   ShipmentNoStyle,
   ShipmentBLStyle,
   ShipmentRightWrapperStyle,
@@ -30,7 +32,6 @@ import {
   ShipmentBadgeIconStyle,
   ShipmentBadgeStyle,
   DividerStyle,
-  ShipmentBookedStyle,
 } from './style';
 
 type OptionalProps = {
@@ -70,16 +71,16 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
       >
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>
-            {booked ? (
-              <div className={ShipmentBookedStyle(true)}>
-                <FormattedMessage id="modules.Shipments.booked" defaultMessage="Booked" />
+            <div className={ShipmentNoWrapperStyle}>
+              <div className={ShipmentBookedStyle(booked)}>
+                {booked ? (
+                  <FormattedMessage id="modules.Shipments.booked" defaultMessage="Booked" />
+                ) : (
+                  <FormattedMessage id="modules.Shipments.unbooked" defaultMessage="Unbooked" />
+                )}
               </div>
-            ) : (
-              <div className={ShipmentBookedStyle(false)}>
-                <FormattedMessage id="modules.Shipments.unbooked" defaultMessage="Unbooked" />
-              </div>
-            )}
-            <div className={ShipmentNoStyle}>{no}</div>
+              <div className={ShipmentNoStyle}>{no}</div>
+            </div>
             <div className={ShipmentBLStyle}>{blNo}</div>
           </div>
           <div className={ShipmentRightWrapperStyle}>

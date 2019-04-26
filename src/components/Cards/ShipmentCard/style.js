@@ -29,6 +29,24 @@ export const ShipmentLeftWrapperStyle: string = css`
   width: 300px;
 `;
 
+export const ShipmentNoWrapperStyle: string = css`
+  display: flex;
+  align-items: center;
+`;
+
+export const ShipmentBookedStyle = (booked: boolean) => css`
+  ${borderRadiuses.MAIN};
+  ${fontSizes.SMALL};
+  width: 60px;
+  text-align: center;
+  background-color: ${booked ? colors.TEAL : colors.GRAY_LIGHT};
+  color: ${colors.WHITE};
+  height: 16px;
+  line-height: 16px;
+  margin: 0 5px 0 0;
+  flex-shrink: 0;
+`;
+
 export const ShipmentNoStyle: string = css`
   ${fontSizesWithHeights.MAIN};
   color: ${colors.BLACK};
@@ -127,12 +145,4 @@ export const DividerStyle: string = css`
   background-color: ${colors.GRAY_VERY_LIGHT};
   width: 840px;
   margin: 0 20px;
-`;
-
-export const ShipmentBookedStyle = (booked: boolean) => css`
-  ${borderRadiuses.MAIN};
-  ${fontSizesWithHeights.SMALL};
-  width: 60px;
-  text-align: center;
-  background-color: ${booked ? colors.TEAL : colors.GRAY_LIGHT};
 `;
