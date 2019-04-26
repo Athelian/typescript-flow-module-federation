@@ -4,6 +4,8 @@ import {
   taskFormFragment,
   userAvatarFragment,
   tagFragment,
+  productCardFragment,
+  productProviderCardFragment,
   orderCardFragment,
   itemCardFragment,
   batchCardFragment,
@@ -15,6 +17,7 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   todoFragment,
+  sizeFragment,
 } from 'graphql';
 import { parseTaskField } from 'utils/data';
 import { isEquals } from 'utils/fp';
@@ -31,6 +34,8 @@ export const taskUpdateManyMutation = gql`
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
+  ${productCardFragment}
+  ${productProviderCardFragment}
   ${batchCardFragment}
   ${shipmentCardFragment}
   ${orderCardFragment}
@@ -42,6 +47,7 @@ export const taskUpdateManyMutation = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
+  ${sizeFragment}
 `;
 
 export const prepareTasksForUpdateMany = (

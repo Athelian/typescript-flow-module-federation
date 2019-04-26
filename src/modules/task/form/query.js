@@ -35,8 +35,8 @@ export const taskFormQuery = gql`
   ${batchCardFragment}
   ${productCardFragment}
   ${shipmentCardFragment}
-  ${orderCardFragment}
   ${itemCardFragment}
+  ${productProviderCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
   ${metricFragment}
@@ -44,7 +44,6 @@ export const taskFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
-  ${productProviderCardFragment}
   ${sizeFragment}
 `;
 

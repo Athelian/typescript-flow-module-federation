@@ -17,6 +17,7 @@ import {
   portFragment,
   todoFragment,
   productProviderCardFragment,
+  sizeFragment,
 } from 'graphql';
 
 const editableTaskListQuery = gql`
@@ -31,20 +32,14 @@ const editableTaskListQuery = gql`
   }
 
   ${taskFormFragment}
-  ${userAvatarFragment}
   ${tagFragment}
-  ${orderCardFragment}
-  ${batchCardFragment}
-  ${shipmentCardFragment}
-  ${partnerNameFragment}
   ${userAvatarFragment}
-  ${tagFragment}
   ${orderCardFragment}
   ${itemCardFragment}
   ${batchCardFragment}
   ${productCardFragment}
   ${shipmentCardFragment}
-  ${orderCardFragment}
+  ${productProviderCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
   ${metricFragment}
@@ -52,7 +47,7 @@ const editableTaskListQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
-  ${productProviderCardFragment}
+  ${sizeFragment}
 `;
 
 export default editableTaskListQuery;
