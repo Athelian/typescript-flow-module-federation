@@ -42,7 +42,7 @@ export const initValues = {
   no: null,
   quantity: 0,
   price: {
-    currency: 'JPY',
+    currency: 'USD',
     amount: 0,
   },
   customFields: {
