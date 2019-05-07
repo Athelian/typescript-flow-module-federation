@@ -409,6 +409,23 @@ function ContainersArea({
                                                   `containers.${index}`,
                                                   newContainer
                                                 );
+                                                const newBatches = batches.map(batch => {
+                                                  const {
+                                                    container: batchContainer,
+                                                    ...rest
+                                                  } = batch;
+                                                  if (
+                                                    batchContainer &&
+                                                    batchContainer.id === newContainer.id
+                                                  ) {
+                                                    return {
+                                                      ...rest,
+                                                      container: newContainer,
+                                                    };
+                                                  }
+                                                  return batch;
+                                                });
+                                                setBatchesState('batches', newBatches);
                                               }}
                                               onClick={
                                                 hasPermission(CONTAINER_FORM)
