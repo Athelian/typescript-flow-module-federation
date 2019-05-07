@@ -141,10 +141,9 @@ function ItemsArea({
                 todo,
               };
 
-              const { exporter, supplier, unitPrice, product } = productProvider;
+              const { name: productProviderName, unitPrice, product } = productProvider;
               const compiledProductProvider = {
-                exporter,
-                supplier,
+                name: productProviderName,
                 unitPrice,
               };
 

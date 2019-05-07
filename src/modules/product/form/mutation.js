@@ -108,6 +108,7 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault([], 'tags', originalValues),
     newValues.tags
   ),
+  ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
   ...parseTodoField(
     getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
     newValues.todo

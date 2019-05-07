@@ -18,7 +18,9 @@ import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
-import { SearchInput } from 'components/NavBar';
+import { SearchInput, SortInput } from 'components/NavBar';
+import { currentSort } from 'components/common/FilterToolBar';
+import { shipmentSortMessages } from 'modules/shipment/messages';
 import AdvancedFilter from '../common/SortFilter/AdvancedFilter';
 import messages from '../messages';
 import SortFilter from '../common/SortFilter';
@@ -140,6 +142,22 @@ const Order = ({ intl }: Props) => {
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
+
+  const shipmentSortFields = [
+    { title: intl.formatMessage(shipmentSortMessages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(shipmentSortMessages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(shipmentSortMessages.shipmentId), value: 'no' },
+    { title: intl.formatMessage(shipmentSortMessages.blNo), value: 'blNo' },
+    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
+    {
+      title: intl.formatMessage(shipmentSortMessages.dischargePortArrival),
+      value: 'dischargePortArrival',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
+      value: 'loadPortDeparture',
+    },
+  ];
 
   const {
     queryVariables: queryOrderVariables,
@@ -483,23 +501,41 @@ const Order = ({ intl }: Props) => {
                           }}
                         />
                       </div>
+
                       {state.toggleShipmentList && (
-                        <SearchInput
-                          value={shipmentFilterAndSort.filter.query}
-                          name="search"
-                          onClear={() =>
-                            onChangeShipmentFilter({
-                              ...shipmentFilterAndSort,
-                              filter: { ...shipmentFilterAndSort.filter, query: '' },
-                            })
-                          }
-                          onChange={newQuery =>
-                            onChangeShipmentFilter({
-                              ...shipmentFilterAndSort,
-                              filter: { ...shipmentFilterAndSort.filter, query: newQuery },
-                            })
-                          }
-                        />
+                        <>
+                          <SortInput
+                            sort={currentSort(shipmentSortFields, shipmentFilterAndSort.sort)}
+                            ascending={shipmentFilterAndSort.sort.direction !== 'DESCENDING'}
+                            fields={shipmentSortFields}
+                            onChange={({ field: { value }, ascending }) =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                sort: {
+                                  field: value,
+                                  direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                                },
+                              })
+                            }
+                          />
+
+                          <SearchInput
+                            value={shipmentFilterAndSort.filter.query}
+                            name="search"
+                            onClear={() =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: '' },
+                              })
+                            }
+                            onChange={newQuery =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: newQuery },
+                              })
+                            }
+                          />
+                        </>
                       )}
                     </EntityHeader>
                   </div>

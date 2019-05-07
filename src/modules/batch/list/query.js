@@ -3,12 +3,9 @@ import gql from 'graphql-tag';
 import {
   batchCardFragment,
   metricFragment,
-  orderCardFragment,
-  userAvatarFragment,
   tagFragment,
   priceFragment,
   imageFragment,
-  partnerNameFragment,
   todoFragment,
 } from 'graphql';
 
@@ -23,14 +20,11 @@ export const batchListQuery = gql`
     }
   }
 
-  ${orderCardFragment}
-  ${userAvatarFragment}
   ${batchCardFragment}
   ${metricFragment}
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}
-  ${partnerNameFragment}
   ${todoFragment}
 `;
 

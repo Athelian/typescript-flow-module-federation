@@ -21,11 +21,12 @@ import {
   ProductWrapperStyle,
   ProductImageStyle,
   ProductInfoWrapperStyle,
+  ProductNameWrapperStyle,
+  ProductIconLinkStyle,
   ProductNameStyle,
   ProductSerialStyle,
-  ProductPartnerStyle,
+  ProductProviderNameStyle,
   ProductTagsWrapperStyle,
-  ProductIconLinkStyle,
   BodyWrapperStyle,
   NoWrapperStyle,
   QuantityWrapperStyle,
@@ -42,6 +43,11 @@ import {
 import validator from './validator';
 
 type OptionalProps = {
+  order: {
+    id: string,
+    poNo: string,
+    currency?: string,
+  },
   batches: Array<{
     quantity: number,
     batchAdjustments: Array<{
@@ -93,18 +99,8 @@ type Props = OptionalProps & {
     batchCount?: number,
     batchShippedCount?: number,
   },
-  order: {
-    id: string,
-    poNo: string,
-    currency?: string,
-  },
   productProvider: {
-    exporter: {
-      name: string,
-    },
-    supplier: ?{
-      name: string,
-    },
+    name: string,
     unitPrice?: ?{
       amount: number,
       currency: string,
@@ -191,10 +187,7 @@ const ItemCard = ({
     orderCurrency,
   };
 
-  const {
-    exporter: { name: exporterName },
-  } = productProvider;
-  const supplierName = getByPathWithDefault(null, 'supplier.name', productProvider);
+  const { name: productProviderName } = productProvider;
   const productUnitPrice = getByPathWithDefault(null, 'unitPrice', productProvider);
 
   const { id: productId, name: productName, serial: productSerial, tags: productTags } = product;
@@ -215,36 +208,37 @@ const ItemCard = ({
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{productName}</div>
+            <div className={ProductNameWrapperStyle}>
+              {mergedNavigable.product ? (
+                <Link
+                  className={ProductIconLinkStyle}
+                  to={`/product/${encodeId(productId)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="PRODUCT" />
+                </Link>
+              ) : (
+                <div className={ProductIconLinkStyle}>
+                  <Icon icon="PRODUCT" />
+                </div>
+              )}
+
+              <div className={ProductNameStyle}>{productName}</div>
+            </div>
+
             <div className={ProductSerialStyle}>{productSerial}</div>
-            <div className={ProductPartnerStyle}>
-              <Icon icon="EXPORTER" />
-              {exporterName}
+
+            <div className={ProductProviderNameStyle}>
+              <Icon icon="PRODUCT_PROVIDER" />
+              {productProviderName}
             </div>
-            <div className={ProductPartnerStyle}>
-              <Icon icon="SUPPLIER" />
-              {supplierName}
-            </div>
+
             <div className={ProductTagsWrapperStyle}>
               {productTags && productTags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
           </div>
-
-          {mergedNavigable.product ? (
-            <Link
-              className={ProductIconLinkStyle}
-              to={`/product/${encodeId(productId)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="PRODUCT" />
-            </Link>
-          ) : (
-            <div className={ProductIconLinkStyle}>
-              <Icon icon="PRODUCT" />
-            </div>
-          )}
         </div>
 
         <div className={BodyWrapperStyle}>

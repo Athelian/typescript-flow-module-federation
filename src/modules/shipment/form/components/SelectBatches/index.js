@@ -171,7 +171,7 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                       selected={selected.includes(item)}
                       onSelect={() => onSelectBatch({ selected, item, push, set })}
                       key={item.id}
-                      read={{
+                      viewable={{
                         price: hasPermission(ORDER_ITEMS_GET_PRICE),
                         tasks: hasPermission(BATCH_TASK_LIST),
                       }}

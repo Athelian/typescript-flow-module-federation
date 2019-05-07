@@ -31,6 +31,7 @@ export const productFormFragment = gql`
     tags {
       ...tagFragment
     }
+    memo
     files {
       ...imageFragment
     }

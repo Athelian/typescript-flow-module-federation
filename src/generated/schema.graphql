@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Apr 26 2019 17:41:51 GMT+0900 (Tokyo Standard Time)
+# timestamp: Tue May 07 2019 14:48:18 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -30558,7 +30558,7 @@ input PriceRangeInput {
   currency: Currency
 }
 
-type Product implements Model & Owned & Tagged & Documented & Customizable {
+type Product implements Model & Owned & Tagged & Documented & Memorizable & Customizable {
   archived: Boolean!
   name: String!
   serial: String!
@@ -30582,6 +30582,7 @@ type Product implements Model & Owned & Tagged & Documented & Customizable {
   ownedBy: GroupPayload!
   tags: [TagPayload!]!
   files: [FilePayload!]!
+  memo: String
   customFields: CustomFields!
 }
 
@@ -30592,10 +30593,11 @@ input ProductCreateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  productProviders: [ProductProviderCreateInput!]!
   files: [FileInput!]
+  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
+  productProviders: [ProductProviderCreateInput!]!
 }
 
 input ProductFilterInput {
@@ -30757,10 +30759,11 @@ input ProductUpdateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
+  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
+  productProviders: [ProductProviderUpdateInput!]
 }
 
 input ProductUpdateWrapperInput {

@@ -12,8 +12,8 @@ export const fieldDefinitionsQuery = gql`
 `;
 
 export const masksQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: MaskFilterInput) {
-    masks(page: $page, perPage: $perPage, filterBy: $filterBy) {
+  query($page: Int!, $perPage: Int!, $filterBy: MaskFilterInput, $sortBy: MaskSortInput) {
+    masks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...maskFragment
       }

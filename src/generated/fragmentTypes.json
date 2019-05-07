@@ -293,6 +293,7 @@
           { "name": "MaskEdit" },
           { "name": "Order" },
           { "name": "OrderItem" },
+          { "name": "Product" },
           { "name": "ProductProvider" },
           { "name": "Role" },
           { "name": "Shipment" },

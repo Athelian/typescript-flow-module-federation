@@ -45,11 +45,8 @@ const defaultRenderItem = (item: Object) => {
     batchShippedCount,
   };
 
-  const { exporter, supplier, product } = productProvider;
-  const compiledProductProvider = {
-    exporter,
-    supplier,
-  };
+  const { name: productProviderName, product } = productProvider;
+  const compiledProductProvider = { name: productProviderName };
 
   const { id: productId, name, serial, tags, files } = product;
   const compiledProduct = {

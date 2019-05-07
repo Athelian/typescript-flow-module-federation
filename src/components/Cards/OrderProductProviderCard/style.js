@@ -7,7 +7,7 @@ export const ProductProviderCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 232px;
+  height: 259px;
   &:hover {
     button {
       opacity: 1;
@@ -77,7 +77,7 @@ export const ProductInfoWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 185px;
   grid-gap: 5px;
-  padding: 5px;
+  padding: 5px 5px 10px 5px;
   width: 195px;
 `;
 
@@ -112,6 +112,15 @@ export const ProductProvidersWrapperStyle: string = css`
   grid-template-columns: 185px;
   grid-gap: 5px;
   width: 185px;
+`;
+
+export const ProductProviderNameStyle: string = css`
+  ${fontSizesWithHeights.MAIN};
+  color: ${colors.BLACK};
+  font-weight: bold;
+  ${presets.ELLIPSIS};
+  padding: 0 5px;
+  width: 100%;
 `;
 
 export const ProductExporterStyle: string = css`
