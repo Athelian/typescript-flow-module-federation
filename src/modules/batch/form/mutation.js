@@ -81,6 +81,7 @@ export const updateBatchMutation = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
+  ${badRequestFragment}
 `;
 
 export const prepareParsedBatchInput = (

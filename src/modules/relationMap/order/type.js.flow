@@ -21,10 +21,10 @@ export type BatchProps = {
   },
   deliveredAt: ?string,
   shipment: ?{
-    id: string
+    id: string,
   },
   container: ?{
-    id: string
+    id: string,
   },
   todo: {
     completedCount: number,
@@ -47,6 +47,7 @@ export type OrderItemProps = {
     },
   },
   batches: Array<BatchProps>,
+  tags: Array<Object>,
 };
 
 export type OrderProps = {

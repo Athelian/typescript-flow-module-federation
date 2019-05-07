@@ -3,6 +3,7 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import { Tags } from 'components/RelationMap';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import { RMOrderItemCard } from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
@@ -63,13 +64,18 @@ function getQuantitySummary(item: Object) {
   };
 }
 
-export default function OrderItem({ wrapperClassName, id, exporterId, batches, ...rest }: Props) {
+export default function OrderItem({
+  wrapperClassName,
+  id,
+  exporterId,
+  batches,
+  tags,
+  ...rest
+}: Props) {
   const context = React.useContext(ActionDispatch);
-  const {
-    state: { clone },
-    dispatch,
-  } = context;
+  const { state, dispatch } = context;
   const actions = actionCreators(dispatch);
+  const { clone, showTag } = state;
   const showCloneBadge = (Object.entries(clone.orderItems || {}): Array<any>).some(([, item]) =>
     item.map(({ id: orderItemId }) => orderItemId).includes(id)
   );
@@ -135,6 +141,7 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
               </>
             )}
           </ActionCard>
+          {showTag && <Tags dataSource={tags} />}
         </div>
       )}
     </BooleanValue>
