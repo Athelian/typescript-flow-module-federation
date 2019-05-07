@@ -395,14 +395,13 @@ function BatchesArea({
                                         : () => {}
                                     }
                                     onClone={value => {
-                                      setFieldValue('batches', [
-                                        ...batches,
-                                        generateCloneBatch(value),
-                                      ]);
+                                      const newBatch = generateCloneBatch(value);
+
+                                      setFieldValue('batches', [...batches, newBatch]);
                                       if (isFocusedContainer) {
                                         setDeepFieldValue(
                                           `containers.${focusedContainerIndex}.batches`,
-                                          [...currentBatches, generateCloneBatch(value)]
+                                          [...currentBatches, newBatch]
                                         );
                                       }
                                     }}

@@ -97,12 +97,12 @@ const getNewSourceContainer = (
   sourceContainer: Object,
   selectedBatches: Array<Object>
 ): { batches: Array<Object>, representativeBatch: Object } => {
-  const { batches, representativeBatch } = sourceContainer;
-  const newBatches = batches.filter(({ id }) => !includesById(id, selectedBatches));
+  const { batches, representativeBatch, ...rest } = sourceContainer;
+  const newBatches = batches.filter(batch => !includesById(batch.id, selectedBatches));
   const newRepresentativeBatch = includesById(representativeBatch.id, newBatches)
     ? { ...representativeBatch }
     : { ...newBatches[0] };
-  return { ...sourceContainer, batches: newBatches, representativeBatch: newRepresentativeBatch };
+  return { ...rest, batches: newBatches, representativeBatch: newRepresentativeBatch };
 };
 
 function ContainersArea({
@@ -211,6 +211,14 @@ function ContainersArea({
                         return (
                           <Action
                             onClick={() => {
+                              setDeepFieldValue(
+                                `containers.${focusedContainerIndex}`,
+                                getNewSourceContainer(
+                                  containers[focusedContainerIndex],
+                                  selectedBatches
+                                )
+                              );
+
                               const newBatches = batches.map(({ id, container, ...rest }) =>
                                 selectedBatches.map(({ id: batchId }) => batchId).includes(id)
                                   ? {
@@ -224,11 +232,7 @@ function ContainersArea({
                                     }
                               );
                               setBatchesState('batches', newBatches);
-                              const sourceContainer = containers[focusedContainerIndex];
-                              setDeepFieldValue(
-                                `containers.${focusedContainerIndex}`,
-                                getNewSourceContainer(sourceContainer, selectedBatches)
-                              );
+
                               onChangeSelectMode(false);
                               changeContainerIdToExistingBatches(selectedBatches, null);
                             }}

@@ -23,7 +23,7 @@ const CargoSection = () => {
 
   const onSelectBatch = React.useCallback(
     (batch: Object) => {
-      if (selectedBatches.includes(batch)) {
+      if (selectedBatches.map(({ id }) => id).includes(batch.id)) {
         setSelectedBatches(selectedBatches.filter(item => item.id !== batch.id));
       } else {
         setSelectedBatches([...selectedBatches, batch]);
