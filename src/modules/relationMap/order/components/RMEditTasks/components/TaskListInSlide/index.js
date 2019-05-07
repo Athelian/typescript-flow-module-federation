@@ -45,6 +45,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                 {isOpen && (
                   <TaskFormInSlide
                     editable
+                    entity={task.entity}
                     task={{ ...task, sort: index }}
                     onSave={value => {
                       onChange(`tasks.${index}`, value);

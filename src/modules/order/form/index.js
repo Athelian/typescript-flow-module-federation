@@ -133,7 +133,7 @@ export default class OrderForm extends React.Component<Props> {
                   <AsyncDocumentsSection />
                 </SectionWrapper>
 
-                <AsyncTaskSection type="order" />
+                <AsyncTaskSection entityId={order.id} type="order" />
 
                 <SectionWrapper id="order_shipmentsSection">
                   <Subscribe to={[OrderInfoContainer]}>

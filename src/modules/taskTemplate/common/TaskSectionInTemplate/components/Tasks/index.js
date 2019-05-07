@@ -91,6 +91,10 @@ const Tasks = ({
             <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
+                  entity={{
+                    ...task.entity,
+                    __typename: type,
+                  }}
                   isInTemplate={isInTemplate}
                   parentEntity={type}
                   editable={hasPermission(TASK_UPDATE)}

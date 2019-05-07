@@ -70,6 +70,7 @@ export type CompatibleEntityTypes =
 type Props = {
   type: CompatibleEntityTypes,
   intl: IntlShape,
+  entityId: string,
 };
 
 const getConfig = (type: string, hasPermission: Function): Object => {
@@ -173,7 +174,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
   }
 };
 
-function TaskSection({ type, intl }: Props) {
+function TaskSection({ type, entityId, intl }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -293,6 +294,7 @@ function TaskSection({ type, intl }: Props) {
                 </BooleanValue>
               }
               <Tasks
+                entityId={entityId}
                 type={type}
                 editable={canUpdateTasks}
                 viewForm={canViewForm}
