@@ -499,6 +499,7 @@ function BatchesArea({
                                   const createdBatches = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
+                                      orderItem,
                                       no: `batch no ${batches.length + index + 1}`,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }
