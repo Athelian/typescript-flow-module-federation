@@ -29,6 +29,7 @@ import {
   ImagesUploadInput,
   TextInputFactory,
   CustomFieldsFactory,
+  TextAreaInputFactory,
 } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
 import {
@@ -334,6 +335,28 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                     )}
                   </Subscribe>
                 </div>
+
+                <FormField
+                  name="memo"
+                  initValue={values.memo}
+                  values={values}
+                  validator={validator}
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextAreaInputFactory
+                      {...inputHandlers}
+                      editable={allowUpdate}
+                      name={name}
+                      isNew={isNew}
+                      originalValue={initialValues[name]}
+                      label={<FormattedMessage id="modules.Product.memo" defaultMessage="MEMO" />}
+                      inputWidth="400px"
+                      inputHeight="120px"
+                    />
+                  )}
+                </FormField>
+
                 <div className={DividerStyle} />
               </GridColumn>
             </div>

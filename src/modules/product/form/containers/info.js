@@ -11,6 +11,7 @@ type FormState = {
   hsCode?: ?string,
   material?: ?string,
   customFields?: Object,
+  memo: string,
 };
 
 const initValues = {
@@ -19,6 +20,7 @@ const initValues = {
     fieldValues: [],
     fieldDefinitions: [],
   },
+  memo: null,
 };
 
 export default class ProductInfoContainer extends Container<FormState> {
