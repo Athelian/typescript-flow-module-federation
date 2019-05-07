@@ -90,7 +90,7 @@ export default function OrderItem({
           onMouseLeave={() => setToggle(false)}
         >
           <RMOrderItemCard
-            orderItem={{ ...rest, tags, batches, ...getQuantitySummary({ ...rest, batches }) }}
+            orderItem={{ ...rest, batches, ...getQuantitySummary({ ...rest, batches }) }}
           />
           {showCloneBadge && <Badge label="clone" />}
           <ActionCard show={hovered}>
