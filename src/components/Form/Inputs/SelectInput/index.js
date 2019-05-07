@@ -88,7 +88,7 @@ class SelectInput extends React.Component<Props, State> {
           highlightedIndex,
           clearSelection,
         }) => (
-          <div>
+          <div style={{ position: 'relative' }}>
             {renderSelect({
               onBlur: this.handleBlur,
               onFocus: this.handleFocus,
