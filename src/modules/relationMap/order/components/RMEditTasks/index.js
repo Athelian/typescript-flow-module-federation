@@ -144,20 +144,16 @@ const EditableTaskList = (props: Props) => {
             >
               {mutationError && <p>Error: Please try again.</p>}
               <Query
-                key={JSON.stringify(variables)}
                 query={editableTaskListQuery}
                 variables={variables}
-                fetchPolicy="network-only"
+                fetchPolicy="no-cache"
                 onCompleted={data => {
+                  const tasks = getByPathWithDefault([], 'tasks.nodes', data);
                   if (
-                    !isEquals(
-                      getByPathWithDefault([], 'tasks.nodes', data),
-                      rmEditTasksContainer.state.tasks
-                    )
+                    !isEquals(tasks, rmEditTasksContainer.state.tasks) ||
+                    (rmEditTasksContainer.state.tasks.length === 0 && tasks.length > 0)
                   ) {
-                    rmEditTasksContainer.initDetailValues(
-                      getByPathWithDefault([], 'tasks.nodes', data)
-                    );
+                    rmEditTasksContainer.initDetailValues(tasks);
                   }
                 }}
               >
