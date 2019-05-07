@@ -1,17 +1,6 @@
 // @flow
 import styled, { css } from 'react-emotion';
-import { colors, layout, borderRadiuses, scrollbars } from 'styles/common';
-
-export const ProductListWrapperStyle: string = css`
-  overflow-x: hidden;
-  overflow-y: auto;
-  ${scrollbars.MAIN};
-  min-height: 0;
-  display: grid;
-  ${layout.GRID_VERTICAL};
-  grid-gap: 20px;
-  padding: 20px 20px 100px 20px;
-`;
+import { colors, layout, borderRadiuses } from 'styles/common';
 
 export const ProductFocusContent = css`
   background-color: ${colors.WHITE};

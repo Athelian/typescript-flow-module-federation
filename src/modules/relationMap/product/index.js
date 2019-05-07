@@ -1,14 +1,17 @@
 // @flow
 import React from 'react';
 import { Query } from 'react-apollo';
+import LoadingIcon from 'components/LoadingIcon';
+import InfiniteScroll from 'react-infinite-scroller';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import useFilter from 'hooks/useFilter';
+import DetailFocused from 'modules/relationMap/common/SlideForm';
 import SortFilter from 'modules/relationMap/common/SortFilter';
 import messages from 'modules/relationMap/messages';
-import LoadingIcon from 'components/LoadingIcon';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault } from 'utils/fp';
+import { ProductListWrapperStyle, WrapperStyle } from './style';
 import ProductFocused from './ProductFocused';
 import query from './query';
 import { hasMoreItems } from '../order/helpers';
@@ -23,11 +26,6 @@ function Product(props: Props) {
     {
       page: 1,
       perPage: 10,
-      batchPage: 1,
-      batchPerPage: 100,
-      batchSort: {
-        deliveredAt: 'DESCENDING',
-      },
       filter: {
         archived: false,
       },
@@ -55,6 +53,11 @@ function Product(props: Props) {
         if (error) {
           return error.message;
         }
+
+        if (loading) {
+          return <LoadingIcon />;
+        }
+
         return (
           <>
             <SortFilter
@@ -81,15 +84,20 @@ function Product(props: Props) {
               onChange={onChangeFilter}
               showTags={false}
             />
-            {loading ? (
-              <LoadingIcon />
-            ) : (
-              <ProductFocused
-                hasMore={hasMoreItems(data)}
+            <div className={WrapperStyle}>
+              <InfiniteScroll
+                className={ProductListWrapperStyle}
                 loadMore={() => loadMore({ fetchMore, data }, queryVariables, 'products')}
-                items={getByPathWithDefault([], `products.nodes`, data)}
-              />
-            )}
+                hasMore={hasMoreItems(data, 'products')}
+                loader={<LoadingIcon key="loading" />}
+                useWindow={false}
+                threshold={500}
+              >
+                <ProductFocused items={getByPathWithDefault([], `products.nodes`, data)} />
+              </InfiniteScroll>
+            </div>
+
+            <DetailFocused />
           </>
         );
       }}
