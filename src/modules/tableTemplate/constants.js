@@ -1362,11 +1362,9 @@ export const shipmentColumnFields = [
     getExportValue: (values: Object) => {
       const { transportType, voyages } = values;
       return voyages.length > 2
-        ? getLatestDate(
-            getByPath(
-              `voyages.1.arrivalPort.${transportType === 'Air' ? 'airport' : 'seaport'}`,
-              values
-            )
+        ? getByPath(
+            `voyages.1.arrivalPort.${transportType === 'Air' ? 'airport' : 'seaport'}`,
+            values
           ) || ''
         : '';
     },
@@ -1454,8 +1452,9 @@ export const shipmentColumnFields = [
     messageId: 'modules.Shipments.warehouse',
     name: 'containerGroups.0.warehouse',
     type: 'warehouse',
-    getExportValue: (values: Object) =>
-      getByPath(`containersGroups.0.warehouse.name`, values) || '',
+    getExportValue: (values: Object) => {
+      return getByPath(`containerGroups.0.warehouse.name`, values) || '';
+    },
     meta: {
       disableIfContainersExist: true,
     },
