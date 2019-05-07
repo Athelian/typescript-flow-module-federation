@@ -391,6 +391,11 @@ function ItemsArea({
                                   : 0,
                               currency,
                             },
+                            files: [],
+                            todo: {
+                              tasks: [],
+                            },
+                            tags: [],
                           })
                         ),
                       ]);

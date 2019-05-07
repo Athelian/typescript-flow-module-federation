@@ -158,9 +158,13 @@ export const itemInOrderFormFragment = gql`
     price {
       ...priceFragment
     }
+    customFields {
+      ...customFieldsFragment
+    }
     tags {
       ...tagFragment
     }
+    memo
     todo {
       ...todoFragment
       tasks {
@@ -211,6 +215,9 @@ export const itemInOrderFormFragment = gql`
     }
     batches {
       ...batchFormFragment
+    }
+    files {
+      ...documentFragment
     }
   }
 `;
