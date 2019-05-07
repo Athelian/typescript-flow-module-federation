@@ -143,6 +143,7 @@ function BatchesSection() {
                           onSelect={selectedOrderItems => {
                             const createdBatches = selectedOrderItems.map((orderItem, counter) => ({
                               ...generateBatchByOrderItem(orderItem),
+                              orderItem,
                               no: `batch no ${batches.length + counter + 1}`,
                             }));
                             if (batches.length === 0 && createdBatches.length > 0) {
