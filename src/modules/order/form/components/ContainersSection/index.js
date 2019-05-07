@@ -19,18 +19,21 @@ function ContainersSection({ containers }: Props) {
       <SectionNavBar>
         <div id="sortsandfilterswip" />
       </SectionNavBar>
-      <div className={ContainersSectionBodyStyle}>
-        {containers.length === 0 ? (
-          <div className={EmptyMessageStyle}>
-            <FormattedMessage
-              id="modules.Orders.noContainersFound"
-              defaultMessage="No containers found"
-            />
-          </div>
-        ) : (
-          containers.map(container => <ContainerCard container={container} key={container.id} />)
-        )}
-      </div>
+
+      {containers.length === 0 ? (
+        <div className={EmptyMessageStyle}>
+          <FormattedMessage
+            id="modules.Orders.noContainersFound"
+            defaultMessage="No containers found"
+          />
+        </div>
+      ) : (
+        <div className={ContainersSectionBodyStyle}>
+          {containers.map(container => (
+            <ContainerCard container={container} key={container.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

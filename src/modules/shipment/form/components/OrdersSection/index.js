@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { SHIPMENT_ORDER_LIST } from 'modules/permission/constants/shipment';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import { uniqueOrders } from 'modules/container/utils';
@@ -27,8 +28,10 @@ function OrdersSection() {
                 icon="ORDER"
                 title={
                   <>
-                    <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />(
-                    {orders.length})
+                    <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />
+                    {' ('}
+                    <FormattedNumber value={orders.length} />
+                    {')'}
                   </>
                 }
               />

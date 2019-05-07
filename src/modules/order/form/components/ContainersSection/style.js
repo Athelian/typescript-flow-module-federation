@@ -37,4 +37,9 @@ export const EmptyMessageStyle: string = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  padding: 100px 0;
+  ${borderRadiuses.MAIN};
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 `;

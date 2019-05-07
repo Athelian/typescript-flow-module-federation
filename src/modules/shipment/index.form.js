@@ -166,6 +166,88 @@ class ShipmentFormModule extends React.Component<Props> {
     }
   };
 
+  initAllValues = (
+    {
+      shipmentInfoContainer,
+      shipmentTagsContainer,
+      shipmentTransportTypeContainer,
+      shipmentTimelineContainer,
+      shipmentBatchesContainer,
+      shipmentContainersContainer,
+      shipmentFilesContainer,
+      shipmentTasksContainer,
+    }: ShipmentFormState,
+    shipment: Object
+  ) => {
+    const {
+      batches = [],
+      containers = [],
+      tags = [],
+      transportType = null,
+      cargoReady = {},
+      voyages = [{}],
+      containerGroups = [{}],
+      files = [],
+      todo = { tasks: [] },
+      ...info
+    }: Object = shipment;
+    shipmentInfoContainer.initDetailValues(info);
+    shipmentBatchesContainer.initDetailValues(batches);
+    shipmentContainersContainer.initDetailValues(containers);
+    shipmentTimelineContainer.initDetailValues({
+      cargoReady,
+      voyages,
+      containerGroups,
+    });
+    shipmentFilesContainer.initDetailValues(files);
+    shipmentTasksContainer.initDetailValues(todo);
+    shipmentTagsContainer.initDetailValues(tags);
+    shipmentTransportTypeContainer.initDetailValues(transportType);
+    return null;
+  };
+
+  initAllValuesForClone = (
+    {
+      shipmentInfoContainer,
+      shipmentTagsContainer,
+      shipmentTransportTypeContainer,
+      shipmentTimelineContainer,
+      shipmentBatchesContainer,
+      shipmentContainersContainer,
+      shipmentFilesContainer,
+      shipmentTasksContainer,
+    }: ShipmentFormState,
+    shipment: Object
+  ) => {
+    const {
+      bookingDate,
+      blDate,
+      no,
+      batches,
+      containers,
+      tags,
+      transportType,
+      cargoReady,
+      voyages,
+      containerGroups,
+      files,
+      todo,
+      ...info
+    }: Object = shipment;
+    shipmentInfoContainer.initDetailValues({
+      ...info,
+      no: `[cloned] ${no}`,
+    });
+    shipmentBatchesContainer.initDetailValues([]);
+    shipmentContainersContainer.initDetailValues([]);
+    shipmentTimelineContainer.initDetailValues({});
+    shipmentFilesContainer.initDetailValues([]);
+    shipmentTasksContainer.initDetailValues({ tasks: [] });
+    shipmentTagsContainer.initDetailValues(tags);
+    shipmentTransportTypeContainer.initDetailValues(transportType);
+    return null;
+  };
+
   onFormReady = (
     {
       shipmentInfoContainer,
@@ -181,39 +263,36 @@ class ShipmentFormModule extends React.Component<Props> {
   ) => {
     const hasInitialStateYet = shipmentInfoContainer.state.id || Object.keys(shipment).length === 0;
     if (hasInitialStateYet) return null;
-    const {
-      batches,
-      containers,
-      tags,
-      transportType,
-      cargoReady,
-      voyages,
-      containerGroups,
-      files,
-      todo,
-      ...info
-    }: Object = shipment;
+
     if (this.isClone()) {
-      const { bookingDate, blDate, no, ...cloneInfo } = info;
-      shipmentInfoContainer.initDetailValues({
-        ...cloneInfo,
-        no: `[cloned] ${no}`,
-      });
-      shipmentFilesContainer.initDetailValues([]);
+      this.initAllValuesForClone(
+        {
+          shipmentInfoContainer,
+          shipmentTagsContainer,
+          shipmentTransportTypeContainer,
+          shipmentTimelineContainer,
+          shipmentBatchesContainer,
+          shipmentContainersContainer,
+          shipmentFilesContainer,
+          shipmentTasksContainer,
+        },
+        shipment
+      );
     } else {
-      shipmentInfoContainer.initDetailValues(info);
-      shipmentBatchesContainer.initDetailValues(batches);
-      shipmentContainersContainer.initDetailValues(containers);
-      shipmentTimelineContainer.initDetailValues({
-        cargoReady,
-        voyages,
-        containerGroups,
-      });
-      shipmentFilesContainer.initDetailValues(files);
-      shipmentTasksContainer.initDetailValues(todo);
+      this.initAllValues(
+        {
+          shipmentInfoContainer,
+          shipmentTagsContainer,
+          shipmentTransportTypeContainer,
+          shipmentTimelineContainer,
+          shipmentBatchesContainer,
+          shipmentContainersContainer,
+          shipmentFilesContainer,
+          shipmentTasksContainer,
+        },
+        shipment
+      );
     }
-    shipmentTagsContainer.initDetailValues(tags);
-    shipmentTransportTypeContainer.initDetailValues(transportType);
     return null;
   };
 
@@ -460,31 +539,18 @@ class ShipmentFormModule extends React.Component<Props> {
                                         },
                                         saveShipment,
                                         updateShipment => {
-                                          const {
-                                            batches,
-                                            containers,
-                                            tags,
-                                            transportType,
-                                            cargoReady,
-                                            voyages,
-                                            containerGroups,
-                                            files,
-                                            todo,
-                                            ...info
-                                          }: Object = updateShipment;
-                                          shipmentInfoContainer.initDetailValues(info);
-                                          shipmentBatchesContainer.initDetailValues(batches);
-                                          shipmentContainersContainer.initDetailValues(containers);
-                                          shipmentTimelineContainer.initDetailValues({
-                                            cargoReady,
-                                            voyages,
-                                            containerGroups,
-                                          });
-                                          shipmentFilesContainer.initDetailValues(files);
-                                          shipmentTasksContainer.initDetailValues(todo);
-                                          shipmentTagsContainer.initDetailValues(tags);
-                                          shipmentTransportTypeContainer.initDetailValues(
-                                            transportType
+                                          this.initAllValues(
+                                            {
+                                              shipmentInfoContainer,
+                                              shipmentTagsContainer,
+                                              shipmentTransportTypeContainer,
+                                              shipmentTimelineContainer,
+                                              shipmentBatchesContainer,
+                                              shipmentContainersContainer,
+                                              shipmentFilesContainer,
+                                              shipmentTasksContainer,
+                                            },
+                                            updateShipment
                                           );
                                           formContainer.onReset();
                                         },
@@ -517,6 +583,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           const isForwarder = types.includes('Forwarder');
                           return (
                             <>
+                              <ShipmentForm shipment={{}} isNew />
                               <Subscribe
                                 to={[
                                   ShipmentInfoContainer,
@@ -574,7 +641,6 @@ class ShipmentFormModule extends React.Component<Props> {
                                   )
                                 }
                               </Subscribe>
-                              <ShipmentForm shipment={{}} isNew />
                             </>
                           );
                         }}
