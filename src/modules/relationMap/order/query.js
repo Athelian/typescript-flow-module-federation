@@ -169,6 +169,10 @@ export const shipmentCardRMFragment = gql`
     totalVolume {
       ...metricFragment
     }
+    containerTypeCounts {
+      containerType
+      count
+    }
     cargoReady {
       ...timelineDateMinimalFragment
     }

@@ -146,3 +146,28 @@ export const DividerStyle: string = css`
   width: 840px;
   margin: 0 20px;
 `;
+
+export const ContainerTypeTooltipTitleStyle: string = css`
+  ${fontSizes.MAIN};
+  border-bottom: 1px solid ${colors.WHITE};
+  padding: 0 0 5px 0;
+  margin: 0 0 5px 0;
+  letter-spacing: 2px;
+`;
+
+export const ContainerTypeWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 70px minmax(50px, 1fr);
+`;
+
+export const ContainerTypeLabelStyle: string = css`
+  ${presets.ELLIPSIS};
+  ${fontSizes.MAIN};
+  text-align: left;
+`;
+
+export const ContainerTypeCountStyle: string = css`
+  text-align: center;
+  font-weight: bold;
+  ${fontSizes.MAIN};
+`;
