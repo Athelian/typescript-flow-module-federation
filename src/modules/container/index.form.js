@@ -200,11 +200,6 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                         query={containerFormQuery}
                         entityId={containerId}
                         entityType="container"
-                        onCompleted={({ container }) => {
-                          if (container) {
-                            this.onFormReady({ containerContainer })(container);
-                          }
-                        }}
                         render={container => {
                           const {
                             warehouseArrivalAgreedDate,
@@ -229,7 +224,16 @@ export default class ContainerFormModule extends React.PureComponent<Props> {
                             ...rest,
                           };
 
-                          return <ContainerForm container={usefulContainer} />;
+                          return (
+                            <ContainerForm
+                              container={usefulContainer}
+                              onFormReady={() => {
+                                this.onFormReady({
+                                  containerContainer,
+                                })(usefulContainer);
+                              }}
+                            />
+                          );
                         }}
                       />
                     </Layout>

@@ -40,6 +40,7 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
           field,
           entityId,
           selectedField,
+          inForm,
         });
 
         if (inForm) {

@@ -15,7 +15,6 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -26,10 +25,12 @@ import {
   todoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
   parseGenericField,
+  parseEnumField,
   parseMemoField,
   parseDateField,
   parseArrayOfIdsField,
@@ -62,7 +63,6 @@ export const updateContainerMutation = gql`
   ${orderCardFragment}
   ${imageFragment}
   ${partnerNameFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -73,6 +73,7 @@ export const updateContainerMutation = gql`
   ${todoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 type UpdateContainerInputType = {
@@ -102,6 +103,16 @@ export const prepareParsedContainerInput = ({
   return {
     ...(!inContainerForm && originalValues ? { id: originalValues.id } : {}),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
+    ...parseGenericField(
+      'containerType',
+      getByPathWithDefault(null, 'containerType', originalValues),
+      newValues.containerType
+    ),
+    ...parseEnumField(
+      'containerOption',
+      getByPathWithDefault(null, 'containerOption', originalValues),
+      newValues.containerOption
+    ),
     ...parseDateField(
       'warehouseArrivalAgreedDate',
       getByPathWithDefault(null, 'warehouseArrivalAgreedDate', originalValues),
@@ -219,9 +230,7 @@ export const prepareParsedContainerInput = ({
       (oldBatch: ?Object, newBatch: Object) => ({
         ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm,
-          inOrderForm: false,
           inContainerForm,
-          inBatchForm: false,
         }),
       }),
       forceSendBatchIds

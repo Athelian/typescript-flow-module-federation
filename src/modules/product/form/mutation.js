@@ -17,6 +17,9 @@ import {
   documentFragment,
   badRequestFragment,
   ownedByFragment,
+  taskTemplateCardFragment,
+  taskFormInSlideViewFragment,
+  taskFormInTemplateFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -26,33 +29,21 @@ import {
   parseArrayOfChildrenField,
   parseCustomFieldsField,
   parseFilesField,
+  parseTodoField,
+  parseMemoField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
 export const createProductMutation: Object = gql`
   mutation productCreate($input: ProductCreateInput!) {
     productCreate(input: $input) {
-      __typename
-      ...productFormFragment
+      ... on Product {
+        id
+      }
       ...badRequestFragment
     }
   }
   ${badRequestFragment}
-  ${productFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
-  ${imageFragment}
-  ${partnerCardFragment}
-  ${priceFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${productProviderFormFragment}
-  ${documentFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
 `;
 
 export const updateProductMutation: Object = gql`
@@ -79,6 +70,9 @@ export const updateProductMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${taskTemplateCardFragment}
+  ${taskFormInSlideViewFragment}
+  ${taskFormInTemplateFragment}
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
@@ -114,6 +108,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
     getByPathWithDefault([], 'tags', originalValues),
     newValues.tags
   ),
+  ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
+  ...parseTodoField(
+    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    newValues.todo
+  ),
   ...parseArrayOfChildrenField(
     'productProviders',
     getByPathWithDefault([], 'productProviders', originalValues),
@@ -129,6 +128,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         'supplierId',
         getByPathWithDefault(null, 'supplier', oldProductProvider),
         newProductProvider.supplier
+      ),
+      ...parseGenericField(
+        'name',
+        getByPathWithDefault(null, 'name', oldProductProvider),
+        newProductProvider.name
       ),
       ...parseEnumField(
         'origin',
@@ -149,6 +153,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         'customFields',
         getByPathWithDefault(null, 'customFields', oldProductProvider),
         newProductProvider.customFields
+      ),
+      ...parseMemoField(
+        'memo',
+        getByPathWithDefault(null, 'memo', oldProductProvider),
+        newProductProvider.memo
       ),
       ...parseGenericField(
         'unitType',
@@ -200,10 +209,24 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'packageSize', oldProductProvider),
         newProductProvider.packageSize
       ),
+      ...parseGenericField(
+        'autoCalculatePackageVolume',
+        getByPathWithDefault(null, 'autoCalculatePackageVolume', oldProductProvider),
+        newProductProvider.autoCalculatePackageVolume
+      ),
+      ...parseGenericField(
+        'autoCalculateUnitVolume',
+        getByPathWithDefault(null, 'autoCalculateUnitVolume', oldProductProvider),
+        newProductProvider.autoCalculateUnitVolume
+      ),
       ...parseFilesField(
         'files',
         getByPathWithDefault([], 'files', oldProductProvider),
         newProductProvider.files
+      ),
+      ...parseTodoField(
+        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', oldProductProvider),
+        newProductProvider.todo
       ),
     })
   ),

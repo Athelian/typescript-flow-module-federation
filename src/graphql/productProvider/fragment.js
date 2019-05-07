@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 export const productProviderFormFragment = gql`
   fragment productProviderFormFragment on ProductProvider {
     id
+    name
     archived
     updatedAt
     updatedBy {
@@ -42,14 +43,25 @@ export const productProviderFormFragment = gql`
     packageVolume {
       ...metricFragment
     }
+    autoCalculatePackageVolume
+    autoCalculateUnitVolume
     packageSize {
       ...sizeFragment
     }
     customFields {
       ...customFieldsFragment
     }
+    memo
     files {
       ...documentFragment
+    }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
   }
 `;
@@ -57,6 +69,7 @@ export const productProviderFormFragment = gql`
 export const productProviderCardFragment = gql`
   fragment productProviderCardFragment on ProductProvider {
     id
+    name
     exporter {
       ...partnerNameFragment
     }
@@ -89,6 +102,9 @@ export const productProviderCardFragment = gql`
     }
     unitPrice {
       ...priceFragment
+    }
+    todo {
+      ...todoFragment
     }
   }
 `;

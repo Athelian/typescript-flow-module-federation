@@ -6,6 +6,8 @@ export const containerFormFragment = gql`
     archived
     updatedAt
     no
+    containerType
+    containerOption
     memo
     ownedBy {
       ...ownedByFragment
@@ -63,6 +65,8 @@ export const containerCardFragment = gql`
   fragment containerCardFragment on Container {
     id
     no
+    containerType
+    containerOption
     representativeBatch {
       ... on Batch {
         id

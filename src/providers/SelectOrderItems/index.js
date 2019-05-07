@@ -7,7 +7,7 @@ import { ArrayValue } from 'react-values';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
-import { OrderItemCard } from 'components/Cards';
+import { ItemCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import orderItemsQuery from 'providers/OrderItemsList/query';
@@ -19,7 +19,7 @@ import type { OrderItem } from 'modules/order/type.js.flow';
 import useFilter from 'hooks/useFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { ItemWrapperStyle } from './style';
 
 type Props = {
@@ -152,30 +152,89 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                     />
                   }
                 >
-                  {items.map(item => (
-                    <div key={item.id} className={ItemWrapperStyle}>
-                      {selected.includes(item) && (
-                        <IncrementInput
-                          value={selected.filter(({ id }) => id === item.id).length}
-                          onChange={total =>
-                            onChangeProductQuantity({
-                              total,
-                              selected,
-                              item,
-                              set,
-                            })
-                          }
+                  {items.map(item => {
+                    const {
+                      id,
+                      no,
+                      quantity,
+                      price,
+                      totalBatched,
+                      totalShipped,
+                      batchCount,
+                      batchShippedCount,
+                      productProvider,
+                      todo,
+                      order,
+                    } = item;
+                    const compiledOrderItem = {
+                      id,
+                      no,
+                      quantity,
+                      price,
+                      totalBatched,
+                      totalShipped,
+                      batchCount,
+                      batchShippedCount,
+                      todo,
+                    };
+
+                    const { name: productProviderName, product } = productProvider;
+                    const compiledProductProvider = { name: productProviderName };
+
+                    const { id: productId, name, serial, tags, files } = product;
+                    const compiledProduct = {
+                      id: productId,
+                      name,
+                      serial,
+                      tags,
+                      files,
+                    };
+
+                    const { id: orderId, poNo } = order;
+                    const compiledOrder = {
+                      id: orderId,
+                      poNo,
+                    };
+
+                    const viewable = {
+                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                    };
+
+                    const config = {
+                      hideOrder: false,
+                    };
+
+                    return (
+                      <div key={item.id} className={ItemWrapperStyle}>
+                        {selected.includes(item) && (
+                          <IncrementInput
+                            value={
+                              selected.filter(selectedItem => selectedItem.id === item.id).length
+                            }
+                            onChange={total =>
+                              onChangeProductQuantity({
+                                total,
+                                selected,
+                                item,
+                                set,
+                              })
+                            }
+                          />
+                        )}
+                        <ItemCard
+                          orderItem={compiledOrderItem}
+                          productProvider={compiledProductProvider}
+                          product={compiledProduct}
+                          order={compiledOrder}
+                          viewable={viewable}
+                          config={config}
+                          selectable
+                          selected={selected.includes(item)}
+                          onSelect={() => onSelectProduct({ selected, item, push, set })}
                         />
-                      )}
-                      <OrderItemCard
-                        viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                        item={item}
-                        selectable
-                        selected={selected.includes(item)}
-                        onSelect={() => onSelectProduct({ selected, item, push, set })}
-                      />
-                    </div>
-                  ))}
+                      </div>
+                    );
+                  })}
                 </GridView>
               </Layout>
             )}

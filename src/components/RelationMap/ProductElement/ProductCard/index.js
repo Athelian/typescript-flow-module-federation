@@ -11,6 +11,7 @@ type Props = {
   item: Object,
 };
 
+// TODO: try to use from util
 function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;

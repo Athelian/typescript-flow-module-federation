@@ -7,6 +7,11 @@ const validator = Yup.object().shape({
   exporter: Yup.string().required(),
   orderItems: Yup.array().of(
     Yup.object().shape({
+      no: Yup.string().required(),
+      quantity: Yup.number().required(),
+      price: Yup.object().shape({
+        amount: Yup.number().required(),
+      }),
       batches: Yup.array().of(
         Yup.object().shape({
           no: Yup.string().required(),

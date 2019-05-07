@@ -51,58 +51,13 @@ export const orderFormFragment = gql`
       ...documentFragment
     }
     orderItems {
-      ... on OrderItem {
-        id
-        quantity
-        price {
-          ...priceFragment
-        }
-        productProvider {
-          ... on ProductProvider {
-            id
-            packageName
-            packageCapacity
-            packageGrossWeight {
-              ...metricFragment
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            packageSize {
-              ...sizeFragment
-            }
-            unitPrice {
-              currency
-              amount
-            }
-            product {
-              ... on Product {
-                id
-                name
-                serial
-                tags {
-                  ...tagFragment
-                }
-                files {
-                  ...imageFragment
-                }
-              }
-            }
-            exporter {
-              ...partnerNameFragment
-            }
-            supplier {
-              ...partnerNameFragment
-            }
-          }
-        }
-        batches {
-          ...batchFormFragment
-        }
-      }
+      ...itemInOrderFormFragment
     }
     shipments {
       ...shipmentCardFragment
+    }
+    containers {
+      ...containerCardFragment
     }
   }
 `;
@@ -210,5 +165,6 @@ export const orderCardFragment = gql`
     inCharges {
       ...userAvatarFragment
     }
+    currency
   }
 `;

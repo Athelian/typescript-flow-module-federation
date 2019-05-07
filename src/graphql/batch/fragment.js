@@ -66,70 +66,7 @@ export const batchFormFragment = gql`
       ...tagFragment
     }
     orderItem {
-      ... on OrderItem {
-        id
-        quantity
-        price {
-          ...priceFragment
-        }
-        batches {
-          ... on Batch {
-            id
-            quantity
-            batchAdjustments {
-              ... on BatchAdjustment {
-                id
-                quantity
-              }
-            }
-            shipment {
-              ... on Shipment {
-                id
-              }
-            }
-            container {
-              ... on Container {
-                id
-              }
-            }
-          }
-        }
-        order {
-          ...orderCardFragment
-        }
-        productProvider {
-          ... on ProductProvider {
-            id
-            packageName
-            packageCapacity
-            packageGrossWeight {
-              ...metricFragment
-            }
-            packageVolume {
-              ...metricFragment
-            }
-            packageSize {
-              ...sizeFragment
-            }
-            product {
-              ... on Product {
-                id
-                name
-                serial
-                files {
-                  ...imageFragment
-                }
-              }
-            }
-            exporter {
-              ...partnerCardFragment
-            }
-            supplier {
-              ...partnerNameFragment
-            }
-          }
-        }
-      }
+      ...itemInBatchFormFragment
     }
     shipment {
       ...shipmentCardFragment
@@ -248,11 +185,16 @@ export const batchCardFragment = gql`
           ...priceFragment
         }
         order {
-          ...orderCardFragment
+          ... on Order {
+            id
+            poNo
+            currency
+          }
         }
         productProvider {
           ... on ProductProvider {
             id
+            name
             product {
               ... on Product {
                 id
@@ -262,12 +204,6 @@ export const batchCardFragment = gql`
                   ...imageFragment
                 }
               }
-            }
-            exporter {
-              ...partnerNameFragment
-            }
-            supplier {
-              ...partnerNameFragment
             }
           }
         }

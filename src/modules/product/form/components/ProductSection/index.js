@@ -18,11 +18,7 @@ import {
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import {
-  PRODUCT_CREATE,
-  PRODUCT_UPDATE,
-  PRODUCT_SET_TAGS,
-} from 'modules/permission/constants/product';
+import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
 import {
   SectionHeader,
   LastModified,
@@ -33,6 +29,7 @@ import {
   ImagesUploadInput,
   TextInputFactory,
   CustomFieldsFactory,
+  TextAreaInputFactory,
 } from 'components/Form';
 import ImagePreviewDialog from 'components/Dialog/ImagePreviewDialog';
 import {
@@ -329,10 +326,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               changeTags(field, value);
                             }}
                             editable={{
-                              set:
-                                hasPermission(TAG_LIST) &&
-                                hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
-                              remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                              set: hasPermission(TAG_LIST) && hasPermission(PRODUCT_UPDATE),
+                              remove: hasPermission(PRODUCT_UPDATE),
                             }}
                           />
                         }
@@ -340,6 +335,28 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                     )}
                   </Subscribe>
                 </div>
+
+                <FormField
+                  name="memo"
+                  initValue={values.memo}
+                  values={values}
+                  validator={validator}
+                  setFieldValue={setFieldValue}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <TextAreaInputFactory
+                      {...inputHandlers}
+                      editable={allowUpdate}
+                      name={name}
+                      isNew={isNew}
+                      originalValue={initialValues[name]}
+                      label={<FormattedMessage id="modules.Product.memo" defaultMessage="MEMO" />}
+                      inputWidth="400px"
+                      inputHeight="120px"
+                    />
+                  )}
+                </FormField>
+
                 <div className={DividerStyle} />
               </GridColumn>
             </div>

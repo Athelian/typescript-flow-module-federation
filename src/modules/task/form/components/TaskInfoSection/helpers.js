@@ -2,7 +2,7 @@
 import { type IntlShape } from 'react-intl';
 import { addWeeks, addMonths, addDays, startOfDay, format, isValid } from 'date-fns';
 import logger from 'utils/logger';
-import { orderBinding, batchBinding, shipmentBinding } from './constants';
+import { orderBinding, orderItemBinding, batchBinding, shipmentBinding } from './constants';
 
 const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
@@ -95,6 +95,14 @@ export const getFieldsByEntity = (type: string, intl: IntlShape) => {
       );
     case 'Batch':
       return (Object.values(batchBinding(intl)): any).map(
+        ({ field: value, description: label }) => ({
+          value,
+          label,
+        })
+      );
+
+    case 'OrderItem':
+      return (Object.values(orderItemBinding(intl)): any).map(
         ({ field: value, description: label }) => ({
           value,
           label,

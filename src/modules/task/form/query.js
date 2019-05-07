@@ -6,7 +6,9 @@ import {
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
+  itemCardFragment,
   batchCardFragment,
+  productCardFragment,
   shipmentCardFragment,
   partnerNameFragment,
   priceFragment,
@@ -15,6 +17,8 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   todoFragment,
+  productProviderCardFragment,
+  sizeFragment,
 } from 'graphql';
 
 export const taskFormQuery = gql`
@@ -29,8 +33,10 @@ export const taskFormQuery = gql`
   ${tagFragment}
   ${orderCardFragment}
   ${batchCardFragment}
+  ${productCardFragment}
   ${shipmentCardFragment}
-  ${orderCardFragment}
+  ${itemCardFragment}
+  ${productProviderCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
   ${metricFragment}
@@ -38,6 +44,7 @@ export const taskFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${todoFragment}
+  ${sizeFragment}
 `;
 
 export default taskFormQuery;

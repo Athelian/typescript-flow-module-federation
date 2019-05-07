@@ -9,7 +9,9 @@ import { encodeId } from 'utils/id';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
+import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   BATCH_CREATE,
   BATCH_UPDATE,
@@ -36,7 +38,7 @@ import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField, FormContainer } from 'modules/form';
-import { OrderItemCard, GrayCard } from 'components/Cards';
+import { ItemCard } from 'components/Cards';
 import { totalAdjustQuantity } from 'components/Cards/utils';
 import GridColumn from 'components/GridColumn';
 import {
@@ -117,6 +119,76 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
             const values = { ...initialValues, ...state };
             const { batchAdjustments = [] } = values;
             const totalAdjustment = totalAdjustQuantity(batchAdjustments);
+
+            const { orderItem } = values;
+            let compiledOrderItem = null;
+            let compiledProductProvider = null;
+            let compiledProduct = null;
+            let compiledOrder = null;
+
+            if (orderItem) {
+              const {
+                id,
+                no,
+                quantity,
+                price,
+                totalBatched,
+                totalShipped,
+                batchCount,
+                batchShippedCount,
+                productProvider,
+                order,
+                todo,
+              } = orderItem;
+              const { name: productProviderName, product } = productProvider;
+              compiledProductProvider = { name: productProviderName };
+
+              const { id: productId, name: productName, serial, tags, files } = product;
+              compiledProduct = {
+                id: productId,
+                name: productName,
+                serial,
+                tags,
+                files,
+              };
+
+              compiledOrderItem = {
+                id,
+                no,
+                quantity,
+                price,
+                totalBatched,
+                totalShipped,
+                batchCount,
+                batchShippedCount,
+                todo,
+              };
+
+              const { id: orderId, poNo } = order;
+              compiledOrder = {
+                id: orderId,
+                poNo,
+              };
+            }
+
+            const editable = {
+              no: false,
+              quantity: false,
+              price: false,
+            };
+
+            const viewable = {
+              price: hasPermission(ORDER_ITEMS_GET_PRICE),
+            };
+
+            const navigable = {
+              order: hasPermission(ORDER_FORM),
+              product: hasPermission(PRODUCT_FORM),
+            };
+
+            const config = {
+              hideOrder: false,
+            };
 
             return (
               <>
@@ -276,7 +348,8 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                     <Label required>
                       <FormattedMessage {...messages.orderItem} />
                     </Label>
-                    {hasPermission([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]) &&
+                    {isNew &&
+                    hasPermission([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]) &&
                     hasPermission(ORDER_ITEMS_LIST) ? (
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
@@ -289,12 +362,16 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                                 onClick={() => slideToggle(true)}
                               />
                             ) : (
-                              <OrderItemCard
-                                viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                                selectable={isNew || isClone}
-                                readOnly
-                                item={values.orderItem}
-                                onSelect={isNew || isClone ? () => slideToggle(true) : null}
+                              <ItemCard
+                                orderItem={compiledOrderItem}
+                                productProvider={compiledProductProvider}
+                                product={compiledProduct}
+                                order={compiledOrder}
+                                editable={editable}
+                                viewable={viewable}
+                                navigable={navigable}
+                                config={config}
+                                onClick={() => slideToggle(true)}
                               />
                             )}
 
@@ -339,17 +416,17 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         )}
                       </BooleanValue>
                     ) : (
-                      <>
-                        {values.orderItem ? (
-                          <OrderItemCard
-                            viewPrice={hasPermission(ORDER_ITEMS_GET_PRICE)}
-                            item={values.orderItem}
-                            readOnly
-                          />
-                        ) : (
-                          <GrayCard width="195px" height="215px" />
-                        )}
-                      </>
+                      <ItemCard
+                        orderItem={compiledOrderItem}
+                        productProvider={compiledProductProvider}
+                        product={compiledProduct}
+                        order={compiledOrder}
+                        editable={editable}
+                        viewable={viewable}
+                        navigable={navigable}
+                        config={config}
+                        readOnly
+                      />
                     )}
                   </div>
                 </div>
@@ -410,4 +487,4 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
   );
 };
 
-export default BatchSection;
+export default React.memo<Props>(BatchSection);

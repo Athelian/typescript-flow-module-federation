@@ -14,8 +14,9 @@ import { masksQuery } from 'modules/metadata/query';
 import { countMaskFieldDefinitions } from 'utils/customFields';
 
 type OptionalProps = {
-  selected: {
+  selected: ?{
     id: string,
+    name: string,
   },
 };
 

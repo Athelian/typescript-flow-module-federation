@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Apr 12 2019 11:48:45 GMT+0900 (Japan Standard Time)
+# timestamp: Tue May 07 2019 14:48:18 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27143,26 +27143,19 @@ input CommentUpdateInput {
 }
 
 type Container implements Model & Owned & Tagged & Sortable & Memorizable {
+  archived: Boolean!
   no: String!
+  representativeBatch: BatchPayload
+  warehouse: WarehousePayload
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedBy: UserPayload
   warehouseArrivalAgreedDateApprovedAt: DateTime
+  warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
   warehouseArrivalActualDate: DateTime
   warehouseArrivalActualDateApprovedBy: UserPayload
   warehouseArrivalActualDateApprovedAt: DateTime
   shipment: ShipmentPayload!
-  warehouse: WarehousePayload
-  representativeBatch: BatchPayload
-  batches: [BatchPayload!]!
-  totalVolume: MetricValue!
-  totalWeight: MetricValue!
-  totalPrice: Price
-  totalBatchQuantity: Int!
-  totalBatchPackages: Int!
-  totalNumberOfUniqueOrderItems: Int!
-  warehouseArrivalAgreedDateAssignedTo: [UserPayload!]!
   warehouseArrivalActualDateAssignedTo: [UserPayload!]!
-  archived: Boolean!
   freeTimeStartDate: DateTime
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean!
@@ -27171,6 +27164,19 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   departureDateAssignedTo: [UserPayload!]!
   departureDateApprovedBy: UserPayload
   departureDateApprovedAt: DateTime
+  containerType: String
+  containerOption: ContainerOption
+  totalVolume: MetricValue!
+  totalWeight: MetricValue!
+  totalPrice: Price
+  totalBatched: Float!
+  totalBatchedPackage: Int!
+  orderItemCount: Int!
+  batchCount: Int!
+  totalBatchQuantity: Float! @deprecated(reason: "Use `totalBatched` instead")
+  totalBatchPackages: Int! @deprecated(reason: "Use `totalBatchedPackage` instead")
+  totalNumberOfUniqueOrderItems: Int! @deprecated(reason: "Use `orderItemCount` instead")
+  batches: [BatchPayload!]!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -27212,7 +27218,6 @@ input ContainerBatchInput {
 
 input ContainerCreateInput {
   no: String!
-  shipmentId: ID!
   warehouseId: ID
   departureDate: DateTime
   departureDateApprovedById: ID
@@ -27229,10 +27234,13 @@ input ContainerCreateInput {
   yardName: String
   representativeBatchId: ID
   representativeBatchIndex: Int
+  containerType: String
+  containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
   todo: TodoInput
+  shipmentId: ID!
 }
 
 input ContainerFilterInput {
@@ -27271,6 +27279,11 @@ input ContainerGroupNestedInput {
 
 union ContainerGroupPayload = ContainerGroup | BadRequest | Forbidden | NotFound
 
+enum ContainerOption {
+  """Hanger"""
+  Hanger
+}
+
 union ContainerPayload = Container | BadRequest | Forbidden | NotFound
 
 type ContainerPayloadPagination {
@@ -27287,6 +27300,12 @@ input ContainerSortInput {
   updatedAt: SortOrder
   warehouseName: SortOrder
   warehouseArrivalActualDate: SortOrder
+  warehouseArrivalAgreedDate: SortOrder
+}
+
+type ContainerTypeCount {
+  containerType: String!
+  count: Float!
 }
 
 input ContainerUpdateInput {
@@ -27307,10 +27326,13 @@ input ContainerUpdateInput {
   yardName: String
   representativeBatchId: ID
   representativeBatchIndex: Int
+  containerType: String
+  containerOption: ContainerOption
   batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
   todo: TodoInput
+  shipmentId: ID
 }
 
 input ContainerUpdateWrapperInput {
@@ -28627,6 +28649,16 @@ interface Documented {
   files: [FilePayload!]!
 }
 
+type Duration {
+  seconds: Long!
+  nanos: Int!
+}
+
+input DurationInput {
+  seconds: Long!
+  nanos: Int
+}
+
 union EmptyPayload = BadRequest | Forbidden | NotFound
 
 type EntitiesMany {
@@ -28641,11 +28673,13 @@ type EntitiesMany {
 
 input EntityInput {
   productId: ID
+  productProviderId: ID
   orderId: ID
   orderItemId: ID
   batchId: ID
   shipmentId: ID
   containerId: ID
+  taskId: ID
 }
 
 union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | File | Task | BadRequest | Forbidden | NotFound
@@ -28954,7 +28988,7 @@ type Integration implements Model & Owned {
 type IntegrationConfiguration implements Model & Owned {
   integration: IntegrationPayload!
   automated: Boolean!
-  interval: Long!
+  interval: Duration!
   integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPagination!
   id: ID!
   createdAt: DateTime!
@@ -28964,6 +28998,13 @@ type IntegrationConfiguration implements Model & Owned {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: GroupPayload!
+}
+
+input IntegrationConfigurationCreateInput {
+  integrationId: ID!
+  automated: Boolean
+  interval: DurationInput!
+  key: String
 }
 
 union IntegrationConfigurationPayload = IntegrationConfiguration | BadRequest | Forbidden | NotFound
@@ -28977,13 +29018,20 @@ type IntegrationConfigurationPayloadPagination {
   totalCount: Int!
 }
 
+input IntegrationConfigurationUpdateInput {
+  integrationId: ID
+  automated: Boolean
+  interval: DurationInput
+  key: String
+}
+
 type IntegrationLink implements Model & Owned {
   configuration: IntegrationConfigurationPayload!
   status: IntegrationLinkStatus!
   entity: EntityPayload!
   externalId: ID!
   automated: Boolean!
-  interval: Long!
+  interval: Duration!
   lastRunAt: DateTime
   nextRunAt: DateTime
   lastError: String
@@ -28995,6 +29043,14 @@ type IntegrationLink implements Model & Owned {
   updatedBy: UserPayload
   deletedBy: UserPayload
   ownedBy: GroupPayload!
+}
+
+input IntegrationLinkCreateInput {
+  configurationId: ID!
+  entity: EntityInput!
+  externalId: ID!
+  automated: Boolean
+  interval: DurationInput!
 }
 
 union IntegrationLinkPayload = IntegrationLink | BadRequest | Forbidden | NotFound
@@ -29023,6 +29079,12 @@ enum IntegrationLinkStatus {
 
   """Stop"""
   Stop
+}
+
+input IntegrationLinkUpdateInput {
+  externalId: ID
+  automated: Boolean
+  interval: DurationInput
 }
 
 union IntegrationPayload = Integration | BadRequest | Forbidden | NotFound
@@ -29735,6 +29797,11 @@ type MaskPayloadPagination {
   totalCount: Int!
 }
 
+input MaskSortInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
 input MaskUpdateInput {
   name: String
   entityType: CustomizableEntityType
@@ -29842,6 +29909,13 @@ type Mutation {
   taskTemplateCreate(input: TaskTemplateCreateInput!): TaskTemplatePayload!
   taskTemplateUpdate(id: ID!, input: TaskTemplateUpdateInput!): TaskTemplatePayload!
   taskTemplateDelete(id: ID!): EmptyPayload
+  integrationConfigurationCreate(input: IntegrationConfigurationCreateInput!): IntegrationConfigurationPayload!
+  integrationConfigurationUpdate(id: ID!, input: IntegrationConfigurationUpdateInput!): IntegrationConfigurationPayload!
+  integrationConfigurationDelete(id: ID!): EmptyPayload
+  integrationLinkCreate(input: IntegrationLinkCreateInput!): IntegrationLinkPayload!
+  integrationLinkUpdate(id: ID!, input: IntegrationLinkUpdateInput!): IntegrationLinkPayload!
+  integrationLinkDelete(id: ID!): EmptyPayload
+  integrationLinkReset(id: ID!): EmptyPayload
 }
 
 type NotFound {
@@ -30056,6 +30130,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   timeline: Timeline!
   todo: Todo!
   shipments: [ShipmentPayload!]!
+  containers: [ContainerPayload!]!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -30079,11 +30154,11 @@ input OrderCreateInput {
   currency: Currency!
   incoterm: Incoterm
   deliveryPlace: String
+  memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
   orderItems: [OrderOrderItemCreateInput!]
   files: [FileInput!]
-  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30149,9 +30224,11 @@ input OrderFilterInput {
   shipmentArchived: Boolean
 }
 
-type OrderItem implements Model & Owned & Sortable & Customizable {
+type OrderItem implements Model & Owned & Sortable & Tagged & Documented & Customizable & Memorizable {
   order: OrderPayload!
   productProvider: ProductProviderPayload!
+  archived: Boolean!
+  no: String!
   price: Price!
   quantity: Float!
   totalPrice: Price!
@@ -30161,6 +30238,8 @@ type OrderItem implements Model & Owned & Sortable & Customizable {
   batchShippedCount: Int!
   shipmentCount: Int!
   batches: [BatchPayload!]!
+  shipments: [ShipmentPayload!]!
+  timeline: Timeline!
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -30171,7 +30250,10 @@ type OrderItem implements Model & Owned & Sortable & Customizable {
   deletedBy: UserPayload
   ownedBy: GroupPayload!
   sort: Int!
+  tags: [TagPayload!]!
+  files: [FilePayload!]!
   customFields: CustomFields!
+  memo: String
 }
 
 input OrderItemBatchCreateInput {
@@ -30227,9 +30309,13 @@ input OrderItemBatchUpdateInput {
 
 input OrderItemCreateInput {
   productProviderId: ID!
+  no: String!
   price: PriceInput!
   quantity: Float!
+  memo: String
+  tagIds: [ID!]
   batches: [OrderItemBatchCreateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID!
@@ -30263,9 +30349,13 @@ input OrderItemSortInput {
 input OrderItemUpdateInput {
   id: ID
   productProviderId: ID
+  no: String
   price: PriceInput
   quantity: Float
+  memo: String
+  tagIds: [ID!]
   batches: [OrderItemBatchUpdateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
   orderId: ID
@@ -30278,9 +30368,13 @@ input OrderItemUpdateWrapperInput {
 
 input OrderOrderItemCreateInput {
   productProviderId: ID!
+  no: String!
   price: PriceInput!
   quantity: Float!
+  memo: String
+  tagIds: [ID!]
   batches: [OrderItemBatchCreateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30288,9 +30382,13 @@ input OrderOrderItemCreateInput {
 input OrderOrderItemUpdateInput {
   id: ID
   productProviderId: ID
+  no: String
   price: PriceInput
   quantity: Float
+  memo: String
+  tagIds: [ID!]
   batches: [OrderItemBatchUpdateInput!]
+  files: [FileInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30327,11 +30425,11 @@ input OrderUpdateInput {
   currency: Currency
   incoterm: Incoterm
   deliveryPlace: String
+  memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
   orderItems: [OrderOrderItemUpdateInput!]
   files: [FileInput!]
-  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30460,7 +30558,7 @@ input PriceRangeInput {
   currency: Currency
 }
 
-type Product implements Model & Owned & Tagged & Documented & Customizable {
+type Product implements Model & Owned & Tagged & Documented & Memorizable & Customizable {
   archived: Boolean!
   name: String!
   serial: String!
@@ -30469,6 +30567,7 @@ type Product implements Model & Owned & Tagged & Documented & Customizable {
   material: String
   productProviders: [ProductProviderPayload!]!
   timeline: Timeline!
+  todo: Todo!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
@@ -30483,6 +30582,7 @@ type Product implements Model & Owned & Tagged & Documented & Customizable {
   ownedBy: GroupPayload!
   tags: [TagPayload!]!
   files: [FilePayload!]!
+  memo: String
   customFields: CustomFields!
 }
 
@@ -30493,9 +30593,11 @@ input ProductCreateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  productProviders: [ProductProviderCreateInput!]!
   files: [FileInput!]
+  memo: String
   customFields: CustomFieldsInput
+  todo: TodoInput
+  productProviders: [ProductProviderCreateInput!]!
 }
 
 input ProductFilterInput {
@@ -30526,17 +30628,20 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   Determined if the ProductProvider is referenced by at least one OrderItem or not
   """
   referenced: Boolean!
+  name: String!
   product: ProductPayload!
   exporter: GroupPayload!
   supplier: GroupPayload
   unitType: String
   unitVolume: MetricValue
+  autoCalculateUnitVolume: Boolean!
   unitWeight: MetricValue
   unitPrice: Price
   unitSize: Size
   inspectionFee: Price
   origin: Country
   productionLeadTime: Int
+  todo: Todo!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
   id: ID!
   createdAt: DateTime!
@@ -30559,10 +30664,12 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
 }
 
 input ProductProviderCreateInput {
+  name: String!
   exporterId: ID!
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
+  autoCalculateUnitVolume: Boolean
   unitWeight: MetricValueInput
   unitPrice: PriceInput
   unitSize: SizeInput
@@ -30578,6 +30685,7 @@ input ProductProviderCreateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
+  todo: TodoInput
 }
 
 input ProductProviderFilterInput {
@@ -30612,10 +30720,12 @@ input ProductProviderSortInput {
 input ProductProviderUpdateInput {
   id: ID
   archived: Boolean
+  name: String
   exporterId: ID
   supplierId: ID
   unitType: String
   unitVolume: MetricValueInput
+  autoCalculateUnitVolume: Boolean
   unitWeight: MetricValueInput
   unitPrice: PriceInput
   unitSize: SizeInput
@@ -30631,6 +30741,7 @@ input ProductProviderUpdateInput {
   files: [FileInput!]
   memo: String
   customFields: CustomFieldsInput
+  todo: TodoInput
 }
 
 input ProductSortInput {
@@ -30648,9 +30759,11 @@ input ProductUpdateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
+  memo: String
   customFields: CustomFieldsInput
+  todo: TodoInput
+  productProviders: [ProductProviderUpdateInput!]
 }
 
 input ProductUpdateWrapperInput {
@@ -30709,9 +30822,11 @@ type Query {
   fieldDefinition(id: ID!): FieldDefinitionPayload!
   fieldDefinitions(entityType: CustomizableEntityType!): [FieldDefinitionPayload!]!
   mask(id: ID!): MaskPayload!
-  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput): MaskPayloadPagination!
+  masks(page: Int! = 1, perPage: Int! = 10, filterBy: MaskFilterInput, sortBy: MaskSortInput): MaskPayloadPagination!
+  masksByIDs(ids: [ID!]!): [MaskPayload!]!
   maskEdit(id: ID!): MaskEditPayload!
   maskEdits(page: Int! = 1, perPage: Int! = 10, filterBy: MaskEditFilterInput, sortBy: MaskEditSortInput): MaskEditPayloadPagination!
+  maskEditsByIDs(ids: [ID!]!): [MaskEditPayload!]!
   integration(id: ID!): IntegrationPayload!
   integrations(page: Int! = 1, perPage: Int! = 10): IntegrationPayloadPagination!
   integrationsOfPartners(page: Int! = 1, perPage: Int! = 10): IntegrationPayloadPagination!
@@ -35702,6 +35817,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   no: String!
   blNo: String
   blDate: DateTime
+  booked: Boolean
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
@@ -35716,14 +35832,16 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   forwarders: [GroupPayload!]!
   totalVolume: MetricValue!
   orderCount: Int!
-  batchCount: Int!
   orderItemCount: Int!
-  timeline: Timeline!
-  todo: Todo!
+  batchCount: Int!
+  containerCount: Int!
+  containerTypeCounts: [ContainerTypeCount!]!
   batches: [BatchPayload!]!
   batchesWithoutContainer: [BatchPayload!]!
   integrationLinks: [IntegrationLinkPayload!]!
   containers: [ContainerPayload!]!
+  timeline: Timeline!
+  todo: Todo!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -35766,53 +35884,55 @@ input ShipmentBatchInput {
 
 input ShipmentContainerCreateInput {
   no: String!
+  warehouseId: ID
   departureDate: DateTime
-  departureDateAssignedToIds: [ID!]
   departureDateApprovedById: ID
-  departureDateApprovedAt: DateTime
+  departureDateAssignedToIds: [ID!]
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedById: ID
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDate: DateTime
   warehouseArrivalActualDateApprovedById: ID
   warehouseArrivalActualDateAssignedToIds: [ID!]
-  warehouseId: ID
-  representativeBatchId: ID
-  representativeBatchIndex: Int
-  batches: [ShipmentBatchInput!]
   freeTimeStartDate: DateTime
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean
   yardName: String
+  representativeBatchId: ID
+  representativeBatchIndex: Int
+  containerType: String
+  containerOption: ContainerOption
+  batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
   todo: TodoInput
 }
 
 input ShipmentContainerUpdateInput {
-  id: ID
   no: String
+  warehouseId: ID
   departureDate: DateTime
-  departureDateAssignedToIds: [ID!]
   departureDateApprovedById: ID
-  departureDateApprovedAt: DateTime
+  departureDateAssignedToIds: [ID!]
   warehouseArrivalAgreedDate: DateTime
   warehouseArrivalAgreedDateApprovedById: ID
   warehouseArrivalAgreedDateAssignedToIds: [ID!]
   warehouseArrivalActualDate: DateTime
   warehouseArrivalActualDateApprovedById: ID
   warehouseArrivalActualDateAssignedToIds: [ID!]
-  warehouseId: ID
-  representativeBatchId: ID
-  representativeBatchIndex: Int
-  batches: [ShipmentBatchInput!]
   freeTimeStartDate: DateTime
   freeTimeDuration: Int
   autoCalculatedFreeTimeStartDate: Boolean
   yardName: String
+  representativeBatchId: ID
+  representativeBatchIndex: Int
+  containerType: String
+  containerOption: ContainerOption
+  batches: [ContainerBatchInput!]
   memo: String
   tagIds: [ID!]
   todo: TodoInput
+  id: ID
 }
 
 input ShipmentCreateInput {
@@ -35820,12 +35940,12 @@ input ShipmentCreateInput {
   no: String!
   blNo: String
   blDate: DateTime
+  booked: Boolean
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
-  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: TimelineDateNestedInput
@@ -35882,6 +36002,18 @@ type ShipmentPayloadPagination {
 input ShipmentSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  no: SortOrder
+  blNo: SortOrder
+  cargoReady: SortOrder
+  loadPortDeparture: SortOrder
+  firstTransitPortArrival: SortOrder
+  firstTransitPortDeparture: SortOrder
+  secondTransitPortArrival: SortOrder
+  secondTransitPortDeparture: SortOrder
+  dischargePortArrival: SortOrder
+  customClearance: SortOrder
+  warehouseArrival: SortOrder
+  deliveryReady: SortOrder
 }
 
 input ShipmentUpdateInput {
@@ -35890,12 +36022,12 @@ input ShipmentUpdateInput {
   no: String
   blNo: String
   blDate: DateTime
+  booked: Boolean
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
   loadType: LoadType
   transportType: TransportType
-  containerType: String
   incoterm: Incoterm
   carrier: String
   cargoReady: TimelineDateNestedInput
@@ -35989,17 +36121,20 @@ enum TagEntityType {
   """Order"""
   Order
 
+  """OrderItem"""
+  OrderItem
+
   """Batch"""
   Batch
 
   """Shipment"""
   Shipment
 
-  """User"""
-  User
-
   """Container"""
   Container
+
+  """User"""
+  User
 
   """Task"""
   Task
@@ -36062,6 +36197,7 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   rejectedAt: DateTime
   approvedBy: UserPayload
   approvedAt: DateTime
+  timeline: Timeline!
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -36103,6 +36239,7 @@ input TaskCreateInput {
 
 enum TaskDateBinding {
   OrderIssuedAt
+  OrderItemOrderIssuedAt
   BatchDeliveredAt
   BatchDesiredAt
   BatchProducedAt
@@ -36174,6 +36311,12 @@ input TaskTemplateCreateInput {
 }
 
 enum TaskTemplateEntityType {
+  """Product"""
+  Product
+
+  """ProductProvider"""
+  ProductProvider
+
   """Order"""
   Order
 
@@ -36496,7 +36639,7 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
-union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | MetricValueValue | SizeValue | EntityValue | Values
+union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | Duration | MetricValueValue | SizeValue | EntityValue | Values
 
 input ValueInput {
   string: String
@@ -36511,7 +36654,7 @@ input ValueRangeInput {
 }
 
 type Values {
-  values: [Value!]!
+  values: [Value]!
 }
 
 type Viewer {

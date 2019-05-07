@@ -17,10 +17,11 @@ import {
   ProductWrapperStyle,
   ProductImageStyle,
   ProductInfoWrapperStyle,
+  ProductNameWrapperStyle,
+  ProductIconLinkStyle,
   ProductNameStyle,
   ProductSerialStyle,
-  ProductSupplierStyle,
-  ProductIconLinkStyle,
+  ProductProviderNameStyle,
   BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
   DividerStyle,
@@ -62,7 +63,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     todo,
   } = batch;
   const {
-    productProvider: { product, supplier, exporter },
+    productProvider: { product, name: productProviderName },
     order,
     price,
   } = orderItem;
@@ -82,28 +83,26 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{product.name}</div>
-            <div className={ProductSerialStyle}>{product.serial}</div>
-            <div className={ProductSupplierStyle}>
-              <Icon icon="EXPORTER" />
-              {exporter && exporter.name}
+            <div className={ProductNameWrapperStyle}>
+              <Link
+                className={ProductIconLinkStyle}
+                to={`/product/${encodeId(product.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <Icon icon="PRODUCT" />
+              </Link>
+              <div className={ProductNameStyle}>{product.name}</div>
             </div>
-            <div className={ProductSupplierStyle}>
-              <Icon icon="SUPPLIER" />
-              {supplier && supplier.name}
+            <div className={ProductSerialStyle}>{product.serial}</div>
+            <div className={ProductProviderNameStyle}>
+              <Icon icon="PRODUCT_PROVIDER" />
+              {productProviderName}
             </div>
           </div>
-
-          <Link
-            className={ProductIconLinkStyle}
-            to={`/product/${encodeId(product.id)}`}
-            onClick={evt => {
-              evt.stopPropagation();
-            }}
-          >
-            <Icon icon="PRODUCT" />
-          </Link>
         </div>
+
         <div className={BatchInfoWrapperStyle}>
           <div className={BatchNoWrapperStyle}>
             <Display align="left">{no}</Display>
@@ -254,7 +253,7 @@ BatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(BatchCard, 'batch', {
   width: '195px',
-  height: '366px',
+  height: '361px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

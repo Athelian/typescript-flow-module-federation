@@ -29,14 +29,11 @@ import {
   BATCH_UPDATE,
   BATCH_TASK_LIST,
 } from 'modules/permission/constants/batch';
-import {
-  ORDER_FORM,
-  ORDER_ITEMS_LIST,
-  ORDER_ITEMS_GET_PRICE,
-} from 'modules/permission/constants/order';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   calculatePackageQuantity,
-  generateBatchForClone,
+  generateCloneBatch,
   generateBatchByOrderItem,
 } from 'utils/batch';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -44,7 +41,7 @@ import { NewButton, MoveButton, CancelButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
-import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import {
   ShipmentBatchesContainer,
   ShipmentContainersContainer,
@@ -251,7 +248,7 @@ function BatchesArea({
                               selectable
                               selected={selectedBatchIds.includes(batch.id)}
                               onSelect={() => (allowMoveBatches ? onSelectBatch(batch) : () => {})}
-                              read={{
+                              viewable={{
                                 price: hasPermission(ORDER_ITEMS_GET_PRICE),
                                 tasks: hasPermission(BATCH_TASK_LIST),
                               }}
@@ -265,7 +262,7 @@ function BatchesArea({
                                     onRequestClose={() => batchSlideToggle(false)}
                                   >
                                     {opened && (
-                                      <BatchFormWrapper
+                                      <BatchFormInSlide
                                         batch={batch}
                                         onSave={value => {
                                           batchSlideToggle(false);
@@ -315,14 +312,14 @@ function BatchesArea({
                                         CONTAINER_BATCHES_REMOVE,
                                       ]),
                                     }}
-                                    navigate={{
+                                    viewable={{
+                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                                      tasks: hasPermission(BATCH_TASK_LIST),
+                                    }}
+                                    navigable={{
                                       order: hasPermission(ORDER_FORM),
                                       product: hasPermission(PRODUCT_FORM),
                                       container: hasPermission(CONTAINER_FORM),
-                                    }}
-                                    read={{
-                                      price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                                      tasks: hasPermission(BATCH_TASK_LIST),
                                     }}
                                     batch={batch}
                                     isRepresented={
@@ -398,14 +395,13 @@ function BatchesArea({
                                         : () => {}
                                     }
                                     onClone={value => {
-                                      setFieldValue('batches', [
-                                        ...batches,
-                                        generateBatchForClone(value),
-                                      ]);
+                                      const newBatch = generateCloneBatch(value);
+
+                                      setFieldValue('batches', [...batches, newBatch]);
                                       if (isFocusedContainer) {
                                         setDeepFieldValue(
                                           `containers.${focusedContainerIndex}.batches`,
-                                          [...currentBatches, generateBatchForClone(value)]
+                                          [...currentBatches, newBatch]
                                         );
                                       }
                                     }}
@@ -502,6 +498,7 @@ function BatchesArea({
                                   const createdBatches = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
+                                      orderItem,
                                       no: `batch no ${batches.length + index + 1}`,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }

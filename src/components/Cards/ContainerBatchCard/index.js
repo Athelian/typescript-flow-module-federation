@@ -28,10 +28,11 @@ import {
   ProductWrapperStyle,
   ProductImageStyle,
   ProductInfoWrapperStyle,
+  ProductNameWrapperStyle,
+  ProductIconLinkStyle,
   ProductNameStyle,
   ProductSerialStyle,
-  ProductSupplierStyle,
-  ProductIconLinkStyle,
+  ProductProviderNameStyle,
   BatchInfoWrapperStyle,
   BatchNoWrapperStyle,
   QuantityWrapperStyle,
@@ -65,14 +66,14 @@ type OptionalProps = {
     cloneBatch: boolean,
     removeBatch: boolean,
   },
-  navigate: {
+  viewable: {
+    price: boolean,
+    tasks: boolean,
+  },
+  navigable: {
     product: boolean,
     order: boolean,
     shipment: boolean,
-  },
-  read: {
-    price: boolean,
-    tasks: boolean,
   },
   isRepresented: boolean,
 };
@@ -90,25 +91,28 @@ const defaultProps = {
   onClear: () => {},
   onClickRepresentative: () => {},
   selectable: false,
-  editable: {
-    no: false,
-    quantity: false,
-    deliveredAt: false,
-    desiredAt: false,
-    representativeBatch: false,
-    cloneBatch: false,
-    removeBatch: false,
-  },
-  navigate: {
-    product: false,
-    order: false,
-    shipment: false,
-  },
-  read: {
-    price: false,
-    tasks: false,
-  },
   isRepresented: false,
+};
+
+const editableDefault = {
+  no: false,
+  quantity: false,
+  deliveredAt: false,
+  desiredAt: false,
+  representativeBatch: false,
+  cloneBatch: false,
+  removeBatch: false,
+};
+
+const viewableDefault = {
+  price: false,
+  tasks: false,
+};
+
+const navigableDefault = {
+  product: false,
+  order: false,
+  shipment: false,
 };
 
 const ContainerBatchCard = ({
@@ -122,18 +126,22 @@ const ContainerBatchCard = ({
   currency,
   selectable,
   editable,
-  navigate,
-  read,
+  viewable,
+  navigable,
   isRepresented,
   ...rest
 }: Props) => {
+  const mergedEditable = { ...editableDefault, ...editable };
+  const mergedViewable = { ...viewableDefault, ...viewable };
+  const mergedNavigable = { ...navigableDefault, ...navigable };
+
   const actions = selectable
     ? []
     : [
-        ...(editable.cloneBatch
+        ...(mergedEditable.cloneBatch
           ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />]
           : []),
-        ...(editable.removeBatch
+        ...(mergedEditable.removeBatch
           ? [<CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />]
           : []),
       ];
@@ -150,7 +158,7 @@ const ContainerBatchCard = ({
     shipment,
     orderItem: {
       price,
-      productProvider: { product, supplier, exporter },
+      productProvider: { name: productProviderName, product },
       order,
     },
     todo,
@@ -166,10 +174,12 @@ const ContainerBatchCard = ({
     no: `batches.${position}.no`,
     quantity: `batches.${position}.quantity`,
   });
+
   const values = {
     [`batches.${position}.no`]: no,
     [`batches.${position}.quantity`]: actualQuantity,
   };
+
   return (
     <BaseCard
       icon="BATCH"
@@ -192,34 +202,35 @@ const ContainerBatchCard = ({
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameStyle}>{product.name}</div>
-            <div className={ProductSerialStyle}>{product.serial}</div>
-            <div className={ProductSupplierStyle}>
-              <Icon icon="EXPORTER" />
-              {exporter && exporter.name}
+            <div className={ProductNameWrapperStyle}>
+              {mergedNavigable.product ? (
+                <Link
+                  className={ProductIconLinkStyle}
+                  to={`/product/${encodeId(product.id)}`}
+                  onClick={evt => {
+                    evt.stopPropagation();
+                  }}
+                >
+                  <Icon icon="PRODUCT" />
+                </Link>
+              ) : (
+                <div className={ProductIconLinkStyle}>
+                  <Icon icon="PRODUCT" />
+                </div>
+              )}
+
+              <div className={ProductNameStyle}>{product.name}</div>
             </div>
-            <div className={ProductSupplierStyle}>
-              <Icon icon="SUPPLIER" />
-              {supplier && supplier.name}
+
+            <div className={ProductSerialStyle}>{product.serial}</div>
+
+            <div className={ProductProviderNameStyle}>
+              <Icon icon="PRODUCT_PROVIDER" />
+              {productProviderName}
             </div>
           </div>
 
-          {navigate.product ? (
-            <Link
-              className={ProductIconLinkStyle}
-              to={`/product/${encodeId(product.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="PRODUCT" />
-            </Link>
-          ) : (
-            <div className={ProductIconLinkStyle}>
-              <Icon icon="PRODUCT" />
-            </div>
-          )}
-          {editable.representativeBatch ? (
+          {mergedEditable.representativeBatch ? (
             <button
               type="button"
               onClick={evt => {
@@ -257,7 +268,7 @@ const ContainerBatchCard = ({
                     saveOnBlur({ ...batch, no: inputHandlers.value });
                   }}
                   originalValue={no}
-                  editable={editable.no}
+                  editable={mergedEditable.no}
                   inputWidth="185px"
                   inputHeight="20px"
                   inputAlign="left"
@@ -301,7 +312,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={actualQuantity}
-                  editable={editable.quantity}
+                  editable={mergedEditable.quantity}
                   inputWidth="90px"
                   inputHeight="20px"
                 />
@@ -330,7 +341,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={deliveredAt}
-                  editable={editable.deliveredAt}
+                  editable={mergedEditable.deliveredAt}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -359,7 +370,7 @@ const ContainerBatchCard = ({
                     });
                   }}
                   originalValue={desiredAt}
-                  editable={editable.desiredAt}
+                  editable={mergedEditable.desiredAt}
                   inputWidth="120px"
                   inputHeight="20px"
                 />
@@ -377,7 +388,7 @@ const ContainerBatchCard = ({
                 </Label>
               }
               input={
-                <Display blackout={!read.price}>
+                <Display blackout={!mergedViewable.price}>
                   <FormattedNumber
                     value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}
@@ -408,7 +419,7 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={OrderWrapperStyle}>
-            {navigate.order ? (
+            {mergedNavigable.order ? (
               <Link
                 className={OrderIconStyle}
                 to={`/order/${encodeId(order.id)}`}
@@ -428,7 +439,7 @@ const ContainerBatchCard = ({
           </div>
 
           <div className={ShipmentWrapperStyle}>
-            {navigate.shipment ? (
+            {mergedNavigable.shipment ? (
               <Link
                 className={ShipmentIconStyle}
                 to={`/shipment/${shipment ? encodeId(shipment.id) : ''}`}
@@ -469,7 +480,7 @@ const ContainerBatchCard = ({
             <div className={BatchTagsWrapperStyle}>
               {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TaskRing {...todo} blackout={!read.tasks} />
+            <TaskRing {...todo} blackout={!mergedViewable.tasks} />
           </div>
         </div>
       </div>
@@ -481,7 +492,7 @@ ContainerBatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ContainerBatchCard, 'batch', {
   width: '195px',
-  height: '381px',
+  height: '371px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

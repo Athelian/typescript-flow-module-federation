@@ -36,7 +36,7 @@ export const OrderFocusEntityHeaderWrapperStyle: string = css`
   grid-template-columns: 320px 320px 360px minmax(920px, 1fr);
   background-color: ${colors.WHITE};
   ${shadows.HEADER};
-  z-index: 0;
+  z-index: 2;
 `;
 
 export const AllShipmentsToggleWrapperStyle = css`

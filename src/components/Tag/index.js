@@ -21,13 +21,12 @@ const Tag = ({ tag, prefix, suffix }: Props) => {
   const defaultTag = {
     name: '',
     color: '#ffffff',
-    description: '',
   };
   const mergedTag = { ...defaultTag, ...tag };
-  const { color, name, description } = mergedTag;
+  const { color, name } = mergedTag;
 
   return (
-    <div className={TagStyle(color)} title={description}>
+    <div className={TagStyle(color)}>
       {prefix && <div className={PrefixStyle(color)}>{prefix}</div>}
       {name}
       {suffix && <div className={SuffixStyle(color)}>{suffix}</div>}

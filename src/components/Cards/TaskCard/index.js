@@ -19,6 +19,8 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
 import {
   Label,
@@ -84,6 +86,13 @@ const getParentInfo = (parent: Object) => {
       parentData: parent.poNo,
     };
   }
+  if (__typename === 'OrderItem') {
+    return {
+      parentType: 'orderItem',
+      parentIcon: 'ORDER_ITEM',
+      parentData: parent.no,
+    };
+  }
   if (__typename === 'Batch') {
     return {
       parentType: 'batch',
@@ -96,6 +105,20 @@ const getParentInfo = (parent: Object) => {
       parentType: 'shipment',
       parentIcon: 'SHIPMENT',
       parentData: parent.no,
+    };
+  }
+  if (__typename === 'Product') {
+    return {
+      parentType: 'product',
+      parentIcon: 'PRODUCT',
+      parentData: parent.name,
+    };
+  }
+  if (__typename === 'ProductProvider') {
+    return {
+      parentType: 'product',
+      parentIcon: 'PRODUCT_PROVIDER',
+      parentData: parent.name,
     };
   }
   return {};
@@ -166,8 +189,10 @@ const TaskCard = ({
 
   const viewPermissions = {
     order: hasPermission(ORDER_FORM),
+    orderItem: hasPermission(ORDER_ITEMS_FORM),
     batch: hasPermission(BATCH_FORM),
     shipment: hasPermission(SHIPMENT_FORM),
+    product: hasPermission(PRODUCT_FORM),
   };
 
   hideParentInfoForHoc = hideParentInfo || isInTemplate;
@@ -175,8 +200,8 @@ const TaskCard = ({
   const isFromTemplate = !!taskTemplate;
 
   let nameWidth = '160px';
-  if (isFromTemplate) nameWidth = '120px';
-  else if (hideParentInfo || isInTemplate) nameWidth = '140px';
+  if (isFromTemplate || isInTemplate) nameWidth = '120px';
+  else if (hideParentInfo) nameWidth = '140px';
 
   const IS_DND_DEVELOPED = false;
 
@@ -275,7 +300,7 @@ const TaskCard = ({
                     inputAlign="left"
                     name={fieldName}
                     isNew={false}
-                    originalValue={name}
+                    hideTooltip
                   />
                 )}
               </FormField>
@@ -321,7 +346,7 @@ const TaskCard = ({
                       inputHeight="20px"
                       name={fieldName}
                       isNew={false}
-                      originalValue={startDate}
+                      hideTooltip
                     />
                   )}
                 </FormField>
@@ -374,7 +399,7 @@ const TaskCard = ({
                       inputHeight="20px"
                       name={fieldName}
                       isNew={false}
-                      originalValue={dueDate}
+                      hideTooltip
                       inputColor={
                         dueDate && isBefore(new Date(dueDate), new Date()) && !completedBy
                           ? 'RED'

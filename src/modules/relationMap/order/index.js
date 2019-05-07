@@ -7,7 +7,7 @@ import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import logger from 'utils/logger';
 import usePermission from 'hooks/usePermission';
-import { usePrevious } from 'modules/form/hooks';
+import usePrevious from 'hooks/usePrevious';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
@@ -17,11 +17,13 @@ import useFilter from 'hooks/useFilter';
 import Icon from 'components/Icon';
 import { Label, ToggleInput, Display } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
-import { SearchInput } from 'components/NavBar';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
+import { SearchInput, SortInput } from 'components/NavBar';
+import { currentSort } from 'components/common/FilterToolBar';
+import { shipmentSortMessages } from 'modules/shipment/messages';
 import AdvancedFilter from '../common/SortFilter/AdvancedFilter';
 import messages from '../messages';
 import SortFilter from '../common/SortFilter';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from '../constants';
 import {
   OrderFocusGridWrapperStyle,
   OrderFocusEntityHeaderWrapperStyle,
@@ -140,6 +142,22 @@ const Order = ({ intl }: Props) => {
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
+
+  const shipmentSortFields = [
+    { title: intl.formatMessage(shipmentSortMessages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(shipmentSortMessages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(shipmentSortMessages.shipmentId), value: 'no' },
+    { title: intl.formatMessage(shipmentSortMessages.blNo), value: 'blNo' },
+    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
+    {
+      title: intl.formatMessage(shipmentSortMessages.dischargePortArrival),
+      value: 'dischargePortArrival',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
+      value: 'loadPortDeparture',
+    },
+  ];
 
   const {
     queryVariables: queryOrderVariables,
@@ -483,23 +501,41 @@ const Order = ({ intl }: Props) => {
                           }}
                         />
                       </div>
+
                       {state.toggleShipmentList && (
-                        <SearchInput
-                          value={shipmentFilterAndSort.filter.query}
-                          name="search"
-                          onClear={() =>
-                            onChangeShipmentFilter({
-                              ...shipmentFilterAndSort,
-                              filter: { ...shipmentFilterAndSort.filter, query: '' },
-                            })
-                          }
-                          onChange={newQuery =>
-                            onChangeShipmentFilter({
-                              ...shipmentFilterAndSort,
-                              filter: { ...shipmentFilterAndSort.filter, query: newQuery },
-                            })
-                          }
-                        />
+                        <>
+                          <SortInput
+                            sort={currentSort(shipmentSortFields, shipmentFilterAndSort.sort)}
+                            ascending={shipmentFilterAndSort.sort.direction !== 'DESCENDING'}
+                            fields={shipmentSortFields}
+                            onChange={({ field: { value }, ascending }) =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                sort: {
+                                  field: value,
+                                  direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                                },
+                              })
+                            }
+                          />
+
+                          <SearchInput
+                            value={shipmentFilterAndSort.filter.query}
+                            name="search"
+                            onClear={() =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: '' },
+                              })
+                            }
+                            onChange={newQuery =>
+                              onChangeShipmentFilter({
+                                ...shipmentFilterAndSort,
+                                filter: { ...shipmentFilterAndSort.filter, query: newQuery },
+                              })
+                            }
+                          />
+                        </>
                       )}
                     </EntityHeader>
                   </div>
@@ -507,7 +543,7 @@ const Order = ({ intl }: Props) => {
                     <InfiniteScroll
                       className={OrderListBodyStyle}
                       loadMore={() => loadMore({ fetchMore, data }, queryOrderVariables, 'orders')}
-                      hasMore={hasMoreItems(data)}
+                      hasMore={hasMoreItems(data, 'orders')}
                       loader={<LoadingIcon key="loading" />}
                       useWindow={false}
                       threshold={500}

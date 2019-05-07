@@ -7,7 +7,7 @@ export const ProductProviderCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 222px;
+  height: 259px;
   &:hover {
     button {
       opacity: 1;
@@ -77,7 +77,7 @@ export const ProductInfoWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 185px;
   grid-gap: 5px;
-  padding: 5px;
+  padding: 5px 5px 10px 5px;
   width: 195px;
 `;
 
@@ -114,6 +114,15 @@ export const ProductProvidersWrapperStyle: string = css`
   width: 185px;
 `;
 
+export const ProductProviderNameStyle: string = css`
+  ${fontSizesWithHeights.MAIN};
+  color: ${colors.BLACK};
+  font-weight: bold;
+  ${presets.ELLIPSIS};
+  padding: 0 5px;
+  width: 100%;
+`;
+
 export const ProductExporterStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.BLACK};
@@ -138,11 +147,19 @@ export const ProductSupplierStyle: string = css`
   }
 `;
 
+export const TagsAndTaskWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 155px 20px;
+  grid-gap: 5px;
+  align-items: center;
+  padding: 5px 0 0 0;
+`;
+
 export const ProductTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  width: 175px;
-  margin: 0 5px;
   overflow: hidden;
+  width: 155px;
+  padding: 0 0 0 5px;
 `;

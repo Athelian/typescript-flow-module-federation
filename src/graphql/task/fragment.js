@@ -14,11 +14,20 @@ export const taskCardFragment = gql`
       ... on Order {
         poNo
       }
+      ... on OrderItem {
+        no
+      }
       ... on Shipment {
         no
       }
       ... on Batch {
         no
+      }
+      ... on Product {
+        name
+      }
+      ... on ProductProvider {
+        name
       }
     }
     assignedTo {
@@ -221,11 +230,20 @@ export const taskFormFragment = gql`
       ... on Order {
         ...orderCardFragment
       }
+      ... on OrderItem {
+        ...itemCardFragment
+      }
       ... on Batch {
         ...batchCardFragment
       }
       ... on Shipment {
         ...shipmentCardFragment
+      }
+      ... on Product {
+        ...productCardFragment
+      }
+      ... on ProductProvider {
+        ...productProviderCardFragment
       }
     }
   }

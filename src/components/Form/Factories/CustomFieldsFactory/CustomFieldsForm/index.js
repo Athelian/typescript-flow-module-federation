@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { contains } from 'utils/fp';
+import { contains, getByPathWithDefault } from 'utils/fp';
 import { countMaskFieldDefinitions } from 'utils/customFields';
 import { TemplateCard, GrayCard } from 'components/Cards';
 import Divider from 'components/Divider';
@@ -67,7 +67,9 @@ class CustomFieldsForm extends React.Component<Props> {
             ...customFieldsContainer.originalValues,
             ...customFieldsContainer.state,
           };
-          const { mask, fieldValues } = values;
+          const { fieldValues } = values;
+          const mask = getByPathWithDefault(false, 'mask.id', values) ? values.mask : null;
+
           return (
             <Layout
               navBar={

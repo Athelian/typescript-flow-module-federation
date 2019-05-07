@@ -60,6 +60,21 @@ const TaskTemplateListModule = () => {
                   }}
                 />
                 <TabItem
+                  active={activeType === 'OrderItem'}
+                  icon="ORDER_ITEM"
+                  label={
+                    <FormattedMessage id="module.TaskTemplate.orderItem" defaultMessage="ITEM" />
+                  }
+                  onClick={() => {
+                    if (activeType !== 'OrderItem') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['OrderItem'] },
+                      });
+                    }
+                  }}
+                />
+                <TabItem
                   active={activeType === 'Batch'}
                   icon="BATCH"
                   label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
@@ -83,6 +98,39 @@ const TaskTemplateListModule = () => {
                       onChangeFilter({
                         ...filterAndSort,
                         filter: { ...filterAndSort.filter, entityTypes: ['Shipment'] },
+                      });
+                    }
+                  }}
+                />
+                <TabItem
+                  active={activeType === 'Product'}
+                  icon="PRODUCT"
+                  label={
+                    <FormattedMessage id="module.TaskTemplate.product" defaultMessage="PRODUCT" />
+                  }
+                  onClick={() => {
+                    if (activeType !== 'Product') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['Product'] },
+                      });
+                    }
+                  }}
+                />
+                <TabItem
+                  active={activeType === 'ProductProvider'}
+                  icon="PRODUCT_PROVIDER"
+                  label={
+                    <FormattedMessage
+                      id="module.TaskTemplate.endProduct"
+                      defaultMessage="END PRODUCT"
+                    />
+                  }
+                  onClick={() => {
+                    if (activeType !== 'ProductProvider') {
+                      onChangeFilter({
+                        ...filterAndSort,
+                        filter: { ...filterAndSort.filter, entityTypes: ['ProductProvider'] },
                       });
                     }
                   }}

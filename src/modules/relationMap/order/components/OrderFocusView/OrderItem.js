@@ -3,13 +3,14 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import { Tags } from 'components/RelationMap';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import { RMOrderItemCard } from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
-import { ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import { ORDER_ITEM, BATCH } from 'constants/keywords';
 import type { OrderItemProps } from 'modules/relationMap/order/type.js.flow';
 import Badge from '../Badge';
 
@@ -23,13 +24,13 @@ type OptionalProps = {
 
 type Props = OptionalProps & OrderItemProps;
 
+// TODO: try to use from util
 function getQuantitySummary(item: Object) {
   let orderedQuantity = 0;
   let batchedQuantity = 0;
   let shippedQuantity = 0;
   let batched = 0;
   let shipped = 0;
-  const shipments = [];
 
   orderedQuantity += item.quantity ? item.quantity : 0;
 
@@ -49,13 +50,10 @@ function getQuantitySummary(item: Object) {
 
       if (batch.shipment) {
         shippedQuantity += currentQuantity;
-        if (!shipments.includes(batch.shipment)) {
-          shipments.push(batch.shipment);
-        }
+        shipped += 1;
       }
     });
   }
-  shipped = shipments.length;
 
   return {
     orderedQuantity,
@@ -66,13 +64,18 @@ function getQuantitySummary(item: Object) {
   };
 }
 
-export default function OrderItem({ wrapperClassName, id, exporterId, batches, ...rest }: Props) {
+export default function OrderItem({
+  wrapperClassName,
+  id,
+  exporterId,
+  batches,
+  tags,
+  ...rest
+}: Props) {
   const context = React.useContext(ActionDispatch);
-  const {
-    state: { clone },
-    dispatch,
-  } = context;
+  const { state, dispatch } = context;
   const actions = actionCreators(dispatch);
+  const { clone, showTag } = state;
   const showCloneBadge = (Object.entries(clone.orderItems || {}): Array<any>).some(([, item]) =>
     item.map(({ id: orderItemId }) => orderItemId).includes(id)
   );
@@ -98,6 +101,12 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
                   targeted={targeted}
                   toggle={toggle}
                   onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
+                />
+                <Action
+                  icon="DOCUMENT"
+                  targeted={targeted}
+                  toggle={toggle}
+                  onClick={() => actions.showEditForm(ORDER_ITEM, id)}
                 />
                 {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                   <>
@@ -132,6 +141,7 @@ export default function OrderItem({ wrapperClassName, id, exporterId, batches, .
               </>
             )}
           </ActionCard>
+          {showTag && <Tags dataSource={tags} />}
         </div>
       )}
     </BooleanValue>

@@ -11,11 +11,15 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
+import Tooltip from 'components/Tooltip';
+import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {
   ShipmentCardWrapperStyle,
   ShipmentInfoWrapperStyle,
   ShipmentLeftWrapperStyle,
+  ShipmentNoWrapperStyle,
+  ShipmentBookedStyle,
   ShipmentNoStyle,
   ShipmentBLStyle,
   ShipmentRightWrapperStyle,
@@ -30,6 +34,10 @@ import {
   ShipmentBadgeIconStyle,
   ShipmentBadgeStyle,
   DividerStyle,
+  ContainerTypeTooltipTitleStyle,
+  ContainerTypeWrapperStyle,
+  ContainerTypeLabelStyle,
+  ContainerTypeCountStyle,
 } from './style';
 
 type OptionalProps = {
@@ -49,6 +57,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     id,
     no,
     blNo,
+    booked,
     tags,
     inCharges,
     batchCount,
@@ -57,7 +66,22 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     containers,
     importer,
     todo,
+    containerTypeCounts,
   } = shipment;
+
+  const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
+  sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
+    const firstContainerTypeSortIndex = CONTAINER_TYPE_ITEMS.findIndex(
+      ({ value }) => value === firstContainerType.containerType
+    );
+    const secondContainerTypeSortIndex = CONTAINER_TYPE_ITEMS.findIndex(
+      ({ value }) => value === secondContainerType.containerType
+    );
+
+    return firstContainerTypeSortIndex - secondContainerTypeSortIndex;
+  });
+
+  const totalContainerTypeCount = sortedContainerTypes.reduce((sum, { count }) => sum + count, 0);
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} {...rest}>
@@ -68,7 +92,16 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
       >
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>
-            <div className={ShipmentNoStyle}>{no}</div>
+            <div className={ShipmentNoWrapperStyle}>
+              <div className={ShipmentBookedStyle(booked)}>
+                {booked ? (
+                  <FormattedMessage id="modules.Shipments.booked" defaultMessage="Booked" />
+                ) : (
+                  <FormattedMessage id="modules.Shipments.unbooked" defaultMessage="Unbooked" />
+                )}
+              </div>
+              <div className={ShipmentNoStyle}>{no}</div>
+            </div>
             <div className={ShipmentBLStyle}>{blNo}</div>
           </div>
           <div className={ShipmentRightWrapperStyle}>
@@ -100,7 +133,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
 
               <div className={ShipmentBadgeWrapperStyle}>
                 <Label>
-                  <FormattedMessage id="components.cards.ttlVol" defaultValue="TTL VOL" />
+                  <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
                 </Label>
                 <div className={ShipmentBadgeStyle}>
                   {totalVolume && (
@@ -109,14 +142,54 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 </div>
               </div>
 
-              <div className={ShipmentBadgeWrapperStyle}>
-                <div className={ShipmentBadgeIconStyle}>
-                  <Icon icon="CONTAINER" />
+              <Tooltip
+                message={
+                  <div>
+                    <div className={ContainerTypeTooltipTitleStyle}>
+                      <FormattedMessage
+                        id="components.cards.containerTypesTitle"
+                        defaultMessage="CONTAINER TYPES"
+                      />
+                    </div>
+
+                    {sortedContainerTypes.map(({ containerType, count }) => {
+                      const foundType = CONTAINER_TYPE_ITEMS.find(
+                        ({ value }) => value === containerType
+                      );
+
+                      return (
+                        <div className={ContainerTypeWrapperStyle} key={containerType}>
+                          <div className={ContainerTypeLabelStyle}>
+                            {foundType ? foundType.label : ''}
+                          </div>
+                          <div className={ContainerTypeCountStyle}>
+                            <FormattedNumber value={count} />
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {(totalContainerTypeCount < (containers ? containers.length : 0) ||
+                      (containers && containers.length === 0)) && (
+                      <div className={ContainerTypeWrapperStyle}>
+                        <div className={ContainerTypeLabelStyle}>N/A</div>
+                        <div className={ContainerTypeCountStyle}>
+                          <FormattedNumber value={containers.length - totalContainerTypeCount} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                }
+              >
+                <div className={ShipmentBadgeWrapperStyle}>
+                  <div className={ShipmentBadgeIconStyle}>
+                    <Icon icon="CONTAINER" />
+                  </div>
+                  <div className={ShipmentBadgeStyle}>
+                    <FormattedNumber value={containers ? containers.length : 0} />
+                  </div>
                 </div>
-                <div className={ShipmentBadgeStyle}>
-                  <FormattedNumber value={containers ? containers.length : 0} />
-                </div>
-              </div>
+              </Tooltip>
 
               <div className={ShipmentBadgeWrapperStyle}>
                 <div className={ShipmentBadgeIconStyle}>

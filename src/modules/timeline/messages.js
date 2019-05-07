@@ -47,6 +47,78 @@ export default defineMessages({
     id: 'modules.timeline.unarchivedChild',
     defaultMessage: '{user} has activated {child}',
   },
+  addedTags: {
+    id: 'modules.timeline.addedTags',
+    defaultMessage: `{user} has added {addedCount, plural,
+      one {the tag}
+      other {tags}
+     } {added}`,
+  },
+  addedTagsChild: {
+    id: 'modules.timeline.addedTagsChild',
+    defaultMessage: `{user} has added {addedCount, plural,
+      one {the tag}
+      other {tags}
+     } {added} to {child}`,
+  },
+  removedTags: {
+    id: 'modules.timeline.removedTags',
+    defaultMessage: `{user} has removed {removedCount, plural,
+      one {the tag}
+      other {tags}
+     } {removed}`,
+  },
+  removedTagsChild: {
+    id: 'modules.timeline.removedTagsChild',
+    defaultMessage: `{user} has removed {removedCount, plural,
+      one {the tag}
+      other {tags}
+     } {removed} to {child}`,
+  },
+  addedAndRemovedTags: {
+    id: 'modules.timeline.addedAndRemovedTags',
+    defaultMessage: `{user} has removed {removedCount, plural,
+      one {the tag}
+      other {tags}
+     } {removed} and added {addedCount, plural,
+      one {the tag}
+      other {tags}
+     } {added}`,
+  },
+  addedAndRemovedTagsChild: {
+    id: 'modules.timeline.addedAndRemovedTagsChild',
+    defaultMessage: `{user} has removed {removedCount, plural,
+      one {the tag}
+      other {tags}
+     } {removed} and added {addedCount, plural,
+      one {the tag}
+      other {tags}
+     } {added} to {child}`,
+  },
+  addedInCharges: {
+    id: 'modules.timeline.addedInCharges',
+    defaultMessage: `{user} has assigned {added}`,
+  },
+  addedInChargesChild: {
+    id: 'modules.timeline.addedInChargesChild',
+    defaultMessage: `{user} has assigned {added} to {child}`,
+  },
+  removedInCharges: {
+    id: 'modules.timeline.removedInCharges',
+    defaultMessage: `{user} has unassigned {removed}`,
+  },
+  removedInChargesChild: {
+    id: 'modules.timeline.removedInChargesChild',
+    defaultMessage: `{user} has unassigned {removed} to {child}`,
+  },
+  addedAndRemovedInCharges: {
+    id: 'modules.timeline.addedAndRemovedInCharges',
+    defaultMessage: `{user} has unassigned {removed} and assigned {added}`,
+  },
+  addedAndRemovedInChargesChild: {
+    id: 'modules.timeline.addedAndRemovedInChargesChild',
+    defaultMessage: `{user} has unassigned {removed} and assigned {added} to {child}`,
+  },
   // OTHER
   message: {
     id: 'modules.timeline.message',
@@ -60,6 +132,14 @@ export default defineMessages({
     id: 'modules.timeline.order',
     defaultMessage: 'order',
   },
+  orderItem: {
+    id: 'modules.timeline.orderItem',
+    defaultMessage: 'item',
+  },
+  batch: {
+    id: 'modules.timeline.batch',
+    defaultMessage: 'batch',
+  },
   shipment: {
     id: 'modules.timeline.shipment',
     defaultMessage: 'shipment',
@@ -71,5 +151,9 @@ export default defineMessages({
   productProvider: {
     id: 'modules.timeline.productProvider',
     defaultMessage: 'end product',
+  },
+  task: {
+    id: 'modules.timeline.task',
+    defaultMessage: 'task',
   },
 });

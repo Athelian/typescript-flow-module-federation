@@ -13,6 +13,8 @@ import {
   CONTAINER_DELETE,
   CONTAINER_UPDATE,
   CONTAINER_SET_NO,
+  CONTAINER_SET_CONTAINER_TYPE,
+  CONTAINER_SET_CONTAINER_OPTION,
   CONTAINER_SET_WAREHOUSE,
   CONTAINER_SET_AGREE_ARRIVAL_DATE,
   CONTAINER_APPROVE_AGREE_ARRIVAL_DATE,
@@ -25,7 +27,6 @@ import { getLatestDate } from 'utils/shipment';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
-import ContainerFormContainer from 'modules/container/form/container';
 import Action from 'modules/shipment/form/components/Action';
 import {
   ShipmentContainersContainer,
@@ -66,8 +67,8 @@ type Props = {
   onChangeSelectMode: Function,
 };
 
-const includesById = (id: string, batches: Array<Object>): boolean =>
-  batches.map(({ id: batchId }) => batchId).includes(id);
+const includesById = (id: string, items: Array<Object>): boolean =>
+  items.map(item => item.id).includes(id);
 
 const removeContainerById = (containers: Array<Object>, id: string): Array<Object> =>
   containers.filter(container => container.id !== id);
@@ -96,12 +97,12 @@ const getNewSourceContainer = (
   sourceContainer: Object,
   selectedBatches: Array<Object>
 ): { batches: Array<Object>, representativeBatch: Object } => {
-  const { batches, representativeBatch } = sourceContainer;
-  const newBatches = batches.filter(({ id }) => !includesById(id, selectedBatches));
+  const { batches, representativeBatch, ...rest } = sourceContainer;
+  const newBatches = batches.filter(batch => !includesById(batch.id, selectedBatches));
   const newRepresentativeBatch = includesById(representativeBatch.id, newBatches)
-    ? { ...representativeBatch }
-    : { ...newBatches[0] };
-  return { ...sourceContainer, batches: newBatches, representativeBatch: newRepresentativeBatch };
+    ? representativeBatch
+    : newBatches[0];
+  return { ...rest, batches: newBatches, representativeBatch: newRepresentativeBatch };
 };
 
 function ContainersArea({
@@ -211,7 +212,7 @@ function ContainersArea({
                           <Action
                             onClick={() => {
                               const newBatches = batches.map(({ id, container, ...rest }) =>
-                                selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                                includesById(id, selectedBatches)
                                   ? {
                                       id,
                                       ...rest,
@@ -223,10 +224,13 @@ function ContainersArea({
                                     }
                               );
                               setBatchesState('batches', newBatches);
-                              const sourceContainer = containers[focusedContainerIndex];
+                              // must first batches, second containers
                               setDeepFieldValue(
                                 `containers.${focusedContainerIndex}`,
-                                getNewSourceContainer(sourceContainer, selectedBatches)
+                                getNewSourceContainer(
+                                  containers[focusedContainerIndex],
+                                  selectedBatches
+                                )
                               );
                               onChangeSelectMode(false);
                               changeContainerIdToExistingBatches(selectedBatches, null);
@@ -367,6 +371,14 @@ function ContainersArea({
                                                   CONTAINER_UPDATE,
                                                   CONTAINER_SET_NO,
                                                 ]),
+                                                containerType: hasPermission([
+                                                  CONTAINER_UPDATE,
+                                                  CONTAINER_SET_CONTAINER_TYPE,
+                                                ]),
+                                                containerOption: hasPermission([
+                                                  CONTAINER_UPDATE,
+                                                  CONTAINER_SET_CONTAINER_OPTION,
+                                                ]),
                                                 warehouse:
                                                   hasPermission(WAREHOUSE_LIST) &&
                                                   hasPermission([
@@ -400,6 +412,23 @@ function ContainersArea({
                                                   `containers.${index}`,
                                                   newContainer
                                                 );
+                                                const newBatches = batches.map(batch => {
+                                                  const {
+                                                    container: batchContainer,
+                                                    ...rest
+                                                  } = batch;
+                                                  if (
+                                                    batchContainer &&
+                                                    batchContainer.id === newContainer.id
+                                                  ) {
+                                                    return {
+                                                      ...rest,
+                                                      container: newContainer,
+                                                    };
+                                                  }
+                                                  return batch;
+                                                });
+                                                setBatchesState('batches', newBatches);
                                               }}
                                               onClick={
                                                 hasPermission(CONTAINER_FORM)
@@ -501,38 +530,30 @@ function ContainersArea({
                                   onRequestClose={() => toggleContainerForm(false)}
                                 >
                                   {isOpenContainerForm && (
-                                    <Subscribe to={[ContainerFormContainer]}>
-                                      {({ initDetailValues }) => (
-                                        <ContainerFormInSlide
-                                          container={container}
-                                          onCancel={() => toggleContainerForm(false)}
-                                          onSave={newContainer => {
-                                            const { batches: newBatches } = newContainer;
-                                            setBatchesState('batches', [
-                                              ...batches.filter(
-                                                ({ container: batchContainer }) =>
-                                                  isNullOrUndefined(batchContainer) ||
-                                                  batchContainer.id !== container.id
-                                              ),
-                                              ...newBatches.map(batch => ({
-                                                ...batch,
-                                                container: newContainer,
-                                              })),
-                                            ]);
-                                            setDeepFieldValue(`containers.${index}`, newContainer);
-                                            toggleContainerForm(false);
-                                          }}
-                                          onFormReady={() =>
-                                            initDetailValues({
-                                              ...container,
-                                              shipment: {
-                                                voyages,
-                                              },
-                                            })
-                                          }
-                                        />
-                                      )}
-                                    </Subscribe>
+                                    <ContainerFormInSlide
+                                      container={{
+                                        ...container,
+                                        shipment: {
+                                          voyages,
+                                        },
+                                      }}
+                                      onSave={newContainer => {
+                                        const { batches: newBatches } = newContainer;
+                                        setBatchesState('batches', [
+                                          ...batches.filter(
+                                            ({ container: batchContainer }) =>
+                                              isNullOrUndefined(batchContainer) ||
+                                              batchContainer.id !== container.id
+                                          ),
+                                          ...newBatches.map(batch => ({
+                                            ...batch,
+                                            container: newContainer,
+                                          })),
+                                        ]);
+                                        setDeepFieldValue(`containers.${index}`, newContainer);
+                                        toggleContainerForm(false);
+                                      }}
+                                    />
                                   )}
                                 </SlideView>
                               </>
@@ -545,8 +566,8 @@ function ContainersArea({
                 })}
               </div>
             </div>
-            {!isSelectBatchesMode && hasPermission([CONTAINER_CREATE]) && (
-              <div className={ContainersFooterWrapperStyle}>
+            <div className={ContainersFooterWrapperStyle}>
+              {!isSelectBatchesMode && hasPermission([CONTAINER_CREATE]) && (
                 <NewButton
                   label={
                     <FormattedMessage
@@ -580,8 +601,8 @@ function ContainersArea({
                     ]);
                   }}
                 />
-              </div>
-            )}
+              )}
+            </div>
           </div>
         );
       }}

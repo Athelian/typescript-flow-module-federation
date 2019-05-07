@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
 import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
@@ -171,7 +171,7 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                       selected={selected.includes(item)}
                       onSelect={() => onSelectBatch({ selected, item, push, set })}
                       key={item.id}
-                      read={{
+                      viewable={{
                         price: hasPermission(ORDER_ITEMS_GET_PRICE),
                         tasks: hasPermission(BATCH_TASK_LIST),
                       }}

@@ -149,6 +149,32 @@ const TableTemplateSection = ({ isNew }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
+                                  selected={inputHandlers.value === 'OrderItem'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'OrderItem') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('OrderItem');
+                                      } else {
+                                        setFieldValue(name, 'OrderItem');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('ORDER_ITEM')}>
+                                      <Icon icon="ORDER_ITEM" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.orderItem"
+                                        defaultMessage="ITEM"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
                                   selected={inputHandlers.value === 'Batch'}
                                   onToggle={() => {
                                     if (values.entityType !== 'Batch') {
@@ -195,6 +221,58 @@ const TableTemplateSection = ({ isNew }: Props) => {
                                       <FormattedMessage
                                         id="modules.TaskTemplates.shipment"
                                         defaultMessage="SHIPMENT"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
+                                  selected={inputHandlers.value === 'Product'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'Product') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('Product');
+                                      } else {
+                                        setFieldValue(name, 'Product');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('PRODUCT')}>
+                                      <Icon icon="PRODUCT" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.product"
+                                        defaultMessage="PRODUCT"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
+                                  selected={inputHandlers.value === 'ProductProvider'}
+                                  onToggle={() => {
+                                    if (values.entityType !== 'ProductProvider') {
+                                      if (hasAutoDate(values.tasks)) {
+                                        setDialog('ProductProvider');
+                                      } else {
+                                        setFieldValue(name, 'ProductProvider');
+                                      }
+                                    }
+                                  }}
+                                  editable={allowUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('PRODUCT_PROVIDER')}>
+                                      <Icon icon="PRODUCT_PROVIDER" />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.TaskTemplates.endProduct"
+                                        defaultMessage="END PRODUCT"
                                       />
                                     </Label>
                                   </div>

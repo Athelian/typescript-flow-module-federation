@@ -10,6 +10,10 @@ import InlineProductProvider from './InlineProductProvider';
 import InlineMetricInput from './InlineMetricInput';
 import InlineForwarderInput from './InlineForwarderInput';
 import InlineTimeLineInput from './InlineTimeLineInput';
+import InlineDateTimeApprovalInput from './InlineDateTimeApprovalInput';
+import InlineWarehouse from './InlineWarehouse';
+import InlineSelectInput from './InlineSelectInput';
+import InlineEnumInput from './InlineEnumInput';
 import AutoCalculate from './AutoCalculate';
 
 export {
@@ -24,5 +28,9 @@ export {
   InlineMetricInput,
   InlineForwarderInput,
   InlineTimeLineInput,
+  InlineDateTimeApprovalInput,
+  InlineWarehouse,
+  InlineSelectInput,
+  InlineEnumInput,
   AutoCalculate,
 };

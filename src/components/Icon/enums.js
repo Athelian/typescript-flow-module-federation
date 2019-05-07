@@ -88,6 +88,7 @@ import {
   faEyeSlash as INVISIBLE,
   faRedo as RELOAD,
   faClock as CLOCK,
+  faThList as TH_LIST,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -187,7 +188,7 @@ export default {
   SECURITY,
   PASSWORD,
   FORGOT,
-
+  TH_LIST,
   RELATION_MAP,
   CONNECT,
   SPLIT,

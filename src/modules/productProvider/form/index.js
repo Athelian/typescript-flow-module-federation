@@ -1,12 +1,16 @@
 // @flow
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
-import ProductProviderContainer from './container';
+import AutoDateBinding from 'modules/task/common/AutoDateBinding';
+import { ProductProviderInfoContainer, ProductProviderTasksContainer } from './containers';
 import { PackagingSection, ProductProviderSection, SpecificationsSection } from './components';
 import { ProductProviderFormWrapperStyle } from './style';
+
+const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
+const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 
 type OptionalProps = {
   isNew: boolean,
@@ -25,91 +29,109 @@ const defaultProps = {
   isOwner: true,
 };
 
-const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
+class ProductProviderForm extends React.Component<Props> {
+  static defaultProps = defaultProps;
 
-const ProductProviderForm = ({
-  productProvider,
-  initDetailValues,
-  isNew,
-  isOwner,
-  isExist,
-}: Props) => {
-  useEffect(() => {
+  componentDidMount() {
+    const { initDetailValues, productProvider } = this.props;
+
     initDetailValues(productProvider);
-  }, [initDetailValues, productProvider]);
+  }
 
-  return (
-    <Suspense fallback={<LoadingIcon />}>
-      <div className={ProductProviderFormWrapperStyle}>
-        <SectionWrapper id="productProvider_productProviderSection">
-          <SectionHeader
-            icon="PROVIDER"
-            title={
-              <FormattedMessage
-                id="modules.ProductProviders.provider"
-                defaultMessage="END PRODUCT"
-              />
-            }
-          >
-            {productProvider.updatedAt && (
-              <LastModified
-                updatedAt={productProvider.updatedAt}
-                updatedBy={productProvider.updatedBy}
-              />
-            )}
-          </SectionHeader>
-          <ProductProviderSection isExist={isExist} isNew={isNew} isOwner={isOwner} />
-        </SectionWrapper>
+  render() {
+    const { productProvider, isNew, isOwner, isExist } = this.props;
 
-        <SectionWrapper id="productProvider_specificationsSection">
-          <SectionHeader
-            icon="SPECIFICATIONS"
-            title={
-              <FormattedMessage
-                id="modules.ProductProviders.specifications"
-                defaultMessage="SPECIFICATIONS"
-              />
-            }
-          />
-          <SpecificationsSection isNew={isNew} isOwner={isOwner} />
-        </SectionWrapper>
+    return (
+      <Suspense fallback={<LoadingIcon />}>
+        <div className={ProductProviderFormWrapperStyle}>
+          <SectionWrapper id="productProvider_productProviderSection">
+            <SectionHeader
+              icon="PRODUCT_PROVIDER"
+              title={
+                <FormattedMessage
+                  id="modules.ProductProviders.provider"
+                  defaultMessage="END PRODUCT"
+                />
+              }
+            >
+              {productProvider.updatedAt && (
+                <LastModified
+                  updatedAt={productProvider.updatedAt}
+                  updatedBy={productProvider.updatedBy}
+                />
+              )}
+            </SectionHeader>
+            <ProductProviderSection isExist={isExist} isNew={isNew} isOwner={isOwner} />
+          </SectionWrapper>
 
-        <SectionWrapper id="productProvider_productProviderPackagingSection">
-          <SectionHeader
-            icon="PACKAGING"
-            title={
-              <FormattedMessage
-                id="modules.ProductProviders.packaging"
-                defaultMessage="PACKAGING"
-              />
-            }
-          />
-          <PackagingSection isNew={isNew} isOwner={isOwner} />
-        </SectionWrapper>
-        <SectionWrapper id="productProvider_documentsSection">
-          <Subscribe to={[ProductProviderContainer]}>
-            {({ state: { files } }) => (
-              <SectionHeader
-                icon="DOCUMENT"
-                title={
-                  <>
-                    <FormattedMessage
-                      id="modules.productProvider.documents"
-                      defaultMessage="DOCUMENTS"
-                    />{' '}
-                    ({files.length})
-                  </>
-                }
+          <SectionWrapper id="productProvider_specificationsSection">
+            <SectionHeader
+              icon="SPECIFICATIONS"
+              title={
+                <FormattedMessage
+                  id="modules.ProductProviders.specifications"
+                  defaultMessage="SPECIFICATIONS"
+                />
+              }
+            />
+            <SpecificationsSection isNew={isNew} isOwner={isOwner} />
+          </SectionWrapper>
+
+          <SectionWrapper id="productProvider_productProviderPackagingSection">
+            <SectionHeader
+              icon="PACKAGING"
+              title={
+                <FormattedMessage
+                  id="modules.ProductProviders.packaging"
+                  defaultMessage="PACKAGING"
+                />
+              }
+            />
+            <PackagingSection isNew={isNew} isOwner={isOwner} />
+          </SectionWrapper>
+
+          <SectionWrapper id="productProvider_documentsSection">
+            <Subscribe to={[ProductProviderInfoContainer]}>
+              {({ state: { files } }) => (
+                <SectionHeader
+                  icon="DOCUMENT"
+                  title={
+                    <>
+                      <FormattedMessage
+                        id="modules.productProvider.documents"
+                        defaultMessage="DOCUMENTS"
+                      />{' '}
+                      ({files.length})
+                    </>
+                  }
+                />
+              )}
+            </Subscribe>
+
+            <AsyncDocumentsSection isOwner={isOwner} />
+          </SectionWrapper>
+
+          <AsyncTaskSection entityId={productProvider.id} type="productProvider" />
+
+          <Subscribe to={[ProductProviderTasksContainer]}>
+            {({
+              state: {
+                todo: { tasks },
+              },
+              setFieldValue,
+            }) => (
+              <AutoDateBinding
+                type="productProvider"
+                values={{}}
+                tasks={tasks}
+                setTaskValue={setFieldValue}
               />
             )}
           </Subscribe>
-          <AsyncDocumentsSection isOwner={isOwner} />
-        </SectionWrapper>
-      </div>
-    </Suspense>
-  );
-};
-
-ProductProviderForm.defaultProps = defaultProps;
+        </div>
+      </Suspense>
+    );
+  }
+}
 
 export default ProductProviderForm;

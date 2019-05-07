@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import FormattedDate from 'components/FormattedDate';
@@ -16,7 +16,10 @@ import {
   DefaultStyle,
   TextInputFactory,
   DateTimeInputFactory,
+  SelectInputFactory,
+  EnumSelectInputFactory,
 } from 'components/Form';
+import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import { getProductImage } from 'components/Cards/utils';
 import { UserConsumer } from 'modules/user';
 import { calculateContainerTotalVolume, calculateDueDate } from 'modules/container/utils';
@@ -32,6 +35,7 @@ import {
   SerialStyle,
   InfoPartWrapperStyle,
   InputStyle,
+  ContainerTypeWrapperStyle,
   LabelInputStyle,
   DividerStyle,
   IconInputStyle,
@@ -52,6 +56,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  intl: IntlShape,
   field: string,
   container: Object,
   update: Function,
@@ -64,6 +69,8 @@ const defaultProps = {
   selectable: false,
   editable: {
     no: false,
+    containerType: false,
+    containerOption: false,
     warehouse: false,
     viewWarehouse: false,
     warehouseArrivalAgreedDate: false,
@@ -75,6 +82,7 @@ const defaultProps = {
 };
 
 const ShipmentContainerCard = ({
+  intl,
   field,
   container,
   onRemove,
@@ -88,6 +96,8 @@ const ShipmentContainerCard = ({
     representativeBatch,
     id,
     no,
+    containerType,
+    containerOption,
     batches,
     warehouse,
     warehouseArrivalAgreedDate,
@@ -168,17 +178,76 @@ const ShipmentContainerCard = ({
                   )}
                 </FormField>
               </div>
+
+              <div
+                className={ContainerTypeWrapperStyle}
+                onClick={evt => evt.stopPropagation()}
+                role="presentation"
+              >
+                <FormField
+                  name={`container.${id}.containerType`}
+                  initValue={containerType}
+                  values={values}
+                  saveOnChange
+                  setFieldValue={(name: string, value: any) => {
+                    update({ ...container, containerType: value });
+                  }}
+                >
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <SelectInputFactory
+                      name={fieldName}
+                      inputWidth="100px"
+                      inputHeight="20px"
+                      inputAlign="left"
+                      editable={editable.containerType}
+                      items={CONTAINER_TYPE_ITEMS}
+                      placeholder={intl.formatMessage({
+                        id: 'components.Cards.containerTypePlaceholder',
+                        defaultMessage: 'Container Type',
+                      })}
+                      hideTooltip
+                      hideDropdownArrow
+                      {...inputHandlers}
+                    />
+                  )}
+                </FormField>
+
+                <FormField
+                  name={`container.${id}.containerOption`}
+                  initValue={containerOption}
+                  values={values}
+                  saveOnChange
+                  setFieldValue={(name: string, value: any) => {
+                    update({ ...container, containerOption: value });
+                  }}
+                >
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <EnumSelectInputFactory
+                      name={fieldName}
+                      inputWidth="80px"
+                      inputHeight="20px"
+                      inputAlign="left"
+                      editable={editable.containerOption}
+                      enumType="ContainerOption"
+                      placeholder={intl.formatMessage({
+                        id: 'components.Cards.containerOptionPlaceholder',
+                        defaultMessage: 'Option',
+                      })}
+                      hideTooltip
+                      hideDropdownArrow
+                      {...inputHandlers}
+                    />
+                  )}
+                </FormField>
+              </div>
+
               <div className={LabelInputStyle}>
                 <Label>
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
                 </Label>
                 <Display align="right">
                   {totalVolume && (
-                    <FormattedNumber
-                      value={totalVolume.value}
-                      suffix={totalVolume.metric}
-                      minimumFractionDigits={6}
-                    />
+                    <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
                 </Display>
               </div>
@@ -264,8 +333,7 @@ const ShipmentContainerCard = ({
                       inputAlign="left"
                       name={fieldName}
                       editable={editable.warehouseArrivalAgreedDate}
-                      isNew={false}
-                      originalValue={warehouseArrivalAgreedDate}
+                      hideTooltip
                       {...{
                         ...inputHandlers,
                         onBlur: evt => {
@@ -348,9 +416,8 @@ const ShipmentContainerCard = ({
                       inputHeight="20px"
                       inputAlign="left"
                       name={fieldName}
-                      isNew={false}
                       editable={editable.warehouseArrivalActualDate}
-                      originalValue={warehouseArrivalActualDate}
+                      hideTooltip
                       {...{
                         ...inputHandlers,
                         onBlur: evt => {
@@ -440,9 +507,11 @@ const ShipmentContainerCard = ({
 
 ShipmentContainerCard.defaultProps = defaultProps;
 
-export default withForbiddenCard(ShipmentContainerCard, 'container', {
-  width: '195px',
-  height: '364px',
-  entityIcon: 'CONTAINER',
-  entityColor: 'CONTAINER',
-});
+export default injectIntl(
+  withForbiddenCard(ShipmentContainerCard, 'container', {
+    width: '195px',
+    height: '394px',
+    entityIcon: 'CONTAINER',
+    entityColor: 'CONTAINER',
+  })
+);

@@ -26,6 +26,9 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  containerCardFragment,
+  itemInOrderFormFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -88,6 +91,9 @@ export const updateOrderMutation = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${containerCardFragment}
+  ${itemInOrderFormFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({
@@ -145,6 +151,7 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         getByPathWithDefault(null, 'productProvider', oldItem),
         newItem.productProvider
       ),
+      ...parseGenericField('no', getByPathWithDefault(null, 'no', oldItem), newItem.no),
       ...parseGenericField(
         'quantity',
         getByPathWithDefault(null, 'quantity', oldItem),
@@ -154,6 +161,8 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         amount: newItem.price.amount,
         currency: newValues.currency,
       }),
+      ...parseArrayOfIdsField('tagIds', getByPathWithDefault([], 'tags', oldItem), newItem.tags),
+      ...parseMemoField('memo', getByPathWithDefault(null, 'memo', oldItem), newItem.memo),
       ...parseArrayOfChildrenField(
         'batches',
         getByPathWithDefault([], 'batches', oldItem),
@@ -161,10 +170,17 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
         (oldBatch: ?Object, newBatch: Object) =>
           prepareParsedBatchInput(oldBatch, newBatch, {
             inOrderForm: true,
-            inBatchForm: false,
-            inContainerForm: false,
-            inShipmentForm: false,
           })
+      ),
+      ...parseFilesField('files', getByPathWithDefault([], 'files', oldItem), newItem.files),
+      ...parseCustomFieldsField(
+        'customFields',
+        getByPathWithDefault(null, 'customFields', oldItem),
+        newItem.customFields
+      ),
+      ...parseTodoField(
+        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', oldItem),
+        newItem.todo
       ),
     })
   ),

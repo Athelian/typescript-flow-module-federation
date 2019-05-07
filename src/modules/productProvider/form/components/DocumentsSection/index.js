@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { DocumentsInput } from 'components/Form';
-import ProductProviderContainer from 'modules/productProvider/form/container';
+import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import usePermission from 'hooks/usePermission';
 import {
   PRODUCT_UPDATE,
@@ -24,7 +24,7 @@ function DocumentsSection({ intl, isOwner }: Props) {
   const allowDownload = hasPermission(PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS);
 
   return (
-    <Subscribe to={[ProductProviderContainer]}>
+    <Subscribe to={[ProductProviderInfoContainer]}>
       {({ state: { files }, setFieldValue: changeFiles }) => (
         <DocumentsInput
           editable={allowUpdate}

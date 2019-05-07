@@ -15,6 +15,12 @@ import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { TASK_CREATE, TASK_UPDATE, TASK_DELETE } from 'modules/permission/constants/task';
+import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
+import {
+  ORDER_ITEMS_TASK_LIST,
+  ORDER_ITEMS_TASK_FORM,
+  ORDER_ITEMS_UPDATE,
+} from 'modules/permission/constants/orderItem';
 import {
   BATCH_TASK_FORM,
   BATCH_TASK_LIST,
@@ -22,9 +28,6 @@ import {
   BATCH_SET_TASKS,
   BATCH_SET_TASK_TEMPLATE,
 } from 'modules/permission/constants/batch';
-import { BatchTasksContainer } from 'modules/batch/form/containers';
-import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
-import { OrderTasksContainer } from 'modules/order/form/containers';
 import {
   SHIPMENT_TASK_FORM,
   SHIPMENT_TASK_LIST,
@@ -32,6 +35,23 @@ import {
   SHIPMENT_SET_TASK_TEMPLATE,
   SHIPMENT_SET_TASKS,
 } from 'modules/permission/constants/shipment';
+import {
+  PRODUCT_TASK_FORM,
+  PRODUCT_TASK_LIST,
+  PRODUCT_UPDATE,
+  PRODUCT_SET_TASKS,
+  PRODUCT_SET_TASK_TEMPLATE,
+  PRODUCT_PROVIDER_TASK_FORM,
+  PRODUCT_PROVIDER_TASK_LIST,
+  PRODUCT_PROVIDER_UPDATE,
+  PRODUCT_PROVIDER_SET_TASKS,
+  PRODUCT_PROVIDER_SET_TASK_TEMPLATE,
+} from 'modules/permission/constants/product';
+import { ProductTasksContainer } from 'modules/product/form/containers';
+import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
+import { OrderTasksContainer } from 'modules/order/form/containers';
+import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
+import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
 import messages from 'modules/task/messages';
@@ -39,11 +59,18 @@ import { TasksSectionWrapperStyle, TasksSectionBodyStyle, TemplateItemStyle } fr
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
-type CompatibleEntityTypes = 'batch' | 'order' | 'shipment';
+export type CompatibleEntityTypes =
+  | 'batch'
+  | 'order'
+  | 'orderItem'
+  | 'product'
+  | 'productProvider'
+  | 'shipment';
 
 type Props = {
   type: CompatibleEntityTypes,
   intl: IntlShape,
+  entityId: string,
 };
 
 const getConfig = (type: string, hasPermission: Function): Object => {
@@ -57,8 +84,22 @@ const getConfig = (type: string, hasPermission: Function): Object => {
         canUpdateTasks: hasPermission(TASK_UPDATE) && hasPermission(ORDER_UPDATE),
         canUpdateTaskTemplate:
           hasPermission(TASK_CREATE) && hasPermission(TASK_DELETE) && hasPermission(ORDER_UPDATE),
-        tasksContainer: OrderTasksContainer,
+        orderItemTasksContainer: OrderTasksContainer,
       };
+    case 'orderItem': {
+      return {
+        canViewList: hasPermission(ORDER_ITEMS_TASK_LIST),
+        canViewForm: hasPermission(ORDER_ITEMS_TASK_FORM),
+        canAddTasks: hasPermission(TASK_CREATE) && hasPermission(ORDER_ITEMS_UPDATE),
+        canDeleteTasks: hasPermission(TASK_DELETE) && hasPermission(ORDER_ITEMS_UPDATE),
+        canUpdateTasks: hasPermission(TASK_UPDATE) && hasPermission(ORDER_ITEMS_UPDATE),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          hasPermission(ORDER_ITEMS_UPDATE),
+        orderItemTasksContainer: OrderItemTasksContainer,
+      };
+    }
     case 'batch':
       return {
         canViewList: hasPermission(BATCH_TASK_LIST),
@@ -73,7 +114,45 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_DELETE) &&
           (hasPermission(BATCH_UPDATE) ||
             (hasPermission(BATCH_SET_TASK_TEMPLATE) && hasPermission(BATCH_SET_TASKS))),
-        tasksContainer: BatchTasksContainer,
+        orderItemTasksContainer: BatchTasksContainer,
+      };
+    case 'product':
+      return {
+        canViewList: hasPermission(PRODUCT_TASK_LIST),
+        canViewForm: hasPermission(PRODUCT_TASK_FORM),
+        canAddTasks:
+          hasPermission(TASK_CREATE) && hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canDeleteTasks:
+          hasPermission(TASK_DELETE) && hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canUpdateTasks:
+          hasPermission(TASK_UPDATE) && hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          (hasPermission(PRODUCT_UPDATE) ||
+            (hasPermission(PRODUCT_SET_TASK_TEMPLATE) && hasPermission(PRODUCT_SET_TASKS))),
+        orderItemTasksContainer: ProductTasksContainer,
+      };
+    case 'productProvider':
+      return {
+        canViewList: hasPermission(PRODUCT_PROVIDER_TASK_LIST),
+        canViewForm: hasPermission(PRODUCT_PROVIDER_TASK_FORM),
+        canAddTasks:
+          hasPermission(TASK_CREATE) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canDeleteTasks:
+          hasPermission(TASK_DELETE) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canUpdateTasks:
+          hasPermission(TASK_UPDATE) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]),
+        canUpdateTaskTemplate:
+          hasPermission(TASK_CREATE) &&
+          hasPermission(TASK_DELETE) &&
+          (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+            (hasPermission(PRODUCT_PROVIDER_SET_TASK_TEMPLATE) &&
+              hasPermission(PRODUCT_PROVIDER_SET_TASKS))),
+        orderItemTasksContainer: ProductProviderTasksContainer,
       };
     default:
       return {
@@ -90,12 +169,12 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_DELETE) &&
           (hasPermission(SHIPMENT_UPDATE) ||
             (hasPermission(SHIPMENT_SET_TASK_TEMPLATE) && hasPermission(SHIPMENT_SET_TASKS))),
-        tasksContainer: ShipmentTasksContainer,
+        orderItemTasksContainer: ShipmentTasksContainer,
       };
   }
 };
 
-function TaskSection({ type, intl }: Props) {
+function TaskSection({ type, entityId, intl }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -106,13 +185,13 @@ function TaskSection({ type, intl }: Props) {
     canDeleteTasks,
     canUpdateTasks,
     canUpdateTaskTemplate,
-    tasksContainer,
+    orderItemTasksContainer,
   } = getConfig(type, hasPermission);
 
   if (!canViewList) return null;
 
   return (
-    <Subscribe to={[tasksContainer, FormContainer]}>
+    <Subscribe to={[orderItemTasksContainer, FormContainer]}>
       {(
         {
           state: {
@@ -215,6 +294,7 @@ function TaskSection({ type, intl }: Props) {
                 </BooleanValue>
               }
               <Tasks
+                entityId={entityId}
                 type={type}
                 editable={canUpdateTasks}
                 viewForm={canViewForm}
@@ -238,7 +318,6 @@ function TaskSection({ type, intl }: Props) {
                 }}
                 onSave={(index, newValue) => {
                   setFieldValue(`todo.tasks.${index}`, newValue);
-                  setFieldTouched(`tasks.${index}`);
                 }}
               />
             </div>

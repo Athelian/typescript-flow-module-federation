@@ -13,7 +13,7 @@ import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import ShipmentList from './list';
 import { shipmentsExportQuery } from './query';
-import messages from './messages';
+import { shipmentSortMessages } from './messages';
 
 type Props = {
   intl: IntlShape,
@@ -54,8 +54,19 @@ const ShipmentListModule = (props: Props) => {
   const { intl } = props;
 
   const sortFields = [
-    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(shipmentSortMessages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(shipmentSortMessages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(shipmentSortMessages.shipmentId), value: 'no' },
+    { title: intl.formatMessage(shipmentSortMessages.blNo), value: 'blNo' },
+    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
+    {
+      title: intl.formatMessage(shipmentSortMessages.dischargePortArrival),
+      value: 'dischargePortArrival',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
+      value: 'loadPortDeparture',
+    },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),

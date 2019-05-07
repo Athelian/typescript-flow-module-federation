@@ -6,7 +6,7 @@ import { BooleanValue } from 'react-values';
 import { isNullOrUndefined } from 'utils/fp';
 import {
   calculatePackageQuantity,
-  generateBatchForClone,
+  generateCloneBatch,
   generateBatchByOrderItem,
 } from 'utils/batch';
 import {
@@ -17,11 +17,8 @@ import {
 } from 'modules/permission/constants/container';
 import { SHIPMENT_FORM, SHIPMENT_REMOVE_BATCH } from 'modules/permission/constants/shipment';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import {
-  ORDER_ITEMS_LIST,
-  ORDER_FORM,
-  ORDER_ITEMS_GET_PRICE,
-} from 'modules/permission/constants/order';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   BATCH_CREATE,
   BATCH_LIST,
@@ -41,7 +38,7 @@ import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import ContainerFormContainer from 'modules/container/form/container';
 import SelectBatches from 'modules/shipment/form/components/SelectBatches';
-import BatchFormWrapper from 'modules/batch/common/BatchFormWrapper';
+import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import SelectOrderItems from 'providers/SelectOrderItems';
 
 import {
@@ -146,6 +143,7 @@ function BatchesSection() {
                           onSelect={selectedOrderItems => {
                             const createdBatches = selectedOrderItems.map((orderItem, counter) => ({
                               ...generateBatchByOrderItem(orderItem),
+                              orderItem,
                               no: `batch no ${batches.length + counter + 1}`,
                             }));
                             if (batches.length === 0 && createdBatches.length > 0) {
@@ -197,7 +195,7 @@ function BatchesSection() {
                       <>
                         <SlideView isOpen={opened} onRequestClose={() => batchSlideToggle(false)}>
                           {opened && (
-                            <BatchFormWrapper
+                            <BatchFormInSlide
                               batch={batch}
                               onSave={value => {
                                 batchSlideToggle(false);
@@ -221,14 +219,14 @@ function BatchesSection() {
                               removeBatch: allowRemoveBatches,
                               cloneBatch: allowCloneBatches,
                             }}
-                            navigate={{
+                            viewable={{
+                              price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                              tasks: hasPermission(BATCH_TASK_LIST),
+                            }}
+                            navigable={{
                               product: hasPermission(PRODUCT_FORM),
                               order: hasPermission(ORDER_FORM),
                               shipment: hasPermission(SHIPMENT_FORM),
-                            }}
-                            read={{
-                              price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                              tasks: hasPermission(BATCH_TASK_LIST),
                             }}
                             position={position}
                             batch={batch}
@@ -260,7 +258,7 @@ function BatchesSection() {
                               }
                             }}
                             onClone={value => {
-                              const clonedBatch = generateBatchForClone(value);
+                              const clonedBatch = generateCloneBatch(value);
 
                               setFieldValue('batches', [...batches, clonedBatch]);
                               addExistingBatches([clonedBatch]);

@@ -6,6 +6,7 @@ import shipmentMessages from 'modules/shipment/messages';
 
 export const START_DATE = 'TaskStartDate';
 const ORDER_ISSUED_AT = 'OrderIssuedAt';
+const ORDER_ITEM_ISSUED_AT = 'OrderItemOrderIssuedAt';
 const BATCH_DELIVERED_AT = 'BatchDeliveredAt';
 const BATCH_DESIRED_AT = 'BatchDesiredAt';
 const BATCH_PRODUCED_AT = 'BatchProducedAt';
@@ -26,6 +27,13 @@ const SHIPMENT_DELIVERY_READY = 'ShipmentDeliveryReady';
 export const orderBinding = (intl: IntlShape) => ({
   issuedAt: {
     field: ORDER_ISSUED_AT,
+    description: intl.formatMessage(orderMessages.date),
+  },
+});
+
+export const orderItemBinding = (intl: IntlShape) => ({
+  issuedAt: {
+    field: ORDER_ITEM_ISSUED_AT,
     description: intl.formatMessage(orderMessages.date),
   },
 });

@@ -499,19 +499,19 @@ export default defineMessages({
     defaultMessage: 'AUTOFILL BATCH',
   },
   detectPriceChanged: {
-    id: 'modules,Orders.detectPriceChanged',
+    id: 'modules.Orders.detectPriceChanged',
     defaultMessage: 'It is detected that some of your {items} have Unit Prices filled in.',
   },
   changePrice: {
-    id: 'modules,Orders.changePrice',
+    id: 'modules.Orders.changePrice',
     defaultMessage: 'Changing your Currency will change the Currencies of all your {items}.',
   },
   resetPrice: {
-    id: 'modules,Orders.resetPrice',
+    id: 'modules.Orders.resetPrice',
     defaultMessage: 'Would you like to reset all Unit Prices to 0?',
   },
   totalItemQuantity: {
-    id: 'modules,Orders.totalItemQuantity',
+    id: 'modules.Orders.totalItemQuantity',
     defaultMessage: 'TOTAL ITEM QUANTITY',
   },
 });

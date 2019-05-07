@@ -13,6 +13,7 @@ export const shipmentFormFragment = gql`
     no
     blNo
     blDate
+    booked
     bookingNo
     bookingDate
     invoiceNo
@@ -115,11 +116,16 @@ export const shipmentCardFragment = gql`
     archived
     no
     blNo
+    booked
     transportType
     batchCount
     orderItemCount
     totalVolume {
       ...metricFragment
+    }
+    containerTypeCounts {
+      containerType
+      count
     }
     importer {
       ... on Group {

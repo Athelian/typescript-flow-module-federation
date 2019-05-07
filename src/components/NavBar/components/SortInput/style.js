@@ -8,6 +8,7 @@ import {
   transitions,
   presets,
   shadows,
+  scrollbars,
 } from 'styles/common';
 
 export const WrapperStyle = (borderRound: boolean) => css`
@@ -57,12 +58,18 @@ export const ButtonStyle: string = css`
 export const OptionWrapperStyle: string = css`
   ${presets.BOX};
   ${shadows.DROPDOWN};
+  ${borderRadiuses.MAIN};
   position: absolute;
-  top: 45px;
+  top: calc(100% + 5px);
+  max-height: 150px;
+  width: 150px;
+  ${scrollbars.SMALL};
+  overflow-x: hidden;
+  overflow-y: overlay;
 `;
 
 export const OptionItemStyle = (onHover: boolean, selected: boolean): string => css`
-  background: ${onHover ? colors.GRAY_SUPER_LIGHT : '#fff'};
+  background: ${onHover ? colors.GRAY_SUPER_LIGHT : colors.TRANSPARENT};
   ${presets.BUTTON};
   justify-content: flex-start;
   padding: 0 5px;

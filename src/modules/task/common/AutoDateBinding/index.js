@@ -5,12 +5,14 @@ import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 import { MappingFields as OrderMappingField } from 'modules/task/form/components/ParentEntity/components/OrderValueSpy';
+import { MappingFields as OrderItemMappingField } from 'modules/task/form/components/ParentEntity/components/OrderItemValueSpy';
 import { MappingFields as BatchMappingField } from 'modules/task/form/components/ParentEntity/components/BatchValueSpy';
 import { getValueBy } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy/helper';
 import { findMappingFields } from 'modules/task/form/components/ParentEntity/components/ShipmentValueSpy';
+import { type CompatibleEntityTypes } from 'modules/task/common/TaskSection';
 
 type Props = {
-  type: 'order' | 'batch' | 'shipment',
+  type: CompatibleEntityTypes,
   values: Object,
   tasks: Array<Object>,
   setTaskValue: Function,
@@ -20,8 +22,11 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
   React.useEffect(() => {
     const mappingFields = {
       order: OrderMappingField,
+      orderItem: OrderItemMappingField,
       batch: BatchMappingField,
       shipment: findMappingFields(values.voyages || []),
+      product: {},
+      productProvider: {},
     };
     emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {

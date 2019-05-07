@@ -1,5 +1,35 @@
 // @flow
+import { times, divide } from 'number-precision';
 import { injectUid } from './id';
+import { convertVolume, convertWeight } from './metric';
+import { isNullOrUndefined } from './fp';
+
+export const findWeight = (batch: Object) => {
+  const {
+    packageQuantity = 0,
+    packageGrossWeight = {},
+  }: {
+    packageQuantity: number,
+    packageGrossWeight: Object,
+  } = batch;
+  return packageGrossWeight
+    ? packageQuantity * convertVolume(packageGrossWeight.value, packageGrossWeight.metric, 'kg')
+    : 0;
+};
+
+export const findVolume = (batch: Object) => {
+  const {
+    packageQuantity = 0,
+    packageVolume,
+  }: {
+    packageQuantity: number,
+    packageVolume: Object,
+  } = batch;
+  const volume = isNullOrUndefined(packageVolume)
+    ? 0
+    : convertWeight(packageVolume.value, packageVolume.metric, 'm³');
+  return packageQuantity * volume;
+};
 
 export const findBatchQuantity = ({
   quantity = 0,
@@ -22,29 +52,67 @@ type Metric = {
   metric: string,
 };
 
-export function convertVolume(
+function calculateVolume(
   volumeMetric: string,
   height: Metric,
   width: Metric,
   length: Metric
 ): number {
-  const heightValue = height.metric === 'cm' ? height.value : height.value * 100;
-  const widthValue = width.metric === 'cm' ? width.value : width.value * 100;
-  const lengthValue = length.metric === 'cm' ? length.value : length.value * 100;
-  const volumeValue = heightValue * widthValue * lengthValue;
+  const heightValue = height.metric === 'cm' ? height.value : times(height.value, 100);
+  const widthValue = width.metric === 'cm' ? width.value : times(width.value, 100);
+  const lengthValue = length.metric === 'cm' ? length.value : times(length.value, 100);
+  const volumeValue = times(heightValue, widthValue, lengthValue);
 
-  return volumeMetric === 'cm³' ? volumeValue : volumeValue / 1e6;
+  return volumeMetric === 'cm³' ? volumeValue : divide(volumeValue, 1000000);
 }
 
-export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => ({
-  metric: packageVolume.metric,
-  value: convertVolume(
-    packageVolume.metric,
-    packageSize.height,
-    packageSize.width,
-    packageSize.length
-  ),
-});
+const isBadMetricData = (data: Object): boolean =>
+  isNullOrUndefined(data.metric) || isNullOrUndefined(data.value);
+
+export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => {
+  if (
+    isNullOrUndefined(packageVolume) ||
+    isBadMetricData(packageVolume) ||
+    isNullOrUndefined(packageSize) ||
+    isNullOrUndefined(packageSize.height) ||
+    isBadMetricData(packageSize.height) ||
+    isNullOrUndefined(packageSize.width) ||
+    isBadMetricData(packageSize.width) ||
+    isNullOrUndefined(packageSize.length) ||
+    isBadMetricData(packageSize.length)
+  ) {
+    return packageVolume;
+  }
+  return {
+    metric: packageVolume.metric,
+    value: calculateVolume(
+      packageVolume.metric,
+      packageSize.height,
+      packageSize.width,
+      packageSize.length
+    ),
+  };
+};
+
+export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object => {
+  if (
+    isNullOrUndefined(unitVolume) ||
+    isBadMetricData(unitVolume) ||
+    isNullOrUndefined(unitSize) ||
+    isNullOrUndefined(unitSize.height) ||
+    isBadMetricData(unitSize.height) ||
+    isNullOrUndefined(unitSize.width) ||
+    isBadMetricData(unitSize.width) ||
+    isNullOrUndefined(unitSize.length) ||
+    isBadMetricData(unitSize.length)
+  ) {
+    return unitVolume;
+  }
+  return {
+    metric: unitVolume.metric,
+    value: calculateVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
+  };
+};
 
 export function calculateBatchQuantity(batches: Array<Object>): number {
   let total = 0;
@@ -74,7 +142,7 @@ export const calculatePackageQuantity = ({
   return 0;
 };
 
-export const generateBatchForClone = ({
+export const generateCloneBatch = ({
   id,
   deliveredAt,
   desired,
@@ -93,19 +161,35 @@ export const generateBatchForClone = ({
     },
   });
 
-export const generateBatchByOrderItem = (orderItem: Object) => {
+export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
+  !packageVolume || !packageQuantity
+    ? total
+    : total +
+      times(
+        packageQuantity,
+        packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume.value, 1000000)
+      );
+
+export const findTotalAutoFillBatches = ({
+  batches,
+  quantity,
+}: {
+  batches: Array<Object>,
+  quantity: number,
+}): Object => {
+  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
+  return quantity - totalBatchQuantity;
+};
+
+export const generateBatchByOrderItem = ({ productProvider }: { productProvider: Object }) => {
   const {
-    productProvider: {
-      packageName,
-      packageCapacity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    },
-  } = orderItem;
+    packageName,
+    packageCapacity,
+    packageGrossWeight,
+    packageVolume,
+    packageSize,
+  } = productProvider;
   return injectUid({
-    isNew: true,
-    orderItem,
     tags: [],
     packageName,
     packageCapacity,
@@ -113,6 +197,8 @@ export const generateBatchByOrderItem = (orderItem: Object) => {
     packageVolume,
     packageSize,
     quantity: 0,
+    packageQuantity: 0,
+    isNew: true,
     batchAdjustments: [],
     autoCalculatePackageQuantity: true,
     todo: {

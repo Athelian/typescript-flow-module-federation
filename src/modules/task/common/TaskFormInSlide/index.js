@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
@@ -19,6 +19,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   task: Object,
+  entity: Object,
   editable: boolean,
   onSave: Function,
 };
@@ -29,7 +30,11 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-const TaskFormInSlide = ({ editable, onSave, task, parentEntity, isInTemplate }: Props) => {
+const TaskFormInSlide = ({ editable, onSave, task, parentEntity, entity, isInTemplate }: Props) => {
+  useEffect(() => {
+    return () => formContainer.onReset();
+  });
+
   return (
     <Provider inject={[formContainer]}>
       <Subscribe to={[TaskContainer]}>
@@ -64,6 +69,7 @@ const TaskFormInSlide = ({ editable, onSave, task, parentEntity, isInTemplate }:
           >
             <TaskForm
               task={task}
+              entity={entity}
               hideParentInfo
               parentEntity={parentEntity}
               isInTemplate={isInTemplate}

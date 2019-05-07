@@ -1,5 +1,6 @@
 // @flow
 import { Container } from 'unstated';
+import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
 
@@ -23,9 +24,10 @@ export default class OrderItemsContainer extends Container<FormState> {
     this.setState(this.originalValues);
   };
 
-  setFieldValue = (name: string, value: mixed) => {
-    this.setState({
-      [name]: value,
+  setFieldValue = (path: string, value: any) => {
+    this.setState(prevState => {
+      const newState = set(cloneDeep(prevState), path, value);
+      return newState;
     });
   };
 

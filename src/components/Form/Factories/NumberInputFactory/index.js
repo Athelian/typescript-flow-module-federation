@@ -15,6 +15,7 @@ import type {
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
 import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
+import { SuffixStyle } from './style';
 
 type InputProps = StandardInputProps & {
   nullable?: boolean,
@@ -34,6 +35,7 @@ type Props = LabelProps &
     autoCalculateIsToggled: boolean,
     editable: boolean,
     blackout: boolean,
+    suffix: ?(string | React.Node),
   };
 
 const defaultProps = {
@@ -45,6 +47,7 @@ const defaultProps = {
   isTouched: false,
   editable: false,
   blackout: false,
+  suffix: null,
   vertical: false,
   showCalculator: false,
   showExtraToggleButton: false,
@@ -85,6 +88,7 @@ const NumberInputFactory = ({
   editable,
   blackout,
   nullable,
+  suffix,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -134,6 +138,7 @@ const NumberInputFactory = ({
         <>
           <DefaultStyle {...inputWrapperConfig}>
             <NumberInput {...inputConfig} />
+            {suffix && <div className={SuffixStyle}>{suffix}</div>}
           </DefaultStyle>
           {showCalculator && (
             <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
@@ -145,7 +150,12 @@ const NumberInputFactory = ({
       );
     } else {
       renderedInput = (
-        <NumberInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        <NumberInput
+          {...inputConfig}
+          readOnlyWidth={inputWidth}
+          readOnlyHeight={inputHeight}
+          readOnlySuffix={suffix}
+        />
       );
     }
   }

@@ -124,6 +124,7 @@
         "name": "Documented",
         "possibleTypes": [
           { "name": "Order" },
+          { "name": "OrderItem" },
           { "name": "Product" },
           { "name": "ProductProvider" },
           { "name": "Shipment" }
@@ -291,6 +292,8 @@
           { "name": "Mask" },
           { "name": "MaskEdit" },
           { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
           { "name": "ProductProvider" },
           { "name": "Role" },
           { "name": "Shipment" },
@@ -503,6 +506,7 @@
           { "name": "Batch" },
           { "name": "Container" },
           { "name": "Order" },
+          { "name": "OrderItem" },
           { "name": "Product" },
           { "name": "Shipment" },
           { "name": "Task" },
@@ -569,6 +573,7 @@
           { "name": "BooleanValue" },
           { "name": "DateTimeValue" },
           { "name": "IntervalValue" },
+          { "name": "Duration" },
           { "name": "MetricValueValue" },
           { "name": "SizeValue" },
           { "name": "EntityValue" },

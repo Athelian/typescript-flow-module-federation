@@ -23,7 +23,7 @@ export const TemplateNameStyle: string = css`
   font-weight: bold;
   ${presets.ELLIPSIS};
   padding: 0 10px;
-  width: 100%;
+  width: 185px;
 `;
 
 export const TemplateDescriptionStyle: string = css`

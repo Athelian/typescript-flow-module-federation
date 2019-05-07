@@ -125,6 +125,12 @@ const TableView = (props: Props) => {
             orders={orders}
             shipments={shipments}
             allId={allId}
+            targetIds={{
+              shipmentIds,
+              batchIds,
+              orderItemIds,
+              orderIds,
+            }}
             onCancel={onCancel}
           />
         );

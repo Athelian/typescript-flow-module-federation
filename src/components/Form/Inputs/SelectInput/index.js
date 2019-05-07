@@ -3,6 +3,7 @@ import * as React from 'react';
 import Downshift from 'downshift';
 import { Display } from 'components/Form';
 import { isEquals } from 'utils/fp';
+import { SelectInputRelativeStyle } from './style';
 import { type SelectInputProps as Props, defaultSelectInputProps } from './type';
 
 type State = {
@@ -88,7 +89,7 @@ class SelectInput extends React.Component<Props, State> {
           highlightedIndex,
           clearSelection,
         }) => (
-          <div>
+          <div className={SelectInputRelativeStyle}>
             {renderSelect({
               onBlur: this.handleBlur,
               onFocus: this.handleFocus,

@@ -9,10 +9,6 @@ type Props = {
   children: React.Node,
 };
 
-const defaultProps = {
-  children: null,
-};
-
 function SectionHeader({ icon, title, children }: Props) {
   return (
     <div className={SectionHeaderWrapperStyle}>
@@ -26,7 +22,5 @@ function SectionHeader({ icon, title, children }: Props) {
     </div>
   );
 }
-
-SectionHeader.defaultProps = defaultProps;
 
 export default SectionHeader;

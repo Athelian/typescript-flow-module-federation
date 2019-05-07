@@ -6,6 +6,7 @@ import ParentEntity from './components/ParentEntity';
 
 type OptionalProps = {
   task?: Object,
+  entity?: Object,
   onFormReady?: () => void,
   parentEntity?: string,
   hideParentInfo?: boolean,
@@ -36,11 +37,11 @@ export default class TaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { task, parentEntity, hideParentInfo, isInTemplate } = this.props;
+    const { task, entity, parentEntity, hideParentInfo, isInTemplate } = this.props;
     return (
       <>
         <TaskInfoSection parentEntity={parentEntity} task={task} isInTemplate={isInTemplate} />
-        <ParentEntity inForm={!!hideParentInfo} />
+        <ParentEntity inForm={!!hideParentInfo} entity={entity} />
       </>
     );
   }

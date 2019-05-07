@@ -130,6 +130,14 @@ export default defineMessages({
     id: 'modules.Shipments.productVolume',
     defaultMessage: 'VOLUME PER UNIT',
   },
+  inspectionApplication: {
+    id: 'modules.Shipments.inspectionApplication',
+    defaultMessage: 'Inspection Application',
+  },
+  document: {
+    id: 'modules.Shipments.document',
+    defaultMessage: 'Document',
+  },
   inspectionFee: {
     id: 'modules.Shipments.inspectionFee',
     defaultMessage: 'INSPECTION FEE',
@@ -585,5 +593,36 @@ export default defineMessages({
   totalBatchQuantity: {
     id: 'modules.Shipments.totalBatchQuantity',
     defaultMessage: 'TOTAL BATCH QUANTITY',
+  },
+});
+
+export const shipmentSortMessages = defineMessages({
+  updatedAt: {
+    id: 'modules.Shipments.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAt: {
+    id: 'modules.Shipments.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
+  shipmentId: {
+    id: 'modules.Shipments.sort.no',
+    defaultMessage: 'Shipment ID',
+  },
+  blNo: {
+    id: 'modules.Shipments.sort.blNo',
+    defaultMessage: 'B/L No',
+  },
+  warehouseArrival: {
+    id: 'modules.Shipments.sort.warehouseArrival',
+    defaultMessage: 'Warehouse Arrival',
+  },
+  dischargePortArrival: {
+    id: 'modules.Shipments.sort.dischargePortArrival',
+    defaultMessage: 'Discharge Port Arrival',
+  },
+  loadPortDeparture: {
+    id: 'modules.Shipments.sort.loadPortDeparture',
+    defaultMessage: 'Load Port Departure',
   },
 });

@@ -12,6 +12,14 @@ export const productFormFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    todo {
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
+    }
     name
     serial
     hsCode
@@ -23,6 +31,7 @@ export const productFormFragment = gql`
     tags {
       ...tagFragment
     }
+    memo
     files {
       ...imageFragment
     }
@@ -51,6 +60,9 @@ export const productCardFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
     }
     files {
       ...imageFragment

@@ -13,7 +13,6 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -23,6 +22,7 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
@@ -44,7 +44,6 @@ export const batchFormQuery = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -54,6 +53,7 @@ export const batchFormQuery = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 export default batchFormQuery;

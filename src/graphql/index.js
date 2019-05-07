@@ -1,4 +1,11 @@
 import { batchFormFragment, batchCardFragment } from './batch/fragment';
+import {
+  itemFormFragment,
+  itemCardFragment,
+  itemInSelectorFragment,
+  itemInOrderFormFragment,
+  itemInBatchFormFragment,
+} from './item/fragment';
 import { orderFormFragment, orderCardFragment, orderBasicFragment } from './order/fragment';
 import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
 import { productFormFragment, productCardFragment } from './product/fragment';
@@ -46,6 +53,11 @@ export {
   batchCardFragment,
   containerFormFragment,
   containerCardFragment,
+  itemFormFragment,
+  itemCardFragment,
+  itemInSelectorFragment,
+  itemInOrderFormFragment,
+  itemInBatchFormFragment,
   orderFormFragment,
   orderCardFragment,
   orderBasicFragment,

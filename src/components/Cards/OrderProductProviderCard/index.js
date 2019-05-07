@@ -7,6 +7,7 @@ import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import TaskRing from 'components/TaskRing';
 import BaseCard from '../BaseCard';
 import {
   ProductProviderCardWrapperStyle,
@@ -19,8 +20,10 @@ import {
   ProductNameStyle,
   ProductSerialStyle,
   ProductProvidersWrapperStyle,
+  ProductProviderNameStyle,
   ProductExporterStyle,
   ProductSupplierStyle,
+  TagsAndTaskWrapperStyle,
   ProductTagsWrapperStyle,
   ProductPriceStyle,
 } from './style';
@@ -75,6 +78,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
     const {
       product: { name, serial, tags, files },
       unitPrice,
+      todo,
     } = productProvider;
 
     if (orderCurrency && unitPrice && orderCurrency !== unitPrice.currency) {
@@ -152,6 +156,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
               </Display>
             </div>
             <div className={ProductProvidersWrapperStyle}>
+              <div className={ProductProviderNameStyle}>{productProvider.name}</div>
               <div className={ProductExporterStyle}>
                 <Icon icon="EXPORTER" />
                 {productProvider.exporter.name}
@@ -161,8 +166,12 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
                 {productProvider.supplier && productProvider.supplier.name}
               </div>
             </div>
-            <div className={ProductTagsWrapperStyle}>
-              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+
+            <div className={TagsAndTaskWrapperStyle}>
+              <div className={ProductTagsWrapperStyle}>
+                {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              </div>
+              <TaskRing {...todo} />
             </div>
           </div>
         </div>
@@ -173,7 +182,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 
 export default withForbiddenCard(OrderProductProviderCard, 'productProvider', {
   width: '195px',
-  height: '222px',
+  height: '259px',
   entityIcon: 'PRODUCT_PROVIDER',
   entityColor: 'PRODUCT_PROVIDER',
 });

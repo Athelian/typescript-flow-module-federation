@@ -28,7 +28,7 @@ import {
   EnumSearchSelectInputFactory,
   UserAssignmentInputFactory,
 } from 'components/Form';
-import { getQuantitySummary } from 'modules/order/helpers';
+import { getQuantityForOrderSummary } from 'modules/order/helpers';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
@@ -418,7 +418,7 @@ const OrderSection = ({ isNew }: Props) => {
                     totalItems,
                     activeBatches,
                     archivedBatches,
-                  } = getQuantitySummary(orderItems);
+                  } = getQuantityForOrderSummary(orderItems);
                   return (
                     <div className={QuantitySummaryStyle}>
                       <TotalSummary

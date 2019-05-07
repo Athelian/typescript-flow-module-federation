@@ -6,12 +6,14 @@ import LoadingIcon from 'components/LoadingIcon';
 import { isEquals } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
+import FormattedNumber from 'components/FormattedNumber';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import {
   ShipmentBatchesContainer,
   ShipmentTasksContainer,
   ShipmentInfoContainer,
   ShipmentTimelineContainer,
+  ShipmentFilesContainer,
 } from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
@@ -26,7 +28,6 @@ type OptionalProps = {
   isNew: boolean,
   isOwner: boolean,
   isClone: boolean,
-  onFormReady: () => void,
   anchor: string,
 };
 
@@ -38,7 +39,6 @@ const defaultProps = {
   isNew: false,
   isClone: false,
   isOwner: true,
-  onFormReady: () => {},
   anchor: '',
 };
 
@@ -46,9 +46,7 @@ class ShipmentForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   componentDidMount() {
-    const { onFormReady, anchor } = this.props;
-
-    if (onFormReady) onFormReady();
+    const { anchor } = this.props;
 
     if (anchor) {
       // wait for the element is rendering on DOM
@@ -73,7 +71,7 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew } = this.props;
+    const { isNew, shipment } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
@@ -93,8 +91,10 @@ class ShipmentForm extends React.Component<Props> {
                   icon="CARGO"
                   title={
                     <>
-                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />(
-                      {batches.length})
+                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
+                      {' ('}
+                      <FormattedNumber value={batches.length} />
+                      {')'}
                     </>
                   }
                 />
@@ -103,15 +103,27 @@ class ShipmentForm extends React.Component<Props> {
             <AsyncCargoSection />
           </SectionWrapper>
           <SectionWrapper id="shipment_documentsSection">
-            <SectionHeader
-              icon="DOCUMENT"
-              title={
-                <FormattedMessage id="modules.Shipments.document" defaultMessage="DOCUMENTS" />
-              }
-            />
+            <Subscribe to={[ShipmentFilesContainer]}>
+              {({ state: { files } }) => (
+                <SectionHeader
+                  icon="DOCUMENT"
+                  title={
+                    <>
+                      <FormattedMessage
+                        id="modules.Shipments.documents"
+                        defaultMessage="DOCUMENTS"
+                      />
+                      {' ('}
+                      <FormattedNumber value={files.length} />
+                      {')'}
+                    </>
+                  }
+                />
+              )}
+            </Subscribe>
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <AsyncTaskSection type="shipment" />
+          <AsyncTaskSection entityId={shipment.id} type="shipment" />
           <AsyncOrdersSection />
           <Subscribe
             to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}

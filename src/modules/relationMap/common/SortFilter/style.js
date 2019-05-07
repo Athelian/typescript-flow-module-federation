@@ -7,7 +7,6 @@ export const SortFilterWrapperStyle: string = css`
   grid-gap: 20px;
   align-items: center;
   padding: 0 20px;
-  width: 100%;
   z-index: 3;
 `;
 

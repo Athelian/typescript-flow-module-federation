@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Provider } from 'unstated';
 import { Router } from '@reach/router';
 import withNotFound from 'hoc/withNotFound';
 import withForbidden from 'hoc/withForbidden';
@@ -13,15 +12,13 @@ const ShipmentFormModuleCreationWrapper = withForbidden(ShipmentFormModuleWrappe
 const ShipmentModuleListWrapper = withForbidden(ShipmentListModule, SHIPMENT_LIST);
 
 const ShipmentApp = () => (
-  <Provider>
-    <Router>
-      <ShipmentModuleListWrapper path="/" />
-      <ShipmentFormModuleCreationWrapper path="new" />
-      <ShipmentFormModuleCreationWrapper path="clone/:shipmentId" />
-      <ShipmentFormModuleWrapper path=":shipmentId/:anchor" />
-      <ShipmentFormModuleWrapper path=":shipmentId" />
-    </Router>
-  </Provider>
+  <Router>
+    <ShipmentModuleListWrapper path="/" />
+    <ShipmentFormModuleCreationWrapper path="new" />
+    <ShipmentFormModuleCreationWrapper path="clone/:shipmentId" />
+    <ShipmentFormModuleWrapper path=":shipmentId/:anchor" />
+    <ShipmentFormModuleWrapper path=":shipmentId" />
+  </Router>
 );
 
 export default ShipmentApp;

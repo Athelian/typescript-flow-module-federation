@@ -14,7 +14,6 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
-  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -24,6 +23,7 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -71,30 +71,37 @@ export const updateBatchMutation = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
-  ${badRequestFragment}
   ${ownedByFragment}
   ${todoFragment}
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
+  ${badRequestFragment}
 `;
 
 export const prepareParsedBatchInput = (
   originalValues: ?Object,
   newValues: Object,
   location: {
-    inShipmentForm: boolean,
-    inOrderForm: boolean,
-    inContainerForm: boolean,
-    inBatchForm: boolean,
+    inShipmentForm?: boolean,
+    inOrderForm?: boolean,
+    inContainerForm?: boolean,
+    inBatchForm?: boolean,
+    inOrderItemForm?: boolean,
   }
 ): Object => {
-  const { inShipmentForm, inOrderForm, inContainerForm, inBatchForm } = location;
+  const {
+    inShipmentForm = false,
+    inOrderForm = false,
+    inContainerForm = false,
+    inBatchForm = false,
+    inOrderItemForm = false,
+  } = location;
 
   return {
     ...(!inBatchForm && originalValues ? { id: originalValues.id } : {}),
@@ -135,7 +142,7 @@ export const prepareParsedBatchInput = (
       newValues.tags
     ),
     ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
-    ...(inOrderForm
+    ...(inOrderForm || inOrderItemForm
       ? {}
       : parseParentIdField(
           'orderItemId',

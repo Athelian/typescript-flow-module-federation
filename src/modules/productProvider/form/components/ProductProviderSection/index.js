@@ -6,7 +6,7 @@ import { getByPath } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
-import ProductProviderContainer from 'modules/productProvider/form/container';
+import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
@@ -15,13 +15,14 @@ import GridColumn from 'components/GridColumn';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import {
   FieldItem,
-  FormTooltip,
   Label,
   DashedPlusButton,
   EnumSearchSelectInputFactory,
   NumberInputFactory,
   CustomFieldsFactory,
   DayInputFactory,
+  TextInputFactory,
+  TextAreaInputFactory,
 } from 'components/Form';
 import { PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
 import SelectSupplier from '../SelectSupplier';
@@ -35,11 +36,12 @@ type Props = {
 
 const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const { hasPermission } = usePermission(isOwner);
+  const allowUpdate = hasPermission(PRODUCT_PROVIDER_UPDATE);
 
   return (
-    <Subscribe to={[ProductProviderContainer]}>
-      {({ originalValues: initialValues, state, setFieldValue }) => {
-        const values = { ...initialValues, ...state };
+    <Subscribe to={[ProductProviderInfoContainer]}>
+      {({ originalValues, state, setFieldValue }) => {
+        const values = { ...originalValues, ...state };
 
         return (
           <div className={ProductProviderSectionWrapperStyle}>
@@ -54,18 +56,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           defaultMessage="EXPORTER"
                         />
                       </Label>
-                    }
-                    tooltip={
-                      isExist ? (
-                        <FormTooltip
-                          errorMessage={
-                            <FormattedMessage
-                              id="modules.productProvider.unique"
-                              defaultMessage="The pair of Exporter and Supplier must be unique"
-                            />
-                          }
-                        />
-                      ) : null
                     }
                   />
 
@@ -125,18 +115,6 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         />
                       </Label>
                     }
-                    tooltip={
-                      isExist ? (
-                        <FormTooltip
-                          errorMessage={
-                            <FormattedMessage
-                              id="modules.productProvider.unique"
-                              defaultMessage="The pair of Exporter and Supplier must be unique"
-                            />
-                          }
-                        />
-                      ) : null
-                    }
                   />
                   {values.isNew ? (
                     <BooleanValue>
@@ -185,6 +163,38 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
               </GridRow>
 
               <FormField
+                name="name"
+                initValue={values.name}
+                setFieldValue={setFieldValue}
+                values={values}
+                validator={validator}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <TextInputFactory
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    required
+                    originalValue={originalValues[name]}
+                    label={
+                      <FormattedMessage id="modules.ProductProviders.name" defaultMessage="NAME" />
+                    }
+                    {...(isExist
+                      ? {
+                          errorMessage: (
+                            <FormattedMessage
+                              id="modules.productProvider.mustBeUniqueName"
+                              defaultMessage="The name of End Product with the same Exporter and Supplier must be unique"
+                            />
+                          ),
+                        }
+                      : {})}
+                    editable={allowUpdate}
+                  />
+                )}
+              </FormField>
+
+              <FormField
                 name="origin"
                 initValue={values.origin}
                 setFieldValue={setFieldValue}
@@ -196,14 +206,14 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={initialValues[name]}
+                    originalValue={originalValues[name]}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.countryOfOrigin"
                         defaultMessage="COUNTRY OF ORIGIN"
                       />
                     }
-                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
+                    editable={allowUpdate}
                     enumType="Country"
                   />
                 )}
@@ -219,14 +229,14 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={initialValues[name]}
+                    originalValue={originalValues[name]}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.productionLeadTime"
                         defaultMessage="PRODUCTION LEAD TIME"
                       />
                     }
-                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -241,14 +251,14 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={getByPath('inspectionFee.amount', initialValues)}
+                    originalValue={getByPath('inspectionFee.amount', originalValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.inspectionFee"
                         defaultMessage="INSPECTION FEE"
                       />
                     }
-                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
+                    editable={allowUpdate}
                   />
                 )}
               </FormField>
@@ -263,14 +273,14 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     name={name}
                     {...inputHandlers}
                     isNew={isNew}
-                    originalValue={getByPath('inspectionFee.currency', initialValues)}
+                    originalValue={getByPath('inspectionFee.currency', originalValues)}
                     label={
                       <FormattedMessage
                         id="modules.ProductProviders.inspectionFeeCurrency"
                         defaultMessage="INSPECTION FEE CURRENCY"
                       />
                     }
-                    editable={hasPermission(PRODUCT_PROVIDER_UPDATE)}
+                    editable={allowUpdate}
                     enumType="Currency"
                     hideClearButton
                   />
@@ -281,10 +291,33 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 customFields={values.customFields}
                 setFieldValue={setFieldValue}
                 editable={{
-                  values: hasPermission(PRODUCT_PROVIDER_UPDATE),
-                  mask: hasPermission(PRODUCT_PROVIDER_UPDATE),
+                  values: allowUpdate,
+                  mask: allowUpdate,
                 }}
               />
+              <FormField
+                name="memo"
+                initValue={values.memo}
+                values={values}
+                validator={validator}
+                setFieldValue={setFieldValue}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <TextAreaInputFactory
+                    {...inputHandlers}
+                    editable={allowUpdate}
+                    name={name}
+                    isNew={isNew}
+                    originalValue={originalValues[name]}
+                    label={
+                      <FormattedMessage id="modules.ProductProviders.memo" defaultMessage="MEMO" />
+                    }
+                    inputWidth="400px"
+                    inputHeight="120px"
+                  />
+                )}
+              </FormField>
+
               <div className={DividerStyle} />
             </GridColumn>
           </div>

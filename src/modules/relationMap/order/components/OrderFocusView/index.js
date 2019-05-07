@@ -4,7 +4,7 @@ import { findLastIndex } from 'lodash';
 import type { OrderProps } from 'modules/relationMap/order/type.js.flow';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators, selectors } from 'modules/relationMap/order/store';
-import { ORDER, ORDER_ITEM, BATCH } from 'modules/relationMap/constants';
+import { ORDER, ORDER_ITEM, BATCH } from 'constants/keywords';
 import { ItemWrapperStyle } from 'modules/relationMap/order/style';
 import { RelationLine } from 'components/RelationMap';
 import Order from './Order';

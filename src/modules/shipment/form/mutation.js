@@ -29,6 +29,7 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
+  itemInBatchFormFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -96,6 +97,7 @@ export const updateShipmentMutation: Object = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
+  ${itemInBatchFormFragment}
 `;
 
 type DateRevisionType = {
@@ -234,6 +236,11 @@ export const prepareParsedShipmentInput = ({
       newValues.blDate
     ),
     ...parseGenericField(
+      'booked',
+      getByPathWithDefault(null, 'booked', originalValues),
+      newValues.booked
+    ),
+    ...parseGenericField(
       'bookingNo',
       getByPathWithDefault(null, 'bookingNo', originalValues),
       newValues.bookingNo
@@ -289,7 +296,6 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault([], 'forwarders', originalValues),
       newValues.forwarders
     ),
-    // TODO: Change to null default, and adjust ui components to handle null object
     ...parseTimelineDateField(
       'cargoReady',
       getByPathWithDefault({}, 'cargoReady', originalValues),
@@ -368,9 +374,6 @@ export const prepareParsedShipmentInput = ({
       (oldBatch: ?Object, newBatch: Object) => ({
         ...prepareParsedBatchInput(oldBatch, newBatch, {
           inShipmentForm: true,
-          inOrderForm: false,
-          inContainerForm: false,
-          inBatchForm: false,
         }),
       }),
       forceSendBatchIdsForPool
