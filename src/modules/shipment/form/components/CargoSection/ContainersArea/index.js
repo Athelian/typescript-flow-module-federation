@@ -67,8 +67,8 @@ type Props = {
   onChangeSelectMode: Function,
 };
 
-const includesById = (id: string, batches: Array<Object>): boolean =>
-  batches.map(({ id: batchId }) => batchId).includes(id);
+const includesById = (id: string, items: Array<Object>): boolean =>
+  items.map(item => item.id).includes(id);
 
 const removeContainerById = (containers: Array<Object>, id: string): Array<Object> =>
   containers.filter(container => container.id !== id);
@@ -97,12 +97,12 @@ const getNewSourceContainer = (
   sourceContainer: Object,
   selectedBatches: Array<Object>
 ): { batches: Array<Object>, representativeBatch: Object } => {
-  const { batches, representativeBatch } = sourceContainer;
-  const newBatches = batches.filter(({ id }) => !includesById(id, selectedBatches));
+  const { batches, representativeBatch, ...rest } = sourceContainer;
+  const newBatches = batches.filter(batch => !includesById(batch.id, selectedBatches));
   const newRepresentativeBatch = includesById(representativeBatch.id, newBatches)
-    ? { ...representativeBatch }
-    : { ...newBatches[0] };
-  return { ...sourceContainer, batches: newBatches, representativeBatch: newRepresentativeBatch };
+    ? representativeBatch
+    : newBatches[0];
+  return { ...rest, batches: newBatches, representativeBatch: newRepresentativeBatch };
 };
 
 function ContainersArea({
@@ -212,7 +212,7 @@ function ContainersArea({
                           <Action
                             onClick={() => {
                               const newBatches = batches.map(({ id, container, ...rest }) =>
-                                selectedBatches.map(({ id: batchId }) => batchId).includes(id)
+                                includesById(id, selectedBatches)
                                   ? {
                                       id,
                                       ...rest,
@@ -224,10 +224,13 @@ function ContainersArea({
                                     }
                               );
                               setBatchesState('batches', newBatches);
-                              const sourceContainer = containers[focusedContainerIndex];
+                              // must first batches, second containers
                               setDeepFieldValue(
                                 `containers.${focusedContainerIndex}`,
-                                getNewSourceContainer(sourceContainer, selectedBatches)
+                                getNewSourceContainer(
+                                  containers[focusedContainerIndex],
+                                  selectedBatches
+                                )
                               );
                               onChangeSelectMode(false);
                               changeContainerIdToExistingBatches(selectedBatches, null);
