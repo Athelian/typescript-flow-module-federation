@@ -19,18 +19,20 @@ function ShipmentsSection({ shipments }: Props) {
       <SectionNavBar>
         <div id="sortsandfilterswip" />
       </SectionNavBar>
-      <div className={ShipmentsSectionBodyStyle}>
-        {shipments.length === 0 ? (
-          <div className={EmptyMessageStyle}>
-            <FormattedMessage
-              id="modules.Orders.noShipmentFound"
-              defaultMessage="No shipments found"
-            />
-          </div>
-        ) : (
-          shipments.map(shipment => <ShipmentCard shipment={shipment} key={shipment.id} />)
-        )}
-      </div>
+      {shipments.length === 0 ? (
+        <div className={EmptyMessageStyle}>
+          <FormattedMessage
+            id="modules.Orders.noShipmentFound"
+            defaultMessage="No shipments found"
+          />
+        </div>
+      ) : (
+        <div className={ShipmentsSectionBodyStyle}>
+          {shipments.map(shipment => (
+            <ShipmentCard shipment={shipment} key={shipment.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

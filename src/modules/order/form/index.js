@@ -28,7 +28,6 @@ type OptionalProps = {
   isNew: boolean,
   isClone: boolean,
   order: Object,
-  onFormReady: () => void,
 };
 
 type Props = OptionalProps & {};
@@ -37,17 +36,10 @@ const defaultProps = {
   isNew: false,
   isClone: false,
   order: {},
-  onFormReady: () => {},
 };
 
 export default class OrderForm extends React.Component<Props> {
   static defaultProps = defaultProps;
-
-  componentDidMount() {
-    const { onFormReady } = this.props;
-
-    if (onFormReady) onFormReady();
-  }
 
   shouldComponentUpdate(nextProps: Props) {
     const { order } = this.props;
