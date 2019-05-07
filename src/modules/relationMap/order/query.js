@@ -156,6 +156,7 @@ export const shipmentCardRMFragment = gql`
     id
     no
     blNo
+    booked
     transportType
     batchCount
     orderItemCount
