@@ -174,6 +174,12 @@ export const itemInOrderFormFragment = gql`
       ... on ProductProvider {
         id
         name
+        exporter {
+          ...partnerNameFragment
+        }
+        supplier {
+          ...partnerNameFragment
+        }
         packageName
         packageCapacity
         packageGrossWeight {
