@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Apr 25 2019 15:59:22 GMT+0900 (Japan Standard Time)
+# timestamp: Tue May 07 2019 14:48:18 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27169,9 +27169,13 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   totalVolume: MetricValue!
   totalWeight: MetricValue!
   totalPrice: Price
-  totalBatchQuantity: Int!
-  totalBatchPackages: Int!
-  totalNumberOfUniqueOrderItems: Int!
+  totalBatched: Float!
+  totalBatchedPackage: Int!
+  orderItemCount: Int!
+  batchCount: Int!
+  totalBatchQuantity: Float! @deprecated(reason: "Use `totalBatched` instead")
+  totalBatchPackages: Int! @deprecated(reason: "Use `totalBatchedPackage` instead")
+  totalNumberOfUniqueOrderItems: Int! @deprecated(reason: "Use `orderItemCount` instead")
   batches: [BatchPayload!]!
   todo: Todo!
   id: ID!
@@ -27297,6 +27301,11 @@ input ContainerSortInput {
   warehouseName: SortOrder
   warehouseArrivalActualDate: SortOrder
   warehouseArrivalAgreedDate: SortOrder
+}
+
+type ContainerTypeCount {
+  containerType: String!
+  count: Float!
 }
 
 input ContainerUpdateInput {
@@ -30549,7 +30558,7 @@ input PriceRangeInput {
   currency: Currency
 }
 
-type Product implements Model & Owned & Tagged & Documented & Customizable {
+type Product implements Model & Owned & Tagged & Documented & Memorizable & Customizable {
   archived: Boolean!
   name: String!
   serial: String!
@@ -30573,6 +30582,7 @@ type Product implements Model & Owned & Tagged & Documented & Customizable {
   ownedBy: GroupPayload!
   tags: [TagPayload!]!
   files: [FilePayload!]!
+  memo: String
   customFields: CustomFields!
 }
 
@@ -30583,10 +30593,11 @@ input ProductCreateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  productProviders: [ProductProviderCreateInput!]!
   files: [FileInput!]
+  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
+  productProviders: [ProductProviderCreateInput!]!
 }
 
 input ProductFilterInput {
@@ -30748,10 +30759,11 @@ input ProductUpdateInput {
   hsCode: String
   material: String
   tagIds: [ID!]
-  productProviders: [ProductProviderUpdateInput!]
   files: [FileInput!]
+  memo: String
   customFields: CustomFieldsInput
   todo: TodoInput
+  productProviders: [ProductProviderUpdateInput!]
 }
 
 input ProductUpdateWrapperInput {
@@ -35820,8 +35832,10 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   forwarders: [GroupPayload!]!
   totalVolume: MetricValue!
   orderCount: Int!
-  batchCount: Int!
   orderItemCount: Int!
+  batchCount: Int!
+  containerCount: Int!
+  containerTypeCounts: [ContainerTypeCount!]!
   batches: [BatchPayload!]!
   batchesWithoutContainer: [BatchPayload!]!
   integrationLinks: [IntegrationLinkPayload!]!
@@ -35988,6 +36002,18 @@ type ShipmentPayloadPagination {
 input ShipmentSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  no: SortOrder
+  blNo: SortOrder
+  cargoReady: SortOrder
+  loadPortDeparture: SortOrder
+  firstTransitPortArrival: SortOrder
+  firstTransitPortDeparture: SortOrder
+  secondTransitPortArrival: SortOrder
+  secondTransitPortDeparture: SortOrder
+  dischargePortArrival: SortOrder
+  customClearance: SortOrder
+  warehouseArrival: SortOrder
+  deliveryReady: SortOrder
 }
 
 input ShipmentUpdateInput {
@@ -36613,7 +36639,7 @@ input UserUpdateInput {
   tagIds: [ID!]
 }
 
-union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | MetricValueValue | SizeValue | EntityValue | Values
+union Value = StringValue | IntValue | FloatValue | BooleanValue | DateTimeValue | IntervalValue | Duration | MetricValueValue | SizeValue | EntityValue | Values
 
 input ValueInput {
   string: String
