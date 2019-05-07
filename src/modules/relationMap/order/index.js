@@ -507,7 +507,7 @@ const Order = ({ intl }: Props) => {
                     <InfiniteScroll
                       className={OrderListBodyStyle}
                       loadMore={() => loadMore({ fetchMore, data }, queryOrderVariables, 'orders')}
-                      hasMore={hasMoreItems(data)}
+                      hasMore={hasMoreItems(data, 'orders')}
                       loader={<LoadingIcon key="loading" />}
                       useWindow={false}
                       threshold={500}
