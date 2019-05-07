@@ -89,7 +89,7 @@ export default class ItemForm extends React.Component<Props> {
             {({ state: itemInfo }) => <AsyncBatchesSection itemInfo={itemInfo} />}
           </Subscribe>
           <AsyncDocumentsSection />
-          <AsyncTaskSection type="orderItem" />
+          <AsyncTaskSection entityId={orderItem.id} type="orderItem" />
           <AsyncShipmentsSection />
           <Subscribe to={[OrderItemTasksContainer]}>
             {({

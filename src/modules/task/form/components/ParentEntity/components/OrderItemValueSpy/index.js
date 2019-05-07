@@ -11,6 +11,7 @@ import { orderItemAutoDateQuery } from './query';
 
 type Props = {
   values: Object,
+  entity: Object,
   location: Object,
   task: Object,
   setTaskValue: Function,
@@ -20,7 +21,7 @@ export const MappingFields = {
   OrderItemOrderIssuedAt: 'issuedAt',
 };
 
-export default function OrderItemValueSpy({ values, task, location, setTaskValue }: Props) {
+export default function OrderItemValueSpy({ entity, values, task, location, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
       'FIND_ORDERITEM_VALUE',
@@ -36,6 +37,7 @@ export default function OrderItemValueSpy({ values, task, location, setTaskValue
         autoDateOffset?: Object,
       }) => {
         const { pathname } = location;
+        const isUnderRelationMap = pathname.includes('/relation-map');
         const [, activeType, orderItemId] = pathname.split('/') || [];
         logger.warn({
           field,
@@ -43,8 +45,9 @@ export default function OrderItemValueSpy({ values, task, location, setTaskValue
           orderItemId,
           location,
         });
-        if (orderItemId && activeType === 'order-item') {
-          const entityId = decodeId(orderItemId);
+        // We will query the order data if open a task on relation map or from order item detail
+        if (isUnderRelationMap || (orderItemId && activeType === 'order-item')) {
+          const entityId = isUnderRelationMap ? entity.id : decodeId(orderItemId);
           logger.warn('query order data for id', client, entityId);
           // TODO: This flag will be used for showing loading on UI
           emitter.emit('LIVE_VALUE_PROCESS', true);

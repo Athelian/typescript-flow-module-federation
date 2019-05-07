@@ -111,7 +111,7 @@ class ProductProviderForm extends React.Component<Props> {
             <AsyncDocumentsSection isOwner={isOwner} />
           </SectionWrapper>
 
-          <AsyncTaskSection type="productProvider" />
+          <AsyncTaskSection entityId={productProvider.id} type="productProvider" />
 
           <Subscribe to={[ProductProviderTasksContainer]}>
             {({

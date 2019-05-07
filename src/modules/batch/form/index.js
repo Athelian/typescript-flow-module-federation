@@ -63,7 +63,7 @@ export default class BatchForm extends React.Component<Props> {
           <AsyncBatchSection isNew={isNew} isClone={isClone} batch={batch} />
           <AsyncQuantityAdjustmentsSection isNew={isNew} />
           <AsyncPackagingSection isNew={isNew} />
-          <AsyncTaskSection type="batch" />
+          <AsyncTaskSection entityId={batch.id} type="batch" />
           <AsyncShipmentSection shipment={batch.shipment} />
           <AsyncContainerSection container={batch.container} />
           <AsyncOrderSection />

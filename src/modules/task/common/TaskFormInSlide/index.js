@@ -19,6 +19,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   task: Object,
+  entity: Object,
   editable: boolean,
   onSave: Function,
 };
@@ -29,7 +30,7 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-const TaskFormInSlide = ({ editable, onSave, task, parentEntity, isInTemplate }: Props) => {
+const TaskFormInSlide = ({ editable, onSave, task, parentEntity, entity, isInTemplate }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -68,6 +69,7 @@ const TaskFormInSlide = ({ editable, onSave, task, parentEntity, isInTemplate }:
           >
             <TaskForm
               task={task}
+              entity={entity}
               hideParentInfo
               parentEntity={parentEntity}
               isInTemplate={isInTemplate}

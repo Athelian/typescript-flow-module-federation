@@ -24,6 +24,7 @@ type Props = OptionalProps & {
   removable: boolean,
   viewForm: boolean,
   type: string,
+  entityId: string,
 };
 
 const defaultProps = {
@@ -39,6 +40,7 @@ const Tasks = ({
   viewForm,
   removable,
   type,
+  entityId,
   isInTemplate,
 }: Props) => {
   const { isOwner } = usePartnerPermission();
@@ -92,6 +94,11 @@ const Tasks = ({
             <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
+                  entity={{
+                    ...task.entity,
+                    __typename: type,
+                    id: entityId,
+                  }}
                   parentEntity={upperFirst(type)}
                   isInTemplate={isInTemplate}
                   editable={hasPermission(TASK_UPDATE)}

@@ -73,7 +73,7 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew } = this.props;
+    const { isNew, shipment } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
@@ -111,7 +111,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <AsyncTaskSection type="shipment" />
+          <AsyncTaskSection entityId={shipment.id} type="shipment" />
           <AsyncOrdersSection />
           <Subscribe
             to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}

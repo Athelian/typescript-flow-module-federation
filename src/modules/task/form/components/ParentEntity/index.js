@@ -13,10 +13,11 @@ import BatchValueSpy from './components/BatchValueSpy';
 import ShipmentValueSpy from './components/ShipmentValueSpy';
 
 type Props = {
+  entity: Object,
   inForm: boolean,
 };
 
-export default function ParentEntity({ inForm }: Props) {
+export default function ParentEntity({ entity, inForm }: Props) {
   return (
     <Location>
       {({ location }) => (
@@ -35,6 +36,7 @@ export default function ParentEntity({ inForm }: Props) {
             <Subscribe to={[OrderInfoContainer, TaskContainer]}>
               {({ state }, { state: task, setFieldValue }) => (
                 <OrderItemValueSpy
+                  entity={entity}
                   location={location}
                   setTaskValue={setFieldValue}
                   task={task}
