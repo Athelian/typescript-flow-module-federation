@@ -200,7 +200,7 @@ export default class OrderItemFormModule extends React.Component<Props> {
                                     id: decodeId(orderItemId),
                                   }}
                                   entity={{
-                                    orderId: decodeId(orderItemId),
+                                    orderItemId: decodeId(orderItemId),
                                   }}
                                 />
                               ) : null}
