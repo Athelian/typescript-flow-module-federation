@@ -140,11 +140,8 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                 order,
                 todo,
               } = orderItem;
-              const { exporter, supplier, product } = productProvider;
-              compiledProductProvider = {
-                exporter,
-                supplier,
-              };
+              const { name: productProviderName, product } = productProvider;
+              compiledProductProvider = { name: productProviderName };
 
               const { id: productId, name: productName, serial, tags, files } = product;
               compiledProduct = {

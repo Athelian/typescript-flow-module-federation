@@ -18,7 +18,7 @@ export const OrderItemCardWrapperStyle: string = css`
 
 export const ProductWrapperStyle: string = css`
   position: relative;
-  height: 100px;
+  height: 95px;
   width: 195px;
 `;
 
@@ -27,7 +27,7 @@ export const ProductImageStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   width: 100%;
-  height: 100px;
+  height: 95px;
   object-fit: contain;
 `;
 
@@ -39,28 +39,42 @@ export const ProductInfoWrapperStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  height: 100px;
+  height: 95px;
   width: 195px;
+  padding: 5px 0 0 0;
+`;
+
+export const ProductNameWrapperStyle: string = css`
+  display: flex;
+  padding: 0 0 0 10px;
+  width: 175px;
+`;
+
+export const ProductIconLinkStyle: string = css`
+  ${presets.BUTTON};
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  margin: 0 5px 0 0;
+  &:hover {
+    color: ${colors.TEAL};
+  }
 `;
 
 export const ProductNameStyle: string = css`
-  ${fontSizesWithHeights.MAIN};
+  ${presets.ELLIPSIS};
   color: ${colors.WHITE};
   font-weight: bold;
-  ${presets.ELLIPSIS};
-  padding: 0 0 0 10px;
-  width: 175px;
+  ${fontSizesWithHeights.MAIN};
 `;
 
 export const ProductSerialStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
-  padding: 0 0 0 10px;
-  width: 175px;
+  padding: 0 10px 0 30px;
 `;
 
-export const ProductPartnerStyle: string = css`
+export const ProductProviderNameStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
@@ -73,28 +87,14 @@ export const ProductPartnerStyle: string = css`
 export const ProductTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
-  padding: 0 10px;
+  padding: 5px 10px;
   overflow: hidden;
-`;
-
-export const ProductIconLinkStyle: string = css`
-  ${presets.BUTTON};
-  position: absolute;
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
-  right: 0;
-  top: 25px;
-  width: 20px;
-  height: 20px;
-  &:hover {
-    color: ${colors.TEAL};
-  }
 `;
 
 export const BodyWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  padding: 5px 0;
+  padding: 5px 0 10px 0;
   width: 195px;
 `;
 

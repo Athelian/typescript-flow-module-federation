@@ -185,11 +185,16 @@ export const batchCardFragment = gql`
           ...priceFragment
         }
         order {
-          ...orderCardFragment
+          ... on Order {
+            id
+            poNo
+            currency
+          }
         }
         productProvider {
           ... on ProductProvider {
             id
+            name
             product {
               ... on Product {
                 id
@@ -199,12 +204,6 @@ export const batchCardFragment = gql`
                   ...imageFragment
                 }
               }
-            }
-            exporter {
-              ...partnerNameFragment
-            }
-            supplier {
-              ...partnerNameFragment
             }
           }
         }

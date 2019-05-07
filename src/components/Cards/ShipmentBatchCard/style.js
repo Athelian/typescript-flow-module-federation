@@ -14,12 +14,12 @@ export const ShipmentBatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 381px;
+  height: 371px;
 `;
 
 export const ProductWrapperStyle: string = css`
   position: relative;
-  height: 80px;
+  height: 70px;
   width: 195px;
 `;
 
@@ -28,7 +28,7 @@ export const ProductImageStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   width: 100%;
-  height: 80px;
+  height: 70px;
   object-fit: contain;
 `;
 
@@ -40,48 +40,63 @@ export const ProductInfoWrapperStyle: string = css`
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  height: 80px;
+  height: 70px;
   width: 195px;
+  padding: 5px 0 0 0;
+`;
+
+export const ProductNameWrapperStyle: string = css`
+  display: flex;
+  padding: 0 0 0 10px;
+  width: 175px;
+`;
+
+export const ProductIconLinkStyle: string = css`
+  ${presets.BUTTON};
+  color: ${colors.WHITE};
+  ${fontSizes.SMALL};
+  margin: 0 5px 0 0;
+  &:hover {
+    color: ${colors.TEAL};
+  }
 `;
 
 export const ProductNameStyle: string = css`
-  ${fontSizesWithHeights.MAIN};
+  ${presets.ELLIPSIS};
   color: ${colors.WHITE};
   font-weight: bold;
-  ${presets.ELLIPSIS};
-  padding: 0 0 0 10px;
-  width: 175px;
+  ${fontSizesWithHeights.MAIN};
 `;
 
 export const ProductSerialStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
-  padding: 0 0 0 10px;
-  width: 175px;
+  padding: 0 10px 0 30px;
 `;
 
-export const ProductSupplierStyle: string = css`
+export const ProductProviderNameStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
-  padding: 0 10px;
+  padding: 0 20px 0 10px;
   & > svg {
     margin: 0 5px 0 0;
   }
 `;
 
-export const ProductIconLinkStyle: string = css`
-  ${presets.BUTTON};
+export const RepresentIconStyle = (isRepresented: boolean) => css`
   position: absolute;
-  color: ${colors.WHITE};
-  ${fontSizes.SMALL};
+  bottom: 5px;
   right: 0;
-  top: 25px;
+  ${fontSizes.SMALL};
   width: 20px;
   height: 20px;
-  &:hover {
-    color: ${colors.TEAL};
+  ${presets.BUTTON};
+  color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
+  &:hover,
+  :focus {
+    color: ${isRepresented ? colors.YELLOW_DARK : colors.WHITE};
   }
 `;
 
@@ -203,19 +218,4 @@ export const BatchTagsWrapperStyle: string = css`
   width: 160px;
   padding: 0 0 0 10px;
   overflow: hidden;
-`;
-
-export const RepresentIconStyle = (isRepresented: boolean) => css`
-  position: absolute;
-  bottom: 5px;
-  right: 0;
-  ${fontSizes.SMALL};
-  width: 20px;
-  height: 20px;
-  ${presets.BUTTON};
-  color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
-  &:hover,
-  :focus {
-    color: ${isRepresented ? colors.YELLOW_DARK : colors.WHITE};
-  }
 `;

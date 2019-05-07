@@ -218,14 +218,14 @@ function BatchesSection() {
                               removeBatch: allowRemoveBatches,
                               cloneBatch: allowCloneBatches,
                             }}
-                            navigate={{
+                            viewable={{
+                              price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                              tasks: hasPermission(BATCH_TASK_LIST),
+                            }}
+                            navigable={{
                               product: hasPermission(PRODUCT_FORM),
                               order: hasPermission(ORDER_FORM),
                               shipment: hasPermission(SHIPMENT_FORM),
-                            }}
-                            read={{
-                              price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                              tasks: hasPermission(BATCH_TASK_LIST),
                             }}
                             position={position}
                             batch={batch}
