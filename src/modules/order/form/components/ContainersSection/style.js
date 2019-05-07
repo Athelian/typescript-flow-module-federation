@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, fontSizes, colors, layout, borderRadiuses, scrollbars } from 'styles/common';
+import { presets, fontSizes, colors, borderRadiuses, scrollbars } from 'styles/common';
 
 export const ContainersSectionWrapperStyle: string = css`
   position: relative;
@@ -10,9 +10,12 @@ export const ContainersSectionWrapperStyle: string = css`
 `;
 
 export const ContainersSectionBodyStyle: string = css`
-  ${layout.GRID_VERTICAL};
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 195px);
+  grid-auto-rows: min-content;
   grid-gap: 30px;
-  padding: 30px 10px;
+  grid-column-gap: 20px;
+  padding: 30px 20px;
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
