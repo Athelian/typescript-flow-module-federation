@@ -79,11 +79,11 @@ export const initValues = {
     value: 0,
   },
   unitPrice: {
-    currency: 'JPY',
+    currency: 'USD',
     amount: 0,
   },
   inspectionFee: {
-    currency: 'JPY',
+    currency: 'USD',
     amount: 0,
   },
   packageGrossWeight: {
