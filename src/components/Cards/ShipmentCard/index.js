@@ -69,7 +69,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     containerTypeCounts,
   } = shipment;
 
-  const sortedContainerTypes = [...containerTypeCounts];
+  const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
   sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
     const firstContainerTypeSortIndex = CONTAINER_TYPE_ITEMS.findIndex(
       ({ value }) => value === firstContainerType.containerType
