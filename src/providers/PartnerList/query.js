@@ -11,6 +11,8 @@ export const partnerListQuery = gql`
             ... on Group {
               id
               partners(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
+                page
+                totalPage
                 nodes {
                   ... on Partner {
                     id
