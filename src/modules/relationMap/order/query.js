@@ -90,6 +90,9 @@ export const orderCardRMFragment = gql`
           inProgressCount
           remainingCount
         }
+        tags {
+          ...tagFragment
+        }
         price {
           ...priceFragment
         }
