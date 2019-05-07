@@ -22,9 +22,6 @@ export const MappingFields = {
 };
 
 export default function OrderItemValueSpy({ entity, values, task, location, setTaskValue }: Props) {
-  console.warn({
-    entity,
-  });
   React.useEffect(() => {
     emitter.addListener(
       'FIND_ORDERITEM_VALUE',
