@@ -7,7 +7,7 @@ describe('Order', () => {
   });
 
   it('should change add 3 order items as same kind', () => {
-    // go to detail
+    // select first order
     cy.visit('/order')
       .wait(1000)
       .get('.InfiniteScroll')
@@ -18,7 +18,7 @@ describe('Order', () => {
 
     cy.url().should('include', '/order/emV');
 
-    cy.getByTestId('newButton')
+    cy.getByTestId('btnNewItems')
       .click()
       .wait(1000)
       .get('.InfiniteScroll')
@@ -34,7 +34,7 @@ describe('Order', () => {
       .click()
       .getByTestId('saveButton')
       .click()
-      .wait(1000)
+      .wait(2000) // API slow
       .should('not.exist');
   });
 });

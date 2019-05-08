@@ -338,7 +338,17 @@ function ItemsArea({
         <BooleanValue>
           {({ value: opened, set: slideToggle }) => (
             <>
-              {!((order.exporter && order.exporter.id) || !isNew) ? (
+              {(order.exporter && order.exporter.id) || !isNew ? (
+                <NewButton
+                  label={
+                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                  }
+                  onClick={() => {
+                    slideToggle(true);
+                  }}
+                  data-testid="btnNewItems"
+                />
+              ) : (
                 <Tooltip
                   message={
                     <FormattedMessage
@@ -356,16 +366,6 @@ function ItemsArea({
                     />
                   </div>
                 </Tooltip>
-              ) : (
-                <NewButton
-                  disabled={!((order.exporter && order.exporter.id) || !isNew)}
-                  label={
-                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
-                  }
-                  onClick={() => {
-                    slideToggle(true);
-                  }}
-                />
               )}
 
               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
