@@ -21,6 +21,7 @@ type OptionalProps = {
   onApprove: Object => void,
   onUnapprove: () => void,
   editable: boolean,
+  name: string,
 };
 
 type Props = OptionalProps;
@@ -31,9 +32,17 @@ const defaultProps = {
   onApprove: () => {},
   onUnapprove: () => {},
   editable: true,
+  name: '',
 };
 
-const ApprovalInput = ({ approvedAt, approvedBy, onApprove, onUnapprove, editable }: Props) => {
+const ApprovalInput = ({
+  name,
+  approvedAt,
+  approvedBy,
+  onApprove,
+  onUnapprove,
+  editable,
+}: Props) => {
   return (
     <div className={ApprovalWrapperStyle}>
       {approvedAt && approvedBy && (
@@ -48,7 +57,12 @@ const ApprovalInput = ({ approvedAt, approvedBy, onApprove, onUnapprove, editabl
           </div>
           <UserAvatar firstName={approvedBy.firstName} lastName={approvedBy.lastName} />
           {editable && (
-            <button className={UnapproveButtonStyle} onClick={onUnapprove} type="button">
+            <button
+              data-testid={`${name}_unApproveButton`}
+              className={UnapproveButtonStyle}
+              onClick={onUnapprove}
+              type="button"
+            >
               <Icon icon="CLEAR" />
             </button>
           )}
@@ -56,7 +70,9 @@ const ApprovalInput = ({ approvedAt, approvedBy, onApprove, onUnapprove, editabl
       )}
       {editable && (!approvedAt || !approvedBy) && (
         <UserConsumer>
-          {({ user }) => <ApproveButton onClick={() => onApprove(user)} />}
+          {({ user }) => (
+            <ApproveButton data-testid={`${name}_approveButton`} onClick={() => onApprove(user)} />
+          )}
         </UserConsumer>
       )}
     </div>

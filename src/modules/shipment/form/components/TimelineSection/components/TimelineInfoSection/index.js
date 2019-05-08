@@ -74,7 +74,7 @@ const TimelineInfoSection = (props: Props) => {
   const { hasPermission } = usePermission(isOwner);
 
   const assignedTo = getByPathWithDefault([], 'assignedTo', timelineDate);
-  const approvedAt = getByPathWithDefault(null, 'assignedAt', timelineDate);
+  const approvedAt = getByPathWithDefault(null, 'approvedAt', timelineDate);
   const approvedBy = getByPathWithDefault(null, 'approvedBy', timelineDate);
   const timelineDateRevisions = getByPathWithDefault([], 'timelineDateRevisions', timelineDate);
   const date = getByPathWithDefault(null, 'date', timelineDate);
@@ -87,6 +87,7 @@ const TimelineInfoSection = (props: Props) => {
         </SectionHeader>
 
         <AssignmentApprovalFactory
+          name={sourceName}
           assignmentsName={`${sourceName}.assignedTo`}
           assignments={assignedTo}
           approvedAtName={`${sourceName}.approvedAt`}

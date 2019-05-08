@@ -6,7 +6,7 @@ describe('Shipment', () => {
     cy.logout();
   });
 
-  it('should create a shipment', () => {
+  it('should create a shipment without timeline', () => {
     cy.task('fixture', 'shipment').then(({ shipmentNo }) => {
       cy.visit('/shipment')
         .getByTestId('newButton')
