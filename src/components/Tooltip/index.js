@@ -1,7 +1,5 @@
 // @flow
-import Tooltip from './BaseTooltip';
+import Tooltip from './Tooltip';
 import BooleanTooltip from './BooleanTooltip';
 
 export { Tooltip, BooleanTooltip };
-
-export default Tooltip;

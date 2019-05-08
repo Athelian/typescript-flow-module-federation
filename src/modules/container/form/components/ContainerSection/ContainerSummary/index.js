@@ -9,7 +9,7 @@ import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import { isNullOrUndefined } from 'utils/fp';
 import { findSummary } from './helper';
 

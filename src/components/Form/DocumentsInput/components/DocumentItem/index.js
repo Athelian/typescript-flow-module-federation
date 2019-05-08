@@ -5,7 +5,7 @@ import { FormField } from 'modules/form';
 import { TextAreaInputFactory, EnumSelectInputFactory, SelectInputFactory } from 'components/Form';
 import BaseCard, { CardAction } from 'components/Cards';
 import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import type { Document, FileType } from 'components/Form/DocumentsInput/type.js.flow';
 import { computeIcon, getFileExtension, getFileName } from './helpers';
 import {

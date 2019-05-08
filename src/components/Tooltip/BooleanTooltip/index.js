@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import Tooltip from '../BaseTooltip';
+import Tooltip from '../Tooltip';
 import { MessageWrapperStyle, BooleanWrapperStyle, MessageStyle } from './style';
 
 type Props = {

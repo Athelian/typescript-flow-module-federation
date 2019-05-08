@@ -8,7 +8,7 @@ import { upload } from 'utils/fs';
 import { isEquals } from 'utils/fp';
 import logger from 'utils/logger';
 import SectionNavBar from 'components/NavBar/SectionNavBar';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import DocumentItem from './components/DocumentItem';
 import type { Document, FileType } from './type.js.flow';
 import {

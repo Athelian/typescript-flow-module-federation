@@ -2,7 +2,7 @@
 import * as React from 'react';
 import FormattedName from 'components/FormattedName';
 import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import { AvatarWrapperStyle } from './style';
 
 type OptionalProps = {
