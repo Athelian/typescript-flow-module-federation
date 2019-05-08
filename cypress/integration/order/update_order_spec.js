@@ -7,7 +7,7 @@ describe('Order', () => {
   });
 
   it('should change the order info section', () => {
-    // go to detail
+    // select first order
     cy.visit('/order')
       .wait(1000)
       .get('.InfiniteScroll')

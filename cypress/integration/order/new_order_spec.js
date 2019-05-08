@@ -40,10 +40,11 @@ describe('Order', () => {
         .wait(1000)
         .getByTestId('saveButton')
         .click()
-        .wait(1000)
-        .should('not.exist');
+        .wait(1000);
 
       // Verify the input data is correct after saving
+      cy.url().should('include', '/order/emV');
+
       cy.get('input[name="poNo"]')
         .should('have.value', poNo)
         .get('input[name="piNo"]')
