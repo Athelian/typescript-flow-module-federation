@@ -21,6 +21,7 @@ describe('Batch', () => {
         .get('input[name="quantity"]')
         .type(quantity)
         .blur();
+
       // select order item
       cy.getByTestId('selectOrderItemButton')
         .click()
@@ -45,17 +46,23 @@ describe('Batch', () => {
         'have.text',
         `${quantity + batchAdjustmentsQuantity}`
       );
-      // package
-      cy.get('input[name="packageCapacity"]').type(2);
-      cy.getByTestId('calculatorButton')
-        .click()
-        .get('input[name="packageQuantity"]')
-        .should('have.value', `${(quantity + batchAdjustmentsQuantity) / 2}`);
 
-      cy.getByTestId('saveButton')
+      cy.get('input[name="packageCapacity"]')
+        .type(2)
+        .blur();
+
+      // auto calculate packageQuantity
+      cy.get('input[name="packageQuantity"]').should(
+        'have.value',
+        `${(quantity + batchAdjustmentsQuantity) / 2}`
+      );
+
+      cy.getByTestId('btnSaveBatch')
         .click()
-        .wait(1000)
-        .should('not.exist');
+        .wait(1000);
+
+      // Verify the input data is correct after saving
+      cy.url().should('include', '/batch/emV');
 
       cy.get('input[name="no"]')
         .should('have.value', batchNo)

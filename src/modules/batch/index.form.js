@@ -290,6 +290,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                     formContainer.onErrors
                                   )
                                 }
+                                data-testid="btnSaveBatch"
                               />
                             </>
                           )}
