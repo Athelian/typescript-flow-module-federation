@@ -85,6 +85,7 @@ const DischargePortArrival = (props: Props) => {
         </SectionHeader>
 
         <AssignmentApprovalFactory
+          name={sourceName}
           assignmentsName={`${sourceName}.assignedTo`}
           assignments={timelineDate && timelineDate.assignedTo}
           approvedAtName={`${sourceName}.approvedAt`}
