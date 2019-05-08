@@ -133,31 +133,36 @@ const NumberInputFactory = ({
   let renderedInput = <Blackout {...blackoutConfig} />;
 
   if (!blackout) {
-    if (editable) {
-      renderedInput = (
-        <>
-          <DefaultStyle {...inputWrapperConfig}>
-            <NumberInput {...inputConfig} />
-            {suffix && <div className={SuffixStyle}>{suffix}</div>}
-          </DefaultStyle>
-          {showCalculator && (
-            <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
-          )}
-          {showExtraToggleButton && (
-            <ExtraToggleButton toggled={autoCalculateIsToggled} onClick={onToggleAutoCalculate} />
-          )}
-        </>
-      );
-    } else {
-      renderedInput = (
-        <NumberInput
-          {...inputConfig}
-          readOnlyWidth={inputWidth}
-          readOnlyHeight={inputHeight}
-          readOnlySuffix={suffix}
-        />
-      );
-    }
+    renderedInput = (
+      <>
+        {editable ? (
+          <>
+            <DefaultStyle {...inputWrapperConfig}>
+              <NumberInput {...inputConfig} />
+              {suffix && <div className={SuffixStyle}>{suffix}</div>}
+            </DefaultStyle>
+            {showCalculator && (
+              <CalculatorButton data-testid="calculatorButton" onClick={onCalculate} />
+            )}
+          </>
+        ) : (
+          <NumberInput
+            {...inputConfig}
+            readOnlyWidth={inputWidth}
+            readOnlyHeight={inputHeight}
+            readOnlySuffix={suffix}
+          />
+        )}
+
+        {showExtraToggleButton && (
+          <ExtraToggleButton
+            editable={editable}
+            toggled={autoCalculateIsToggled}
+            onClick={onToggleAutoCalculate}
+          />
+        )}
+      </>
+    );
   }
 
   return (

@@ -350,6 +350,16 @@ const ContainerSection = () => {
                               !autoCalculatedFreeTimeStartDate
                             );
                           }}
+                          toggleMessages={{
+                            editable: {
+                              on: `Automatically sync with Shipment's Discharge Port Arrival. Manual input is still available, but will be overridden when Shipment's Discharge Port Arrival changes.`,
+                              off: `Manual input only.`,
+                            },
+                            readonly: {
+                              on: `This field is being automatically synced with Shipment's Discharge Port Arrival.`,
+                              off: `This field is not being automatically synced with Shipment's Discharge Port Arrival.`,
+                            },
+                          }}
                           editable={
                             allowUpdate || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
                           }

@@ -144,23 +144,27 @@ const MetricInputFactory = ({
   let renderedInput = <Blackout {...blackoutConfig} />;
 
   if (!blackout) {
-    if (editable) {
-      renderedInput = (
-        <>
-          <DefaultStyle {...inputWrapperConfig}>
-            <MetricInput {...inputConfig} />
-          </DefaultStyle>
-          {showCalculator && <CalculatorButton onClick={onCalculate} />}
-          {showExtraToggleButton && (
-            <ExtraToggleButton toggled={autoCalculateIsToggled} onClick={onToggleAutoCalculate} />
-          )}
-        </>
-      );
-    } else {
-      renderedInput = (
-        <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-      );
-    }
+    renderedInput = (
+      <>
+        {editable ? (
+          <>
+            <DefaultStyle {...inputWrapperConfig}>
+              <MetricInput {...inputConfig} />
+            </DefaultStyle>
+            {showCalculator && <CalculatorButton onClick={onCalculate} />}
+          </>
+        ) : (
+          <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        )}
+        {showExtraToggleButton && (
+          <ExtraToggleButton
+            editable={editable}
+            toggled={autoCalculateIsToggled}
+            onClick={onToggleAutoCalculate}
+          />
+        )}
+      </>
+    );
   }
 
   return (
