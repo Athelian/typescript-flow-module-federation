@@ -1,7 +1,8 @@
 // @flow
-import React, { useEffect, useRef, useCallback } from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import { isEquals } from 'utils/fp';
 import ContainerForm from 'modules/container/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -21,99 +22,96 @@ type Props = {
 };
 
 const formContainer = new FormContainer();
+const infoContainer = new ContainerInfoContainer();
+const batchesContainer = new ContainerBatchesContainer();
 
-const ContainerFormInSlide = ({ container, onSave }: Props) => {
-  const hasInitialStateYet = useRef(false);
-  useEffect(() => {
-    return () => {
-      formContainer.onReset();
-    };
-  });
+class ContainerFormInSlide extends React.Component<Props> {
+  componentDidMount() {
+    const { container } = this.props;
+    const { batches = [], representativeBatch, ...info } = container;
+    infoContainer.initDetailValues(info);
+    batchesContainer.initDetailValues({ batches, representativeBatch });
+  }
 
-  const onFormReady = useCallback(
-    (containerInfoContainer: Object, containerBatchesContainer: Object) => {
-      if (hasInitialStateYet && hasInitialStateYet.current) return null;
+  shouldComponentUpdate(nextProps: Props) {
+    const { container } = this.props;
 
-      if (container.id) {
-        hasInitialStateYet.current = true;
-        const { batches = [], representativeBatch, ...info } = container;
-        containerInfoContainer.initDetailValues(info);
-        containerBatchesContainer.initDetailValues({ batches, representativeBatch });
-      }
-      return null;
-    },
-    [hasInitialStateYet, container]
-  );
+    return !isEquals(container, nextProps.container);
+  }
 
-  return (
-    <Provider inject={[formContainer]}>
-      <Layout
-        navBar={
-          <SlideViewNavBar>
-            <EntityIcon icon="CONTAINER" color="CONTAINER" />
-            <JumpToSection>
-              <SectionTabs
-                link="container_containerSection"
-                label={
-                  <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />
-                }
-                icon="CONTAINER"
-              />
-              <SectionTabs
-                link="container_batchesSection"
-                label={<FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />}
-                icon="BATCH"
-              />
-              <SectionTabs
-                link="container_ordersSection"
-                label={<FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />}
-                icon="ORDER"
-              />
-            </JumpToSection>
-            <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-              {(containerInfoContainer, containerBatchesContainer) =>
-                (containerInfoContainer.isDirty() || containerBatchesContainer.isDirty()) && (
-                  <>
-                    <ResetButton
-                      onClick={() => {
-                        resetFormState(containerInfoContainer);
-                        resetFormState(containerBatchesContainer);
-                        formContainer.onReset();
-                      }}
-                    />
-                    <SaveButton
-                      disabled={
-                        !formContainer.isReady(
-                          {
+  componentWillUnmount() {
+    formContainer.onReset();
+  }
+
+  render() {
+    const { container, onSave } = this.props;
+    return (
+      <Provider inject={[formContainer, infoContainer, batchesContainer]}>
+        <Layout
+          navBar={
+            <SlideViewNavBar>
+              <EntityIcon icon="CONTAINER" color="CONTAINER" />
+              <JumpToSection>
+                <SectionTabs
+                  link="container_containerSection"
+                  label={
+                    <FormattedMessage id="modules.container.container" defaultMessage="CONTAINER" />
+                  }
+                  icon="CONTAINER"
+                />
+                <SectionTabs
+                  link="container_batchesSection"
+                  label={
+                    <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />
+                  }
+                  icon="BATCH"
+                />
+                <SectionTabs
+                  link="container_ordersSection"
+                  label={<FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />}
+                  icon="ORDER"
+                />
+              </JumpToSection>
+              <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
+                {(containerInfoContainer, containerBatchesContainer) =>
+                  (containerInfoContainer.isDirty() || containerBatchesContainer.isDirty()) && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(containerInfoContainer);
+                          resetFormState(containerBatchesContainer);
+                          formContainer.onReset();
+                        }}
+                      />
+                      <SaveButton
+                        disabled={
+                          !formContainer.isReady(
+                            {
+                              ...containerInfoContainer.state,
+                              ...containerBatchesContainer.state,
+                            },
+                            validator
+                          )
+                        }
+                        onClick={() =>
+                          onSave({
                             ...containerInfoContainer.state,
                             ...containerBatchesContainer.state,
-                          },
-                          validator
-                        )
-                      }
-                      onClick={() =>
-                        onSave({
-                          ...containerInfoContainer.state,
-                          ...containerBatchesContainer.state,
-                        })
-                      }
-                    />
-                  </>
-                )
-              }
-            </Subscribe>
-          </SlideViewNavBar>
-        }
-      >
-        <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-          {(containerInfoContainer, containerBatchesContainer) =>
-            onFormReady(containerInfoContainer, containerBatchesContainer)
+                          })
+                        }
+                      />
+                    </>
+                  )
+                }
+              </Subscribe>
+            </SlideViewNavBar>
           }
-        </Subscribe>
-        <ContainerForm inShipmentForm container={container} />
-      </Layout>
-    </Provider>
-  );
-};
+        >
+          <ContainerForm inShipmentForm container={container} />
+        </Layout>
+      </Provider>
+    );
+  }
+}
 
 export default ContainerFormInSlide;

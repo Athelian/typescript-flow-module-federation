@@ -531,12 +531,7 @@ function ContainersArea({
                                 >
                                   {isOpenContainerForm && (
                                     <ContainerFormInSlide
-                                      container={{
-                                        ...container,
-                                        shipment: {
-                                          voyages,
-                                        },
-                                      }}
+                                      container={container}
                                       onSave={newContainer => {
                                         const { batches: newBatches } = newContainer;
                                         setBatchesState('batches', [
