@@ -80,4 +80,5 @@ export const OptionItemStyle = (onHover: boolean, selected: boolean): string => 
   height: 30px;
   width: 150px;
   ${presets.ELLIPSIS};
+  text-transform: capitalize;
 `;

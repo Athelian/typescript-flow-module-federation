@@ -47,7 +47,6 @@ const defaultProps = {
   vertical: false,
   showExtraToggle: false,
   toggled: true,
-  toggleMessages: null,
 };
 
 const DateInputFactory = ({

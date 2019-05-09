@@ -352,12 +352,32 @@ const ContainerSection = () => {
                           }}
                           toggleMessages={{
                             editable: {
-                              on: `Automatically sync with Shipment's Discharge Port Arrival. Manual input is still available, but will be overridden when Shipment's Discharge Port Arrival changes.`,
-                              off: `Manual input only.`,
+                              on: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipEditableOn"
+                                  defaultMessage="Automatically sync with Shipment's Discharge Port Arrival. Manual input is still available, but will be overridden when Shipment's Discharge Port Arrival changes."
+                                />
+                              ),
+                              off: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipEditableOff"
+                                  defaultMessage="Manual input only."
+                                />
+                              ),
                             },
                             readonly: {
-                              on: `This field is being automatically synced with Shipment's Discharge Port Arrival.`,
-                              off: `This field is not being automatically synced with Shipment's Discharge Port Arrival.`,
+                              on: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipReadonlyOn"
+                                  defaultMessage="This field is being automatically synced with Shipment's Discharge Port Arrival."
+                                />
+                              ),
+                              off: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipReadonlyOff"
+                                  defaultMessage="This field is not being automatically synced with Shipment's Discharge Port Arrival."
+                                />
+                              ),
                             },
                           }}
                           editable={

@@ -128,6 +128,36 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                     showExtraToggleButton={canCreateOrUpdate}
                     autoCalculateIsToggled={values.autoCalculatePackageVolume}
                     onToggleAutoCalculate={() => toggleAutoCalculatePackageVolume()}
+                    autoCalculateToggleMessages={{
+                      editable: {
+                        on: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.packageVolumeTooltipEditableOn"
+                            defaultMessage="Automatically calculate by multiplying Package Length, Package Width, and Package Height. Manual input is still available, but will be overridden when Package Length, Package Width, or Package Height changes."
+                          />
+                        ),
+                        off: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.packageVolumeTooltipEditableOff"
+                            defaultMessage="Manual input only."
+                          />
+                        ),
+                      },
+                      readonly: {
+                        on: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.packageVolumeTooltipReadonlyOn"
+                            defaultMessage="This field is being automatically calculated by multiplying Package Length, Package Width, and Package Height."
+                          />
+                        ),
+                        off: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.packageVolumeTooltipReadonlyOff"
+                            defaultMessage="This field is not being automatically calculated by multiplying Package Length, Package Width, and Package Height."
+                          />
+                        ),
+                      },
+                    }}
                     editable={canCreateOrUpdate}
                   />
                 )}

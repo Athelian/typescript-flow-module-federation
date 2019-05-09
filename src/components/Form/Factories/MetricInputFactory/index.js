@@ -37,6 +37,16 @@ type Props = LabelProps &
     showExtraToggleButton: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
+    autoCalculateToggleMessages?: {
+      editable: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+      readonly: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+    },
     editable: boolean,
     blackout: boolean,
   };
@@ -67,6 +77,7 @@ const MetricInputFactory = ({
   showExtraToggleButton,
   onToggleAutoCalculate,
   autoCalculateIsToggled,
+  autoCalculateToggleMessages,
   onCalculate,
   required,
   labelAlign,
@@ -161,6 +172,7 @@ const MetricInputFactory = ({
             editable={editable}
             toggled={autoCalculateIsToggled}
             onClick={onToggleAutoCalculate}
+            toggleMessages={autoCalculateToggleMessages}
           />
         )}
       </>

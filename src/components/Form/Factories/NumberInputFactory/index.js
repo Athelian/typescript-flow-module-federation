@@ -33,6 +33,16 @@ type Props = LabelProps &
     showExtraToggleButton: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
+    autoCalculateToggleMessages?: {
+      editable: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+      readonly: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+    },
     editable: boolean,
     blackout: boolean,
     suffix: ?(string | React.Node),
@@ -63,6 +73,7 @@ const NumberInputFactory = ({
   showExtraToggleButton,
   onToggleAutoCalculate,
   autoCalculateIsToggled,
+  autoCalculateToggleMessages,
   required,
   labelAlign,
   labelWidth,
@@ -159,6 +170,7 @@ const NumberInputFactory = ({
             editable={editable}
             toggled={autoCalculateIsToggled}
             onClick={onToggleAutoCalculate}
+            toggleMessages={autoCalculateToggleMessages}
           />
         )}
       </>
