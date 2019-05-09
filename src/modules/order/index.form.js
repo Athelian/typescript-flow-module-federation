@@ -38,6 +38,7 @@ type OptionalProps = {
   redirectAfterSuccess: boolean,
   onSuccessCallback: ?Function,
   onCancel?: Function,
+  initDataForSlideView: Object,
 };
 
 type Props = OptionalProps & {
@@ -50,6 +51,7 @@ const defaultProps = {
   isSlideView: false,
   onSuccessCallback: null,
   redirectAfterSuccess: true,
+  initDataForSlideView: {},
 };
 
 type CreateOrderResponse = {|
@@ -257,7 +259,7 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   render() {
-    const { orderId, isSlideView, onCancel } = this.props;
+    const { orderId, isSlideView, onCancel, initDataForSlideView } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (orderId && !isNewOrClone) {
@@ -522,6 +524,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                               orderItems: [],
                               shipments: [],
                               containers: [],
+                              ...initDataForSlideView,
                             }
                           )
                         }

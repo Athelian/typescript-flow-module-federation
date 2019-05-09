@@ -688,7 +688,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         };
                       })
                       .filter(Boolean);
-                    actions.showEditForm('NEW_SHIPMENT', 'new', initBatches);
+                    actions.showEditForm('NEW_SHIPMENT', 'new', { batches: initBatches });
                   }}
                 />
               )}
@@ -724,11 +724,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     });
                     const processBatchIds = [];
                     const moveOrderItems = [];
-                    const defaultBatchInput = {
+                    const defaultInput = {
                       isNew: true,
                       todo: {
                         tasks: [],
                       },
+                      files: [],
                     };
                     orderItemIds.forEach(orderItemId => {
                       const orderItem = orderItems[orderItemId];
@@ -738,6 +739,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           orderItem.batches.length === 0
                         ) {
                           moveOrderItems.push({
+                            ...defaultInput,
                             ...orderItem,
                             ...(needToResetPrice
                               ? {
@@ -752,6 +754,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           });
                         } else {
                           moveOrderItems.push({
+                            ...defaultInput,
                             ...orderItem,
                             ...(needToResetPrice
                               ? {
@@ -766,7 +769,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               .map(batchId => {
                                 const { totalAdjusted, ...inputBatchFields } = batches[batchId];
                                 return {
-                                  ...defaultBatchInput,
+                                  ...defaultInput,
                                   ...inputBatchFields,
                                   shipment: inputBatchFields.shipment
                                     ? shipments[inputBatchFields.shipment.id]
@@ -793,6 +796,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           );
                           const { totalAdjusted, ...inputBatchFields } = batch;
                           moveOrderItems.push({
+                            ...defaultInput,
                             ...orderItem,
                             quantity: calculateBatchQuantity([batch]),
                             isNew: true,
@@ -806,7 +810,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               : {}),
                             batches: [
                               {
-                                ...defaultBatchInput,
+                                ...defaultInput,
                                 ...inputBatchFields,
                                 shipment: inputBatchFields.shipment
                                   ? shipments[inputBatchFields.shipment.id]
@@ -828,7 +832,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       exporter: exporters[uiSelectors.currentExporterId()],
                       currency: currencies.length === 1 ? currencies[0] : 'USD',
                       orderItems: moveOrderItems,
-                      tasks: [],
                     });
                     // remove order item and batches from original order
                     const orderIds = [];

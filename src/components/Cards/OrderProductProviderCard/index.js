@@ -169,7 +169,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 
             <div className={TagsAndTaskWrapperStyle}>
               <div className={ProductTagsWrapperStyle}>
-                {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
               <TaskRing {...todo} />
             </div>

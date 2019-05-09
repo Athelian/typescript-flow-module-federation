@@ -41,6 +41,7 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
       form = (
         <OrderForm
           path="new"
+          initDataForSlideView={extra}
           isSlideView
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
@@ -59,7 +60,7 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
         <ShipmentForm
           path="new"
           isSlideView
-          initDataForSlideView={{ batches: extra }}
+          initDataForSlideView={extra}
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
             if (data.shipmentCreate.id) {
