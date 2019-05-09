@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import { FormattedMessage } from 'react-intl';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { Tags } from 'components/RelationMap';
@@ -101,12 +102,24 @@ export default function OrderItem({
                   targeted={targeted}
                   toggle={toggle}
                   onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
+                  tooltipMessage={
+                    <FormattedMessage
+                      id="modules.RelationMaps.highlightTooltip"
+                      defaultMessage="Highlight / Unhighlight"
+                    />
+                  }
                 />
                 <Action
                   icon="DOCUMENT"
                   targeted={targeted}
                   toggle={toggle}
                   onClick={() => actions.showEditForm(ORDER_ITEM, id)}
+                  tooltipMessage={
+                    <FormattedMessage
+                      id="modules.RelationMaps.viewFormTooltip"
+                      defaultMessage="View Form"
+                    />
+                  }
                 />
                 {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                   <>
@@ -129,12 +142,24 @@ export default function OrderItem({
                         ])
                       }
                       className={RotateIcon}
+                      tooltipMessage={
+                        <FormattedMessage
+                          id="modules.RelationMaps.targetTreeTooltip"
+                          defaultMessage="Target / Untarget Tree"
+                        />
+                      }
                     />
                     <Action
                       icon="CHECKED"
                       targeted={targeted}
                       toggle={toggle}
                       onClick={() => actions.targetOrderItemEntity(id, `${id}-${exporterId}`)}
+                      tooltipMessage={
+                        <FormattedMessage
+                          id="modules.RelationMaps.targetTooltip"
+                          defaultMessage="Target / Untarget"
+                        />
+                      }
                     />
                   </>
                 )}

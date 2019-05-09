@@ -413,10 +413,10 @@ const Order = ({ intl }: Props) => {
                       }
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={Object.keys(orders || []).length}
-                      onClick={() =>
+                      onClick={
                         allowToUpdate
-                          ? actions.toggleSelectAll(ORDER, Object.keys(orders || []))
-                          : () => {}
+                          ? () => actions.toggleSelectAll(ORDER, Object.keys(orders || []))
+                          : null
                       }
                     />
                     <EntityHeader
@@ -431,10 +431,10 @@ const Order = ({ intl }: Props) => {
                       }
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={Object.keys(orderItems || []).length}
-                      onClick={() =>
+                      onClick={
                         allowToUpdate
-                          ? actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
-                          : () => {}
+                          ? () => actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
+                          : null
                       }
                     />
                     <EntityHeader
@@ -446,10 +446,10 @@ const Order = ({ intl }: Props) => {
                       }
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={Object.keys(batches || []).length}
-                      onClick={() =>
+                      onClick={
                         allowToUpdate
-                          ? actions.toggleSelectAll(BATCH, Object.keys(batches || []))
-                          : () => {}
+                          ? () => actions.toggleSelectAll(BATCH, Object.keys(batches || []))
+                          : null
                       }
                     />
                     <EntityHeader
@@ -465,10 +465,10 @@ const Order = ({ intl }: Props) => {
                           ? state.totalShipment
                           : Object.keys(shipments || []).length
                       }
-                      onClick={() =>
+                      onClick={
                         allowToUpdate
-                          ? actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
-                          : () => {}
+                          ? () => actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
+                          : null
                       }
                     >
                       <div className={AllShipmentsToggleWrapperStyle}>
