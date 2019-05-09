@@ -84,7 +84,7 @@ const AssignmentApprovalFactory = ({
       <FieldItem
         vertical
         label={
-          <Label align="right">
+          <Label height="30px" align="right">
             <FormattedMessage id="components.inputs.approval" defaultMessage="APPROVAL" />
           </Label>
         }

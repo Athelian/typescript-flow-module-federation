@@ -10,7 +10,9 @@ import { earliest, latest } from 'utils/date';
 import GridColumn from 'components/GridColumn';
 import { SectionHeader } from 'components/Form';
 import { EditButton } from 'components/Buttons';
+import Icon from 'components/Icon';
 import SlideView from 'components/SlideView';
+import { Tooltip } from 'components/Tooltip';
 import {
   getAgreedArrivalDates,
   getActualArrivalDates,
@@ -26,7 +28,10 @@ import {
   ShipmentContainersContainer,
   ContainersInSlideViewContainer,
 } from 'modules/shipment/form/containers';
-import { ContainerWarehouseArrivalSectionWrapperStyle } from './style';
+import {
+  ContainerWarehouseArrivalSectionWrapperStyle,
+  WarehouseArrivalInfoIconStyle,
+} from './style';
 
 const ContainerWarehouseArrivalSection = () => {
   const { isOwner } = usePartnerPermission();
@@ -94,6 +99,18 @@ const ContainerWarehouseArrivalSection = () => {
                     )}
                   </BooleanValue>
                 )}
+                <Tooltip
+                  message={
+                    <FormattedMessage
+                      id="components.Shipments.warehouseContainersTimelineTooltip"
+                      defaultMessage="Since this Shipment has at least one Container, the warehouse information can only be set in each Container."
+                    />
+                  }
+                >
+                  <div className={WarehouseArrivalInfoIconStyle}>
+                    <Icon icon="INFO" />
+                  </div>
+                </Tooltip>
               </SectionHeader>
               <ContainersDatesSummary
                 agreedArrivalDateFrom={agreedArrivalDateFrom}
