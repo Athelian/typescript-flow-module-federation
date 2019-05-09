@@ -23,6 +23,16 @@ type Props = LabelProps &
     showExtraToggle: boolean,
     toggled: boolean,
     onToggle?: Function,
+    toggleMessages?: {
+      editable: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+      readonly: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+    },
   };
 
 const defaultProps = {
@@ -71,6 +81,7 @@ const DateInputFactory = ({
   showExtraToggle,
   toggled,
   onToggle,
+  toggleMessages,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -120,25 +131,30 @@ const DateInputFactory = ({
   let renderedInput = <Blackout {...blackoutConfig} />;
 
   if (!blackout) {
-    if (editable) {
-      renderedInput = (
-        <>
+    renderedInput = (
+      <>
+        {editable ? (
           <DefaultStyle {...inputWrapperConfig}>
             <DateInput {...inputConfig} />
           </DefaultStyle>
-          {showExtraToggle && <ExtraToggleButton toggled={toggled} onClick={onToggle} />}
-        </>
-      );
-    } else {
-      renderedInput = (
-        <DateInput
-          {...inputConfig}
-          color={inputColor}
-          readOnlyWidth={inputWidth}
-          readOnlyHeight={inputHeight}
-        />
-      );
-    }
+        ) : (
+          <DateInput
+            {...inputConfig}
+            color={inputColor}
+            readOnlyWidth={inputWidth}
+            readOnlyHeight={inputHeight}
+          />
+        )}
+        {showExtraToggle && (
+          <ExtraToggleButton
+            editable={editable}
+            toggled={toggled}
+            onClick={onToggle}
+            toggleMessages={toggleMessages}
+          />
+        )}
+      </>
+    );
   }
 
   return (

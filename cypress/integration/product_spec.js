@@ -7,47 +7,63 @@ describe('Product', () => {
   });
 
   it('new a product', () => {
-    cy.task('fixture', 'product').then(({ name, serial, janCode, hsCode, material }) => {
-      cy.visit('/product')
-        .getByTestId('newButton')
-        .click()
-        .url()
-        .should('include', 'new');
+    cy.task('fixture', 'product').then(
+      ({ name, serial, janCode, hsCode, material, endProductName }) => {
+        cy.visit('/product')
+          .getByTestId('newButton')
+          .click()
+          .url()
+          .should('include', 'new');
 
-      cy.get('input[name="name"]')
-        .type(name)
-        .get('input[name="serial"]')
-        .type(serial)
-        .get('input[name="janCode"]')
-        .type(janCode)
-        .get('input[name="hsCode"]')
-        .type(hsCode)
-        .get('input[name="material"]')
-        .type(material);
+        // required fields
+        cy.get('input[name="name"]')
+          .type(name)
+          .get('input[name="serial"]')
+          .type(serial);
 
-      cy.getByTestId('newProviderButton').click();
-      cy.getByTestId('selectExportersButton').click();
-      cy.getByTestId('partnerCard').click();
-      cy.getByTestId('saveButtonOnSelectExporters').click();
-      cy.getByTestId('saveProviderButton').click();
+        cy.get('input[name="janCode"]')
+          .type(janCode)
+          .get('input[name="hsCode"]')
+          .type(hsCode)
+          .get('input[name="material"]')
+          .type(material);
 
-      cy.getByTestId('saveButton')
-        .click()
-        .wait(1000);
+        // end product
+        cy.getByTestId('newProviderButton')
+          .click()
+          .getByTestId('selectExportersButton')
+          .click()
+          .getByTestId('partnerCard')
+          .first()
+          .click()
+          .getByTestId('saveButtonOnSelectExporters')
+          .click();
 
-      cy.getByTestId('saveButton').should('be.disabled');
+        cy.get('input[name="name"]')
+          .eq(1)
+          .type(endProductName)
+          .blur();
 
-      cy.get('input[name="name"]')
-        .should('have.value', name)
-        .get('input[name="serial"]')
-        .should('have.value', serial)
-        .get('input[name="janCode"]')
-        .should('have.value', janCode)
-        .get('input[name="hsCode"]')
-        .should('have.value', hsCode)
-        .get('input[name="material"]')
-        .should('have.value', material);
-    });
+        cy.getByTestId('saveProviderButton').click();
+
+        cy.getByTestId('saveButton')
+          .click()
+          .wait(1000);
+
+        cy.url().should('include', '/product/emV');
+
+        cy.get('input[name="name"]')
+          .should('have.value', name)
+          .get('input[name="serial"]')
+          .should('have.value', serial)
+          .get('input[name="janCode"]')
+          .should('have.value', janCode)
+          .get('input[name="hsCode"]')
+          .should('have.value', hsCode)
+          .get('input[name="material"]')
+          .should('have.value', material);
+      }
+    );
   });
 
   it('update a product', () => {
@@ -62,9 +78,8 @@ describe('Product', () => {
         .blur();
       cy.getByTestId('saveButton')
         .click()
-        .wait(1000);
-
-      cy.getByTestId('saveButton').should('be.disabled');
+        .wait(1000)
+        .should('not.exist');
 
       cy.get('input[name="name"]').should('have.value', updatedName);
     });
@@ -76,6 +91,7 @@ describe('Product', () => {
         cy.getByTestId('cloneButton')
           .click()
           .wait(1000);
+
         cy.url().should('include', 'clone');
 
         cy.get('input[name="name"]')
@@ -99,7 +115,7 @@ describe('Product', () => {
           .click()
           .wait(1000);
 
-        cy.getByTestId('saveButton').should('be.disabled');
+        cy.url().should('include', '/product/emV');
 
         cy.get('input[name="name"]')
           .should('have.value', clonedName)

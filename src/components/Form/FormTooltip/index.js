@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { isEquals } from 'utils/fp';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import TooltipIcon from './TooltipIcon';
 import {

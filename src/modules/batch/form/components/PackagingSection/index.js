@@ -200,6 +200,36 @@ const PackagingSection = ({ isNew }: Props) => {
                           triggerCalculatePackageQuantity();
                         }
                       }}
+                      autoCalculateToggleMessages={{
+                        editable: {
+                          on: (
+                            <FormattedMessage
+                              id="modules.Batches.packageQuantityTooltipEditableOn"
+                              defaultMessage="Automatically calculate by dividing Current Quantity with Package Capacity. Manual input is still available, but will be overridden when Current Quantity or Package Capacity changes."
+                            />
+                          ),
+                          off: (
+                            <FormattedMessage
+                              id="modules.Batches.packageQuantityTooltipEditableOff"
+                              defaultMessage="Manual input only."
+                            />
+                          ),
+                        },
+                        readonly: {
+                          on: (
+                            <FormattedMessage
+                              id="modules.Batches.packageQuantityTooltipReadonlyOn"
+                              defaultMessage="This field is being automatically calculated by dividing Current Quantity with Package Capacity."
+                            />
+                          ),
+                          off: (
+                            <FormattedMessage
+                              id="modules.Batches.packageQuantityTooltipReadonlyOff"
+                              defaultMessage="This field is not being automatically calculated by dividing Current Quantity with Package Capacity."
+                            />
+                          ),
+                        },
+                      }}
                       editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_QUANTITY)}
                     />
                   )}
@@ -250,6 +280,36 @@ const PackagingSection = ({ isNew }: Props) => {
                       showExtraToggleButton={allowAutoCalculatePackageVolume}
                       autoCalculateIsToggled={values.autoCalculatePackageVolume}
                       onToggleAutoCalculate={() => toggleAutoCalculatePackageVolume()}
+                      autoCalculateToggleMessages={{
+                        editable: {
+                          on: (
+                            <FormattedMessage
+                              id="modules.Batches.packageVolumeTooltipEditableOn"
+                              defaultMessage="Automatically calculate by multiplying Package Length, Package Width, and Package Height. Manual input is still available, but will be overridden when Package Length, Package Width, or Package Height changes."
+                            />
+                          ),
+                          off: (
+                            <FormattedMessage
+                              id="modules.Batches.packageVolumeTooltipEditableOff"
+                              defaultMessage="Manual input only."
+                            />
+                          ),
+                        },
+                        readonly: {
+                          on: (
+                            <FormattedMessage
+                              id="modules.Batches.packageVolumeTooltipReadonlyOn"
+                              defaultMessage="This field is being automatically calculated by multiplying Package Length, Package Width, and Package Height."
+                            />
+                          ),
+                          off: (
+                            <FormattedMessage
+                              id="modules.Batches.packageVolumeTooltipReadonlyOff"
+                              defaultMessage="This field is not being automatically calculated by multiplying Package Length, Package Width, and Package Height."
+                            />
+                          ),
+                        },
+                      }}
                       editable={allowAutoCalculatePackageVolume}
                     />
                   )}

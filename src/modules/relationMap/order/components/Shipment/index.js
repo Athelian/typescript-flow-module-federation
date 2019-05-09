@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import { FormattedMessage } from 'react-intl';
 import usePermission from 'hooks/usePermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
@@ -74,12 +75,24 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
                     targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.toggleHighLight('SHIPMENT', id)}
+                    tooltipMessage={
+                      <FormattedMessage
+                        id="modules.RelationMaps.highlightTooltip"
+                        defaultMessage="Highlight / Unhighlight"
+                      />
+                    }
                   />
                   <Action
                     icon="DOCUMENT"
                     targeted={targeted}
                     toggle={toggle}
                     onClick={() => actions.showEditForm('SHIPMENT', id)}
+                    tooltipMessage={
+                      <FormattedMessage
+                        id="modules.RelationMaps.viewFormTooltip"
+                        defaultMessage="View Form"
+                      />
+                    }
                   />
                   {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
                     <Action
@@ -87,6 +100,12 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
                       targeted={targeted}
                       toggle={toggle}
                       onClick={() => actions.targetShipmentEntity(id, no)}
+                      tooltipMessage={
+                        <FormattedMessage
+                          id="modules.RelationMaps.targetTooltip"
+                          defaultMessage="Target / Untarget"
+                        />
+                      }
                     />
                   )}
                 </>

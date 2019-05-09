@@ -23,7 +23,6 @@ const ApproveButton = ({ disabled, onClick, ...rest }: Props): React.Node => (
     hoverBackgroundColor="BLUE_DARK"
     disabled={disabled}
     onClick={onClick}
-    data-testid="approveButton"
     {...rest}
   />
 );

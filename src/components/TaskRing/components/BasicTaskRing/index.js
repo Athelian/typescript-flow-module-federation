@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import FormattedNumber from 'components/FormattedNumber';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import Ring from 'components/Ring';
 import type { TaskRingDataProps } from 'components/TaskRing/type.js.flow';
 import TaskRingTooltipMessage from '../TaskRingTooltipMessage';

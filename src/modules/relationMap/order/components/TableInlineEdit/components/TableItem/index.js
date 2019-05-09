@@ -22,6 +22,7 @@ import {
   InlineSelectInput,
   InlineEnumInput,
   AutoCalculate,
+  InlineToggleButton,
 } from './components';
 
 type OptionalProps = {
@@ -70,8 +71,11 @@ function renderItem({
     case 'calculate':
       return <AutoCalculate values={values} editData={editData} {...meta} id={id} />;
 
+    case 'toggle':
+      return <InlineToggleButton name={name} toggled={value} id={id} />;
+
     case 'numberAdjustment': {
-      const totalAdjustment = getByPath('totalAdjusted', values) || 0;
+      const totalAdjustment = getByPathWithDefault(0, 'totalAdjusted', values);
 
       return (
         <InlineNumberAdjustmentInput

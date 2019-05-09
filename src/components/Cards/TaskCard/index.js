@@ -13,7 +13,7 @@ import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';

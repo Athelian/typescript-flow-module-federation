@@ -76,24 +76,13 @@ export const updateOrderItemMutation = gql`
   ${badRequestFragment}
 `;
 
-export const prepareParseOrderItemInput = ({
-  originalValues,
-  newValues,
-}: {
-  originalValues: Object,
-  newValues: Object,
-}): Object => ({
+export const prepareParseOrderItem = (originalValues: Object, newValues: Object): Object => ({
   ...parseParentIdField(
     'productProviderId',
     getByPathWithDefault(null, 'productProvider', originalValues),
     newValues.productProvider
   ),
   ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
-  ...parseGenericField(
-    'price',
-    getByPathWithDefault(null, 'price', originalValues),
-    newValues.price
-  ),
   ...parseGenericField(
     'quantity',
     getByPathWithDefault(null, 'quantity', originalValues),
@@ -123,6 +112,21 @@ export const prepareParseOrderItemInput = ({
   ...parseTodoField(
     getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
     newValues.todo
+  ),
+});
+
+export const prepareParseOrderItemInput = ({
+  originalValues,
+  newValues,
+}: {
+  originalValues: Object,
+  newValues: Object,
+}): Object => ({
+  ...prepareParseOrderItem(originalValues, newValues),
+  ...parseGenericField(
+    'price',
+    getByPathWithDefault(null, 'price', originalValues),
+    newValues.price
   ),
   ...parseParentIdField(
     'orderId',

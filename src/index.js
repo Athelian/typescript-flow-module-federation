@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import NP from 'number-precision';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
 import UNSTATED from 'unstated-debug';
@@ -23,6 +24,8 @@ loadFonts();
 errorReport();
 
 UNSTATED.isEnabled = !isAppInProduction;
+
+NP.enableBoundaryChecking(isAppInProduction);
 
 const container = document.querySelector('#root');
 

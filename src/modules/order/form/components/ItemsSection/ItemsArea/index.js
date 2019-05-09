@@ -15,7 +15,7 @@ import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { Display } from 'components/Form';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -338,7 +338,17 @@ function ItemsArea({
         <BooleanValue>
           {({ value: opened, set: slideToggle }) => (
             <>
-              {!((order.exporter && order.exporter.id) || !isNew) ? (
+              {(order.exporter && order.exporter.id) || !isNew ? (
+                <NewButton
+                  label={
+                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                  }
+                  onClick={() => {
+                    slideToggle(true);
+                  }}
+                  data-testid="btnNewItems"
+                />
+              ) : (
                 <Tooltip
                   message={
                     <FormattedMessage
@@ -356,16 +366,6 @@ function ItemsArea({
                     />
                   </div>
                 </Tooltip>
-              ) : (
-                <NewButton
-                  disabled={!((order.exporter && order.exporter.id) || !isNew)}
-                  label={
-                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
-                  }
-                  onClick={() => {
-                    slideToggle(true);
-                  }}
-                />
               )}
 
               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>

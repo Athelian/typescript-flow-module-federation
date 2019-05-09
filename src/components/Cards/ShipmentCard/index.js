@@ -11,7 +11,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Label } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {

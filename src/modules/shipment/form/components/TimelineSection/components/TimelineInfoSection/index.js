@@ -87,6 +87,7 @@ const TimelineInfoSection = (props: Props) => {
         </SectionHeader>
 
         <AssignmentApprovalFactory
+          name={sourceName}
           assignmentsName={`${sourceName}.assignedTo`}
           assignments={assignedTo}
           approvedAtName={`${sourceName}.approvedAt`}

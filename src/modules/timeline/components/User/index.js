@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import FormattedName from 'components/FormattedName';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import type { UserInfo } from 'modules/timeline/types';

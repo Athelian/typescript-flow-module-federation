@@ -6,13 +6,15 @@ describe('Shipment', () => {
     cy.logout();
   });
 
-  it('should update a shipment', () => {
+  it('should update shipment basic field', () => {
     cy.visit('/shipment')
+      .wait(1000)
       .get('.InfiniteScroll')
       .children()
       .first()
       .click()
       .wait(1000);
+
     cy.url().should('include', '/shipment/emV');
 
     cy.task('fixture', 'shipment').then(({ blDate, incoterm }) => {
@@ -42,15 +44,16 @@ describe('Shipment', () => {
   });
 
   it('should update timeline of shipment', () => {
-    cy.visit('/shipment')
-      .get('.InfiniteScroll')
-      .children()
-      .first()
-      .click()
-      .wait(1000);
-    cy.url().should('include', '/shipment/emV');
-
     cy.task('fixture', 'shipment').then(({ cargoReadyDate }) => {
+      cy.visit('/shipment')
+        .get('.InfiniteScroll')
+        .children()
+        .first()
+        .click()
+        .wait(1000);
+
+      cy.url().should('include', '/shipment/emV');
+
       const cargoReadyDateMoment = Cypress.moment(cargoReadyDate).format('YYYY-MM-DD');
 
       cy.getByTestId('cargoReady_approveButton').click();

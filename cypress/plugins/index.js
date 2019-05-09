@@ -121,6 +121,7 @@ module.exports = on => {
             clonedHsCode: chance.string({ length: 10 }),
             material: faker.name.findName(),
             tags: [],
+            endProductName: faker.name.findName(),
           };
 
         case 'shipment':

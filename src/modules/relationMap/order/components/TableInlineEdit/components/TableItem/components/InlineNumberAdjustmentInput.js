@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { plus, minus } from 'number-precision';
 import { DefaultStyle, NumberInput } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useNumberInput } from 'modules/form/hooks';
@@ -27,7 +28,7 @@ export default function InlineNumberAdjustmentInput({
   isRequired,
   id,
 }: Props) {
-  const { hasError, isFocused, ...inputHandlers } = useNumberInput(value + adjustment, {
+  const { hasError, isFocused, ...inputHandlers } = useNumberInput(plus(value, adjustment), {
     isRequired,
   });
   return (
@@ -41,7 +42,7 @@ export default function InlineNumberAdjustmentInput({
           emitter.emit('INLINE_CHANGE', {
             name,
             hasError,
-            value: inputHandlers.value - adjustment,
+            value: minus(inputHandlers.value, adjustment),
           });
         }}
         align="left"

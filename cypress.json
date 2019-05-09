@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:3000",
-  "viewportWidth": 1200,
-  "viewportHeight": 1000,
+  "viewportWidth": 1280,
+  "viewportHeight": 800,
   "projectId": "ybwd1a",
   "env": {
     "graphql": "https://graphql-staging.zenport.io/graphql"

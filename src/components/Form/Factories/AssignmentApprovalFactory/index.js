@@ -16,6 +16,7 @@ type OptionalProps = {
   setFieldValue: (name: string, value: any) => void,
   assignable: boolean,
   approvable: boolean,
+  name: string,
 };
 
 type Props = OptionalProps & {};
@@ -30,9 +31,11 @@ const defaultProps = {
   setFieldValue: () => {},
   assignable: false,
   approvable: false,
+  name: '',
 };
 
 const AssignmentApprovalFactory = ({
+  name,
   assignmentsName,
   assignments,
   approvedAtName,
@@ -46,8 +49,8 @@ const AssignmentApprovalFactory = ({
   const userAssignmentInputFactoryConfig = {
     name: assignmentsName,
     values: assignments,
-    onChange: (name: string, assigns: Array<Object>) => {
-      setFieldValue(name, assigns);
+    onChange: (fieldName: string, assigns: Array<Object>) => {
+      setFieldValue(fieldName, assigns);
     },
     label: (
       <>
@@ -81,11 +84,11 @@ const AssignmentApprovalFactory = ({
       <FieldItem
         vertical
         label={
-          <Label align="right">
+          <Label height="30px" align="right">
             <FormattedMessage id="components.inputs.approval" defaultMessage="APPROVAL" />
           </Label>
         }
-        input={<ApprovalInput {...approvalInputConfig} />}
+        input={<ApprovalInput name={name} {...approvalInputConfig} />}
       />
     </div>
   );
