@@ -1310,8 +1310,8 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                       <TableItemForCustomFields
                                         rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
                                         columnNo={columnShipmentCustomNo}
-                                        cell={`shipments.${batch.id}.${shipment.data.id}`}
-                                        key={`shipments.customFields.${batch.id}.${
+                                        cell={`shipments.${shipment.data.id}`}
+                                        key={`shipments.customFields.${counter + 1}.${batch.id}.${
                                           shipment.data.id
                                         }`}
                                         fields={shipmentCustomFieldsFilter}
