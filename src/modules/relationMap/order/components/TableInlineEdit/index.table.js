@@ -320,17 +320,30 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           });
         }
 
-        if (entityType === 'batches' && (field === 'quantity' || field === 'packageCapacity')) {
-          const batch = getByPath(`batches.${id}`, editData);
-          if (batch && batch.autoCalculatePackageQuantity) {
-            newEditData = set(
-              newEditData,
-              `batches.${id}.packageQuantity`,
-              calculatePackageQuantity({
-                ...batch,
-                ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
-              })
-            );
+        if (entityType === 'batches') {
+          if (field === 'autoCalculatePackageQuantity' && value === true) {
+            const batch = getByPath(`batches.${id}`, editData);
+            if (batch) {
+              newEditData = set(
+                newEditData,
+                `batches.${id}.packageQuantity`,
+                calculatePackageQuantity(batch)
+              );
+            }
+          }
+
+          if (field === 'quantity' || field === 'packageCapacity') {
+            const batch = getByPath(`batches.${id}`, editData);
+            if (batch && batch.autoCalculatePackageQuantity) {
+              newEditData = set(
+                newEditData,
+                `batches.${id}.packageQuantity`,
+                calculatePackageQuantity({
+                  ...batch,
+                  ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
+                })
+              );
+            }
           }
         }
 

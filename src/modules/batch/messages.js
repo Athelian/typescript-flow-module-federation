@@ -75,7 +75,10 @@ export default defineMessages({
     id: 'components.BatchItem.packageQuantity',
     defaultMessage: 'PACKAGE QUANTITY',
   },
-
+  autoCalculatePackageQuantity: {
+    id: 'components.BatchItem.autoCalculatePackageQuantity',
+    defaultMessage: 'AUTO CALCULATE PACKAGE QUANTITY',
+  },
   packageGrossWeight: {
     id: 'components.BatchItem.packageGrossWeight',
     defaultMessage: 'PACKAGE GROSS WEIGHT',

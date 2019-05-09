@@ -18,7 +18,7 @@ const defaultProps = {
   onToggle: () => {},
 };
 
-const ToggleInput = ({ toggled, onToggle, children, editable }: Props) => (
+const ToggleInput = ({ toggled, onToggle, children, editable, ...rest }: Props) => (
   <div className={ToggleInputStyle}>
     {children}
     <button
@@ -26,6 +26,7 @@ const ToggleInput = ({ toggled, onToggle, children, editable }: Props) => (
       className={ToggleButtonStyle(toggled, editable)}
       tabIndex={-1}
       onClick={editable ? onToggle : () => {}}
+      {...rest}
     >
       {toggled ? <Icon icon="TOGGLE_ON" /> : <Icon icon="TOGGLE_OFF" />}
     </button>

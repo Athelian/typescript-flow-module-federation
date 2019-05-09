@@ -132,6 +132,7 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.packageName} />,
       <FormattedMessage {...batchMessages.packageCapacity} />,
       <FormattedMessage {...batchMessages.packageQuantity} />,
+      <FormattedMessage {...batchMessages.autoCalculatePackageQuantity} />,
       <FormattedMessage {...batchMessages.packageGrossWeight} />,
       <FormattedMessage {...batchMessages.packageVolume} />,
       <FormattedMessage id="modules.Batches.pkgWidth" defaultMessage="PKG WIDTH" />,
@@ -668,6 +669,11 @@ export const batchColumnFields = [
     messageId: batchMessages.packageQuantity.id,
     name: 'packageQuantity',
     type: 'number',
+  },
+  {
+    messageId: batchMessages.autoCalculatePackageQuantity.id,
+    name: 'autoCalculatePackageQuantity',
+    type: 'toggle',
   },
   {
     messageId: batchMessages.packageGrossWeight.id,
