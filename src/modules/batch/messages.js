@@ -63,14 +63,19 @@ export default defineMessages({
     id: 'components.BatchItem.PO',
     defaultMessage: 'PO NO.',
   },
-  packageQuantity: {
-    id: 'components.BatchItem.packageQuantity',
-    defaultMessage: 'PACKAGE QUANTITY',
-  },
   packageName: {
     id: 'components.BatchItem.packageName',
     defaultMessage: 'PACKAGE NAME',
   },
+  packageCapacity: {
+    id: 'components.BatchItem.packageCapacity',
+    defaultMessage: 'PACKAGE CAPACITY',
+  },
+  packageQuantity: {
+    id: 'components.BatchItem.packageQuantity',
+    defaultMessage: 'PACKAGE QUANTITY',
+  },
+
   packageGrossWeight: {
     id: 'components.BatchItem.packageGrossWeight',
     defaultMessage: 'PACKAGE GROSS WEIGHT',

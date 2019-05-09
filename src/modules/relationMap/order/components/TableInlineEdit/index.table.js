@@ -12,7 +12,8 @@ import usePrevious from 'hooks/usePrevious';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, getByPath } from 'utils/fp';
+import { calculatePackageQuantity } from 'utils/batch';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -317,6 +318,20 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           orderItemIds.forEach(orderItemId => {
             newEditData = set(newEditData, `orderItems.${orderItemId}.price.currency`, value);
           });
+        }
+
+        if (entityType === 'batches' && (field === 'quantity' || field === 'packageCapacity')) {
+          const batch = getByPath(`batches.${id}`, editData);
+          if (batch && batch.autoCalculatePackageQuantity) {
+            newEditData = set(
+              newEditData,
+              `batches.${id}.packageQuantity`,
+              calculatePackageQuantity({
+                ...batch,
+                ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
+              })
+            );
+          }
         }
 
         if (entityType === 'shipments' && field === 'transportType') {

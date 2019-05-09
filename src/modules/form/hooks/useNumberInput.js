@@ -4,8 +4,8 @@ import { useState, useCallback } from 'react';
 import { number } from 'yup';
 import type { ValidationObject } from './type.js.flow';
 
-function useNumberInput(initialValue: number, schema: ValidationObject) {
-  const [value, setValue] = useState(initialValue || 0);
+function useNumberInput(initialValue: number = 0, schema: ValidationObject) {
+  const [value, setValue] = useState(initialValue);
   const [focus, setFocus] = useState(false);
   const hasError = schema.isRequired
     ? !number()
