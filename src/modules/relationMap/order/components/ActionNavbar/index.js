@@ -13,7 +13,6 @@ import {
   OrderInfoContainer,
   OrderTasksContainer,
 } from 'modules/order/form/containers';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import Dialog from 'components/Dialog';
@@ -536,178 +535,168 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 />
               )}
               {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectShipment() && (
-                <Subscribe to={[ShipmentBatchesContainer]}>
-                  {shipmentBatchesContainer => (
-                    <MoveToShipmentPanel
-                      status={state.connectShipment.status}
-                      hasSelectedShipment={uiSelectors.isSelectedShipment()}
-                      onClear={actions.clearConnectMessage}
-                      onClearSelectShipment={() => actions.toggleSelectedShipment('')}
-                      onDisconnect={async () => {
-                        const batchIds = uiSelectors.targetedBatchIds();
-                        const allOrderItemIds = [];
-                        (Object.entries(orderItems || {}): Array<any>).forEach(
-                          ([orderItemId, orderItem]) => {
-                            if (
-                              !allOrderItemIds.includes(orderItemId) &&
-                              intersection(orderItem.batches, batchIds).length > 0
-                            ) {
-                              allOrderItemIds.push(orderItemId);
-                            }
-                          }
-                        );
-                        const orderIds = [];
-                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
-                          if (
-                            !orderIds.includes(orderId) &&
-                            intersection(order.orderItems, allOrderItemIds).length > 0
-                          ) {
-                            orderIds.push(orderId);
-                          }
-                        });
-                        const shipmentId = null;
-                        actions.disconnectShipment(batchIds);
-                        try {
-                          const updateBatches = await Promise.all(
-                            batchIds.map((id, idx) =>
-                              client.mutate({
-                                mutation: updateBatchMutation,
-                                variables: {
-                                  id,
-                                  input: {
-                                    shipmentId,
-                                  },
-                                },
-                                ...(idx === batchIds.length - 1
-                                  ? {
-                                      refetchQueries: orderIds.map(orderId => ({
-                                        query: orderDetailQuery,
-                                        variables: {
-                                          id: orderId,
-                                        },
-                                      })),
-                                    }
-                                  : {}),
-                              })
-                            )
-                          );
-                          actions.disconnectShipmentSuccess(
-                            updateBatches.map(result =>
-                              result.data ? result.data.BatchUpdate : {}
-                            )
-                          );
-                        } catch (error) {
-                          actions.disconnectShipmentFailed(error);
+                <MoveToShipmentPanel
+                  status={state.connectShipment.status}
+                  hasSelectedShipment={uiSelectors.isSelectedShipment()}
+                  onClear={actions.clearConnectMessage}
+                  onClearSelectShipment={() => actions.toggleSelectedShipment('')}
+                  onDisconnect={async () => {
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const allOrderItemIds = [];
+                    (Object.entries(orderItems || {}): Array<any>).forEach(
+                      ([orderItemId, orderItem]) => {
+                        if (
+                          !allOrderItemIds.includes(orderItemId) &&
+                          intersection(orderItem.batches, batchIds).length > 0
+                        ) {
+                          allOrderItemIds.push(orderItemId);
                         }
-                      }}
-                      onMoveToExistShipment={async () => {
-                        const batchIds = uiSelectors.targetedBatchIds();
-                        const allOrderItemIds = [];
-                        (Object.entries(orderItems || {}): Array<any>).forEach(
-                          ([orderItemId, orderItem]) => {
-                            if (
-                              !allOrderItemIds.includes(orderItemId) &&
-                              intersection(orderItem.batches, batchIds).length > 0
-                            ) {
-                              allOrderItemIds.push(orderItemId);
-                            }
-                          }
-                        );
+                      }
+                    );
+                    const orderIds = [];
+                    (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    const shipmentId = null;
+                    actions.disconnectShipment(batchIds);
+                    try {
+                      const updateBatches = await Promise.all(
+                        batchIds.map((id, idx) =>
+                          client.mutate({
+                            mutation: updateBatchMutation,
+                            variables: {
+                              id,
+                              input: {
+                                shipmentId,
+                              },
+                            },
+                            ...(idx === batchIds.length - 1
+                              ? {
+                                  refetchQueries: orderIds.map(orderId => ({
+                                    query: orderDetailQuery,
+                                    variables: {
+                                      id: orderId,
+                                    },
+                                  })),
+                                }
+                              : {}),
+                          })
+                        )
+                      );
+                      actions.disconnectShipmentSuccess(
+                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
+                      );
+                    } catch (error) {
+                      actions.disconnectShipmentFailed(error);
+                    }
+                  }}
+                  onMoveToExistShipment={async () => {
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const allOrderItemIds = [];
+                    (Object.entries(orderItems || {}): Array<any>).forEach(
+                      ([orderItemId, orderItem]) => {
+                        if (
+                          !allOrderItemIds.includes(orderItemId) &&
+                          intersection(orderItem.batches, batchIds).length > 0
+                        ) {
+                          allOrderItemIds.push(orderItemId);
+                        }
+                      }
+                    );
 
-                        const orderIds = [];
-                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
-                          if (
-                            !orderIds.includes(orderId) &&
-                            intersection(order.orderItems, allOrderItemIds).length > 0
-                          ) {
-                            orderIds.push(orderId);
-                          }
-                        });
-                        const { shipmentId } = state.connectShipment;
-                        actions.moveToShipment(batchIds);
-                        try {
-                          const updateBatches = await Promise.all(
-                            batchIds.map((id, idx) =>
-                              client.mutate({
-                                mutation: updateBatchMutation,
-                                variables: {
-                                  id,
-                                  input: {
-                                    shipmentId,
-                                    containerId: null,
-                                  },
-                                },
-                                ...(idx === batchIds.length - 1
-                                  ? {
-                                      refetchQueries: orderIds.map(orderId => ({
-                                        query: orderDetailQuery,
-                                        variables: {
-                                          id: orderId,
-                                        },
-                                      })),
-                                    }
-                                  : {}),
-                              })
-                            )
-                          );
-                          actions.moveToShipmentSuccess(
-                            updateBatches.map(result =>
-                              result.data ? result.data.BatchUpdate : {}
-                            )
-                          );
-                        } catch (error) {
-                          actions.moveToShipmentFailed(error);
+                    const orderIds = [];
+                    (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    const { shipmentId } = state.connectShipment;
+                    actions.moveToShipment(batchIds);
+                    try {
+                      const updateBatches = await Promise.all(
+                        batchIds.map((id, idx) =>
+                          client.mutate({
+                            mutation: updateBatchMutation,
+                            variables: {
+                              id,
+                              input: {
+                                shipmentId,
+                                containerId: null,
+                              },
+                            },
+                            ...(idx === batchIds.length - 1
+                              ? {
+                                  refetchQueries: orderIds.map(orderId => ({
+                                    query: orderDetailQuery,
+                                    variables: {
+                                      id: orderId,
+                                    },
+                                  })),
+                                }
+                              : {}),
+                          })
+                        )
+                      );
+                      actions.moveToShipmentSuccess(
+                        updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
+                      );
+                    } catch (error) {
+                      actions.moveToShipmentFailed(error);
+                    }
+                  }}
+                  onMoveToNewShipment={() => {
+                    const defaultBatchInput = {
+                      batchAdjustments: [],
+                      todo: {
+                        tasks: [],
+                      },
+                    };
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const initBatches = batchIds
+                      .map(batchId => {
+                        const [orderItemId, orderItem] =
+                          (Object.entries(orderItems || {}): Array<any>).find(
+                            ([, item]) => item.batches && item.batches.includes(batchId)
+                          ) || [];
+                        const [, order] =
+                          (Object.entries(orders || {}): Array<any>).find(
+                            ([, item]) => item.orderItems && item.orderItems.includes(orderItemId)
+                          ) || [];
+
+                        if (!batches[batchId]) {
+                          return false;
                         }
-                      }}
-                      onMoveToNewShipment={() => {
-                        const defaultBatchInput = {
-                          batchAdjustments: [],
-                          todo: {
-                            tasks: [],
+                        const { totalAdjusted, ...batch } = batches[batchId];
+                        return {
+                          ...defaultBatchInput,
+                          ...batch,
+                          shipment: null,
+                          container: null,
+                          orderItem: {
+                            ...orderItem,
+                            productProvider: {
+                              ...orderItem.productProvider,
+                              exporter: exporters[orderItem.productProvider.exporter],
+                            },
+                            order: {
+                              ...order,
+                              exporter: exporters[order.exporter],
+                            },
                           },
                         };
-                        const batchIds = uiSelectors.targetedBatchIds();
-                        const initBatches = batchIds
-                          .map(batchId => {
-                            const [orderItemId, orderItem] =
-                              (Object.entries(orderItems || {}): Array<any>).find(
-                                ([, item]) => item.batches && item.batches.includes(batchId)
-                              ) || [];
-                            const [, order] =
-                              (Object.entries(orders || {}): Array<any>).find(
-                                ([, item]) =>
-                                  item.orderItems && item.orderItems.includes(orderItemId)
-                              ) || [];
-
-                            if (!batches[batchId]) {
-                              return false;
-                            }
-                            const { totalAdjusted, ...batch } = batches[batchId];
-                            return {
-                              ...defaultBatchInput,
-                              ...batch,
-                              shipment: null,
-                              container: null,
-                              orderItem: {
-                                ...orderItem,
-                                productProvider: {
-                                  ...orderItem.productProvider,
-                                  exporter: exporters[orderItem.productProvider.exporter],
-                                },
-                                order: {
-                                  ...order,
-                                  exporter: exporters[order.exporter],
-                                },
-                              },
-                            };
-                          })
-                          .filter(Boolean);
-                        shipmentBatchesContainer.initDetailValues(initBatches);
-                        actions.showEditForm('NEW_SHIPMENT', 'new');
-                      }}
-                    />
-                  )}
-                </Subscribe>
+                      })
+                      .filter(Boolean);
+                    actions.showEditForm('NEW_SHIPMENT', 'new', initBatches);
+                  }}
+                />
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
                 <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTasksContainer]}>

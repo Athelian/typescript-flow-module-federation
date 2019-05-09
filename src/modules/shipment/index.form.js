@@ -48,6 +48,7 @@ type OptionalProps = {
   onSuccessCallback: ?Function,
   redirectAfterSuccess: boolean,
   onCancel?: Function,
+  initDataForSlideView: Object,
 };
 
 type Props = OptionalProps & {};
@@ -59,6 +60,7 @@ const defaultProps = {
   isSlideView: false,
   onSuccessCallback: null,
   redirectAfterSuccess: true,
+  initDataForSlideView: {},
 };
 
 type CreateShipmentResponse = {|
@@ -316,7 +318,7 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { shipmentId, anchor, isSlideView, onCancel } = this.props;
+    const { shipmentId, anchor, isSlideView, onCancel, initDataForSlideView } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (shipmentId && !isNewOrClone) {
@@ -637,6 +639,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       files: [],
                                       containers: [],
                                       batches: [],
+                                      ...initDataForSlideView,
                                     }
                                   )
                                 }
