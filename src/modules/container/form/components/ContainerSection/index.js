@@ -52,7 +52,7 @@ import GridColumn from 'components/GridColumn';
 import { WarehouseCard, GrayCard } from 'components/Cards';
 import { FormField } from 'modules/form';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
-import ContainerFormContainer from 'modules/container/form/container';
+import { ContainerInfoContainer } from 'modules/container/form/containers';
 import validator from 'modules/container/form/validator';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getLatestDate } from 'utils/shipment';
@@ -117,7 +117,7 @@ const ContainerSection = () => {
 
   return (
     <div className={ContainerSectionWrapperStyle}>
-      <Subscribe to={[ContainerFormContainer]}>
+      <Subscribe to={[ContainerInfoContainer]}>
         {({ originalValues, state, setFieldValue, setDeepFieldValue }) => {
           const values = { ...originalValues, ...state };
 
