@@ -1,7 +1,8 @@
 // @flow
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
-import { isEquals } from 'utils/fp';
+import { formatToDateTimeInput } from 'utils/date';
+import { isEquals, isNullOrUndefined } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 
 export type ContainerInfoState = {
@@ -104,7 +105,22 @@ export default class ContainerInfoContainer extends Container<ContainerInfoState
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues = { ...initValues, ...values };
+    const { warehouseArrivalAgreedDate, warehouseArrivalActualDate, ...rest } = values;
+    const info = {
+      ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+        ? {}
+        : {
+            warehouseArrivalAgreedDate: formatToDateTimeInput(warehouseArrivalAgreedDate),
+          }),
+      ...(isNullOrUndefined(warehouseArrivalActualDate)
+        ? {}
+        : {
+            warehouseArrivalActualDate: formatToDateTimeInput(warehouseArrivalActualDate),
+          }),
+      ...rest,
+    };
+
+    const parsedValues = { ...initValues, ...info };
 
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
