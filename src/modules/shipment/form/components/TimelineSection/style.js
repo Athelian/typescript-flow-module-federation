@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, borderRadiuses, scrollbars } from 'styles/common';
+import { presets, borderRadiuses, scrollbars, colors } from 'styles/common';
 
 export const TimelineSectionWrapperStyle: string = css`
   ${presets.BOX};
@@ -31,4 +31,16 @@ export const BodyWrapperStyle: string = css`
     overflow-x: hidden;
     overflow-y: overlay;
   }
+`;
+
+export const WarehouseArrivalInfoIconStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: -40px;
+  top: -80px;
+  color: ${colors.GRAY_LIGHT};
+  width: 40px;
+  height: 40px;
 `;
