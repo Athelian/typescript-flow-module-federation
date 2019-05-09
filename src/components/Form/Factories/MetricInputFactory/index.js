@@ -37,6 +37,16 @@ type Props = LabelProps &
     showExtraToggleButton: boolean,
     onToggleAutoCalculate?: Function,
     autoCalculateIsToggled: boolean,
+    autoCalculateToggleMessages?: {
+      editable: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+      readonly: {
+        on: React.Node | string,
+        off: React.Node | string,
+      },
+    },
     editable: boolean,
     blackout: boolean,
   };
@@ -67,6 +77,7 @@ const MetricInputFactory = ({
   showExtraToggleButton,
   onToggleAutoCalculate,
   autoCalculateIsToggled,
+  autoCalculateToggleMessages,
   onCalculate,
   required,
   labelAlign,
@@ -144,23 +155,28 @@ const MetricInputFactory = ({
   let renderedInput = <Blackout {...blackoutConfig} />;
 
   if (!blackout) {
-    if (editable) {
-      renderedInput = (
-        <>
-          <DefaultStyle {...inputWrapperConfig}>
-            <MetricInput {...inputConfig} />
-          </DefaultStyle>
-          {showCalculator && <CalculatorButton onClick={onCalculate} />}
-          {showExtraToggleButton && (
-            <ExtraToggleButton toggled={autoCalculateIsToggled} onClick={onToggleAutoCalculate} />
-          )}
-        </>
-      );
-    } else {
-      renderedInput = (
-        <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
-      );
-    }
+    renderedInput = (
+      <>
+        {editable ? (
+          <>
+            <DefaultStyle {...inputWrapperConfig}>
+              <MetricInput {...inputConfig} />
+            </DefaultStyle>
+            {showCalculator && <CalculatorButton onClick={onCalculate} />}
+          </>
+        ) : (
+          <MetricInput {...inputConfig} readOnlyWidth={inputWidth} readOnlyHeight={inputHeight} />
+        )}
+        {showExtraToggleButton && (
+          <ExtraToggleButton
+            editable={editable}
+            toggled={autoCalculateIsToggled}
+            onClick={onToggleAutoCalculate}
+            toggleMessages={autoCalculateToggleMessages}
+          />
+        )}
+      </>
+    );
   }
 
   return (

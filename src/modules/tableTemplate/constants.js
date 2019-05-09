@@ -21,7 +21,7 @@ import containerMessages from 'modules/container/messages';
 import shipmentMessages from 'modules/shipment/messages';
 import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import {
   mapColumnId,
   calculateOrderTotalVolume,

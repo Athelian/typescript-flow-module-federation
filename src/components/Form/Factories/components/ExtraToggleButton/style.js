@@ -1,12 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets } from 'styles/common';
 
 export const ExtraToggleButtonStyle: string = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   top: 0;
   right: -40px;
-  ${presets.BUTTON};
   height: 30px;
   width: 30px;
   flex-shrink: 0;

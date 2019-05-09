@@ -350,6 +350,36 @@ const ContainerSection = () => {
                               !autoCalculatedFreeTimeStartDate
                             );
                           }}
+                          toggleMessages={{
+                            editable: {
+                              on: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipEditableOn"
+                                  defaultMessage="Automatically sync with Shipment's Discharge Port Arrival. Manual input is still available, but will be overridden when Shipment's Discharge Port Arrival changes."
+                                />
+                              ),
+                              off: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipEditableOff"
+                                  defaultMessage="Manual input only."
+                                />
+                              ),
+                            },
+                            readonly: {
+                              on: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipReadonlyOn"
+                                  defaultMessage="This field is being automatically synced with Shipment's Discharge Port Arrival."
+                                />
+                              ),
+                              off: (
+                                <FormattedMessage
+                                  id="modules.Containers.startDateTooltipReadonlyOff"
+                                  defaultMessage="This field is not being automatically synced with Shipment's Discharge Port Arrival."
+                                />
+                              ),
+                            },
+                          }}
                           editable={
                             allowUpdate || hasPermission(CONTAINER_SET_FREE_TIME_START_DATE)
                           }

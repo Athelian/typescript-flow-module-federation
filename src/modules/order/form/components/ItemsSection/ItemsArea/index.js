@@ -15,7 +15,7 @@ import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { Display } from 'components/Form';
-import Tooltip from 'components/Tooltip';
+import { Tooltip } from 'components/Tooltip';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';

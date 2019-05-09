@@ -158,6 +158,36 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                     editable={canCreateOrUpdate}
                     showExtraToggleButton={canCreateOrUpdate}
                     autoCalculateIsToggled={values.autoCalculateUnitVolume}
+                    autoCalculateToggleMessages={{
+                      editable: {
+                        on: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.unitVolumeTooltipEditableOn"
+                            defaultMessage="Automatically calculate by multiplying Unit Length, Unit Width, and Unit Height. Manual input is still available, but will be overridden when Unit Length, Unit Width, or Unit Height changes."
+                          />
+                        ),
+                        off: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.unitVolumeTooltipEditableOff"
+                            defaultMessage="Manual input only."
+                          />
+                        ),
+                      },
+                      readonly: {
+                        on: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.unitVolumeTooltipReadonlyOn"
+                            defaultMessage="This field is being automatically calculated by multiplying Unit Length, Unit Width, and Unit Height."
+                          />
+                        ),
+                        off: (
+                          <FormattedMessage
+                            id="modules.ProductProviders.unitVolumeTooltipReadonlyOff"
+                            defaultMessage="This field is not being automatically calculated by multiplying Unit Length, Unit Width, and Unit Height."
+                          />
+                        ),
+                      },
+                    }}
                     onToggleAutoCalculate={() => toggleAutoCalculateUnitVolume()}
                   />
                 )}
