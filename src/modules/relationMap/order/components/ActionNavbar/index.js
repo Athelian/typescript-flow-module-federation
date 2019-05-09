@@ -1,18 +1,12 @@
 // @flow
 
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { intersection } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import logger from 'utils/logger';
-import {
-  OrderItemsContainer,
-  OrderInfoContainer,
-  OrderTasksContainer,
-} from 'modules/order/form/containers';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import Dialog from 'components/Dialog';
@@ -699,484 +693,478 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 />
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
-                <Subscribe to={[OrderItemsContainer, OrderInfoContainer, OrderTasksContainer]}>
-                  {(orderItemContainer, orderInfoContainer, orderTaskContainer) => (
-                    <MoveToOrderPanel
-                      status={state.connectOrder.status}
-                      hasSelectedOrderItem={uiSelectors.targetedOrderItemIds().length > 0}
-                      hasSelectedOrder={uiSelectors.isSelectedOrder()}
-                      hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
-                      currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
-                      onClear={actions.clearConnectMessage}
-                      onMoveToNewOrder={() => {
-                        const currencies = [];
-                        const needToResetPrice = currencies.length > 1;
-                        const orderItemIds = uiSelectors.targetedOrderItemIds();
-                        const batchIds = uiSelectors.targetedBatchIds();
-                        const allOrderItemIds = [...orderItemIds];
-                        (Object.entries(orderItems || {}): Array<any>).forEach(
-                          ([orderItemId, orderItem]) => {
-                            if (
-                              !allOrderItemIds.includes(orderItemId) &&
-                              intersection(orderItem.batches, batchIds).length > 0
-                            ) {
-                              allOrderItemIds.push(orderItemId);
-                            }
-                          }
-                        );
-                        allOrderItemIds.forEach(orderItemId => {
-                          if (orderItems[orderItemId]) {
-                            const { price } = orderItems[orderItemId];
-                            if (!currencies.includes(price.currency))
-                              currencies.push(price.currency);
-                          }
-                        });
-                        const processBatchIds = [];
-                        const moveOrderItems = [];
-                        const defaultBatchInput = {
-                          isNew: true,
-                          todo: {
-                            tasks: [],
-                          },
-                        };
-                        orderItemIds.forEach(orderItemId => {
-                          const orderItem = orderItems[orderItemId];
-                          if (orderItem) {
-                            if (
-                              intersection(orderItem.batches, batchIds).length === 0 ||
-                              orderItem.batches.length === 0
-                            ) {
-                              moveOrderItems.push({
-                                ...orderItem,
-                                ...(needToResetPrice
-                                  ? {
-                                      price: {
-                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                        amount: 0,
-                                      },
-                                    }
-                                  : {}),
-                                batches: [],
-                                isNew: true,
-                              });
-                            } else {
-                              moveOrderItems.push({
-                                ...orderItem,
-                                ...(needToResetPrice
-                                  ? {
-                                      price: {
-                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                        amount: 0,
-                                      },
-                                    }
-                                  : {}),
-                                batches: orderItem.batches
-                                  .filter(batchId => batchIds.includes(batchId))
-                                  .map(batchId => {
-                                    const { totalAdjusted, ...inputBatchFields } = batches[batchId];
-                                    return {
-                                      ...defaultBatchInput,
-                                      ...inputBatchFields,
-                                      shipment: inputBatchFields.shipment
-                                        ? shipments[inputBatchFields.shipment.id]
-                                        : null,
-                                    };
-                                  }),
-                                isNew: true,
-                                order: null,
-                              });
-                              processBatchIds.push(...orderItem.batches);
-                            }
-                          }
-                        });
-                        // create each order item for the batch without the parent
-                        batchIds.forEach(batchId => {
-                          if (!processBatchIds.includes(batchId)) {
-                            const batch = batches[batchId];
-                            processBatchIds.push(batchId);
-                            if (batch) {
-                              const [, orderItem] = (Object.entries(orderItems): any).find(
-                                ([, { batches: currentBatches = [] }]) => {
-                                  return currentBatches.includes(batch.id);
-                                }
-                              );
-                              const { totalAdjusted, ...inputBatchFields } = batch;
-                              moveOrderItems.push({
-                                ...orderItem,
-                                quantity: calculateBatchQuantity([batch]),
-                                isNew: true,
-                                ...(needToResetPrice
-                                  ? {
-                                      price: {
-                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                        amount: 0,
-                                      },
-                                    }
-                                  : {}),
-                                batches: [
-                                  {
-                                    ...defaultBatchInput,
-                                    ...inputBatchFields,
-                                    shipment: inputBatchFields.shipment
-                                      ? shipments[inputBatchFields.shipment.id]
-                                      : null,
-                                    batchAdjustments: inputBatchFields.batchAdjustments
-                                      ? inputBatchFields.batchAdjustments.map(item => ({
-                                          ...item,
-                                          isNew: true,
-                                        }))
-                                      : [],
+                <MoveToOrderPanel
+                  status={state.connectOrder.status}
+                  hasSelectedOrderItem={uiSelectors.targetedOrderItemIds().length > 0}
+                  hasSelectedOrder={uiSelectors.isSelectedOrder()}
+                  hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
+                  currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
+                  onClear={actions.clearConnectMessage}
+                  onMoveToNewOrder={() => {
+                    const currencies = [];
+                    const needToResetPrice = currencies.length > 1;
+                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const allOrderItemIds = [...orderItemIds];
+                    (Object.entries(orderItems || {}): Array<any>).forEach(
+                      ([orderItemId, orderItem]) => {
+                        if (
+                          !allOrderItemIds.includes(orderItemId) &&
+                          intersection(orderItem.batches, batchIds).length > 0
+                        ) {
+                          allOrderItemIds.push(orderItemId);
+                        }
+                      }
+                    );
+                    allOrderItemIds.forEach(orderItemId => {
+                      if (orderItems[orderItemId]) {
+                        const { price } = orderItems[orderItemId];
+                        if (!currencies.includes(price.currency)) currencies.push(price.currency);
+                      }
+                    });
+                    const processBatchIds = [];
+                    const moveOrderItems = [];
+                    const defaultBatchInput = {
+                      isNew: true,
+                      todo: {
+                        tasks: [],
+                      },
+                    };
+                    orderItemIds.forEach(orderItemId => {
+                      const orderItem = orderItems[orderItemId];
+                      if (orderItem) {
+                        if (
+                          intersection(orderItem.batches, batchIds).length === 0 ||
+                          orderItem.batches.length === 0
+                        ) {
+                          moveOrderItems.push({
+                            ...orderItem,
+                            ...(needToResetPrice
+                              ? {
+                                  price: {
+                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                    amount: 0,
                                   },
-                                ],
-                                order: null,
-                              });
-                            }
-                          }
-                        });
-                        orderItemContainer.initDetailValues(moveOrderItems);
-                        orderInfoContainer.initDetailValues({
-                          exporter: exporters[uiSelectors.currentExporterId()],
-                          currency: currencies.length === 1 ? currencies[0] : 'USD',
-                        });
-                        orderTaskContainer.initDetailValues({ tasks: [] });
-                        actions.showEditForm('NEW_ORDER', 'new');
-                        // remove order item and batches from original order
-                        const orderIds = [];
-                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
-                          if (
-                            !orderIds.includes(orderId) &&
-                            intersection(order.orderItems, allOrderItemIds).length > 0
-                          ) {
-                            orderIds.push(orderId);
-                          }
-                        });
-                        const updateOrdersInput = [];
-                        orderIds.forEach(orderId => {
-                          const { orderItems: oldOrderItems } = orders[orderId];
-                          updateOrdersInput.push({
-                            id: orderId,
-                            orderItems: oldOrderItems
-                              .filter(
-                                orderItemId =>
-                                  orderItemIds &&
-                                  Array.isArray(orderItemIds) &&
-                                  !orderItemIds.includes(orderItemId)
-                              )
-                              .map(orderItemId => {
-                                const orderItem = orderItems[orderItemId];
+                                }
+                              : {}),
+                            batches: [],
+                            isNew: true,
+                          });
+                        } else {
+                          moveOrderItems.push({
+                            ...orderItem,
+                            ...(needToResetPrice
+                              ? {
+                                  price: {
+                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                    amount: 0,
+                                  },
+                                }
+                              : {}),
+                            batches: orderItem.batches
+                              .filter(batchId => batchIds.includes(batchId))
+                              .map(batchId => {
+                                const { totalAdjusted, ...inputBatchFields } = batches[batchId];
                                 return {
-                                  ...orderItem,
-                                  batches: orderItem.batches
-                                    .filter(
-                                      batchId =>
-                                        batchIds &&
-                                        Array.isArray(batchIds) &&
-                                        !batchIds.includes(batchId)
-                                    )
-                                    .map(batchId => ({ id: batchId, isNew: false })),
+                                  ...defaultBatchInput,
+                                  ...inputBatchFields,
+                                  shipment: inputBatchFields.shipment
+                                    ? shipments[inputBatchFields.shipment.id]
+                                    : null,
                                 };
                               }),
+                            isNew: true,
+                            order: null,
                           });
-                        });
-                        actions.prepareRemoveOrderItemsAndBatches(updateOrdersInput);
-                      }}
-                      onMoveToExistOrder={async ({ currencies }) => {
-                        const needToResetPrice = currencies.length > 1;
-                        const targetOrder = orders[state.connectOrder.orderId];
-                        if (!targetOrder) {
-                          logger.error('Not found order');
-                          return;
+                          processBatchIds.push(...orderItem.batches);
                         }
-                        const ignoreOrderItemIds = targetOrder.orderItems;
-                        const ignoreBatchIds = ignoreOrderItemIds.reduce((result, orderItemId) => {
-                          const { batches: batchesOfOrderItem = [] } = orderItems[orderItemId];
-                          return result.concat(batchesOfOrderItem);
-                        }, []);
-                        const orderItemIds = uiSelectors
-                          .targetedOrderItemIds()
-                          .filter(orderItemId => !ignoreOrderItemIds.includes(orderItemId));
-                        const batchIds = uiSelectors
-                          .targetedBatchIds()
-                          .filter(batchId => !ignoreBatchIds.includes(batchId));
-                        const allOrderItemIds = [...orderItemIds];
-                        (Object.entries(orderItems || {}): Array<any>).forEach(
-                          ([orderItemId, orderItem]) => {
-                            if (
-                              !targetOrder.orderItems.includes(orderItemId) &&
-                              !allOrderItemIds.includes(orderItemId) &&
-                              intersection(orderItem.batches, batchIds).length > 0
-                            ) {
-                              allOrderItemIds.push(orderItemId);
+                      }
+                    });
+                    // create each order item for the batch without the parent
+                    batchIds.forEach(batchId => {
+                      if (!processBatchIds.includes(batchId)) {
+                        const batch = batches[batchId];
+                        processBatchIds.push(batchId);
+                        if (batch) {
+                          const [, orderItem] = (Object.entries(orderItems): any).find(
+                            ([, { batches: currentBatches = [] }]) => {
+                              return currentBatches.includes(batch.id);
                             }
-                          }
-                        );
-                        const orderIds = [];
-                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
-                          if (
-                            !orderIds.includes(orderId) &&
-                            intersection(order.orderItems, allOrderItemIds).length > 0
-                          ) {
-                            orderIds.push(orderId);
-                          }
-                        });
-                        const processBatchIds = [];
-                        const updateOrdersInput: Array<{
-                          id: string,
-                          oldOrderItems: Array<Object>,
-                          orderItems: Array<Object>,
-                        }> = [];
-                        // add order items and batches to target
-                        const moveOrderItems = [];
-                        orderItemIds.forEach(orderItemId => {
-                          const orderItem = orderItems[orderItemId];
-                          if (orderItem) {
-                            if (
-                              intersection(orderItem.batches, batchIds).length === 0 ||
-                              orderItem.batches.length === 0
-                            ) {
-                              moveOrderItems.push({
-                                ...orderItem,
-                                ...(needToResetPrice
-                                  ? {
-                                      price: {
-                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                        amount: 0,
-                                      },
-                                    }
-                                  : {}),
-                                batches: [],
-                              });
-                            } else {
-                              moveOrderItems.push({
-                                ...orderItem,
-                                ...(needToResetPrice
-                                  ? {
-                                      price: {
-                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                        amount: 0,
-                                      },
-                                    }
-                                  : {}),
-                                batches: orderItem.batches
-                                  .filter(batchId => batchIds.includes(batchId))
-                                  .map(batchId => batches[batchId]),
-                              });
-                              processBatchIds.push(...orderItem.batches);
-                            }
-                          }
-                        });
-                        // create each order item for the batch without the parent
-                        batchIds.forEach(batchId => {
-                          if (!processBatchIds.includes(batchId)) {
-                            const batch = batches[batchId];
-                            processBatchIds.push(batchId);
-                            if (batch) {
-                              const [, orderItem] = (Object.entries(orderItems): any).find(
-                                ([, { batches: currentBatches = [] }]) => {
-                                  return currentBatches.includes(batch.id);
+                          );
+                          const { totalAdjusted, ...inputBatchFields } = batch;
+                          moveOrderItems.push({
+                            ...orderItem,
+                            quantity: calculateBatchQuantity([batch]),
+                            isNew: true,
+                            ...(needToResetPrice
+                              ? {
+                                  price: {
+                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                    amount: 0,
+                                  },
                                 }
-                              );
-                              moveOrderItems.push({
-                                ...orderItem,
-                                ...(needToResetPrice
-                                  ? {
-                                      price: {
-                                        currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                        amount: 0,
-                                      },
-                                    }
-                                  : {}),
-                                batches: [batch],
-                                quantity: calculateBatchQuantity([batch]),
-                              });
+                              : {}),
+                            batches: [
+                              {
+                                ...defaultBatchInput,
+                                ...inputBatchFields,
+                                shipment: inputBatchFields.shipment
+                                  ? shipments[inputBatchFields.shipment.id]
+                                  : null,
+                                batchAdjustments: inputBatchFields.batchAdjustments
+                                  ? inputBatchFields.batchAdjustments.map(item => ({
+                                      ...item,
+                                      isNew: true,
+                                    }))
+                                  : [],
+                              },
+                            ],
+                            order: null,
+                          });
+                        }
+                      }
+                    });
+                    actions.showEditForm('NEW_ORDER', 'new', {
+                      exporter: exporters[uiSelectors.currentExporterId()],
+                      currency: currencies.length === 1 ? currencies[0] : 'USD',
+                      orderItems: moveOrderItems,
+                      tasks: [],
+                    });
+                    // remove order item and batches from original order
+                    const orderIds = [];
+                    (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    const updateOrdersInput = [];
+                    orderIds.forEach(orderId => {
+                      const { orderItems: oldOrderItems } = orders[orderId];
+                      updateOrdersInput.push({
+                        id: orderId,
+                        orderItems: oldOrderItems
+                          .filter(
+                            orderItemId =>
+                              orderItemIds &&
+                              Array.isArray(orderItemIds) &&
+                              !orderItemIds.includes(orderItemId)
+                          )
+                          .map(orderItemId => {
+                            const orderItem = orderItems[orderItemId];
+                            return {
+                              ...orderItem,
+                              batches: orderItem.batches
+                                .filter(
+                                  batchId =>
+                                    batchIds &&
+                                    Array.isArray(batchIds) &&
+                                    !batchIds.includes(batchId)
+                                )
+                                .map(batchId => ({ id: batchId, isNew: false })),
+                            };
+                          }),
+                      });
+                    });
+                    actions.prepareRemoveOrderItemsAndBatches(updateOrdersInput);
+                  }}
+                  onMoveToExistOrder={async ({ currencies }) => {
+                    const needToResetPrice = currencies.length > 1;
+                    const targetOrder = orders[state.connectOrder.orderId];
+                    if (!targetOrder) {
+                      logger.error('Not found order');
+                      return;
+                    }
+                    const ignoreOrderItemIds = targetOrder.orderItems;
+                    const ignoreBatchIds = ignoreOrderItemIds.reduce((result, orderItemId) => {
+                      const { batches: batchesOfOrderItem = [] } = orderItems[orderItemId];
+                      return result.concat(batchesOfOrderItem);
+                    }, []);
+                    const orderItemIds = uiSelectors
+                      .targetedOrderItemIds()
+                      .filter(orderItemId => !ignoreOrderItemIds.includes(orderItemId));
+                    const batchIds = uiSelectors
+                      .targetedBatchIds()
+                      .filter(batchId => !ignoreBatchIds.includes(batchId));
+                    const allOrderItemIds = [...orderItemIds];
+                    (Object.entries(orderItems || {}): Array<any>).forEach(
+                      ([orderItemId, orderItem]) => {
+                        if (
+                          !targetOrder.orderItems.includes(orderItemId) &&
+                          !allOrderItemIds.includes(orderItemId) &&
+                          intersection(orderItem.batches, batchIds).length > 0
+                        ) {
+                          allOrderItemIds.push(orderItemId);
+                        }
+                      }
+                    );
+                    const orderIds = [];
+                    (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+                    const processBatchIds = [];
+                    const updateOrdersInput: Array<{
+                      id: string,
+                      oldOrderItems: Array<Object>,
+                      orderItems: Array<Object>,
+                    }> = [];
+                    // add order items and batches to target
+                    const moveOrderItems = [];
+                    orderItemIds.forEach(orderItemId => {
+                      const orderItem = orderItems[orderItemId];
+                      if (orderItem) {
+                        if (
+                          intersection(orderItem.batches, batchIds).length === 0 ||
+                          orderItem.batches.length === 0
+                        ) {
+                          moveOrderItems.push({
+                            ...orderItem,
+                            ...(needToResetPrice
+                              ? {
+                                  price: {
+                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                    amount: 0,
+                                  },
+                                }
+                              : {}),
+                            batches: [],
+                          });
+                        } else {
+                          moveOrderItems.push({
+                            ...orderItem,
+                            ...(needToResetPrice
+                              ? {
+                                  price: {
+                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                    amount: 0,
+                                  },
+                                }
+                              : {}),
+                            batches: orderItem.batches
+                              .filter(batchId => batchIds.includes(batchId))
+                              .map(batchId => batches[batchId]),
+                          });
+                          processBatchIds.push(...orderItem.batches);
+                        }
+                      }
+                    });
+                    // create each order item for the batch without the parent
+                    batchIds.forEach(batchId => {
+                      if (!processBatchIds.includes(batchId)) {
+                        const batch = batches[batchId];
+                        processBatchIds.push(batchId);
+                        if (batch) {
+                          const [, orderItem] = (Object.entries(orderItems): any).find(
+                            ([, { batches: currentBatches = [] }]) => {
+                              return currentBatches.includes(batch.id);
                             }
-                          }
-                        });
+                          );
+                          moveOrderItems.push({
+                            ...orderItem,
+                            ...(needToResetPrice
+                              ? {
+                                  price: {
+                                    currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                    amount: 0,
+                                  },
+                                }
+                              : {}),
+                            batches: [batch],
+                            quantity: calculateBatchQuantity([batch]),
+                          });
+                        }
+                      }
+                    });
 
-                        const oldOrderItems = targetOrder.orderItems.map(orderItemId => {
+                    const oldOrderItems = targetOrder.orderItems.map(orderItemId => {
+                      const orderItem = orderItems[orderItemId];
+                      return {
+                        ...orderItem,
+                        batches: orderItem.batches.map(batchId => batches[batchId]),
+                      };
+                    });
+                    updateOrdersInput.push({
+                      id: targetOrder.id,
+                      oldOrderItems,
+                      orderItems: [...oldOrderItems, ...moveOrderItems],
+                    });
+
+                    // remove order item and batches from original order
+                    orderIds.forEach(orderId => {
+                      const { orderItems: existOrderItems } = orders[orderId];
+                      updateOrdersInput.push({
+                        id: orderId,
+                        oldOrderItems: existOrderItems.map(orderItemId => {
                           const orderItem = orderItems[orderItemId];
                           return {
                             ...orderItem,
                             batches: orderItem.batches.map(batchId => batches[batchId]),
                           };
-                        });
-                        updateOrdersInput.push({
-                          id: targetOrder.id,
-                          oldOrderItems,
-                          orderItems: [...oldOrderItems, ...moveOrderItems],
-                        });
-
-                        // remove order item and batches from original order
-                        orderIds.forEach(orderId => {
-                          const { orderItems: existOrderItems } = orders[orderId];
-                          updateOrdersInput.push({
-                            id: orderId,
-                            oldOrderItems: existOrderItems.map(orderItemId => {
-                              const orderItem = orderItems[orderItemId];
-                              return {
-                                ...orderItem,
-                                batches: orderItem.batches.map(batchId => batches[batchId]),
-                              };
-                            }),
-                            orderItems: existOrderItems
-                              .filter(orderItemId => !orderItemIds.includes(orderItemId))
-                              .map(orderItemId => {
-                                const orderItem = orderItems[orderItemId];
-                                return {
-                                  ...orderItem,
-                                  ...(needToResetPrice
-                                    ? {
-                                        price: {
-                                          currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                          amount: 0,
-                                        },
-                                      }
-                                    : {}),
-                                  batches: orderItem.batches
-                                    .filter(batchId => !batchIds.includes(batchId))
-                                    .map(batchId => batches[batchId]),
-                                };
-                              }),
-                          });
-                        });
-
-                        actions.moveToOrder({
-                          ...targetOrder,
-                          orderItems: targetOrder.orderItems.map(
-                            orderItemId => orderItems[orderItemId]
-                          ),
-                        });
-                        try {
-                          const updateOrders = await Promise.all(
-                            updateOrdersInput.map(item =>
-                              client.mutate({
-                                mutation: updateOrderMutation,
-                                variables: {
-                                  id: item.id,
-                                  input: prepareParsedOrderInput(
-                                    {
-                                      tags: [],
-                                      inCharges: [],
-                                      files: [],
-                                      todo: {
-                                        tasks: [],
-                                      },
+                        }),
+                        orderItems: existOrderItems
+                          .filter(orderItemId => !orderItemIds.includes(orderItemId))
+                          .map(orderItemId => {
+                            const orderItem = orderItems[orderItemId];
+                            return {
+                              ...orderItem,
+                              ...(needToResetPrice
+                                ? {
+                                    price: {
                                       currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                      orderItems: item.oldOrderItems,
+                                      amount: 0,
                                     },
-                                    {
-                                      tags: [],
-                                      inCharges: [],
-                                      files: [],
-                                      todo: {
-                                        tasks: [],
-                                      },
-                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                      orderItems: item.orderItems,
-                                    }
-                                  ),
-                                },
-                              })
-                            )
-                          );
-                          actions.moveToOrderSuccess(
-                            updateOrders.map(result => (result.data ? result.data.orderUpdate : {}))
-                          );
-                        } catch (error) {
-                          actions.moveToOrderFailed(error);
-                        }
-                      }}
-                      onClearSelectOrder={() => actions.toggleSelectedOrder('')}
-                      onDelete={async (currencies: Array<string>) => {
-                        const orderItemIds = uiSelectors.targetedOrderItemIds();
-                        const batchIds = uiSelectors.targetedBatchIds();
-                        const allOrderItemIds = [...orderItemIds];
-                        (Object.entries(orderItems || {}): Array<any>).forEach(
-                          ([orderItemId, orderItem]) => {
-                            if (
-                              !allOrderItemIds.includes(orderItemId) &&
-                              intersection(orderItem.batches, batchIds).length > 0
-                            ) {
-                              allOrderItemIds.push(orderItemId);
-                            }
-                          }
-                        );
-                        const orderIds = [];
-                        (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
-                          if (
-                            !orderIds.includes(orderId) &&
-                            intersection(order.orderItems, allOrderItemIds).length > 0
-                          ) {
-                            orderIds.push(orderId);
-                          }
-                        });
+                                  }
+                                : {}),
+                              batches: orderItem.batches
+                                .filter(batchId => !batchIds.includes(batchId))
+                                .map(batchId => batches[batchId]),
+                            };
+                          }),
+                      });
+                    });
 
-                        // remove order item and batches from original order
-                        const updateOrdersInput: Array<{
-                          id: string,
-                          oldOrderItems: Array<Object>,
-                          orderItems: Array<Object>,
-                        }> = [];
-                        orderIds.forEach(orderId => {
-                          const { orderItems: oldOrderItems } = orders[orderId];
-                          updateOrdersInput.push({
-                            id: orderId,
-                            oldOrderItems,
-                            orderItems: oldOrderItems
-                              .filter(orderItemId => !orderItemIds.includes(orderItemId))
-                              .map(orderItemId => {
-                                const orderItem = orderItems[orderItemId];
-                                return {
-                                  ...orderItem,
-                                  batches: orderItem.batches
-                                    .filter(batchId => !batchIds.includes(batchId))
-                                    .map(batchId => ({ id: batchId, isNew: false })),
-                                };
-                              }),
-                          });
-                        });
-
-                        try {
-                          await Promise.all(
-                            updateOrdersInput.map(item =>
-                              client.mutate({
-                                mutation: updateOrderMutation,
-                                variables: {
-                                  id: item.id,
-                                  input: prepareParsedOrderInput(
-                                    {
-                                      tags: [],
-                                      inCharges: [],
-                                      files: [],
-                                      todo: {
-                                        tasks: [],
-                                      },
-                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                      orderItems: item.oldOrderItems,
-                                    },
-                                    {
-                                      tags: [],
-                                      inCharges: [],
-                                      files: [],
-                                      todo: {
-                                        tasks: [],
-                                      },
-                                      currency: currencies.length > 0 ? currencies[0] : 'USD',
-                                      orderItems: item.orderItems,
-                                    }
-                                  ),
+                    actions.moveToOrder({
+                      ...targetOrder,
+                      orderItems: targetOrder.orderItems.map(
+                        orderItemId => orderItems[orderItemId]
+                      ),
+                    });
+                    try {
+                      const updateOrders = await Promise.all(
+                        updateOrdersInput.map(item =>
+                          client.mutate({
+                            mutation: updateOrderMutation,
+                            variables: {
+                              id: item.id,
+                              input: prepareParsedOrderInput(
+                                {
+                                  tags: [],
+                                  inCharges: [],
+                                  files: [],
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                  orderItems: item.oldOrderItems,
                                 },
-                              })
-                            )
-                          );
-                          actions.removeEntitiesSuccess();
-                        } catch (error) {
-                          actions.removeEntitiesFailed(error);
+                                {
+                                  tags: [],
+                                  inCharges: [],
+                                  files: [],
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                  orderItems: item.orderItems,
+                                }
+                              ),
+                            },
+                          })
+                        )
+                      );
+                      actions.moveToOrderSuccess(
+                        updateOrders.map(result => (result.data ? result.data.orderUpdate : {}))
+                      );
+                    } catch (error) {
+                      actions.moveToOrderFailed(error);
+                    }
+                  }}
+                  onClearSelectOrder={() => actions.toggleSelectedOrder('')}
+                  onDelete={async (currencies: Array<string>) => {
+                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const batchIds = uiSelectors.targetedBatchIds();
+                    const allOrderItemIds = [...orderItemIds];
+                    (Object.entries(orderItems || {}): Array<any>).forEach(
+                      ([orderItemId, orderItem]) => {
+                        if (
+                          !allOrderItemIds.includes(orderItemId) &&
+                          intersection(orderItem.batches, batchIds).length > 0
+                        ) {
+                          allOrderItemIds.push(orderItemId);
                         }
-                      }}
-                    />
-                  )}
-                </Subscribe>
+                      }
+                    );
+                    const orderIds = [];
+                    (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                      if (
+                        !orderIds.includes(orderId) &&
+                        intersection(order.orderItems, allOrderItemIds).length > 0
+                      ) {
+                        orderIds.push(orderId);
+                      }
+                    });
+
+                    // remove order item and batches from original order
+                    const updateOrdersInput: Array<{
+                      id: string,
+                      oldOrderItems: Array<Object>,
+                      orderItems: Array<Object>,
+                    }> = [];
+                    orderIds.forEach(orderId => {
+                      const { orderItems: oldOrderItems } = orders[orderId];
+                      updateOrdersInput.push({
+                        id: orderId,
+                        oldOrderItems,
+                        orderItems: oldOrderItems
+                          .filter(orderItemId => !orderItemIds.includes(orderItemId))
+                          .map(orderItemId => {
+                            const orderItem = orderItems[orderItemId];
+                            return {
+                              ...orderItem,
+                              batches: orderItem.batches
+                                .filter(batchId => !batchIds.includes(batchId))
+                                .map(batchId => ({ id: batchId, isNew: false })),
+                            };
+                          }),
+                      });
+                    });
+
+                    try {
+                      await Promise.all(
+                        updateOrdersInput.map(item =>
+                          client.mutate({
+                            mutation: updateOrderMutation,
+                            variables: {
+                              id: item.id,
+                              input: prepareParsedOrderInput(
+                                {
+                                  tags: [],
+                                  inCharges: [],
+                                  files: [],
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                  orderItems: item.oldOrderItems,
+                                },
+                                {
+                                  tags: [],
+                                  inCharges: [],
+                                  files: [],
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                  orderItems: item.orderItems,
+                                }
+                              ),
+                            },
+                          })
+                        )
+                      );
+                      actions.removeEntitiesSuccess();
+                    } catch (error) {
+                      actions.removeEntitiesFailed(error);
+                    }
+                  }}
+                />
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
