@@ -38,7 +38,7 @@ import { ShipmentContainerCard, CardAction, BatchesPoolCard } from 'components/C
 import Icon from 'components/Icon';
 import { getBatchesInPool } from 'modules/shipment/helpers';
 import SelectWareHouse from 'modules/warehouse/common/SelectWareHouse';
-import ContainerFormInSlide from 'modules/container/index.form.slide';
+import ContainerFormInSlide from 'modules/container/common/ContainerFormInSlide';
 import RemoveContainerConfirmDialog from './components/RemoveContainerConfirmDialog';
 
 import {

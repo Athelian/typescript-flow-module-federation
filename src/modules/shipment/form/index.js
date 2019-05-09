@@ -65,9 +65,9 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { shipment, isOwner } = this.props;
+    const { shipment } = this.props;
 
-    return !isEquals(shipment, nextProps.shipment) || isOwner !== nextProps.isOwner;
+    return !isEquals(shipment, nextProps.shipment);
   }
 
   render() {

@@ -92,7 +92,7 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches }: P
     'filterSelectContainerBatches'
   );
   return (
-    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="no-cache">
+    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="cache-first">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;

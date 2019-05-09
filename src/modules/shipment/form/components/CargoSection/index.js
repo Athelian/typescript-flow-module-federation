@@ -73,4 +73,4 @@ const CargoSection = () => {
   );
 };
 
-export default CargoSection;
+export default React.memo<{}>(CargoSection);

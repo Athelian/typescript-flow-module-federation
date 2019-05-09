@@ -73,7 +73,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
   ];
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     {
-      perPage: 20,
+      perPage: 10,
       page: 1,
       filter: {
         query: '',
@@ -83,7 +83,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
     'filterSelectOrderItems'
   );
   return (
-    <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="network-only">
+    <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="cache-first">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;
