@@ -108,7 +108,9 @@ export const batchEntityFragment = gql`
       ...tagFragment
     }
     packageName
+    packageCapacity
     packageQuantity
+    autoCalculatePackageQuantity
     packageGrossWeight {
       ...metricFragment
     }

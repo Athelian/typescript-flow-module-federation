@@ -15,6 +15,7 @@ import InlineWarehouse from './InlineWarehouse';
 import InlineSelectInput from './InlineSelectInput';
 import InlineEnumInput from './InlineEnumInput';
 import AutoCalculate from './AutoCalculate';
+import InlineToggleButton from './InlineToggleButton';
 
 export {
   InlineTextInput,
@@ -33,4 +34,5 @@ export {
   InlineSelectInput,
   InlineEnumInput,
   AutoCalculate,
+  InlineToggleButton,
 };

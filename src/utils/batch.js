@@ -1,5 +1,5 @@
 // @flow
-import { times, divide } from 'number-precision';
+import { plus, times, divide } from 'number-precision';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
 import { isNullOrUndefined } from './fp';
@@ -134,10 +134,10 @@ export const calculatePackageQuantity = ({
 }: Object) => {
   if (packageCapacity > 0) {
     const totalQuantity = batchAdjustments.reduce(
-      (total, adjustment) => adjustment.quantity + total,
+      (total, adjustment) => plus(adjustment.quantity, total),
       quantity
     );
-    return totalQuantity > 0 ? totalQuantity / packageCapacity : 0;
+    return totalQuantity > 0 ? divide(totalQuantity, packageCapacity) : 0;
   }
   return 0;
 };
