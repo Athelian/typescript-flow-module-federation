@@ -16,74 +16,76 @@ const getInitToggleShipmentList = () => {
   return initValue.isToggle || false;
 };
 
-export const uiInitState: UIState = {
-  loading: false,
-  error: false,
-  showTag: getInitShowTag(),
-  refetch: {
-    orderIds: [],
-    shipmentIds: [],
-  },
-  refetchAll: false,
-  expandCards: {
-    orders: [],
+export const uiInitState = (): UIState => {
+  return {
+    loading: false,
+    error: false,
+    showTag: getInitShowTag(),
+    refetch: {
+      orderIds: [],
+      shipmentIds: [],
+    },
+    refetchAll: false,
+    expandCards: {
+      orders: [],
+      shipments: [],
+    },
+    toggleShipmentList: getInitToggleShipmentList(),
+    new: {
+      orders: [],
+      shipments: [],
+      updateOrdersInput: [],
+    },
+    select: {
+      mode: 'SINGLE',
+      entities: [],
+    },
+    highlight: {
+      type: '',
+      selectedId: '',
+    },
+    edit: {
+      type: '',
+      selectedId: '',
+    },
+    targets: [],
+    // all shipment on
     shipments: [],
-  },
-  toggleShipmentList: getInitToggleShipmentList(),
-  new: {
-    orders: [],
-    shipments: [],
-    updateOrdersInput: [],
-  },
-  select: {
-    mode: 'SINGLE',
-    entities: [],
-  },
-  highlight: {
-    type: '',
-    selectedId: '',
-  },
-  edit: {
-    type: '',
-    selectedId: '',
-  },
-  targets: [],
-  // all shipment on
-  shipments: [],
-  totalShipment: 0,
-  split: {
-    batches: {},
-  },
-  balanceSplit: {
-    batches: [],
-  },
-  clone: {
-    orders: {},
-    orderItems: {},
-    batches: {},
-    shipments: {},
-    shipmentNo: {},
-  },
-  connectOrder: {
-    enableSelectMode: false,
-    orderId: '',
-    status: false,
-    exporterIds: [],
-    sourceOrder: {},
-  },
-  connectShipment: {
-    enableSelectMode: false,
-    status: false,
-    shipmentId: '',
-    lastResultId: '',
-  },
+    totalShipment: 0,
+    split: {
+      batches: {},
+    },
+    balanceSplit: {
+      batches: [],
+    },
+    clone: {
+      orders: {},
+      orderItems: {},
+      batches: {},
+      shipments: {},
+      shipmentNo: {},
+    },
+    connectOrder: {
+      enableSelectMode: false,
+      orderId: '',
+      status: false,
+      exporterIds: [],
+      sourceOrder: {},
+    },
+    connectShipment: {
+      enableSelectMode: false,
+      status: false,
+      shipmentId: '',
+      lastResultId: '',
+    },
+  };
 };
 
 export function uiReducer(state: UIState, action: { type: string, payload?: Object }) {
   logger.warn({ action, state });
   switch (action.type) {
     case 'RESET':
-      return uiInitState;
+      return uiInitState();
     case 'CLEAR_ERROR_MESSAGE':
       return {
         ...state,

@@ -138,7 +138,7 @@ function manualSortByAction(shipments: Object = {}, state: Object = {}) {
 }
 
 const Order = ({ intl }: Props) => {
-  const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
+  const [state, dispatch] = React.useReducer(uiReducer, uiInitState());
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
