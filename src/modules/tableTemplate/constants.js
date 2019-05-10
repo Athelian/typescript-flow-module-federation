@@ -39,7 +39,8 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
       <FormattedMessage {...orderMessages.date} />,
-      <FormattedMessage {...orderMessages.exporter} />,
+      <FormattedMessage {...orderMessages.exporterName} />,
+      <FormattedMessage {...orderMessages.exporterCode} />,
       <FormattedMessage {...orderMessages.currency} />,
       <FormattedMessage {...orderMessages.incoterm} />,
       <FormattedMessage {...orderMessages.deliveryPlace} />,
@@ -59,8 +60,22 @@ export const orderItemColumns = [
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
-      <FormattedMessage id="modules.ProductProviders.exporter" defaultMessage="EXPORTER" />,
-      <FormattedMessage id="modules.ProductProviders.supplier" defaultMessage="SUPPLIER" />,
+      <FormattedMessage
+        id="modules.ProductProviders.exporterName"
+        defaultMessage="EXPORTER NAME"
+      />,
+      <FormattedMessage
+        id="modules.ProductProviders.exporterCode"
+        defaultMessage="EXPORTER CODE"
+      />,
+      <FormattedMessage
+        id="modules.ProductProviders.supplierName"
+        defaultMessage="SUPPLIER NAME"
+      />,
+      <FormattedMessage
+        id="modules.ProductProviders.supplierCode"
+        defaultMessage="SUPPLIER CODE"
+      />,
       <FormattedMessage id="modules.ProductProviders.unitPrice" defaultMessage="UNIT PRICE" />,
       <FormattedMessage
         id="modules.ProductProviders.unitPriceCurrency"
@@ -239,8 +254,16 @@ export const orderColumnFields = [
     type: 'date',
   },
   {
-    messageId: orderMessages.exporter.id,
+    messageId: orderMessages.exporterName.id,
     name: 'exporter.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: orderMessages.exporterCode.id,
+    name: 'exporter.id',
     type: 'text',
     meta: {
       disabled: true,
@@ -456,7 +479,7 @@ export const orderItemColumnFields = [
     },
   },
   {
-    messageId: 'modules.ProductProviders.exporter',
+    messageId: 'modules.ProductProviders.exporterName',
     name: 'productProvider.exporter.name',
     type: 'text',
     meta: {
@@ -464,8 +487,24 @@ export const orderItemColumnFields = [
     },
   },
   {
-    messageId: 'modules.ProductProviders.supplier',
+    messageId: 'modules.ProductProviders.exporterCode',
+    name: 'productProvider.exporter.id',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: 'modules.ProductProviders.supplierName',
     name: 'productProvider.supplier.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: 'modules.ProductProviders.supplierCode',
+    name: 'productProvider.supplier.id',
     type: 'text',
     meta: {
       disabled: true,
