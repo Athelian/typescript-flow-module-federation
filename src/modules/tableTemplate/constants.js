@@ -68,7 +68,14 @@ export const orderItemColumns = [
         id="modules.ProductProviders.exporterCode"
         defaultMessage="EXPORTER CODE"
       />,
-      <FormattedMessage id="modules.ProductProviders.supplier" defaultMessage="SUPPLIER" />,
+      <FormattedMessage
+        id="modules.ProductProviders.supplierName"
+        defaultMessage="SUPPLIER NAME"
+      />,
+      <FormattedMessage
+        id="modules.ProductProviders.supplierCode"
+        defaultMessage="SUPPLIER CODE"
+      />,
       <FormattedMessage id="modules.ProductProviders.unitPrice" defaultMessage="UNIT PRICE" />,
       <FormattedMessage
         id="modules.ProductProviders.unitPriceCurrency"
@@ -488,8 +495,16 @@ export const orderItemColumnFields = [
     },
   },
   {
-    messageId: 'modules.ProductProviders.supplier',
+    messageId: 'modules.ProductProviders.supplierName',
     name: 'productProvider.supplier.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: 'modules.ProductProviders.supplierCode',
+    name: 'productProvider.supplier.id',
     type: 'text',
     meta: {
       disabled: true,
