@@ -1,13 +1,13 @@
 // @flow
 import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
-import { isEquals } from 'utils/fp';
+import { formatToDateTimeInput } from 'utils/date';
+import { isEquals, isNullOrUndefined } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 
-export type ContainerFormState = {
+export type ContainerInfoState = {
   archived: boolean,
   autoCalculatedFreeTimeStartDate: boolean,
-  batches: Array<Object>,
   departureDate: ?string,
   departureDateApprovedBy: ?Object,
   departureDateApprovedAt: ?string,
@@ -19,7 +19,6 @@ export type ContainerFormState = {
   containerType: ?string,
   containerOption: ?string,
   ownedBy: ?Object,
-  representativeBatch: ?Object,
   shipment: ?Object,
   tags: Array<Object>,
   updatedAt: ?string,
@@ -36,9 +35,8 @@ export type ContainerFormState = {
   yardName: ?string,
 };
 
-const initValues: ContainerFormState = {
+const initValues: ContainerInfoState = {
   autoCalculatedFreeTimeStartDate: false,
-  batches: [],
   departureDate: null,
   departureDateApprovedAt: null,
   departureDateApprovedBy: null,
@@ -49,7 +47,6 @@ const initValues: ContainerFormState = {
   no: null,
   containerType: null,
   containerOption: null,
-  representativeBatch: null,
   shipment: null,
   tags: [],
   warehouse: null,
@@ -73,20 +70,10 @@ const initValues: ContainerFormState = {
   isNew: false,
 };
 
-export default class ContainerFormContainer extends Container<ContainerFormState> {
+export default class ContainerInfoContainer extends Container<ContainerInfoState> {
   state = initValues;
 
   originalValues = initValues;
-
-  existingBatches = initValues.batches;
-
-  addExistingBatches = (batches: Array<Object>) => {
-    this.existingBatches = [...this.existingBatches, ...batches];
-  };
-
-  removeExistingBatch = (batchId: string) => {
-    this.existingBatches = [...this.existingBatches.filter(batch => batch.id !== batchId)];
-  };
 
   setFieldValue = (name: string, value: any) => {
     this.setState({
@@ -114,15 +101,28 @@ export default class ContainerFormContainer extends Container<ContainerFormState
 
   onSuccess = () => {
     this.originalValues = this.state;
-    this.existingBatches = this.state.batches;
     this.setState(this.originalValues);
   };
 
   initDetailValues = (values: Object) => {
-    const parsedValues = { ...initValues, ...values };
+    const { warehouseArrivalAgreedDate, warehouseArrivalActualDate, ...rest } = values;
+    const info = {
+      ...(isNullOrUndefined(warehouseArrivalAgreedDate)
+        ? {}
+        : {
+            warehouseArrivalAgreedDate: formatToDateTimeInput(warehouseArrivalAgreedDate),
+          }),
+      ...(isNullOrUndefined(warehouseArrivalActualDate)
+        ? {}
+        : {
+            warehouseArrivalActualDate: formatToDateTimeInput(warehouseArrivalActualDate),
+          }),
+      ...rest,
+    };
+
+    const parsedValues = { ...initValues, ...info };
 
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
-    this.existingBatches = [...parsedValues.batches];
   };
 }

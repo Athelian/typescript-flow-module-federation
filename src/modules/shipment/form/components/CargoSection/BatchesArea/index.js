@@ -48,7 +48,7 @@ import {
 } from 'modules/shipment/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
-import SelectBatches from 'modules/shipment/form/components/SelectBatches';
+import SelectShipmentBatches from 'modules/shipment/form/components/SelectShipmentBatches';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -83,7 +83,6 @@ function BatchesArea({
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -438,37 +437,35 @@ function BatchesArea({
                             isOpen={selectBatchesIsOpen}
                             onRequestClose={() => selectBatchesSlideToggle(false)}
                           >
-                            {selectBatchesIsOpen && (
-                              <SelectBatches
-                                selectedBatches={batches}
-                                onSelect={selected => {
-                                  const newSelectBatches = selected.map(selectedBatch => ({
-                                    ...selectedBatch,
-                                    ...(isFocusedContainer
-                                      ? { container: containers[focusedContainerIndex] }
-                                      : {}),
-                                    packageQuantity: calculatePackageQuantity(selectedBatch),
-                                  }));
-                                  if (isFocusedContainer) {
+                            <SelectShipmentBatches
+                              selectedBatches={batches}
+                              onSelect={selected => {
+                                const newSelectBatches = selected.map(selectedBatch => ({
+                                  ...selectedBatch,
+                                  ...(isFocusedContainer
+                                    ? { container: containers[focusedContainerIndex] }
+                                    : {}),
+                                  packageQuantity: calculatePackageQuantity(selectedBatch),
+                                }));
+                                if (isFocusedContainer) {
+                                  setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [
+                                    ...currentBatches,
+                                    ...newSelectBatches,
+                                  ]);
+                                  if (currentBatches.length === 0) {
                                     setDeepFieldValue(
-                                      `containers.${focusedContainerIndex}.batches`,
-                                      [...currentBatches, ...newSelectBatches]
+                                      `containers.${focusedContainerIndex}.representativeBatch`,
+                                      newSelectBatches[0]
                                     );
-                                    if (currentBatches.length === 0) {
-                                      setDeepFieldValue(
-                                        `containers.${focusedContainerIndex}.representativeBatch`,
-                                        newSelectBatches[0]
-                                      );
-                                    }
                                   }
-                                  setFieldValue('batches', [...batches, ...newSelectBatches]);
-                                  addExistingBatches(newSelectBatches);
+                                }
+                                setFieldValue('batches', [...batches, ...newSelectBatches]);
+                                addExistingBatches(newSelectBatches);
 
-                                  selectBatchesSlideToggle(false);
-                                }}
-                                onCancel={() => selectBatchesSlideToggle(false)}
-                              />
-                            )}
+                                selectBatchesSlideToggle(false);
+                              }}
+                              onCancel={() => selectBatchesSlideToggle(false)}
+                            />
                           </SlideView>
                         </>
                       )}
@@ -492,37 +489,35 @@ function BatchesArea({
                             isOpen={createBatchesIsOpen}
                             onRequestClose={() => createBatchesSlideToggle(false)}
                           >
-                            {createBatchesIsOpen && (
-                              <SelectOrderItems
-                                onSelect={selectedOrderItems => {
-                                  const createdBatches = selectedOrderItems.map(
-                                    (orderItem, index) => ({
-                                      ...generateBatchByOrderItem(orderItem),
-                                      orderItem,
-                                      no: `batch no ${batches.length + index + 1}`,
-                                      ...(isFocusedContainer
-                                        ? { container: containers[focusedContainerIndex] }
-                                        : {}),
-                                    })
-                                  );
-                                  setFieldValue('batches', [...batches, ...createdBatches]);
-                                  if (isFocusedContainer) {
+                            <SelectOrderItems
+                              onSelect={selectedOrderItems => {
+                                const createdBatches = selectedOrderItems.map(
+                                  (orderItem, index) => ({
+                                    ...generateBatchByOrderItem(orderItem),
+                                    orderItem,
+                                    no: `batch no ${batches.length + index + 1}`,
+                                    ...(isFocusedContainer
+                                      ? { container: containers[focusedContainerIndex] }
+                                      : {}),
+                                  })
+                                );
+                                setFieldValue('batches', [...batches, ...createdBatches]);
+                                if (isFocusedContainer) {
+                                  setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [
+                                    ...currentBatches,
+                                    ...createdBatches,
+                                  ]);
+                                  if (currentBatches.length === 0) {
                                     setDeepFieldValue(
-                                      `containers.${focusedContainerIndex}.batches`,
-                                      [...currentBatches, ...createdBatches]
+                                      `containers.${focusedContainerIndex}.representativeBatch`,
+                                      createdBatches[0]
                                     );
-                                    if (currentBatches.length === 0) {
-                                      setDeepFieldValue(
-                                        `containers.${focusedContainerIndex}.representativeBatch`,
-                                        createdBatches[0]
-                                      );
-                                    }
                                   }
-                                  createBatchesSlideToggle(false);
-                                }}
-                                onCancel={() => createBatchesSlideToggle(false)}
-                              />
-                            )}
+                                }
+                                createBatchesSlideToggle(false);
+                              }}
+                              onCancel={() => createBatchesSlideToggle(false)}
+                            />
                           </SlideView>
                         </>
                       )}
@@ -538,4 +533,4 @@ function BatchesArea({
   );
 }
 
-export default BatchesArea;
+export default React.memo<Props>(BatchesArea);

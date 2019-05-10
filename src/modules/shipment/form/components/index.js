@@ -4,7 +4,7 @@ import ContainersSlideView from './ContainersSlideView';
 import { ContainersAmountSummary, ContainersDatesSummary } from './ContainersSummary';
 import DocumentsSection from './DocumentsSection';
 import OrdersSection from './OrdersSection';
-import SelectBatches from './SelectBatches';
+import SelectShipmentBatches from './SelectShipmentBatches';
 import SelectForwarders from './SelectForwarders';
 import ShipmentSection from './ShipmentSection';
 import TimelineSection from './TimelineSection';
@@ -16,7 +16,7 @@ export {
   ContainersDatesSummary,
   DocumentsSection,
   OrdersSection,
-  SelectBatches,
+  SelectShipmentBatches,
   SelectForwarders,
   ShipmentSection,
   TimelineSection,

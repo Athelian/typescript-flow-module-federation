@@ -28,7 +28,7 @@ const defaultProps = {
 };
 
 const OrderItemsList = ({ filterBy, sortBy, page, perPage, children }: Props) => (
-  <Query fetchPolicy="network-only" query={query} variables={{ page, perPage, filterBy, sortBy }}>
+  <Query fetchPolicy="no-cache" query={query} variables={{ page, perPage, filterBy, sortBy }}>
     {children}
   </Query>
 );

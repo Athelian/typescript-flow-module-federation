@@ -61,12 +61,13 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
           shipments,
         },
       }),
-    showEditForm: (type: string, selectedId: string) =>
+    showEditForm: (type: string, selectedId: string, extra: Object = {}) =>
       dispatch({
         type: 'TOGGLE_EDIT_FORM',
         payload: {
           type,
           selectedId,
+          extra,
         },
       }),
     selectBranch: (selectItems: Array<{ entity: string, id: string, exporterId: string }>) =>

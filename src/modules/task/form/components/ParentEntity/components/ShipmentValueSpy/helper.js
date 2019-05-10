@@ -3,10 +3,6 @@ import { getByPath } from 'utils/fp';
 import { getLatestDate } from 'utils/shipment';
 
 export const getValueBy = (field: string, values: Object) => {
-  console.warn({
-    field,
-    values,
-  });
   const currentValue = getByPath(field, values);
   const { hasOwnProperty } = Object.prototype;
 
