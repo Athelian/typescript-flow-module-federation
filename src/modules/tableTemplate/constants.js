@@ -39,7 +39,8 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
       <FormattedMessage {...orderMessages.date} />,
-      <FormattedMessage {...orderMessages.exporter} />,
+      <FormattedMessage {...orderMessages.exporterName} />,
+      <FormattedMessage {...orderMessages.exporterCode} />,
       <FormattedMessage {...orderMessages.currency} />,
       <FormattedMessage {...orderMessages.incoterm} />,
       <FormattedMessage {...orderMessages.deliveryPlace} />,
@@ -239,8 +240,16 @@ export const orderColumnFields = [
     type: 'date',
   },
   {
-    messageId: orderMessages.exporter.id,
+    messageId: orderMessages.exporterName.id,
     name: 'exporter.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: orderMessages.exporterCode.id,
+    name: 'exporter.id',
     type: 'text',
     meta: {
       disabled: true,
