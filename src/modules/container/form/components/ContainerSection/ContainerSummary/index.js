@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import ContainerFormContainer from 'modules/container/form/container';
+import { ContainerInfoContainer } from 'modules/container/form/containers';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
@@ -17,7 +17,7 @@ export default function ContainerSummary() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   return (
-    <Subscribe to={[ContainerFormContainer]}>
+    <Subscribe to={[ContainerInfoContainer]}>
       {({ originalValues, state }) => {
         const values = { ...originalValues, ...state };
         const {

@@ -436,9 +436,6 @@ build                                    // auto generated build folder containi
 
   a tiny but mighty list virtualization library
 
-* [react-transition-group](https://github.com/reactjs/react-transition-group#readme)
-  A react component toolset for managing animations
-
 - [react-values](https://github.com/ianstormtaylor/react-values)
 
   A set of tiny, composable React components for handling state with render props.

@@ -138,7 +138,7 @@ function manualSortByAction(shipments: Object = {}, state: Object = {}) {
 }
 
 const Order = ({ intl }: Props) => {
-  const [state, dispatch] = React.useReducer(uiReducer, uiInitState);
+  const [state, dispatch] = React.useReducer(uiReducer, uiInitState());
   const actions = actionCreators(dispatch);
   const uiSelectors = selectors(state);
   const { hasPermission } = usePermission();
@@ -181,7 +181,12 @@ const Order = ({ intl }: Props) => {
 
   return (
     <DispatchProvider value={{ dispatch, state }}>
-      <Query query={orderListQuery} variables={queryOrderVariables} fetchPolicy="network-only">
+      <Query
+        key={JSON.stringify(queryOrderVariables)}
+        query={orderListQuery}
+        variables={queryOrderVariables}
+        fetchPolicy="network-only"
+      >
         {({ loading, data, refetch, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;

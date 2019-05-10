@@ -28,7 +28,7 @@ type Props = {
 };
 
 const getInitFilter = () => ({
-  perPage: 20,
+  perPage: 10,
   page: 1,
   filter: {
     query: '',
@@ -54,7 +54,7 @@ function onSelectBatch({
   }
 }
 
-function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
+function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -95,10 +95,10 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
   ];
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     getInitFilter(),
-    'filterSelectBatches'
+    'filterSelectShipmentBatches'
   );
   return (
-    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="network-only">
+    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="cache-first">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;
@@ -148,7 +148,7 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
                     />
                     <CancelButton onClick={onCancel} />
                     <SaveButton
-                      data-testid="saveButtonOnSelectBatches"
+                      data-testid="saveButtonOnSelectShipmentBatches"
                       disabled={selected.length === 0}
                       onClick={() => {
                         onSelect(removeTypename(selected));
@@ -187,4 +187,4 @@ function SelectBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
   );
 }
 
-export default injectIntl(SelectBatches);
+export default injectIntl(SelectShipmentBatches);

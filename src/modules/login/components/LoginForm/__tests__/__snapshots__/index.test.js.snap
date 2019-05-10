@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<LoginForm /> should allow to click on submit button on valid data 1`] = `
-.emotion-14 {
+.emotion-16 {
   box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #fff;
@@ -13,6 +13,28 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
   grid-auto-rows: min-content;
   grid-gap: 40px;
   justify-items: center;
+}
+
+.emotion-15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-14 {
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  color: #11d1a6;
+  margin-top: 20px;
 }
 
 .emotion-13 {
@@ -228,7 +250,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
     data-testid="loginForm"
   >
     <div
-      class="emotion-14"
+      class="emotion-16"
     >
       <div
         class="emotion-10"
@@ -290,37 +312,47 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           </div>
         </div>
       </div>
-      <button
-        class="emotion-13"
-        data-testid="submitButton"
-        disabled=""
-        type="submit"
+      <div
+        class="emotion-15"
       >
-        <div
-          class="emotion-11"
+        <button
+          class="emotion-13"
+          data-testid="submitButton"
+          disabled=""
+          type="submit"
         >
-          LOGIN
-        </div>
-        <div
-          class="emotion-12"
-        >
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
-            data-icon="sign-in-alt"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="emotion-11"
           >
-            <path
-              d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </button>
+            LOGIN
+          </div>
+          <div
+            class="emotion-12"
+          >
+            <svg
+              aria-hidden="true"
+              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
+              data-icon="sign-in-alt"
+              data-prefix="fas"
+              focusable="false"
+              role="img"
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </button>
+        <a
+          class="emotion-14"
+          href="/forgot-password"
+        >
+          forgot password
+        </a>
+      </div>
     </div>
   </form>
 </div>
@@ -394,44 +426,54 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
           </div>
         </div>
       </div>
-      <button
-        class="css-1obbnpt"
-        data-testid="submitButton"
-        disabled=""
-        type="submit"
+      <div
+        class="css-1q3ffjc"
       >
-        <div
-          class="css-6tmki"
+        <button
+          class="css-1obbnpt"
+          data-testid="submitButton"
+          disabled=""
+          type="submit"
         >
-          LOGIN
-        </div>
-        <div
-          class="css-x1sjjo"
-        >
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
-            data-icon="sign-in-alt"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="css-6tmki"
           >
-            <path
-              d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </button>
+            LOGIN
+          </div>
+          <div
+            class="css-x1sjjo"
+          >
+            <svg
+              aria-hidden="true"
+              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
+              data-icon="sign-in-alt"
+              data-prefix="fas"
+              focusable="false"
+              role="img"
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </button>
+        <a
+          class="css-1055wl4"
+          href="/forgot-password"
+        >
+          forgot password
+        </a>
+      </div>
     </div>
   </form>
 </div>
 `;
 
 exports[`<LoginForm /> should render without crash 1`] = `
-.emotion-14 {
+.emotion-16 {
   box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   background-color: #fff;
@@ -443,6 +485,28 @@ exports[`<LoginForm /> should render without crash 1`] = `
   grid-auto-rows: min-content;
   grid-gap: 40px;
   justify-items: center;
+}
+
+.emotion-15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-14 {
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  color: #11d1a6;
+  margin-top: 20px;
 }
 
 .emotion-13 {
@@ -658,7 +722,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
     data-testid="loginForm"
   >
     <div
-      class="emotion-14"
+      class="emotion-16"
     >
       <div
         class="emotion-10"
@@ -720,37 +784,47 @@ exports[`<LoginForm /> should render without crash 1`] = `
           </div>
         </div>
       </div>
-      <button
-        class="emotion-13"
-        data-testid="submitButton"
-        disabled=""
-        type="submit"
+      <div
+        class="emotion-15"
       >
-        <div
-          class="emotion-11"
+        <button
+          class="emotion-13"
+          data-testid="submitButton"
+          disabled=""
+          type="submit"
         >
-          LOGIN
-        </div>
-        <div
-          class="emotion-12"
-        >
-          <svg
-            aria-hidden="true"
-            class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
-            data-icon="sign-in-alt"
-            data-prefix="fas"
-            focusable="false"
-            role="img"
-            viewBox="0 0 512 512"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="emotion-11"
           >
-            <path
-              d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </button>
+            LOGIN
+          </div>
+          <div
+            class="emotion-12"
+          >
+            <svg
+              aria-hidden="true"
+              class="svg-inline--fa fa-sign-in-alt fa-w-16 fa-fw "
+              data-icon="sign-in-alt"
+              data-prefix="fas"
+              focusable="false"
+              role="img"
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+        </button>
+        <a
+          class="emotion-14"
+          href="/forgot-password"
+        >
+          forgot password
+        </a>
+      </div>
     </div>
   </form>
 </div>

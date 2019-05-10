@@ -126,6 +126,14 @@ export default defineMessages({
     id: 'modules.Orders.exporter',
     defaultMessage: 'EXPORTER',
   },
+  exporterName: {
+    id: 'modules.Orders.exporterName',
+    defaultMessage: 'EXPORTER NAME',
+  },
+  exporterCode: {
+    id: 'modules.Orders.exporterCode',
+    defaultMessage: 'EXPORTER CODE',
+  },
   forwarder: {
     id: 'modules.Orders.forwarder',
     defaultMessage: 'FORWARDER',

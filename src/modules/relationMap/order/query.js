@@ -84,11 +84,15 @@ export const orderCardRMFragment = gql`
     orderItems {
       ... on OrderItem {
         id
+        no
         quantity
         todo {
           completedCount
           inProgressCount
           remainingCount
+          tasks {
+            ...taskFormInSlideViewFragment
+          }
         }
         tags {
           ...tagFragment

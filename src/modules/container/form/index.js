@@ -3,10 +3,9 @@ import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { isEquals } from 'utils/fp';
-import ContainerFormContainer from 'modules/container/form/container';
+import { ContainerBatchesContainer } from 'modules/container/form/containers';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
-import FormattedNumber from 'components/FormattedNumber';
 import { FormTooltip, SectionHeader, LastModified, SectionWrapper } from 'components/Form';
 import { uniqueOrders } from 'modules/container/utils';
 import { ContainerSection, ShipmentSection } from './components';
@@ -21,7 +20,6 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   container: Object,
-  onFormReady: Function,
 };
 
 const defaultProps = {
@@ -30,11 +28,6 @@ const defaultProps = {
 
 export default class ContainerForm extends React.Component<Props> {
   static defaultProps = defaultProps;
-
-  componentDidMount() {
-    const { onFormReady } = this.props;
-    if (onFormReady) onFormReady();
-  }
 
   shouldComponentUpdate(nextProps: Props) {
     const { container } = this.props;
@@ -95,32 +88,12 @@ export default class ContainerForm extends React.Component<Props> {
               <ShipmentSection shipment={container.shipment} />
             </SectionWrapper>
           )}
-          <Subscribe to={[ContainerFormContainer]}>
+          <AsyncBatchesSection />
+          <Subscribe to={[ContainerBatchesContainer]}>
             {({ state: values }) => {
               const { batches = [] } = values;
               const orders = uniqueOrders(batches);
-              return (
-                <>
-                  <SectionWrapper id="container_batchesSection">
-                    <SectionHeader
-                      icon="BATCH"
-                      title={
-                        <>
-                          <FormattedMessage
-                            id="modules.container.batches"
-                            defaultMessage="BATCHES"
-                          />{' '}
-                          (
-                          <FormattedNumber value={batches.length} />)
-                        </>
-                      }
-                    />
-                    <AsyncBatchesSection />
-                  </SectionWrapper>
-
-                  <AsyncOrdersSection orders={orders} />
-                </>
-              );
+              return <AsyncOrdersSection orders={orders} />;
             }}
           </Subscribe>
         </div>

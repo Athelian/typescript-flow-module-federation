@@ -405,8 +405,6 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           }
         }
 
-        // custom logic for voyages
-
         newEditData = set(newEditData, name, value);
         setEditData(newEditData);
 
@@ -1279,7 +1277,8 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                   .filter(batch => batchIds.includes(batch.id))
                                   .map(batch => {
                                     const shipmentId = batch.shipment && batch.shipment.id;
-                                    if (!shipmentId) {
+                                    const shipment = mappingObjects.shipment[shipmentId];
+                                    if (!shipmentId || !shipment) {
                                       return (
                                         <TableEmptyItem
                                           key={`empty-shipment-${order.id}-${batch.id}`}
@@ -1289,7 +1288,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                         />
                                       );
                                     }
-                                    const shipment = mappingObjects.shipment[batch.shipment.id];
+
                                     return (
                                       <TableItem
                                         rowNo={getRowCounter(rowCounter, 'shipment')}
@@ -1323,7 +1322,8 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                   .filter(batch => batchIds.includes(batch.id))
                                   .map(batch => {
                                     const shipmentId = batch.shipment && batch.shipment.id;
-                                    if (!shipmentId) {
+                                    const shipment = mappingObjects.shipment[shipmentId];
+                                    if (!shipmentId || !shipment) {
                                       return (
                                         <TableEmptyItem
                                           key={`empty-shipment-custom-${order.id}-${batch.id}`}
@@ -1333,7 +1333,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                         />
                                       );
                                     }
-                                    const shipment = mappingObjects.shipment[batch.shipment.id];
+
                                     return (
                                       <TableItemForCustomFields
                                         rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
