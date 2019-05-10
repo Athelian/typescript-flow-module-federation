@@ -60,7 +60,14 @@ export const orderItemColumns = [
     columns: [
       <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
-      <FormattedMessage id="modules.ProductProviders.exporter" defaultMessage="EXPORTER" />,
+      <FormattedMessage
+        id="modules.ProductProviders.exporterName"
+        defaultMessage="EXPORTER NAME"
+      />,
+      <FormattedMessage
+        id="modules.ProductProviders.exporterCode"
+        defaultMessage="EXPORTER CODE"
+      />,
       <FormattedMessage id="modules.ProductProviders.supplier" defaultMessage="SUPPLIER" />,
       <FormattedMessage id="modules.ProductProviders.unitPrice" defaultMessage="UNIT PRICE" />,
       <FormattedMessage
@@ -465,8 +472,16 @@ export const orderItemColumnFields = [
     },
   },
   {
-    messageId: 'modules.ProductProviders.exporter',
+    messageId: 'modules.ProductProviders.exporterName',
     name: 'productProvider.exporter.name',
+    type: 'text',
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: 'modules.ProductProviders.exporterCode',
+    name: 'productProvider.exporter.id',
     type: 'text',
     meta: {
       disabled: true,
