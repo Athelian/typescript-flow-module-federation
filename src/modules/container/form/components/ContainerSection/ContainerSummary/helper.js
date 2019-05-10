@@ -11,7 +11,7 @@ const findPriceAmount = (batch: Object, totalBatchQuantity: number) => {
 };
 
 export const findSummary = (values: Object) => {
-  const { batches = [], totalVolume, totalWeight } = cloneDeep(values);
+  const { batches = [] } = cloneDeep(values);
   let diffCurrency = false;
   let totalBatchQuantity = 0;
   let totalPriceAmount = 0;
@@ -48,11 +48,11 @@ export const findSummary = (values: Object) => {
           amount: totalPriceAmount,
         },
     totalVolume: {
-      ...totalVolume,
+      metric: 'm³',
       value: totalVolumeValue,
     },
     totalWeight: {
-      ...totalWeight,
+      metric: 'kg',
       value: totalWeightValue,
     },
   };
