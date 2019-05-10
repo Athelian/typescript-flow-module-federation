@@ -1,91 +1,66 @@
 // @flow
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
+import { DefaultStyle, Display } from 'components/Form';
+import { SelectForwarders } from 'modules/shipment/form/components';
 import SlideView from 'components/SlideView';
-import Icon from 'components/Icon';
-import UserAvatar from 'components/UserAvatar';
-import SelectForwarders from 'modules/shipment/form/components/SelectForwarders';
-import {
-  AssignmentWrapperStyle,
-  AssignmentStyle,
-  RemoveAssignmentButtonStyle,
-  AddAssignmentButtonStyle,
-} from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import emitter from 'utils/emitter';
-import { useInChargeInput } from 'modules/form/hooks';
+import { getByPathWithDefault } from 'utils/fp';
 
 type OptionalProps = {
-  max: number,
+  disabled: boolean,
 };
 
 type Props = OptionalProps & {
   name: string,
-  values: Array<Object>,
+  values: Object,
   id: string,
 };
 
 const defaultProps = {
-  max: 4,
+  disabled: false,
 };
 
-export default function InlineForwarderInput({ name, values, max, id: inputId }: Props) {
-  const { isRemain, onChange } = useInChargeInput(values, { max });
+export default function InlineForwarderInput({ name, values, id, disabled }: Props) {
+  const [entityType, shipmentId, ...fields] = name.split('.');
+  const editField = fields.join('.');
+
   return (
-    <div className={AssignmentWrapperStyle}>
-      {values.map(({ id, name: forwarderName }) => (
-        <div className={AssignmentStyle} key={id}>
-          <button
-            className={RemoveAssignmentButtonStyle}
-            onClick={() => {
-              onChange(values.filter(({ id: userId }) => id !== userId));
-              emitter.emit('INLINE_CHANGE', {
-                name,
-                hasError: false,
-                value: values.filter(({ id: userId }) => id !== userId),
-              });
-            }}
-            type="button"
-          >
-            <Icon icon="REMOVE" />
-          </button>
-          <UserAvatar firstName={forwarderName} lastName={forwarderName} a11y={false} />
-        </div>
-      ))}
-      {isRemain && (
-        <BooleanValue>
-          {({ value: isOpen, set: slideToggle }) => (
-            <>
-              <button
-                id={`input-${inputId}`}
-                data-testid="addAssignerButton"
-                className={AddAssignmentButtonStyle}
-                type="button"
-                onClick={() => slideToggle(true)}
-              >
-                <Icon icon="ADD" />
-              </button>
-              <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
-                {isOpen && (
-                  <SelectForwarders
-                    selected={values}
-                    onSelect={selected => {
-                      slideToggle(false);
-                      onChange(selected);
-                      emitter.emit('INLINE_CHANGE', {
-                        name,
-                        hasError: false,
-                        value: selected,
-                      });
-                    }}
-                    onCancel={() => slideToggle(false)}
-                  />
-                )}
-              </SlideView>
-            </>
-          )}
-        </BooleanValue>
-      )}
-    </div>
+    <BooleanValue>
+      {({ value: opened, set: slideToggle }) =>
+        disabled ? (
+          <DefaultStyle width="200px" type="button" disabled={disabled}>
+            <Display id={`input-${id}`} align="left">
+              {getByPathWithDefault('', editField, values)}
+            </Display>
+          </DefaultStyle>
+        ) : (
+          <>
+            <button id={`input-${id}`} type="button" onClick={() => slideToggle(true)}>
+              <DefaultStyle width="200px" type="button">
+                <Display align="left">{getByPathWithDefault('', editField, values)}</Display>
+              </DefaultStyle>
+            </button>
+            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+              {opened && (
+                <SelectForwarders
+                  selected={getByPathWithDefault([], 'forwarders', values)}
+                  onCancel={() => slideToggle(false)}
+                  onSelect={selected => {
+                    slideToggle(false);
+                    emitter.emit('INLINE_CHANGE', {
+                      name: `${entityType}.${shipmentId}.forwarders`,
+                      hasError: false,
+                      value: selected,
+                    });
+                  }}
+                />
+              )}
+            </SlideView>
+          </>
+        )
+      }
+    </BooleanValue>
   );
 }
 

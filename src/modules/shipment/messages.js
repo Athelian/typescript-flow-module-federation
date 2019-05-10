@@ -42,6 +42,38 @@ export default defineMessages({
     id: 'modules.Shipments.forwarder',
     defaultMessage: 'FORWARDER',
   },
+  forwarderNameA: {
+    id: 'modules.Shipments.forwarderNameA',
+    defaultMessage: 'FORWARDER NAME (A)',
+  },
+  forwarderCodeA: {
+    id: 'modules.Shipments.forwarderCodeA',
+    defaultMessage: 'FORWARDER CODE (A)',
+  },
+  forwarderNameB: {
+    id: 'modules.Shipments.forwarderNameB',
+    defaultMessage: 'FORWARDER NAME (B)',
+  },
+  forwarderCodeB: {
+    id: 'modules.Shipments.forwarderCodeB',
+    defaultMessage: 'FORWARDER CODE (B)',
+  },
+  forwarderNameC: {
+    id: 'modules.Shipments.forwarderNameC',
+    defaultMessage: 'FORWARDER NAME (C)',
+  },
+  forwarderCodeC: {
+    id: 'modules.Shipments.forwarderCodeC',
+    defaultMessage: 'FORWARDER CODE (C)',
+  },
+  forwarderNameD: {
+    id: 'modules.Shipments.forwarderNameD',
+    defaultMessage: 'FORWARDER NAME (D)',
+  },
+  forwarderCodeD: {
+    id: 'modules.Shipments.forwarderCodeD',
+    defaultMessage: 'FORWARDER CODE (D)',
+  },
   exporter: {
     id: 'modules.Shipments.exporter',
     defaultMessage: 'EXPORTER',

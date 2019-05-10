@@ -116,7 +116,7 @@ function renderItem({
       return <InlineInChargeInput name={name} values={value} {...meta} id={id} />;
 
     case 'forwarders':
-      return <InlineForwarderInput name={name} values={value} {...meta} id={id} />;
+      return <InlineForwarderInput name={name} values={values} {...meta} id={id} />;
 
     case 'tags':
       return <InlineTagInput name={name} values={value} {...meta} id={id} />;
