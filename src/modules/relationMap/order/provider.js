@@ -10,7 +10,7 @@ type ContextProps = {
 
 const ActionDispatch: React.Context<ContextProps> = React.createContext({
   dispatch: () => {},
-  state: uiInitState,
+  state: uiInitState(),
 });
 
 export default ActionDispatch;
