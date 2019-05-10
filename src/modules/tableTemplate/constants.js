@@ -172,7 +172,14 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.loadType} />,
       <FormattedMessage {...shipmentMessages.incoterms} />,
       <FormattedMessage {...shipmentMessages.carrier} />,
-      <FormattedMessage {...shipmentMessages.forwarder} />,
+      <FormattedMessage {...shipmentMessages.forwarderNameA} />,
+      <FormattedMessage {...shipmentMessages.forwarderCodeA} />,
+      <FormattedMessage {...shipmentMessages.forwarderNameB} />,
+      <FormattedMessage {...shipmentMessages.forwarderCodeB} />,
+      <FormattedMessage {...shipmentMessages.forwarderNameC} />,
+      <FormattedMessage {...shipmentMessages.forwarderCodeC} />,
+      <FormattedMessage {...shipmentMessages.forwarderNameD} />,
+      <FormattedMessage {...shipmentMessages.forwarderCodeD} />,
       <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE" />,
       <FormattedMessage {...shipmentMessages.tags} />,
       <FormattedMessage {...shipmentMessages.totalVolume} />,
@@ -263,7 +270,7 @@ export const orderColumnFields = [
   },
   {
     messageId: orderMessages.exporterCode.id,
-    name: 'exporter.id',
+    name: 'exporter.partner.code',
     type: 'text',
     meta: {
       disabled: true,
@@ -488,7 +495,7 @@ export const orderItemColumnFields = [
   },
   {
     messageId: 'modules.ProductProviders.exporterCode',
-    name: 'productProvider.exporter.id',
+    name: 'productProvider.exporter.partner.code',
     type: 'text',
     meta: {
       disabled: true,
@@ -504,7 +511,7 @@ export const orderItemColumnFields = [
   },
   {
     messageId: 'modules.ProductProviders.supplierCode',
-    name: 'productProvider.supplier.id',
+    name: 'productProvider.supplier.partner.code',
     type: 'text',
     meta: {
       disabled: true,
@@ -1164,14 +1171,64 @@ export const shipmentColumnFields = [
     type: 'text',
   },
   {
-    messageId: shipmentMessages.forwarder.id,
-    name: 'forwarders',
+    messageId: shipmentMessages.forwarderNameA.id,
+    name: 'forwarders.0.name',
     type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.0.name`, value),
+  },
+  {
+    messageId: shipmentMessages.forwarderCodeA.id,
+    name: 'forwarders.0.partner.code',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.0.partner.code`, value),
     meta: {
-      max: 4,
+      disabled: true,
     },
-    getExportValue: ({ forwarders }: { forwarders: Array<Object> } = {}) =>
-      forwarders && forwarders.reduce((field, value) => `${field}${value.name}, `, ''),
+  },
+  {
+    messageId: shipmentMessages.forwarderNameB.id,
+    name: 'forwarders.1.name',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.1.name`, value),
+  },
+  {
+    messageId: shipmentMessages.forwarderCodeB.id,
+    name: 'forwarders.1.partner.code',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.1.partner.code`, value),
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: shipmentMessages.forwarderNameC.id,
+    name: 'forwarders.2.name',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.2.name`, value),
+  },
+  {
+    messageId: shipmentMessages.forwarderCodeC.id,
+    name: 'forwarders.2.partner.code',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.2.partner.code`, value),
+    meta: {
+      disabled: true,
+    },
+  },
+  {
+    messageId: shipmentMessages.forwarderNameD.id,
+    name: 'forwarders.3.name',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.3.name`, value),
+  },
+  {
+    messageId: shipmentMessages.forwarderCodeD.id,
+    name: 'forwarders.3.partner.code',
+    type: 'forwarders',
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.3.partner.code`, value),
+    meta: {
+      disabled: true,
+    },
   },
   {
     messageId: 'modules.Shipments.inCharge',

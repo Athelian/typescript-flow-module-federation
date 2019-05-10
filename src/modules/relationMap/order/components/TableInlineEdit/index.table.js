@@ -405,8 +405,6 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           }
         }
 
-        // custom logic for voyages
-
         newEditData = set(newEditData, name, value);
         setEditData(newEditData);
 
