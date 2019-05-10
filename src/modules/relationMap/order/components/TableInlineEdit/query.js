@@ -6,7 +6,7 @@ import {
   portFragment,
   userAvatarFragment,
   metricFragment,
-  partnerNameFragment,
+  partnerCardFragment,
   priceFragment,
   sizeFragment,
   customFieldsFragment,
@@ -22,7 +22,7 @@ export const orderEntityFragment = gql`
     piNo
     issuedAt
     exporter {
-      ...partnerNameFragment
+      ...partnerCardFragment
     }
     currency
     incoterm
@@ -56,10 +56,10 @@ export const orderItemEntityFragment = gql`
           ...productEntityFragment
         }
         exporter {
-          ...partnerNameFragment
+          ...partnerCardFragment
         }
         supplier {
-          ...partnerNameFragment
+          ...partnerCardFragment
         }
       }
     }
@@ -143,7 +143,7 @@ export const shipmentEntityFragment = gql`
       ...customFieldsFragment
     }
     forwarders {
-      ...partnerNameFragment
+      ...partnerCardFragment
     }
     inCharges {
       ...userAvatarFragment
@@ -322,7 +322,7 @@ export const editTableViewQuery = gql`
   ${portFragment}
   ${userAvatarFragment}
   ${metricFragment}
-  ${partnerNameFragment}
+  ${partnerCardFragment}
   ${priceFragment}
   ${sizeFragment}
   ${customFieldsFragment}

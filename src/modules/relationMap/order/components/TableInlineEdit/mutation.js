@@ -4,7 +4,7 @@ import {
   userAvatarFragment,
   tagFragment,
   priceFragment,
-  partnerNameFragment,
+  partnerCardFragment,
   timelineDateFullFragment,
   portFragment,
   metricFragment,
@@ -75,7 +75,7 @@ export const entitiesUpdateManyMutation = gql`
   ${userAvatarFragment}
   ${tagFragment}
   ${priceFragment}
-  ${partnerNameFragment}
+  ${partnerCardFragment}
   ${timelineDateFullFragment}
   ${portFragment}
   ${batchEntityFragment}

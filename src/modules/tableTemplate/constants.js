@@ -270,7 +270,7 @@ export const orderColumnFields = [
   },
   {
     messageId: orderMessages.exporterCode.id,
-    name: 'exporter.id',
+    name: 'exporter.partner.code',
     type: 'text',
     meta: {
       disabled: true,
@@ -495,7 +495,7 @@ export const orderItemColumnFields = [
   },
   {
     messageId: 'modules.ProductProviders.exporterCode',
-    name: 'productProvider.exporter.id',
+    name: 'productProvider.exporter.partner.code',
     type: 'text',
     meta: {
       disabled: true,
@@ -511,7 +511,7 @@ export const orderItemColumnFields = [
   },
   {
     messageId: 'modules.ProductProviders.supplierCode',
-    name: 'productProvider.supplier.id',
+    name: 'productProvider.supplier.partner.code',
     type: 'text',
     meta: {
       disabled: true,
@@ -1178,9 +1178,9 @@ export const shipmentColumnFields = [
   },
   {
     messageId: shipmentMessages.forwarderCodeA.id,
-    name: 'forwarders.0.id',
+    name: 'forwarders.0.partner.code',
     type: 'forwarders',
-    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.0.id`, value),
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.0.partner.code`, value),
     meta: {
       disabled: true,
     },
@@ -1193,9 +1193,9 @@ export const shipmentColumnFields = [
   },
   {
     messageId: shipmentMessages.forwarderCodeB.id,
-    name: 'forwarders.1.id',
+    name: 'forwarders.1.partner.code',
     type: 'forwarders',
-    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.1.id`, value),
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.1.partner.code`, value),
     meta: {
       disabled: true,
     },
@@ -1208,9 +1208,9 @@ export const shipmentColumnFields = [
   },
   {
     messageId: shipmentMessages.forwarderCodeC.id,
-    name: 'forwarders.2.id',
+    name: 'forwarders.2.partner.code',
     type: 'forwarders',
-    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.2.id`, value),
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.2.partner.code`, value),
     meta: {
       disabled: true,
     },
@@ -1223,9 +1223,9 @@ export const shipmentColumnFields = [
   },
   {
     messageId: shipmentMessages.forwarderCodeD.id,
-    name: 'forwarders.3.id',
+    name: 'forwarders.3.partner.code',
     type: 'forwarders',
-    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.3.id`, value),
+    getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.3.partner.code`, value),
     meta: {
       disabled: true,
     },
