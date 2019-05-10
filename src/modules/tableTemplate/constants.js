@@ -179,7 +179,7 @@ export const shipmentColumns = [
       <FormattedMessage {...shipmentMessages.forwarderNameC} />,
       <FormattedMessage {...shipmentMessages.forwarderCodeC} />,
       <FormattedMessage {...shipmentMessages.forwarderNameD} />,
-      <FormattedMessage {...shipmentMessages.forwarderNameD} />,
+      <FormattedMessage {...shipmentMessages.forwarderCodeD} />,
       <FormattedMessage id="modules.Shipments.inCharge" defaultMessage="IN CHARGE" />,
       <FormattedMessage {...shipmentMessages.tags} />,
       <FormattedMessage {...shipmentMessages.totalVolume} />,
