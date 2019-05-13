@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
+import { showToastError } from 'utils/errors';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
@@ -33,6 +33,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   batchId?: string,
+  intl: IntlShape,
 };
 
 const defaultProps = {
@@ -135,8 +136,8 @@ class BatchFormModule extends React.PureComponent<Props> {
   onMutationCompleted = ({ batchInfoContainer, batchTasksContainer }: BatchFormState) => (
     result: Object
   ) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
+    const { intl } = this.props;
+    if (showToastError({ result, entity: 'batch', intl })) {
       return;
     }
 
@@ -331,4 +332,4 @@ class BatchFormModule extends React.PureComponent<Props> {
   }
 }
 
-export default BatchFormModule;
+export default injectIntl(BatchFormModule);

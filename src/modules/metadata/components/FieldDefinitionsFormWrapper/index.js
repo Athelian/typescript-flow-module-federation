@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Query, Mutation } from 'react-apollo';
 import { Subscribe } from 'unstated';
+import { showToastError } from 'utils/errors';
 import LoadingIcon from 'components/LoadingIcon';
 import { SaveButton } from 'components/Buttons';
 import { Label } from 'components/Form';
@@ -22,9 +22,10 @@ import {
 
 type Props = {
   entityType: string,
+  intl: IntlShape,
 };
 
-const FieldDefinitionsFormWrapper = ({ entityType }: Props) => (
+const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
     {({ state, originalValues, initDetailValues, isDirty, onSuccess, ...fieldHelpers }, form) => (
       <Query
@@ -86,10 +87,10 @@ const FieldDefinitionsFormWrapper = ({ entityType }: Props) => (
                               variables: { input },
                             });
 
-                            if (!result) {
-                              toast.error('There was an error. Please try again later');
+                            if (showToastError({ intl, result, entity: 'fieldDefinitions' })) {
                               return;
                             }
+
                             const { data } = result;
                             const {
                               fieldDefinitionsUpdate: { violations },
@@ -126,4 +127,4 @@ const FieldDefinitionsFormWrapper = ({ entityType }: Props) => (
   </Subscribe>
 );
 
-export default FieldDefinitionsFormWrapper;
+export default injectIntl(FieldDefinitionsFormWrapper);

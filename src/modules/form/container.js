@@ -1,6 +1,6 @@
 // @flow
 import { Container } from 'unstated';
-import yupToFormErrors from 'utils/yupToFormErrors';
+import { yupToFormErrors } from 'utils/errors';
 import logger from 'utils/logger';
 import { isEquals, setIn } from 'utils/fp';
 

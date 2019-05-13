@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
-import { toast } from 'react-toastify';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { QueryForm } from 'components/common';
@@ -10,6 +9,8 @@ import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { UserConsumer } from 'modules/user';
 import { getByPath } from 'utils/fp';
+import { showToastError } from 'utils/errors';
+import { removeTypename } from 'utils/data';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
@@ -18,7 +19,6 @@ import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { encodeId, decodeId } from 'utils/id';
-import { removeTypename } from 'utils/data';
 import Timeline from 'modules/timeline/components/Timeline';
 import { shipmentExportQuery, shipmentTimelineQuery } from './query';
 import {
@@ -51,7 +51,9 @@ type OptionalProps = {
   initDataForSlideView: Object,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  intl: IntlShape,
+};
 
 const defaultProps = {
   path: '',
@@ -299,10 +301,9 @@ class ShipmentFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateShipmentResponse | UpdateShipmentResponse) => {
-    const { redirectAfterSuccess } = this.props;
+    const { redirectAfterSuccess, intl } = this.props;
 
-    if (!result) {
-      toast.error('There was an error. Please try again later');
+    if (showToastError({ result, intl, entity: 'shipment' })) {
       return;
     }
 
@@ -713,4 +714,4 @@ class ShipmentFormModule extends React.Component<Props> {
   }
 }
 
-export default ShipmentFormModule;
+export default injectIntl(ShipmentFormModule);
