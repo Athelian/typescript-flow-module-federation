@@ -25,7 +25,7 @@ describe('Shipment', () => {
         .children()
         .first()
         .click()
-        .getByTestId('saveButtonOnSelectBatches')
+        .getByTestId('saveButtonOnSelectShipmentBatches')
         .click()
         .wait(1000)
         .getByTestId('saveButton')
@@ -56,7 +56,7 @@ describe('Shipment', () => {
         .children()
         .first()
         .click()
-        .getByTestId('saveButtonOnSelectBatches')
+        .getByTestId('saveButtonOnSelectShipmentBatches')
         .click()
         .wait(1000);
 
