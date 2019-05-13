@@ -83,7 +83,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
     'filterSelectOrderItems'
   );
   return (
-    <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="cache-first">
+    <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;
