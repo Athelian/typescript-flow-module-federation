@@ -132,6 +132,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                 no,
                 quantity,
                 price,
+                tags,
                 totalBatched,
                 totalShipped,
                 batchCount,
@@ -143,12 +144,18 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
               const { name: productProviderName, product } = productProvider;
               compiledProductProvider = { name: productProviderName };
 
-              const { id: productId, name: productName, serial, tags, files } = product;
+              const {
+                id: productId,
+                name: productName,
+                serial,
+                tags: productTags,
+                files,
+              } = product;
               compiledProduct = {
                 id: productId,
                 name: productName,
                 serial,
-                tags,
+                tags: productTags,
                 files,
               };
 
@@ -157,6 +164,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                 no,
                 quantity,
                 price,
+                tags,
                 totalBatched,
                 totalShipped,
                 batchCount,
