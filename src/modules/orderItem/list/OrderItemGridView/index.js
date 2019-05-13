@@ -24,6 +24,7 @@ const defaultRenderItem = (item: Object) => {
     no,
     quantity,
     price,
+    tags,
     todo,
     totalBatched,
     totalShipped,
@@ -38,6 +39,7 @@ const defaultRenderItem = (item: Object) => {
     no,
     quantity,
     price,
+    tags,
     todo,
     totalBatched,
     totalShipped,
@@ -48,12 +50,12 @@ const defaultRenderItem = (item: Object) => {
   const { name: productProviderName, product } = productProvider;
   const compiledProductProvider = { name: productProviderName };
 
-  const { id: productId, name, serial, tags, files } = product;
+  const { id: productId, name, serial, tags: productTags, files } = product;
   const compiledProduct = {
     id: productId,
     name,
     serial,
-    tags,
+    tags: productTags,
     files,
   };
 
