@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import emitter from 'utils/emitter';
 import TemplateFormContainer from 'modules/tableTemplate/form/container';
 import validator from 'modules/tableTemplate/form/validator';
 import JumpToSection from 'components/JumpToSection';
@@ -12,7 +13,6 @@ import {
   maskEditUpdateMutation,
   maskEditCreateMutation,
 } from 'modules/tableTemplate/form/mutation';
-import query from 'modules/tableTemplate/list/query';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -58,27 +58,6 @@ class TemplateFormWrapper extends React.Component<Props> {
     if (isNew) {
       const { data } = await saveTemplate({
         variables: { input },
-        update: (store, { data: { maskEditCreate } }) => {
-          const collections = store.readQuery({
-            query,
-            variables: {
-              page: 1,
-              perPage: 10,
-              filterBy: {
-                type: 'Order',
-              },
-              sortBy: {
-                updatedAt: 'DESCENDING',
-              },
-            },
-          });
-          collections.maskEdits.nodes.unshift(maskEditCreate);
-          collections.maskEdits.totalCount += 1;
-          if (collections.maskEdits.totalCount % collections.maskEdits.perPage === 1) {
-            collections.maskEdits.totalPage += 1;
-          }
-          store.writeQuery({ query, data: collections });
-        },
       });
       const {
         maskEditCreate: { violations },
@@ -87,7 +66,9 @@ class TemplateFormWrapper extends React.Component<Props> {
         onErrors(violations);
       } else {
         closeSlideView();
-        onSuccess();
+        setTimeout(() => {
+          emitter.emit('REFETCH_TABLE_TEMPLATES');
+        }, 200);
       }
     } else if (template.id) {
       const { data } = await saveTemplate({

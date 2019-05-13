@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query } from 'react-apollo';
+import emitter from 'utils/emitter';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import TableTemplateGridView from './TableTemplateGridView';
@@ -27,7 +28,7 @@ const TableTemplateList = ({ ...filtersAndSort }: Props) => {
       }}
       fetchPolicy="network-only"
     >
-      {({ loading, data, fetchMore, error }) => {
+      {({ loading, data, fetchMore, refetch, error }) => {
         if (error) {
           return error.message;
         }
@@ -35,6 +36,11 @@ const TableTemplateList = ({ ...filtersAndSort }: Props) => {
         const nextPage = getByPathWithDefault(1, `maskEdits.page`, data) + 1;
         const totalPage = getByPathWithDefault(1, `maskEdits.totalPage`, data);
         const hasMore = nextPage <= totalPage;
+
+        emitter.removeAllListeners('REFETCH_TABLE_TEMPLATES');
+        emitter.addListener('REFETCH_TABLE_TEMPLATES', () => {
+          refetch(tableTemplateQuery);
+        });
 
         return (
           <TableTemplateGridView
