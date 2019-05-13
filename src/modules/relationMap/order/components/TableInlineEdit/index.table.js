@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, isEqual, cloneDeep } from 'lodash';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT, CONTAINER } from 'constants/keywords';
+import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
 import usePrevious from 'hooks/usePrevious';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -180,31 +180,33 @@ const handlers = {
 };
 
 function findColumns({
-  entity,
   fields,
   templateColumns,
   showAll,
 }: {
-  entity: string,
   fields: Array<Object>,
   templateColumns: Array<string>,
   showAll: boolean,
 }) {
   if (templateColumns.length) {
-    return showAll
-      ? fields
-      : fields.filter((item, idx) => templateColumns.includes(`${entity}-${idx}`));
+    return showAll ? fields : fields.filter(item => templateColumns.includes(item.columnName));
   }
   return fields;
 }
 
-function findColumnsForCustomFields({ showAll, fields: customFields, templateColumns, entity }) {
+function findColumnsForCustomFields({
+  showAll,
+  fields: customFields,
+  templateColumns,
+}: {
+  fields: Array<Object>,
+  templateColumns: Array<string>,
+  showAll: boolean,
+}) {
   if (templateColumns && templateColumns.length > 0) {
     return showAll
       ? customFields
-      : customFields.filter((field, index) =>
-          templateColumns.includes(`${entity}-customFields-${index}`)
-        );
+      : customFields.filter(field => templateColumns.includes(`customFields.${field.id}`));
   }
   return customFields;
 }
@@ -435,38 +437,32 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
     showAll,
     templateColumns,
     fields: orderColumnFields,
-    entity: ORDER,
   });
 
   const orderItemColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: orderItemColumnFields,
-    entity: ORDER_ITEM,
   });
   const batchColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: batchColumnFields,
-    entity: BATCH,
   });
   const containerColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: containerColumnFields,
-    entity: CONTAINER,
   });
   const shipmentColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: shipmentColumnFields,
-    entity: SHIPMENT,
   });
   const productColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: productColumnFields,
-    entity: PRODUCT,
   });
 
   return (
@@ -519,31 +515,26 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           showAll,
           fields: orderCustomFields,
           templateColumns,
-          entity: ORDER,
         });
         const orderItemCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: orderItemCustomFields,
           templateColumns,
-          entity: ORDER_ITEM,
         });
         const batchCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: batchCustomFields,
           templateColumns,
-          entity: BATCH,
         });
         const shipmentCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: shipmentCustomFields,
           templateColumns,
-          entity: SHIPMENT,
         });
         const productCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: productCustomFields,
           templateColumns,
-          entity: PRODUCT,
         });
 
         const rowCounter = {};

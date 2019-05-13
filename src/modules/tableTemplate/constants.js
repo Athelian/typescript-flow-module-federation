@@ -360,6 +360,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.PO.id,
     name: 'poNo',
+    columnName: 'order.PO',
     type: 'text',
     meta: {
       isRequired: true,
@@ -368,16 +369,19 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.PI.id,
     name: 'piNo',
+    columnName: 'order.PI',
     type: 'text',
   },
   {
     messageId: orderMessages.date.id,
     name: 'issuedAt',
+    columnName: 'order.date',
     type: 'date',
   },
   {
     messageId: orderMessages.exporterName.id,
     name: 'exporter.name',
+    columnName: 'order.exporterName',
     type: 'text',
     meta: {
       disabled: true,
@@ -386,6 +390,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.exporterCode.id,
     name: 'exporter.partner.code',
+    columnName: 'order.exporterCode',
     type: 'text',
     meta: {
       disabled: true,
@@ -394,6 +399,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.currency.id,
     name: 'currency',
+    columnName: 'order.currency',
     type: 'enum',
     meta: {
       enumType: 'Currency',
@@ -403,6 +409,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.incoterm.id,
     name: 'incoterm',
+    columnName: 'order.incoterm',
     type: 'enum',
     meta: {
       enumType: 'Incoterm',
@@ -411,11 +418,13 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.deliveryPlace.id,
     name: 'deliveryPlace',
+    columnName: 'order.deliveryPlace',
     type: 'text',
   },
   {
     messageId: orderMessages.inCharge.id,
     name: 'inCharges',
+    columnName: 'order.inCharge',
     type: 'inCharges',
     meta: {
       max: 5,
@@ -429,6 +438,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.tags.id,
     name: 'tags',
+    columnName: 'order.tags',
     type: 'tags',
     meta: {
       tagType: 'Order',
@@ -439,6 +449,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.totalItemQuantity.id,
     name: 'totalItemQuantity',
+    columnName: 'order.totalItemQuantity',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { orderItems = [] } = values;
@@ -475,6 +486,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.totalPrice.id,
     name: 'orderTotalPrice',
+    columnName: 'order.totalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { orderItems = [], currency } = values;
@@ -519,6 +531,7 @@ export const orderColumnFields = [
   {
     messageId: orderMessages.totalVolume.id,
     name: 'orderTotalVolume',
+    columnName: 'order.totalVolume',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { orderItems = [] } = values;
@@ -559,6 +572,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.Products.name',
     name: 'productProvider',
+    columnName: 'orderItem.name',
     type: 'text',
     meta: {
       disabled: true,
@@ -581,6 +595,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.Products.serial',
     name: 'productProvider.product.serial',
+    columnName: 'orderItem.serial',
     type: 'text',
     meta: {
       disabled: true,
@@ -603,6 +618,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.ProductProviders.exporterName',
     name: 'productProvider.exporter.name',
+    columnName: 'orderItem.exporterName',
     type: 'text',
     meta: {
       disabled: true,
@@ -611,6 +627,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.ProductProviders.exporterCode',
     name: 'productProvider.exporter.partner.code',
+    columnName: 'orderItem.exporterCode',
     type: 'text',
     meta: {
       disabled: true,
@@ -619,6 +636,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.ProductProviders.supplierName',
     name: 'productProvider.supplier.name',
+    columnName: 'orderItem.supplierName',
     type: 'text',
     meta: {
       disabled: true,
@@ -627,6 +645,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.ProductProviders.supplierCode',
     name: 'productProvider.supplier.partner.code',
+    columnName: 'orderItem.supplierCode',
     type: 'text',
     meta: {
       disabled: true,
@@ -635,6 +654,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.ProductProviders.unitPrice',
     name: 'price.amount',
+    columnName: 'orderItem.unitPrice',
     type: 'number',
     meta: {
       isRequired: true,
@@ -643,6 +663,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'modules.ProductProviders.unitPriceCurrency',
     name: 'price.currency',
+    columnName: 'orderItem.unitPriceCurrency',
     type: 'text',
     meta: {
       disabled: true,
@@ -651,6 +672,7 @@ export const orderItemColumnFields = [
   {
     messageId: 'global.quantity',
     name: 'quantity',
+    columnName: 'orderItem.quantity',
     type: 'number',
     meta: {
       isRequired: true,
@@ -659,6 +681,7 @@ export const orderItemColumnFields = [
   {
     messageId: orderMessages.totalPrice.id,
     name: 'orderItemTotalPrice',
+    columnName: 'orderItem.totalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: orderItemId } = values;
@@ -699,6 +722,7 @@ export const productColumnFields = [
   {
     messageId: 'modules.Products.name',
     name: 'name',
+    columnName: 'product.name',
     type: 'text',
     meta: {
       isRequired: true,
@@ -706,6 +730,7 @@ export const productColumnFields = [
   },
   {
     messageId: 'modules.Products.serial',
+    columnName: 'product.serial',
     name: 'serial',
     type: 'text',
     meta: {
@@ -714,6 +739,7 @@ export const productColumnFields = [
   },
   {
     messageId: 'modules.Products.janCode',
+    columnName: 'product.janCode',
     name: 'janCode',
     type: 'text',
     meta: {
@@ -735,6 +761,7 @@ export const productColumnFields = [
   {
     messageId: 'modules.Products.hsCode',
     name: 'hsCode',
+    columnName: 'product.hsCode',
     type: 'text',
     meta: {
       validator: Yup.string()
@@ -755,11 +782,13 @@ export const productColumnFields = [
   {
     messageId: 'modules.Products.material',
     name: 'material',
+    columnName: 'product.material',
     type: 'text',
   },
   {
     messageId: productMessages.tags.id,
     name: 'tags',
+    columnName: 'product.tags',
     type: 'tags',
     meta: {
       tagType: 'Product',
@@ -773,6 +802,7 @@ export const batchColumnFields = [
   {
     messageId: batchMessages.batchNo.id,
     name: 'no',
+    columnName: 'batch.batchNo',
     type: 'text',
     meta: {
       isRequired: true,
@@ -781,6 +811,7 @@ export const batchColumnFields = [
   {
     messageId: batchMessages.quantity.id,
     name: 'quantity',
+    columnName: 'batch.quantity',
     type: 'numberAdjustment',
     meta: {
       isRequired: true,
@@ -788,26 +819,31 @@ export const batchColumnFields = [
   },
   {
     messageId: batchMessages.deliveredAt.id,
+    columnName: 'batch.deliveredAt',
     name: 'deliveredAt',
     type: 'date',
   },
   {
     messageId: batchMessages.desiredAt.id,
     name: 'desiredAt',
+    columnName: 'batch.desiredAt',
     type: 'date',
   },
   {
     messageId: batchMessages.expiredAt.id,
     name: 'expiredAt',
+    columnName: 'batch.expiredAt',
     type: 'date',
   },
   {
     messageId: batchMessages.producedAt.id,
     name: 'producedAt',
+    columnName: 'batch.producedAt',
     type: 'date',
   },
   {
     messageId: batchMessages.tags.id,
+    columnName: 'batch.tags',
     name: 'tags',
     type: 'tags',
     meta: {
@@ -819,26 +855,31 @@ export const batchColumnFields = [
   {
     messageId: batchMessages.packageName.id,
     name: 'packageName',
+    columnName: 'batch.packageName',
     type: 'text',
   },
   {
     messageId: batchMessages.packageCapacity.id,
     name: 'packageCapacity',
+    columnName: 'batch.packageCapacity',
     type: 'number',
   },
   {
     messageId: batchMessages.packageQuantity.id,
     name: 'packageQuantity',
+    columnName: 'batch.packageQuantity',
     type: 'number',
   },
   {
     messageId: batchMessages.autoCalculatePackageQuantity.id,
     name: 'autoCalculatePackageQuantity',
+    columnName: 'batch.autoCalculatePackageQuantity',
     type: 'toggle',
   },
   {
     messageId: batchMessages.packageGrossWeight.id,
     name: 'packageGrossWeight',
+    columnName: 'batch.packageGrossWeight',
     type: 'metric',
     meta: {
       metrics: weightMetrics,
@@ -849,6 +890,7 @@ export const batchColumnFields = [
   },
   {
     messageId: batchMessages.packageVolume.id,
+    columnName: 'batch.packageVolume',
     name: 'packageVolume',
     type: 'metric',
     meta: {
@@ -860,6 +902,7 @@ export const batchColumnFields = [
   },
   {
     messageId: 'modules.Batches.pkgWidth',
+    columnName: 'batch.packageWidth',
     name: 'packageSize.width',
     type: 'metric',
     meta: {
@@ -874,6 +917,7 @@ export const batchColumnFields = [
   {
     messageId: 'modules.Batches.pkgHeight',
     name: 'packageSize.height',
+    columnName: 'batch.packageHeight',
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
@@ -889,6 +933,7 @@ export const batchColumnFields = [
   {
     messageId: 'modules.Batches.pkgLength',
     name: 'packageSize.length',
+    columnName: 'batch.packageLength',
     type: 'metric',
     meta: {
       metrics: distanceMetrics,
@@ -907,6 +952,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.containerNo.id,
     name: 'no',
+    columnName: 'container.containerNo',
     type: 'text',
     meta: {
       isRequired: true,
@@ -915,6 +961,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.containerType.id,
     name: 'containerType',
+    columnName: 'container.containerType',
     type: 'select',
     meta: {
       items: CONTAINER_TYPE_ITEMS,
@@ -923,6 +970,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.containerOption.id,
     name: 'containerOption',
+    columnName: 'container.containerOption',
     type: 'enumSelect',
     meta: {
       enumType: 'ContainerOption',
@@ -931,6 +979,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.warehouseArrivalAgreedDate.id,
     name: 'warehouseArrivalAgreedDate',
+    columnName: 'container.warehouseArrivalAgreedDate',
     type: 'datetimeWithApproval',
     getFieldValue: (values: Object) => {
       return {
@@ -943,6 +992,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.warehouseArrivalAgreedDateAssignedTo.id,
     name: 'warehouseArrivalAgreedDateAssignedTo',
+    columnName: 'container.warehouseArrivalAgreedDateAssignedTo',
     type: 'inCharges',
     meta: {
       max: 5,
@@ -958,6 +1008,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.warehouseArrivalActualDate.id,
     name: 'warehouseArrivalActualDate',
+    columnName: 'container.warehouseArrivalActualDate',
     type: 'datetimeWithApproval',
     getFieldValue: (values: Object) => {
       return {
@@ -970,6 +1021,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.warehouseArrivalActualDateAssignedTo.id,
     name: 'warehouseArrivalActualDateAssignedTo',
+    columnName: 'container.warehouseArrivalActualDateAssignedTo',
     type: 'inCharges',
     meta: {
       max: 5,
@@ -985,6 +1037,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.warehouse.id,
     name: 'warehouse',
+    columnName: 'container.warehouse',
     type: 'warehouse',
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -994,6 +1047,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.tags.id,
     name: 'tags',
+    columnName: 'container.tags',
     type: 'tags',
     meta: {
       tagType: 'Container',
@@ -1004,6 +1058,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalPackages.id,
     name: 'containerTotalPackages',
+    columnName: 'container.totalPackages',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -1034,6 +1089,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalBatchQuantity.id,
     name: 'containerTotalBatchQuantity',
+    columnName: 'container.totalBatchQuantity',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -1064,6 +1120,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalUniqueItems.id,
     name: 'containerTotalUniqueItems',
+    columnName: 'container.containerTotalUniqueItems',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -1121,6 +1178,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalVolume.id,
     name: 'containerTotalVolume',
+    columnName: 'container.totalVolume',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -1152,6 +1210,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalWeight.id,
     name: 'containerTotalWeight',
+    columnName: 'container.totalWeight',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -1183,6 +1242,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalPrice.id,
     name: 'containerTotalPrice',
+    columnName: 'container.totalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
@@ -1226,6 +1286,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.shipmentId.id,
     name: 'no',
+    columnName: 'shipment.shipmentId',
     type: 'text',
     meta: {
       isRequired: true,
@@ -1234,31 +1295,37 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.blNo.id,
     name: 'blNo',
+    columnName: 'shipment.blNo',
     type: 'text',
   },
   {
     messageId: shipmentMessages.blDate.id,
     name: 'blDate',
+    columnName: 'shipment.blDate',
     type: 'date',
   },
   {
     messageId: shipmentMessages.bookingNo.id,
     name: 'bookingNo',
+    columnName: 'shipment.bookingNo',
     type: 'text',
   },
   {
     messageId: shipmentMessages.bookingDate.id,
     name: 'bookingDate',
+    columnName: 'shipment.bookingDate',
     type: 'date',
   },
   {
     messageId: shipmentMessages.invoiceNo.id,
     name: 'invoiceNo',
+    columnName: 'shipment.invoiceNo',
     type: 'text',
   },
   {
     messageId: shipmentMessages.transportType.id,
     name: 'transportType',
+    columnName: 'shipment.transportType',
     type: 'enumSelect',
     meta: {
       enumType: 'TransportType',
@@ -1267,6 +1334,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.loadType.id,
     name: 'loadType',
+    columnName: 'shipment.loadType',
     type: 'enumSelect',
     meta: {
       enumType: 'LoadType',
@@ -1275,6 +1343,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.incoterms.id,
     name: 'incoterm',
+    columnName: 'shipment.incoterms',
     type: 'enum',
     meta: {
       enumType: 'Incoterm',
@@ -1283,17 +1352,20 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.carrier.id,
     name: 'carrier',
+    columnName: 'shipment.carrier',
     type: 'text',
   },
   {
     messageId: shipmentMessages.forwarderNameA.id,
     name: 'forwarders.0.name',
+    columnName: 'shipment.forwarderNameA',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.0.name`, value),
   },
   {
     messageId: shipmentMessages.forwarderCodeA.id,
     name: 'forwarders.0.partner.code',
+    columnName: 'shipment.forwarderCodeA',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.0.partner.code`, value),
     meta: {
@@ -1303,12 +1375,14 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.forwarderNameB.id,
     name: 'forwarders.1.name',
+    columnName: 'shipment.forwarderNameB',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.1.name`, value),
   },
   {
     messageId: shipmentMessages.forwarderCodeB.id,
     name: 'forwarders.1.partner.code',
+    columnName: 'shipment.forwarderCodeB',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.1.partner.code`, value),
     meta: {
@@ -1318,12 +1392,14 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.forwarderNameC.id,
     name: 'forwarders.2.name',
+    columnName: 'shipment.forwarderNameC',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.2.name`, value),
   },
   {
     messageId: shipmentMessages.forwarderCodeC.id,
     name: 'forwarders.2.partner.code',
+    columnName: 'shipment.forwarderCodeC',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.2.partner.code`, value),
     meta: {
@@ -1333,12 +1409,14 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.forwarderNameD.id,
     name: 'forwarders.3.name',
+    columnName: 'shipment.forwarderNameD',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.3.name`, value),
   },
   {
     messageId: shipmentMessages.forwarderCodeD.id,
     name: 'forwarders.3.partner.code',
+    columnName: 'shipment.forwarderCodeD',
     type: 'forwarders',
     getExportValue: (value: Object) => getByPathWithDefault('', `forwarders.3.partner.code`, value),
     meta: {
@@ -1348,6 +1426,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.inCharge',
     name: 'inCharges',
+    columnName: 'shipment.inCharge',
     type: 'inCharges',
     meta: {
       max: 5,
@@ -1361,6 +1440,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.tags.id,
     name: 'tags',
+    columnName: 'shipment.tags',
     type: 'tags',
     meta: {
       tagType: 'Shipment',
@@ -1371,6 +1451,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.totalVolume.id,
     name: 'shipmentTotalVolume',
+    columnName: 'shipment.totalVolume',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
@@ -1393,6 +1474,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.totalContainers.id,
     name: 'shipmentTotalContainers',
+    columnName: 'shipment.totalContainers',
     type: 'calculate',
     getFieldValue: (values: Object) => {
       const { containerGroups = [] } = values;
@@ -1412,6 +1494,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.totalBatchQuantity.id,
     name: 'shipmentTotalBatchQuantity',
+    columnName: 'shipment.totalBatchQuantity',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
@@ -1433,6 +1516,7 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.totalPrice.id,
     name: 'shipmentTotalPrice',
+    columnName: 'shipment.totalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: shipmentId } = values;
@@ -1473,12 +1557,14 @@ export const shipmentColumnFields = [
   {
     messageId: shipmentMessages.cargoReady.id,
     name: 'cargoReady',
+    columnName: 'shipment.cargoReady',
     type: 'timeline',
     getExportValue: (values: Object) => getLatestDate(getByPath(`cargoReady`, values)) || '',
   },
   {
     messageId: 'modules.Shipments.loadPort',
     name: 'voyages.0.departurePort',
+    columnName: 'shipment.loadPort',
     type: 'port',
     getFieldValue: (values: Object) => {
       const { transportType } = values;
@@ -1502,6 +1588,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.loadPortDeparture',
     name: 'voyages.0.departure',
+    columnName: 'shipment.loadPortDeparture',
     type: 'timeline',
     getExportValue: (values: Object) =>
       getLatestDate(getByPath(`voyages.0.departure`, values)) || '',
@@ -1509,6 +1596,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.firstTransitPort',
     name: 'voyages.0.arrivalPort',
+    columnName: 'shipment.firstTransitPort',
     type: 'port',
     getFieldValue: (values: Object) => {
       const { transportType, voyages } = values;
@@ -1540,6 +1628,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.firstTransitPortArrival',
     name: 'voyages.0.arrival',
+    columnName: 'shipment.firstTransitPortArrival',
     type: 'timeline',
     getFieldValue: (values: Object) => {
       const { voyages } = values;
@@ -1553,6 +1642,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.firstTransitPortDeparture',
     name: 'voyages.1.departure',
+    columnName: 'shipment.firstTransitPortDeparture',
     type: 'timeline',
     getFieldValue: (values: Object) => {
       const { voyages } = values;
@@ -1568,6 +1658,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.secondTransitPort',
     name: 'voyages.1.arrivalPort',
+    columnName: 'shipment.secondTransitPort',
     type: 'port',
     getFieldValue: (values: Object) => {
       const { transportType, voyages } = values;
@@ -1598,6 +1689,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.secondTransitPortArrival',
     name: 'voyages.1.arrival',
+    columnName: 'shipment.secondTransitPortArrival',
     type: 'timeline',
     getFieldValue: (values: Object) => {
       const { voyages } = values;
@@ -1611,6 +1703,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.secondTransitPortDeparture',
     name: 'voyages.2.departure',
+    columnName: 'shipment.secondTransitPortDeparture',
     type: 'timeline',
     getFieldValue: (values: Object) => {
       const { voyages } = values;
@@ -1626,6 +1719,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.dischargePort',
     name: 'voyages.2.arrivalPort',
+    columnName: 'shipment.dischargePort',
     type: 'port',
     getFieldValue: (values: Object) => {
       const { transportType, voyages } = values;
@@ -1656,6 +1750,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.dischargePortArrival',
     name: 'voyages.2.arrival',
+    columnName: 'shipment.dischargePortArrival',
     type: 'timeline',
     getFieldValue: ({ voyages }: { voyages: Array<Object> }) =>
       getByPath(`${voyages.length - 1}.arrival`, voyages),
@@ -1667,6 +1762,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.customsClearance',
     name: 'containerGroups.0.customClearance',
+    columnName: 'shipment.customsClearance',
     type: 'timeline',
     getExportValue: (values: Object) =>
       getLatestDate(getByPath('containerGroups.0.customClearance', values)) || '',
@@ -1674,6 +1770,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.warehouse',
     name: 'containerGroups.0.warehouse',
+    columnName: 'shipment.warehouse',
     type: 'warehouse',
     getExportValue: (values: Object) => {
       return getByPath(`containerGroups.0.warehouse.name`, values) || '';
@@ -1685,6 +1782,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.warehouseArrival',
     name: 'containerGroups.0.warehouseArrival',
+    columnName: 'shipment.warehouseArrival',
     type: 'timeline',
     getExportValue: (values: Object) =>
       getLatestDate(getByPath('containerGroups.0.warehouseArrival', values)) || '',
@@ -1692,6 +1790,7 @@ export const shipmentColumnFields = [
   {
     messageId: 'modules.Shipments.deliveryReady',
     name: 'containerGroups.0.deliveryReady',
+    columnName: 'shipment.deliveryReady',
     type: 'timeline',
     getExportValue: (values: Object) =>
       getLatestDate(getByPath('containerGroups.0.deliveryReady', values)) || '',
