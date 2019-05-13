@@ -10,6 +10,7 @@ import {
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
+  partnerCardFragment,
   metricFragment,
   sizeFragment,
   imageFragment,
@@ -54,6 +55,7 @@ export const orderItemFormQuery = gql`
   ${fieldDefinitionFragment}
   ${fieldValuesFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
   ${shipmentCardFragment}
   ${orderCardFragment}
   ${portFragment}

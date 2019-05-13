@@ -55,7 +55,6 @@ export const shipmentFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${documentFragment}
-  ${partnerCardFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}
@@ -66,6 +65,7 @@ export const shipmentFormQuery = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
 `;
 
 export default shipmentFormQuery;

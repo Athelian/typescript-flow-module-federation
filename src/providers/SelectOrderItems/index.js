@@ -83,7 +83,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
     'filterSelectOrderItems'
   );
   return (
-    <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="cache-first">
+    <Query query={orderItemsQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;
@@ -158,6 +158,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       no,
                       quantity,
                       price,
+                      tags,
                       totalBatched,
                       totalShipped,
                       batchCount,
@@ -171,6 +172,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                       no,
                       quantity,
                       price,
+                      tags,
                       totalBatched,
                       totalShipped,
                       batchCount,
@@ -181,12 +183,12 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                     const { name: productProviderName, product } = productProvider;
                     const compiledProductProvider = { name: productProviderName };
 
-                    const { id: productId, name, serial, tags, files } = product;
+                    const { id: productId, name, serial, tags: productTags, files } = product;
                     const compiledProduct = {
                       id: productId,
                       name,
                       serial,
-                      tags,
+                      tags: productTags,
                       files,
                     };
 
