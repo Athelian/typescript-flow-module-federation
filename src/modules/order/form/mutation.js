@@ -69,7 +69,6 @@ export const updateOrderMutation = gql`
   ${orderFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
-  ${partnerCardFragment}
   ${documentFragment}
   ${shipmentCardFragment}
   ${priceFragment}
@@ -94,6 +93,7 @@ export const updateOrderMutation = gql`
   ${containerCardFragment}
   ${itemInOrderFormFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({

@@ -15,6 +15,7 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
+  partnerCardFragment,
   customFieldsFragment,
   maskFragment,
   fieldValuesFragment,
@@ -74,6 +75,7 @@ export const updateContainerMutation = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
 `;
 
 type UpdateContainerInputType = {
