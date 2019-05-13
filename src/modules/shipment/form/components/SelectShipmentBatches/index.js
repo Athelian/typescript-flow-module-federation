@@ -98,7 +98,7 @@ function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Pr
     'filterSelectShipmentBatches'
   );
   return (
-    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="cache-first">
+    <Query query={selectBatchListQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;

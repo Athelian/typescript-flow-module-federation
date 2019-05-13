@@ -437,35 +437,37 @@ function BatchesArea({
                             isOpen={selectBatchesIsOpen}
                             onRequestClose={() => selectBatchesSlideToggle(false)}
                           >
-                            <SelectShipmentBatches
-                              selectedBatches={batches}
-                              onSelect={selected => {
-                                const newSelectBatches = selected.map(selectedBatch => ({
-                                  ...selectedBatch,
-                                  ...(isFocusedContainer
-                                    ? { container: containers[focusedContainerIndex] }
-                                    : {}),
-                                  packageQuantity: calculatePackageQuantity(selectedBatch),
-                                }));
-                                if (isFocusedContainer) {
-                                  setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [
-                                    ...currentBatches,
-                                    ...newSelectBatches,
-                                  ]);
-                                  if (currentBatches.length === 0) {
+                            {selectBatchesIsOpen && (
+                              <SelectShipmentBatches
+                                selectedBatches={batches}
+                                onSelect={selected => {
+                                  const newSelectBatches = selected.map(selectedBatch => ({
+                                    ...selectedBatch,
+                                    ...(isFocusedContainer
+                                      ? { container: containers[focusedContainerIndex] }
+                                      : {}),
+                                    packageQuantity: calculatePackageQuantity(selectedBatch),
+                                  }));
+                                  if (isFocusedContainer) {
                                     setDeepFieldValue(
-                                      `containers.${focusedContainerIndex}.representativeBatch`,
-                                      newSelectBatches[0]
+                                      `containers.${focusedContainerIndex}.batches`,
+                                      [...currentBatches, ...newSelectBatches]
                                     );
+                                    if (currentBatches.length === 0) {
+                                      setDeepFieldValue(
+                                        `containers.${focusedContainerIndex}.representativeBatch`,
+                                        newSelectBatches[0]
+                                      );
+                                    }
                                   }
-                                }
-                                setFieldValue('batches', [...batches, ...newSelectBatches]);
-                                addExistingBatches(newSelectBatches);
+                                  setFieldValue('batches', [...batches, ...newSelectBatches]);
+                                  addExistingBatches(newSelectBatches);
 
-                                selectBatchesSlideToggle(false);
-                              }}
-                              onCancel={() => selectBatchesSlideToggle(false)}
-                            />
+                                  selectBatchesSlideToggle(false);
+                                }}
+                                onCancel={() => selectBatchesSlideToggle(false)}
+                              />
+                            )}
                           </SlideView>
                         </>
                       )}
@@ -489,35 +491,37 @@ function BatchesArea({
                             isOpen={createBatchesIsOpen}
                             onRequestClose={() => createBatchesSlideToggle(false)}
                           >
-                            <SelectOrderItems
-                              onSelect={selectedOrderItems => {
-                                const createdBatches = selectedOrderItems.map(
-                                  (orderItem, index) => ({
-                                    ...generateBatchByOrderItem(orderItem),
-                                    orderItem,
-                                    no: `batch no ${batches.length + index + 1}`,
-                                    ...(isFocusedContainer
-                                      ? { container: containers[focusedContainerIndex] }
-                                      : {}),
-                                  })
-                                );
-                                setFieldValue('batches', [...batches, ...createdBatches]);
-                                if (isFocusedContainer) {
-                                  setDeepFieldValue(`containers.${focusedContainerIndex}.batches`, [
-                                    ...currentBatches,
-                                    ...createdBatches,
-                                  ]);
-                                  if (currentBatches.length === 0) {
+                            {createBatchesIsOpen && (
+                              <SelectOrderItems
+                                onSelect={selectedOrderItems => {
+                                  const createdBatches = selectedOrderItems.map(
+                                    (orderItem, index) => ({
+                                      ...generateBatchByOrderItem(orderItem),
+                                      orderItem,
+                                      no: `batch no ${batches.length + index + 1}`,
+                                      ...(isFocusedContainer
+                                        ? { container: containers[focusedContainerIndex] }
+                                        : {}),
+                                    })
+                                  );
+                                  setFieldValue('batches', [...batches, ...createdBatches]);
+                                  if (isFocusedContainer) {
                                     setDeepFieldValue(
-                                      `containers.${focusedContainerIndex}.representativeBatch`,
-                                      createdBatches[0]
+                                      `containers.${focusedContainerIndex}.batches`,
+                                      [...currentBatches, ...createdBatches]
                                     );
+                                    if (currentBatches.length === 0) {
+                                      setDeepFieldValue(
+                                        `containers.${focusedContainerIndex}.representativeBatch`,
+                                        createdBatches[0]
+                                      );
+                                    }
                                   }
-                                }
-                                createBatchesSlideToggle(false);
-                              }}
-                              onCancel={() => createBatchesSlideToggle(false)}
-                            />
+                                  createBatchesSlideToggle(false);
+                                }}
+                                onCancel={() => createBatchesSlideToggle(false)}
+                              />
+                            )}
                           </SlideView>
                         </>
                       )}
