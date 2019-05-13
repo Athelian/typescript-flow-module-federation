@@ -121,6 +121,7 @@ function ItemsArea({
                 no,
                 quantity,
                 price,
+                tags,
                 totalBatched,
                 totalShipped,
                 batchCount,
@@ -134,6 +135,7 @@ function ItemsArea({
                 no,
                 quantity,
                 price,
+                tags,
                 totalBatched,
                 totalShipped,
                 batchCount,
@@ -147,12 +149,12 @@ function ItemsArea({
                 unitPrice,
               };
 
-              const { id: productId, name, serial, tags, files } = product;
+              const { id: productId, name, serial, tags: productTags, files } = product;
               const compiledProduct = {
                 id: productId,
                 name,
                 serial,
-                tags,
+                tags: productTags,
                 files,
               };
 

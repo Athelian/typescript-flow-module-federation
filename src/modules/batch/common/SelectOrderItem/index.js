@@ -76,6 +76,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                         quantity,
                         todo,
                         price,
+                        tags,
                         totalBatched,
                         totalShipped,
                         batchCount,
@@ -89,6 +90,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                         todo,
                         quantity,
                         price,
+                        tags,
                         totalBatched,
                         totalShipped,
                         batchCount,
@@ -98,12 +100,12 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                       const { name: productProviderName, product } = productProvider;
                       const compiledProductProvider = { name: productProviderName };
 
-                      const { id: productId, name, serial, tags, files } = product;
+                      const { id: productId, name, serial, tags: productTags, files } = product;
                       const compiledProduct = {
                         id: productId,
                         name,
                         serial,
-                        tags,
+                        tags: productTags,
                         files,
                       };
 
