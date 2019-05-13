@@ -10,6 +10,7 @@ import {
   imageFragment,
   orderCardFragment,
   partnerNameFragment,
+  partnerCardFragment,
   userAvatarFragment,
 } from 'graphql';
 
@@ -33,6 +34,7 @@ export const orderItemsListQuery = gql`
   ${imageFragment}
   ${orderCardFragment}
   ${partnerNameFragment}
+  ${partnerCardFragment}
   ${userAvatarFragment}
 `;
 
