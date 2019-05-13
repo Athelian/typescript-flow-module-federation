@@ -121,6 +121,9 @@ export const itemInSelectorFragment = gql`
       ... on ProductProvider {
         id
         name
+        exporter {
+          ...partnerCardFragment
+        }
         packageName
         packageCapacity
         packageGrossWeight {
@@ -247,6 +250,9 @@ export const itemInBatchFormFragment = gql`
       ... on ProductProvider {
         id
         name
+        exporter {
+          ...partnerCardFragment
+        }
         packageName
         packageCapacity
         packageGrossWeight {
