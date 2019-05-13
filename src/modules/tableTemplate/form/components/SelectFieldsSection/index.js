@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { CONTAINER, PRODUCT, SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'constants/keywords';
 import { TEMPLATE_CREATE, TEMPLATE_UPDATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
 import GridColumn from 'components/GridColumn';
@@ -21,25 +20,21 @@ import {
 import { ContentWrapperStyle, FirstBlockStyle, SecondBlockStyle } from './style';
 
 const renderGroup = ({
-  type,
   groups,
   hasSelectField,
   toggleSelectField,
   editable,
 }: {
-  type: string,
   groups: Array<Object>,
   hasSelectField: Function,
   toggleSelectField: Function,
   editable: boolean,
 }) =>
-  groups.map(({ id, group, columns }, index) => (
+  groups.map(({ id, group, columns, availableColumns }) => (
     <GridColumn gap="10px" key={id}>
       <Display align="left">{group}</Display>
       {columns.map((column, position) => {
-        const fieldName = `${type}-${
-          index > 0 ? groups[index - 1].columns.length + position : position
-        }`;
+        const fieldName = availableColumns[position];
         return (
           <div style={{ display: 'flex' }} key={fieldName}>
             <FormField name={fieldName} initValue={hasSelectField(fieldName)}>
@@ -64,13 +59,11 @@ const renderGroup = ({
   ));
 
 const renderCustomFields = ({
-  type,
   customFields,
   hasSelectField,
   toggleSelectField,
   editable,
 }: {
-  type: string,
   customFields: Array<Object>,
   hasSelectField: Function,
   toggleSelectField: Function,
@@ -81,8 +74,8 @@ const renderCustomFields = ({
       <FormattedMessage id="modules.tableTemplate.customFields" defaultMessage="CUSTOM FIELDS" />
     </Display>
 
-    {customFields.map(({ id, name: text }, index) => {
-      const fieldName = `${type}-customFields-${index}`;
+    {customFields.map(({ id, name: text }) => {
+      const fieldName = `customFields.${id}`;
       return (
         <div style={{ display: 'flex' }} key={id}>
           <FormField name={fieldName} initValue={hasSelectField(fieldName)}>
@@ -124,14 +117,12 @@ const SelectFieldsSection = () => {
               <div className={FirstBlockStyle}>
                 <GridColumn>
                   {renderGroup({
-                    type: ORDER,
                     groups: orderColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: ORDER,
                     customFields: orderCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -140,14 +131,12 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: ORDER_ITEM,
                     groups: orderItemColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: ORDER_ITEM,
                     customFields: orderItemCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -156,14 +145,12 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: BATCH,
                     groups: batchColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: BATCH,
                     customFields: batchCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -172,14 +159,12 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: SHIPMENT,
                     groups: shipmentColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: SHIPMENT,
                     customFields: shipmentCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -190,14 +175,12 @@ const SelectFieldsSection = () => {
               <div className={SecondBlockStyle}>
                 <GridColumn>
                   {renderGroup({
-                    type: PRODUCT,
                     groups: productColumns,
                     hasSelectField,
                     toggleSelectField,
                     editable: canCreateOrUpdate,
                   })}
                   {renderCustomFields({
-                    type: PRODUCT,
                     customFields: productCustomFields,
                     hasSelectField,
                     toggleSelectField,
@@ -206,7 +189,6 @@ const SelectFieldsSection = () => {
                 </GridColumn>
                 <GridColumn>
                   {renderGroup({
-                    type: CONTAINER,
                     groups: containerColumns,
                     hasSelectField,
                     toggleSelectField,
