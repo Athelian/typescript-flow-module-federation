@@ -11,6 +11,7 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
+  partnerCardFragment,
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
@@ -81,6 +82,7 @@ export const updateBatchMutation = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
   ${badRequestFragment}
 `;
 

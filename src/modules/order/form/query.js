@@ -40,7 +40,6 @@ export const orderFormQuery = gql`
   ${orderFormFragment}
   ${userAvatarFragment}
   ${tagFragment}
-  ${partnerCardFragment}
   ${documentFragment}
   ${shipmentCardFragment}
   ${priceFragment}
@@ -64,6 +63,7 @@ export const orderFormQuery = gql`
   ${containerCardFragment}
   ${itemInOrderFormFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
 `;
 
 export default orderFormQuery;

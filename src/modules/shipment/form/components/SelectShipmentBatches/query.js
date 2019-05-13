@@ -10,6 +10,7 @@ import {
   orderCardFragment,
   imageFragment,
   partnerNameFragment,
+  partnerCardFragment,
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
@@ -63,6 +64,7 @@ export const selectBatchListQuery = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
 `;
 
 export default selectBatchListQuery;

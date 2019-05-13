@@ -10,6 +10,7 @@ import {
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
+  partnerCardFragment,
   metricFragment,
   sizeFragment,
   imageFragment,
@@ -67,6 +68,7 @@ export const updateOrderItemMutation = gql`
   ${fieldDefinitionFragment}
   ${fieldValuesFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
   ${shipmentCardFragment}
   ${orderCardFragment}
   ${portFragment}

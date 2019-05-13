@@ -86,7 +86,6 @@ export const updateShipmentMutation: Object = gql`
   ${timelineDateMinimalFragment}
   ${portFragment}
   ${documentFragment}
-  ${partnerCardFragment}
   ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
@@ -98,6 +97,7 @@ export const updateShipmentMutation: Object = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
+  ${partnerCardFragment}
 `;
 
 type DateRevisionType = {
