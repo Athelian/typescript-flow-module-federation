@@ -62,6 +62,7 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
     representativeBatch,
     shipment,
     id,
+    archived,
     no,
     containerType,
     containerOption,
@@ -83,7 +84,7 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
   );
   const productImage = getProductImage(product);
   return (
-    <BaseCard icon="CONTAINER" color="CONTAINER" {...rest}>
+    <BaseCard icon="CONTAINER" color="CONTAINER" isArchived={archived} {...rest}>
       <div
         className={CardWrapperStyle}
         onClick={() => navigate(`/container/${encodeId(id)}`)}

@@ -71,6 +71,7 @@ type Props = {
   focusedContainerIndex: number,
   selectedBatches: Array<Object>,
   onSelectBatch: Function,
+  shipmentIsArchived: boolean,
 };
 
 function BatchesArea({
@@ -80,6 +81,7 @@ function BatchesArea({
   focusedContainerIndex,
   selectedBatches,
   onSelectBatch,
+  shipmentIsArchived,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -502,6 +504,7 @@ function BatchesArea({
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }
                                         : {}),
+                                      archived: orderItem.archived && shipmentIsArchived,
                                     })
                                   );
                                   setFieldValue('batches', [...batches, ...createdBatches]);

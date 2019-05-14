@@ -14,7 +14,11 @@ import BatchesArea from './BatchesArea';
 const UNSELECTED = -2;
 const POOL = -1;
 
-const CargoSection = () => {
+type Props = {
+  shipmentIsArchived: boolean,
+};
+
+const CargoSection = ({ shipmentIsArchived }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [focusedContainerIndex, setFocusedCardIndex] = React.useState(UNSELECTED);
@@ -60,6 +64,7 @@ const CargoSection = () => {
         }
         onDeselect={() => setFocusedCardIndex(UNSELECTED)}
         selectedBatches={selectedBatches}
+        shipmentIsArchived={shipmentIsArchived}
       />
       <BatchesArea
         isFocusedBatchesPool={focusedContainerIndex === POOL}
@@ -68,6 +73,7 @@ const CargoSection = () => {
         onChangeSelectMode={onChangeSelectMode}
         selectedBatches={selectedBatches}
         onSelectBatch={onSelectBatch}
+        shipmentIsArchived={shipmentIsArchived}
       />
     </div>
   );

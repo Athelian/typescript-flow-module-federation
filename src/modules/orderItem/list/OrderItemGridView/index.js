@@ -21,6 +21,7 @@ type Props = {
 const defaultRenderItem = (item: Object) => {
   const {
     id,
+    archived,
     no,
     quantity,
     price,
@@ -36,6 +37,7 @@ const defaultRenderItem = (item: Object) => {
   } = item;
   const compiledOrderItem = {
     id,
+    archived,
     no,
     quantity,
     price,

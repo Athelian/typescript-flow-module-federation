@@ -76,6 +76,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
     const actions = [];
 
     const {
+      archived,
       product: { name, serial, tags, files },
       unitPrice,
       todo,
@@ -103,6 +104,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
         actions={actions}
         selectable={selectable}
         forceShowActions={rest.selected}
+        isArchived={archived}
         {...rest}
       >
         <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">

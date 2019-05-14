@@ -155,6 +155,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                   {items.map(item => {
                     const {
                       id,
+                      archived,
                       no,
                       quantity,
                       price,
@@ -169,6 +170,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                     } = item;
                     const compiledOrderItem = {
                       id,
+                      archived,
                       no,
                       quantity,
                       price,

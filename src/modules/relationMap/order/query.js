@@ -14,6 +14,7 @@ import {
 export const batchCardRMFragment = gql`
   fragment batchCardRMFragment on Batch {
     id
+    archived
     no
     quantity
     batchAdjustments {
@@ -58,6 +59,7 @@ export const batchCardRMFragment = gql`
 export const orderCardRMFragment = gql`
   fragment orderCardRMFragment on Order {
     id
+    archived
     poNo
     currency
     totalOrdered
@@ -84,6 +86,7 @@ export const orderCardRMFragment = gql`
     orderItems {
       ... on OrderItem {
         id
+        archived
         no
         quantity
         todo {
@@ -161,6 +164,7 @@ export const orderCardRMFragment = gql`
 export const shipmentCardRMFragment = gql`
   fragment shipmentCardRMFragment on Shipment {
     id
+    archived
     no
     blNo
     booked

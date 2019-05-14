@@ -45,7 +45,7 @@ const ProductProviderCard = ({
   selectable,
   ...rest
 }: Props) => {
-  const { name, exporter, supplier, referenced, todo } = productProvider;
+  const { archived, name, exporter, supplier, referenced, todo } = productProvider;
 
   const actions = selectable
     ? []
@@ -68,6 +68,7 @@ const ProductProviderCard = ({
       color="PRODUCT_PROVIDER"
       selectable={selectable}
       actions={actions}
+      isArchived={archived}
       {...rest}
     >
       <div className={ProductProviderCardWrapperStyle} onClick={onClick} role="presentation">

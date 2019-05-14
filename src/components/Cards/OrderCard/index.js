@@ -40,6 +40,7 @@ const defaultProps = {
 const OrderCard = ({ order, actions, ...rest }: Props) => {
   const {
     id,
+    archived,
     poNo,
     issuedAt,
     totalPrice,
@@ -55,7 +56,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
   } = order;
 
   return (
-    <BaseCard icon="ORDER" color="ORDER" actions={actions} {...rest}>
+    <BaseCard icon="ORDER" color="ORDER" actions={actions} isArchived={archived} {...rest}>
       <Link className={OrderCardWrapperStyle} to={`/order/${encodeId(id)}`}>
         <div className={OrderInfoWrapperStyle}>
           <div className={PONoWrapperStyle}>

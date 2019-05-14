@@ -39,6 +39,7 @@ type Props = {
   setFieldValue: (string, any) => void,
   setFieldTouched: Function,
   focusedItemIndex: number,
+  orderIsArchived: boolean,
 };
 
 function findOrderItemPosition({
@@ -72,6 +73,7 @@ function BatchesArea({
   setFieldValue,
   setFieldTouched,
   focusedItemIndex,
+  orderIsArchived,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -131,6 +133,7 @@ function BatchesArea({
                           orderItem,
                           no: `batch no ${orderItem.batches.length + 1}`,
                           quantity,
+                          archived: orderIsArchived,
                         };
                         return {
                           ...orderItem,
@@ -159,6 +162,7 @@ function BatchesArea({
                         orderItem,
                         no: `batch no ${orderItem.batches.length + 1}`,
                         quantity,
+                        archived: orderIsArchived,
                       };
                       const newOrderItem = {
                         ...orderItem,
@@ -265,6 +269,7 @@ function BatchesArea({
                   order,
                 },
                 no: `batch ${batches.length + 1}`,
+                archived: orderIsArchived,
               };
               setFieldValue(`orderItems.${focusedItemIndex}.batches`, [...batches, newBatch]);
               setFieldTouched(`orderItems.${focusedItemIndex}.batches`);

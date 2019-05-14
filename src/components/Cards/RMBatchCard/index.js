@@ -21,6 +21,7 @@ import {
 
 type Props = {
   batch: {
+    archived: boolean,
     no: string,
     batchedQuantity: number,
     totalVolume: ?{
@@ -41,11 +42,11 @@ type Props = {
 export default class RMBatchCard extends React.PureComponent<Props> {
   render() {
     const {
-      batch: { no, batchedQuantity, totalVolume, deliveredAt, shipment, container, todo },
+      batch: { no, archived, batchedQuantity, totalVolume, deliveredAt, shipment, container, todo },
     } = this.props;
 
     return (
-      <BaseCard icon="BATCH" color="BATCH" actions={[]}>
+      <BaseCard icon="BATCH" color="BATCH" isArchived={archived}>
         <div className={RMBatchCardWrapperStyle}>
           <div className={InfoWrapperStyle}>
             <div className={NameWrapperStyle}>

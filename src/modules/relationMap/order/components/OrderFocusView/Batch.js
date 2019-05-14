@@ -45,6 +45,7 @@ function findBadgeLabel({
 export default function Batch({
   wrapperClassName,
   id,
+  archived,
   parentOrderId,
   exporterId,
   tags,
@@ -81,6 +82,7 @@ export default function Batch({
         >
           <RMBatchCard
             batch={{
+              archived,
               no,
               totalVolume,
               batchedQuantity: quantity + totalAdjusted,
