@@ -127,9 +127,8 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 {inCharges &&
                   inCharges.length > 0 &&
                   inCharges.map((inCharge, index) => (
-                    <div className={InChargeStyle(index)}>
+                    <div key={inCharge.id} className={InChargeStyle(index)}>
                       <UserAvatar
-                        key={inCharge.id}
                         firstName={inCharge.firstName}
                         lastName={inCharge.lastName}
                         width="20px"

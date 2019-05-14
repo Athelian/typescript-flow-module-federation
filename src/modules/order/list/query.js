@@ -12,7 +12,11 @@ export const orderListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...orderCardFragment
+        ... on Order {
+          ...orderCardFragment
+          totalBatched
+          batchShippedCount
+        }
       }
       page
       totalPage

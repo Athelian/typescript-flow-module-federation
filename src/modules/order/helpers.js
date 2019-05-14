@@ -1,24 +1,17 @@
 // @flow
 
-// TODO: try to send `orderItems` or reuse from order item util function
-export const calculateBatchesFromOrder = (order: Object) => {
-  let totalBatches = 0;
-  let shippedBatches = 0;
-
-  if (order.orderItems) {
-    order.orderItems.forEach(item => {
-      if (item.batches) {
-        totalBatches += item.batches.length;
-        item.batches.forEach(batch => {
-          if (batch.shipment) {
-            shippedBatches += 1;
-          }
-        });
-      }
-    });
-  }
-
-  return { totalBatches, shippedBatches, unshippedBatches: totalBatches - shippedBatches };
+export const calculateBatchesFromOrder = ({
+  totalBatched,
+  batchShippedCount,
+}: {
+  totalBatched: number,
+  batchShippedCount: number,
+}) => {
+  return {
+    totalBatches: totalBatched,
+    shippedBatches: batchShippedCount,
+    unshippedBatches: totalBatched - batchShippedCount,
+  };
 };
 
 export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
