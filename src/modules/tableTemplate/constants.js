@@ -1118,7 +1118,7 @@ export const containerColumnFields = [
   {
     messageId: containerMessages.totalUniqueItems.id,
     name: 'containerTotalUniqueItems',
-    columnName: 'container.containerTotalUniqueItems',
+    columnName: 'container.totalUniqueItems',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;

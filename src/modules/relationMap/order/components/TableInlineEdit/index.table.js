@@ -7,7 +7,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, isEqual, cloneDeep } from 'lodash';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT } from 'constants/keywords';
 import usePrevious from 'hooks/usePrevious';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -231,16 +230,11 @@ const getRowCounter = (counter, type) => {
   return counter[type];
 };
 
-const mapCustomField = (entity: string) => (_, index) => `${entity}-customFields-${index}`;
-
 const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-  logger.warn({
-    allColumnIds,
-  });
   const [templateColumns, setTemplateColumns] = useState(
     initTemplateColumn ? JSON.parse(initTemplateColumn) : [...allColumnIds]
   );
@@ -500,19 +494,19 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           setIsReady(true);
         }
         const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
-          mapCustomField(ORDER)
+          customField => `customFields.${customField.id}`
         );
         const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
-          mapCustomField(ORDER_ITEM)
+          customField => `customFields.${customField.id}`
         );
         const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
-          mapCustomField(BATCH)
+          customField => `customFields.${customField.id}`
         );
         const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
-          mapCustomField(SHIPMENT)
+          customField => `customFields.${customField.id}`
         );
         const productCustomFieldIds = getByPathWithDefault([], 'product', customFields).map(
-          mapCustomField(PRODUCT)
+          customField => `customFields.${customField.id}`
         );
         const allCustomColumnIds = [
           ...orderCustomFieldIds,
@@ -528,6 +522,11 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           shipmentCustomFieldIds.length > 0 ||
           productCustomFieldIds.length > 0;
 
+        logger.warn({
+          haveCustomFields,
+          templateColumns,
+          allColumnIds,
+        });
         if (haveCustomFields && templateColumns.length === allColumnIds.length) {
           setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
         }
