@@ -1,16 +1,16 @@
 // @flow
 
 export const calculateBatchesFromOrder = ({
-  totalBatched,
+  batchCount,
   batchShippedCount,
 }: {
-  totalBatched: number,
+  batchCount: number,
   batchShippedCount: number,
 }) => {
   return {
-    totalBatches: totalBatched,
+    totalBatches: batchCount,
     shippedBatches: batchShippedCount,
-    unshippedBatches: totalBatched - batchShippedCount,
+    unshippedBatches: batchCount - batchShippedCount,
   };
 };
 

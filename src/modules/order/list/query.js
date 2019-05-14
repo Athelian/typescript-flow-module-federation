@@ -14,7 +14,7 @@ export const orderListQuery = gql`
       nodes {
         ... on Order {
           ...orderCardFragment
-          totalBatched
+          batchCount
           batchShippedCount
         }
       }
