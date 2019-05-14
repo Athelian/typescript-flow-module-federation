@@ -37,10 +37,6 @@ export default class DeployNotifier extends React.Component<Props> {
             onClick={() => {
               window.localStorage.setItem('version', currentRevision);
               serviceWorker.unregister();
-              // clear all cache
-              if (window.localStorage) {
-                window.localStorage.clear();
-              }
               // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
               apolloClient.resetStore();
               window.location.reload();

@@ -232,7 +232,7 @@ const getRowCounter = (counter, type) => {
 
 const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
-  const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
+  const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [templateColumns, setTemplateColumns] = useState(
@@ -281,7 +281,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           : [...templateColumns, selectedColumn];
         setTemplateColumns(filteredTemplateColumns);
         window.localStorage.setItem(
-          'filterRMTemplateColumns',
+          'rmTemplateFilterColumns',
           JSON.stringify(filteredTemplateColumns)
         );
       }
@@ -727,7 +727,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                   template.name
                                 );
                                 window.localStorage.setItem(
-                                  'filterRMTemplateColumns',
+                                  'rmTemplateFilterColumns',
                                   JSON.stringify(template.fields)
                                 );
                                 setTemplateColumns(template.fields);
