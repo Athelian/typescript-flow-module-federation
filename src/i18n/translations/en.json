@@ -51,6 +51,7 @@
   "components.cards.vol": "VOL",
   "modules.Shipments.booked": "Booked",
   "modules.Shipments.unbooked": "Unbooked",
+  "components.cards.lastVessel": "LAST VESSEL",
   "components.cards.containerTypesTitle": "CONTAINER TYPES",
   "components.cards.managerUser": "Manager",
   "components.cards.defaultUser": "User",

@@ -51,6 +51,7 @@
   "components.cards.vol": "容積",
   "modules.Shipments.booked": "予約済",
   "modules.Shipments.unbooked": "未予約",
+  "components.cards.lastVessel": "LAST VESSEL",
   "components.cards.containerTypesTitle": "サイズと種類",
   "components.cards.managerUser": "管理者",
   "components.cards.defaultUser": "ユーザー",
