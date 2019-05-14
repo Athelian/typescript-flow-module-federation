@@ -71,8 +71,6 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     voyages,
   } = shipment;
 
-  console.warn(voyages);
-
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
   sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
     const firstContainerTypeSortIndex = CONTAINER_TYPE_ITEMS.findIndex(
