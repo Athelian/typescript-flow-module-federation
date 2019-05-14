@@ -49,7 +49,7 @@ const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: Order
                   }}
                 />
               </div>
-              {totalBatches > 0 && (
+              {unshippedBatches > 0 && (
                 <div>
                   <FormattedMessage
                     {...messages.unshippedMsg}
