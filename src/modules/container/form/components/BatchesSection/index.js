@@ -51,7 +51,11 @@ import {
   EmptyMessageStyle,
 } from './style';
 
-function BatchesSection() {
+type Props = {
+  containerIsArchived: boolean,
+};
+
+function BatchesSection({ containerIsArchived }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
@@ -165,6 +169,7 @@ function BatchesSection() {
                                     ...generateBatchByOrderItem(orderItem),
                                     orderItem,
                                     no: `batch no ${batches.length + counter + 1}`,
+                                    archived: orderItem.archived && containerIsArchived,
                                   })
                                 );
                                 if (batches.length === 0 && createdBatches.length > 0) {

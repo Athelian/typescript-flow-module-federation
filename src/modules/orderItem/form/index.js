@@ -58,8 +58,8 @@ export default class ItemForm extends React.Component<Props> {
               {orderItem.updatedAt && (
                 <>
                   <LastModified updatedAt={orderItem.updatedAt} updatedBy={orderItem.updatedBy} />
-                  <div className={StatusStyle(orderItem.order.archived)}>
-                    <Icon icon={orderItem.order.archived ? 'ARCHIVED' : 'ACTIVE'} />
+                  <div className={StatusStyle(orderItem.archived)}>
+                    <Icon icon={orderItem.archived ? 'ARCHIVED' : 'ACTIVE'} />
                     <div className={StatusLabelStyle}>
                       {orderItem.order.archived ? (
                         <FormattedMessage
@@ -85,12 +85,19 @@ export default class ItemForm extends React.Component<Props> {
             </SectionHeader>
             <ItemSection isSlideView={isSlideView} />
           </SectionWrapper>
+
           <Subscribe to={[OrderItemInfoContainer]}>
-            {({ state: itemInfo }) => <AsyncBatchesSection itemInfo={itemInfo} />}
+            {({ state: itemInfo }) => (
+              <AsyncBatchesSection itemInfo={itemInfo} itemIsArchived={orderItem.archived} />
+            )}
           </Subscribe>
+
           <AsyncDocumentsSection />
+
           <AsyncTaskSection entityId={orderItem.id} type="orderItem" />
+
           <AsyncShipmentsSection />
+
           <Subscribe to={[OrderItemTasksContainer]}>
             {({
               state: {

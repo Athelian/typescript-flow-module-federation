@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 export const itemCardFragment = gql`
   fragment itemCardFragment on OrderItem {
     id
+    archived
     no
     quantity
     price {
@@ -50,6 +51,7 @@ export const itemCardFragment = gql`
 export const itemFormFragment = gql`
   fragment itemFormFragment on OrderItem {
     id
+    archived
     updatedAt
     updatedBy {
       ...userAvatarFragment
@@ -99,6 +101,7 @@ export const itemFormFragment = gql`
 export const itemInSelectorFragment = gql`
   fragment itemInSelectorFragment on OrderItem {
     id
+    archived
     no
     quantity
     price {
@@ -156,6 +159,7 @@ export const itemInSelectorFragment = gql`
 export const itemInOrderFormFragment = gql`
   fragment itemInOrderFormFragment on OrderItem {
     id
+    archived
     no
     quantity
     price {
@@ -228,6 +232,7 @@ export const itemInOrderFormFragment = gql`
 export const itemInBatchFormFragment = gql`
   fragment itemInBatchFormFragment on OrderItem {
     id
+    archived
     no
     quantity
     price {

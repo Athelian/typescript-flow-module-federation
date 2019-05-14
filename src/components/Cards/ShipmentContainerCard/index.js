@@ -95,6 +95,7 @@ const ShipmentContainerCard = ({
   const {
     representativeBatch,
     id,
+    archived,
     no,
     containerType,
     containerOption,
@@ -133,6 +134,7 @@ const ShipmentContainerCard = ({
           color="CONTAINER"
           showActionsOnHover
           selectable={selectable}
+          isArchived={archived}
           {...rest}
         >
           <div className={CardWrapperStyle} role="presentation">

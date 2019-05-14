@@ -66,12 +66,12 @@ class ProductCard extends React.PureComponent<Props, State> {
   render() {
     const { product, actions, ...rest } = this.props;
     const { activeImage } = this.state;
-    const { id, name, serial, tags, files, productProviders, todo } = product;
+    const { id, archived, name, serial, tags, files, productProviders, todo } = product;
 
     const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
     return (
-      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} {...rest}>
+      <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} isArchived={archived} {...rest}>
         <Link className={ProductCardWrapperStyle} to={`/product/${encodeId(id)}`}>
           <div className={ProductImageWrapperStyle}>
             <img className={ProductImageStyle} src={productImage} alt="product_image" />

@@ -55,6 +55,7 @@ const defaultProps = {
 
 const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
   const {
+    archived,
     id,
     no,
     blNo,
@@ -86,7 +87,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
   const totalContainerTypeCount = sortedContainerTypes.reduce((sum, { count }) => sum + count, 0);
 
   return (
-    <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} {...rest}>
+    <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} isArchived={archived} {...rest}>
       <div
         className={ShipmentCardWrapperStyle}
         onClick={() => navigate(`/shipment/${encodeId(id)}`)}

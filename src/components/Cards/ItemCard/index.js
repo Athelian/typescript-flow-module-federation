@@ -82,6 +82,7 @@ type OptionalProps = {
 type Props = OptionalProps & {
   orderItem: {
     id: string,
+    archived: boolean,
     no: string,
     quantity: number,
     price: {
@@ -170,7 +171,7 @@ const ItemCard = ({
   config,
   ...rest
 }: Props) => {
-  const { no, quantity, price, tags, todo } = orderItem;
+  const { archived, no, quantity, price, tags, todo } = orderItem;
 
   const { id: orderId, poNo, currency: orderCurrency } = order;
 
@@ -202,7 +203,13 @@ const ItemCard = ({
   if (!mergedConfig.hideOrder) cardHeight += 25;
 
   return (
-    <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" showActionsOnHover {...rest}>
+    <BaseCard
+      icon="ORDER_ITEM"
+      color="ORDER_ITEM"
+      showActionsOnHover
+      isArchived={archived}
+      {...rest}
+    >
       <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ProductWrapperStyle}>
           <img className={ProductImageStyle} src={productImage} alt="product_image" />

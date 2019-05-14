@@ -127,6 +127,7 @@ const OrderBatchCard = ({
 
   const {
     id,
+    archived,
     no,
     quantity,
     deliveredAt,
@@ -155,7 +156,14 @@ const OrderBatchCard = ({
   };
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" showActionsOnHover actions={actions} {...rest}>
+    <BaseCard
+      icon="BATCH"
+      color="BATCH"
+      showActionsOnHover
+      actions={actions}
+      isArchived={archived}
+      {...rest}
+    >
       <div
         className={OrderBatchCardWrapperStyle}
         onClick={() => onClick(batch)}

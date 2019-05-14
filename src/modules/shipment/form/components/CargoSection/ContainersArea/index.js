@@ -65,6 +65,7 @@ type Props = {
   isFocusedBatchesPool: boolean,
   isSelectBatchesMode: boolean,
   onChangeSelectMode: Function,
+  shipmentIsArchived: boolean,
 };
 
 const includesById = (id: string, items: Array<Object>): boolean =>
@@ -114,6 +115,7 @@ function ContainersArea({
   onSelectPool,
   onDeselect,
   onSelect,
+  shipmentIsArchived,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -592,6 +594,7 @@ function ContainersArea({
                         shipment: {
                           voyages,
                         },
+                        archived: shipmentIsArchived,
                       },
                     ]);
                   }}

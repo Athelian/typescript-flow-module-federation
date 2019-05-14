@@ -84,6 +84,7 @@ class ShipmentForm extends React.Component<Props> {
             />
             <AsyncTimelineSection isNew={isNew} />
           </SectionWrapper>
+
           <SectionWrapper id="shipment_cargoSection">
             <Subscribe to={[ShipmentBatchesContainer]}>
               {({ state: { batches } }) => (
@@ -100,8 +101,9 @@ class ShipmentForm extends React.Component<Props> {
                 />
               )}
             </Subscribe>
-            <AsyncCargoSection />
+            <AsyncCargoSection shipmentIsArchived={shipment.archived} />
           </SectionWrapper>
+
           <SectionWrapper id="shipment_documentsSection">
             <Subscribe to={[ShipmentFilesContainer]}>
               {({ state: { files } }) => (

@@ -64,6 +64,7 @@ export const containerFormFragment = gql`
 export const containerCardFragment = gql`
   fragment containerCardFragment on Container {
     id
+    archived
     no
     containerType
     containerOption

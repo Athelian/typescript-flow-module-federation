@@ -72,6 +72,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                     renderItem={item => {
                       const {
                         id,
+                        archived,
                         no,
                         quantity,
                         todo,
@@ -86,6 +87,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                       } = item;
                       const compiledOrderItem = {
                         id,
+                        archived,
                         no,
                         todo,
                         quantity,
