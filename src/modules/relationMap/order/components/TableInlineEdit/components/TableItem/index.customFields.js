@@ -36,7 +36,7 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
     'customFields',
     values
   );
-  const { fieldValues } = customFields;
+  const { fieldValues, mask } = customFields;
   return (
     <div className={WrapperStyle}>
       {fields.map(({ id }, fieldCounter) => {
@@ -54,6 +54,7 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
                 <InlineTextInput
                   name={fieldName}
                   value={getByPathWithDefault('', 'value.string', fieldValue)}
+                  disabled={mask && !fieldValue}
                   id={inputId}
                 />
               )}
