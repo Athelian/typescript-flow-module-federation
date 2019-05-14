@@ -41,23 +41,19 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
     <div className={WrapperStyle}>
       {fields.map(({ id }, fieldCounter) => {
         const fieldValue = fieldValues.find(({ fieldDefinition }) => fieldDefinition.id === id);
-        const findPosition = fieldValues.findIndex(
-          ({ fieldDefinition }) => fieldDefinition.id === id
-        );
         const inputId = `${rowNo}-${fieldCounter + columnNo + 1}`;
         return (
           <div className={ItemStyle} key={inputId}>
             <FormField
-              name={`${cell}.customFields.fieldValues[${findPosition}].value.string`}
-              initValue={fieldValue ? fieldValue.value.string : ''}
+              name={`${cell}.customFields.fieldValues[${fieldCounter}].value.string`}
+              initValue={getByPathWithDefault('', 'value.string', fieldValue)}
               validator={validator}
               values={values}
             >
               {({ name: fieldName }) => (
                 <InlineTextInput
                   name={fieldName}
-                  value={fieldValue ? fieldValue.value.string : ''}
-                  disabled={!fieldValue}
+                  value={getByPathWithDefault('', 'value.string', fieldValue)}
                   id={inputId}
                 />
               )}

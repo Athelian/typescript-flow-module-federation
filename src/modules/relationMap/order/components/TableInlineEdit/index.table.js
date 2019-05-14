@@ -314,6 +314,31 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
         let newEditData = cloneDeep(editData);
         const [entityType, id, ...fields] = name.split('.');
         const [field] = fields || [];
+
+        // init empty values for custom field in case there is empty from api
+        if (field === 'customFields') {
+          if (
+            getByPathWithDefault([], `${entityType}.${id}.customFields.fieldValues`, newEditData)
+              .length === 0
+          ) {
+            const fieldDefinitions = getByPathWithDefault(
+              [],
+              `${entityType}.${id}.customFields.fieldDefinitions`,
+              newEditData
+            );
+            newEditData = set(
+              newEditData,
+              `${entityType}.${id}.customFields.fieldValues`,
+              fieldDefinitions.map(fieldDefinition => ({
+                fieldDefinition,
+                value: {
+                  string: '',
+                },
+              }))
+            );
+          }
+        }
+
         if (entityType === 'orders' && field === 'currency') {
           logger.warn({ field });
           const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
