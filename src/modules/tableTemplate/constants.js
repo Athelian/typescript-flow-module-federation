@@ -2,7 +2,6 @@
 import * as React from 'react';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
-import { ORDER, ORDER_ITEM, BATCH, CONTAINER, SHIPMENT, PRODUCT } from 'constants/keywords';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
@@ -23,7 +22,6 @@ import productMessages from 'modules/product/messages';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
 import {
-  mapColumnId,
   calculateOrderTotalVolume,
   calculateShipmentTotalVolume,
   calculateShipmentTotalBatchQuantity,
@@ -1797,17 +1795,17 @@ export const shipmentColumnFields = [
   },
 ];
 
-export const orderColumnIds: Array<string> = orderColumnFields.map(mapColumnId(ORDER));
+export const orderColumnIds: Array<string> = orderColumnFields.map(item => item.columnName);
 
-export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(mapColumnId(ORDER_ITEM));
+export const orderItemColumnIds: Array<string> = orderItemColumnFields.map(item => item.columnName);
 
-export const batchColumnIds: Array<string> = batchColumnFields.map(mapColumnId(BATCH));
+export const batchColumnIds: Array<string> = batchColumnFields.map(item => item.columnName);
 
-export const containerColumnIds: Array<string> = containerColumnFields.map(mapColumnId(CONTAINER));
+export const containerColumnIds: Array<string> = containerColumnFields.map(item => item.columnName);
 
-export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(mapColumnId(SHIPMENT));
+export const shipmentColumnIds: Array<string> = shipmentColumnFields.map(item => item.columnName);
 
-export const productColumnIds: Array<string> = productColumnFields.map(mapColumnId(PRODUCT));
+export const productColumnIds: Array<string> = productColumnFields.map(item => item.columnName);
 
 export const allColumnIds = [
   ...orderColumnIds,

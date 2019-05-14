@@ -238,6 +238,9 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
   const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
+  logger.warn({
+    allColumnIds,
+  });
   const [templateColumns, setTemplateColumns] = useState(
     initTemplateColumn ? JSON.parse(initTemplateColumn) : [...allColumnIds]
   );

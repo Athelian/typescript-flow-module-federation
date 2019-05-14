@@ -1,9 +1,6 @@
 // @flow
 import { calculateBatchQuantity, totalVolume } from 'utils/batch';
 
-export const mapColumnId: Function = (entity: string) => (_: any, index: number): string =>
-  `${entity}-${index}`;
-
 export function calculateOrderTotalVolume(orderItems: Array<string>, editData: Object) {
   const allBatchIds = [];
   orderItems.forEach(orderItemId => {
