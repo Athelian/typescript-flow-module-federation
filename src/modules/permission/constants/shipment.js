@@ -17,6 +17,7 @@ export const SHIPMENT_SET_NO = 'shipment.shipments.setNo';
 export const SHIPMENT_SET_BL_NO = 'shipment.shipments.setBlNo';
 export const SHIPMENT_SET_BL_DATE = 'shipment.shipments.setBlDate';
 export const SHIPMENT_SET_BOOKING_NO = 'shipment.shipments.setBookingNo';
+export const SHIPMENT_SET_BOOKED = 'shipment.shipments.setBooked';
 export const SHIPMENT_SET_BOOKING_DATE = 'shipment.shipments.setBookingDate';
 export const SHIPMENT_SET_INVOICE_NO = 'shipment.shipments.setInvoiceNo';
 export const SHIPMENT_SET_TRANSPORT_TYPE = 'shipment.shipments.setTransportType';
