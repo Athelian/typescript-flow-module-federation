@@ -209,6 +209,7 @@ export const shipmentCardRMFragment = gql`
         arrival {
           ...timelineDateMinimalFragment
         }
+        vesselName
       }
     }
     containerGroups {
