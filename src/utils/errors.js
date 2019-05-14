@@ -20,7 +20,7 @@ export function yupToFormErrors(yupError: {
   }, {});
 }
 
-export const hasNotFoundError = (violations?: Array<Object> = []) => {
+const hasNotFoundError = (violations?: Array<Object> = []) => {
   return violations.some(item => item.error === 'not_found_error');
 };
 
@@ -38,6 +38,20 @@ export const showToastError = ({
       intl.formatMessage({
         id: 'global.apiErrorMessage',
         defaultMessage: 'There was an error. Please try again later.',
+      })
+    );
+    return true;
+  }
+
+  const errorType =
+    getByPath(`${entity}Create.__typename`, result) ||
+    getByPath(`${entity}Update.__typename`, result);
+  if (errorType === 'NotFound') {
+    toast.error(
+      intl.formatMessage({
+        id: 'global.apiEntityNotFoundErrorMessage',
+        defaultMessage:
+          'Sorry, but this data has been deleted. Please refresh the page and review the logs to see more details',
       })
     );
     return true;
