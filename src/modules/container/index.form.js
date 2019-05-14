@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { toast } from 'react-toastify';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
+import { showToastError } from 'utils/errors';
 import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
 import { UIConsumer } from 'modules/ui';
@@ -25,7 +25,9 @@ type OptionalProps = {
   containerId: string,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  intl: IntlShape,
+};
 
 const defaultProps = {
   containerId: '',
@@ -39,7 +41,8 @@ type UpdateContainerResponse = {|
 |};
 
 const formContainer = new FormContainer();
-export default class ContainerFormModule extends React.Component<Props> {
+
+class ContainerFormModule extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   prevContainer = {};
@@ -134,9 +137,8 @@ export default class ContainerFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: UpdateContainerResponse) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
-    }
+    const { intl } = this.props;
+    showToastError({ result, intl, entity: 'container' });
   };
 
   render() {
@@ -284,3 +286,5 @@ export default class ContainerFormModule extends React.Component<Props> {
     );
   }
 }
+
+export default injectIntl(ContainerFormModule);

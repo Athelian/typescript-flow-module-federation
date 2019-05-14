@@ -148,6 +148,7 @@ const ContainerBatchCard = ({
 
   const {
     no,
+    archived,
     quantity = 0,
     batchAdjustments,
     deliveredAt,
@@ -187,6 +188,7 @@ const ContainerBatchCard = ({
       showActionsOnHover
       actions={actions}
       selectable={selectable}
+      isArchived={archived}
       {...rest}
     >
       <div

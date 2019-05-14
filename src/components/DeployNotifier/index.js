@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import firebase from 'firebase';
 import { toast } from 'react-toastify';
+import apolloClient from 'apollo';
 import Icon from 'components/Icon';
 import * as serviceWorker from 'serviceWorker';
 import {
@@ -36,6 +37,8 @@ export default class DeployNotifier extends React.Component<Props> {
             onClick={() => {
               window.localStorage.setItem('version', currentRevision);
               serviceWorker.unregister();
+              // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
+              apolloClient.resetStore();
               window.location.reload();
             }}
             type="button"

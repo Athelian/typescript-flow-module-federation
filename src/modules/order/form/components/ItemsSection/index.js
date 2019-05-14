@@ -15,9 +15,10 @@ import { ItemsSectionWrapperStyle, ItemsUIWrapperStyle, ItemsUIStyle } from './s
 
 type Props = {
   isNew: boolean,
+  orderIsArchived: boolean,
 };
 
-const ItemsSection = ({ isNew }: Props) => {
+const ItemsSection = ({ isNew, orderIsArchived }: Props) => {
   const [storedValue, setValue] = useLocalStorage('itemsIsExpanded', false);
   return (
     <BooleanValue value={storedValue} onChange={setValue}>
@@ -81,6 +82,7 @@ const ItemsSection = ({ isNew }: Props) => {
                                   changeFocusedItem(index);
                                 }
                               }}
+                              orderIsArchived={orderIsArchived}
                             />
                             <BatchesArea
                               itemsIsExpanded={itemsIsExpanded}
@@ -89,6 +91,7 @@ const ItemsSection = ({ isNew }: Props) => {
                               setFieldValue={setFieldValue}
                               setFieldTouched={setFieldTouched}
                               focusedItemIndex={focusedItemIndex}
+                              orderIsArchived={orderIsArchived}
                             />
                           </div>
                         );

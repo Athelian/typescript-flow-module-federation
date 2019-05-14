@@ -14,7 +14,7 @@ export const ShipmentCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 860px;
-  height: min-content;
+  height: 164px;
 `;
 
 export const ShipmentInfoWrapperStyle: string = css`
@@ -24,9 +24,9 @@ export const ShipmentInfoWrapperStyle: string = css`
 `;
 
 export const ShipmentLeftWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-  width: 300px;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 5px;
+  width: 230px;
 `;
 
 export const ShipmentNoWrapperStyle: string = css`
@@ -41,8 +41,8 @@ export const ShipmentBookedStyle = (booked: boolean) => css`
   text-align: center;
   background-color: ${booked ? colors.TEAL : colors.GRAY_LIGHT};
   color: ${colors.WHITE};
-  height: 16px;
-  line-height: 16px;
+  height: 20px;
+  line-height: 20px;
   margin: 0 5px 0 0;
   flex-shrink: 0;
 `;
@@ -63,7 +63,7 @@ export const ShipmentBLStyle: string = css`
 export const ShipmentRightWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
-  width: 540px;
+  width: 610px;
 `;
 
 export const ShipmentHeaderWrapperStyle: string = css`
@@ -79,7 +79,7 @@ export const ShipmentTagsWrapperStyle: string = css`
   grid-gap: 5px;
   overflow: hidden;
   height: 18px;
-  width: 365px;
+  width: 425px;
 `;
 
 export const ShipmentImporterWrapperStyle: string = css`
@@ -89,6 +89,7 @@ export const ShipmentImporterWrapperStyle: string = css`
   width: 150px;
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
+  align-items: center;
 `;
 
 export const ShipmentImporterIconStyle: string = css`
@@ -111,9 +112,18 @@ export const ShipmentDataWrapperStyle: string = css`
 `;
 
 export const ShipmentInChargeWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
-  grid-gap: 5px;
+  position: relative;
   height: 20px;
+  width: 70px;
+`;
+
+export const InChargeStyle = (index: number): string => css`
+  position: absolute;
+  right: ${index > 0 ? index * 12 : 0}px;
+  border: 1px solid ${colors.WHITE};
+  width: 22px;
+  height: 22px;
+  ${borderRadiuses.CIRCLE};
 `;
 
 export const ShipmentBadgeWrapperStyle: string = css`
@@ -130,14 +140,16 @@ export const ShipmentBadgeIconStyle: string = css`
   color: ${colors.GRAY_LIGHT};
 `;
 
-export const ShipmentBadgeStyle: string = css`
+export const ShipmentBadgeStyle = (width: string): string => css`
   ${fontSizes.SMALL};
   color: ${colors.GRAY_DARK};
   ${presets.ELLIPSIS};
   ${borderRadiuses.BUTTON};
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  padding: 0 10px;
+  padding: 0 5px;
   line-height: 20px;
+  width: ${width};
+  text-align: center;
 `;
 
 export const DividerStyle: string = css`

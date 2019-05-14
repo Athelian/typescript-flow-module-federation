@@ -48,6 +48,7 @@ type Props = {
   setFieldTouched: Function,
   focusedItemIndex: number,
   onFocusItem: number => void,
+  orderIsArchived: boolean,
 };
 
 function ItemsArea({
@@ -59,6 +60,7 @@ function ItemsArea({
   setFieldTouched,
   focusedItemIndex,
   onFocusItem,
+  orderIsArchived,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -118,6 +120,7 @@ function ItemsArea({
 
               const {
                 id,
+                archived,
                 no,
                 quantity,
                 price,
@@ -132,6 +135,7 @@ function ItemsArea({
               } = item;
               const compiledOrderItem = {
                 id,
+                archived,
                 no,
                 quantity,
                 price,
@@ -398,6 +402,7 @@ function ItemsArea({
                               tasks: [],
                             },
                             tags: [],
+                            archived: orderIsArchived,
                           })
                         ),
                       ]);

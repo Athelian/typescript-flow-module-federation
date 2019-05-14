@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { Provider, Subscribe } from 'unstated';
+import { showToastError } from 'utils/errors';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import { decodeId } from 'utils/id';
@@ -25,9 +25,9 @@ type OptionalProps = {
   taskId?: string,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & { intl: IntlShape };
 
-export default class TaskFormModule extends React.Component<Props> {
+class TaskFormModule extends React.Component<Props> {
   onReset = (taskContainer: Object, formReset: Function) => {
     resetFormState(taskContainer);
     formReset();
@@ -60,9 +60,8 @@ export default class TaskFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
-    }
+    const { intl } = this.props;
+    showToastError({ result, intl, entity: 'task' });
   };
 
   render() {
@@ -154,3 +153,5 @@ export default class TaskFormModule extends React.Component<Props> {
     );
   }
 }
+
+export default injectIntl(TaskFormModule);

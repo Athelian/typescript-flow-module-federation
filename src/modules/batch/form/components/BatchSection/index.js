@@ -129,6 +129,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
             if (orderItem) {
               const {
                 id,
+                archived,
                 no,
                 quantity,
                 price,
@@ -161,6 +162,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
 
               compiledOrderItem = {
                 id,
+                archived,
                 no,
                 quantity,
                 price,

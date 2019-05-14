@@ -12,7 +12,7 @@ export default defineMessages({
   },
   active: {
     id: 'modules.OrderItems.active',
-    defaultMessage: 'ACTIVE',
+    defaultMessage: 'Active',
   },
   newOrderItem: {
     id: 'modules.OrderItems.newOrderItem',

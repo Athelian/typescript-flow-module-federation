@@ -17,6 +17,7 @@ import {
 
 type Props = {
   orderItem: {
+    archived: boolean,
     productProvider: {
       product: {
         name: string,
@@ -41,6 +42,7 @@ type Props = {
 
 const RMOrderItemCard = ({
   orderItem: {
+    archived,
     productProvider: {
       product: { name, serial, files },
     },
@@ -55,7 +57,7 @@ const RMOrderItemCard = ({
   const productImage = files && files.length > 0 ? files[0].pathSmall : FALLBACK_IMAGE;
 
   return (
-    <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" actions={[]}>
+    <BaseCard icon="ORDER_ITEM" color="ORDER_ITEM" isArchived={archived}>
       <div className={RMOrderItemCardWrapperStyle}>
         <img className={ProductImageStyle} src={productImage} alt="product_image" />
 

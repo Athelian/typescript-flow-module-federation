@@ -13,9 +13,7 @@ import { type OrderDialogProps, defaultProps } from '../type';
 import { MessageStyle } from '../style';
 
 const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderDialogProps) => {
-  const { totalBatches = 0, unshippedBatches = 0, shippedBatches = 0 } = order
-    ? calculateBatchesFromOrder(order)
-    : {};
+  const { totalBatches, unshippedBatches, shippedBatches } = calculateBatchesFromOrder(order);
   const { id: orderId = '' } = order || {};
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY_DARK');
   const batches = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');
@@ -52,44 +50,39 @@ const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderD
                 />
               </div>
               {unshippedBatches > 0 && (
+                <div>
+                  <FormattedMessage
+                    {...messages.unshippedMsg}
+                    values={{
+                      total,
+                      batches,
+                      unshipped: spanWithColor(
+                        <FormattedNumber value={unshippedBatches} />,
+                        'BATCH'
+                      ),
+                    }}
+                  />
+                </div>
+              )}
+              {shippedBatches > 0 && (
                 <>
                   <div>
                     <FormattedMessage
-                      {...messages.unshippedMsg}
+                      {...messages.shippedMsg}
                       values={{
                         total,
                         batches,
-                        unshipped: spanWithColor(
-                          <FormattedNumber value={unshippedBatches} />,
-                          'BATCH'
+                        shipped: spanWithColor(<FormattedNumber value={shippedBatches} />, 'BATCH'),
+                        shipments: spanWithColor(
+                          <FormattedMessage {...messages.shipments} />,
+                          'SHIPMENT'
                         ),
                       }}
                     />
                   </div>
-                  {shippedBatches > 0 && (
-                    <>
-                      <div>
-                        <FormattedMessage
-                          {...messages.shippedMsg}
-                          values={{
-                            total,
-                            batches,
-                            shipped: spanWithColor(
-                              <FormattedNumber value={shippedBatches} />,
-                              'BATCH'
-                            ),
-                            shipments: spanWithColor(
-                              <FormattedMessage {...messages.shipments} />,
-                              'SHIPMENT'
-                            ),
-                          }}
-                        />
-                      </div>
-                      <div>
-                        {spanWithColor(<FormattedMessage {...messages.warnMsg} />, 'GRAY_DARK')}
-                      </div>
-                    </>
-                  )}
+                  <div>
+                    {spanWithColor(<FormattedMessage {...messages.warnMsg} />, 'GRAY_DARK')}
+                  </div>
                 </>
               )}
             </div>

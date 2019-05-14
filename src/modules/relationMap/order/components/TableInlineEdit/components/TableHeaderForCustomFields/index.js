@@ -32,21 +32,19 @@ function isHiddenColumn({
 }
 
 function shouldShowCustomFields({
-  entity,
   customFields,
   showAll,
   templateColumns,
 }: {
-  entity: string,
   customFields: Array<Object>,
   showAll: boolean,
   templateColumns: Array<string>,
 }) {
   return customFields.some(
-    (field, index) =>
+    field =>
       !isHiddenColumn({
         showAll,
-        fieldName: `${entity}-customFields-${index}`,
+        fieldName: `customFields.${field.id}`,
         templateColumns,
       })
   );
@@ -61,7 +59,7 @@ export default function TableHeader({
 }: Props) {
   return (
     <div className={TableHeaderWrapperStyle}>
-      {shouldShowCustomFields({ entity, customFields, showAll, templateColumns }) && (
+      {shouldShowCustomFields({ customFields, showAll, templateColumns }) && (
         <>
           <div className={TableHeaderTitleStyle(entity)}>
             <FormattedMessage
@@ -70,8 +68,8 @@ export default function TableHeader({
             />
           </div>
           <div className={TableHeaderGroupStyle}>
-            {customFields.map(({ name: text }, index) => {
-              const fieldName = `${entity}-customFields-${index}`;
+            {customFields.map(({ id, name: text }) => {
+              const fieldName = `customFields.${id}`;
 
               return (
                 <React.Fragment key={fieldName}>

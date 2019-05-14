@@ -117,6 +117,8 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
   build the project using production environment variables.
 
   **NOTE:** Final build is produced in the `build` folder.
+  
+  If you want to deploy with now.sh, please follow this [guide line](https://zeit.co/guides/deploying-react-with-now-cra).
 
 - **storybook**
 

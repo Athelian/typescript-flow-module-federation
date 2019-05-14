@@ -146,6 +146,7 @@ const ShipmentBatchCard = ({
 
   const {
     id,
+    archived,
     no,
     quantity,
     deliveredAt,
@@ -185,6 +186,7 @@ const ShipmentBatchCard = ({
       showActionsOnHover
       actions={actions}
       selectable={selectable}
+      isArchived={archived}
       {...rest}
     >
       <div

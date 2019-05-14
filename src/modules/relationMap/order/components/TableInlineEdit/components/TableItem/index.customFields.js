@@ -36,11 +36,13 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
     'customFields',
     values
   );
-  const { fieldValues } = customFields;
+  const { fieldValues, mask } = customFields;
   return (
     <div className={WrapperStyle}>
       {fields.map(({ id }, fieldCounter) => {
-        const fieldValue = fieldValues.find(({ fieldDefinition }) => fieldDefinition.id === id);
+        const fieldValue = fieldValues.find(
+          ({ fieldDefinition }) => fieldDefinition && fieldDefinition.id === id
+        );
         const findPosition = fieldValues.findIndex(
           ({ fieldDefinition }) => fieldDefinition.id === id
         );
@@ -48,16 +50,18 @@ function TableItemForCustomFields({ cell, fields, values, validator, rowNo, colu
         return (
           <div className={ItemStyle} key={inputId}>
             <FormField
-              name={`${cell}.customFields.fieldValues[${findPosition}].value.string`}
-              initValue={fieldValue ? fieldValue.value.string : ''}
+              name={`${cell}.customFields.fieldValues[${
+                findPosition !== -1 ? findPosition : fieldCounter
+              }].value.string`}
+              initValue={getByPathWithDefault('', 'value.string', fieldValue)}
               validator={validator}
               values={values}
             >
               {({ name: fieldName }) => (
                 <InlineTextInput
                   name={fieldName}
-                  value={fieldValue ? fieldValue.value.string : ''}
-                  disabled={!fieldValue}
+                  value={getByPathWithDefault('', 'value.string', fieldValue)}
+                  disabled={mask && !fieldValue}
                   id={inputId}
                 />
               )}

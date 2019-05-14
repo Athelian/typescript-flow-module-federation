@@ -103,7 +103,7 @@ export default class OrderForm extends React.Component<Props> {
                   <OrderSection isNew={isNew} />
                 </SectionWrapper>
 
-                <AsyncItemsSection isNew={isNew} />
+                <AsyncItemsSection isNew={isNew} orderIsArchived={order.archived} />
 
                 <SectionWrapper id="order_documentsSection">
                   <Subscribe to={[OrderFilesContainer]}>

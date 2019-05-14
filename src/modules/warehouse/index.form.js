@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
-import { toast } from 'react-toastify';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { prepareCustomFieldsData } from 'utils/customFields';
+import { showToastError } from 'utils/errors';
 import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
@@ -28,6 +28,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   warehouseId?: string,
+  intl: IntlShape,
 };
 
 const defaultProps = {
@@ -92,8 +93,9 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
+    const { intl } = this.props;
+
+    if (showToastError({ result, intl, entity: 'warehouse' })) {
       return;
     }
 
@@ -229,4 +231,4 @@ class WarehouseFormModule extends React.PureComponent<Props> {
   }
 }
 
-export default WarehouseFormModule;
+export default injectIntl(WarehouseFormModule);

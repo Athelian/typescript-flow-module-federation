@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { toast } from 'react-toastify';
+import { showToastError } from 'utils/errors';
 import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
@@ -33,9 +33,10 @@ import { updateOrderItemMutation, prepareParseOrderItemInput } from './form/muta
 type Props = {
   orderItemId: string,
   isSlideView: boolean,
+  intl: IntlShape,
 };
 
-export default class OrderItemFormModule extends React.Component<Props> {
+class OrderItemFormModule extends React.Component<Props> {
   onFormReady = (
     {
       orderItemInfoContainer,
@@ -114,9 +115,8 @@ export default class OrderItemFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
-    }
+    const { intl } = this.props;
+    showToastError({ result, intl, entity: 'orderItem' });
   };
 
   render() {
@@ -348,3 +348,5 @@ export default class OrderItemFormModule extends React.Component<Props> {
     );
   }
 }
+
+export default injectIntl(OrderItemFormModule);

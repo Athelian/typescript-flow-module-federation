@@ -23,6 +23,7 @@ import {
   SHIPMENT_SET_BL_NO,
   SHIPMENT_SET_BL_DATE,
   SHIPMENT_SET_BOOKING_NO,
+  SHIPMENT_SET_BOOKED,
   SHIPMENT_SET_BOOKING_DATE,
   SHIPMENT_SET_INVOICE_NO,
   SHIPMENT_SET_TRANSPORT_TYPE,
@@ -238,7 +239,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       onToggle={() => {
                         setFieldValue('booked', !values.booked);
                       }}
-                      editable={SHIPMENT_UPDATE}
+                      editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKED])}
                     >
                       {values.booked ? (
                         <div className={BookedStyle(true)}>

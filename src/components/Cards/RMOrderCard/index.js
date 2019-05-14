@@ -16,6 +16,7 @@ import {
 
 type Props = {
   order: {
+    archived: boolean,
     poNo: string | React.Node,
     exporter: { name: string },
     orderedQuantity: number,
@@ -35,6 +36,7 @@ export default class RMOrderCard extends React.PureComponent<Props> {
   render() {
     const {
       order: {
+        archived,
         poNo,
         exporter,
         orderedQuantity,
@@ -47,7 +49,7 @@ export default class RMOrderCard extends React.PureComponent<Props> {
     } = this.props;
 
     return (
-      <BaseCard icon="ORDER" color="ORDER" actions={[]}>
+      <BaseCard icon="ORDER" color="ORDER" isArchived={archived}>
         <div className={RMOrderCardWrapperStyle}>
           <div className={InfoWrapperStyle}>
             <div className={PONoWrapperStyle}>

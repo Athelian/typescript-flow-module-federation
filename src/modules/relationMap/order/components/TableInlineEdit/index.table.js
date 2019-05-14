@@ -7,7 +7,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { diff } from 'deep-object-diff';
 import { HotKeys } from 'react-hotkeys';
 import { range, set, isEqual, cloneDeep } from 'lodash';
-import { ORDER, ORDER_ITEM, BATCH, SHIPMENT, PRODUCT, CONTAINER } from 'constants/keywords';
 import usePrevious from 'hooks/usePrevious';
 import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
@@ -180,31 +179,33 @@ const handlers = {
 };
 
 function findColumns({
-  entity,
   fields,
   templateColumns,
   showAll,
 }: {
-  entity: string,
   fields: Array<Object>,
   templateColumns: Array<string>,
   showAll: boolean,
 }) {
   if (templateColumns.length) {
-    return showAll
-      ? fields
-      : fields.filter((item, idx) => templateColumns.includes(`${entity}-${idx}`));
+    return showAll ? fields : fields.filter(item => templateColumns.includes(item.columnName));
   }
   return fields;
 }
 
-function findColumnsForCustomFields({ showAll, fields: customFields, templateColumns, entity }) {
+function findColumnsForCustomFields({
+  showAll,
+  fields: customFields,
+  templateColumns,
+}: {
+  fields: Array<Object>,
+  templateColumns: Array<string>,
+  showAll: boolean,
+}) {
   if (templateColumns && templateColumns.length > 0) {
     return showAll
       ? customFields
-      : customFields.filter((field, index) =>
-          templateColumns.includes(`${entity}-customFields-${index}`)
-        );
+      : customFields.filter(field => templateColumns.includes(`customFields.${field.id}`));
   }
   return customFields;
 }
@@ -229,11 +230,9 @@ const getRowCounter = (counter, type) => {
   return counter[type];
 };
 
-const mapCustomField = (entity: string) => (_, index) => `${entity}-customFields-${index}`;
-
 const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
-  const initTemplateColumn = window.localStorage.getItem('filterRMTemplateColumns');
+  const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [templateColumns, setTemplateColumns] = useState(
@@ -282,7 +281,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           : [...templateColumns, selectedColumn];
         setTemplateColumns(filteredTemplateColumns);
         window.localStorage.setItem(
-          'filterRMTemplateColumns',
+          'rmTemplateFilterColumns',
           JSON.stringify(filteredTemplateColumns)
         );
       }
@@ -312,6 +311,31 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
         let newEditData = cloneDeep(editData);
         const [entityType, id, ...fields] = name.split('.');
         const [field] = fields || [];
+
+        // init empty values for custom field in case there is empty from api
+        if (field === 'customFields') {
+          if (
+            getByPathWithDefault([], `${entityType}.${id}.customFields.fieldValues`, newEditData)
+              .length === 0
+          ) {
+            const fieldDefinitions = getByPathWithDefault(
+              [],
+              `${entityType}.${id}.customFields.fieldDefinitions`,
+              newEditData
+            );
+            newEditData = set(
+              newEditData,
+              `${entityType}.${id}.customFields.fieldValues`,
+              fieldDefinitions.map(fieldDefinition => ({
+                fieldDefinition,
+                value: {
+                  string: '',
+                },
+              }))
+            );
+          }
+        }
+
         if (entityType === 'orders' && field === 'currency') {
           logger.warn({ field });
           const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
@@ -435,38 +459,32 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
     showAll,
     templateColumns,
     fields: orderColumnFields,
-    entity: ORDER,
   });
 
   const orderItemColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: orderItemColumnFields,
-    entity: ORDER_ITEM,
   });
   const batchColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: batchColumnFields,
-    entity: BATCH,
   });
   const containerColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: containerColumnFields,
-    entity: CONTAINER,
   });
   const shipmentColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: shipmentColumnFields,
-    entity: SHIPMENT,
   });
   const productColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,
     fields: productColumnFields,
-    entity: PRODUCT,
   });
 
   return (
@@ -476,19 +494,19 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           setIsReady(true);
         }
         const orderCustomFieldIds = getByPathWithDefault([], 'order', customFields).map(
-          mapCustomField(ORDER)
+          customField => `customFields.${customField.id}`
         );
         const orderItemCustomFieldIds = getByPathWithDefault([], 'orderItem', customFields).map(
-          mapCustomField(ORDER_ITEM)
+          customField => `customFields.${customField.id}`
         );
         const batchCustomFieldIds = getByPathWithDefault([], 'batch', customFields).map(
-          mapCustomField(BATCH)
+          customField => `customFields.${customField.id}`
         );
         const shipmentCustomFieldIds = getByPathWithDefault([], 'shipment', customFields).map(
-          mapCustomField(SHIPMENT)
+          customField => `customFields.${customField.id}`
         );
         const productCustomFieldIds = getByPathWithDefault([], 'product', customFields).map(
-          mapCustomField(PRODUCT)
+          customField => `customFields.${customField.id}`
         );
         const allCustomColumnIds = [
           ...orderCustomFieldIds,
@@ -504,6 +522,11 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           shipmentCustomFieldIds.length > 0 ||
           productCustomFieldIds.length > 0;
 
+        logger.warn({
+          haveCustomFields,
+          templateColumns,
+          allColumnIds,
+        });
         if (haveCustomFields && templateColumns.length === allColumnIds.length) {
           setTemplateColumns([...new Set([...templateColumns, ...allCustomColumnIds])]);
         }
@@ -519,31 +542,26 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           showAll,
           fields: orderCustomFields,
           templateColumns,
-          entity: ORDER,
         });
         const orderItemCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: orderItemCustomFields,
           templateColumns,
-          entity: ORDER_ITEM,
         });
         const batchCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: batchCustomFields,
           templateColumns,
-          entity: BATCH,
         });
         const shipmentCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: shipmentCustomFields,
           templateColumns,
-          entity: SHIPMENT,
         });
         const productCustomFieldsFilter = findColumnsForCustomFields({
           showAll,
           fields: productCustomFields,
           templateColumns,
-          entity: PRODUCT,
         });
 
         const rowCounter = {};
@@ -709,7 +727,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                   template.name
                                 );
                                 window.localStorage.setItem(
-                                  'filterRMTemplateColumns',
+                                  'rmTemplateFilterColumns',
                                   JSON.stringify(template.fields)
                                 );
                                 setTemplateColumns(template.fields);

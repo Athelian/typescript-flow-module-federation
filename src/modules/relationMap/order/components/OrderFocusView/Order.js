@@ -23,6 +23,7 @@ type Props = OptionalProps & OrderProps;
 
 export default function Order({
   wrapperClassName,
+  archived,
   poNo,
   totalOrdered,
   totalBatched,
@@ -57,6 +58,7 @@ export default function Order({
         >
           <RMOrderCard
             order={{
+              archived,
               poNo,
               exporter,
               orderedQuantity: totalOrdered,

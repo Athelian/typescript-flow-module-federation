@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
-import { QueryForm } from 'components/common';
 import { navigate } from '@reach/router';
+import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
+import { showToastError } from 'utils/errors';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
@@ -39,8 +39,8 @@ type OptionalProps = {
   path: string,
   isSlideView: boolean,
 };
-
 type Props = OptionalProps & {
+  intl: IntlShape,
   productId?: string,
 };
 
@@ -191,8 +191,9 @@ class ProductFormModule extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: CreateProductResponse | UpdateProductResponse) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
+    const { intl } = this.props;
+
+    if (showToastError({ result, intl, entity: 'product' })) {
       return;
     }
 
@@ -441,4 +442,4 @@ class ProductFormModule extends React.Component<Props> {
   }
 }
 
-export default ProductFormModule;
+export default injectIntl(ProductFormModule);

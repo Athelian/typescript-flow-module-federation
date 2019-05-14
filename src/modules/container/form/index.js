@@ -77,6 +77,7 @@ export default class ContainerForm extends React.Component<Props> {
             </SectionHeader>
             <ContainerSection />
           </SectionWrapper>
+
           {!inShipmentForm && (
             <SectionWrapper id="container_shipmentSection">
               <SectionHeader
@@ -88,7 +89,9 @@ export default class ContainerForm extends React.Component<Props> {
               <ShipmentSection shipment={container.shipment} />
             </SectionWrapper>
           )}
-          <AsyncBatchesSection />
+
+          <AsyncBatchesSection containerIsArchived={container.archived} />
+
           <Subscribe to={[ContainerBatchesContainer]}>
             {({ state: values }) => {
               const { batches = [] } = values;

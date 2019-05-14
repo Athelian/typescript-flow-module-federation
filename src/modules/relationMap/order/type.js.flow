@@ -11,6 +11,7 @@ export type ShipmentProps = {
 
 export type BatchProps = {
   id: string,
+  archived: boolean,
   no: string,
   quantity: number,
   totalAdjusted: number,
@@ -35,6 +36,7 @@ export type BatchProps = {
 
 export type OrderItemProps = {
   id: string,
+  archived: boolean,
   name: string,
   orderedQuantity: number,
   batchedQuantity: number,
@@ -52,6 +54,7 @@ export type OrderItemProps = {
 
 export type OrderProps = {
   id: string,
+  archived: boolean,
   batchCount: number,
   batchShippedCount: number,
   id: string,

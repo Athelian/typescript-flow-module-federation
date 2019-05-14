@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
-import { toast } from 'react-toastify';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
+import { showToastError } from 'utils/errors';
 import Layout from 'components/Layout';
 import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
@@ -43,6 +43,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   orderId?: string,
+  intl: IntlShape,
 };
 
 const defaultProps = {
@@ -240,10 +241,9 @@ class OrderFormModule extends React.PureComponent<Props> {
   };
 
   onMutationCompleted = (result: CreateOrderResponse | UpdateOrderResponse) => {
-    const { redirectAfterSuccess } = this.props;
+    const { redirectAfterSuccess, intl } = this.props;
 
-    if (!result) {
-      toast.error('There was an error. Please try again later');
+    if (showToastError({ intl, result, entity: 'order' })) {
       return;
     }
 
@@ -580,4 +580,4 @@ class OrderFormModule extends React.PureComponent<Props> {
   }
 }
 
-export default OrderFormModule;
+export default injectIntl(OrderFormModule);

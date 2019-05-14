@@ -17,9 +17,7 @@ import { OrderBatchCard } from 'components/Cards';
 import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import { OrderItemBatchesContainer } from 'modules/orderItem/form/containers';
-
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
-
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -34,9 +32,10 @@ type Props = {
     price: ?Object,
     productProvider: ?Object,
   },
+  itemIsArchived: boolean,
 };
 
-function BatchesSection({ itemInfo }: Props) {
+function BatchesSection({ itemInfo, itemIsArchived }: Props) {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
 
@@ -72,6 +71,7 @@ function BatchesSection({ itemInfo }: Props) {
                           {
                             ...generateBatchByOrderItem(values),
                             no: `batch no ${batches.length + 1}`,
+                            archived: itemIsArchived,
                           },
                         ]);
                       }}

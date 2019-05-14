@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { toast } from 'react-toastify';
 import { Mutation } from 'react-apollo';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
+import { showToastError } from 'utils/errors';
 import emitter from 'utils/emitter';
 import TaskTemplateFormContainer from 'modules/taskTemplate/form/container';
 import validator from 'modules/taskTemplate/form/validator';
@@ -28,7 +28,9 @@ type OptionalProps = {
   onCancel: Function,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  intl: IntlShape,
+};
 
 const defaultProps = {
   template: {},
@@ -95,8 +97,10 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
   };
 
   onMutationCompleted = (result: Object) => {
-    if (!result) {
-      toast.error('There was an error. Please try again later');
+    const { intl } = this.props;
+
+    if (showToastError({ result, intl, entity: 'taskTemplate' })) {
+      return;
     }
 
     if (result.taskTemplateCreate) {
@@ -193,4 +197,4 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
   }
 }
 
-export default TaskTemplateFormWrapper;
+export default injectIntl(TaskTemplateFormWrapper);

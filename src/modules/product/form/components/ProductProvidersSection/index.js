@@ -25,9 +25,10 @@ import {
 
 type Props = {
   isOwner: boolean,
+  productIsArchived: boolean,
 };
 
-function ProductProvidersSection({ isOwner }: Props) {
+function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
   const { hasPermission } = usePermission(isOwner);
   return (
     hasPermission(PRODUCT_PROVIDER_FORM) && (
@@ -57,6 +58,7 @@ function ProductProvidersSection({ isOwner }: Props) {
                             productProvider={{
                               isNew: true,
                               ...generateEndProduct(),
+                              archived: productIsArchived,
                             }}
                             isNew
                             onCancel={() => slideToggle(false)}
