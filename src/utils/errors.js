@@ -21,7 +21,7 @@ export function yupToFormErrors(yupError: {
 }
 
 const hasNotFoundError = (violations?: Array<Object> = []) => {
-  return violations.some(item => item.error === 'not_found_error');
+  return violations.some(item => ['entity_error', 'not_found_error'].includes(item.error));
 };
 
 export const showToastError = ({
