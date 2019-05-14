@@ -30,6 +30,7 @@ import {
   ShipmentImporterStyle,
   ShipmentDataWrapperStyle,
   ShipmentInChargeWrapperStyle,
+  InChargeStyle,
   ShipmentBadgeWrapperStyle,
   ShipmentBadgeIconStyle,
   ShipmentBadgeStyle,
@@ -67,7 +68,10 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     importer,
     todo,
     containerTypeCounts,
+    voyages,
   } = shipment;
+
+  console.warn(voyages);
 
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
   sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
@@ -104,11 +108,13 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
             </div>
             <div className={ShipmentBLStyle}>{blNo}</div>
           </div>
+
           <div className={ShipmentRightWrapperStyle}>
             <div className={ShipmentHeaderWrapperStyle}>
               <div className={ShipmentTagsWrapperStyle}>
                 {tags && tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
               </div>
+
               <div className={ShipmentImporterWrapperStyle}>
                 <div className={ShipmentImporterIconStyle}>
                   <Icon icon="IMPORTER" />
@@ -116,26 +122,40 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 <div className={ShipmentImporterStyle}>{importer && importer.name}</div>
               </div>
             </div>
+
             <div className={ShipmentDataWrapperStyle}>
               <div className={ShipmentInChargeWrapperStyle}>
                 {inCharges &&
                   inCharges.length > 0 &&
-                  inCharges.map(inCharge => (
-                    <UserAvatar
-                      key={inCharge.id}
-                      firstName={inCharge.firstName}
-                      lastName={inCharge.lastName}
-                      width="20px"
-                      height="20px"
-                    />
+                  inCharges.map((inCharge, index) => (
+                    <div className={InChargeStyle(index)}>
+                      <UserAvatar
+                        key={inCharge.id}
+                        firstName={inCharge.firstName}
+                        lastName={inCharge.lastName}
+                        width="20px"
+                        height="20px"
+                      />
+                    </div>
                   ))}
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
+                </Label>
+                <div className={ShipmentBadgeStyle('80px')}>
+                  {voyages && voyages.length > 0 && voyages[voyages.length - 1].vesselName
+                    ? voyages[voyages.length - 1].vesselName
+                    : 'N/A'}
+                </div>
               </div>
 
               <div className={ShipmentBadgeWrapperStyle}>
                 <Label>
                   <FormattedMessage id="components.cards.ttlVol" defaultMessage="TTL VOL" />
                 </Label>
-                <div className={ShipmentBadgeStyle}>
+                <div className={ShipmentBadgeStyle('60px')}>
                   {totalVolume && (
                     <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
@@ -185,7 +205,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                   <div className={ShipmentBadgeIconStyle}>
                     <Icon icon="CONTAINER" />
                   </div>
-                  <div className={ShipmentBadgeStyle}>
+                  <div className={ShipmentBadgeStyle('30px')}>
                     <FormattedNumber value={containers ? containers.length : 0} />
                   </div>
                 </div>
@@ -195,7 +215,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 <div className={ShipmentBadgeIconStyle}>
                   <Icon icon="ORDER_ITEM" />
                 </div>
-                <div className={ShipmentBadgeStyle}>
+                <div className={ShipmentBadgeStyle('30px')}>
                   <FormattedNumber value={orderItemCount} />
                 </div>
               </div>
@@ -204,7 +224,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                 <div className={ShipmentBadgeIconStyle}>
                   <Icon icon="BATCH" />
                 </div>
-                <div className={ShipmentBadgeStyle}>
+                <div className={ShipmentBadgeStyle('30px')}>
                   <FormattedNumber value={batchCount} />
                 </div>
               </div>
@@ -223,7 +243,7 @@ ShipmentCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(ShipmentCard, 'shipment', {
   width: '860px',
-  height: '149px',
+  height: '164px',
   entityIcon: 'SHIPMENT',
   entityColor: 'SHIPMENT',
 });
