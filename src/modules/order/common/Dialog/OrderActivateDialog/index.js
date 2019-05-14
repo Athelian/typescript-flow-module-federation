@@ -50,40 +50,35 @@ const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: Order
                 />
               </div>
               {totalBatches > 0 && (
-                <>
-                  <div>
-                    <FormattedMessage
-                      {...messages.unshippedMsg}
-                      values={{
-                        total,
-                        batches: batchesMsg,
-                        unshipped: spanWithColor(
-                          <FormattedNumber value={unshippedBatches} />,
-                          'BATCH'
-                        ),
-                      }}
-                    />
-                  </div>
-                  {shippedBatches > 0 && (
-                    <div>
-                      <FormattedMessage
-                        {...messages.shippedMsg}
-                        values={{
-                          total,
-                          batches: batchesMsg,
-                          shipped: spanWithColor(
-                            <FormattedNumber value={shippedBatches} />,
-                            'BATCH'
-                          ),
-                          shipments: spanWithColor(
-                            <FormattedMessage {...messages.shipments} />,
-                            'SHIPMENT'
-                          ),
-                        }}
-                      />
-                    </div>
-                  )}
-                </>
+                <div>
+                  <FormattedMessage
+                    {...messages.unshippedMsg}
+                    values={{
+                      total,
+                      batches: batchesMsg,
+                      unshipped: spanWithColor(
+                        <FormattedNumber value={unshippedBatches} />,
+                        'BATCH'
+                      ),
+                    }}
+                  />
+                </div>
+              )}
+              {shippedBatches > 0 && (
+                <div>
+                  <FormattedMessage
+                    {...messages.shippedMsg}
+                    values={{
+                      total,
+                      batches: batchesMsg,
+                      shipped: spanWithColor(<FormattedNumber value={shippedBatches} />, 'BATCH'),
+                      shipments: spanWithColor(
+                        <FormattedMessage {...messages.shipments} />,
+                        'SHIPMENT'
+                      ),
+                    }}
+                  />
+                </div>
               )}
             </div>
           }
