@@ -50,6 +50,7 @@ const defaultProps = {
 const BatchCard = ({ batch, actions, ...rest }: Props) => {
   const {
     id,
+    archived,
     no,
     quantity,
     deliveredAt,
@@ -73,7 +74,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
   const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" actions={actions} {...rest}>
+    <BaseCard icon="BATCH" color="BATCH" actions={actions} isArchived={archived} {...rest}>
       <div
         className={BatchCardWrapperStyle}
         onClick={() => navigate(`/batch/${encodeId(id)}`)}
