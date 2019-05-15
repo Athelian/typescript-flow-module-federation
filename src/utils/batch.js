@@ -2,7 +2,7 @@
 import { plus, times, divide } from 'number-precision';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
-import { isNullOrUndefined } from './fp';
+import { isNullOrUndefined, getByPathWithDefault } from './fp';
 
 export const findWeight = (batch: Object) => {
   const {
@@ -39,7 +39,7 @@ export const findBatchQuantity = ({
 }: {
   quantity: number,
   batchAdjustments: Array<{ quantity: number }>,
-}) => {
+}): number => {
   const batchQuantity = batchAdjustments
     ? batchAdjustments.reduce(
         (totalAdjustment, adjustment) => plus(totalAdjustment, adjustment.quantity),
@@ -47,6 +47,21 @@ export const findBatchQuantity = ({
       )
     : quantity;
   return batchQuantity;
+};
+
+export const totalBatchPriceAmount = ({
+  quantity = 0,
+  batchAdjustments,
+  orderItem,
+}: {
+  quantity: number,
+  batchAdjustments: Array<{ quantity: number }>,
+  orderItem: Object,
+}): number => {
+  return times(
+    findBatchQuantity({ quantity, batchAdjustments }),
+    getByPathWithDefault(0, 'price.amount', orderItem)
+  );
 };
 
 type Metric = {
