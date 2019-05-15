@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
 import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
+import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
@@ -27,6 +28,7 @@ import {
 import { PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
+import { generateName } from './helper';
 
 type Props = {
   isNew: boolean,
@@ -81,14 +83,43 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                             onRequestClose={() => exporterSlideToggle(false)}
                           >
                             {opened && (
-                              <SelectExporters
-                                selected={values.exporter}
-                                onCancel={() => exporterSlideToggle(false)}
-                                onSelect={newValue => {
-                                  exporterSlideToggle(false);
-                                  setFieldValue('exporter', newValue);
-                                }}
-                              />
+                              <FormField
+                                name="name"
+                                initValue={values.name}
+                                setFieldValue={setFieldValue}
+                                values={values}
+                                validator={validator}
+                                saveOnChange
+                                validationOnChange
+                              >
+                                {({ onChange }) => (
+                                  <SelectExporters
+                                    selected={values.exporter}
+                                    onCancel={() => exporterSlideToggle(false)}
+                                    onSelect={newValue => {
+                                      exporterSlideToggle(false);
+                                      const existName = getByPathWithDefault('', 'name', values);
+                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                      const generatedName = generateName(
+                                        {
+                                          entityName,
+                                          name: existName,
+                                          type: 'exporter',
+                                        },
+                                        {
+                                          supplier: getByPath('supplier.name', values),
+                                          exporter: getByPath('exporter.name', values),
+                                        }
+                                      );
+
+                                      setFieldValue('exporter', newValue);
+                                      if (generatedName !== existName) {
+                                        onChange(convertValueToFormFieldFormat(generatedName));
+                                      }
+                                    }}
+                                  />
+                                )}
+                              </FormField>
                             )}
                           </SlideView>
                         </>
@@ -137,14 +168,43 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                             onRequestClose={() => supplierSlideToggle(false)}
                           >
                             {opened && (
-                              <SelectSupplier
-                                selected={values.supplier}
-                                onCancel={() => supplierSlideToggle(false)}
-                                onSelect={newValue => {
-                                  supplierSlideToggle(false);
-                                  setFieldValue('supplier', newValue);
-                                }}
-                              />
+                              <FormField
+                                name="name"
+                                initValue={values.name}
+                                setFieldValue={setFieldValue}
+                                values={values}
+                                validator={validator}
+                                saveOnChange
+                                validationOnChange
+                              >
+                                {({ onChange }) => (
+                                  <SelectSupplier
+                                    selected={values.supplier}
+                                    onCancel={() => supplierSlideToggle(false)}
+                                    onSelect={newValue => {
+                                      supplierSlideToggle(false);
+                                      const existName = getByPathWithDefault('', 'name', values);
+                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                      const generatedName = generateName(
+                                        {
+                                          entityName,
+                                          name: existName,
+                                          type: 'supplier',
+                                        },
+                                        {
+                                          supplier: getByPath('supplier.name', values),
+                                          exporter: getByPath('exporter.name', values),
+                                        }
+                                      );
+
+                                      if (generatedName !== existName) {
+                                        onChange(convertValueToFormFieldFormat(generatedName));
+                                      }
+                                      setFieldValue('supplier', newValue);
+                                    }}
+                                  />
+                                )}
+                              </FormField>
                             )}
                           </SlideView>
                         </>
