@@ -21,7 +21,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  filterBy: {},
+  filterBy: { archived: false },
   sortBy: {},
   page: 1,
   perPage: 100,

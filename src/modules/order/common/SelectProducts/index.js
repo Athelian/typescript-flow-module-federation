@@ -91,6 +91,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
       page: 1,
       filter: {
         exporterId: exporter,
+        archived: false,
         query: '',
       },
       sort: { field: 'updatedAt', direction: 'DESCENDING' },

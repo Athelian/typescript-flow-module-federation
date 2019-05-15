@@ -77,6 +77,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
       page: 1,
       filter: {
         query: '',
+        archived: false,
       },
       sort: { field: 'updatedAt', direction: 'DESCENDING' },
     },

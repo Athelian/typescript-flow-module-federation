@@ -33,6 +33,7 @@ const getInitFilter = () => ({
   filter: {
     query: '',
     hasShipment: false,
+    archived: false,
   },
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
