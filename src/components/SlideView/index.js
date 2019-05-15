@@ -40,14 +40,11 @@ const defaultProps = {
 };
 
 class SlideView extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.slideViewContainer = document.createElement('div');
+  state = {
+    neverOpened: true,
+  };
 
-    this.state = {
-      neverOpened: true,
-    };
-  }
+  slideViewContainer: HTMLElement = document.createElement('div');
 
   componentDidMount() {
     const {
@@ -96,8 +93,6 @@ class SlideView extends React.Component<Props, State> {
       minWidthWithUnit: minWidth + optionMinWidth.unit,
     };
   };
-
-  slideViewContainer: HTMLElement;
 
   render() {
     const { children, isOpen, onRequestClose } = this.props;

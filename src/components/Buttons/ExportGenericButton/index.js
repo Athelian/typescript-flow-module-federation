@@ -37,13 +37,11 @@ class ExportGenericButton extends React.Component<Props, State> {
     csv: 'CSV',
   };
 
-  constructor() {
-    super();
-    this.state = {
-      isLoading: false,
-    };
-    this.buttonRef = React.createRef();
-  }
+  state = {
+    isLoading: false,
+  };
+
+  buttonRef: { current: HTMLButtonElement | null } = React.createRef();
 
   doExport = (client: ApolloClient<any>, extension: string) => {
     const { columns, rows } = this.props;
@@ -76,8 +74,6 @@ class ExportGenericButton extends React.Component<Props, State> {
         });
     });
   };
-
-  buttonRef: any;
 
   render() {
     const { label, disabled } = this.props;

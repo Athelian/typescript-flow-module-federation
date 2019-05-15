@@ -19,13 +19,13 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
     shouldApplyAnimation: false,
   };
 
+  isMount: boolean;
+
   componentDidMount() {
     this.isMount = true;
   }
 
   componentDidUpdate() {
-    // Due to this issue https://github.com/yannickcr/eslint-plugin-react/issues/2017
-    // eslint-disable-next-line react/prop-types
     const { shouldApplyAnimation } = this.state;
     const { isChildrenVisible } = this.props;
     if (shouldApplyAnimation || !isChildrenVisible) return;
@@ -35,8 +35,6 @@ export default class PreventInitialAnimation extends React.Component<Props, Stat
   componentWillUnmount() {
     this.isMount = false;
   }
-
-  isMount: boolean;
 
   render() {
     const { children } = this.props;
