@@ -9,6 +9,7 @@ import { getPortName } from 'utils/shipment';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
+import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import {
@@ -19,7 +20,12 @@ import {
   ShipmentTasksContainer,
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
-import { SummaryStyle } from './style';
+import {
+  SummaryStyle,
+  ContainerTypesWrapperStyle,
+  TasksWrapperStyle,
+  TaskIconStyle,
+} from './style';
 
 const ShipmentSummary = () => {
   return (
@@ -61,7 +67,7 @@ const ShipmentSummary = () => {
         );
 
         const lastVessel = getByPathWithDefault(
-          'N/A',
+          null,
           `voyages.${voyages.length - 1}.vesselName`,
           shipmentTimelineState
         );
@@ -124,7 +130,13 @@ const ShipmentSummary = () => {
                     <FormattedMessage id="modules.shipment.loadPort" defaultMessage="LOAD PORT" />
                   </Label>
                 }
-                input={<Display>{getPortName(transportTypeEnum, loadPort)}</Display>}
+                input={
+                  <Display>
+                    {getPortName(transportTypeEnum, loadPort) || (
+                      <FormattedMessage id="components.cards.na" />
+                    )}
+                  </Display>
+                }
               />
               <FieldItem
                 label={
@@ -135,18 +147,26 @@ const ShipmentSummary = () => {
                     />
                   </Label>
                 }
-                input={<Display>{getPortName(transportTypeEnum, dischargePort)}</Display>}
+                input={
+                  <Display>
+                    {getPortName(transportTypeEnum, dischargePort) || (
+                      <FormattedMessage id="components.cards.na" />
+                    )}
+                  </Display>
+                }
               />
               <FieldItem
                 label={
                   <Label>
                     <FormattedMessage
                       id="modules.shipment.latestVessel"
-                      defaultMessage="LATEST VESSEL"
+                      defaultMessage="LAST VESSEL"
                     />
                   </Label>
                 }
-                input={<Display>{lastVessel}</Display>}
+                input={
+                  <Display>{lastVessel || <FormattedMessage id="components.cards.na" />}</Display>
+                }
               />
               <FieldItem
                 label={
@@ -194,13 +214,13 @@ const ShipmentSummary = () => {
                         />
                       }
                     >
-                      <div>
+                      <Display>
                         <FormattedMessage id="modules.shipment.invalid" defaultMessage="Invalid" />
-                      </div>
+                      </Display>
                     </Tooltip>
                   ) : (
                     <Display>
-                      <FormattedNumber value={totalPrice} prefix={currency} />
+                      <FormattedNumber value={totalPrice} suffix={currency} />
                     </Display>
                   )
                 }
@@ -266,6 +286,7 @@ const ShipmentSummary = () => {
                 }
               />
             </GridColumn>
+
             <GridColumn>
               <FieldItem
                 label={
@@ -279,95 +300,169 @@ const ShipmentSummary = () => {
                   </Display>
                 }
               />
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage
-                      id="modules.shipment.containers"
-                      defaultMessage="CONTAINERS"
-                    />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={containers && containers.length} />
-                  </Display>
-                }
-              />
-              <div>
-                {Object.entries(containerTypes).map(([key, value]) => {
-                  const label = new Map(
-                    CONTAINER_TYPE_ITEMS.map(item => [item.value, item.label])
-                  ).get(key);
-                  if (label)
-                    return (
-                      <FieldItem
-                        key={key}
-                        label={<Display>{label}</Display>}
-                        input={
-                          <Display>
-                            <FormattedNumber value={Array.isArray(value) ? value.length : 0} />
-                          </Display>
-                        }
+
+              <GridColumn gap="0">
+                <FieldItem
+                  label={
+                    <Label>
+                      <FormattedMessage
+                        id="modules.shipment.containers"
+                        defaultMessage="CONTAINERS"
                       />
-                    );
-                  return null;
-                })}
-              </div>
-              <FieldItem
-                label={
-                  <Label>
-                    <FormattedMessage id="modules.shipment.tasks" defaultMessage="TASKS" />
-                  </Label>
-                }
-                input={
-                  <Display>
-                    <FormattedNumber value={tasks && tasks.length} />
-                  </Display>
-                }
-              />
-              <div>
-                <FieldItem
-                  label="Pending"
+                    </Label>
+                  }
                   input={
                     <Display>
-                      <FormattedNumber value={tasksPending} />
+                      <FormattedNumber value={containers && containers.length} />
                     </Display>
                   }
                 />
+
+                {containerTypes !== {} &&
+                  !Object.keys(containerTypes).every(key => key === 'undefined') && (
+                    <div className={ContainerTypesWrapperStyle}>
+                      {Object.entries(containerTypes).map(([key, value]) => {
+                        const label = new Map(
+                          CONTAINER_TYPE_ITEMS.map(item => [item.value, item.label])
+                        ).get(key);
+
+                        if (label)
+                          return (
+                            <FieldItem
+                              key={key}
+                              label={<Label>{label}</Label>}
+                              input={
+                                <Display>
+                                  <FormattedNumber
+                                    value={Array.isArray(value) ? value.length : 0}
+                                  />
+                                </Display>
+                              }
+                            />
+                          );
+                        return null;
+                      })}
+                    </div>
+                  )}
+              </GridColumn>
+
+              <GridColumn gap="0">
                 <FieldItem
-                  label="In Progress"
+                  label={
+                    <Label>
+                      <FormattedMessage id="modules.shipment.tasks" defaultMessage="TASKS" />
+                    </Label>
+                  }
                   input={
                     <Display>
-                      <FormattedNumber value={tasksInProgress} />
+                      <FormattedNumber value={tasks && tasks.length} />
                     </Display>
                   }
                 />
-                <FieldItem
-                  label="Completed"
-                  input={
-                    <Display>
-                      <FormattedNumber value={tasksCompleted} />
-                    </Display>
-                  }
-                />
-                <FieldItem
-                  label="Approved"
-                  input={
-                    <Display>
-                      <FormattedNumber value={tasksApproved} />
-                    </Display>
-                  }
-                />
-                <FieldItem
-                  label="Rejected"
-                  input={
-                    <Display>
-                      <FormattedNumber value={tasksRejected} />
-                    </Display>
-                  }
-                />
-              </div>
+
+                <div className={TasksWrapperStyle}>
+                  <FieldItem
+                    label={
+                      <>
+                        <div className={TaskIconStyle('GRAY_DARK')}>
+                          <Icon icon="TASK" />
+                        </div>
+                        <Label>
+                          <FormattedMessage
+                            id="modules.shipment.pending"
+                            defaultMessage="PENDING"
+                          />
+                        </Label>
+                      </>
+                    }
+                    input={
+                      <Display>
+                        <FormattedNumber value={tasksPending} />
+                      </Display>
+                    }
+                  />
+                  <FieldItem
+                    label={
+                      <>
+                        <div className={TaskIconStyle('GRAY_DARK')}>
+                          <Icon icon="CLOCK" />
+                        </div>
+                        <Label>
+                          <FormattedMessage
+                            id="modules.shipment.inProgress"
+                            defaultMessage="IN PROGRESS"
+                          />
+                        </Label>
+                      </>
+                    }
+                    input={
+                      <Display>
+                        <FormattedNumber value={tasksInProgress} />
+                      </Display>
+                    }
+                  />
+                  <FieldItem
+                    label={
+                      <>
+                        <div className={TaskIconStyle('TEAL')}>
+                          <Icon icon="CONFIRM" />
+                        </div>
+                        <Label color="TEAL">
+                          <FormattedMessage
+                            id="modules.shipment.completed"
+                            defaultMessage="COMPLETED"
+                          />
+                        </Label>
+                      </>
+                    }
+                    input={
+                      <Display>
+                        <FormattedNumber value={tasksCompleted} />
+                      </Display>
+                    }
+                  />
+                  <FieldItem
+                    label={
+                      <>
+                        <div className={TaskIconStyle('BLUE')}>
+                          <Icon icon="CHECKED" />
+                        </div>
+                        <Label color="BLUE">
+                          <FormattedMessage
+                            id="modules.shipment.approved"
+                            defaultMessage="APPROVED"
+                          />
+                        </Label>
+                      </>
+                    }
+                    input={
+                      <Display>
+                        <FormattedNumber value={tasksApproved} />
+                      </Display>
+                    }
+                  />
+                  <FieldItem
+                    label={
+                      <>
+                        <div className={TaskIconStyle('RED')}>
+                          <Icon icon="CANCEL" />
+                        </div>
+                        <Label color="RED">
+                          <FormattedMessage
+                            id="modules.shipment.rejected"
+                            defaultMessage="REJECTED"
+                          />
+                        </Label>
+                      </>
+                    }
+                    input={
+                      <Display>
+                        <FormattedNumber value={tasksRejected} />
+                      </Display>
+                    }
+                  />
+                </div>
+              </GridColumn>
             </GridColumn>
           </div>
         );
