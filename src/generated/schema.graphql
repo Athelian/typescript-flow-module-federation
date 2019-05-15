@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue May 07 2019 14:48:18 GMT+0900 (Japan Standard Time)
+# timestamp: Wed May 15 2019 15:13:15 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27042,6 +27042,7 @@ input BatchFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  orderItemId: ID
   exporterId: ID
   supplierId: ID
   producedAt: DateRangeInput
@@ -27248,6 +27249,7 @@ input ContainerFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  shipmentId: ID
   warehouseArrivalActualDate: DateRangeInput
   warehouses: [ID!]
 }
@@ -30326,6 +30328,8 @@ input OrderItemFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  orderId: ID
+  productProviderId: ID
   exporterId: ID
   supplierId: ID
 }
@@ -30693,6 +30697,7 @@ input ProductProviderFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
+  productId: ID
   exporterId: ID
   supplierId: ID
   tagIds: [ID!]
@@ -36011,6 +36016,7 @@ input ShipmentSortInput {
   secondTransitPortArrival: SortOrder
   secondTransitPortDeparture: SortOrder
   dischargePortArrival: SortOrder
+  vesselName: SortOrder
   customClearance: SortOrder
   warehouseArrival: SortOrder
   deliveryReady: SortOrder
