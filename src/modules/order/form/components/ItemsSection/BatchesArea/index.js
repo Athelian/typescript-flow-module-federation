@@ -8,6 +8,7 @@ import {
   generateBatchByOrderItem,
   generateCloneBatch,
 } from 'utils/batch';
+import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { NewButton, BaseButton } from 'components/Buttons';
@@ -82,7 +83,7 @@ function BatchesArea({
   const batches =
     focusedItemIndex === -1
       ? flatten(orderItems.map(({ batches: itemBatches }) => itemBatches))
-      : orderItems[focusedItemIndex].batches;
+      : getByPathWithDefault([], `${focusedItemIndex}.batches`, orderItems);
 
   return (
     <div className={BatchesAreaWrapperStyle(itemsIsExpanded)}>
