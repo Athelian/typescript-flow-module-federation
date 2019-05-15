@@ -666,7 +666,7 @@ export const shipmentSortMessages = defineMessages({
     defaultMessage: '1st Transit Departure',
   },
   secondTransitPortArrival: {
-    id: 'modules.Shipments.sort.firstTransitPortArrival',
+    id: 'modules.Shipments.sort.secondTransitPortArrival',
     defaultMessage: '2nd Transit Arrival',
   },
   secondTransitPortDeparture: {
