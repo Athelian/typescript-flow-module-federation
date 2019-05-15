@@ -148,14 +148,40 @@ const Order = ({ intl }: Props) => {
     { title: intl.formatMessage(shipmentSortMessages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(shipmentSortMessages.shipmentId), value: 'no' },
     { title: intl.formatMessage(shipmentSortMessages.blNo), value: 'blNo' },
-    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
+    { title: intl.formatMessage(shipmentSortMessages.vesselName), value: 'vesselName' },
+    { title: intl.formatMessage(shipmentSortMessages.cargoReady), value: 'cargoReady' },
+    {
+      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
+      value: 'loadPortDeparture',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.firstTransitPortArrival),
+      value: 'firstTransitPortArrival',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.firstTransitPortDeparture),
+      value: 'firstTransitPortDeparture',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.secondTransitPortArrival),
+      value: 'secondTransitPortArrival',
+    },
+    {
+      title: intl.formatMessage(shipmentSortMessages.secondTransitPortDeparture),
+      value: 'secondTransitPortDeparture',
+    },
     {
       title: intl.formatMessage(shipmentSortMessages.dischargePortArrival),
       value: 'dischargePortArrival',
     },
     {
-      title: intl.formatMessage(shipmentSortMessages.loadPortDeparture),
-      value: 'loadPortDeparture',
+      title: intl.formatMessage(shipmentSortMessages.customClearance),
+      value: 'customClearance',
+    },
+    { title: intl.formatMessage(shipmentSortMessages.warehouseArrival), value: 'warehouseArrival' },
+    {
+      title: intl.formatMessage(shipmentSortMessages.deliveryReady),
+      value: 'deliveryReady',
     },
   ];
 
