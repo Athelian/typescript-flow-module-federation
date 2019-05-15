@@ -46,13 +46,11 @@ class ExportButton extends React.Component<Props, State> {
     csv: 'CSV',
   };
 
-  constructor() {
-    super();
-    this.state = {
-      isLoading: false,
-    };
-    this.buttonRef = React.createRef();
-  }
+  state = {
+    isLoading: false,
+  };
+
+  buttonRef: { current: HTMLButtonElement | null } = React.createRef();
 
   doExport = (client: ApolloClient<any>, exportTemplateId: string) => {
     const { exportQuery, variables } = this.props;
@@ -81,8 +79,6 @@ class ExportButton extends React.Component<Props, State> {
         });
     });
   };
-
-  buttonRef: any;
 
   render() {
     const { label, disabled, type, dynamic } = this.props;

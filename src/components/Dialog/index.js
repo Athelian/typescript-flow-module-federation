@@ -34,10 +34,7 @@ export default class Dialog extends React.Component<Props> {
     showCancelButton: false,
   };
 
-  constructor() {
-    super();
-    this.dialogContainer = document.createElement('div');
-  }
+  dialogContainer: HTMLDivElement = document.createElement('div');
 
   componentDidUpdate(prevProps: Props) {
     const { rootElementId = 'dialog-root' } = this.props;
@@ -62,8 +59,6 @@ export default class Dialog extends React.Component<Props> {
       }, ANIMATION_FINISHED);
     }
   }
-
-  dialogContainer: HTMLDivElement;
 
   render() {
     const { children, isOpen, onRequestClose, onCancel, width, showCancelButton } = this.props;

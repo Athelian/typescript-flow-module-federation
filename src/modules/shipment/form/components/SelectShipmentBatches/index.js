@@ -32,10 +32,12 @@ const getInitFilter = () => ({
   page: 1,
   filter: {
     query: '',
+    archived: false,
     hasShipment: false,
   },
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
+
 function onSelectBatch({
   selected,
   item,

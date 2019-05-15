@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
+import { getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import UserAvatar from 'components/UserAvatar';
@@ -143,9 +144,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                   <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
                 </Label>
                 <div className={ShipmentBadgeStyle('80px')}>
-                  {voyages && voyages.length > 0 && voyages[voyages.length - 1].vesselName
-                    ? voyages[voyages.length - 1].vesselName
-                    : 'N/A'}
+                  {getByPathWithDefault('N/A', `${(voyages || []).length - 1}.vesselName`, voyages)}
                 </div>
               </div>
 

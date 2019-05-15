@@ -27,16 +27,14 @@ type State = {
 };
 
 class UserNavBar extends React.Component<Props, State> {
-  constructor() {
-    super();
-    this.state = {
-      isNotificationOpen: false,
-      isUserMenuOpen: false,
-    };
+  state = {
+    isNotificationOpen: false,
+    isUserMenuOpen: false,
+  };
 
-    this.notificationRef = React.createRef();
-    this.userMenuRef = React.createRef();
-  }
+  notificationRef: { current: HTMLButtonElement | null } = React.createRef();
+
+  userMenuRef: { current: HTMLButtonElement | null } = React.createRef();
 
   handleClickOutside = () => {
     const { isNotificationOpen, isUserMenuOpen } = this.state;
@@ -61,10 +59,6 @@ class UserNavBar extends React.Component<Props, State> {
       isNotificationOpen: false,
     }));
   };
-
-  notificationRef: any;
-
-  userMenuRef: any;
 
   render() {
     const { isNotificationOpen, isUserMenuOpen } = this.state;

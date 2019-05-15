@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { getPortName } from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import { getPortName } from 'utils/shipment';
 import { TimelinePortNameWrapperStyle } from './style';
 
 type OptionalProps = {

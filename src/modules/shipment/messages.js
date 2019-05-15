@@ -645,16 +645,48 @@ export const shipmentSortMessages = defineMessages({
     id: 'modules.Shipments.sort.blNo',
     defaultMessage: 'B/L No',
   },
-  warehouseArrival: {
-    id: 'modules.Shipments.sort.warehouseArrival',
-    defaultMessage: 'Warehouse Arrival',
+  vesselName: {
+    id: 'modules.Shipments.sort.vesselName',
+    defaultMessage: 'Vessel Name',
+  },
+  cargoReady: {
+    id: 'modules.Shipments.sort.cargoReady',
+    defaultMessage: 'Cargo Ready',
+  },
+  loadPortDeparture: {
+    id: 'modules.Shipments.sort.loadPortDeparture',
+    defaultMessage: 'Load Port Departure',
+  },
+  firstTransitPortArrival: {
+    id: 'modules.Shipments.sort.firstTransitPortArrival',
+    defaultMessage: '1st Transit Arrival',
+  },
+  firstTransitPortDeparture: {
+    id: 'modules.Shipments.sort.firstTransitPortDeparture',
+    defaultMessage: '1st Transit Departure',
+  },
+  secondTransitPortArrival: {
+    id: 'modules.Shipments.sort.secondTransitPortArrival',
+    defaultMessage: '2nd Transit Arrival',
+  },
+  secondTransitPortDeparture: {
+    id: 'modules.Shipments.sort.secondTransitPortDeparture',
+    defaultMessage: '2nd Transit Departure',
   },
   dischargePortArrival: {
     id: 'modules.Shipments.sort.dischargePortArrival',
     defaultMessage: 'Discharge Port Arrival',
   },
-  loadPortDeparture: {
-    id: 'modules.Shipments.sort.loadPortDeparture',
-    defaultMessage: 'Load Port Departure',
+  customClearance: {
+    id: 'modules.Shipments.sort.customClearance',
+    defaultMessage: 'Customs Clearance',
+  },
+  warehouseArrival: {
+    id: 'modules.Shipments.sort.warehouseArrival',
+    defaultMessage: 'Warehouse Arrival',
+  },
+  deliveryReady: {
+    id: 'modules.Shipments.sort.deliveryReady',
+    defaultMessage: 'Delivery Ready',
   },
 });

@@ -32,15 +32,12 @@ type State = {
 };
 
 class FilterInput extends React.Component<Props, State> {
-  constructor() {
-    super();
-    this.state = {
-      isOpen: false,
-      isActive: false,
-    };
+  state = {
+    isOpen: false,
+    isActive: false,
+  };
 
-    this.filterButtonRef = React.createRef();
-  }
+  filterButtonRef: { current: HTMLButtonElement | null } = React.createRef();
 
   componentDidMount() {
     const { initialFilter } = this.props;
@@ -84,8 +81,6 @@ class FilterInput extends React.Component<Props, State> {
     onChange(resetFilter);
     this.close();
   };
-
-  filterButtonRef: any;
 
   render() {
     const { initialFilter, children, onChange } = this.props;

@@ -15,10 +15,7 @@ type Props = {
 };
 
 class PartnerList extends React.Component<Props> {
-  constructor() {
-    super();
-    this.partnerPath = 'viewer.user.group.partners';
-  }
+  partnerPath = 'viewer.user.group.partners';
 
   loadMore = (clientData: { fetchMore: Function, data: ?Object }) => {
     const { data, fetchMore } = clientData;
@@ -66,8 +63,6 @@ class PartnerList extends React.Component<Props> {
       },
     });
   };
-
-  partnerPath: string;
 
   render() {
     const { ...filtersAndSort } = this.props;

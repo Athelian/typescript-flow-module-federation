@@ -21,6 +21,8 @@ const defaultProps = {
 export default class OutsideClickHandler extends React.Component<Props> {
   static defaultProps = defaultProps;
 
+  wrapperRef: HTMLDivElement;
+
   componentDidMount() {
     document.addEventListener('mousedown', this.onOutsideClick);
   }
@@ -54,8 +56,6 @@ export default class OutsideClickHandler extends React.Component<Props> {
   setChildNodeRef = (ref: HTMLDivElement | null) => {
     if (ref) this.wrapperRef = ref;
   };
-
-  wrapperRef: HTMLDivElement;
 
   render() {
     const { children, className } = this.props;

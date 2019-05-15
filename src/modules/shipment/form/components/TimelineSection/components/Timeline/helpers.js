@@ -1,8 +1,6 @@
 // @flow
-import * as React from 'react';
 import { isNullOrUndefined } from 'utils/fp';
 import { isBefore, isAfter } from 'date-fns';
-import EnumProvider from 'providers/enum';
 
 export const getTimelineColoring = ({
   cargoReady,
@@ -64,35 +62,6 @@ export const getTransportIcon = (transportType: ?string) => {
   if (transportType === 'Air') return 'PLANE';
   if (transportType === 'Sea') return 'SHIPMENT';
   return 'UNKNOWN';
-};
-
-export const getPortName = (
-  enumType: ?('Seaport' | 'Airport'),
-  portValue: ?string | ?{ description: string }
-): React.Node => {
-  if (portValue && portValue.description) {
-    return String(portValue.description);
-  }
-
-  if (enumType && portValue) {
-    return (
-      <EnumProvider enumType={enumType}>
-        {({ loading, error, data }) => {
-          if (loading) return null;
-          if (error) return `Error!: ${error}`;
-
-          const searchedPort = data.find(portInList => portInList.name === portValue);
-
-          if (searchedPort) {
-            return searchedPort.description;
-          }
-
-          return 'Not found';
-        }}
-      </EnumProvider>
-    );
-  }
-  return null;
 };
 
 export const getContainerDatesRange = (

@@ -25,6 +25,8 @@ class JumpToSection extends React.Component<Props, State> {
     activeNode: null,
   };
 
+  io: IntersectionObserver;
+
   componentDidMount() {
     this.isMountedOnDOM = true;
     logger.warn('create IntersectionObserver');
@@ -99,8 +101,6 @@ class JumpToSection extends React.Component<Props, State> {
       });
     }
   };
-
-  io: IntersectionObserver;
 
   render() {
     const { children } = this.props;

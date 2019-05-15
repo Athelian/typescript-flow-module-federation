@@ -51,14 +51,11 @@ const defaultProps = {
 export default class BaseCard extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      actionsAreShown: false,
-    };
+  state = {
+    actionsAreShown: false,
+  };
 
-    this.cornerIcon = React.createRef();
-  }
+  cornerIcon: { current: HTMLButtonElement | null } = React.createRef();
 
   toggleActions = () => {
     const { actionsAreShown } = this.state;
@@ -73,8 +70,6 @@ export default class BaseCard extends React.Component<Props, State> {
   closeActions = () => {
     this.setState({ actionsAreShown: false });
   };
-
-  cornerIcon: { current: ?HTMLButtonElement };
 
   render() {
     const {
