@@ -30,8 +30,8 @@ export const generateName = (
       if (name.length === 0) return entityName;
 
       if (name.includes(previousNames.supplier)) {
-        if (name.includes(previousNames.exporter)) {
-          return name.replace(`-${previousNames.supplier}`, entityName);
+        if (name.includes(previousNames.exporter) && entityName.length === 0) {
+          return name.replace(`-${previousNames.supplier}`, '');
         }
         return name.replace(previousNames.supplier, entityName);
       }
