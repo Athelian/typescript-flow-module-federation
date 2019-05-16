@@ -4,15 +4,29 @@ import * as React from 'react';
 import { Facebook } from 'react-content-loader';
 import BasePlaceHolder from '../BasePlaceHolder';
 
-type Props = {
+type OptionalProps = {
+  width: number,
+  height: number,
+  isLoading: boolean,
+};
+
+type Props = OptionalProps & {
   children: React.Node,
   id: string,
 };
 
-export default function MainSectionPlaceholder({ children, id }: Props) {
+const defaultProps = {
+  width: 880,
+  height: 320,
+  isLoading: false,
+};
+
+export default function MainSectionPlaceholder({ children, ...rest }: Props) {
   return (
-    <BasePlaceHolder id={id} PlaceHolderComponent={Facebook}>
+    <BasePlaceHolder {...rest} PlaceHolderComponent={Facebook}>
       {children}
     </BasePlaceHolder>
   );
 }
+
+MainSectionPlaceholder.defaultProps = defaultProps;

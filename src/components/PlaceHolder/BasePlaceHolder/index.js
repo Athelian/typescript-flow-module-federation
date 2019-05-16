@@ -12,6 +12,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   children: React.Node,
+  isLoading: boolean,
 };
 
 const defaultProps = {
@@ -26,6 +27,7 @@ export default function BasePlaceHolder({
   children,
   width,
   height,
+  isLoading,
   PlaceHolderComponent,
 }: Props) {
   const ref = React.createRef();
@@ -39,7 +41,7 @@ export default function BasePlaceHolder({
       }}
       ref={ref}
     >
-      {isReady ? children : <PlaceHolderComponent />}
+      {isReady && !isLoading ? children : <PlaceHolderComponent />}
     </div>
   );
 }
