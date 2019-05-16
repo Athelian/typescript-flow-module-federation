@@ -200,7 +200,12 @@ export default class TagFormModule extends React.PureComponent<Props> {
                               isNew={isNewOrClone}
                               tag={tag}
                               onFormReady={() => {
-                                const { name, description, color, entityTypes } = tag;
+                                const {
+                                  name = null,
+                                  description = null,
+                                  color = '#cccccc',
+                                  entityTypes = [],
+                                } = tag;
                                 tagContainer.initDetailValues({ name, description, color });
                                 entityTypeContainer.initDetailValues(entityTypes);
                               }}
