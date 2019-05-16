@@ -117,7 +117,7 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
   build the project using production environment variables.
 
   **NOTE:** Final build is produced in the `build` folder.
-  
+
   If you want to deploy with now.sh, please follow this [guide line](https://zeit.co/guides/deploying-react-with-now-cra).
 
 - **storybook**
@@ -538,3 +538,5 @@ We use [SemVer](http://semver.org/) for versioning.
 ### Troubleshooting
 
 Try to run `pkill flow` if you meet a memory issue with `flow` then restart VSCode.
+
+If you want to fix the flow issue, you could try `yarn flow --show-all-branches` for detail explanation with flow error
