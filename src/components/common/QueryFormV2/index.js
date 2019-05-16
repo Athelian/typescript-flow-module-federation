@@ -4,12 +4,11 @@ import { navigate } from '@reach/router';
 import { Query } from 'react-apollo';
 import type { DocumentNode } from 'graphql';
 import useUser from 'hooks/useUser';
-import LoadingIcon from 'components/LoadingIcon';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
-import QueryFormPermissionContext from './context';
-import { partnerPermissionQuery } from './query';
+import QueryFormPermissionContext from '../QueryForm/context';
+import { partnerPermissionQuery } from '../QueryForm/query';
 
 type OptionalProps = {
   onCompleted: ?Function,
@@ -22,14 +21,18 @@ type Props = OptionalProps & {
   render: (Object, boolean) => React.Node,
 };
 
-export default function QueryForm({ query, entityId, entityType, render, onCompleted }: Props) {
+const defaultProps = {
+  onCompleted: logger.warn,
+};
+
+export default function QueryFormV2({ query, entityId, entityType, render, onCompleted }: Props) {
   const { isOwnerBy } = useUser();
   return (
     <Query
       query={query}
       variables={{ id: decodeId(entityId) }}
       fetchPolicy="network-only"
-      onCompleted={onCompleted || logger.warn}
+      onCompleted={onCompleted}
       onError={logger.error}
     >
       {({ loading, data, error }) => {
@@ -41,7 +44,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
           return error.message;
         }
 
-        if (loading) return <LoadingIcon />;
+        if (loading) return render({}, false);
 
         const errorType = getByPath(`${entityType}.__typename`, data);
         if (['NotFound', 'Forbidden'].includes(errorType)) {
@@ -60,7 +63,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
               fetchPolicy="cache-first"
             >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {
-                if (isLoading) return <LoadingIcon />;
+                if (isLoading) return render(getByPathWithDefault({}, entityType, data), false);
                 if (permissionError) {
                   if (permissionError.message && permissionError.message.includes('403')) {
                     navigate('/403');
@@ -99,8 +102,10 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
           );
         }
         navigate(`/${entityType}`);
-        return <LoadingIcon />;
+        return null;
       }}
     </Query>
   );
 }
+
+QueryFormV2.defaultProps = defaultProps;
