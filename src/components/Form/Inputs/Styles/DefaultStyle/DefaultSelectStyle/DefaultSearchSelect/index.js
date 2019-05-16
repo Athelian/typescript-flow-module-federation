@@ -20,7 +20,7 @@ type OptionalProps = {
   height: string,
   align: 'left' | 'right' | 'center',
   hideClearButton: boolean,
-  placeholder: string,
+  placeholder: ?string,
 };
 
 type Props = OptionalProps &

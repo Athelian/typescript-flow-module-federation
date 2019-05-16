@@ -10,7 +10,7 @@ type Props = {
 };
 
 type State = {
-  activeNode: ?string,
+  activeNode: React.Node,
 };
 
 class JumpToSection extends React.Component<Props, State> {

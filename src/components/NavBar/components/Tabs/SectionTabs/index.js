@@ -10,11 +10,11 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  label: string | React.Node,
+  label: React.Node,
 };
 
 const defaultProps = {
-  icon: null,
+  icon: '',
   disabled: false,
   active: false,
   onClick: () => {},

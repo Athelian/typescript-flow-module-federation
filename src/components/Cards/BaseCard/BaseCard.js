@@ -7,7 +7,7 @@ import Actions from './Actions';
 import CornerIcon from './CornerIcon';
 
 type OptionalProps = {
-  icon: string,
+  icon: ?string,
   color: string,
   actions: Array<React.Node>,
   showActionsOnHover: boolean,

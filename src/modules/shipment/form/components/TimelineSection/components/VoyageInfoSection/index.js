@@ -69,8 +69,14 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  voyage: {},
-  initialVoyage: {},
+  voyage: {
+    vesselCode: '',
+    vesselName: '',
+  },
+  initialVoyage: {
+    vesselCode: '',
+    vesselName: '',
+  },
 };
 
 const VoyageInfoSection = ({
