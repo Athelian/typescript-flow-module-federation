@@ -7,10 +7,10 @@ import FormattedDate from 'components/FormattedDate';
 import { ContainerDatesSummaryStyle, ColumnWrapperStyle } from './style';
 
 type OptionalProps = {
-  agreedArrivalDateFrom: Date,
-  agreedArrivalDateTo: Date,
-  actualArrivalDateFrom: Date,
-  actualArrivalDateTo: Date,
+  agreedArrivalDateFrom: ?Date,
+  agreedArrivalDateTo: ?Date,
+  actualArrivalDateFrom: ?Date,
+  actualArrivalDateTo: ?Date,
 };
 
 type Props = OptionalProps;
