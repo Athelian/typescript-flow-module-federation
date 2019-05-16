@@ -14,8 +14,9 @@ import { MessageStyle } from '../style';
 
 const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderDialogProps) => {
   const { totalBatches, unshippedBatches, shippedBatches } = calculateBatchesFromOrder(order);
-  const { id: orderId } = order;
+  const { id: orderId, orderItemCount = 0 } = order;
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY');
+  const items = spanWithColor(<FormattedMessage {...messages.items} />, 'ORDER_ITEM');
   const batchesMsg = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');
 
   return (
@@ -49,6 +50,22 @@ const OrderActivateDialog = ({ isOpen, onRequestClose, order, onConfirm }: Order
                   }}
                 />
               </div>
+
+              {orderItemCount > 0 && (
+                <div>
+                  <FormattedMessage
+                    {...messages.makeItemsActivate}
+                    values={{
+                      orderItemCount: spanWithColor(
+                        <FormattedNumber value={orderItemCount} />,
+                        'ORDER_ITEM'
+                      ),
+                      items,
+                    }}
+                  />
+                </div>
+              )}
+
               {unshippedBatches > 0 && (
                 <div>
                   <FormattedMessage

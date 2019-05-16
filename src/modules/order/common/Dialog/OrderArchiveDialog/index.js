@@ -14,8 +14,9 @@ import { MessageStyle } from '../style';
 
 const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderDialogProps) => {
   const { totalBatches, unshippedBatches, shippedBatches } = calculateBatchesFromOrder(order);
-  const { id: orderId = '' } = order || {};
+  const { id: orderId = '', orderItemCount = 0 } = order || {};
   const total = spanWithColor(<FormattedNumber value={totalBatches} />, 'GRAY_DARK');
+  const items = spanWithColor(<FormattedMessage {...messages.items} />, 'ORDER_ITEM');
   const batches = spanWithColor(<FormattedMessage {...messages.batches} />, 'BATCH');
 
   return (
@@ -49,6 +50,22 @@ const OrderArchiveDialog = ({ isOpen, onRequestClose, order, onConfirm }: OrderD
                   }}
                 />
               </div>
+
+              {orderItemCount > 0 && (
+                <div>
+                  <FormattedMessage
+                    {...messages.makeItemsArchived}
+                    values={{
+                      orderItemCount: spanWithColor(
+                        <FormattedNumber value={orderItemCount} />,
+                        'ORDER_ITEM'
+                      ),
+                      items,
+                    }}
+                  />
+                </div>
+              )}
+
               {unshippedBatches > 0 && (
                 <div>
                   <FormattedMessage
