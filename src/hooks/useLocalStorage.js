@@ -14,7 +14,7 @@ export default function useLocalStorage(key: string, initialValue: mixed) {
   });
 
   const setValue = useCallback(
-    (value: mixed) => {
+    (value: any) => {
       try {
         const valueToStore = value instanceof Function ? value(storedValue) : value;
         setStoredValue(valueToStore);
