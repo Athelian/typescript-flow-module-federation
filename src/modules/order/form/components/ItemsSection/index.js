@@ -23,7 +23,7 @@ const ItemsSection = ({ isNew, orderIsArchived }: Props) => {
   return (
     <BooleanValue value={storedValue} onChange={setValue}>
       {({ value: itemsIsExpanded, set: setItemsUI }) => (
-        <SectionWrapper id="order_itemsSection">
+        <SectionWrapper>
           <Subscribe to={[OrderItemsContainer]}>
             {({ state: { orderItems }, setFieldValue }) => (
               <>
