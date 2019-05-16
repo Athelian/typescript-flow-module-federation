@@ -6,6 +6,10 @@ export default defineMessages({
     id: 'modules.Orders.form.activateDialog.confirmMsg',
     defaultMessage: 'Are you sure you want to activate this {order}?',
   },
+  makeItemsActivate: {
+    id: 'modules.Orders.archiveDialog.makeItemsArchiveMsg',
+    defaultMessage: 'This will activate all {orderItemCount} {items} as well.',
+  },
   unshippedMsg: {
     id: 'modules.Orders.form.activateDialog.unshippedMsg',
     defaultMessage: 'This will activate {unshipped}/{total} {batches} as well.',
@@ -18,6 +22,10 @@ export default defineMessages({
   order: {
     id: 'global.order',
     defaultMessage: 'order',
+  },
+  items: {
+    id: 'modules.Orders.form.dialog.items',
+    defaultMessage: 'items',
   },
   batches: {
     id: 'global.batches',
