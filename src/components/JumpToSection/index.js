@@ -106,15 +106,22 @@ class JumpToSection extends React.Component<Props, State> {
     const { children } = this.props;
     const { activeNode } = this.state;
 
-    return React.Children.map(
-      children,
-      child =>
-        document.querySelector(`#${child.props.link}`) &&
-        React.cloneElement(child, {
-          active: child.props.link === activeNode,
-          onClick: this.handleClick(child.props.link),
-        })
-    );
+    return !activeNode
+      ? React.Children.map(children, child =>
+          React.cloneElement(child, {
+            active: child.props.link === activeNode,
+            onClick: this.handleClick(child.props.link),
+          })
+        )
+      : React.Children.map(
+          children,
+          child =>
+            document.querySelector(`#${child.props.link}`) &&
+            React.cloneElement(child, {
+              active: child.props.link === activeNode,
+              onClick: this.handleClick(child.props.link),
+            })
+        );
   }
 }
 
