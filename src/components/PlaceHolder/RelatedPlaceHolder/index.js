@@ -7,6 +7,7 @@ import BasePlaceHolder from '../BasePlaceHolder';
 type OptionalProps = {
   width: number,
   height: number,
+  isLoading: boolean,
 };
 
 type Props = OptionalProps & {
@@ -17,6 +18,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   width: 880,
   height: 320,
+  isLoading: false,
 };
 
 export default function RelatedPlaceHolder({ children, ...rest }: Props) {
