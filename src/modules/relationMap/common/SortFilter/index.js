@@ -57,8 +57,8 @@ const SortFilter = ({
         <SearchInput
           name="filter"
           value={filter.query}
-          onClear={() => onChange({ filter: { query: '' } })}
-          onChange={newQuery => onChange({ filter: { query: newQuery } })}
+          onClear={() => onChange({ filter: { ...filter, query: '' } })}
+          onChange={newQuery => onChange({ filter: { ...filter, query: newQuery } })}
         />
       </div>
       {showTags && <ToggleTag onToggle={onToggle} />}
