@@ -390,7 +390,7 @@
   "modules.Orders.expiry": "EXPIRY DATE",
   "modules.Orders.quantity": "QUANTITY",
   "modules.OrderItems.quantity": "QUANTITY",
-  "modules.Batches.quantity": "BATCH QUANTITY",
+  "modules.Batches.quantity": "QUANTITY",
   "modules.Orders.shippedQuantity": "ALREADY CARGO READY QUANTITY",
   "modules.Orders.batchedQuantity": "CURRENTLY BATCHED QUANTITY",
   "modules.Orders.quantityAbove": "Currently batched quantity is {diff} above the order quantity. Please revise.",

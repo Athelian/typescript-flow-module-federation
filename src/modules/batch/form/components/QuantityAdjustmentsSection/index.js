@@ -2,113 +2,116 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { BATCH_UPDATE, BATCH_SET_QUANTITY_ADJUSTMENTS } from 'modules/permission/constants/batch';
+import {
+  BATCH_UPDATE,
+  BATCH_SET_QUANTITY_ADJUSTMENTS,
+  BATCH_SET_QUANTITY,
+} from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import BatchFormContainer from 'modules/batch/form/containers';
-import FormattedNumber from 'components/FormattedNumber';
+import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';
-import Divider from 'components/Divider';
 import { FormField, FormContainer } from 'modules/form';
 import {
   SectionHeader,
   SectionWrapper,
-  FieldItem,
-  Label,
   DefaultAdjustmentStyle,
   NumberInputFactory,
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
-import {
-  QuantityAdjustmentsSectionWrapperStyle,
-  InitialQuantityStyle,
-  AddAdjustmentButtonWrapperStyle,
-  CurrentQuantityStyle,
-} from './style';
+import validator from 'modules/batch/form/validator';
+import { QuantityAdjustmentsSectionWrapperStyle, AddAdjustmentButtonWrapperStyle } from './style';
 
 type Props = {
   isNew: boolean,
 };
 
+// FIXME: rename later
 const QuantityAdjustmentsSection = ({ isNew }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
 
   return (
-    <SectionWrapper id="batch_quantityAdjustmentsSection">
+    <SectionWrapper id="batch_quantitySection">
       <SectionHeader
         icon="QUANTITY_ADJUSTMENTS"
-        title={
-          <FormattedMessage
-            id="modules.Batches.quantityAdjustments"
-            defaultMessage="QUANTITY ADJUSTMENTS"
-          />
-        }
+        title={<FormattedMessage id="modules.Batches.quantity" defaultMessage="QUANTITY" />}
       />
       <div className={QuantityAdjustmentsSectionWrapperStyle}>
-        <Subscribe to={[BatchFormContainer]}>
-          {({
-            originalValues,
-            state,
-            setFieldArrayValue,
-            removeArrayItem,
-            calculatePackageQuantity,
-          }) => {
-            const values = { ...originalValues, ...state };
+        <Subscribe to={[FormContainer]}>
+          {({ setFieldTouched }) => (
+            <Subscribe to={[BatchFormContainer]}>
+              {({
+                originalValues,
+                state,
+                setFieldArrayValue,
+                removeArrayItem,
+                calculatePackageQuantity,
+              }) => {
+                const values = { ...originalValues, ...state };
 
-            const currentQuantity = values.batchAdjustments.reduce(
-              (total, adjustment) => adjustment.quantity + total,
-              values.quantity
-            );
+                const { quantity, batchQuantityRevisions = [] } = values;
 
-            return (
-              <GridColumn gap="10px">
-                <FieldItem
-                  label={
-                    <Label>
-                      <FormattedMessage
-                        id="modules.Batches.initialQuantity"
-                        defaultMessage="INITIAL QUANTITY"
-                      />
-                    </Label>
-                  }
-                  input={
-                    <div data-testid="initialQuantityDiv" className={InitialQuantityStyle}>
-                      <FormattedNumber value={values.quantity || 0} />
-                    </div>
-                  }
-                />
-                {values.batchAdjustments &&
-                  values.batchAdjustments.map(
-                    (adjustment, index) =>
-                      adjustment && (
-                        <Subscribe key={adjustment.id} to={[FormContainer]}>
-                          {({ setFieldTouched }) => (
-                            <DefaultAdjustmentStyle
-                              editable={
-                                allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
-                              }
-                              isNew={isNew}
-                              index={index}
-                              adjustment={adjustment}
-                              setFieldArrayValue={setFieldArrayValue}
-                              removeArrayItem={targetName => {
-                                removeArrayItem(targetName);
-                                calculatePackageQuantity(setFieldTouched);
-                              }}
-                              enumType="BatchAdjustmentReason"
-                              targetName="batchAdjustments"
-                              typeName="reason"
-                              memoName="memo"
-                              valueInput={
-                                <FormField
-                                  name={`batchAdjustments.${index}.quantity`}
-                                  initValue={adjustment.quantity}
-                                  setFieldValue={setFieldArrayValue}
-                                >
-                                  {({ name, ...inputHandlers }) => (
+                return (
+                  <GridColumn gap="10px">
+                    <FormField
+                      name="quantity"
+                      initValue={quantity}
+                      setFieldValue={setFieldArrayValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <NumberInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          onBlur={evt => {
+                            inputHandlers.onBlur(evt);
+                            setFieldArrayValue('quantity', inputHandlers.value);
+                            calculatePackageQuantity(setFieldTouched);
+                          }}
+                          isNew={isNew}
+                          required
+                          originalValue={originalValues[name]}
+                          label={
+                            <FormattedMessage
+                              id="modules.Batches.initialQuantity"
+                              defaultMessage="INITIAL QUANTITY"
+                            />
+                          }
+                          editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
+                        />
+                      )}
+                    </FormField>
+
+                    {batchQuantityRevisions &&
+                      batchQuantityRevisions.map((item, index) => (
+                        <div key={item.id}>
+                          <DefaultAdjustmentStyle
+                            editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)}
+                            isNew={isNew}
+                            index={index}
+                            adjustment={item}
+                            setFieldArrayValue={setFieldArrayValue}
+                            removeArrayItem={targetName => {
+                              removeArrayItem(targetName);
+                              calculatePackageQuantity(setFieldTouched);
+                            }}
+                            enumType="BatchQuantityRevisionType"
+                            targetName="batchQuantityRevisions"
+                            typeName="type"
+                            memoName="memo"
+                            valueInput={
+                              <FormField
+                                name={`batchQuantityRevisions.${index}.quantity`}
+                                initValue={item.quantity}
+                                setFieldValue={setFieldArrayValue}
+                              >
+                                {({ name, ...inputHandlers }) => (
+                                  <>
                                     <NumberInputFactory
                                       name={name}
                                       {...inputHandlers}
@@ -118,63 +121,79 @@ const QuantityAdjustmentsSection = ({ isNew }: Props) => {
                                         calculatePackageQuantity(setFieldTouched);
                                       }}
                                       isNew={isNew}
-                                      originalValue={adjustment.quantity}
+                                      originalValue={item.quantity}
                                       editable={
                                         allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
                                       }
                                     />
-                                  )}
-                                </FormField>
-                              }
-                            />
-                          )}
-                        </Subscribe>
-                      )
-                  )}
-                {(allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)) && (
-                  <div className={AddAdjustmentButtonWrapperStyle}>
-                    <NewButton
-                      data-testid="addAdjustmentButton"
-                      label={
-                        <FormattedMessage
-                          id="modules.Batches.newAdjustment"
-                          defaultMessage="NEW ADJUSTMENT"
-                        />
-                      }
-                      onClick={() => {
-                        setFieldArrayValue(
-                          `batchAdjustments[${values.batchAdjustments.length}]`,
-                          injectUid({
-                            isNew: true,
-                            reason: 'Other',
-                            quantity: 0,
-                            memo: '',
-                            updatedAt: new Date(),
-                          })
-                        );
-                      }}
-                    />
-                  </div>
-                )}
-                <Divider />
-                <FieldItem
-                  label={
-                    <Label>
-                      <FormattedMessage
-                        id="modules.Batches.currentQuantity"
-                        defaultMessage="CURRENT QUANTITY"
-                      />
-                    </Label>
-                  }
-                  input={
-                    <div data-testid="currentQuantityDiv" className={CurrentQuantityStyle}>
-                      <FormattedNumber value={currentQuantity || 0} />
-                    </div>
-                  }
-                />
-              </GridColumn>
-            );
-          }}
+                                  </>
+                                )}
+                              </FormField>
+                            }
+                          />
+                          <div>
+                            {index === 0 && item.quantity - quantity}
+                            {index > 0 &&
+                              index < 5 &&
+                              item.quantity - batchQuantityRevisions[index - 1].quantity}
+                          </div>
+                        </div>
+                      ))}
+                    {(allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)) && (
+                      <div className={AddAdjustmentButtonWrapperStyle}>
+                        {batchQuantityRevisions.length < 5 ? (
+                          <NewButton
+                            data-testid="btnNewQuantity"
+                            label={
+                              <FormattedMessage
+                                id="modules.Batches.newQuantity"
+                                defaultMessage="NEW QUANTITY"
+                              />
+                            }
+                            onClick={() => {
+                              setFieldArrayValue(
+                                `batchQuantityRevisions[${batchQuantityRevisions.length}]`,
+                                injectUid({
+                                  isNew: true,
+                                  type: 'Other',
+                                  quantity: 0,
+                                  memo: '',
+                                  // FIXME: use formatted string
+                                  updatedAt: new Date(),
+                                })
+                              );
+                              calculatePackageQuantity(setFieldTouched);
+                            }}
+                          />
+                        ) : (
+                          <Tooltip
+                            message={
+                              <FormattedMessage
+                                id="modules.batch.batchQuantityRevisionMaxMessage"
+                                defaultMessage="Only a maximum of 5 new quantities is allowed."
+                              />
+                            }
+                          >
+                            <div>
+                              <NewButton
+                                label={
+                                  <FormattedMessage
+                                    id="modules.Batches.newQuantity"
+                                    defaultMessage="NEW QUANTITY"
+                                  />
+                                }
+                                disabled
+                              />
+                            </div>
+                          </Tooltip>
+                        )}
+                      </div>
+                    )}
+                  </GridColumn>
+                );
+              }}
+            </Subscribe>
+          )}
         </Subscribe>
       </div>
     </SectionWrapper>
