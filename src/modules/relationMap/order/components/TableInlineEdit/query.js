@@ -92,6 +92,14 @@ export const batchEntityFragment = gql`
     desiredAt
     expiredAt
     producedAt
+    latestQuantity
+    batchQuantityRevisions {
+      ... on BatchQuantityRevision {
+        id
+        quantity
+        type
+      }
+    }
     totalAdjusted
     batchAdjustments {
       ... on BatchAdjustment {

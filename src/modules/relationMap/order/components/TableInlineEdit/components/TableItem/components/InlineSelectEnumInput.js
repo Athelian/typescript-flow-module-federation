@@ -26,7 +26,14 @@ const defaultProps = {
   width: '200px',
 };
 
-export default function InlineEnumInput({ name, value, enumType, isRequired, width, id }: Props) {
+export default function InlineSelectEnumInput({
+  name,
+  value,
+  enumType,
+  isRequired,
+  width,
+  id,
+}: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
 
   return (
@@ -47,6 +54,7 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, wid
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSelect
                     {...selectProps}
+                    required
                     id={`input-${id}`}
                     hasError={hasError}
                     isOpen={isFocused}
@@ -134,4 +142,4 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, wid
   );
 }
 
-InlineEnumInput.defaultProps = defaultProps;
+InlineSelectEnumInput.defaultProps = defaultProps;

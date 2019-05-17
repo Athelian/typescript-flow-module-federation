@@ -11,6 +11,30 @@ export default defineMessages({
     id: 'components.BatchItem.quantity',
     defaultMessage: 'QUANTITY',
   },
+  initialQuantity: {
+    id: 'components.BatchItem.initialQuantity',
+    defaultMessage: 'INITIAL QUANTITY',
+  },
+  newQuantity1: {
+    id: 'components.BatchItem.newQuantity1',
+    defaultMessage: 'NEW QUANTITY #1',
+  },
+  newQuantity2: {
+    id: 'components.BatchItem.newQuantity2',
+    defaultMessage: 'NEW QUANTITY #2',
+  },
+  newQuantity3: {
+    id: 'components.BatchItem.newQuantity3',
+    defaultMessage: 'NEW QUANTITY #3',
+  },
+  newQuantity4: {
+    id: 'components.BatchItem.newQuantity4',
+    defaultMessage: 'NEW QUANTITY #4',
+  },
+  newQuantity5: {
+    id: 'components.BatchItem.newQuantity5',
+    defaultMessage: 'NEW QUANTITY #5',
+  },
   shortQuantity: {
     id: 'components.BatchItem.shortQuantity',
     defaultMessage: 'QTY',
