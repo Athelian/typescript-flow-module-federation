@@ -164,7 +164,11 @@ const QuantitySection = ({ isNew }: Props) => {
                                 injectUid({
                                   isNew: true,
                                   type: 'Other',
-                                  quantity: 0,
+                                  quantity:
+                                    batchQuantityRevisions.length === 0
+                                      ? quantity
+                                      : batchQuantityRevisions[batchQuantityRevisions.length - 1]
+                                          .quantity,
                                   memo: '',
                                   updatedAt: new Date(),
                                 })
