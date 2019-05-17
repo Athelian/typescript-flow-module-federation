@@ -11,8 +11,6 @@ import { BooleanValue } from 'react-values';
 import { CloneButton } from 'components/Buttons';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
-import DocumentPlaceHolder from 'components/PlaceHolder/DocumentPlaceHolder';
-import RelatedPlaceHolder from 'components/PlaceHolder/RelatedPlaceHolder';
 import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
@@ -71,8 +69,8 @@ export default class OrderForm extends React.Component<Props> {
 
             return (
               <div className={OrderFormWrapperStyle}>
-                <MainSectionPlaceholder id="order_orderSection" isLoading={loading}>
-                  <SectionWrapper>
+                <SectionWrapper id="order_orderSection">
+                  <MainSectionPlaceholder height={816} isLoading={loading}>
                     <SectionHeader
                       icon="ORDER"
                       title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
@@ -107,16 +105,19 @@ export default class OrderForm extends React.Component<Props> {
                         </>
                       )}
                     </SectionHeader>
+
                     <OrderSection isNew={isNew} />
-                  </SectionWrapper>
-                </MainSectionPlaceholder>
+                  </MainSectionPlaceholder>
+                </SectionWrapper>
 
-                <ListCardPlaceHolder id="order_itemsSection" isLoading={loading}>
-                  <ItemsSection isNew={isNew} orderIsArchived={order.archived} />
-                </ListCardPlaceHolder>
+                <SectionWrapper id="order_itemsSection">
+                  <ListCardPlaceHolder isLoading={loading}>
+                    <ItemsSection isNew={isNew} orderIsArchived={order.archived} />
+                  </ListCardPlaceHolder>
+                </SectionWrapper>
 
-                <DocumentPlaceHolder id="order_documentsSection" isLoading={loading}>
-                  <SectionWrapper>
+                <SectionWrapper id="order_documentsSection">
+                  <ListCardPlaceHolder isLoading={loading}>
                     <Subscribe to={[OrderFilesContainer]}>
                       {({ state: values }) => (
                         <SectionHeader
@@ -134,15 +135,17 @@ export default class OrderForm extends React.Component<Props> {
                       )}
                     </Subscribe>
                     <DocumentsSection />
-                  </SectionWrapper>
-                </DocumentPlaceHolder>
+                  </ListCardPlaceHolder>
+                </SectionWrapper>
 
-                <ListCardPlaceHolder id="order_taskSection" isLoading={loading}>
-                  <TaskSection entityId={order.id} type="order" />
-                </ListCardPlaceHolder>
+                <SectionWrapper id="order_taskSection">
+                  <ListCardPlaceHolder isLoading={loading}>
+                    <TaskSection entityId={order.id} type="order" />
+                  </ListCardPlaceHolder>
+                </SectionWrapper>
 
-                <RelatedPlaceHolder id="order_shipmentsSection" isLoading={loading}>
-                  <SectionWrapper>
+                <SectionWrapper id="order_shipmentsSection">
+                  <ListCardPlaceHolder isLoading={loading}>
                     <Subscribe to={[OrderInfoContainer]}>
                       {({ state: { shipments } }) => (
                         <>
@@ -162,11 +165,11 @@ export default class OrderForm extends React.Component<Props> {
                         </>
                       )}
                     </Subscribe>
-                  </SectionWrapper>
-                </RelatedPlaceHolder>
+                  </ListCardPlaceHolder>
+                </SectionWrapper>
 
-                <RelatedPlaceHolder id="order_containersSection" isLoading={loading}>
-                  <SectionWrapper>
+                <SectionWrapper id="order_containersSection">
+                  <ListCardPlaceHolder isLoading={loading}>
                     <Subscribe to={[OrderInfoContainer]}>
                       {({ state: { containers } }) => (
                         <>
@@ -186,8 +189,8 @@ export default class OrderForm extends React.Component<Props> {
                         </>
                       )}
                     </Subscribe>
-                  </SectionWrapper>
-                </RelatedPlaceHolder>
+                  </ListCardPlaceHolder>
+                </SectionWrapper>
 
                 <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
                   {(
