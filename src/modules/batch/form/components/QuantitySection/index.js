@@ -22,7 +22,13 @@ import {
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import validator from 'modules/batch/form/validator';
-import { QuantitySectionWrapperStyle, AddAdjustmentButtonWrapperStyle } from './style';
+import Diff from './Diff';
+import {
+  QuantitySectionWrapperStyle,
+  AddAdjustmentButtonWrapperStyle,
+  QuantityRevisionItemStyle,
+  QuantityRevisionDiffStyle,
+} from './style';
 
 type Props = {
   isNew: boolean,
@@ -88,7 +94,7 @@ const QuantitySection = ({ isNew }: Props) => {
 
                     {batchQuantityRevisions &&
                       batchQuantityRevisions.map((item, index) => (
-                        <div key={item.id}>
+                        <div key={item.id} className={QuantityRevisionItemStyle}>
                           <DefaultAdjustmentStyle
                             editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)}
                             isNew={isNew}
@@ -130,11 +136,14 @@ const QuantitySection = ({ isNew }: Props) => {
                               </FormField>
                             }
                           />
-                          <div>
-                            {index === 0 && item.quantity - quantity}
-                            {index > 0 &&
-                              index < 5 &&
-                              item.quantity - batchQuantityRevisions[index - 1].quantity}
+                          <div className={QuantityRevisionDiffStyle}>
+                            {index === 0 && <Diff before={quantity} after={item.quantity} />}
+                            {index > 0 && index < 5 && (
+                              <Diff
+                                before={batchQuantityRevisions[index - 1].quantity}
+                                after={item.quantity}
+                              />
+                            )}
                           </div>
                         </div>
                       ))}

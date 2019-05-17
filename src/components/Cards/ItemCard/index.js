@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { times } from 'number-precision';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { times } from 'utils/number';
 import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';

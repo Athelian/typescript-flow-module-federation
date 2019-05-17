@@ -37,3 +37,13 @@ export const CurrentQuantityStyle: string = css`
   min-width: 200px;
   text-align: right;
 `;
+
+export const QuantityRevisionItemStyle: string = css`
+  position: relative;
+`;
+
+export const QuantityRevisionDiffStyle: string = css`
+  position: absolute;
+  right: -60px;
+  top: 0;
+`;

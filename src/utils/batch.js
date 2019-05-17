@@ -1,5 +1,5 @@
 // @flow
-import { plus, times, divide } from 'number-precision';
+import { plus, times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
 import { isNullOrUndefined, getByPathWithDefault } from './fp';
