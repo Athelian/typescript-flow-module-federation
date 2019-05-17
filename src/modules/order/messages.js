@@ -498,6 +498,18 @@ export default defineMessages({
     id: 'modules.Orders.list.sort.deliveryPlace',
     defaultMessage: 'Place of Delivery',
   },
+  nameSort: {
+    id: 'modules.Orders.list.sort.name',
+    defaultMessage: 'NAME',
+  },
+  serialSort: {
+    id: 'modules.Orders.list.sort.serial',
+    defaultMessage: 'SERIAL',
+  },
+  exporterSort: {
+    id: 'modules.Orders.list.sort.exporter',
+    defaultMessage: 'Exporter',
+  },
   batch: {
     id: 'modules.Orders.form.batch',
     defaultMessage: 'BATCH',
