@@ -145,16 +145,17 @@ export function calculateBatchQuantity(batches: Array<Object>): number {
 }
 
 export const calculatePackageQuantity = ({
+  quantity = 0,
+  batchQuantityRevisions = [],
   packageCapacity = 0,
-  quantity,
-  batchAdjustments,
 }: Object) => {
   if (packageCapacity > 0) {
-    const totalQuantity = batchAdjustments.reduce(
-      (total, adjustment) => plus(adjustment.quantity, total),
-      quantity
-    );
-    return totalQuantity > 0 ? divide(totalQuantity, packageCapacity) : 0;
+    const validQuantity =
+      batchQuantityRevisions.length > 0
+        ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
+        : quantity;
+
+    return divide(validQuantity, packageCapacity);
   }
   return 0;
 };

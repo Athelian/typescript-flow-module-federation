@@ -10,9 +10,7 @@ import { BatchInfoContainer, BatchTasksContainer } from './containers';
 import { BatchFormInSlideStyle } from './style';
 
 const AsyncBatchSection = lazy(() => import('./components/BatchSection'));
-const AsyncQuantityAdjustmentsSection = lazy(() =>
-  import('./components/QuantityAdjustmentsSection')
-);
+const AsyncQuantitySection = lazy(() => import('./components/QuantitySection'));
 const AsyncPackagingSection = lazy(() => import('./components/PackagingSection'));
 const AsyncShipmentSection = lazy(() => import('./components/ShipmentSection'));
 const AsyncContainerSection = lazy(() => import('./components/ContainerSection'));
@@ -61,7 +59,7 @@ export default class BatchForm extends React.Component<Props> {
       <Suspense fallback={<LoadingIcon />}>
         <div className={BatchFormInSlideStyle}>
           <AsyncBatchSection isNew={isNew} isClone={isClone} batch={batch} />
-          <AsyncQuantityAdjustmentsSection isNew={isNew} />
+          <AsyncQuantitySection isNew={isNew} />
           <AsyncPackagingSection isNew={isNew} />
           <AsyncTaskSection entityId={batch.id} type="batch" />
           <AsyncShipmentSection shipment={batch.shipment} />
