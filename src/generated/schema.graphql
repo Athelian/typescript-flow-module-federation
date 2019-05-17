@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed May 15 2019 15:13:15 GMT+0900 (Japan Standard Time)
+# timestamp: Fri May 17 2019 19:17:40 GMT+0900 (JST)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -26893,16 +26893,18 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   shipment: ShipmentPayload
   no: String!
   quantity: Float!
+  latestQuantity: Float!
   packageQuantity: Float
   autoCalculatePackageQuantity: Boolean!
   producedAt: DateTime
   deliveredAt: DateTime
   expiredAt: DateTime
   desiredAt: DateTime
-  totalAdjusted: Float!
+  totalAdjusted: Float! @deprecated(reason: "Batch adjustment is deprecated")
   totalVolume: MetricValue!
   batchAssignments: [BatchAssignmentPayload!]!
-  batchAdjustments: [BatchAdjustmentPayload!]!
+  batchAdjustments: [BatchAdjustmentPayload!]! @deprecated(reason: "Batch adjustment is deprecated")
+  batchQuantityRevisions: [BatchQuantityRevisionPayload!]!
   container: ContainerPayload
   todo: Todo!
   id: ID!
@@ -27020,6 +27022,7 @@ input BatchCreateInput {
   customFields: CustomFieldsInput
   batchAssignments: [BatchAssignmentCreateInput!]
   batchAdjustments: [BatchAdjustmentCreateInput!]
+  batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
   todo: TodoInput
   orderItemId: ID!
   shipmentId: ID
@@ -27064,6 +27067,57 @@ type BatchPayloadPagination {
   totalCount: Int!
 }
 
+type BatchQuantityRevision implements Model & Owned & Sortable & Memorizable {
+  batch: BatchPayload!
+  type: BatchQuantityRevisionType!
+  quantity: Float!
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  sort: Int!
+  memo: String
+}
+
+input BatchQuantityRevisionCreateInput {
+  type: BatchQuantityRevisionType!
+  quantity: Float!
+  memo: String
+}
+
+union BatchQuantityRevisionPayload = BatchQuantityRevision | BadRequest | Forbidden | NotFound
+
+enum BatchQuantityRevisionType {
+  """Produced"""
+  Produced
+
+  """Dispatched"""
+  Dispatched
+
+  """Shipped"""
+  Shipped
+
+  """Inspected"""
+  Inspected
+
+  """WarehouseArrival"""
+  WarehouseArrival
+
+  """Other"""
+  Other
+}
+
+input BatchQuantityRevisionUpdateInput {
+  id: ID
+  type: BatchQuantityRevisionType
+  quantity: Float
+  memo: String
+}
+
 input BatchSimpleSplitInput {
   quantity: Float!
 }
@@ -27073,7 +27127,7 @@ input BatchSortInput {
   updatedAt: SortOrder
   no: SortOrder
   poNo: SortOrder
-  product: SortOrder
+  productName: SortOrder
   producedAt: SortOrder
   deliveredAt: SortOrder
   expiredAt: SortOrder
@@ -27099,6 +27153,7 @@ input BatchUpdateInput {
   customFields: CustomFieldsInput
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
+  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   orderItemId: ID
   shipmentId: ID
@@ -27212,6 +27267,7 @@ input ContainerBatchInput {
   customFields: CustomFieldsInput
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
+  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   orderItemId: ID
@@ -29802,6 +29858,7 @@ type MaskPayloadPagination {
 input MaskSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
 }
 
 input MaskUpdateInput {
@@ -30178,31 +30235,11 @@ input OrderFilterInput {
   completelyBatched: Boolean
   completelyShipped: Boolean
   orderItemPrice: PriceRangeInput
-  orderItemCreatedAt: DateRangeInput
-  orderItemUpdatedAt: DateRangeInput
-  productProviderExporterIds: [ID!]
-  productProviderSupplierIds: [ID!]
-  productProviderOrigins: [Country!]
-  productProviderProductionLeadTime: ValueRangeInput
-  productProviderUnitSize: SizeRangeInput
-  productProviderUnitVolume: MetricRangeInput
-  productProviderUnitWeight: MetricRangeInput
-  productProviderPackageSize: SizeRangeInput
-  productProviderPackageVolume: MetricRangeInput
-  productProviderPackageWeight: MetricRangeInput
-  productTagIds: [ID!]
   batchTagIds: [ID!]
   batchDeliveredAt: DateRangeInput
   batchExpiredAt: DateRangeInput
   batchProducedAt: DateRangeInput
-  batchCreatedAt: DateRangeInput
-  batchUpdatedAt: DateRangeInput
-  batchArchived: Boolean
-  batchQuantity: ValueRangeInput
-  batchPackageSize: SizeRangeInput
-  batchPackageVolume: MetricRangeInput
   batchTotalVolume: MetricRangeInput
-  batchPackageWeight: MetricRangeInput
   shipmentTagIds: [ID!]
   shipmentForwarderIds: [ID!]
   shipmentInChargeIds: [ID!]
@@ -30278,6 +30315,7 @@ input OrderItemBatchCreateInput {
   customFields: CustomFieldsInput
   batchAssignments: [BatchAssignmentCreateInput!]
   batchAdjustments: [BatchAdjustmentCreateInput!]
+  batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
   todo: TodoInput
   shipmentId: ID
   containerId: ID
@@ -30303,6 +30341,7 @@ input OrderItemBatchUpdateInput {
   customFields: CustomFieldsInput
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
+  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   shipmentId: ID
@@ -30348,6 +30387,12 @@ type OrderItemPayloadPagination {
 input OrderItemSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  no: SortOrder
+  currency: SortOrder
+  productName: SortOrder
+  productSerial: SortOrder
+  productProviderName: SortOrder
+  supplierName: SortOrder
 }
 
 input OrderItemUpdateInput {
@@ -30414,7 +30459,7 @@ input OrderSortInput {
   poNo: SortOrder
   piNo: SortOrder
   issuedAt: SortOrder
-  exporter: SortOrder
+  exporterName: SortOrder
   currency: SortOrder
   incoterm: SortOrder
   deliveryPlace: SortOrder
@@ -30534,6 +30579,8 @@ type PartnershipPayloadPagination {
 input PartnerSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
+  code: SortOrder
 }
 
 type Port {
@@ -30718,7 +30765,10 @@ input ProductProviderSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
   name: SortOrder
-  serial: SortOrder
+  productName: SortOrder
+  productSerial: SortOrder
+  exporterName: SortOrder
+  supplierName: SortOrder
   unitPriceCurrency: SortOrder
 }
 
@@ -35882,6 +35932,7 @@ input ShipmentBatchInput {
   customFields: CustomFieldsInput
   batchAssignments: [BatchAssignmentUpdateInput!]
   batchAdjustments: [BatchAdjustmentUpdateInput!]
+  batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
   orderItemId: ID
@@ -36065,12 +36116,6 @@ input SizeInput {
   length: MetricValueInput!
   width: MetricValueInput!
   height: MetricValueInput!
-}
-
-input SizeRangeInput {
-  length: MetricRangeInput
-  width: MetricRangeInput
-  height: MetricRangeInput
 }
 
 type SizeValue {
@@ -36456,6 +36501,7 @@ type Timeline {
 
 type TimelineDate implements Model & Owned & Memorizable {
   date: DateTime
+  latestDate: DateTime
   assignedTo: [UserPayload!]!
   approvedBy: UserPayload
   approvedAt: DateTime
@@ -36625,6 +36671,9 @@ union UserRolesPayload = UserRoles | BadRequest | Forbidden | NotFound
 input UserSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  firstName: SortOrder
+  lastName: SortOrder
+  fullName: SortOrder
 }
 
 input UserUpdateInput {
@@ -36652,11 +36701,6 @@ input ValueInput {
   int: Int
   float: Float
   boolean: Boolean
-}
-
-input ValueRangeInput {
-  min: Float
-  max: Float
 }
 
 type Values {

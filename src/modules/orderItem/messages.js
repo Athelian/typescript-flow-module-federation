@@ -24,11 +24,11 @@ export default defineMessages({
   },
   updatedAtSort: {
     id: 'modules.OrderItems.list.sort.updatedAt',
-    defaultMessage: 'Updated At',
+    defaultMessage: 'Last Modified',
   },
   createdAtSort: {
     id: 'modules.OrderItems.list.sort.createdAt',
-    defaultMessage: 'Created At',
+    defaultMessage: 'Date Created',
   },
   noSort: {
     id: 'modules.OrderItems.list.sort.no',
@@ -51,8 +51,12 @@ export default defineMessages({
     defaultMessage: 'End Product Name',
   },
   supplierNameSort: {
-    id: 'modules.OrderItems.list.sort.supplier',
+    id: 'modules.OrderItems.list.sort.supplierName',
     defaultMessage: 'Supplier',
+  },
+  supplierCodeSort: {
+    id: 'modules.OrderItems.list.sort.supplierCode',
+    defaultMessage: 'Supplier Code',
   },
   fileTypeDocument: {
     id: 'modules.orderItems.fileType.document',

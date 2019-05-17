@@ -25,7 +25,8 @@ function OrderItemModule(props: Props) {
     { title: intl.formatMessage(messages.productNameSort), value: 'productName' },
     { title: intl.formatMessage(messages.productSerialSort), value: 'productSerial' },
     { title: intl.formatMessage(messages.productProviderNameSort), value: 'productProviderName' },
-    { title: intl.formatMessage(messages.supplierNameSort), value: 'supplier' },
+    { title: intl.formatMessage(messages.supplierNameSort), value: 'supplierName' },
+    { title: intl.formatMessage(messages.supplierCodeSort), value: 'supplierCode' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {
