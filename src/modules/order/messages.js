@@ -462,9 +462,41 @@ export default defineMessages({
     id: 'modules.Orders.addAdjustment',
     defaultMessage: 'ADD ADJUSTMENT',
   },
+  updatedAtSort: {
+    id: 'modules.Orders.list.sort.updatedAt',
+    defaultMessage: 'Updated At',
+  },
+  createdAtSort: {
+    id: 'modules.Orders.list.sort.createdAt',
+    defaultMessage: 'Created At',
+  },
   poSort: {
     id: 'modules.Orders.list.sort.po',
     defaultMessage: 'PO No',
+  },
+  piSort: {
+    id: 'modules.Orders.list.sort.pi',
+    defaultMessage: 'PI No.',
+  },
+  issuedAtSort: {
+    id: 'modules.Orders.list.sort.issuedAt',
+    defaultMessage: 'PO Date',
+  },
+  exporterNameSort: {
+    id: 'modules.Orders.list.sort.exporterNameSort',
+    defaultMessage: 'Exporter',
+  },
+  currencySort: {
+    id: 'modules.Orders.list.sort.currency',
+    defaultMessage: 'Currency',
+  },
+  incotermSort: {
+    id: 'modules.Orders.list.sort.incoterm',
+    defaultMessage: 'Incoterms',
+  },
+  deliveryPlaceSort: {
+    id: 'modules.Orders.list.sort.deliveryPlace',
+    defaultMessage: 'Place of Delivery',
   },
   nameSort: {
     id: 'modules.Orders.list.sort.name',
@@ -477,14 +509,6 @@ export default defineMessages({
   exporterSort: {
     id: 'modules.Orders.list.sort.exporter',
     defaultMessage: 'Exporter',
-  },
-  createdAtSort: {
-    id: 'modules.Orders.list.sort.createdAt',
-    defaultMessage: 'Created At',
-  },
-  updatedAtSort: {
-    id: 'modules.Orders.list.sort.updatedAt',
-    defaultMessage: 'Updated At',
   },
   batch: {
     id: 'modules.Orders.form.batch',

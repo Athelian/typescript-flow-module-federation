@@ -20,6 +20,13 @@ function OrderItemModule(props: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
+    { title: intl.formatMessage(messages.piNo), value: 'piNo' },
+    { title: intl.formatMessage(messages.issuedAt), value: 'issuedAt' },
+    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
+    { title: intl.formatMessage(messages.currency), value: 'currency' },
+    { title: intl.formatMessage(messages.incoterm), value: 'incoterm' },
+    { title: intl.formatMessage(messages.deliveryPlace), value: 'deliveryPlace' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {

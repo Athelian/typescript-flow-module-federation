@@ -23,9 +23,15 @@ function OrderModule(props: Props) {
   const { intl } = props;
 
   const sortFields = [
-    { title: intl.formatMessage(messages.poSort), value: 'poNo' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(messages.poSort), value: 'poNo' },
+    { title: intl.formatMessage(messages.piSort), value: 'piNo' },
+    { title: intl.formatMessage(messages.issuedAtSort), value: 'issuedAt' },
+    { title: intl.formatMessage(messages.exporterNameSort), value: 'exporterName' },
+    { title: intl.formatMessage(messages.currencySort), value: 'currency' },
+    { title: intl.formatMessage(messages.incotermSort), value: 'incoterm' },
+    { title: intl.formatMessage(messages.deliveryPlaceSort), value: 'deliveryPlace' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {
