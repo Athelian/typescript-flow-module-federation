@@ -218,7 +218,6 @@ const OrderBatchCard = ({
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
-                    // FIXME: redo
                     const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
                     saveOnBlur({
                       ...batch,

@@ -33,7 +33,7 @@ export type BatchFormState = {
   tags?: Array<Object>,
   memo?: string,
   orderItem?: Object,
-  batchQuantityRevisions: Array<any>,
+  batchAdjustments: Array<any>,
   packageName?: ?string,
   packageCapacity?: number,
   packageQuantity: number,
@@ -65,7 +65,7 @@ export const initValues = {
   tags: [],
   memo: null,
   orderItem: null,
-  batchQuantityRevisions: [],
+  batchAdjustments: [],
   packageName: null,
   packageCapacity: 0,
   packageQuantity: 0,
@@ -136,7 +136,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
   };
 
   syncProductProvider = (productProvider: ProductProvider) => {
-    const { quantity, batchQuantityRevisions } = this.state;
+    const { quantity, batchAdjustments } = this.state;
     const {
       packageName,
       packageCapacity = 0,
@@ -162,7 +162,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
       packageName,
       packageCapacity,
       packageQuantity: prevState.autoCalculatePackageQuantity
-        ? calculatePackageQuantity({ packageCapacity, quantity, batchQuantityRevisions })
+        ? calculatePackageQuantity({ packageCapacity, quantity, batchAdjustments })
         : prevState.packageQuantity,
       packageGrossWeight,
       packageVolume,

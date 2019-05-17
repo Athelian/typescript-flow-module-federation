@@ -194,11 +194,11 @@ class BatchFormModule extends React.PureComponent<Props> {
                               icon="BATCH"
                             />
                             <SectionTabs
-                              link="batch_quantitySection"
+                              link="batch_quantityAdjustmentsSection"
                               label={
                                 <FormattedMessage
-                                  id="modules.Batches.quantity"
-                                  defaultMessage="QUANTITY"
+                                  id="modules.Batches.quantityAdjustments"
+                                  defaultMessage="QUANTITY ADJUSTMENTS"
                                 />
                               }
                               icon="QUANTITY_ADJUSTMENTS"
