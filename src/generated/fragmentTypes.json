@@ -88,6 +88,16 @@
       },
       {
         "kind": "UNION",
+        "name": "BatchQuantityRevisionPayload",
+        "possibleTypes": [
+          { "name": "BatchQuantityRevision" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
         "name": "ContainerGroupPayload",
         "possibleTypes": [
           { "name": "ContainerGroup" },
@@ -287,6 +297,7 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
           { "name": "Container" },
           { "name": "File" },
           { "name": "Mask" },
@@ -310,6 +321,7 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
           { "name": "Comment" },
           { "name": "Container" },
           { "name": "ContainerGroup" },
@@ -378,6 +390,7 @@
           { "name": "Batch" },
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
           { "name": "Comment" },
           { "name": "Container" },
           { "name": "ContainerGroup" },
@@ -474,6 +487,7 @@
         "possibleTypes": [
           { "name": "BatchAdjustment" },
           { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
           { "name": "Container" },
           { "name": "ContainerGroup" },
           { "name": "FieldDefinition" },

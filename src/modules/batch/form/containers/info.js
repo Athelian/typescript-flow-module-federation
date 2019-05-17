@@ -33,7 +33,7 @@ export type BatchFormState = {
   tags?: Array<Object>,
   memo?: string,
   orderItem?: Object,
-  batchAdjustments: Array<any>,
+  batchQuantityRevisions: Array<any>,
   packageName?: ?string,
   packageCapacity?: number,
   packageQuantity: number,
@@ -65,7 +65,7 @@ export const initValues = {
   tags: [],
   memo: null,
   orderItem: null,
-  batchAdjustments: [],
+  batchQuantityRevisions: [],
   packageName: null,
   packageCapacity: 0,
   packageQuantity: 0,
@@ -136,7 +136,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
   };
 
   syncProductProvider = (productProvider: ProductProvider) => {
-    const { quantity, batchAdjustments } = this.state;
+    const { quantity, batchQuantityRevisions } = this.state;
     const {
       packageName,
       packageCapacity = 0,
@@ -162,7 +162,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
       packageName,
       packageCapacity,
       packageQuantity: prevState.autoCalculatePackageQuantity
-        ? calculatePackageQuantity({ packageCapacity, quantity, batchAdjustments })
+        ? calculatePackageQuantity({ quantity, batchQuantityRevisions, packageCapacity })
         : prevState.packageQuantity,
       packageGrossWeight,
       packageVolume,
@@ -172,15 +172,26 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   getPackageQuantity = () => calculatePackageQuantity(this.state);
 
-  triggerCalculatePackageQuantity = () => {
-    this.setState(prevState => ({
-      packageQuantity: calculatePackageQuantity(prevState),
-    }));
+  toggleAutoCalculatePackageQuantity = () => {
+    const { autoCalculatePackageQuantity } = this.state;
+    if (autoCalculatePackageQuantity) {
+      this.setState({
+        autoCalculatePackageQuantity: false,
+      });
+    } else {
+      this.setState(prevState => ({
+        autoCalculatePackageQuantity: true,
+        packageQuantity: calculatePackageQuantity(prevState),
+      }));
+    }
   };
 
   calculatePackageQuantity = (setFieldTouched?: Function) => {
-    if (this.state.autoCalculatePackageQuantity) {
-      this.triggerCalculatePackageQuantity();
+    const { autoCalculatePackageQuantity } = this.state;
+    if (autoCalculatePackageQuantity) {
+      this.setState(prevState => ({
+        packageQuantity: calculatePackageQuantity(prevState),
+      }));
       if (setFieldTouched) {
         setFieldTouched('packageQuantity');
       }
