@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri May 17 2019 11:31:41 GMT+0900 (Japan Standard Time)
+# timestamp: Fri May 17 2019 18:13:46 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """28 de Noviembre Airport"""
@@ -27084,7 +27084,7 @@ type BatchQuantityRevision implements Model & Owned & Sortable & Memorizable {
 }
 
 input BatchQuantityRevisionCreateInput {
-  reason: BatchQuantityRevisionType!
+  type: BatchQuantityRevisionType!
   quantity: Float!
   memo: String
 }
@@ -27113,7 +27113,7 @@ enum BatchQuantityRevisionType {
 
 input BatchQuantityRevisionUpdateInput {
   id: ID
-  reason: BatchQuantityRevisionType
+  type: BatchQuantityRevisionType
   quantity: Float
   memo: String
 }
@@ -27127,7 +27127,7 @@ input BatchSortInput {
   updatedAt: SortOrder
   no: SortOrder
   poNo: SortOrder
-  product: SortOrder
+  productName: SortOrder
   producedAt: SortOrder
   deliveredAt: SortOrder
   expiredAt: SortOrder
@@ -29858,6 +29858,7 @@ type MaskPayloadPagination {
 input MaskSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
 }
 
 input MaskUpdateInput {
@@ -30391,7 +30392,7 @@ input OrderItemSortInput {
   productName: SortOrder
   productSerial: SortOrder
   productProviderName: SortOrder
-  supplier: SortOrder
+  supplierName: SortOrder
 }
 
 input OrderItemUpdateInput {
@@ -30458,7 +30459,7 @@ input OrderSortInput {
   poNo: SortOrder
   piNo: SortOrder
   issuedAt: SortOrder
-  exporter: SortOrder
+  exporterName: SortOrder
   currency: SortOrder
   incoterm: SortOrder
   deliveryPlace: SortOrder
@@ -30578,6 +30579,8 @@ type PartnershipPayloadPagination {
 input PartnerSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
+  code: SortOrder
 }
 
 type Port {
@@ -30762,7 +30765,10 @@ input ProductProviderSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
   name: SortOrder
-  serial: SortOrder
+  productName: SortOrder
+  productSerial: SortOrder
+  exporterName: SortOrder
+  supplierName: SortOrder
   unitPriceCurrency: SortOrder
 }
 
@@ -36665,6 +36671,9 @@ union UserRolesPayload = UserRoles | BadRequest | Forbidden | NotFound
 input UserSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  firstName: SortOrder
+  lastName: SortOrder
+  fullName: SortOrder
 }
 
 input UserUpdateInput {
