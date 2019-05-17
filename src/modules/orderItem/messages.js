@@ -22,41 +22,37 @@ export default defineMessages({
     id: 'modules.OrderItems.noOrderItems',
     defaultMessage: 'No order items found.',
   },
-  createdAtSort: {
-    id: 'modules.OrderItems.list.sort.createdAt',
-    defaultMessage: 'Created At',
-  },
   updatedAtSort: {
     id: 'modules.OrderItems.list.sort.updatedAt',
     defaultMessage: 'Updated At',
   },
-  poNo: {
-    id: 'modules.OrderItems.list.sort.poNo',
-    defaultMessage: 'PO No.',
+  createdAtSort: {
+    id: 'modules.OrderItems.list.sort.createdAt',
+    defaultMessage: 'Created At',
   },
-  piNo: {
-    id: 'modules.OrderItems.list.sort.piNo',
-    defaultMessage: 'PI No.',
+  noSort: {
+    id: 'modules.OrderItems.list.sort.no',
+    defaultMessage: 'Item No.',
   },
-  issuedAt: {
-    id: 'modules.OrderItems.list.sort.issuedAt',
-    defaultMessage: 'PO Date',
-  },
-  exporterName: {
-    id: 'modules.OrderItems.list.sort.exporterName',
-    defaultMessage: 'Exporter',
-  },
-  currency: {
+  currencySort: {
     id: 'modules.OrderItems.list.sort.currency',
     defaultMessage: 'Currency',
   },
-  incoterm: {
-    id: 'modules.OrderItems.list.sort.incoterm',
-    defaultMessage: 'Incoterms',
+  productNameSort: {
+    id: 'modules.OrderItems.list.sort.productName',
+    defaultMessage: 'Product Name',
   },
-  deliveryPlace: {
-    id: 'modules.OrderItems.list.sort.deliveryPlace',
-    defaultMessage: 'Place of Delivery',
+  productSerialSort: {
+    id: 'modules.OrderItems.list.sort.productSerial',
+    defaultMessage: 'Prodcut Serial',
+  },
+  productProviderNameSort: {
+    id: 'modules.OrderItems.list.sort.productProviderName',
+    defaultMessage: 'End Product Name',
+  },
+  supplierNameSort: {
+    id: 'modules.OrderItems.list.sort.supplier',
+    defaultMessage: 'Supplier',
   },
   fileTypeDocument: {
     id: 'modules.orderItems.fileType.document',

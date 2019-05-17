@@ -20,13 +20,12 @@ function OrderItemModule(props: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
-    { title: intl.formatMessage(messages.piNo), value: 'piNo' },
-    { title: intl.formatMessage(messages.issuedAt), value: 'issuedAt' },
-    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
-    { title: intl.formatMessage(messages.currency), value: 'currency' },
-    { title: intl.formatMessage(messages.incoterm), value: 'incoterm' },
-    { title: intl.formatMessage(messages.deliveryPlace), value: 'deliveryPlace' },
+    { title: intl.formatMessage(messages.noSort), value: 'no' },
+    { title: intl.formatMessage(messages.currencySort), value: 'currency' },
+    { title: intl.formatMessage(messages.productNameSort), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerialSort), value: 'productSerial' },
+    { title: intl.formatMessage(messages.productProviderNameSort), value: 'productProviderName' },
+    { title: intl.formatMessage(messages.supplierNameSort), value: 'supplier' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {
