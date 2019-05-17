@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { plus, minus } from 'number-precision';
+import { plus, minus } from 'utils/number';
 import { DefaultStyle, NumberInput } from 'components/Form';
 import emitter from 'utils/emitter';
 import { useNumberInput } from 'modules/form/hooks';
