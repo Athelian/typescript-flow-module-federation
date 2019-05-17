@@ -42,7 +42,7 @@ const BatchListModule = (props: Props) => {
     { title: intl.formatMessage(messages.PO), value: 'poNo' },
     {
       title: intl.formatMessage(messages.productName),
-      value: 'product',
+      value: 'productName',
     },
     {
       title: intl.formatMessage(messages.deliveredAt),
