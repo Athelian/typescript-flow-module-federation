@@ -36,11 +36,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.WareHouses.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.WareHouses.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   required: {
     id: 'modules.WareHouses.validation.required',
