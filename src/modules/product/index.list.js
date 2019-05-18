@@ -54,10 +54,10 @@ const ProductListModule = (props: Props) => {
   const { intl } = props;
 
   const sortFields = [
-    { title: intl.formatMessage(messages.name), value: 'name' },
-    { title: intl.formatMessage(messages.serial), value: 'serial' },
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.name), value: 'name' },
+    { title: intl.formatMessage(messages.serial), value: 'serial' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
