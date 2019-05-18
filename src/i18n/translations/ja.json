@@ -542,6 +542,7 @@
   "modules.Partners.newPartner": "新規追加",
   "modules.Partners.noPartners": "取引先がありません",
   "modules.Partners.name": "取引先名",
+  "modules.Partners.code": "取引先コード",
   "modules.Partners.type": "業種",
   "modules.Partners.type.forwarder": "フォワーダー",
   "modules.Partners.type.importer": "輸入者",
