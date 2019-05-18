@@ -85,7 +85,7 @@ export default defineMessages({
   },
   poNo: {
     id: 'components.BatchItem.poNo',
-    defaultMessage: 'PO NO.',
+    defaultMessage: 'PO No.',
   },
   packageName: {
     id: 'components.BatchItem.packageName',
