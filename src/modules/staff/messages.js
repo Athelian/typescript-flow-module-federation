@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'modules.Users.lastName',
     defaultMessage: 'LAST NAME',
   },
+  fullName: {
+    id: 'modules.Users.fullName',
+    defaultMessage: 'FULL NAME',
+  },
   language: {
     id: 'modules.Users.language',
     defaultMessage: 'LANGUAGE',
@@ -81,5 +85,25 @@ export default defineMessages({
   noUsers: {
     id: 'modules.Users.noUsers',
     defaultMessage: 'No staff found.',
+  },
+  updatedAtSort: {
+    id: 'modules.Users.list.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAtSort: {
+    id: 'modules.Users.list.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
+  firstNameSort: {
+    id: 'modules.Users.list.sort.firstName',
+    defaultMessage: 'First Name',
+  },
+  lastNameSort: {
+    id: 'modules.Users.list.sort.lastName',
+    defaultMessage: 'Last Name',
+  },
+  fullNameSort: {
+    id: 'modules.Users.list.sort.fullName',
+    defaultMessage: 'Full Name',
   },
 });

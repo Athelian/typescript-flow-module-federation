@@ -46,6 +46,9 @@ const StaffModule = (props: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.firstName), value: 'firstName' },
+    { title: intl.formatMessage(messages.lastName), value: 'lastName' },
+    { title: intl.formatMessage(messages.fullName), value: 'fullName' },
   ];
   return (
     <UIConsumer>
