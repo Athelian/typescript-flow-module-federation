@@ -185,7 +185,7 @@
   "components.BatchItem.packageVolume": "容積",
   "components.BatchItem.packageMaxQuantity": "最大入り数",
   "components.BatchItem.packageSize": "梱包サイズ(m)",
-  "components.BatchItem.productName": "商品",
+  "components.BatchItem.productName": "商品名",
   "components.BatchItem.productSerial": "商品番号",
   "components.BatchItem.deliveredAt": "引取日",
   "components.BatchItem.desiredAt": "希望納期",

@@ -65,32 +65,14 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches }: P
   const viewTasks = hasPermission(BATCH_TASK_LIST);
   const ignoreBatches = selectedBatches.map(batch => batch.id);
   const fields = [
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.batchNo), value: 'no' },
-    { title: intl.formatMessage(messages.PO), value: 'poNo' },
-    {
-      title: intl.formatMessage(messages.productName),
-      value: 'product',
-    },
-    {
-      title: intl.formatMessage(messages.deliveredAt),
-      value: 'deliveredAt',
-    },
-    {
-      title: intl.formatMessage(messages.expiredAt),
-      value: 'expiredAt',
-    },
-    {
-      title: intl.formatMessage(messages.producedAt),
-      value: 'producedAt',
-    },
-    {
-      title: intl.formatMessage(messages.updatedAt),
-      value: 'updatedAt',
-    },
-    {
-      title: intl.formatMessage(messages.createdAt),
-      value: 'createdAt',
-    },
+    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
+    { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
+    { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     getInitFilter(),

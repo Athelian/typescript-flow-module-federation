@@ -5,7 +5,7 @@ export default defineMessages({
   // fields
   batchNo: {
     id: 'components.BatchItem.batchNo',
-    defaultMessage: 'BATCH NO',
+    defaultMessage: 'Batch No.',
   },
   quantity: {
     id: 'components.BatchItem.quantity',
@@ -83,8 +83,8 @@ export default defineMessages({
     id: 'components.BatchItem.tags',
     defaultMessage: 'TAGS',
   },
-  PO: {
-    id: 'components.BatchItem.PO',
+  poNo: {
+    id: 'components.BatchItem.poNo',
     defaultMessage: 'PO NO.',
   },
   packageName: {
@@ -121,7 +121,7 @@ export default defineMessages({
   },
   productName: {
     id: 'components.BatchItem.productName',
-    defaultMessage: 'PRODUCT NAME',
+    defaultMessage: 'Product Name',
   },
   productSerial: {
     id: 'components.BatchItem.productSerial',
@@ -129,7 +129,7 @@ export default defineMessages({
   },
   deliveredAt: {
     id: 'components.BatchItem.deliveredAt',
-    defaultMessage: 'DELIVERY DATE',
+    defaultMessage: 'Delivery Date',
   },
   desiredAt: {
     id: 'components.BatchItem.desiredAt',
@@ -141,19 +141,19 @@ export default defineMessages({
   },
   expiredAt: {
     id: 'components.BatchItem.expiredAt',
-    defaultMessage: 'EXPIRY',
+    defaultMessage: 'Expiry Date',
   },
   producedAt: {
     id: 'components.BatchItem.producedAt',
-    defaultMessage: 'PRODUCTION DATE',
-  },
-  createdAt: {
-    id: 'components.BatchItem.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Productino Date',
   },
   updatedAt: {
     id: 'components.BatchItem.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
+  },
+  createdAt: {
+    id: 'components.BatchItem.createdAt',
+    defaultMessage: 'Date Created',
   },
   adjustmentType: {
     id: 'components.BatchItem.adjustmentType',
