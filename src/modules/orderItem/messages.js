@@ -22,39 +22,39 @@ export default defineMessages({
     id: 'modules.OrderItems.noOrderItems',
     defaultMessage: 'No order items found.',
   },
-  updatedAtSort: {
+  updatedAt: {
     id: 'modules.OrderItems.list.sort.updatedAt',
     defaultMessage: 'Last Modified',
   },
-  createdAtSort: {
+  createdAt: {
     id: 'modules.OrderItems.list.sort.createdAt',
     defaultMessage: 'Date Created',
   },
-  noSort: {
+  no: {
     id: 'modules.OrderItems.list.sort.no',
     defaultMessage: 'Item No.',
   },
-  currencySort: {
+  currency: {
     id: 'modules.OrderItems.list.sort.currency',
     defaultMessage: 'Currency',
   },
-  productNameSort: {
+  productName: {
     id: 'modules.OrderItems.list.sort.productName',
     defaultMessage: 'Product Name',
   },
-  productSerialSort: {
+  productSerial: {
     id: 'modules.OrderItems.list.sort.productSerial',
     defaultMessage: 'Prodcut Serial',
   },
-  productProviderNameSort: {
+  productProviderName: {
     id: 'modules.OrderItems.list.sort.productProviderName',
     defaultMessage: 'End Product Name',
   },
-  supplierNameSort: {
+  supplierName: {
     id: 'modules.OrderItems.list.sort.supplierName',
     defaultMessage: 'Supplier',
   },
-  supplierCodeSort: {
+  supplierCode: {
     id: 'modules.OrderItems.list.sort.supplierCode',
     defaultMessage: 'Supplier Code',
   },
