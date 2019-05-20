@@ -38,7 +38,7 @@ if (!container) {
 const renderApp = (Component, renderFn) => {
   trace('initial render', performance.now(), () =>
     renderFn(
-      <Profiler id="Application" onRender={logger.warn}>
+      <Profiler id="Application" onRender={logger.debug}>
         <div>
           {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
           {isAppInProduction && (
