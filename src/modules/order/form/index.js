@@ -144,53 +144,17 @@ export default class OrderForm extends React.Component<Props> {
                   </ListCardPlaceHolder>
                 </SectionWrapper>
 
-                <SectionWrapper id="order_shipmentsSection">
-                  <ListCardPlaceHolder isLoading={loading}>
-                    <Subscribe to={[OrderInfoContainer]}>
-                      {({ state: { shipments } }) => (
-                        <>
-                          <SectionHeader
-                            icon="SHIPMENT"
-                            title={
-                              <>
-                                <FormattedMessage
-                                  id="modules.Orders.shipments"
-                                  defaultMessage="SHIPMENTS"
-                                />{' '}
-                                ({shipments.length})
-                              </>
-                            }
-                          />
-                          <ShipmentsSection shipments={shipments} />
-                        </>
-                      )}
-                    </Subscribe>
-                  </ListCardPlaceHolder>
-                </SectionWrapper>
+                {!isNew && (
+                  <SectionWrapper id="order_shipmentsSection">
+                    <ShipmentsSection entityId={order.id} isLoading={loading} />
+                  </SectionWrapper>
+                )}
 
-                <SectionWrapper id="order_containersSection">
-                  <ListCardPlaceHolder isLoading={loading}>
-                    <Subscribe to={[OrderInfoContainer]}>
-                      {({ state: { containers } }) => (
-                        <>
-                          <SectionHeader
-                            icon="CONTAINER"
-                            title={
-                              <>
-                                <FormattedMessage
-                                  id="modules.Orders.containers"
-                                  defaultMessage="CONTAINERS"
-                                />{' '}
-                                ({containers.length})
-                              </>
-                            }
-                          />
-                          <ContainersSection containers={containers} />
-                        </>
-                      )}
-                    </Subscribe>
-                  </ListCardPlaceHolder>
-                </SectionWrapper>
+                {!isNew && (
+                  <SectionWrapper id="order_containersSection">
+                    <ContainersSection entityId={order.id} isLoading={loading} />
+                  </SectionWrapper>
+                )}
 
                 <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
                   {(

@@ -53,12 +53,6 @@ export const orderFormFragment = gql`
     orderItems {
       ...itemInOrderFormFragment
     }
-    shipments {
-      ...shipmentCardFragment
-    }
-    containers {
-      ...containerCardFragment
-    }
   }
 `;
 
