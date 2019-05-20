@@ -25,13 +25,12 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
-  containerCardFragment,
   itemInOrderFormFragment,
   itemInBatchFormFragment,
 } from 'graphql';
 
 export const orderFormQuery = gql`
-  query($id: ID!) {
+  query order($id: ID!) {
     order(id: $id) {
       ...orderFormFragment
     }
@@ -60,7 +59,6 @@ export const orderFormQuery = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
-  ${containerCardFragment}
   ${itemInOrderFormFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
