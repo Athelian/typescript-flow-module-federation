@@ -67,10 +67,6 @@ class JumpToSection extends React.Component<Props, State> {
         child => {
           const { link } = child.props;
           const element = document.querySelector(`#${link}`);
-          console.warn({
-            link,
-            element,
-          });
           if (element) {
             setTimeout(() => {
               this.setState({
@@ -105,9 +101,6 @@ class JumpToSection extends React.Component<Props, State> {
   }
 
   componentDidUpdate() {
-    console.warn({
-      elements: this.elements,
-    });
     this.elements.forEach(link => {
       const element = document.querySelector(`#${link}`);
       if (element) {
@@ -142,10 +135,6 @@ class JumpToSection extends React.Component<Props, State> {
   render() {
     const { children } = this.props;
     const { activeNode } = this.state;
-    console.warn({
-      elements: this.elements,
-      activeNode,
-    });
 
     return !activeNode
       ? React.Children.map(children, child =>
