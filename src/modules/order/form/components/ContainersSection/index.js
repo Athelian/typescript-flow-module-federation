@@ -12,14 +12,14 @@ import {
   ContainersSectionBodyStyle,
   EmptyMessageStyle,
 } from './style';
-import { containerRelateOfOrder } from './query';
+import { orderFormContainersQuery } from './query';
 
 type Props = {
   entityId: string,
 };
 
 function ContainersSection({ entityId }: Props) {
-  const { data, loading, error, networkStatus } = useQuery(containerRelateOfOrder, {
+  const { data, loading, error, networkStatus } = useQuery(orderFormContainersQuery, {
     variables: {
       id: entityId,
     },

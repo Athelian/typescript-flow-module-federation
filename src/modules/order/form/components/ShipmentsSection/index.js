@@ -12,14 +12,14 @@ import {
   ShipmentsSectionBodyStyle,
   EmptyMessageStyle,
 } from './style';
-import { shipmentRelateOfOrder } from './query';
+import { orderFormShipmentsQuery } from './query';
 
 type Props = {
   entityId: string,
 };
 
 function ShipmentsSection({ entityId }: Props) {
-  const { data, loading, error, networkStatus } = useQuery(shipmentRelateOfOrder, {
+  const { data, loading, error, networkStatus } = useQuery(orderFormShipmentsQuery, {
     variables: {
       id: entityId,
     },

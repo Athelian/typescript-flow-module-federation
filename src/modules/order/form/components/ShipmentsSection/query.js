@@ -10,8 +10,8 @@ import {
   todoFragment,
 } from 'graphql';
 
-export const shipmentRelateOfOrder = gql`
-  query shipmentRelateOfOrder($id: ID!) {
+export const orderFormShipmentsQuery = gql`
+  query orderFormShipmentsQuery($id: ID!) {
     order(id: $id) {
       ... on Order {
         id
@@ -31,4 +31,4 @@ export const shipmentRelateOfOrder = gql`
   ${todoFragment}
 `;
 
-export default shipmentRelateOfOrder;
+export default orderFormShipmentsQuery;
