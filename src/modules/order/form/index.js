@@ -18,14 +18,14 @@ import { SectionHeader, SectionWrapper, LastModified, StatusToggle } from 'compo
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { PermissionConsumer } from 'modules/permission';
-import TaskSection from 'modules/task/common/TaskSection';
 import OrderSection from './components/OrderSection';
 import ItemsSection from './components/ItemsSection';
 import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import ContainersSection from './components/ContainersSection';
-import { OrderFormWrapperStyle } from './style';
+import OrderTasksSection from './components/OrderTasksSection';
 import { OrderInfoContainer, OrderFilesContainer, OrderTasksContainer } from './containers';
+import { OrderFormWrapperStyle } from './style';
 
 type OptionalProps = {
   isNew: boolean,
@@ -139,9 +139,15 @@ export default class OrderForm extends React.Component<Props> {
                 </SectionWrapper>
 
                 <SectionWrapper id="order_taskSection">
-                  <ListCardPlaceHolder isLoading={loading}>
-                    <TaskSection entityId={order.id} type="order" />
-                  </ListCardPlaceHolder>
+                  <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
+                    {({ initDetailValues }) => (
+                      <OrderTasksSection
+                        initValues={initDetailValues}
+                        isLoading={loading}
+                        entityId={order.id}
+                      />
+                    )}
+                  </Subscribe>
                 </SectionWrapper>
 
                 {!isNew && (

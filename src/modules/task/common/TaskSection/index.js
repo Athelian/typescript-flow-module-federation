@@ -84,7 +84,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
         canUpdateTasks: hasPermission(TASK_UPDATE) && hasPermission(ORDER_UPDATE),
         canUpdateTaskTemplate:
           hasPermission(TASK_CREATE) && hasPermission(TASK_DELETE) && hasPermission(ORDER_UPDATE),
-        orderItemTasksContainer: OrderTasksContainer,
+        tasksContainer: OrderTasksContainer,
       };
     case 'orderItem': {
       return {
@@ -97,7 +97,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_CREATE) &&
           hasPermission(TASK_DELETE) &&
           hasPermission(ORDER_ITEMS_UPDATE),
-        orderItemTasksContainer: OrderItemTasksContainer,
+        tasksContainer: OrderItemTasksContainer,
       };
     }
     case 'batch':
@@ -114,7 +114,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_DELETE) &&
           (hasPermission(BATCH_UPDATE) ||
             (hasPermission(BATCH_SET_TASK_TEMPLATE) && hasPermission(BATCH_SET_TASKS))),
-        orderItemTasksContainer: BatchTasksContainer,
+        tasksContainer: BatchTasksContainer,
       };
     case 'product':
       return {
@@ -131,7 +131,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_DELETE) &&
           (hasPermission(PRODUCT_UPDATE) ||
             (hasPermission(PRODUCT_SET_TASK_TEMPLATE) && hasPermission(PRODUCT_SET_TASKS))),
-        orderItemTasksContainer: ProductTasksContainer,
+        tasksContainer: ProductTasksContainer,
       };
     case 'productProvider':
       return {
@@ -152,7 +152,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
             (hasPermission(PRODUCT_PROVIDER_SET_TASK_TEMPLATE) &&
               hasPermission(PRODUCT_PROVIDER_SET_TASKS))),
-        orderItemTasksContainer: ProductProviderTasksContainer,
+        tasksContainer: ProductProviderTasksContainer,
       };
     default:
       return {
@@ -169,7 +169,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
           hasPermission(TASK_DELETE) &&
           (hasPermission(SHIPMENT_UPDATE) ||
             (hasPermission(SHIPMENT_SET_TASK_TEMPLATE) && hasPermission(SHIPMENT_SET_TASKS))),
-        orderItemTasksContainer: ShipmentTasksContainer,
+        tasksContainer: ShipmentTasksContainer,
       };
   }
 };
@@ -185,13 +185,13 @@ function TaskSection({ type, entityId, intl }: Props) {
     canDeleteTasks,
     canUpdateTasks,
     canUpdateTaskTemplate,
-    orderItemTasksContainer,
+    tasksContainer,
   } = getConfig(type, hasPermission);
 
   if (!canViewList) return null;
 
   return (
-    <Subscribe to={[orderItemTasksContainer, FormContainer]}>
+    <Subscribe to={[tasksContainer, FormContainer]}>
       {(
         {
           state: {

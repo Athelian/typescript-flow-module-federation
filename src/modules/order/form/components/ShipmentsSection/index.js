@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { navigate } from '@reach/router';
+import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader } from 'components/Form';
 import { ShipmentCard } from 'components/Cards';
@@ -20,51 +21,60 @@ type Props = {
 };
 
 function ShipmentsSection({ entityId, isLoading }: Props) {
-  const { data, loading, error, networkStatus } = useQuery(orderFormShipmentsQuery, {
-    variables: {
-      id: entityId,
-    },
-  });
-
-  const refetching = networkStatus === 4;
-  const shipments = getByPathWithDefault([], 'order.shipments', data);
-
-  const showPlaceHolder = (loading && !refetching) || isLoading;
-
-  if (error) return error.message;
-
   return (
-    <ListCardPlaceholder isLoading={showPlaceHolder}>
-      <>
-        <SectionHeader
-          icon="SHIPMENT"
-          title={
-            <>
-              <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" /> (
-              {shipments.length})
-            </>
+    <ListCardPlaceholder isLoading={isLoading}>
+      <Query
+        query={orderFormShipmentsQuery}
+        variables={{
+          id: entityId,
+        }}
+        fetchPolicy="network-only"
+      >
+        {({ loading, data, error }) => {
+          if (error) {
+            if (error.message && error.message.includes('403')) {
+              navigate('/403');
+            }
+
+            return error.message;
           }
-        />
-        <div className={ShipmentsSectionWrapperStyle}>
-          <SectionNavBar>
-            <div id="sortsandfilterswip" />
-          </SectionNavBar>
-          {shipments.length === 0 ? (
-            <div className={EmptyMessageStyle}>
-              <FormattedMessage
-                id="modules.Orders.noShipmentFound"
-                defaultMessage="No shipments found"
+          if (loading) return <ListCardPlaceholder isLoading>Loading... </ListCardPlaceholder>;
+
+          const shipments = getByPathWithDefault([], 'order.shipments', data);
+          return (
+            <>
+              <SectionHeader
+                icon="SHIPMENT"
+                title={
+                  <>
+                    <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" /> (
+                    {shipments.length})
+                  </>
+                }
               />
-            </div>
-          ) : (
-            <div className={ShipmentsSectionBodyStyle}>
-              {shipments.map(shipment => (
-                <ShipmentCard shipment={shipment} key={shipment.id} />
-              ))}
-            </div>
-          )}
-        </div>
-      </>
+              <div className={ShipmentsSectionWrapperStyle}>
+                <SectionNavBar>
+                  <div id="sortsandfilterswip" />
+                </SectionNavBar>
+                {shipments.length === 0 ? (
+                  <div className={EmptyMessageStyle}>
+                    <FormattedMessage
+                      id="modules.Orders.noShipmentFound"
+                      defaultMessage="No shipments found"
+                    />
+                  </div>
+                ) : (
+                  <div className={ShipmentsSectionBodyStyle}>
+                    {shipments.map(shipment => (
+                      <ShipmentCard shipment={shipment} key={shipment.id} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          );
+        }}
+      </Query>
     </ListCardPlaceholder>
   );
 }

@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { navigate } from '@reach/router';
+import { Query } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { SectionHeader } from 'components/Form';
 import { ContainerCard } from 'components/Cards';
@@ -20,52 +21,62 @@ type Props = {
 };
 
 function ContainersSection({ entityId, isLoading }: Props) {
-  const { data, loading, error, networkStatus } = useQuery(orderFormContainersQuery, {
-    variables: {
-      id: entityId,
-    },
-  });
-
-  const refetching = networkStatus === 4;
-  const containers = getByPathWithDefault([], 'order.containers', data);
-
-  const showPlaceHolder = (loading && !refetching) || isLoading;
-
-  if (error) return error.message;
-
   return (
-    <ListCardPlaceholder isLoading={showPlaceHolder}>
-      <>
-        <SectionHeader
-          icon="CONTAINER"
-          title={
-            <>
-              <FormattedMessage id="modules.Orders.containers" defaultMessage="CONTAINERS" /> (
-              {containers.length})
-            </>
-          }
-        />
-        <div className={ContainersSectionWrapperStyle}>
-          <SectionNavBar>
-            <div id="sortsandfilterswip" />
-          </SectionNavBar>
+    <ListCardPlaceholder isLoading={isLoading}>
+      <Query
+        query={orderFormContainersQuery}
+        variables={{
+          id: entityId,
+        }}
+        fetchPolicy="network-only"
+      >
+        {({ loading, data, error }) => {
+          if (error) {
+            if (error.message && error.message.includes('403')) {
+              navigate('/403');
+            }
 
-          {containers.length === 0 ? (
-            <div className={EmptyMessageStyle}>
-              <FormattedMessage
-                id="modules.Orders.noContainersFound"
-                defaultMessage="No containers found"
+            return error.message;
+          }
+          if (loading) return <ListCardPlaceholder isLoading>Loading... </ListCardPlaceholder>;
+
+          const containers = getByPathWithDefault([], 'order.containers', data);
+
+          return (
+            <>
+              <SectionHeader
+                icon="CONTAINER"
+                title={
+                  <>
+                    <FormattedMessage id="modules.Orders.containers" defaultMessage="CONTAINERS" />{' '}
+                    ({containers.length})
+                  </>
+                }
               />
-            </div>
-          ) : (
-            <div className={ContainersSectionBodyStyle}>
-              {containers.map(container => (
-                <ContainerCard container={container} key={container.id} />
-              ))}
-            </div>
-          )}
-        </div>
-      </>
+              <div className={ContainersSectionWrapperStyle}>
+                <SectionNavBar>
+                  <div id="sortsandfilterswip" />
+                </SectionNavBar>
+
+                {containers.length === 0 ? (
+                  <div className={EmptyMessageStyle}>
+                    <FormattedMessage
+                      id="modules.Orders.noContainersFound"
+                      defaultMessage="No containers found"
+                    />
+                  </div>
+                ) : (
+                  <div className={ContainersSectionBodyStyle}>
+                    {containers.map(container => (
+                      <ContainerCard container={container} key={container.id} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          );
+        }}
+      </Query>
     </ListCardPlaceholder>
   );
 }
