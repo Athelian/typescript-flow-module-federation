@@ -1,5 +1,7 @@
 // @flow
-import * as React from 'react';
+// $FlowFixMe not have type yet
+import React, { unstable_Profiler as Profiler } from 'react';
+import { unstable_trace as trace } from 'scheduler/tracing';
 import NP from 'number-precision';
 import { hydrate, render } from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -34,34 +36,38 @@ if (!container) {
 }
 
 const renderApp = (Component, renderFn) => {
-  renderFn(
-    <div>
-      {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
-      {isAppInProduction && (
-        <DeployNotifier
-          revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-          revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-        />
-      )}
-      <ApolloProvider client={apolloClient}>
-        <AuthenticationProvider>
-          <LanguageProvider>
-            <UIProvider>
-              {isEnableStrictMode ? (
-                <React.StrictMode>
-                  <Component />
-                </React.StrictMode>
-              ) : (
-                <Component />
-              )}
-            </UIProvider>
-          </LanguageProvider>
-        </AuthenticationProvider>
-      </ApolloProvider>
+  trace('initial render', performance.now(), () =>
+    renderFn(
+      <Profiler id="Application" onRender={logger.debug}>
+        <div>
+          {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
+          {isAppInProduction && (
+            <DeployNotifier
+              revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+              revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+            />
+          )}
+          <ApolloProvider client={apolloClient}>
+            <AuthenticationProvider>
+              <LanguageProvider>
+                <UIProvider>
+                  {isEnableStrictMode ? (
+                    <React.StrictMode>
+                      <Component />
+                    </React.StrictMode>
+                  ) : (
+                    <Component />
+                  )}
+                </UIProvider>
+              </LanguageProvider>
+            </AuthenticationProvider>
+          </ApolloProvider>
 
-      <ToastContainer />
-    </div>,
-    container
+          <ToastContainer />
+        </div>{' '}
+      </Profiler>,
+      container
+    )
   );
 };
 

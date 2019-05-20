@@ -18,7 +18,7 @@ type OptionalProps = {
   height: string,
   align: 'left' | 'right' | 'center',
   hideDropdownArrow: boolean,
-  placeholder: string,
+  placeholder: ?string,
 };
 
 type Props = OptionalProps &

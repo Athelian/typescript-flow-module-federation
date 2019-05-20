@@ -576,6 +576,13 @@ export const parseChangedData = ({
           case 'tags':
             changedBatch.tagIds = updateValue.map(({ id: tagId }) => tagId);
             break;
+          case 'batchQuantityRevisions':
+            changedBatch.batchQuantityRevisions = updateValue.map(revision => ({
+              id: revision.id,
+              quantity: revision.quantity,
+              type: revision.type,
+            }));
+            break;
 
           case 'customFields':
             changedBatch[key] = prepareCustomFieldsData(updateValue);

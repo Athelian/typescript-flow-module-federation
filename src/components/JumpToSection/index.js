@@ -10,7 +10,7 @@ type Props = {
 };
 
 type State = {
-  activeNode: ?string,
+  activeNode: React.Node,
 };
 
 class JumpToSection extends React.Component<Props, State> {
@@ -26,6 +26,8 @@ class JumpToSection extends React.Component<Props, State> {
   };
 
   io: IntersectionObserver;
+
+  elements: Array<string> = [];
 
   componentDidMount() {
     this.isMountedOnDOM = true;
@@ -65,7 +67,17 @@ class JumpToSection extends React.Component<Props, State> {
         child => {
           const { link } = child.props;
           const element = document.querySelector(`#${link}`);
+          console.warn({
+            link,
+            element,
+          });
           if (element) {
+            setTimeout(() => {
+              this.setState({
+                activeNode: this.elements.length > 0 ? this.elements[0] : '',
+              });
+            }, TIMEOUT);
+            this.elements.push(link);
             this.io.observe(element);
           } else {
             // wait for the element is rendering on DOM
@@ -75,6 +87,12 @@ class JumpToSection extends React.Component<Props, State> {
                 requestAnimationFrame(retryFindElement);
               } else {
                 this.io.observe(retryElement);
+                this.elements.push(link);
+                setTimeout(() => {
+                  this.setState({
+                    activeNode: this.elements.length > 0 ? this.elements[0] : '',
+                  });
+                }, TIMEOUT);
               }
             };
 
@@ -86,31 +104,54 @@ class JumpToSection extends React.Component<Props, State> {
     });
   }
 
+  componentDidUpdate() {
+    console.warn({
+      elements: this.elements,
+    });
+    this.elements.forEach(link => {
+      const element = document.querySelector(`#${link}`);
+      if (element) {
+        this.io.observe(element);
+      }
+    });
+  }
+
   componentWillUnmount() {
     logger.warn('remove IntersectionObserver');
     this.isMountedOnDOM = false;
     this.io.disconnect();
   }
 
-  handleClick = (id: string) => () => {
+  handleClick = (id: string) => {
     const node = document.querySelector(`#${id}`);
     if (node) {
-      scrollIntoView(node, {
-        behavior: 'smooth',
-        scrollMode: 'if-needed',
-      });
+      this.setState(
+        {
+          activeNode: id,
+        },
+        () => {
+          scrollIntoView(node, {
+            behavior: 'smooth',
+            scrollMode: 'if-needed',
+          });
+        }
+      );
     }
   };
 
   render() {
     const { children } = this.props;
     const { activeNode } = this.state;
+    console.warn({
+      elements: this.elements,
+      activeNode,
+    });
 
     return !activeNode
       ? React.Children.map(children, child =>
           React.cloneElement(child, {
             active: child.props.link === activeNode,
-            onClick: this.handleClick(child.props.link),
+            onClick: () => this.handleClick(child.props.link),
           })
         )
       : React.Children.map(
@@ -119,7 +160,7 @@ class JumpToSection extends React.Component<Props, State> {
             document.querySelector(`#${child.props.link}`) &&
             React.cloneElement(child, {
               active: child.props.link === activeNode,
-              onClick: this.handleClick(child.props.link),
+              onClick: () => this.handleClick(child.props.link),
             })
         );
   }

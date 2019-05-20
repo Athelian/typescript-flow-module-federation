@@ -123,7 +123,10 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  order: null,
+  order: {
+    id: '',
+    poNo: '',
+  },
   batches: [],
   index: 0,
   actions: [],

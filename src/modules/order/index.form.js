@@ -7,11 +7,11 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
 import Layout from 'components/Layout';
-import { QueryForm } from 'components/common';
 import { UIConsumer } from 'modules/ui';
 import { getByPath } from 'utils/fp';
 import { FormContainer, resetFormState } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
+import QueryFormV2 from 'components/common/QueryFormV2';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
@@ -531,13 +531,13 @@ class OrderFormModule extends React.PureComponent<Props> {
                       </Subscribe>
                     </>
                   ) : (
-                    <QueryForm
+                    <QueryFormV2
                       query={orderFormQuery}
                       entityId={orderId}
                       entityType="order"
-                      render={order => (
+                      render={(order, loading) => (
                         <>
-                          <OrderForm order={order} isClone={this.isClone()} />
+                          <OrderForm order={order} loading={loading} isClone={this.isClone()} />
                           <Subscribe
                             to={[
                               OrderItemsContainer,

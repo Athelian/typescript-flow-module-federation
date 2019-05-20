@@ -7,6 +7,7 @@ import { useNumberInput } from 'modules/form/hooks';
 type OptionalProps = {
   isRequired: boolean,
   disabled: boolean,
+  width: string,
 };
 
 type Props = OptionalProps & {
@@ -18,9 +19,10 @@ type Props = OptionalProps & {
 const defaultProps = {
   isRequired: false,
   disabled: false,
+  width: '200px',
 };
 
-export default function InlineNumberInput({ name, value, isRequired, disabled, id }: Props) {
+export default function InlineNumberInput({ name, value, isRequired, disabled, width, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useNumberInput(value, { isRequired });
   return (
     <DefaultStyle
@@ -45,6 +47,7 @@ export default function InlineNumberInput({ name, value, isRequired, disabled, i
           });
         }}
         align="left"
+        width={width}
       />
     </DefaultStyle>
   );

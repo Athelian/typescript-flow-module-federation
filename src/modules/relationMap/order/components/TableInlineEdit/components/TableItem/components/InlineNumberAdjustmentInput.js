@@ -1,53 +1,65 @@
 // @flow
 import * as React from 'react';
-import { plus, minus } from 'utils/number';
-import { DefaultStyle, NumberInput } from 'components/Form';
+import { FormattedMessage } from 'react-intl';
+import { NewButton } from 'components/Buttons';
 import emitter from 'utils/emitter';
-import { useNumberInput } from 'modules/form/hooks';
+import InlineSelectEnumInput from './InlineSelectEnumInput';
+import InlineNumberInput from './InlineNumberInput';
+import { InlineRowStyle } from './style';
 
 type OptionalProps = {
   isRequired: boolean,
-  adjustment: number,
+  value: ?{
+    quantity: number,
+    type: string,
+  },
 };
 
 type Props = OptionalProps & {
   name: string,
-  value: number,
   id: string,
 };
 
 const defaultProps = {
   isRequired: false,
-  adjustment: 0,
+  value: null,
 };
 
-export default function InlineNumberAdjustmentInput({
-  name,
-  value,
-  adjustment,
-  isRequired,
-  id,
-}: Props) {
-  const { hasError, isFocused, ...inputHandlers } = useNumberInput(plus(value, adjustment), {
-    isRequired,
-  });
-  return (
-    <DefaultStyle type="number" isFocused={isFocused} hasError={hasError}>
-      <NumberInput
-        name={name}
+export default function InlineNumberAdjustmentInput({ name, value, isRequired, id }: Props) {
+  const hasQuantityYet = !!value;
+  return hasQuantityYet ? (
+    <div className={InlineRowStyle}>
+      <InlineSelectEnumInput
         id={`input-${id}`}
-        {...inputHandlers}
-        onBlur={() => {
-          inputHandlers.onBlur();
-          emitter.emit('INLINE_CHANGE', {
-            name,
-            hasError,
-            value: minus(inputHandlers.value, adjustment),
-          });
-        }}
-        align="left"
+        name={`${name}.type`}
+        value={value && value.type ? value.type : ''}
+        enumType="BatchQuantityRevisionType"
+        isRequired={isRequired}
+        width="97.5px"
       />
-    </DefaultStyle>
+      <InlineNumberInput
+        id={`input-${id}`}
+        name={`${name}.quantity`}
+        value={value && value.quantity ? value.quantity : 0}
+        isRequired={isRequired}
+        width="97.5px"
+      />
+    </div>
+  ) : (
+    <NewButton
+      label={<FormattedMessage id="components.button.newQuantity" defaultMessage="NEW QUANTITY" />}
+      onClick={() => {
+        emitter.emit('INLINE_CHANGE', {
+          name,
+          hasError: false,
+          value: {
+            quantity: 0,
+            type: 'Other',
+          },
+        });
+      }}
+      id={`input-${id}`}
+    />
   );
 }
 
