@@ -36,7 +36,7 @@ describe('Batch', () => {
 
       // quantity adjustments
       cy.getByTestId('initialQuantityDiv').should('have.text', `${quantity}`);
-      cy.getByTestId('addAdjustmentButton')
+      cy.getByTestId('btnNewQuantity')
         .click()
         .get('input[name="batchAdjustments.0.quantity"]')
         .type(batchAdjustmentsQuantity)

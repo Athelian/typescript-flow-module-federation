@@ -24,7 +24,7 @@ export type NumberInputProps = Props;
 const defaultProps = {
   ...defaultInputProps,
   nullable: false,
-  nonNegative: false,
+  nonNegative: true,
   readOnlySuffix: null,
 };
 
