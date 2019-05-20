@@ -16,9 +16,10 @@ import { orderFormContainersQuery } from './query';
 
 type Props = {
   entityId: string,
+  isLoading: boolean,
 };
 
-function ContainersSection({ entityId }: Props) {
+function ContainersSection({ entityId, isLoading }: Props) {
   const { data, loading, error, networkStatus } = useQuery(orderFormContainersQuery, {
     variables: {
       id: entityId,
@@ -26,49 +27,46 @@ function ContainersSection({ entityId }: Props) {
   });
 
   const refetching = networkStatus === 4;
+  const containers = getByPathWithDefault([], 'order.containers', data);
 
-  if (loading && !refetching)
-    return (
-      <ListCardPlaceholder isLoading>
-        <span>Loading...</span>
-      </ListCardPlaceholder>
-    );
+  const showPlaceHolder = (loading && !refetching) || isLoading;
 
   if (error) return error.message;
 
-  const containers = getByPathWithDefault([], 'order.containers', data);
   return (
-    <>
-      <SectionHeader
-        icon="CONTAINER"
-        title={
-          <>
-            <FormattedMessage id="modules.Orders.containers" defaultMessage="CONTAINERS" /> (
-            {containers.length})
-          </>
-        }
-      />
-      <div className={ContainersSectionWrapperStyle}>
-        <SectionNavBar>
-          <div id="sortsandfilterswip" />
-        </SectionNavBar>
+    <ListCardPlaceholder isLoading={showPlaceHolder}>
+      <>
+        <SectionHeader
+          icon="CONTAINER"
+          title={
+            <>
+              <FormattedMessage id="modules.Orders.containers" defaultMessage="CONTAINERS" /> (
+              {containers.length})
+            </>
+          }
+        />
+        <div className={ContainersSectionWrapperStyle}>
+          <SectionNavBar>
+            <div id="sortsandfilterswip" />
+          </SectionNavBar>
 
-        {containers.length === 0 ? (
-          <div className={EmptyMessageStyle}>
-            <FormattedMessage
-              id="modules.Orders.noContainersFound"
-              defaultMessage="No containers found"
-            />
-          </div>
-        ) : (
-          <div className={ContainersSectionBodyStyle}>
-            {containers.map(container => (
-              <ContainerCard container={container} key={container.id} />
-            ))}
-          </div>
-        )}
-      </div>
-    </>
+          {containers.length === 0 ? (
+            <div className={EmptyMessageStyle}>
+              <FormattedMessage
+                id="modules.Orders.noContainersFound"
+                defaultMessage="No containers found"
+              />
+            </div>
+          ) : (
+            <div className={ContainersSectionBodyStyle}>
+              {containers.map(container => (
+                <ContainerCard container={container} key={container.id} />
+              ))}
+            </div>
+          )}
+        </div>
+      </>
+    </ListCardPlaceholder>
   );
 }
 

@@ -42,6 +42,13 @@ class JumpToSection extends React.Component<Props, State> {
           );
 
           if (!activeSection) {
+            this.elements.forEach(link => {
+              const element = document.querySelector(`#${link}`);
+              if (element) {
+                this.io.unobserve(element);
+                this.io.observe(element);
+              }
+            });
             return;
           }
 
@@ -68,11 +75,6 @@ class JumpToSection extends React.Component<Props, State> {
           const { link } = child.props;
           const element = document.querySelector(`#${link}`);
           if (element) {
-            setTimeout(() => {
-              this.setState({
-                activeNode: this.elements.length > 0 ? this.elements[0] : '',
-              });
-            }, TIMEOUT);
             this.elements.push(link);
             this.io.observe(element);
           } else {
@@ -84,11 +86,6 @@ class JumpToSection extends React.Component<Props, State> {
               } else {
                 this.io.observe(retryElement);
                 this.elements.push(link);
-                setTimeout(() => {
-                  this.setState({
-                    activeNode: this.elements.length > 0 ? this.elements[0] : '',
-                  });
-                }, TIMEOUT);
               }
             };
 
@@ -97,15 +94,6 @@ class JumpToSection extends React.Component<Props, State> {
         },
         TIMEOUT
       );
-    });
-  }
-
-  componentDidUpdate() {
-    this.elements.forEach(link => {
-      const element = document.querySelector(`#${link}`);
-      if (element) {
-        this.io.observe(element);
-      }
     });
   }
 

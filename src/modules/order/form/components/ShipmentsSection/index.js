@@ -16,9 +16,10 @@ import { orderFormShipmentsQuery } from './query';
 
 type Props = {
   entityId: string,
+  isLoading: boolean,
 };
 
-function ShipmentsSection({ entityId }: Props) {
+function ShipmentsSection({ entityId, isLoading }: Props) {
   const { data, loading, error, networkStatus } = useQuery(orderFormShipmentsQuery, {
     variables: {
       id: entityId,
@@ -26,49 +27,45 @@ function ShipmentsSection({ entityId }: Props) {
   });
 
   const refetching = networkStatus === 4;
+  const shipments = getByPathWithDefault([], 'order.shipments', data);
 
-  if (loading && !refetching)
-    return (
-      <ListCardPlaceholder isLoading>
-        <span>Loading...</span>
-      </ListCardPlaceholder>
-    );
+  const showPlaceHolder = (loading && !refetching) || isLoading;
 
   if (error) return error.message;
 
-  const shipments = getByPathWithDefault([], 'order.shipments', data);
-
   return (
-    <>
-      <SectionHeader
-        icon="SHIPMENT"
-        title={
-          <>
-            <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" /> (
-            {shipments.length})
-          </>
-        }
-      />
-      <div className={ShipmentsSectionWrapperStyle}>
-        <SectionNavBar>
-          <div id="sortsandfilterswip" />
-        </SectionNavBar>
-        {shipments.length === 0 ? (
-          <div className={EmptyMessageStyle}>
-            <FormattedMessage
-              id="modules.Orders.noShipmentFound"
-              defaultMessage="No shipments found"
-            />
-          </div>
-        ) : (
-          <div className={ShipmentsSectionBodyStyle}>
-            {shipments.map(shipment => (
-              <ShipmentCard shipment={shipment} key={shipment.id} />
-            ))}
-          </div>
-        )}
-      </div>
-    </>
+    <ListCardPlaceholder isLoading={showPlaceHolder}>
+      <>
+        <SectionHeader
+          icon="SHIPMENT"
+          title={
+            <>
+              <FormattedMessage id="modules.Orders.shipments" defaultMessage="SHIPMENTS" /> (
+              {shipments.length})
+            </>
+          }
+        />
+        <div className={ShipmentsSectionWrapperStyle}>
+          <SectionNavBar>
+            <div id="sortsandfilterswip" />
+          </SectionNavBar>
+          {shipments.length === 0 ? (
+            <div className={EmptyMessageStyle}>
+              <FormattedMessage
+                id="modules.Orders.noShipmentFound"
+                defaultMessage="No shipments found"
+              />
+            </div>
+          ) : (
+            <div className={ShipmentsSectionBodyStyle}>
+              {shipments.map(shipment => (
+                <ShipmentCard shipment={shipment} key={shipment.id} />
+              ))}
+            </div>
+          )}
+        </div>
+      </>
+    </ListCardPlaceholder>
   );
 }
 

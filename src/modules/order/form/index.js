@@ -146,17 +146,13 @@ export default class OrderForm extends React.Component<Props> {
 
                 {!isNew && (
                   <SectionWrapper id="order_shipmentsSection">
-                    <ListCardPlaceHolder isLoading={loading}>
-                      <ShipmentsSection entityId={order.id} />
-                    </ListCardPlaceHolder>
+                    <ShipmentsSection entityId={order.id} isLoading={loading} />
                   </SectionWrapper>
                 )}
 
                 {!isNew && (
                   <SectionWrapper id="order_containersSection">
-                    <ListCardPlaceHolder isLoading={loading}>
-                      <ContainersSection entityId={order.id} />
-                    </ListCardPlaceHolder>
+                    <ContainersSection entityId={order.id} isLoading={loading} />
                   </SectionWrapper>
                 )}
 
