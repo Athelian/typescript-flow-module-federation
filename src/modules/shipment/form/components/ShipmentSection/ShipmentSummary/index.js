@@ -214,9 +214,14 @@ const ShipmentSummary = () => {
                         />
                       }
                     >
-                      <Display>
-                        <FormattedMessage id="modules.shipment.invalid" defaultMessage="Invalid" />
-                      </Display>
+                      <div>
+                        <Display>
+                          <FormattedMessage
+                            id="modules.shipment.invalid"
+                            defaultMessage="Invalid"
+                          />
+                        </Display>
+                      </div>
                     </Tooltip>
                   ) : (
                     <Display>
