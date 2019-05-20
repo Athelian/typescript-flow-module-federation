@@ -1,4 +1,5 @@
 // @flow
+import { set, cloneDeep } from 'lodash';
 import { plus, times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
@@ -223,4 +224,23 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
       tasks: [],
     },
   });
+};
+
+export const updateBatchCardQuantity = (batch: Object, quantity: number): Object => {
+  const { batchQuantityRevisions, autoCalculatePackageQuantity } = batch;
+
+  const newBatch = cloneDeep(batch);
+  if (batchQuantityRevisions.length > 0) {
+    set(
+      newBatch,
+      `batchQuantityRevisions[${batchQuantityRevisions.length - 1}].quantity`,
+      quantity
+    );
+  } else {
+    set(newBatch, `quantity`, quantity);
+  }
+  if (autoCalculatePackageQuantity) {
+    set(newBatch, `packageQuantity`, calculatePackageQuantity(newBatch));
+  }
+  return newBatch;
 };
