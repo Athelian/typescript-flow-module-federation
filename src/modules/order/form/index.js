@@ -11,6 +11,7 @@ import { BooleanValue } from 'react-values';
 import { CloneButton } from 'components/Buttons';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
+import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
@@ -111,31 +112,36 @@ export default class OrderForm extends React.Component<Props> {
                 </SectionWrapper>
 
                 <SectionWrapper id="order_itemsSection">
-                  <ListCardPlaceHolder isLoading={loading}>
-                    <ItemsSection isNew={isNew} orderIsArchived={order.archived} />
-                  </ListCardPlaceHolder>
+                  <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
+                    {() => <ItemsSection isNew={isNew} orderIsArchived={order.archived} />}
+                  </QueryPlaceHolder>
                 </SectionWrapper>
 
                 <SectionWrapper id="order_documentsSection">
-                  <ListCardPlaceHolder isLoading={loading}>
-                    <Subscribe to={[OrderFilesContainer]}>
-                      {({ state: values }) => (
-                        <SectionHeader
-                          icon="DOCUMENT"
-                          title={
-                            <>
-                              <FormattedMessage
-                                id="modules.Orders.documents"
-                                defaultMessage="DOCUMENTS"
-                              />{' '}
-                              ({values.files.length})
-                            </>
-                          }
-                        />
-                      )}
-                    </Subscribe>
-                    <DocumentsSection />
-                  </ListCardPlaceHolder>
+                  <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
+                    {() => (
+                      <>
+                        {' '}
+                        <Subscribe to={[OrderFilesContainer]}>
+                          {({ state: values }) => (
+                            <SectionHeader
+                              icon="DOCUMENT"
+                              title={
+                                <>
+                                  <FormattedMessage
+                                    id="modules.Orders.documents"
+                                    defaultMessage="DOCUMENTS"
+                                  />{' '}
+                                  ({values.files.length})
+                                </>
+                              }
+                            />
+                          )}
+                        </Subscribe>
+                        <DocumentsSection />
+                      </>
+                    )}
+                  </QueryPlaceHolder>
                 </SectionWrapper>
 
                 <SectionWrapper id="order_taskSection">

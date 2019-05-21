@@ -15,7 +15,7 @@ const defaultProps = {
   height: 400,
 };
 
-export default function ListCardPlaceholder({ height }: Props) {
+export default function ListCardPlaceHolder({ height }: Props) {
   return (
     <BoxContainer height={height}>
       <ContentLoader
@@ -33,4 +33,4 @@ export default function ListCardPlaceholder({ height }: Props) {
   );
 }
 
-ListCardPlaceholder.defaultProps = defaultProps;
+ListCardPlaceHolder.defaultProps = defaultProps;
