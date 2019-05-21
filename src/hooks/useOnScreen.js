@@ -13,7 +13,7 @@ export default function useOnScreen(
     root?: ?HTMLDivElement,
     rootMargin: string,
   } = {
-    threshold: [0, 1],
+    threshold: 0,
     root: null,
     rootMargin: '0px',
   }
