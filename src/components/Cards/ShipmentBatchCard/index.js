@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { calculatePackageQuantity } from 'utils/batch';
+import { updateBatchCardQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
@@ -20,7 +20,7 @@ import {
   TextInputFactory,
   DateInputFactory,
 } from 'components/Form';
-import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
+import { getProductImage } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -151,12 +151,11 @@ const ShipmentBatchCard = ({
     quantity,
     deliveredAt,
     desiredAt,
-    batchAdjustments,
+    batchQuantityRevisions = [],
     packageVolume,
     packageQuantity,
     tags,
     container,
-    autoCalculatePackageQuantity,
     orderItem: {
       price,
       productProvider: { name: productProviderName, product },
@@ -165,18 +164,24 @@ const ShipmentBatchCard = ({
     todo,
   } = batch;
 
-  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
+  const actualQuantity =
+    batchQuantityRevisions.length > 0
+      ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
+      : quantity;
+
+  const quantityName =
+    batchQuantityRevisions.length > 0
+      ? `batches.${id}.batchQuantityRevisions.${batchQuantityRevisions.length - 1}.quantity`
+      : `batches.${id}.quantity`;
 
   const productImage = getProductImage(product);
 
   const validation = validator({
     no: `batch.${id}.no`,
-    quantity: `batch.${id}.quantity`,
   });
 
   const values = {
     [`batch.${id}.no`]: no,
-    [`batch.${id}.quantity`]: quantity + totalAdjustment,
   };
 
   return (
@@ -291,8 +296,8 @@ const ShipmentBatchCard = ({
               <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
             </Label>
             <FormField
-              name={`batch.${id}.quantity`}
-              initValue={quantity + totalAdjustment}
+              name={quantityName}
+              initValue={actualQuantity}
               validator={validation}
               values={values}
             >
@@ -305,25 +310,13 @@ const ShipmentBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      // FIXME: redo
-                      const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
-                      saveOnBlur({
-                        ...batch,
-                        quantity: baseQuantity,
-                        ...(autoCalculatePackageQuantity
-                          ? {
-                              packageQuantity: calculatePackageQuantity({
-                                ...batch,
-                                quantity: baseQuantity,
-                              }),
-                            }
-                          : {}),
-                      });
+                      const newBatch = updateBatchCardQuantity(batch, inputHandlers.value);
+                      saveOnBlur(newBatch);
                     },
                   }}
                   name={fieldName}
                   isNew={false}
-                  originalValue={quantity + totalAdjustment}
+                  originalValue={actualQuantity}
                 />
               )}
             </FormField>
@@ -405,9 +398,7 @@ const ShipmentBatchCard = ({
               input={
                 <Display blackout={!mergedViewable.price}>
                   <FormattedNumber
-                    value={
-                      (price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)
-                    }
+                    value={(price && price.amount ? price.amount : 0) * actualQuantity}
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>
