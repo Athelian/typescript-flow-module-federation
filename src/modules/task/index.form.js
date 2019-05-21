@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
+import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
 import { showToastError } from 'utils/errors';
 import { UIConsumer } from 'modules/ui';
@@ -9,16 +10,19 @@ import { FormContainer, resetFormState } from 'modules/form';
 import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import Layout from 'components/Layout';
+import SlideView from 'components/SlideView';
 import { ResetButton, SaveButton } from 'components/Buttons';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
+import Timeline from 'modules/timeline/components/Timeline';
 import { taskFormQuery } from './form/query';
 import TaskForm from './form';
 import TaskContainer from './form/container';
 import validator from './form/validator';
 import { updateTaskMutation, prepareParsedTaskInput } from './form/mutation';
+import { taskTimelineQuery } from './query';
 
 type OptionalProps = {
   path: string,
@@ -99,6 +103,40 @@ class TaskFormModule extends React.Component<Props> {
                                 icon="TASK"
                               />
                             </JumpToSection>
+
+                            <BooleanValue>
+                              {({ value: opened, set: slideToggle }) => (
+                                <>
+                                  <LogsButton onClick={() => slideToggle(true)} />
+                                  <SlideView
+                                    isOpen={opened}
+                                    onRequestClose={() => slideToggle(false)}
+                                  >
+                                    <Layout
+                                      navBar={
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
+                                      }
+                                    >
+                                      {taskId && opened ? (
+                                        <Timeline
+                                          query={taskTimelineQuery}
+                                          queryField="task"
+                                          variables={{
+                                            id: decodeId(taskId),
+                                          }}
+                                          entity={{
+                                            taskId: decodeId(taskId),
+                                          }}
+                                        />
+                                      ) : null}
+                                    </Layout>
+                                  </SlideView>
+                                </>
+                              )}
+                            </BooleanValue>
+
                             {isDirty() && (
                               <>
                                 <ResetButton
