@@ -44,7 +44,7 @@ export default function useOnScreen(
       observer.observe(node);
     }
     return () => {
-      observer.unobserve(node);
+      if (node) observer.unobserve(node);
     };
   }, [ref, root, rootMargin, threshold]);
 
