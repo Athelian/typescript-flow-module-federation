@@ -9,7 +9,7 @@ export default function useOnScreen(
     root,
     rootMargin,
   }: {
-    threshold: number | Array<number>,
+    threshold: Array<number>,
     root?: ?HTMLDivElement,
     rootMargin: string,
   } = {

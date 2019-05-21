@@ -1,5 +1,4 @@
 // @flow
-import { set, cloneDeep } from 'lodash';
 import { plus, times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
@@ -34,7 +33,6 @@ export const findVolume = (batch: Object) => {
     : 0;
 };
 
-// FIXME: deprecate
 export const findBatchQuantity = ({
   quantity = 0,
   batchAdjustments,
@@ -174,8 +172,8 @@ export const generateCloneBatch = ({
   injectUid({
     ...rest,
     isNew: true,
-    no: `${no} - clone`,
-    batchQuantityRevisions: [],
+    no: `${no}- clone`,
+    batchAdjustments: [],
     todo: {
       tasks: [],
     },
@@ -219,29 +217,10 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
     quantity: 0,
     packageQuantity: 0,
     isNew: true,
-    batchQuantityRevisions: [],
+    batchAdjustments: [],
     autoCalculatePackageQuantity: true,
     todo: {
       tasks: [],
     },
   });
-};
-
-export const updateBatchCardQuantity = (batch: Object, quantity: number): Object => {
-  const { batchQuantityRevisions, autoCalculatePackageQuantity } = batch;
-
-  const newBatch = cloneDeep(batch);
-  if (batchQuantityRevisions.length > 0) {
-    set(
-      newBatch,
-      `batchQuantityRevisions[${batchQuantityRevisions.length - 1}].quantity`,
-      quantity
-    );
-  } else {
-    set(newBatch, `quantity`, quantity);
-  }
-  if (autoCalculatePackageQuantity) {
-    set(newBatch, `packageQuantity`, calculatePackageQuantity(newBatch));
-  }
-  return newBatch;
 };
