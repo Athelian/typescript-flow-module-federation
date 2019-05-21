@@ -48,7 +48,10 @@ export type UIState = {
     shipments: Array<string>,
     updateOrdersInput: Array<{
       id: string,
+      oldCurrency: string,
+      newCurrency: string,
       orderItems: Array<Object>,
+      oldOrderItems: Array<Object>,
     }>,
   },
   split: {
