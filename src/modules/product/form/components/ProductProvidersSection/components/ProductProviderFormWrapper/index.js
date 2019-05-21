@@ -1,6 +1,7 @@
 // @flow
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
 import {
   ProductProviderInfoContainer,
@@ -8,13 +9,16 @@ import {
 } from 'modules/productProvider/form/containers';
 import validator from 'modules/productProvider/form/validator';
 import ProductProviderForm from 'modules/productProvider/form';
+import Timeline from 'modules/timeline/components/Timeline';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import SlideView from 'components/SlideView';
 import { contains, getByPathWithDefault } from 'utils/fp';
+import { productProviderTimelineQuery } from './query';
 
 type OptionalProps = {
   isOwner: boolean,
@@ -128,6 +132,37 @@ const ProductProviderFormWrapper = ({
                       icon="TASK"
                     />
                   </JumpToSection>
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) =>
+                      !isNew && (
+                        <>
+                          <LogsButton onClick={() => slideToggle(true)} />
+                          <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                            <Layout
+                              navBar={
+                                <SlideViewNavBar>
+                                  <EntityIcon icon="LOGS" color="LOGS" />
+                                </SlideViewNavBar>
+                              }
+                            >
+                              {productProvider.id && opened ? (
+                                <Timeline
+                                  query={productProviderTimelineQuery}
+                                  queryField="productProvider"
+                                  variables={{
+                                    id: productProvider.id,
+                                  }}
+                                  entity={{
+                                    productProviderId: productProvider.id,
+                                  }}
+                                />
+                              ) : null}
+                            </Layout>
+                          </SlideView>
+                        </>
+                      )
+                    }
+                  </BooleanValue>
                   {isNew && (
                     <>
                       <CancelButton onClick={() => onCancel()} />
