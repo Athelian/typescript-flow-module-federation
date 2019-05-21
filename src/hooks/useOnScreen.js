@@ -13,7 +13,7 @@ export default function useOnScreen(
     root?: ?HTMLDivElement,
     rootMargin: string,
   } = {
-    threshold: [0, 1],
+    threshold: 0,
     root: null,
     rootMargin: '0px',
   }
@@ -44,7 +44,7 @@ export default function useOnScreen(
       observer.observe(node);
     }
     return () => {
-      observer.unobserve(node);
+      if (node) observer.unobserve(node);
     };
   }, [ref, root, rootMargin, threshold]);
 
