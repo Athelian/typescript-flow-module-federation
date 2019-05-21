@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { updateBatchCardQuantity } from 'utils/batch';
+import { calculatePackageQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
@@ -20,7 +20,7 @@ import {
   NumberInputFactory,
   DateInputFactory,
 } from 'components/Form';
-import { getProductImage } from 'components/Cards/utils';
+import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
 import {
@@ -79,6 +79,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  position: number,
   batch: Object,
   currency: string,
   saveOnBlur: Function,
@@ -115,6 +116,7 @@ const navigableDefault = {
 };
 
 const ContainerBatchCard = ({
+  position,
   batch,
   onClick,
   onClear,
@@ -145,11 +147,10 @@ const ContainerBatchCard = ({
       ];
 
   const {
-    id,
     no,
     archived,
     quantity = 0,
-    batchQuantityRevisions = [],
+    batchAdjustments,
     deliveredAt,
     desiredAt,
     packageVolume,
@@ -162,24 +163,22 @@ const ContainerBatchCard = ({
       order,
     },
     todo,
+    autoCalculatePackageQuantity,
   } = batch;
   const productImage = getProductImage(product);
 
-  const actualQuantity =
-    batchQuantityRevisions.length > 0
-      ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-      : quantity;
+  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
-  const quantityName =
-    batchQuantityRevisions.length > 0
-      ? `batches.${id}.batchQuantityRevisions.${batchQuantityRevisions.length - 1}.quantity`
-      : `batches.${id}.quantity`;
+  const actualQuantity = quantity + totalAdjustment;
 
   const validation = validator({
-    no: `batches.${id}.no`,
+    no: `batches.${position}.no`,
+    quantity: `batches.${position}.quantity`,
   });
+
   const values = {
-    [`batches.${id}.no`]: no,
+    [`batches.${position}.no`]: no,
+    [`batches.${position}.quantity`]: actualQuantity,
   };
 
   return (
@@ -257,7 +256,7 @@ const ContainerBatchCard = ({
             role="presentation"
           >
             <FormField
-              name={`batches.${id}.no`}
+              name={`batches.${position}.no`}
               initValue={no}
               validator={validation}
               values={values}
@@ -289,7 +288,7 @@ const ContainerBatchCard = ({
               <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
             </Label>
             <FormField
-              name={quantityName}
+              name={`batches.${position}.quantity`}
               initValue={actualQuantity}
               validator={validation}
               values={values}
@@ -297,13 +296,23 @@ const ContainerBatchCard = ({
               {({ name: fieldName, ...inputHandlers }) => (
                 <NumberInputFactory
                   name={fieldName}
-                  {...{
-                    ...inputHandlers,
-                    onBlur: evt => {
-                      inputHandlers.onBlur(evt);
-                      const newBatch = updateBatchCardQuantity(batch, inputHandlers.value);
-                      saveOnBlur(newBatch);
-                    },
+                  {...inputHandlers}
+                  onBlur={evt => {
+                    inputHandlers.onBlur(evt);
+                    // FIXME: redo
+                    const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
+                    saveOnBlur({
+                      ...batch,
+                      quantity: baseQuantity,
+                      ...(autoCalculatePackageQuantity
+                        ? {
+                            packageQuantity: calculatePackageQuantity({
+                              ...batch,
+                              quantity: baseQuantity,
+                            }),
+                          }
+                        : {}),
+                    });
                   }}
                   originalValue={actualQuantity}
                   editable={mergedEditable.quantity}
@@ -322,7 +331,7 @@ const ContainerBatchCard = ({
             <Label>
               <FormattedMessage id="components.cards.delivery" defaultMessage="DELIVERY" />
             </Label>
-            <FormField name={`batches.${id}.deliveredAt`} initValue={deliveredAt}>
+            <FormField name={`batches.${position}.deliveredAt`} initValue={deliveredAt}>
               {({ name: fieldName, ...inputHandlers }) => (
                 <DateInputFactory
                   name={fieldName}
@@ -351,7 +360,7 @@ const ContainerBatchCard = ({
             <Label>
               <FormattedMessage id="components.cards.desired" defaultMessage="DESIRED" />
             </Label>
-            <FormField name={`batches.${id}.desiredAt`} initValue={desiredAt}>
+            <FormField name={`batches.${position}.desiredAt`} initValue={desiredAt}>
               {({ name: fieldName, ...inputHandlers }) => (
                 <DateInputFactory
                   name={fieldName}
