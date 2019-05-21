@@ -43,6 +43,7 @@ import {
 } from './ClonePanel/mutation';
 import { updateOrderMutation } from './MoveToOrderPanel/mutation';
 import { updateBatchMutation } from './MoveToShipmentPanel/mutation';
+import { prepareOrderInput } from './helper';
 import TableView from '../TableInlineEdit';
 import RMEditTasks from '../RMEditTasks';
 
@@ -845,9 +846,15 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     });
                     const updateOrdersInput = [];
                     orderIds.forEach(orderId => {
-                      const { orderItems: oldOrderItems } = orders[orderId];
+                      const { orderItems: oldOrderItems, currency } = orders[orderId];
                       updateOrdersInput.push({
                         id: orderId,
+                        oldCurrency: currency,
+                        newCurrency: currency,
+                        oldOrderItems: oldOrderItems.map(orderItemId => {
+                          const orderItem = orderItems[orderItemId];
+                          return orderItem;
+                        }),
                         orderItems: oldOrderItems
                           .filter(
                             orderItemId =>
@@ -915,6 +922,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     const processBatchIds = [];
                     const updateOrdersInput: Array<{
                       id: string,
+                      newCurrency: string,
+                      oldCurrency: string,
                       oldOrderItems: Array<Object>,
                       orderItems: Array<Object>,
                     }> = [];
@@ -995,15 +1004,19 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     });
                     updateOrdersInput.push({
                       id: targetOrder.id,
+                      oldCurrency: targetOrder.currency,
+                      newCurrency: currencies.length > 0 ? currencies[0] : 'USD',
                       oldOrderItems,
                       orderItems: [...oldOrderItems, ...moveOrderItems],
                     });
 
                     // remove order item and batches from original order
                     orderIds.forEach(orderId => {
-                      const { orderItems: existOrderItems } = orders[orderId];
+                      const { orderItems: existOrderItems, currency } = orders[orderId];
                       updateOrdersInput.push({
                         id: orderId,
+                        oldCurrency: currency,
+                        newCurrency: currency,
                         oldOrderItems: existOrderItems.map(orderItemId => {
                           const orderItem = orderItems[orderItemId];
                           return {
@@ -1046,25 +1059,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             mutation: updateOrderMutation,
                             variables: {
                               id: item.id,
-                              input: prepareParsedOrderInput(
+                              input: prepareOrderInput(
                                 {
-                                  tags: [],
-                                  inCharges: [],
-                                  files: [],
-                                  todo: {
-                                    tasks: [],
-                                  },
-                                  currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                  currency: item.oldCurrency,
                                   orderItems: item.oldOrderItems,
                                 },
                                 {
-                                  tags: [],
-                                  inCharges: [],
-                                  files: [],
-                                  todo: {
-                                    tasks: [],
-                                  },
-                                  currency: currencies.length > 0 ? currencies[0] : 'USD',
+                                  currency: item.newCurrency,
                                   orderItems: item.orderItems,
                                 }
                               ),
