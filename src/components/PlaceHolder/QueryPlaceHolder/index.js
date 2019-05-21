@@ -39,7 +39,7 @@ export default function QueryPlaceHolder({
     <div ref={ref}>
       {(() => {
         if (entityId) {
-          if (isReady && !isLoading) return <PlaceHolder />;
+          if (!isReady || isLoading) return <PlaceHolder />;
 
           return (
             <Query
@@ -67,7 +67,7 @@ export default function QueryPlaceHolder({
           );
         }
 
-        if (isReady && !isLoading) return <PlaceHolder />;
+        if (!isReady || isLoading) return <PlaceHolder />;
 
         return children({});
       })()}
