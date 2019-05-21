@@ -34,6 +34,7 @@ export const findVolume = (batch: Object) => {
     : 0;
 };
 
+// FIXME: deprecate
 export const findBatchQuantity = ({
   quantity = 0,
   batchAdjustments,
@@ -173,8 +174,8 @@ export const generateCloneBatch = ({
   injectUid({
     ...rest,
     isNew: true,
-    no: `${no}- clone`,
-    batchAdjustments: [],
+    no: `${no} - clone`,
+    batchQuantityRevisions: [],
     todo: {
       tasks: [],
     },
@@ -218,7 +219,7 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
     quantity: 0,
     packageQuantity: 0,
     isNew: true,
-    batchAdjustments: [],
+    batchQuantityRevisions: [],
     autoCalculatePackageQuantity: true,
     todo: {
       tasks: [],

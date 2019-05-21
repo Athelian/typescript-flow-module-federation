@@ -301,9 +301,7 @@ const ContainerBatchCard = ({
                     ...inputHandlers,
                     onBlur: evt => {
                       inputHandlers.onBlur(evt);
-                      // FIXME: redo
-                      const newQuantity = Number(inputHandlers.value);
-                      const newBatch = updateBatchCardQuantity(batch, newQuantity);
+                      const newBatch = updateBatchCardQuantity(batch, inputHandlers.value);
                       saveOnBlur(newBatch);
                     },
                   }}
