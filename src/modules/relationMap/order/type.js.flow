@@ -13,8 +13,7 @@ export type BatchProps = {
   id: string,
   archived: boolean,
   no: string,
-  quantity: number,
-  totalAdjusted: number,
+  latestQuantity: number,
   tags: Array<Object>,
   totalVolume: ?{
     value: number,
