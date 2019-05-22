@@ -136,7 +136,7 @@ const ProductProviderFormWrapper = ({
                     {({ value: opened, set: slideToggle }) =>
                       !isNew &&
                       productProvider.id &&
-                      !Number.isNaN(Number(productProvider.id)) && (
+                      !productProvider.hideLogs && (
                         <>
                           <LogsButton onClick={() => slideToggle(true)} />
                           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
