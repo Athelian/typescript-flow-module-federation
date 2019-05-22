@@ -144,7 +144,11 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                   <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
                 </Label>
                 <div className={ShipmentBadgeStyle('80px')}>
-                  {getByPathWithDefault('N/A', `${(voyages || []).length - 1}.vesselName`, voyages)}
+                  {getByPathWithDefault(
+                    <FormattedMessage id="components.cards.na" defaultMessage="N/A" />,
+                    `${(voyages || []).length - 1}.vesselName`,
+                    voyages
+                  )}
                 </div>
               </div>
 
@@ -189,7 +193,9 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                     {(totalContainerTypeCount < (containers ? containers.length : 0) ||
                       (containers && containers.length === 0)) && (
                       <div className={ContainerTypeWrapperStyle}>
-                        <div className={ContainerTypeLabelStyle}>N/A</div>
+                        <div className={ContainerTypeLabelStyle}>
+                          <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+                        </div>
                         <div className={ContainerTypeCountStyle}>
                           <FormattedNumber value={containers.length - totalContainerTypeCount} />
                         </div>

@@ -130,7 +130,11 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
                           defaultMessage="ORDER CURRENCY"
                         />
                       </Label>
-                      <Display align="left">{orderCurrency || 'N/A'}</Display>
+                      <Display align="left">
+                        {orderCurrency || (
+                          <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+                        )}
+                      </Display>
                     </div>
                     <CancelButton onClick={onCancel} />
                     <SaveButton
