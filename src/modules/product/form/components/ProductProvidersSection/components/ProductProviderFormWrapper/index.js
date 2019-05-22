@@ -134,7 +134,9 @@ const ProductProviderFormWrapper = ({
                   </JumpToSection>
                   <BooleanValue>
                     {({ value: opened, set: slideToggle }) =>
-                      !isNew && (
+                      !isNew &&
+                      productProvider.id &&
+                      !Number.isNaN(Number(productProvider.id)) && (
                         <>
                           <LogsButton onClick={() => slideToggle(true)} />
                           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
@@ -145,7 +147,7 @@ const ProductProviderFormWrapper = ({
                                 </SlideViewNavBar>
                               }
                             >
-                              {productProvider.id && opened ? (
+                              {opened && (
                                 <Timeline
                                   query={productProviderTimelineQuery}
                                   queryField="productProvider"
@@ -156,7 +158,7 @@ const ProductProviderFormWrapper = ({
                                     productProviderId: productProvider.id,
                                   }}
                                 />
-                              ) : null}
+                              )}
                             </Layout>
                           </SlideView>
                         </>
