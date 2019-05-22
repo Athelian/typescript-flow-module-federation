@@ -102,9 +102,9 @@ export default defineMessages({
     id: 'modules.Orders.poNo',
     defaultMessage: 'PO NO.',
   },
-  date: {
+  issuedAt: {
     id: 'modules.Orders.issuedAt',
-    defaultMessage: 'PO DATE',
+    defaultMessage: 'PO Date',
   },
   PI: {
     id: 'modules.Orders.piNo',
@@ -112,15 +112,15 @@ export default defineMessages({
   },
   incoterm: {
     id: 'modules.Orders.incoterms',
-    defaultMessage: 'INCOTERMS',
+    defaultMessage: 'Incoterms',
   },
   deliveryPlace: {
     id: 'modules.Orders.deliveryPlace',
-    defaultMessage: 'PLACE OF DELIVERY',
+    defaultMessage: 'Place of Delivery',
   },
   currency: {
     id: 'modules.Orders.currency',
-    defaultMessage: 'CURRENCY',
+    defaultMessage: 'Currency',
   },
   exporter: {
     id: 'modules.Orders.exporter',
@@ -128,7 +128,7 @@ export default defineMessages({
   },
   exporterName: {
     id: 'modules.Orders.exporterName',
-    defaultMessage: 'EXPORTER NAME',
+    defaultMessage: 'Exporter',
   },
   exporterCode: {
     id: 'modules.Orders.exporterCode',
@@ -148,11 +148,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Orders.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Orders.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   status: {
     id: 'modules.Orders.status',
