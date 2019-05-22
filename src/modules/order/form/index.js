@@ -130,7 +130,7 @@ export default class OrderForm extends React.Component<Props> {
                       <OrderTasksSection
                         initValues={initDetailValues}
                         isLoading={loading}
-                        entityId={order.id}
+                        entityId={!isClone && order.id ? order.id : ''}
                       />
                     )}
                   </Subscribe>
