@@ -198,9 +198,7 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
     tags: [],
     packageName,
     packageCapacity,
-    ...(packageGrossWeight
-      ? { packageGrossWeight }
-      : { packageGrossWeight: { value: 0, metric: 'kg' } }),
+    packageGrossWeight,
     packageVolume,
     packageSize,
     quantity: 0,
