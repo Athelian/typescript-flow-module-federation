@@ -26,7 +26,6 @@ function OrderItemModule(props: Props) {
     { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
     { title: intl.formatMessage(messages.productProviderName), value: 'productProviderName' },
     { title: intl.formatMessage(messages.supplierName), value: 'supplierName' },
-    { title: intl.formatMessage(messages.supplierCode), value: 'supplierCode' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {
