@@ -72,12 +72,12 @@ const EditableTaskList = (props: Props) => {
   const shipmentIds = uiSelectors.targetedShipmentIds();
 
   const sortFields = [
-    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.startDate), value: 'startDate' },
-    { title: intl.formatMessage(messages.taskName), value: 'name' },
-    { title: intl.formatMessage(messages.hierarchy), value: 'entity' },
+    { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
+    { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
 
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
