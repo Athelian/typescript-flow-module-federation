@@ -37,6 +37,7 @@ storiesOf('Form/Inputs/Enum Select Input', module).add('Enum Select Input Factor
                   originalValue={originalValue}
                   label="BASIC"
                   infoMessage="This is an info tooltip :)"
+                  // FIXME: redo
                   enumType="BatchAdjustmentReason"
                   type="label"
                 />

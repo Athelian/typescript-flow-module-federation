@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
+import { getBatchLatestQuantity, findVolume, findWeight } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import {
@@ -1168,14 +1168,14 @@ export const containerColumnFields = [
       const { id: containerId } = values;
       const container = editData.containers[containerId];
       return container.batches.reduce((total, batch) => {
-        return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+        return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
       return container.batches.reduce((total, batch) => {
-        return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+        return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     meta: {
@@ -1184,7 +1184,7 @@ export const containerColumnFields = [
         const container = editData.containers[containerId];
 
         const totalBatchQuantity = (container.batches || []).reduce((total, batch) => {
-          return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+          return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
         }, 0);
         return <FormattedNumber value={totalBatchQuantity} />;
       },

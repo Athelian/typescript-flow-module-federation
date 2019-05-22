@@ -124,7 +124,7 @@ class BatchFormModule extends React.PureComponent<Props> {
         ...batchClone,
         autoCalculatePackageQuantity: true,
         no: `[cloned] ${no}`,
-        batchAdjustments: [],
+        batchQuantityRevisions: [],
       });
     } else {
       const { todo = { tasks: [] }, ...rest } = batch;

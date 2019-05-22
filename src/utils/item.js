@@ -1,5 +1,5 @@
 // @flow
-import { findBatchQuantity } from 'utils/batch';
+import { getBatchLatestQuantity } from 'utils/batch';
 
 type GetItemQuantityChartDataProps = {
   orderItem: {
@@ -11,7 +11,7 @@ type GetItemQuantityChartDataProps = {
   },
   batches: Array<{
     quantity: number,
-    batchAdjustments: Array<{
+    batchQuantityRevisions: Array<{
       quantity: number,
     }>,
     shipment: ?Object,
@@ -32,8 +32,8 @@ export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantity
   let shipped = 0;
 
   if (batches && batches.length > 0) {
-    batches.forEach(({ quantity, batchAdjustments, shipment }) => {
-      const currentQuantity = findBatchQuantity({ quantity, batchAdjustments });
+    batches.forEach(({ quantity, batchQuantityRevisions, shipment }) => {
+      const currentQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
       batchedQuantity += currentQuantity;
       batched += 1;
       if (shipment) {

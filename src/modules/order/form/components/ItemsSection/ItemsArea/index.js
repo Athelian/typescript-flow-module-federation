@@ -166,16 +166,6 @@ function ItemsArea({
                 currency,
               };
 
-              const compiledBatches = batches.map(
-                ({ quantity: batchQuantity, batchAdjustments, shipment }) => ({
-                  quantity: batchQuantity,
-                  batchAdjustments: batchAdjustments.map(({ quantity: adjustmentQuantity }) => ({
-                    quantity: adjustmentQuantity,
-                  })),
-                  shipment,
-                })
-              );
-
               const actions = [
                 allowUpdate && (
                   <CardAction
@@ -314,7 +304,7 @@ function ItemsArea({
                           productProvider={compiledProductProvider}
                           product={compiledProduct}
                           order={compiledOrder}
-                          batches={compiledBatches}
+                          batches={batches}
                           index={index}
                           actions={actions}
                           setFieldValue={setFieldValue}

@@ -3,14 +3,12 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { updateBatchCardQuantity } from 'utils/batch';
+import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
-import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
-import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getByPathWithDefault } from 'utils/fp';
 import {
   FieldItem,
@@ -20,6 +18,8 @@ import {
   TextInputFactory,
   DateInputFactory,
 } from 'components/Form';
+import TaskRing from 'components/TaskRing';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getProductImage } from 'components/Cards/utils';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -164,10 +164,7 @@ const ShipmentBatchCard = ({
     todo,
   } = batch;
 
-  const actualQuantity =
-    batchQuantityRevisions.length > 0
-      ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-      : quantity;
+  const actualQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0

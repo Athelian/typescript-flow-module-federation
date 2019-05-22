@@ -1,4 +1,5 @@
 // @flow
+import { getBatchLatestQuantity } from 'utils/batch';
 
 export const calculateBatchesFromOrder = ({
   batchCount,
@@ -34,19 +35,11 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
 
       if (item.batches) {
         item.batches.forEach(batch => {
-          batchedQuantity += batch.quantity;
+          const latestQuantity = getBatchLatestQuantity(batch);
 
-          let currentQuantity = batch.quantity;
-
-          if (batch.batchAdjustments) {
-            batch.batchAdjustments.forEach(batchAdjustment => {
-              batchedQuantity += batchAdjustment.quantity;
-              currentQuantity += batchAdjustment.quantity;
-            });
-          }
-
+          batchedQuantity += latestQuantity;
           if (batch.shipment) {
-            shippedQuantity += currentQuantity;
+            shippedQuantity += latestQuantity;
           }
 
           if (batch.archived) {

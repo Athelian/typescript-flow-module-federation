@@ -5,7 +5,7 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
-import { updateBatchCardQuantity } from 'utils/batch';
+import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
 import {
   Label,
   Display,
@@ -13,14 +13,14 @@ import {
   NumberInputFactory,
   DateInputFactory,
 } from 'components/Form';
+import TaskRing from 'components/TaskRing';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FormField } from 'modules/form';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import TaskRing from 'components/TaskRing';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getLatestDate } from 'utils/shipment';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -141,10 +141,7 @@ const OrderBatchCard = ({
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
-  const actualQuantity =
-    batchQuantityRevisions.length > 0
-      ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-      : quantity;
+  const actualQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0

@@ -21,7 +21,7 @@ import { orderDetailQuery } from 'modules/relationMap/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
-import { calculateBatchQuantity } from 'utils/batch';
+import { getBatchLatestQuantity } from 'utils/batch';
 import { prepareParsedOrderInput } from 'modules/order/form/mutation';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
@@ -799,7 +799,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           moveOrderItems.push({
                             ...defaultInput,
                             ...orderItem,
-                            quantity: calculateBatchQuantity([batch]),
+                            quantity: getBatchLatestQuantity(batch),
                             isNew: true,
                             ...(needToResetPrice
                               ? {
@@ -989,7 +989,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 }
                               : {}),
                             batches: [batch],
-                            quantity: calculateBatchQuantity([batch]),
+                            quantity: getBatchLatestQuantity(batch),
                           });
                         }
                       }

@@ -7,6 +7,7 @@ describe('Batch', () => {
   });
 
   it('should create a batch', () => {
+    // FIXME: redo
     cy.task('fixture', 'batch').then(({ batchNo, quantity, batchAdjustmentsQuantity }) => {
       cy.visit('/batch')
         .getByTestId('newButton')

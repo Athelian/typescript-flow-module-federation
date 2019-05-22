@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { updateBatchCardQuantity } from 'utils/batch';
+import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
@@ -165,10 +165,7 @@ const ContainerBatchCard = ({
   } = batch;
   const productImage = getProductImage(product);
 
-  const actualQuantity =
-    batchQuantityRevisions.length > 0
-      ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-      : quantity;
+  const actualQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0
