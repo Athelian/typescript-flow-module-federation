@@ -27,7 +27,7 @@ function OrderModule(props: Props) {
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.poSort), value: 'poNo' },
     { title: intl.formatMessage(messages.piSort), value: 'piNo' },
-    { title: intl.formatMessage(messages.issuedAt), value: 'issuedAt' },
+    { title: intl.formatMessage(messages.date), value: 'issuedAt' },
     { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
     { title: intl.formatMessage(messages.currency), value: 'currency' },
     { title: intl.formatMessage(messages.incoterm), value: 'incoterm' },

@@ -102,7 +102,7 @@ export default defineMessages({
     id: 'modules.Orders.poNo',
     defaultMessage: 'PO NO.',
   },
-  issuedAt: {
+  date: {
     id: 'modules.Orders.issuedAt',
     defaultMessage: 'PO Date',
   },
