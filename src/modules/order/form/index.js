@@ -25,7 +25,7 @@ import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import ContainersSection from './components/ContainersSection';
 import OrderTasksSection from './components/OrderTasksSection';
-import { OrderInfoContainer, OrderFilesContainer, OrderTasksContainer } from './containers';
+import { OrderInfoContainer, OrderTasksContainer } from './containers';
 import { OrderFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -118,30 +118,10 @@ export default class OrderForm extends React.Component<Props> {
                 </SectionWrapper>
 
                 <SectionWrapper id="order_documentsSection">
-                  <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
-                    {() => (
-                      <>
-                        {' '}
-                        <Subscribe to={[OrderFilesContainer]}>
-                          {({ state: values }) => (
-                            <SectionHeader
-                              icon="DOCUMENT"
-                              title={
-                                <>
-                                  <FormattedMessage
-                                    id="modules.Orders.documents"
-                                    defaultMessage="DOCUMENTS"
-                                  />{' '}
-                                  ({values.files.length})
-                                </>
-                              }
-                            />
-                          )}
-                        </Subscribe>
-                        <DocumentsSection />
-                      </>
-                    )}
-                  </QueryPlaceHolder>
+                  <DocumentsSection
+                    entityId={!isClone && order.id ? order.id : ''}
+                    isLoading={loading}
+                  />
                 </SectionWrapper>
 
                 <SectionWrapper id="order_taskSection">

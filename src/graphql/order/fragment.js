@@ -38,9 +38,6 @@ export const orderFormQueryFragment = gql`
     tags {
       ...tagFragment
     }
-    files {
-      ...documentFragment
-    }
     orderItems {
       ...itemInOrderFormFragment
     }
