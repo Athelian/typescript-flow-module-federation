@@ -50,7 +50,7 @@ type OptionalProps = {
   },
   batches: Array<{
     quantity: number,
-    batchAdjustments: Array<{
+    batchQuantityRevisions: Array<{
       quantity: number,
     }>,
     shipment: ?Object,

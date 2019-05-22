@@ -3,7 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { updateBatchCardQuantity } from 'utils/batch';
+import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
@@ -149,7 +149,7 @@ const ContainerBatchCard = ({
     no,
     archived,
     quantity = 0,
-    batchQuantityRevisions = [],
+    batchQuantityRevisions,
     deliveredAt,
     desiredAt,
     packageVolume,
@@ -165,10 +165,7 @@ const ContainerBatchCard = ({
   } = batch;
   const productImage = getProductImage(product);
 
-  const actualQuantity =
-    batchQuantityRevisions.length > 0
-      ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
-      : quantity;
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0
@@ -290,7 +287,7 @@ const ContainerBatchCard = ({
             </Label>
             <FormField
               name={quantityName}
-              initValue={actualQuantity}
+              initValue={latestQuantity}
               validator={validation}
               values={values}
             >
@@ -305,7 +302,7 @@ const ContainerBatchCard = ({
                       saveOnBlur(newBatch);
                     },
                   }}
-                  originalValue={actualQuantity}
+                  originalValue={latestQuantity}
                   editable={mergedEditable.quantity}
                   inputWidth="90px"
                   inputHeight="20px"
@@ -384,7 +381,7 @@ const ContainerBatchCard = ({
               input={
                 <Display blackout={!mergedViewable.price}>
                   <FormattedNumber
-                    value={(price && price.amount ? price.amount : 0) * actualQuantity}
+                    value={(price && price.amount ? price.amount : 0) * latestQuantity}
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>

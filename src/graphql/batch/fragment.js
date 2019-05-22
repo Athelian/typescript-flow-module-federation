@@ -50,19 +50,6 @@ export const batchFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
-    batchAdjustments {
-      ... on BatchAdjustment {
-        id
-        sort
-        updatedAt
-        updatedBy {
-          ...userAvatarFragment
-        }
-        reason
-        quantity
-        memo
-      }
-    }
     packageName
     packageCapacity
     packageQuantity
@@ -159,7 +146,7 @@ export const batchCardFragment = gql`
     id
     no
     archived
-    quantity
+    latestQuantity
     deliveredAt
     desiredAt
     todo {
@@ -169,13 +156,6 @@ export const batchCardFragment = gql`
       ...metricFragment
     }
     packageQuantity
-    batchAdjustments {
-      ... on BatchAdjustment {
-        id
-        quantity
-        sort
-      }
-    }
     tags {
       ...tagFragment
     }

@@ -5,7 +5,7 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
-import { calculatePackageQuantity } from 'utils/batch';
+import { updateBatchCardQuantity, getBatchLatestQuantity } from 'utils/batch';
 import {
   Label,
   Display,
@@ -13,15 +13,14 @@ import {
   NumberInputFactory,
   DateInputFactory,
 } from 'components/Form';
+import TaskRing from 'components/TaskRing';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FormField } from 'modules/form';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import TaskRing from 'components/TaskRing';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import { totalAdjustQuantity } from 'components/Cards/utils';
-import withForbiddenCard from 'hoc/withForbiddenCard';
 import { getLatestDate } from 'utils/shipment';
 import validator from './validator';
 import BaseCard, { CardAction } from '../BaseCard';
@@ -134,25 +133,27 @@ const OrderBatchCard = ({
     desiredAt,
     packageVolume,
     packageQuantity,
-    batchAdjustments,
+    batchQuantityRevisions,
     shipment,
     container,
-    autoCalculatePackageQuantity,
     todo,
   } = batch;
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
-  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+
+  const quantityName =
+    batchQuantityRevisions.length > 0
+      ? `batches.${id}.batchQuantityRevisions.${batchQuantityRevisions.length - 1}.quantity`
+      : `batches.${id}.quantity`;
 
   const validation = validator({
     no: `batch.${batch.id}.no`,
-    quantity: `batch.${batch.id}.quantity`,
   });
 
   const values = {
     [`batch.${batch.id}.no`]: no,
-    [`batch.${batch.id}.quantity`]: quantity + totalAdjustment,
   };
 
   return (
@@ -204,8 +205,8 @@ const OrderBatchCard = ({
             <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
           </Label>
           <FormField
-            name={`batch.${batch.id}.quantity`}
-            initValue={quantity + totalAdjustment}
+            name={quantityName}
+            initValue={latestQuantity}
             validator={validation}
             values={values}
           >
@@ -218,23 +219,12 @@ const OrderBatchCard = ({
                   ...inputHandlers,
                   onBlur: evt => {
                     inputHandlers.onBlur(evt);
-                    // FIXME: redo
-                    const baseQuantity = Number(inputHandlers.value) - Number(totalAdjustment);
-                    saveOnBlur({
-                      ...batch,
-                      quantity: baseQuantity,
-                      ...(autoCalculatePackageQuantity
-                        ? {
-                            packageQuantity: calculatePackageQuantity({
-                              ...batch,
-                              quantity: baseQuantity,
-                            }),
-                          }
-                        : {}),
-                    });
+                    const newBatch = updateBatchCardQuantity(batch, inputHandlers.value);
+                    saveOnBlur(newBatch);
                   },
                 }}
                 name={fieldName}
+                originalValue={latestQuantity}
                 hideTooltip
               />
             )}
@@ -311,7 +301,7 @@ const OrderBatchCard = ({
           </Label>
           <Display>
             <FormattedNumber
-              value={(price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)}
+              value={(price && price.amount ? price.amount : 0) * latestQuantity}
               suffix={currency}
             />
           </Display>

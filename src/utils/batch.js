@@ -1,6 +1,6 @@
 // @flow
 import { set, cloneDeep } from 'lodash';
-import { plus, times, divide } from './number';
+import { times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
 import { isNullOrUndefined, getByPathWithDefault } from './fp';
@@ -34,34 +34,29 @@ export const findVolume = (batch: Object) => {
     : 0;
 };
 
-// FIXME: deprecate
-export const findBatchQuantity = ({
+export const getBatchLatestQuantity = ({
   quantity = 0,
-  batchAdjustments,
+  batchQuantityRevisions = [],
 }: {
   quantity: number,
-  batchAdjustments: Array<{ quantity: number }>,
+  batchQuantityRevisions: Array<{ quantity: number }>,
 }): number => {
-  const batchQuantity = batchAdjustments
-    ? batchAdjustments.reduce(
-        (totalAdjustment, adjustment) => plus(totalAdjustment, adjustment.quantity),
-        quantity
-      )
+  return batchQuantityRevisions.length > 0
+    ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
     : quantity;
-  return batchQuantity;
 };
 
 export const totalBatchPriceAmount = ({
   quantity = 0,
-  batchAdjustments,
+  batchQuantityRevisions = [],
   orderItem,
 }: {
   quantity: number,
-  batchAdjustments: Array<{ quantity: number }>,
+  batchQuantityRevisions: Array<{ quantity: number }>,
   orderItem: Object,
 }): number => {
   return times(
-    findBatchQuantity({ quantity, batchAdjustments }),
+    getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
     getByPathWithDefault(0, 'price.amount', orderItem)
   );
 };
@@ -133,19 +128,6 @@ export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object =>
   };
 };
 
-export function calculateBatchQuantity(batches: Array<Object>): number {
-  let total = 0;
-  batches.forEach(batch => {
-    total += batch.quantity;
-    if (batch.batchAdjustments) {
-      batch.batchAdjustments.forEach(({ quantity }) => {
-        total += quantity;
-      });
-    }
-  });
-  return total;
-}
-
 export const calculatePackageQuantity = ({
   quantity = 0,
   batchQuantityRevisions = [],
@@ -197,7 +179,10 @@ export const findTotalAutoFillBatches = ({
   batches: Array<Object>,
   quantity: number,
 }): Object => {
-  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
+  const totalBatchQuantity = batches.reduce(
+    (total, batch) => total + getBatchLatestQuantity(batch),
+    0
+  );
   return quantity - totalBatchQuantity;
 };
 

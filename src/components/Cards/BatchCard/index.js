@@ -5,12 +5,12 @@ import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
-import { FieldItem, Label, Display } from 'components/Form';
-import { getProductImage, totalAdjustQuantity } from 'components/Cards/utils';
+import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { FieldItem, Label, Display } from 'components/Form';
+import TaskRing from 'components/TaskRing';
 import BaseCard from '../BaseCard';
 import {
   BatchCardWrapperStyle,
@@ -52,14 +52,13 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
     id,
     archived,
     no,
-    quantity,
+    latestQuantity,
     deliveredAt,
     desiredAt,
     packageVolume,
     packageQuantity,
     orderItem,
     shipment,
-    batchAdjustments,
     container,
     todo,
   } = batch;
@@ -70,8 +69,6 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
   } = orderItem;
 
   const productImage = getProductImage(product);
-
-  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
   return (
     <BaseCard icon="BATCH" color="BATCH" actions={actions} isArchived={archived} {...rest}>
@@ -117,7 +114,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={quantity + totalAdjustment} />
+                <FormattedNumber value={latestQuantity} />
               </Display>
             }
           />
@@ -175,7 +172,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
             input={
               <Display>
                 <FormattedNumber
-                  value={(price && price.amount ? price.amount : 0) * (quantity + totalAdjustment)}
+                  value={(price && price.amount ? price.amount : 0) * latestQuantity}
                   suffix={order.currency || (orderItem.price && orderItem.currency)}
                 />
               </Display>
