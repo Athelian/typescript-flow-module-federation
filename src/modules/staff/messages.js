@@ -16,15 +16,15 @@ export default defineMessages({
   },
   firstName: {
     id: 'modules.Users.firstName',
-    defaultMessage: 'FIRST NAME',
+    defaultMessage: 'First Name',
   },
   lastName: {
     id: 'modules.Users.lastName',
-    defaultMessage: 'LAST NAME',
+    defaultMessage: 'Last Name',
   },
   fullName: {
     id: 'modules.Users.fullName',
-    defaultMessage: 'FULL NAME',
+    defaultMessage: 'Full Name',
   },
   language: {
     id: 'modules.Users.language',
@@ -36,11 +36,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Users.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Users.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   required: {
     id: 'modules.Users.validation.required',
