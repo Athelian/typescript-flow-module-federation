@@ -6,6 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { QueryForm } from 'components/common';
+import { getByPath } from 'utils/fp';
 import { UIConsumer } from 'modules/ui';
 import { showToastError } from 'utils/errors';
 import { FormContainer, resetFormState } from 'modules/form';
@@ -109,7 +110,7 @@ class ProductFormModule extends React.Component<Props> {
     originalValues: Object,
     formData: Object,
     saveProduct: any => Promise<?{ data?: CreateProductResponse | UpdateProductResponse }>,
-    onSuccess: () => void,
+    onSuccess: Object => void,
     onErrors: (Array<Object>) => void
   ) => {
     const { productId } = this.props;
@@ -133,7 +134,7 @@ class ProductFormModule extends React.Component<Props> {
           if (violations && violations.length) {
             onErrors(violations);
           } else {
-            onSuccess();
+            onSuccess(getByPath('productCreate', data));
           }
         }
       }
@@ -148,11 +149,53 @@ class ProductFormModule extends React.Component<Props> {
           if (violations && violations.length) {
             onErrors(violations);
           } else {
-            onSuccess();
+            onSuccess(getByPath('productUpdate', data));
           }
         }
       }
     }
+  };
+
+  initAllValues = (
+    {
+      productInfoState,
+      productTagsState,
+      productFilesState,
+      productTasksState,
+      productProvidersState,
+    }: ProductFormState,
+    product: Object
+  ) => {
+    const { tags = [], productProviders = [], files = [], todo = { tasks: [] }, ...info } = product;
+    productInfoState.initDetailValues(info);
+    productTagsState.initDetailValues(tags);
+    productTasksState.initDetailValues(todo);
+    productFilesState.initDetailValues(files);
+    productProvidersState.initDetailValues(productProviders);
+  };
+
+  initAllValuesForClone = (
+    {
+      productInfoState,
+      productTagsState,
+      productFilesState,
+      productTasksState,
+      productProvidersState,
+    }: ProductFormState,
+    product: Object
+  ) => {
+    const { tags = [], productProviders, files, todo, ...info } = product;
+    productInfoState.initDetailValues(info);
+    productTagsState.initDetailValues(tags);
+    productTasksState.initDetailValues({ tasks: [] });
+    productFilesState.initDetailValues([]);
+    productProvidersState.initDetailValues(
+      product.productProviders.map(({ updatedBy, archived, ...productProvider }) => ({
+        ...productProvider,
+        isNew: true,
+        files: [],
+      }))
+    );
   };
 
   onFormReady = (
@@ -173,18 +216,27 @@ class ProductFormModule extends React.Component<Props> {
     productTagsState.initDetailValues(tags);
 
     if (this.isClone()) {
-      productFilesState.initDetailValues([]);
-      productProvidersState.initDetailValues(
-        product.productProviders.map(({ updatedBy, archived, ...productProvider }) => ({
-          ...productProvider,
-          isNew: true,
-          files: [],
-        }))
+      this.initAllValuesForClone(
+        {
+          productInfoState,
+          productTagsState,
+          productFilesState,
+          productTasksState,
+          productProvidersState,
+        },
+        product
       );
     } else {
-      productFilesState.initDetailValues(files);
-      productProvidersState.initDetailValues(productProviders);
-      productTasksState.initDetailValues(todo);
+      this.initAllValues(
+        {
+          productInfoState,
+          productTagsState,
+          productFilesState,
+          productTasksState,
+          productProvidersState,
+        },
+        product
+      );
     }
 
     return null;
@@ -366,12 +418,17 @@ class ProductFormModule extends React.Component<Props> {
                                       ...productTasksState.state,
                                     },
                                     saveProduct,
-                                    () => {
-                                      productInfoState.onSuccess();
-                                      productProvidersState.onSuccess();
-                                      productTagsState.onSuccess();
-                                      productFilesState.onSuccess();
-                                      productTasksState.onSuccess();
+                                    updateProduct => {
+                                      this.initAllValues(
+                                        {
+                                          productInfoState,
+                                          productTagsState,
+                                          productFilesState,
+                                          productTasksState,
+                                          productProvidersState,
+                                        },
+                                        updateProduct
+                                      );
                                       form.onReset();
                                     },
                                     form.onErrors
