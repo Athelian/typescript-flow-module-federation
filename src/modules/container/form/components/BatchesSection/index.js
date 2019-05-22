@@ -287,9 +287,7 @@ function BatchesSection({ containerIsArchived }: Props) {
                                   }}
                                   onClone={value => {
                                     const clonedBatch = generateCloneBatch(value);
-
                                     setFieldValue('batches', [...batches, clonedBatch]);
-                                    addExistingBatches([clonedBatch]);
                                   }}
                                 />
                               </div>
