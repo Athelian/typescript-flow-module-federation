@@ -23,7 +23,7 @@ function getQuantitySummary(item: Object) {
       batchedQuantity += batch.quantity;
       numOfBatched += 1;
 
-      let currentQuantity = batch.quantity;
+      let latestQuantity = batch.quantity;
 
       const { orderItem } = batch;
       if (orderItem) {
@@ -33,12 +33,12 @@ function getQuantitySummary(item: Object) {
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
           batchedQuantity += batchAdjustment.quantity;
-          currentQuantity += batchAdjustment.quantity;
+          latestQuantity += batchAdjustment.quantity;
         });
       }
 
       if (batch.shipment) {
-        shippedQuantity += currentQuantity;
+        shippedQuantity += latestQuantity;
         numOfShipped += 1;
       }
     });

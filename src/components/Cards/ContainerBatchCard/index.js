@@ -165,7 +165,7 @@ const ContainerBatchCard = ({
   } = batch;
   const productImage = getProductImage(product);
 
-  const actualQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0
@@ -287,7 +287,7 @@ const ContainerBatchCard = ({
             </Label>
             <FormField
               name={quantityName}
-              initValue={actualQuantity}
+              initValue={latestQuantity}
               validator={validation}
               values={values}
             >
@@ -302,7 +302,7 @@ const ContainerBatchCard = ({
                       saveOnBlur(newBatch);
                     },
                   }}
-                  originalValue={actualQuantity}
+                  originalValue={latestQuantity}
                   editable={mergedEditable.quantity}
                   inputWidth="90px"
                   inputHeight="20px"
@@ -381,7 +381,7 @@ const ContainerBatchCard = ({
               input={
                 <Display blackout={!mergedViewable.price}>
                   <FormattedNumber
-                    value={(price && price.amount ? price.amount : 0) * actualQuantity}
+                    value={(price && price.amount ? price.amount : 0) * latestQuantity}
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>

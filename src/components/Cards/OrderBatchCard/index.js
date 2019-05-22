@@ -141,7 +141,7 @@ const OrderBatchCard = ({
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
 
-  const actualQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0
@@ -206,7 +206,7 @@ const OrderBatchCard = ({
           </Label>
           <FormField
             name={quantityName}
-            initValue={actualQuantity}
+            initValue={latestQuantity}
             validator={validation}
             values={values}
           >
@@ -224,7 +224,7 @@ const OrderBatchCard = ({
                   },
                 }}
                 name={fieldName}
-                originalValue={actualQuantity}
+                originalValue={latestQuantity}
                 hideTooltip
               />
             )}
@@ -301,7 +301,7 @@ const OrderBatchCard = ({
           </Label>
           <Display>
             <FormattedNumber
-              value={(price && price.amount ? price.amount : 0) * actualQuantity}
+              value={(price && price.amount ? price.amount : 0) * latestQuantity}
               suffix={currency}
             />
           </Display>

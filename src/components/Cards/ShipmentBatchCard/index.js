@@ -164,7 +164,7 @@ const ShipmentBatchCard = ({
     todo,
   } = batch;
 
-  const actualQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const quantityName =
     batchQuantityRevisions.length > 0
@@ -294,7 +294,7 @@ const ShipmentBatchCard = ({
             </Label>
             <FormField
               name={quantityName}
-              initValue={actualQuantity}
+              initValue={latestQuantity}
               validator={validation}
               values={values}
             >
@@ -313,7 +313,7 @@ const ShipmentBatchCard = ({
                   }}
                   name={fieldName}
                   isNew={false}
-                  originalValue={actualQuantity}
+                  originalValue={latestQuantity}
                 />
               )}
             </FormField>
@@ -395,7 +395,7 @@ const ShipmentBatchCard = ({
               input={
                 <Display blackout={!mergedViewable.price}>
                   <FormattedNumber
-                    value={(price && price.amount ? price.amount : 0) * actualQuantity}
+                    value={(price && price.amount ? price.amount : 0) * latestQuantity}
                     suffix={currency || (price && price.currency)}
                   />
                 </Display>

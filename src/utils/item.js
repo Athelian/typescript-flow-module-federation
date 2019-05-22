@@ -33,11 +33,11 @@ export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantity
 
   if (batches && batches.length > 0) {
     batches.forEach(({ quantity, batchQuantityRevisions, shipment }) => {
-      const currentQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
-      batchedQuantity += currentQuantity;
+      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+      batchedQuantity += latestQuantity;
       batched += 1;
       if (shipment) {
-        shippedQuantity += currentQuantity;
+        shippedQuantity += latestQuantity;
         shipped += 1;
       }
     });
