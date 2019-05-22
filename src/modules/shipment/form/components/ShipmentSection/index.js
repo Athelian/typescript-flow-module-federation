@@ -84,7 +84,6 @@ import {
   BookedInputWrapperStyle,
   BookedStyle,
 } from './style';
-import ShipmentSummary from './ShipmentSummary';
 
 type Props = {
   isNew: boolean,
@@ -672,7 +671,6 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
 
               <div className={DividerStyle} />
 
-              <ShipmentSummary />
             </div>
           );
         }}
