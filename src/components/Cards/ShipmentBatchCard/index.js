@@ -151,7 +151,7 @@ const ShipmentBatchCard = ({
     quantity,
     deliveredAt,
     desiredAt,
-    batchQuantityRevisions = [],
+    batchQuantityRevisions,
     packageVolume,
     packageQuantity,
     tags,

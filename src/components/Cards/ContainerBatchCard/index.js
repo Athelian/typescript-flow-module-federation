@@ -149,7 +149,7 @@ const ContainerBatchCard = ({
     no,
     archived,
     quantity = 0,
-    batchQuantityRevisions = [],
+    batchQuantityRevisions,
     deliveredAt,
     desiredAt,
     packageVolume,

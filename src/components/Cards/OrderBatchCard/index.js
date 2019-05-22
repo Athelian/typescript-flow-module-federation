@@ -133,7 +133,7 @@ const OrderBatchCard = ({
     desiredAt,
     packageVolume,
     packageQuantity,
-    batchQuantityRevisions = [],
+    batchQuantityRevisions,
     shipment,
     container,
     todo,
