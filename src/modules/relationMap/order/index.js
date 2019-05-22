@@ -11,7 +11,6 @@ import usePrevious from 'hooks/usePrevious';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import { cleanUpData } from 'utils/data';
 import scrollIntoView from 'utils/scrollIntoView';
 import useFilter from 'hooks/useFilter';
 import Icon from 'components/Icon';
@@ -48,10 +47,8 @@ import Shipment from './components/Shipment';
 import ShipmentList from './components/ShipmentList';
 import EditForm from './components/EditForm';
 import ActionNavbar from './components/ActionNavbar';
-import {
-  updateOrderMutation,
-  prepareUpdateOrderInput,
-} from './components/ActionNavbar/MoveToOrderPanel/mutation';
+import { prepareOrderInput } from './components/ActionNavbar/helper';
+import { updateOrderMutation } from './components/ActionNavbar/MoveToOrderPanel/mutation';
 
 type Props = {
   intl: IntlShape,
@@ -300,9 +297,16 @@ const Order = ({ intl }: Props) => {
                   mutation: updateOrderMutation,
                   variables: {
                     id: item.id,
-                    input: prepareUpdateOrderInput({
-                      orderItems: cleanUpData(item.orderItems),
-                    }),
+                    input: prepareOrderInput(
+                      {
+                        orderItems: item.oldOrderItems,
+                        currency: item.oldCurrency,
+                      },
+                      {
+                        currency: item.newCurrency,
+                        orderItems: item.orderItems,
+                      }
+                    ),
                   },
                 })
               )

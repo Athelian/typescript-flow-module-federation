@@ -1,12 +1,17 @@
 // @flow
 
-import React, { lazy, Suspense } from 'react';
+import React, {
+  // $FlowFixMe not has type yet
+  unstable_ConcurrentMode as ConcurrentMode,
+} from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { CloneButton } from 'components/Buttons';
-import LoadingIcon from 'components/LoadingIcon';
+import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
+import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
+import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
@@ -15,17 +20,17 @@ import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Di
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { PermissionConsumer } from 'modules/permission';
 import OrderSection from './components/OrderSection';
+import ItemsSection from './components/ItemsSection';
+import DocumentsSection from './components/DocumentsSection';
+import ShipmentsSection from './components/ShipmentsSection';
+import ContainersSection from './components/ContainersSection';
+import OrderTasksSection from './components/OrderTasksSection';
+import { OrderInfoContainer, OrderTasksContainer } from './containers';
 import { OrderFormWrapperStyle } from './style';
-import { OrderInfoContainer, OrderFilesContainer, OrderTasksContainer } from './containers';
-
-const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
-const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
-const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
-const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
-const AsyncContainersSection = lazy(() => import('./components/ContainersSection'));
 
 type OptionalProps = {
   isNew: boolean,
+  loading: boolean,
   isClone: boolean,
   order: Object,
 };
@@ -35,6 +40,7 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   isClone: false,
+  loading: false,
   order: {},
 };
 
@@ -53,10 +59,10 @@ export default class OrderForm extends React.Component<Props> {
   };
 
   render() {
-    const { isNew, isClone, order } = this.props;
+    const { isNew, isClone, order, loading } = this.props;
     const { updatedAt, updatedBy, archived } = order;
     return (
-      <Suspense fallback={<LoadingIcon />}>
+      <ConcurrentMode>
         <PermissionConsumer>
           {hasPermission => {
             const canCreate = hasPermission(ORDER_CREATE);
@@ -65,111 +71,82 @@ export default class OrderForm extends React.Component<Props> {
             return (
               <div className={OrderFormWrapperStyle}>
                 <SectionWrapper id="order_orderSection">
-                  <SectionHeader
-                    icon="ORDER"
-                    title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
-                  >
-                    {!isNew && (
-                      <>
-                        <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                        {!isClone && canCreate && <CloneButton onClick={this.onClone} />}
-                        <BooleanValue>
-                          {({ value: isDialogOpen, set: dialogToggle }) => (
-                            <StatusToggle
-                              readOnly={!canUpdate}
-                              archived={archived}
-                              openStatusDialog={() => dialogToggle(true)}
-                              activateDialog={
-                                <OrderActivateDialog
-                                  order={order}
-                                  isOpen={isDialogOpen && !!archived}
-                                  onRequestClose={() => dialogToggle(false)}
-                                />
-                              }
-                              archiveDialog={
-                                <OrderArchiveDialog
-                                  order={order}
-                                  isOpen={isDialogOpen && !archived}
-                                  onRequestClose={() => dialogToggle(false)}
-                                />
-                              }
-                            />
-                          )}
-                        </BooleanValue>
-                      </>
-                    )}
-                  </SectionHeader>
+                  <MainSectionPlaceholder height={816} isLoading={loading}>
+                    <SectionHeader
+                      icon="ORDER"
+                      title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
+                    >
+                      {!isNew && (
+                        <>
+                          <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                          {!isClone && canCreate && <CloneButton onClick={this.onClone} />}
+                          <BooleanValue>
+                            {({ value: isDialogOpen, set: dialogToggle }) => (
+                              <StatusToggle
+                                readOnly={!canUpdate}
+                                archived={archived}
+                                openStatusDialog={() => dialogToggle(true)}
+                                activateDialog={
+                                  <OrderActivateDialog
+                                    order={order}
+                                    isOpen={isDialogOpen && !!archived}
+                                    onRequestClose={() => dialogToggle(false)}
+                                  />
+                                }
+                                archiveDialog={
+                                  <OrderArchiveDialog
+                                    order={order}
+                                    isOpen={isDialogOpen && !archived}
+                                    onRequestClose={() => dialogToggle(false)}
+                                  />
+                                }
+                              />
+                            )}
+                          </BooleanValue>
+                        </>
+                      )}
+                    </SectionHeader>
 
-                  <OrderSection isNew={isNew} />
+                    <OrderSection isNew={isNew} />
+                  </MainSectionPlaceholder>
                 </SectionWrapper>
 
-                <AsyncItemsSection isNew={isNew} orderIsArchived={order.archived} />
+                <SectionWrapper id="order_itemsSection">
+                  <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
+                    {() => <ItemsSection isNew={isNew} orderIsArchived={order.archived} />}
+                  </QueryPlaceHolder>
+                </SectionWrapper>
 
                 <SectionWrapper id="order_documentsSection">
-                  <Subscribe to={[OrderFilesContainer]}>
-                    {({ state: values }) => (
-                      <SectionHeader
-                        icon="DOCUMENT"
-                        title={
-                          <>
-                            <FormattedMessage
-                              id="modules.Orders.documents"
-                              defaultMessage="DOCUMENTS"
-                            />{' '}
-                            ({values.files.length})
-                          </>
-                        }
+                  <DocumentsSection
+                    entityId={!isClone && order.id ? order.id : ''}
+                    isLoading={loading}
+                  />
+                </SectionWrapper>
+
+                <SectionWrapper id="order_taskSection">
+                  <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
+                    {({ initDetailValues }) => (
+                      <OrderTasksSection
+                        initValues={initDetailValues}
+                        isLoading={loading}
+                        entityId={!isClone && order.id ? order.id : ''}
                       />
                     )}
                   </Subscribe>
-                  <AsyncDocumentsSection />
                 </SectionWrapper>
 
-                <AsyncTaskSection entityId={order.id} type="order" />
+                {!isNew && (
+                  <SectionWrapper id="order_shipmentsSection">
+                    <ShipmentsSection entityId={order.id} isLoading={loading} />
+                  </SectionWrapper>
+                )}
 
-                <SectionWrapper id="order_shipmentsSection">
-                  <Subscribe to={[OrderInfoContainer]}>
-                    {({ state: { shipments } }) => (
-                      <>
-                        <SectionHeader
-                          icon="SHIPMENT"
-                          title={
-                            <>
-                              <FormattedMessage
-                                id="modules.Orders.shipments"
-                                defaultMessage="SHIPMENTS"
-                              />{' '}
-                              ({shipments.length})
-                            </>
-                          }
-                        />
-                        <AsyncShipmentsSection shipments={shipments} />
-                      </>
-                    )}
-                  </Subscribe>
-                </SectionWrapper>
-
-                <SectionWrapper id="order_containersSection">
-                  <Subscribe to={[OrderInfoContainer]}>
-                    {({ state: { containers } }) => (
-                      <>
-                        <SectionHeader
-                          icon="CONTAINER"
-                          title={
-                            <>
-                              <FormattedMessage
-                                id="modules.Orders.containers"
-                                defaultMessage="CONTAINERS"
-                              />{' '}
-                              ({containers.length})
-                            </>
-                          }
-                        />
-                        <AsyncContainersSection containers={containers} />
-                      </>
-                    )}
-                  </Subscribe>
-                </SectionWrapper>
+                {!isNew && (
+                  <SectionWrapper id="order_containersSection">
+                    <ContainersSection entityId={order.id} isLoading={loading} />
+                  </SectionWrapper>
+                )}
 
                 <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
                   {(
@@ -193,7 +170,7 @@ export default class OrderForm extends React.Component<Props> {
             );
           }}
         </PermissionConsumer>
-      </Suspense>
+      </ConcurrentMode>
     );
   }
 }

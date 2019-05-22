@@ -1,6 +1,6 @@
 // @flow
 import { cloneDeep } from 'lodash';
-import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
+import { getBatchLatestQuantity, findVolume, findWeight } from 'utils/batch';
 import { getByPath } from 'utils/fp';
 
 const findPriceAmount = (batch: Object, totalBatchQuantity: number) => {
@@ -30,7 +30,7 @@ export const findSummary = (values: Object) => {
     if (baseCurrency !== price.currency) {
       diffCurrency = true;
     }
-    const batchQuantity = findBatchQuantity(batch);
+    const batchQuantity = getBatchLatestQuantity(batch);
     totalBatchQuantity += batchQuantity;
     totalBatchPackages += packageQuantity;
     totalPriceAmount += findPriceAmount(batch, batchQuantity);

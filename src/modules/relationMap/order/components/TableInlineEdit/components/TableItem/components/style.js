@@ -9,4 +9,10 @@ export const WrapperStyle: string = css`
   height: 100%;
 `;
 
+export const InlineRowStyle: string = css`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+`;
+
 export default WrapperStyle;

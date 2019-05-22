@@ -1,5 +1,6 @@
 // @flow
-import { plus, times, divide } from 'number-precision';
+import { set, cloneDeep } from 'lodash';
+import { times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
 import { isNullOrUndefined, getByPathWithDefault } from './fp';
@@ -33,33 +34,29 @@ export const findVolume = (batch: Object) => {
     : 0;
 };
 
-export const findBatchQuantity = ({
+export const getBatchLatestQuantity = ({
   quantity = 0,
-  batchAdjustments,
+  batchQuantityRevisions = [],
 }: {
   quantity: number,
-  batchAdjustments: Array<{ quantity: number }>,
+  batchQuantityRevisions: Array<{ quantity: number }>,
 }): number => {
-  const batchQuantity = batchAdjustments
-    ? batchAdjustments.reduce(
-        (totalAdjustment, adjustment) => plus(totalAdjustment, adjustment.quantity),
-        quantity
-      )
+  return batchQuantityRevisions.length > 0
+    ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
     : quantity;
-  return batchQuantity;
 };
 
 export const totalBatchPriceAmount = ({
   quantity = 0,
-  batchAdjustments,
+  batchQuantityRevisions = [],
   orderItem,
 }: {
   quantity: number,
-  batchAdjustments: Array<{ quantity: number }>,
+  batchQuantityRevisions: Array<{ quantity: number }>,
   orderItem: Object,
 }): number => {
   return times(
-    findBatchQuantity({ quantity, batchAdjustments }),
+    getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
     getByPathWithDefault(0, 'price.amount', orderItem)
   );
 };
@@ -131,30 +128,18 @@ export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object =>
   };
 };
 
-export function calculateBatchQuantity(batches: Array<Object>): number {
-  let total = 0;
-  batches.forEach(batch => {
-    total += batch.quantity;
-    if (batch.batchAdjustments) {
-      batch.batchAdjustments.forEach(({ quantity }) => {
-        total += quantity;
-      });
-    }
-  });
-  return total;
-}
-
 export const calculatePackageQuantity = ({
+  quantity = 0,
+  batchQuantityRevisions = [],
   packageCapacity = 0,
-  quantity,
-  batchAdjustments,
 }: Object) => {
   if (packageCapacity > 0) {
-    const totalQuantity = batchAdjustments.reduce(
-      (total, adjustment) => plus(adjustment.quantity, total),
-      quantity
-    );
-    return totalQuantity > 0 ? divide(totalQuantity, packageCapacity) : 0;
+    const validQuantity =
+      batchQuantityRevisions.length > 0
+        ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
+        : quantity;
+
+    return divide(validQuantity, packageCapacity);
   }
   return 0;
 };
@@ -171,8 +156,8 @@ export const generateCloneBatch = ({
   injectUid({
     ...rest,
     isNew: true,
-    no: `${no}- clone`,
-    batchAdjustments: [],
+    no: `${no} - clone`,
+    batchQuantityRevisions: [],
     todo: {
       tasks: [],
     },
@@ -194,7 +179,10 @@ export const findTotalAutoFillBatches = ({
   batches: Array<Object>,
   quantity: number,
 }): Object => {
-  const totalBatchQuantity = batches.reduce((total, batch) => total + findBatchQuantity(batch), 0);
+  const totalBatchQuantity = batches.reduce(
+    (total, batch) => total + getBatchLatestQuantity(batch),
+    0
+  );
   return quantity - totalBatchQuantity;
 };
 
@@ -216,10 +204,29 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
     quantity: 0,
     packageQuantity: 0,
     isNew: true,
-    batchAdjustments: [],
+    batchQuantityRevisions: [],
     autoCalculatePackageQuantity: true,
     todo: {
       tasks: [],
     },
   });
+};
+
+export const updateBatchCardQuantity = (batch: Object, quantity: number): Object => {
+  const { batchQuantityRevisions, autoCalculatePackageQuantity } = batch;
+
+  const newBatch = cloneDeep(batch);
+  if (batchQuantityRevisions.length > 0) {
+    set(
+      newBatch,
+      `batchQuantityRevisions[${batchQuantityRevisions.length - 1}].quantity`,
+      quantity
+    );
+  } else {
+    set(newBatch, `quantity`, quantity);
+  }
+  if (autoCalculatePackageQuantity) {
+    set(newBatch, `packageQuantity`, calculatePackageQuantity(newBatch));
+  }
+  return newBatch;
 };

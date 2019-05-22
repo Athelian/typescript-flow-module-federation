@@ -255,7 +255,6 @@ function BatchesSection({ containerIsArchived }: Props) {
                                     order: hasPermission(ORDER_FORM),
                                     shipment: hasPermission(SHIPMENT_FORM),
                                   }}
-                                  position={position}
                                   batch={batch}
                                   saveOnBlur={updatedBatch => {
                                     setDeepFieldValue(`batches.${position}`, updatedBatch);
@@ -288,9 +287,7 @@ function BatchesSection({ containerIsArchived }: Props) {
                                   }}
                                   onClone={value => {
                                     const clonedBatch = generateCloneBatch(value);
-
                                     setFieldValue('batches', [...batches, clonedBatch]);
-                                    addExistingBatches([clonedBatch]);
                                   }}
                                 />
                               </div>

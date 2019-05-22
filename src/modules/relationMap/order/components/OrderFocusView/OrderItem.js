@@ -40,17 +40,17 @@ function getQuantitySummary(item: Object) {
       batchedQuantity += batch.quantity;
       batched += 1;
 
-      let currentQuantity = batch.quantity;
+      let latestQuantity = batch.quantity;
 
       if (batch.batchAdjustments) {
         batch.batchAdjustments.forEach(batchAdjustment => {
           batchedQuantity += batchAdjustment.quantity;
-          currentQuantity += batchAdjustment.quantity;
+          latestQuantity += batchAdjustment.quantity;
         });
       }
 
       if (batch.shipment) {
-        shippedQuantity += currentQuantity;
+        shippedQuantity += latestQuantity;
         shipped += 1;
       }
     });

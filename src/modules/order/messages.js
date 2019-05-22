@@ -199,7 +199,7 @@ export default defineMessages({
     defaultMessage: 'ORDER ITEM QUANTITY',
   },
   batchQuantity: {
-    id: 'modules.Batches.quantity',
+    id: 'modules.Orders.batchQuantity',
     defaultMessage: 'BATCH QUANTITY',
   },
   packageQuantity: {

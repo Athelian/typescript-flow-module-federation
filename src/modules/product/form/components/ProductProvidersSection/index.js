@@ -57,6 +57,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                             productProviders={productProviders}
                             productProvider={{
                               isNew: true,
+                              hideLogs: true,
                               ...generateEndProduct(),
                               archived: productIsArchived,
                             }}

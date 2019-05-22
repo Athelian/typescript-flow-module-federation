@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { groupBy } from 'lodash';
 import { Subscribe } from 'unstated';
 import { getByPathWithDefault, isNullOrUndefined, getByPath } from 'utils/fp';
-import { findBatchQuantity, findVolume, findWeight, totalBatchPriceAmount } from 'utils/batch';
+import { getBatchLatestQuantity, findVolume, findWeight, totalBatchPriceAmount } from 'utils/batch';
 import { getPortName } from 'utils/shipment';
 import GridColumn from 'components/GridColumn';
 import { FieldItem, Label, Display } from 'components/Form';
@@ -73,7 +73,7 @@ const ShipmentSummary = () => {
         );
 
         const totalBatchQuantity = batches.reduce(
-          (total, batch) => total + findBatchQuantity(batch),
+          (total, batch) => total + getBatchLatestQuantity(batch),
           0
         );
 
@@ -214,9 +214,14 @@ const ShipmentSummary = () => {
                         />
                       }
                     >
-                      <Display>
-                        <FormattedMessage id="modules.shipment.invalid" defaultMessage="Invalid" />
-                      </Display>
+                      <div>
+                        <Display>
+                          <FormattedMessage
+                            id="modules.shipment.invalid"
+                            defaultMessage="Invalid"
+                          />
+                        </Display>
+                      </div>
                     </Tooltip>
                   ) : (
                     <Display>

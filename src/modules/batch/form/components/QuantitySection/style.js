@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { presets, fontSizes, colors } from 'styles/common';
 
-export const QuantityAdjustmentsSectionWrapperStyle: string = css`
+export const QuantitySectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
   padding: 40px 0;
@@ -36,4 +36,14 @@ export const CurrentQuantityStyle: string = css`
   font-weight: bold;
   min-width: 200px;
   text-align: right;
+`;
+
+export const QuantityRevisionItemStyle: string = css`
+  position: relative;
+`;
+
+export const QuantityRevisionDiffStyle: string = css`
+  position: absolute;
+  right: -60px;
+  top: 0;
 `;

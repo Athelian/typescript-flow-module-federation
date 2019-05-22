@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
-import { findBatchQuantity, findVolume, findWeight } from 'utils/batch';
+import { getBatchLatestQuantity, findVolume, findWeight } from 'utils/batch';
 import { getLatestDate } from 'utils/shipment';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import {
@@ -183,6 +183,11 @@ export const batchColumns = [
     availableColumns: [
       'batch.batchNo',
       'batch.quantity',
+      'batch.newQuantity1',
+      'batch.newQuantity2',
+      'batch.newQuantity3',
+      'batch.newQuantity4',
+      'batch.newQuantity5',
       'batch.deliveredAt',
       'batch.desiredAt',
       'batch.expiredAt',
@@ -191,7 +196,12 @@ export const batchColumns = [
     ],
     columns: [
       <FormattedMessage {...batchMessages.batchNo} />,
-      <FormattedMessage {...batchMessages.quantity} />,
+      <FormattedMessage {...batchMessages.initialQuantity} />,
+      <FormattedMessage {...batchMessages.newQuantity1} />,
+      <FormattedMessage {...batchMessages.newQuantity2} />,
+      <FormattedMessage {...batchMessages.newQuantity3} />,
+      <FormattedMessage {...batchMessages.newQuantity4} />,
+      <FormattedMessage {...batchMessages.newQuantity5} />,
       <FormattedMessage {...batchMessages.deliveredAt} />,
       <FormattedMessage {...batchMessages.desiredAt} />,
       <FormattedMessage {...batchMessages.expiredAt} />,
@@ -807,12 +817,77 @@ export const batchColumnFields = [
     },
   },
   {
-    messageId: batchMessages.quantity.id,
+    messageId: batchMessages.initialQuantity.id,
     name: 'quantity',
     columnName: 'batch.quantity',
-    type: 'numberAdjustment',
+    type: 'number',
     meta: {
       isRequired: true,
+    },
+  },
+  {
+    messageId: batchMessages.newQuantity1.id,
+    name: 'batchQuantityRevisions.0',
+    columnName: 'batch.newQuantity1',
+    type: 'numberAdjustment',
+    getExportValue: (values: Object) => {
+      const revision = getByPath(`batchQuantityRevisions.0`, values);
+      if (!revision) return '';
+
+      const { type, quantity } = revision;
+      return `${type}-${quantity}`;
+    },
+  },
+  {
+    messageId: batchMessages.newQuantity2.id,
+    name: 'batchQuantityRevisions.1',
+    columnName: 'batch.newQuantity2',
+    type: 'numberAdjustment',
+    getExportValue: (values: Object) => {
+      const revision = getByPath(`batchQuantityRevisions.1`, values);
+      if (!revision) return '';
+
+      const { type, quantity } = revision;
+      return `${type}-${quantity}`;
+    },
+  },
+  {
+    messageId: batchMessages.newQuantity3.id,
+    name: 'batchQuantityRevisions.2',
+    columnName: 'batch.newQuantity3',
+    type: 'numberAdjustment',
+    getExportValue: (values: Object) => {
+      const revision = getByPath(`batchQuantityRevisions.2`, values);
+      if (!revision) return '';
+
+      const { type, quantity } = revision;
+      return `${type}-${quantity}`;
+    },
+  },
+  {
+    messageId: batchMessages.newQuantity4.id,
+    name: 'batchQuantityRevisions.3',
+    columnName: 'batch.newQuantity4',
+    type: 'numberAdjustment',
+    getExportValue: (values: Object) => {
+      const revision = getByPath(`batchQuantityRevisions.3`, values);
+      if (!revision) return '';
+
+      const { type, quantity } = revision;
+      return `${type}-${quantity}`;
+    },
+  },
+  {
+    messageId: batchMessages.newQuantity5.id,
+    name: 'batchQuantityRevisions.4',
+    columnName: 'batch.newQuantity5',
+    type: 'numberAdjustment',
+    getExportValue: (values: Object) => {
+      const revision = getByPath(`batchQuantityRevisions.4`, values);
+      if (!revision) return '';
+
+      const { type, quantity } = revision;
+      return `${type}-${quantity}`;
     },
   },
   {
@@ -1093,14 +1168,14 @@ export const containerColumnFields = [
       const { id: containerId } = values;
       const container = editData.containers[containerId];
       return container.batches.reduce((total, batch) => {
-        return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+        return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
       return container.batches.reduce((total, batch) => {
-        return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+        return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     meta: {
@@ -1109,7 +1184,7 @@ export const containerColumnFields = [
         const container = editData.containers[containerId];
 
         const totalBatchQuantity = (container.batches || []).reduce((total, batch) => {
-          return total + findBatchQuantity(getByPath(`batches.${batch.id}`, editData));
+          return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
         }, 0);
         return <FormattedNumber value={totalBatchQuantity} />;
       },

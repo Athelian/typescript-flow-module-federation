@@ -50,6 +50,7 @@ const CornerIcon = React.forwardRef(
   }
 );
 
+// $FlowFixMe: ignore for now until flow fix this issue with forwardRef
 CornerIcon.defaultProps = defaultProps;
 
 export default CornerIcon;

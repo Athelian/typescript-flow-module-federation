@@ -107,7 +107,7 @@ const PackagingSection = ({ isNew }: Props) => {
             setFieldValue,
             setFieldArrayValue,
             calculatePackageQuantity,
-            triggerCalculatePackageQuantity,
+            toggleAutoCalculatePackageQuantity,
             toggleAutoCalculatePackageVolume,
             calculatePackageVolume,
           }) => {
@@ -191,15 +191,7 @@ const PackagingSection = ({ isNew }: Props) => {
                         allowUpdate || hasPermission(BATCH_SET_PACKAGE_QUANTITY)
                       }
                       autoCalculateIsToggled={values.autoCalculatePackageQuantity}
-                      onToggleAutoCalculate={() => {
-                        setFieldValue(
-                          'autoCalculatePackageQuantity',
-                          !values.autoCalculatePackageQuantity
-                        );
-                        if (!values.autoCalculatePackageQuantity) {
-                          triggerCalculatePackageQuantity();
-                        }
-                      }}
+                      onToggleAutoCalculate={toggleAutoCalculatePackageQuantity}
                       autoCalculateToggleMessages={{
                         editable: {
                           on: (

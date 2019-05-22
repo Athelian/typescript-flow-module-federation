@@ -1,16 +1,20 @@
 // @flow
 import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
+import { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
+import SlideView from 'components/SlideView';
+import Timeline from 'modules/timeline/components/Timeline';
 import validator from 'modules/task/form/validator';
 import TaskContainer from 'modules/task/form/container';
 import TaskForm from 'modules/task/form';
+import { taskTimelineQuery } from 'modules/task/query';
 
 type OptionalProps = {
   isInTemplate: boolean,
@@ -50,6 +54,39 @@ const TaskFormInSlide = ({ editable, onSave, task, parentEntity, entity, isInTem
                     icon="TASK"
                   />
                 </JumpToSection>
+
+                {!task.isNew && (
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) => (
+                      <>
+                        <LogsButton onClick={() => slideToggle(true)} />
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          <Layout
+                            navBar={
+                              <SlideViewNavBar>
+                                <EntityIcon icon="LOGS" color="LOGS" />
+                              </SlideViewNavBar>
+                            }
+                          >
+                            {task.id && opened ? (
+                              <Timeline
+                                query={taskTimelineQuery}
+                                queryField="task"
+                                variables={{
+                                  id: task.id,
+                                }}
+                                entity={{
+                                  taskId: task.id,
+                                }}
+                              />
+                            ) : null}
+                          </Layout>
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                )}
+
                 {editable && taskContainer.isDirty() && (
                   <>
                     <ResetButton

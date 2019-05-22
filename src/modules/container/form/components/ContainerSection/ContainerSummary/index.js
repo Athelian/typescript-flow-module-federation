@@ -130,7 +130,10 @@ export default function ContainerSummary() {
                           />
                         }
                       >
-                        <span>N/A</span>
+                        <FormattedMessage
+                          id="modules.Containers.invalid"
+                          defaultMessage="Invalid"
+                        />
                       </Tooltip>
                     ) : (
                       <FormattedNumber

@@ -166,25 +166,25 @@ export const prepareParsedBatchInput = (
           newValues.container
         )),
     ...parseArrayOfChildrenField(
-      'batchAdjustments',
-      getByPathWithDefault([], 'batchAdjustments', originalValues),
-      newValues.batchAdjustments,
-      (oldAdjustment: ?Object, newAdjustment: Object) => ({
-        ...(!oldAdjustment ? {} : { id: oldAdjustment.id }),
+      'batchQuantityRevisions',
+      getByPathWithDefault([], 'batchQuantityRevisions', originalValues),
+      newValues.batchQuantityRevisions,
+      (oldQuantities: ?Object, newQuantities: Object) => ({
+        ...(!oldQuantities ? {} : { id: oldQuantities.id }),
         ...parseGenericField(
           'quantity',
-          getByPathWithDefault(null, 'quantity', oldAdjustment),
-          newAdjustment.quantity
+          getByPathWithDefault(null, 'quantity', oldQuantities),
+          newQuantities.quantity
         ),
         ...parseEnumField(
-          'reason',
-          getByPathWithDefault(null, 'reason', oldAdjustment),
-          newAdjustment.reason
+          'type',
+          getByPathWithDefault(null, 'type', oldQuantities),
+          newQuantities.type
         ),
         ...parseMemoField(
           'memo',
-          getByPathWithDefault(null, 'memo', oldAdjustment),
-          newAdjustment.memo
+          getByPathWithDefault(null, 'memo', oldQuantities),
+          newQuantities.memo
         ),
       })
     ),
