@@ -124,10 +124,10 @@ class BatchFormModule extends React.PureComponent<Props> {
         ...batchClone,
         autoCalculatePackageQuantity: true,
         no: `[cloned] ${no}`,
-        batchAdjustments: [],
+        batchQuantityRevisions: [],
       });
     } else {
-      const { todo, ...rest } = batch;
+      const { todo = { tasks: [] }, ...rest } = batch;
       batchInfoContainer.initDetailValues(rest);
       batchTasksContainer.initDetailValues(todo);
     }
@@ -194,11 +194,11 @@ class BatchFormModule extends React.PureComponent<Props> {
                               icon="BATCH"
                             />
                             <SectionTabs
-                              link="batch_quantityAdjustmentsSection"
+                              link="batch_quantitySection"
                               label={
                                 <FormattedMessage
-                                  id="modules.Batches.quantityAdjustments"
-                                  defaultMessage="QUANTITY ADJUSTMENTS"
+                                  id="modules.Batches.quantity"
+                                  defaultMessage="QUANTITY"
                                 />
                               }
                               icon="QUANTITY_ADJUSTMENTS"

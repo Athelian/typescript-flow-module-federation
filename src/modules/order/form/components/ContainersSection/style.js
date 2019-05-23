@@ -13,7 +13,7 @@ export const ContainersSectionBodyStyle: string = css`
   display: grid;
   grid-template-columns: repeat(auto-fit, 195px);
   grid-auto-rows: min-content;
-  grid-gap: 30px;
+  grid-row-gap: 30px;
   grid-column-gap: 20px;
   padding: 30px 20px;
   ${borderRadiuses.MAIN};
@@ -22,7 +22,7 @@ export const ContainersSectionBodyStyle: string = css`
   background-color: ${colors.GRAY_SUPER_LIGHT};
   max-height: 80vh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: overlay;
   ${scrollbars.SMALL};
 `;
 

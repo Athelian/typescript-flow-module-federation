@@ -21,7 +21,7 @@ import { orderDetailQuery } from 'modules/relationMap/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
-import { calculateBatchQuantity } from 'utils/batch';
+import { getBatchLatestQuantity } from 'utils/batch';
 import { prepareParsedOrderInput } from 'modules/order/form/mutation';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
@@ -412,7 +412,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     customFields: null,
                                     producedAt: null,
                                     tagIds: [],
-                                    batchAdjustments: [],
+                                    batchQuantityRevisions: [],
                                   },
                                 },
                                 refetchQueries: allOrderIds.map(orderId => ({
@@ -649,7 +649,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   }}
                   onMoveToNewShipment={() => {
                     const defaultBatchInput = {
-                      batchAdjustments: [],
+                      batchQuantityRevisions: [],
                       todo: {
                         tasks: [],
                       },
@@ -799,7 +799,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           moveOrderItems.push({
                             ...defaultInput,
                             ...orderItem,
-                            quantity: calculateBatchQuantity([batch]),
+                            quantity: getBatchLatestQuantity(batch),
                             isNew: true,
                             ...(needToResetPrice
                               ? {
@@ -816,8 +816,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 shipment: inputBatchFields.shipment
                                   ? shipments[inputBatchFields.shipment.id]
                                   : null,
-                                batchAdjustments: inputBatchFields.batchAdjustments
-                                  ? inputBatchFields.batchAdjustments.map(item => ({
+                                batchQuantityRevisions: inputBatchFields.batchQuantityRevisions
+                                  ? inputBatchFields.batchQuantityRevisions.map(item => ({
                                       ...item,
                                       isNew: true,
                                     }))
@@ -989,7 +989,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 }
                               : {}),
                             batches: [batch],
-                            quantity: calculateBatchQuantity([batch]),
+                            quantity: getBatchLatestQuantity(batch),
                           });
                         }
                       }
@@ -1172,14 +1172,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
-                  max={
-                    getByPathWithDefault(0, `${uiSelectors.targetedBatchId()}.quantity`, batches) +
-                    getByPathWithDefault(
-                      0,
-                      `${uiSelectors.targetedBatchId()}.totalAdjusted`,
-                      batches
-                    )
-                  }
+                  max={getByPathWithDefault(
+                    0,
+                    `${uiSelectors.targetedBatchId()}.latestQuantity`,
+                    batches
+                  )}
                   onSplit={async inputData => {
                     const { type, quantity } = inputData;
                     const id = uiSelectors.targetedBatchId();

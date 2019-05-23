@@ -5,14 +5,13 @@ import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import TaskRing from 'components/TaskRing';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
-import { FieldItem, Label, Display, Blackout } from 'components/Form';
-import { totalAdjustQuantity } from 'components/Cards/utils';
 import { getLatestDate } from 'utils/shipment';
 import { getByPathWithDefault } from 'utils/fp';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import TaskRing from 'components/TaskRing';
+import { FieldItem, Label, Display, Blackout } from 'components/Form';
 import BaseCard from '../BaseCard';
 import {
   ProductBatchCardWrapperStyle,
@@ -45,12 +44,10 @@ const defaultProps = {
 };
 
 const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
-  const { no, quantity, orderItem, shipment, batchAdjustments, container, todo } = batch;
+  const { no, latestQuantity, orderItem, shipment, container, todo } = batch;
   const order = getByPathWithDefault(null, 'order', orderItem);
 
   const hasContainers = shipment && shipment.containers && shipment.containers.length > 0;
-
-  const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
   return (
     <BaseCard icon="BATCH" color="BATCH" {...rest}>
@@ -68,7 +65,7 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={quantity + totalAdjustment} />
+                <FormattedNumber value={latestQuantity} />
               </Display>
             }
           />

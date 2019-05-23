@@ -41,12 +41,9 @@ const BatchFormInSlide = ({ batch, onSave }: Props) => {
                       icon="BATCH"
                     />
                     <SectionTabs
-                      link="batch_quantityAdjustmentsSection"
+                      link="batch_quantitySection"
                       label={
-                        <FormattedMessage
-                          id="modules.Batches.quantityAdjustments"
-                          defaultMessage="QUANTITY ADJUSTMENTS"
-                        />
+                        <FormattedMessage id="modules.Batches.quantity" defaultMessage="QUANTITY" />
                       }
                       icon="QUANTITY_ADJUSTMENTS"
                     />

@@ -14,7 +14,8 @@ function useNumberInput(initialValue: number, schema: ValidationObject) {
     : false;
   const onChange = useCallback((event: Object) => {
     if (event && event.currentTarget) {
-      setValue(Number(event.currentTarget.value));
+      const newValue = Number(event.currentTarget.value);
+      setValue(newValue > 0 ? newValue : 0);
     }
   }, []);
   const onFocus = useCallback(() => {

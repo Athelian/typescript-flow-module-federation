@@ -1,6 +1,49 @@
 // @flow
 import gql from 'graphql-tag';
 
+export const orderFormQueryFragment = gql`
+  fragment orderFormQueryFragment on Order {
+    id
+    archived
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    memo
+    poNo
+    currency
+    totalOrdered
+    totalBatched
+    totalShipped
+    orderItemCount
+    batchCount
+    batchShippedCount
+    shipmentCount
+    issuedAt
+    piNo
+    incoterm
+    deliveryPlace
+    customFields {
+      ...customFieldsFragment
+    }
+    exporter {
+      ...partnerCardFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    orderItems {
+      ...itemInOrderFormFragment
+    }
+  }
+`;
+
 export const orderFormFragment = gql`
   fragment orderFormFragment on Order {
     id

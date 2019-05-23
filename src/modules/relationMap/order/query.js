@@ -16,15 +16,7 @@ export const batchCardRMFragment = gql`
     id
     archived
     no
-    quantity
-    batchAdjustments {
-      ... on BatchAdjustment {
-        id
-        quantity
-        reason
-      }
-    }
-    totalAdjusted
+    latestQuantity
     tags {
       ...tagFragment
     }

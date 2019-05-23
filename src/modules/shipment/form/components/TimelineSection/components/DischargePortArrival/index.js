@@ -31,14 +31,14 @@ type OptionalProps = {
       firstName: string,
       lastName: string,
     }>,
+    timelineDateRevisions: Array<Object>,
     approvedAt: ?Date,
     approvedBy: ?{
       id: string,
       firstName: string,
       lastName: string,
     },
-    timelineDateRevisions: Array<Object>,
-    date: Date,
+    date: ?Date,
   },
   renderBelowHeader: React.Node,
 };
@@ -56,7 +56,13 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   renderBelowHeader: null,
-  timelineDate: { assignedTo: [], timelineDateRevisions: [] },
+  timelineDate: {
+    assignedTo: [],
+    timelineDateRevisions: [],
+    approvedAt: null,
+    approvedBy: null,
+    date: null,
+  },
 };
 
 const DischargePortArrival = (props: Props) => {

@@ -16,7 +16,7 @@ export default defineMessages({
   },
   warehouseName: {
     id: 'modules.container.warehouseName',
-    defaultMessage: 'Warehouse Name'.toUpperCase(),
+    defaultMessage: 'Warehouse Name',
   },
   warehouse: {
     id: 'modules.container.warehouse',
@@ -24,7 +24,7 @@ export default defineMessages({
   },
   warehouseArrivalAgreedDate: {
     id: 'modules.container.warehouseArrivalAgreedDate',
-    defaultMessage: 'Agreed Arrival Date'.toUpperCase(),
+    defaultMessage: 'Agreed Arrival Date',
   },
   warehouseArrivalAgreedDateAssignedTo: {
     id: 'modules.container.warehouseArrivalAgreedDateAssignedTo',
@@ -32,7 +32,7 @@ export default defineMessages({
   },
   warehouseArrivalActualDate: {
     id: 'modules.container.warehouseArrivalActualDate',
-    defaultMessage: 'Actual Arrival Date'.toUpperCase(),
+    defaultMessage: 'Actual Arrival Date',
   },
   warehouseArrivalActualDateAssignedTo: {
     id: 'modules.container.warehouseArrivalActualDateAssignedTo',
@@ -40,11 +40,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.container.createdAt',
-    defaultMessage: 'Date Created'.toUpperCase(),
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.container.updatedAt',
-    defaultMessage: 'Last Modified'.toUpperCase(),
+    defaultMessage: 'Last Modified',
   },
   noContainerFound: {
     id: 'modules.container.noContainerFound',

@@ -1,37 +1,52 @@
 // @flow
 import * as React from 'react';
+import { injectIntl, type IntlShape } from 'react-intl';
+import { useTextInput } from 'modules/form/hooks';
 import EnumProvider from 'providers/enum';
+import enumMessages from 'components/Form/Factories/messages';
+import { parseEnumValue, parseEnumDescriptionOrValue } from 'components/Form/Factories/helpers';
 import { FieldItem, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
 import emitter from 'utils/emitter';
-import { useTextInput } from 'modules/form/hooks';
-import { parseEnumValue, parseEnumDescriptionOrValue } from 'components/Form/Factories/helpers';
 import logger from 'utils/logger';
 
 type OptionalProps = {
   isRequired: boolean,
   disabled: boolean,
+  width: string,
 };
 
 type Props = OptionalProps & {
+  intl: IntlShape,
   name: string,
   value: string,
-  enumType: 'Currency' | 'Incoterm' | 'LoadType' | 'TransportType',
+  enumType: 'Currency' | 'Incoterm' | 'LoadType' | 'TransportType' | 'BatchQuantityRevisionType',
   id: string,
 };
 
 const defaultProps = {
   isRequired: false,
   disabled: false,
+  width: '200px',
 };
 
-export default function InlineEnumInput({ name, value, enumType, isRequired, id }: Props) {
+function InlineEnumInput({ intl, name, value, enumType, isRequired, width, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
+  const itemToString = enumMessages[enumType]
+    ? (enumValue: ?string | ?{ description: string, name: string }) => {
+        const selectedValue = parseEnumDescriptionOrValue(enumValue);
+        const messages = enumMessages[enumType];
+        return messages[selectedValue]
+          ? intl.formatMessage(messages[selectedValue])
+          : selectedValue;
+      }
+    : parseEnumDescriptionOrValue;
 
   return (
     <EnumProvider enumType={enumType}>
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) return `Error!: ${error}`;
+
         return (
           <FieldItem
             input={
@@ -39,7 +54,7 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, id 
                 {...inputHandlers}
                 name={name}
                 items={data}
-                itemToString={parseEnumDescriptionOrValue}
+                itemToString={itemToString}
                 itemToValue={parseEnumValue}
                 inputValue={inputHandlers.value}
                 renderSelect={({ ...selectProps }) => (
@@ -48,7 +63,7 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, id 
                     id={`input-${id}`}
                     hasError={hasError}
                     isOpen={isFocused}
-                    width="200px"
+                    width={width}
                     align="left"
                   />
                 )}
@@ -133,3 +148,5 @@ export default function InlineEnumInput({ name, value, enumType, isRequired, id 
 }
 
 InlineEnumInput.defaultProps = defaultProps;
+
+export default injectIntl(InlineEnumInput);

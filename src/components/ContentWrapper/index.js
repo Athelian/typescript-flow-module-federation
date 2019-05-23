@@ -18,7 +18,9 @@ const defaultProps = {
 };
 
 const ContentWrapper = ({ className, children, width }: Props) => (
-  <div className={cx(ContentWrapperStyle(width), className)}>{children}</div>
+  <div id="mainContent" className={cx(ContentWrapperStyle(width), className)}>
+    {children}
+  </div>
 );
 
 ContentWrapper.defaultProps = defaultProps;

@@ -255,7 +255,6 @@ function BatchesSection({ containerIsArchived }: Props) {
                                     order: hasPermission(ORDER_FORM),
                                     shipment: hasPermission(SHIPMENT_FORM),
                                   }}
-                                  position={position}
                                   batch={batch}
                                   saveOnBlur={updatedBatch => {
                                     setDeepFieldValue(`batches.${position}`, updatedBatch);

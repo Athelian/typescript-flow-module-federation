@@ -92,13 +92,12 @@ export const batchEntityFragment = gql`
     desiredAt
     expiredAt
     producedAt
-    totalAdjusted
-    batchAdjustments {
-      ... on BatchAdjustment {
+    latestQuantity
+    batchQuantityRevisions {
+      ... on BatchQuantityRevision {
         id
-        reason
         quantity
-        memo
+        type
       }
     }
     customFields {

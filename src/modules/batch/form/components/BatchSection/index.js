@@ -16,7 +16,6 @@ import {
   BATCH_CREATE,
   BATCH_UPDATE,
   BATCH_SET_NO,
-  BATCH_SET_QUANTITY,
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_EXPIRY,
@@ -37,9 +36,9 @@ import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import BatchFormContainer from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
-import { FormField, FormContainer } from 'modules/form';
+import { FormField } from 'modules/form';
 import { ItemCard } from 'components/Cards';
-import { totalAdjustQuantity } from 'components/Cards/utils';
+
 import GridColumn from 'components/GridColumn';
 import {
   SectionHeader,
@@ -52,7 +51,6 @@ import {
   TagsInput,
   CustomFieldsFactory,
   TextInputFactory,
-  NumberInputFactory,
   DateInputFactory,
   TextAreaInputFactory,
 } from 'components/Form';
@@ -115,10 +113,8 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
       </SectionHeader>
       <div className={BatchSectionWrapperStyle}>
         <Subscribe to={[BatchFormContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue, calculatePackageQuantity }) => {
+          {({ originalValues: initialValues, state, setFieldValue }) => {
             const values = { ...initialValues, ...state };
-            const { batchAdjustments = [] } = values;
-            const totalAdjustment = totalAdjustQuantity(batchAdjustments);
 
             const { orderItem } = values;
             let compiledOrderItem = null;
@@ -221,35 +217,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                           label={<FormattedMessage {...messages.batchNo} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_NO])}
                         />
-                      )}
-                    </FormField>
-
-                    <FormField
-                      name="quantity"
-                      initValue={values.quantity + totalAdjustment}
-                      setFieldValue={setFieldValue}
-                      values={values}
-                      validator={validator}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <Subscribe to={[FormContainer]}>
-                          {({ setFieldTouched }) => (
-                            <NumberInputFactory
-                              name={name}
-                              {...inputHandlers}
-                              onBlur={evt => {
-                                inputHandlers.onBlur(evt);
-                                setFieldValue('quantity', inputHandlers.value - totalAdjustment);
-                                calculatePackageQuantity(setFieldTouched);
-                              }}
-                              isNew={isNew}
-                              required
-                              originalValue={initialValues[name] + totalAdjustment}
-                              label={<FormattedMessage {...messages.quantity} />}
-                              editable={hasPermission([BATCH_UPDATE, BATCH_SET_QUANTITY])}
-                            />
-                          )}
-                        </Subscribe>
                       )}
                     </FormField>
 

@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { getBatchLatestQuantity } from 'utils/batch';
 import BaseCard from 'components/Cards';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -20,25 +21,19 @@ function getQuantitySummary(item: Object) {
   let numOfShipped = 0;
   if (item.batches.nodes) {
     item.batches.nodes.forEach(batch => {
-      batchedQuantity += batch.quantity;
+      const { quantity, batchQuantityRevisions, orderItem } = batch;
+
+      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+
+      batchedQuantity += latestQuantity;
       numOfBatched += 1;
 
-      let currentQuantity = batch.quantity;
-
-      const { orderItem } = batch;
       if (orderItem) {
         orderedQuantity += orderItem.quantity || 0;
       }
 
-      if (batch.batchAdjustments) {
-        batch.batchAdjustments.forEach(batchAdjustment => {
-          batchedQuantity += batchAdjustment.quantity;
-          currentQuantity += batchAdjustment.quantity;
-        });
-      }
-
       if (batch.shipment) {
-        shippedQuantity += currentQuantity;
+        shippedQuantity += latestQuantity;
         numOfShipped += 1;
       }
     });

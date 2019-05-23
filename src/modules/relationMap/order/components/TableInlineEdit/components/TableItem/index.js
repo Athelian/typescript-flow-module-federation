@@ -75,17 +75,12 @@ function renderItem({
       return <InlineToggleButton name={name} toggled={value} id={id} />;
 
     case 'numberAdjustment': {
-      const totalAdjustment = getByPathWithDefault(0, 'totalAdjusted', values);
+      const position = Number(name.substr(-1, 1));
+      const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', values);
 
-      return (
-        <InlineNumberAdjustmentInput
-          name={name}
-          value={value}
-          {...meta}
-          adjustment={totalAdjustment}
-          id={id}
-        />
-      );
+      if (position > batchQuantityRevisions.length) return <TableDisableCell />;
+
+      return <InlineNumberAdjustmentInput name={name} value={value} {...meta} id={id} />;
     }
 
     case 'date':

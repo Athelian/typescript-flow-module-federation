@@ -1,5 +1,5 @@
 // @flow
-import { calculateBatchQuantity, totalVolume } from 'utils/batch';
+import { totalVolume, getBatchLatestQuantity } from 'utils/batch';
 
 export function calculateOrderTotalVolume(orderItems: Array<string>, editData: Object) {
   const allBatchIds = [];
@@ -20,7 +20,11 @@ export function calculateShipmentTotalBatchQuantity(shipmentId: string, editData
   const allBatches = (Object.entries(editData.batches || {}): Array<any>).filter(
     ([, batch]) => batch.shipment === shipmentId
   );
-  return calculateBatchQuantity(allBatches.map(([, batch]) => batch));
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  return allBatches
+    .map(([, batch]) => batch)
+    .map(batch => getBatchLatestQuantity(batch))
+    .reduce(reducer);
 }
 
 export function calculateShipmentTotalVolume(shipmentId: string, editData: Object) {

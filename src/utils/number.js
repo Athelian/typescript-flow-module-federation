@@ -1,4 +1,8 @@
 // @flow
+import { plus, minus, times, divide } from 'number-precision';
+
+export { plus, minus, times, divide };
+
 export const toFloat = (value: any): number =>
   Number.isNaN(Number.parseFloat(value)) ? 0 : Number.parseFloat(value);
 

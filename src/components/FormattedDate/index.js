@@ -1,6 +1,11 @@
 // @flow
 import * as React from 'react';
-import { FormattedDate as FormattedDateIntl, FormattedRelative, FormattedTime } from 'react-intl';
+import {
+  FormattedDate as FormattedDateIntl,
+  FormattedRelative,
+  FormattedTime,
+  FormattedMessage,
+} from 'react-intl';
 import { isDataType } from 'utils/fp';
 
 type Props = {
@@ -9,7 +14,7 @@ type Props = {
 };
 
 const FormattedDate = ({ value, mode = 'date' }: Props) => {
-  if (!value) return 'N/A';
+  if (!value) return <FormattedMessage id="components.cards.na" defaultMessage="N/A" />;
   switch (mode) {
     case 'date':
       return <FormattedDateIntl value={isDataType(Date, value) ? value : new Date(value)} />;

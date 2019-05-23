@@ -400,7 +400,7 @@ const Order = ({ intl }: Props) => {
                   },
                   {
                     title: intl.formatMessage(messages.exporterSort),
-                    value: 'exporter',
+                    value: 'exporterName',
                   },
                   {
                     title: intl.formatMessage(messages.currencySort),

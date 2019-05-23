@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  orderFormFragment,
+  orderFormQueryFragment,
   userAvatarFragment,
   tagFragment,
   partnerCardFragment,
@@ -25,19 +25,18 @@ import {
   taskFormInSlideViewFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
-  containerCardFragment,
   itemInOrderFormFragment,
   itemInBatchFormFragment,
 } from 'graphql';
 
 export const orderFormQuery = gql`
-  query($id: ID!) {
+  query order($id: ID!) {
     order(id: $id) {
-      ...orderFormFragment
+      ...orderFormQueryFragment
     }
   }
 
-  ${orderFormFragment}
+  ${orderFormQueryFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${documentFragment}
@@ -60,7 +59,6 @@ export const orderFormQuery = gql`
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
-  ${containerCardFragment}
   ${itemInOrderFormFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
