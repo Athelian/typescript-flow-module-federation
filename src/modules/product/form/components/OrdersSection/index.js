@@ -9,7 +9,7 @@ import { SectionWrapper } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 
 import { SectionHeader } from 'modules/relationMap/common/SortFilter/AdvancedFilter/FilterMenu/components';
-import OrderGridView from 'modules/order/list/OrderGridView';
+import OrderGridView from './OrderGridView';
 
 import { ordersInProductQuery } from './query';
 import { SectionWrapperStyle, SectionBodyStyle } from './style';
