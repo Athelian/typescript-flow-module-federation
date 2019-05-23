@@ -65,7 +65,6 @@ const initValues: ContainerInfoState = {
   updatedBy: null,
   ownedBy: null,
   totalVolume: null,
-  totalAdjusted: 0,
   orderItem: null,
   isNew: false,
 };

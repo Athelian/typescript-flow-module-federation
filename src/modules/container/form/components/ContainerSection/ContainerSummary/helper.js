@@ -3,11 +3,11 @@ import { cloneDeep } from 'lodash';
 import { getBatchLatestQuantity, findVolume, findWeight } from 'utils/batch';
 import { getByPath } from 'utils/fp';
 
-const findPriceAmount = (batch: Object, totalBatchQuantity: number) => {
+const findPriceAmount = (batch: Object, quantity: number) => {
   const {
     orderItem: { price },
   }: { orderItem: { price: Object } } = batch;
-  return price.amount * totalBatchQuantity;
+  return price.amount * quantity;
 };
 
 export const findSummary = (values: Object) => {
@@ -22,7 +22,7 @@ export const findSummary = (values: Object) => {
   const baseCurrency = getByPath('orderItem.price.currency', batches.length > 0 && batches[0]);
 
   batches.forEach(batch => {
-    const { orderItem = {}, packageQuantity = 0 } = batch;
+    const { orderItem = {}, packageQuantity = 0, quantity, batchQuantityRevisions } = batch;
     const { price, id: orderItemId } = orderItem;
     if (!uniqueItems.includes(orderItem && orderItemId)) {
       uniqueItems.push(orderItemId);
@@ -30,10 +30,10 @@ export const findSummary = (values: Object) => {
     if (baseCurrency !== price.currency) {
       diffCurrency = true;
     }
-    const batchQuantity = getBatchLatestQuantity(batch);
-    totalBatchQuantity += batchQuantity;
+    const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+    totalBatchQuantity += latestQuantity;
     totalBatchPackages += packageQuantity;
-    totalPriceAmount += findPriceAmount(batch, batchQuantity);
+    totalPriceAmount += findPriceAmount(batch, latestQuantity);
     totalVolumeValue += findVolume(batch);
     totalWeightValue += findWeight(batch);
   });

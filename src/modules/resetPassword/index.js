@@ -34,7 +34,7 @@ export default function ResetPasswordModule({ token }: Props) {
                 <Mutation
                   mutation={resetPasswordMutation}
                   onCompleted={({ resetPassword }) => {
-                    if (resetPassword.violations) {
+                    if (resetPassword !== null) {
                       setHasError(true);
                     } else {
                       setPasswordChanged(true);

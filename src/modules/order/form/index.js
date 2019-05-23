@@ -1,9 +1,6 @@
 // @flow
 
-import React, {
-  // $FlowFixMe not has type yet
-  unstable_ConcurrentMode as ConcurrentMode,
-} from 'react';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
@@ -62,115 +59,113 @@ export default class OrderForm extends React.Component<Props> {
     const { isNew, isClone, order, loading } = this.props;
     const { updatedAt, updatedBy, archived } = order;
     return (
-      <ConcurrentMode>
-        <PermissionConsumer>
-          {hasPermission => {
-            const canCreate = hasPermission(ORDER_CREATE);
-            const canUpdate = hasPermission(ORDER_UPDATE);
+      <PermissionConsumer>
+        {hasPermission => {
+          const canCreate = hasPermission(ORDER_CREATE);
+          const canUpdate = hasPermission(ORDER_UPDATE);
 
-            return (
-              <div className={OrderFormWrapperStyle}>
-                <SectionWrapper id="order_orderSection">
-                  <MainSectionPlaceholder height={816} isLoading={loading}>
-                    <SectionHeader
-                      icon="ORDER"
-                      title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
-                    >
-                      {!isNew && (
-                        <>
-                          <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
-                          {!isClone && canCreate && <CloneButton onClick={this.onClone} />}
-                          <BooleanValue>
-                            {({ value: isDialogOpen, set: dialogToggle }) => (
-                              <StatusToggle
-                                readOnly={!canUpdate}
-                                archived={archived}
-                                openStatusDialog={() => dialogToggle(true)}
-                                activateDialog={
-                                  <OrderActivateDialog
-                                    order={order}
-                                    isOpen={isDialogOpen && !!archived}
-                                    onRequestClose={() => dialogToggle(false)}
-                                  />
-                                }
-                                archiveDialog={
-                                  <OrderArchiveDialog
-                                    order={order}
-                                    isOpen={isDialogOpen && !archived}
-                                    onRequestClose={() => dialogToggle(false)}
-                                  />
-                                }
-                              />
-                            )}
-                          </BooleanValue>
-                        </>
-                      )}
-                    </SectionHeader>
-
-                    <OrderSection isNew={isNew} />
-                  </MainSectionPlaceholder>
-                </SectionWrapper>
-
-                <SectionWrapper id="order_itemsSection">
-                  <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
-                    {() => <ItemsSection isNew={isNew} orderIsArchived={order.archived} />}
-                  </QueryPlaceHolder>
-                </SectionWrapper>
-
-                <SectionWrapper id="order_documentsSection">
-                  <DocumentsSection
-                    entityId={!isClone && order.id ? order.id : ''}
-                    isLoading={loading}
-                  />
-                </SectionWrapper>
-
-                <SectionWrapper id="order_taskSection">
-                  <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
-                    {({ initDetailValues }) => (
-                      <OrderTasksSection
-                        initValues={initDetailValues}
-                        isLoading={loading}
-                        entityId={!isClone && order.id ? order.id : ''}
-                      />
+          return (
+            <div className={OrderFormWrapperStyle}>
+              <SectionWrapper id="order_orderSection">
+                <MainSectionPlaceholder height={816} isLoading={loading}>
+                  <SectionHeader
+                    icon="ORDER"
+                    title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}
+                  >
+                    {!isNew && (
+                      <>
+                        <LastModified updatedAt={updatedAt} updatedBy={updatedBy} />
+                        {!isClone && canCreate && <CloneButton onClick={this.onClone} />}
+                        <BooleanValue>
+                          {({ value: isDialogOpen, set: dialogToggle }) => (
+                            <StatusToggle
+                              readOnly={!canUpdate}
+                              archived={archived}
+                              openStatusDialog={() => dialogToggle(true)}
+                              activateDialog={
+                                <OrderActivateDialog
+                                  order={order}
+                                  isOpen={isDialogOpen && !!archived}
+                                  onRequestClose={() => dialogToggle(false)}
+                                />
+                              }
+                              archiveDialog={
+                                <OrderArchiveDialog
+                                  order={order}
+                                  isOpen={isDialogOpen && !archived}
+                                  onRequestClose={() => dialogToggle(false)}
+                                />
+                              }
+                            />
+                          )}
+                        </BooleanValue>
+                      </>
                     )}
-                  </Subscribe>
-                </SectionWrapper>
+                  </SectionHeader>
 
-                {!isNew && (
-                  <SectionWrapper id="order_shipmentsSection">
-                    <ShipmentsSection entityId={order.id} isLoading={loading} />
-                  </SectionWrapper>
-                )}
+                  <OrderSection isNew={isNew} />
+                </MainSectionPlaceholder>
+              </SectionWrapper>
 
-                {!isNew && (
-                  <SectionWrapper id="order_containersSection">
-                    <ContainersSection entityId={order.id} isLoading={loading} />
-                  </SectionWrapper>
-                )}
+              <SectionWrapper id="order_itemsSection">
+                <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
+                  {() => <ItemsSection isNew={isNew} orderIsArchived={order.archived} />}
+                </QueryPlaceHolder>
+              </SectionWrapper>
 
+              <SectionWrapper id="order_documentsSection">
+                <DocumentsSection
+                  entityId={!isClone && order.id ? order.id : ''}
+                  isLoading={loading}
+                />
+              </SectionWrapper>
+
+              <SectionWrapper id="order_taskSection">
                 <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
-                  {(
-                    {
-                      state: {
-                        todo: { tasks },
-                      },
-                      setFieldValue,
-                    },
-                    { state }
-                  ) => (
-                    <AutoDateBinding
-                      type="order"
-                      values={state}
-                      tasks={tasks}
-                      setTaskValue={setFieldValue}
+                  {({ initDetailValues }) => (
+                    <OrderTasksSection
+                      initValues={initDetailValues}
+                      isLoading={loading}
+                      entityId={!isClone && order.id ? order.id : ''}
                     />
                   )}
                 </Subscribe>
-              </div>
-            );
-          }}
-        </PermissionConsumer>
-      </ConcurrentMode>
+              </SectionWrapper>
+
+              {!isNew && (
+                <SectionWrapper id="order_shipmentsSection">
+                  <ShipmentsSection entityId={order.id} isLoading={loading} />
+                </SectionWrapper>
+              )}
+
+              {!isNew && (
+                <SectionWrapper id="order_containersSection">
+                  <ContainersSection entityId={order.id} isLoading={loading} />
+                </SectionWrapper>
+              )}
+
+              <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
+                {(
+                  {
+                    state: {
+                      todo: { tasks },
+                    },
+                    setFieldValue,
+                  },
+                  { state }
+                ) => (
+                  <AutoDateBinding
+                    type="order"
+                    values={state}
+                    tasks={tasks}
+                    setTaskValue={setFieldValue}
+                  />
+                )}
+              </Subscribe>
+            </div>
+          );
+        }}
+      </PermissionConsumer>
     );
   }
 }

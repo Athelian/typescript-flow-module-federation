@@ -100,15 +100,6 @@ export const batchEntityFragment = gql`
         type
       }
     }
-    totalAdjusted
-    batchAdjustments {
-      ... on BatchAdjustment {
-        id
-        reason
-        quantity
-        memo
-      }
-    }
     customFields {
       ...customFieldsFragment
     }

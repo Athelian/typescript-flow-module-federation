@@ -19,6 +19,7 @@ import {
 } from 'modules/relationMap/order/query';
 import { prepareCustomFieldsData } from 'utils/customFields';
 
+// FIXME: test
 export const prepareUpdateBatchInput = ({
   id,
   isNew,
@@ -34,7 +35,7 @@ export const prepareUpdateBatchInput = ({
   customFields,
   producedAt,
   tags = [],
-  batchAdjustments = [],
+  batchQuantityRevisions = [],
   totalVolume,
   archived,
   ...rest
@@ -49,18 +50,18 @@ export const prepareUpdateBatchInput = ({
         customFields: prepareCustomFieldsData(customFields),
         producedAt: producedAt ? new Date(producedAt) : null,
         tagIds: tags.map(({ id: tagId }) => tagId),
-        batchAdjustments: batchAdjustments.map(
+        batchQuantityRevisions: batchQuantityRevisions.map(
           ({
-            isNew: isNewAdjustment,
-            id: adjustmentId,
-            createdAt: adjustmentCreatedAt,
-            updatedAt: adjustmentUpdateAt,
-            updatedBy: adjustmentUpdatedBy,
+            isNew: isNewBatchQuantityRevisions,
+            id: batchQuantityRevisionId,
+            createdAt: batchQuantityRevisionCreatedAt,
+            updatedAt: batchQuantityRevisionUpdateAt,
+            updatedBy: batchQuantityRevisionUpdatedBy,
             sort,
-            ...adjustment
+            ...others
           }) => ({
-            ...adjustment,
-            ...(isNewAdjustment ? {} : { id: adjustmentId }),
+            ...others,
+            ...(isNewBatchQuantityRevisions ? {} : { id: batchQuantityRevisionId }),
           })
         ),
       };
