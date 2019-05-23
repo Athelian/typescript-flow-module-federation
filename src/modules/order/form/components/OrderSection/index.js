@@ -154,8 +154,9 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                                     setPriceDialog(false);
                                   }}
                                   onDeny={() => {
-                                    setPriceDialog(false);
+                                    resetAmountWithNewCurrency(values.currency, false);
                                     changeCurrency(values.currency);
+                                    setPriceDialog(false);
                                   }}
                                   message={
                                     <>

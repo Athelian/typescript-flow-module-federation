@@ -52,7 +52,7 @@ export default class OrderItemsContainer extends Container<FormState> {
     }
   };
 
-  resetAmountWithNewCurrency = (currency: string) => {
+  resetAmountWithNewCurrency = (currency: string, isReset: boolean = true) => {
     let retry;
     if (this.state.hasCalledApiYet) {
       const { orderItems } = this.state;
@@ -61,7 +61,7 @@ export default class OrderItemsContainer extends Container<FormState> {
           ...orderItem,
           price: {
             ...orderItem.price,
-            amount: 0,
+            ...(isReset ? { amount: 0 } : {}),
             currency,
           },
         })),
@@ -75,7 +75,7 @@ export default class OrderItemsContainer extends Container<FormState> {
               ...orderItem,
               price: {
                 ...orderItem.price,
-                amount: 0,
+                ...(isReset ? { amount: 0 } : {}),
                 currency,
               },
             })),
