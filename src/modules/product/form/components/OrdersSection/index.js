@@ -32,40 +32,45 @@ const OrdersSection = ({ id }: Props) => {
   };
 
   return (
-    <SectionWrapper id="product_ordersSection">
-      <SectionHeader
-        icon="ORDER"
-        title={<FormattedMessage id="modules.global.orders" defaultMessage="ORDERS" />}
-      />
+    <Query query={ordersInProductQuery} variables={filtersAndSort} fetchPolicy="network-only">
+      {({ loading, data, error, fetchMore }) => {
+        if (error) {
+          return error.message;
+        }
 
-      <div className={SectionWrapperStyle}>
-        <SectionNavBar>
-          <div id="sortandfilterswip" />
-        </SectionNavBar>
-        <div className={SectionBodyStyle}>
-          <Query query={ordersInProductQuery} variables={filtersAndSort} fetchPolicy="network-only">
-            {({ loading, data, error, fetchMore }) => {
-              if (error) {
-                return error.message;
+        const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
+        const hasMore = nextPage <= totalPage;
+
+        return (
+          <SectionWrapper id="product_ordersSection">
+            <SectionHeader
+              icon="ORDER"
+              title={
+                <>
+                  <FormattedMessage id="modules.Products.orders" defaultMessage="ORDERS" /> (
+                  {getByPathWithDefault([], 'orders.nodes', data).length})
+                </>
               }
+            />
 
-              const nextPage = getByPathWithDefault(1, 'orders.page', data) + 1;
-              const totalPage = getByPathWithDefault(1, 'orders.totalPage', data);
-              const hasMore = nextPage <= totalPage;
-
-              return (
+            <div className={SectionWrapperStyle}>
+              <SectionNavBar>
+                <div id="sortandfilterswip" />
+              </SectionNavBar>
+              <div className={SectionBodyStyle}>
                 <OrderGridView
                   items={getByPathWithDefault([], 'orders.nodes', data)}
                   onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orders')}
                   hasMore={hasMore}
                   isLoading={loading}
                 />
-              );
-            }}
-          </Query>
-        </div>
-      </div>
-    </SectionWrapper>
+              </div>
+            </div>
+          </SectionWrapper>
+        );
+      }}
+    </Query>
   );
 };
 
