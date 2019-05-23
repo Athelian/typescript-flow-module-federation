@@ -1,5 +1,6 @@
-import React from 'react';
 // @flow
+import React from 'react';
+
 import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
