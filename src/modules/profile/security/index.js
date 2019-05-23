@@ -32,7 +32,7 @@ export default function Security() {
               <Mutation
                 mutation={changePasswordMutation}
                 onCompleted={({ changePassword }) => {
-                  if (changePassword.violations) {
+                  if (changePassword !== null) {
                     formContainer.onErrors(changePassword.violations);
                   } else {
                     onSuccess();
