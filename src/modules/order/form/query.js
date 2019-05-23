@@ -3,30 +3,14 @@ import gql from 'graphql-tag';
 import {
   orderFormQueryFragment,
   userAvatarFragment,
-  tagFragment,
-  partnerCardFragment,
-  documentFragment,
-  shipmentCardFragment,
-  priceFragment,
-  imageFragment,
-  partnerNameFragment,
-  timelineDateMinimalFragment,
-  portFragment,
-  batchFormFragment,
-  metricFragment,
-  sizeFragment,
-  orderCardFragment,
+  ownedByFragment,
   customFieldsFragment,
+  partnerCardFragment,
+  tagFragment,
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
-  ownedByFragment,
-  todoFragment,
-  taskFormInSlideViewFragment,
-  taskTemplateCardFragment,
-  taskFormInTemplateFragment,
-  itemInOrderFormFragment,
-  itemInBatchFormFragment,
+  priceFragment,
 } from 'graphql';
 
 export const orderFormQuery = gql`
@@ -38,30 +22,14 @@ export const orderFormQuery = gql`
 
   ${orderFormQueryFragment}
   ${userAvatarFragment}
-  ${tagFragment}
-  ${documentFragment}
-  ${shipmentCardFragment}
-  ${priceFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${batchFormFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${orderCardFragment}
+  ${ownedByFragment}
   ${customFieldsFragment}
+  ${partnerCardFragment}
+  ${tagFragment}
   ${maskFragment}
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
-  ${ownedByFragment}
-  ${todoFragment}
-  ${taskFormInSlideViewFragment}
-  ${taskTemplateCardFragment}
-  ${taskFormInTemplateFragment}
-  ${itemInOrderFormFragment}
-  ${itemInBatchFormFragment}
-  ${partnerCardFragment}
+  ${priceFragment}
 `;
 
 export default orderFormQuery;

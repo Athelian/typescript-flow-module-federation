@@ -21,8 +21,7 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
   let shippedQuantity = 0;
   let totalPrice = 0;
   let totalItems = 0;
-  let activeBatches = 0;
-  let archivedBatches = 0;
+  let totalBatches = 0;
 
   if (orderItems) {
     totalItems = orderItems.length;
@@ -34,18 +33,13 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
       totalPrice += price * qty;
 
       if (item.batches) {
+        totalBatches += item.batches.length;
         item.batches.forEach(batch => {
           const latestQuantity = getBatchLatestQuantity(batch);
 
           batchedQuantity += latestQuantity;
           if (batch.shipment) {
             shippedQuantity += latestQuantity;
-          }
-
-          if (batch.archived) {
-            archivedBatches += 1;
-          } else {
-            activeBatches += 1;
           }
         });
       }
@@ -58,7 +52,6 @@ export const getQuantityForOrderSummary = (orderItems: Array<Object>) => {
     shippedQuantity,
     totalPrice,
     totalItems,
-    activeBatches,
-    archivedBatches,
+    totalBatches,
   };
 };
