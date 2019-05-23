@@ -6,10 +6,12 @@ import { isEquals } from 'utils/fp';
 
 type FormState = {
   orderItems: Array<Object>,
+  hasCalledApiYet: boolean,
 };
 
-const initValues = {
+const initValues: FormState = {
   orderItems: [],
+  hasCalledApiYet: false,
 };
 
 export default class OrderItemsContainer extends Container<FormState> {
@@ -43,8 +45,10 @@ export default class OrderItemsContainer extends Container<FormState> {
     );
   };
 
-  initDetailValues = (orderItems: Array<Object>) => {
-    this.setState({ orderItems });
-    this.originalValues = { orderItems };
+  initDetailValues = (orderItems: Array<Object>, hasCalledApiYet: boolean = false) => {
+    this.setState({ orderItems, hasCalledApiYet });
+    if (hasCalledApiYet) {
+      this.originalValues = { orderItems, hasCalledApiYet };
+    }
   };
 }

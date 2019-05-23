@@ -34,7 +34,7 @@ import messages from 'modules/order/messages';
 import SelectExporters from 'modules/order/common/SelectExporters';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import TotalSummary from './components/TotalSummary';
+import OrderSummary from './components/OrderSummary';
 import PriceDialog from './components/PriceDialog';
 import {
   OrderSectionWrapperStyle,
@@ -46,9 +46,10 @@ import {
 
 type Props = {
   isNew: boolean,
+  isClone: boolean,
 };
 
-const OrderSection = ({ isNew }: Props) => {
+const OrderSection = ({ isNew, isClone }: Props) => {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_UPDATE);
 
@@ -409,28 +410,25 @@ const OrderSection = ({ isNew }: Props) => {
 
               <div className={DividerStyle} />
               <Subscribe to={[OrderItemsContainer]}>
-                {({ state: { orderItems } }) => {
-                  const {
-                    orderedQuantity,
-                    batchedQuantity,
-                    shippedQuantity,
-                    totalPrice,
-                    totalItems,
-                    activeBatches,
-                    archivedBatches,
-                  } = getQuantityForOrderSummary(orderItems);
+                {({ state: { orderItems, hasCalledApiYet } }) => {
                   return (
                     <div className={QuantitySummaryStyle}>
-                      <TotalSummary
-                        orderedQuantity={orderedQuantity}
-                        batchedQuantity={batchedQuantity}
-                        shippedQuantity={shippedQuantity}
-                        currency={currency}
-                        totalPrice={totalPrice}
-                        totalItems={totalItems}
-                        activeBatches={activeBatches}
-                        archivedBatches={archivedBatches}
-                      />
+                      {hasCalledApiYet || isClone ? (
+                        <OrderSummary
+                          currency={currency}
+                          {...getQuantityForOrderSummary(orderItems)}
+                        />
+                      ) : (
+                        <OrderSummary
+                          currency={currency}
+                          totalPrice={values.totalPrice && values.totalPrice.amount}
+                          orderedQuantity={values.totalOrdered}
+                          batchedQuantity={values.totalBatched}
+                          shippedQuantity={values.totalShipped}
+                          totalItems={values.orderItemCount}
+                          totalBatches={values.batchCount}
+                        />
+                      )}
                     </div>
                   );
                 }}

@@ -143,10 +143,7 @@ const OrderBatchCard = ({
 
   const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
-  const quantityName =
-    batchQuantityRevisions.length > 0
-      ? `batches.${id}.batchQuantityRevisions.${batchQuantityRevisions.length - 1}.quantity`
-      : `batches.${id}.quantity`;
+  const quantityName = `batches.${id}.latestQuantity`;
 
   const validation = validator({
     no: `batch.${batch.id}.no`,
