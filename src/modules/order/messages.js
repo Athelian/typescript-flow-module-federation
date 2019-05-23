@@ -104,7 +104,7 @@ export default defineMessages({
   },
   date: {
     id: 'modules.Orders.issuedAt',
-    defaultMessage: 'PO DATE',
+    defaultMessage: 'PO Date',
   },
   PI: {
     id: 'modules.Orders.piNo',
@@ -112,15 +112,15 @@ export default defineMessages({
   },
   incoterm: {
     id: 'modules.Orders.incoterms',
-    defaultMessage: 'INCOTERMS',
+    defaultMessage: 'Incoterms',
   },
   deliveryPlace: {
     id: 'modules.Orders.deliveryPlace',
-    defaultMessage: 'PLACE OF DELIVERY',
+    defaultMessage: 'Place of Delivery',
   },
   currency: {
     id: 'modules.Orders.currency',
-    defaultMessage: 'CURRENCY',
+    defaultMessage: 'Currency',
   },
   exporter: {
     id: 'modules.Orders.exporter',
@@ -128,7 +128,7 @@ export default defineMessages({
   },
   exporterName: {
     id: 'modules.Orders.exporterName',
-    defaultMessage: 'EXPORTER NAME',
+    defaultMessage: 'Exporter',
   },
   exporterCode: {
     id: 'modules.Orders.exporterCode',
@@ -148,11 +148,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Orders.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Orders.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   status: {
     id: 'modules.Orders.status',
@@ -462,9 +462,41 @@ export default defineMessages({
     id: 'modules.Orders.addAdjustment',
     defaultMessage: 'ADD ADJUSTMENT',
   },
+  updatedAtSort: {
+    id: 'modules.Orders.list.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAtSort: {
+    id: 'modules.Orders.list.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
   poSort: {
     id: 'modules.Orders.list.sort.po',
-    defaultMessage: 'PO No',
+    defaultMessage: 'PO No.',
+  },
+  piSort: {
+    id: 'modules.Orders.list.sort.pi',
+    defaultMessage: 'PI No.',
+  },
+  issuedAtSort: {
+    id: 'modules.Orders.list.sort.issuedAt',
+    defaultMessage: 'PO Date',
+  },
+  exporterNameSort: {
+    id: 'modules.Orders.list.sort.exporterName',
+    defaultMessage: 'Exporter',
+  },
+  currencySort: {
+    id: 'modules.Orders.list.sort.currency',
+    defaultMessage: 'Currency',
+  },
+  incotermSort: {
+    id: 'modules.Orders.list.sort.incoterm',
+    defaultMessage: 'Incoterms',
+  },
+  deliveryPlaceSort: {
+    id: 'modules.Orders.list.sort.deliveryPlace',
+    defaultMessage: 'Place of Delivery',
   },
   nameSort: {
     id: 'modules.Orders.list.sort.name',
@@ -477,14 +509,6 @@ export default defineMessages({
   exporterSort: {
     id: 'modules.Orders.list.sort.exporter',
     defaultMessage: 'Exporter',
-  },
-  createdAtSort: {
-    id: 'modules.Orders.list.sort.createdAt',
-    defaultMessage: 'Created At',
-  },
-  updatedAtSort: {
-    id: 'modules.Orders.list.sort.updatedAt',
-    defaultMessage: 'Updated At',
   },
   batch: {
     id: 'modules.Orders.form.batch',

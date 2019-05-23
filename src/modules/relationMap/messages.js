@@ -38,17 +38,25 @@ export default defineMessages({
     id: 'global.items',
     defaultMessage: 'ITEMS',
   },
+  updatedAtSort: {
+    id: 'modules.RelationMaps.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAtSort: {
+    id: 'modules.RelationMaps.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
   poNoSort: {
     id: 'modules.RelationMaps.sort.poNo',
-    defaultMessage: 'PO No',
+    defaultMessage: 'PO No.',
   },
   piNoSort: {
     id: 'modules.RelationMaps.sort.piNo',
-    defaultMessage: 'PI No',
+    defaultMessage: 'PI No.',
   },
   issuedAtSort: {
     id: 'modules.RelationMaps.sort.issuedAt',
-    defaultMessage: 'PO Issuance Date',
+    defaultMessage: 'PO Date',
   },
   exporterSort: {
     id: 'modules.RelationMaps.sort.exporter',
@@ -60,27 +68,11 @@ export default defineMessages({
   },
   incotermSort: {
     id: 'modules.RelationMaps.sort.incoterm',
-    defaultMessage: 'Incoterm',
+    defaultMessage: 'Incoterms',
   },
   deliveryPlaceSort: {
     id: 'modules.RelationMaps.sort.deliveryPlace',
     defaultMessage: 'Place of Delivery',
-  },
-  updatedAtSort: {
-    id: 'modules.RelationMaps.sort.updatedAt',
-    defaultMessage: 'Updated At',
-  },
-  createdAtSort: {
-    id: 'modules.RelationMaps.sort.createdAt',
-    defaultMessage: 'Created At',
-  },
-  nameSort: {
-    id: 'modules.RelationMaps.sort.name',
-    defaultMessage: 'NAME',
-  },
-  serialSort: {
-    id: 'modules.RelationMaps.sort.serial',
-    defaultMessage: 'SERIAL',
   },
   all: {
     id: 'modules.RelationMaps.label.all',

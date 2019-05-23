@@ -670,7 +670,6 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
               </div>
 
               <div className={DividerStyle} />
-
             </div>
           );
         }}

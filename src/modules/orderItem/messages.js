@@ -22,13 +22,41 @@ export default defineMessages({
     id: 'modules.OrderItems.noOrderItems',
     defaultMessage: 'No order items found.',
   },
-  createdAtSort: {
-    id: 'modules.OrderItems.list.sort.createdAt',
-    defaultMessage: 'Created At',
-  },
-  updatedAtSort: {
+  updatedAt: {
     id: 'modules.OrderItems.list.sort.updatedAt',
-    defaultMessage: 'Updated At',
+    defaultMessage: 'Last Modified',
+  },
+  createdAt: {
+    id: 'modules.OrderItems.list.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
+  no: {
+    id: 'modules.OrderItems.list.sort.no',
+    defaultMessage: 'Item No.',
+  },
+  currency: {
+    id: 'modules.OrderItems.list.sort.currency',
+    defaultMessage: 'Currency',
+  },
+  productName: {
+    id: 'modules.OrderItems.list.sort.productName',
+    defaultMessage: 'Product Name',
+  },
+  productSerial: {
+    id: 'modules.OrderItems.list.sort.productSerial',
+    defaultMessage: 'Prodcut Serial',
+  },
+  productProviderName: {
+    id: 'modules.OrderItems.list.sort.productProviderName',
+    defaultMessage: 'End Product Name',
+  },
+  supplierName: {
+    id: 'modules.OrderItems.list.sort.supplierName',
+    defaultMessage: 'Supplier',
+  },
+  supplierCode: {
+    id: 'modules.OrderItems.list.sort.supplierCode',
+    defaultMessage: 'Supplier Code',
   },
   fileTypeDocument: {
     id: 'modules.orderItems.fileType.document',
