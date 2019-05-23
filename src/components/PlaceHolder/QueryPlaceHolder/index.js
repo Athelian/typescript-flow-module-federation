@@ -36,42 +36,45 @@ export default function QueryPlaceHolder({
   const isReady = useOnScreen(ref, { rootMargin: '0px', threshold: 0.2 });
 
   return (
-    <div ref={ref}>
-      {(() => {
-        if (entityId) {
-          if (!isReady || isLoading) return <PlaceHolder />;
+    // $FlowFixMe: not have type yet
+    <React.unstable_ConcurrentMode>
+      <div ref={ref}>
+        {(() => {
+          if (entityId) {
+            if (!isReady || isLoading) return <PlaceHolder />;
 
-          return (
-            <Query
-              query={query}
-              variables={{
-                id: entityId,
-              }}
-              fetchPolicy="network-only"
-              onCompleted={onCompleted}
-            >
-              {({ loading, data, error }) => {
-                if (error) {
-                  if (error.message && error.message.includes('403')) {
-                    navigate('/403');
+            return (
+              <Query
+                query={query}
+                variables={{
+                  id: entityId,
+                }}
+                fetchPolicy="network-only"
+                onCompleted={onCompleted}
+              >
+                {({ loading, data, error }) => {
+                  if (error) {
+                    if (error.message && error.message.includes('403')) {
+                      navigate('/403');
+                    }
+
+                    return error.message;
                   }
 
-                  return error.message;
-                }
+                  if (loading) return <PlaceHolder />;
 
-                if (loading) return <PlaceHolder />;
+                  return children({ data });
+                }}
+              </Query>
+            );
+          }
 
-                return children({ data });
-              }}
-            </Query>
-          );
-        }
+          if (!isReady || isLoading) return <PlaceHolder />;
 
-        if (!isReady || isLoading) return <PlaceHolder />;
-
-        return children({});
-      })()}
-    </div>
+          return children({});
+        })()}
+      </div>
+    </React.unstable_ConcurrentMode>
   );
 }
 
