@@ -26,9 +26,11 @@ const defaultProps = {
   dropDirection: 'down',
 };
 
-const removePx = (size: string) => {
-  if (size.indexOf('px')) return size.replace('px', '');
-  return size;
+const removePx = (size: string): number => {
+  if (size.indexOf('px')) {
+    return Number(size.replace('px', ''));
+  }
+  return 0;
 };
 
 function DefaultOptions({
@@ -44,16 +46,18 @@ function DefaultOptions({
   height,
   dropDirection,
 }: Props) {
+  const rawHeight = removePx(height);
+  const numItemsInAPage = Math.ceil(rawHeight / 30);
+
   return (
     <div className={OptionWrapperStyle({ width, height, dropDirection })}>
       {items.length > 0 ? (
         <VirtualList
-          height={removePx(height)}
+          height={items.length < numItemsInAPage ? items.length * 30 : rawHeight}
           width={removePx(width)}
-          scrollToIndex={highlightedIndex || 0}
-          scrollToAlignment="auto"
           itemCount={items.length}
           itemSize={30}
+          overscanCount={numItemsInAPage}
           renderItem={({ index, style }) => {
             const item = items[index];
             if (!item) return null;

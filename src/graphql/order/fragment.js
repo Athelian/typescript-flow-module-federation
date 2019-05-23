@@ -15,6 +15,9 @@ export const orderFormQueryFragment = gql`
     memo
     poNo
     currency
+    totalPrice {
+      ...priceFragment
+    }
     totalOrdered
     totalBatched
     totalShipped
@@ -37,9 +40,6 @@ export const orderFormQueryFragment = gql`
     }
     tags {
       ...tagFragment
-    }
-    orderItems {
-      ...itemInOrderFormFragment
     }
   }
 `;

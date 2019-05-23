@@ -5,31 +5,25 @@ import { FieldItem, Label, Display } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
 import GridColumn from 'components/GridColumn';
 import QuantityChart from 'components/QuantityChart';
-import Icon from 'components/Icon';
-import TotalSubItemStyle from './style';
 
 type Props = {
   orderedQuantity: number,
   batchedQuantity: number,
   shippedQuantity: number,
-
   currency: string,
   totalPrice: number,
   totalItems: number,
-
-  activeBatches: number,
-  archivedBatches: number,
+  totalBatches: number,
 };
 
-export default function TotalSummary({
+export default function OrderSummary({
   orderedQuantity,
   batchedQuantity,
   shippedQuantity,
   currency,
   totalPrice,
   totalItems,
-  activeBatches,
-  archivedBatches,
+  totalBatches,
 }: Props) {
   return (
     <>
@@ -87,11 +81,7 @@ export default function TotalSummary({
           }
           input={
             <Display>
-              <FormattedNumber value={activeBatches + archivedBatches} />
-              <div className={TotalSubItemStyle}>
-                <Icon icon="ACTIVE" /> <FormattedNumber value={activeBatches} />
-                <Icon icon="ARCHIVE" /> <FormattedNumber value={archivedBatches} />
-              </div>
+              <FormattedNumber value={totalBatches} />
             </Display>
           }
         />

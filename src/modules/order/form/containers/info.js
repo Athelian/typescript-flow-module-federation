@@ -17,9 +17,17 @@ type FormState = {
   containers: Array<Object>,
   inCharges: Array<Object>,
   customFields: Object,
+  totalPrice: ?Object,
+  totalOrdered: number,
+  totalBatched: number,
+  totalShipped: number,
+  orderItemCount: number,
+  batchCount: number,
+  batchShippedCount: number,
+  shipmentCount: number,
 };
 
-const initValues = {
+const initValues: FormState = {
   piNo: null,
   poNo: null,
   currency: 'USD',
@@ -34,6 +42,14 @@ const initValues = {
     fieldValues: [],
     fieldDefinitions: [],
   },
+  totalPrice: null,
+  totalOrdered: 0,
+  totalBatched: 0,
+  totalShipped: 0,
+  orderItemCount: 0,
+  batchCount: 0,
+  batchShippedCount: 0,
+  shipmentCount: 0,
 };
 
 export default class OrderInfoContainer extends Container<FormState> {

@@ -9,7 +9,7 @@ import { showToastError } from 'utils/errors';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { getByPath } from 'utils/fp';
-import { FormContainer, resetFormState } from 'modules/form';
+import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
@@ -99,22 +99,6 @@ class OrderFormModule extends React.PureComponent<Props> {
 
   onCancel = () => navigate('/order');
 
-  onReset = ({
-    orderInfoState,
-    orderItemState,
-    orderTagsState,
-    orderFilesState,
-    orderTasksState,
-    form,
-  }: OrderFormState & { form: Object }) => {
-    resetFormState(orderInfoState);
-    resetFormState(orderItemState, 'orderItems');
-    resetFormState(orderTagsState, 'tags');
-    resetFormState(orderFilesState, 'files');
-    resetFormState(orderTasksState, 'todo');
-    form.onReset();
-  };
-
   onSave = async (
     originalValues: Object,
     formData: Object,
@@ -169,9 +153,16 @@ class OrderFormModule extends React.PureComponent<Props> {
     }: OrderFormState,
     order: Object
   ) => {
-    const { orderItems = [], tags = [], files = [], todo = { tasks: [] }, ...info } = order;
+    const {
+      orderItems = [],
+      hasCalledApiYet = false,
+      tags = [],
+      files = [],
+      todo = { tasks: [] },
+      ...info
+    } = order;
     orderInfoState.initDetailValues(info);
-    orderItemState.initDetailValues(orderItems);
+    orderItemState.initDetailValues(orderItems, hasCalledApiYet || orderItems.length > 0);
     orderFilesState.initDetailValues(files);
     orderTasksState.initDetailValues(todo);
     orderTagsState.initDetailValues(tags);
@@ -188,13 +179,24 @@ class OrderFormModule extends React.PureComponent<Props> {
     }: OrderFormState,
     order: Object
   ) => {
-    const { orderItems, tags, files, todo, issuedAt, poNo, ...info } = order;
+    const {
+      orderItems,
+      hasCalledApiYet = false,
+      tags,
+      files,
+      todo,
+      issuedAt,
+      poNo,
+      ...info
+    } = order;
     orderInfoState.initDetailValues({
       ...info,
       shipments: [],
       poNo: `[cloned] ${poNo}`,
     });
-    orderItemState.initDetailValues(orderItems.map(item => ({ ...item, batches: [] })));
+    if (hasCalledApiYet) {
+      orderItemState.initDetailValues(orderItems.map(item => ({ ...item, batches: [] })));
+    }
     orderFilesState.initDetailValues([]);
     orderTasksState.initDetailValues({ tasks: [] });
     orderTagsState.initDetailValues(tags);
@@ -401,16 +403,25 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 <>
                                   {isDirty && (
                                     <ResetButton
-                                      onClick={() =>
-                                        this.onReset({
-                                          orderItemState,
-                                          orderInfoState,
-                                          orderTagsState,
-                                          orderFilesState,
-                                          orderTasksState,
-                                          form,
-                                        })
-                                      }
+                                      onClick={() => {
+                                        this.initAllValues(
+                                          {
+                                            orderItemState,
+                                            orderInfoState,
+                                            orderTagsState,
+                                            orderFilesState,
+                                            orderTasksState,
+                                          },
+                                          {
+                                            ...orderItemState.originalValues,
+                                            ...orderInfoState.originalValues,
+                                            ...orderTagsState.originalValues,
+                                            ...orderFilesState.originalValues,
+                                            ...orderTasksState.originalValues,
+                                          }
+                                        );
+                                        form.onReset();
+                                      }}
                                     />
                                   )}
                                 </>
@@ -457,7 +468,10 @@ class OrderFormModule extends React.PureComponent<Props> {
                                             orderFilesState,
                                             orderTasksState,
                                           },
-                                          updateOrder
+                                          {
+                                            ...updateOrder,
+                                            hasCalledApiYet: true,
+                                          }
                                         );
                                         form.onReset();
                                       },

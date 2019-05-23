@@ -7,8 +7,6 @@ import { navigate } from '@reach/router';
 import { BooleanValue } from 'react-values';
 import { CloneButton } from 'components/Buttons';
 import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
-import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
-import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
 import { isEquals } from 'utils/fp';
 import { encodeId } from 'utils/id';
@@ -103,14 +101,17 @@ export default class OrderForm extends React.Component<Props> {
                     )}
                   </SectionHeader>
 
-                  <OrderSection isNew={isNew} />
+                  <OrderSection isNew={isNew} isClone={isClone} />
                 </MainSectionPlaceholder>
               </SectionWrapper>
 
               <SectionWrapper id="order_itemsSection">
-                <QueryPlaceHolder PlaceHolder={ListCardPlaceHolder} isLoading={loading}>
-                  {() => <ItemsSection isNew={isNew} orderIsArchived={order.archived} />}
-                </QueryPlaceHolder>
+                <ItemsSection
+                  isNew={isNew}
+                  entityId={!isClone && order.id ? order.id : ''}
+                  isLoading={loading}
+                  orderIsArchived={order.archived}
+                />
               </SectionWrapper>
 
               <SectionWrapper id="order_documentsSection">

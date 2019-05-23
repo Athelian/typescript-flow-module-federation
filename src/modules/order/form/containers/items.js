@@ -6,10 +6,12 @@ import { isEquals } from 'utils/fp';
 
 type FormState = {
   orderItems: Array<Object>,
+  hasCalledApiYet: boolean,
 };
 
-const initValues = {
+const initValues: FormState = {
   orderItems: [],
+  hasCalledApiYet: false,
 };
 
 export default class OrderItemsContainer extends Container<FormState> {
@@ -43,8 +45,47 @@ export default class OrderItemsContainer extends Container<FormState> {
     );
   };
 
-  initDetailValues = (orderItems: Array<Object>) => {
-    this.setState({ orderItems });
-    this.originalValues = { orderItems };
+  initDetailValues = (orderItems: Array<Object>, hasCalledApiYet: boolean = false) => {
+    this.setState({ orderItems, hasCalledApiYet });
+    if (hasCalledApiYet) {
+      this.originalValues = { orderItems, hasCalledApiYet };
+    }
+  };
+
+  resetAmountWithNewCurrency = (currency: string, isReset: boolean = true) => {
+    let retry;
+    if (this.state.hasCalledApiYet) {
+      const { orderItems } = this.state;
+      this.setState({
+        orderItems: orderItems.map(orderItem => ({
+          ...orderItem,
+          price: {
+            ...orderItem.price,
+            ...(isReset ? { amount: 0 } : {}),
+            currency,
+          },
+        })),
+      });
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledApiYet) {
+          const { orderItems } = this.state;
+          this.setState({
+            orderItems: orderItems.map(orderItem => ({
+              ...orderItem,
+              price: {
+                ...orderItem.price,
+                ...(isReset ? { amount: 0 } : {}),
+                currency,
+              },
+            })),
+          });
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
   };
 }
