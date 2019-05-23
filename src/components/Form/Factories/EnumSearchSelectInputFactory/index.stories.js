@@ -16,6 +16,7 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
         <ApolloProvider client={apolloClient}>
           <ObjectValue
             defaultValue={{
+              editable: true,
               isNew: false,
               initialValues: {
                 inputTwo: null,
@@ -27,13 +28,10 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
                 inputTwo: false,
               },
               focusedField: null,
-              user: {
-                role: 'manager',
-              },
             }}
           >
             {({
-              value: { isNew, initialValues, values, touchedFields, focusedField, user },
+              value: { editable, isNew, initialValues, values, touchedFields, focusedField },
               set,
             }) => (
               <ObjectValue
@@ -42,7 +40,9 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
                   value: values.inputTwo,
                   isTouched: touchedFields.inputTwo,
                   isFocused: focusedField === 'inputTwo',
-                  onChange: newValue => set('values', { ...values, inputTwo: newValue }),
+                  onChange: newValue => {
+                    set('values', { ...values, inputTwo: newValue.target.value });
+                  },
                   onFocus: () => {
                     if (!touchedFields.inputTwo) {
                       set('touchedFields', { ...touchedFields, inputTwo: true });
@@ -54,8 +54,6 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
                 }}
               >
                 {({ value: { name, ...inputHandlers } }) => {
-                  const editable = !!(user.role === 'default');
-
                   return (
                     <>
                       <EnumSearchSelectInputFactory
@@ -68,15 +66,7 @@ storiesOf('Form/Inputs/Enum Search Select Input', module).add(
                         placeholder="Please input a value"
                         enumType="Seaport"
                       />
-                      <ToggleInput
-                        toggled={editable}
-                        onToggle={() =>
-                          set('user', {
-                            ...user,
-                            role: user.role === 'manager' ? 'default' : 'manager',
-                          })
-                        }
-                      >
+                      <ToggleInput toggled={editable} onToggle={() => set('editable', !editable)}>
                         <Label>editable</Label>
                       </ToggleInput>
                       <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
