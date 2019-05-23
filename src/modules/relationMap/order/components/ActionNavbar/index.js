@@ -412,7 +412,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                     customFields: null,
                                     producedAt: null,
                                     tagIds: [],
-                                    batchAdjustments: [],
+                                    batchQuantityRevisions: [],
                                   },
                                 },
                                 refetchQueries: allOrderIds.map(orderId => ({
@@ -649,7 +649,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   }}
                   onMoveToNewShipment={() => {
                     const defaultBatchInput = {
-                      batchAdjustments: [],
+                      batchQuantityRevisions: [],
                       todo: {
                         tasks: [],
                       },
@@ -816,8 +816,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 shipment: inputBatchFields.shipment
                                   ? shipments[inputBatchFields.shipment.id]
                                   : null,
-                                batchAdjustments: inputBatchFields.batchAdjustments
-                                  ? inputBatchFields.batchAdjustments.map(item => ({
+                                batchQuantityRevisions: inputBatchFields.batchQuantityRevisions
+                                  ? inputBatchFields.batchQuantityRevisions.map(item => ({
                                       ...item,
                                       isNew: true,
                                     }))
@@ -1172,14 +1172,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'split' && uiSelectors.isAllowToSplitBatch() && (
                 <SplitPanel
-                  max={
-                    getByPathWithDefault(0, `${uiSelectors.targetedBatchId()}.quantity`, batches) +
-                    getByPathWithDefault(
-                      0,
-                      `${uiSelectors.targetedBatchId()}.totalAdjusted`,
-                      batches
-                    )
-                  }
+                  max={getByPathWithDefault(
+                    0,
+                    `${uiSelectors.targetedBatchId()}.latestQuantity`,
+                    batches
+                  )}
                   onSplit={async inputData => {
                     const { type, quantity } = inputData;
                     const id = uiSelectors.targetedBatchId();

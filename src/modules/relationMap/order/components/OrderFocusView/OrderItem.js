@@ -37,17 +37,10 @@ function getQuantitySummary(item: Object) {
 
   if (item.batches) {
     item.batches.forEach(batch => {
-      batchedQuantity += batch.quantity;
+      const { latestQuantity } = batch;
+
+      batchedQuantity += latestQuantity;
       batched += 1;
-
-      let latestQuantity = batch.quantity;
-
-      if (batch.batchAdjustments) {
-        batch.batchAdjustments.forEach(batchAdjustment => {
-          batchedQuantity += batchAdjustment.quantity;
-          latestQuantity += batchAdjustment.quantity;
-        });
-      }
 
       if (batch.shipment) {
         shippedQuantity += latestQuantity;

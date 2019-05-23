@@ -40,7 +40,7 @@ export const productListQuery = gql`
               ... on Batch {
                 id
                 no
-                quantity
+                latestQuantity
                 shipment {
                   ... on Shipment {
                     id
@@ -68,12 +68,6 @@ export const productListQuery = gql`
                     warehouseArrivalAgreedDateApprovedAt
                     warehouseArrivalActualDate
                     warehouseArrivalActualDateApprovedAt
-                  }
-                }
-                batchAdjustments {
-                  ... on BatchAdjustment {
-                    id
-                    quantity
                   }
                 }
                 orderItem {

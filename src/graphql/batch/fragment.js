@@ -18,6 +18,7 @@ export const batchFormFragment = gql`
     memo
     no
     quantity
+    latestQuantity
     batchQuantityRevisions {
       ... on BatchQuantityRevision {
         id
