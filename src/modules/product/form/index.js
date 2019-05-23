@@ -13,6 +13,7 @@ import { ProductFormWrapperStyle } from './style';
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncProductSection = lazy(() => import('./components/ProductSection'));
 const AsyncProductProvidersSection = lazy(() => import('./components/ProductProvidersSection'));
+const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 
 type OptionalProps = {
   isNewOrClone: boolean,
@@ -89,6 +90,8 @@ class ProductForm extends React.Component<Props> {
               )}
             </Subscribe>
           </SectionWrapper>
+
+          <AsyncOrdersSection id={product.id} />
         </div>
       </Suspense>
     );
