@@ -6,6 +6,7 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 
+import FormattedNumber from 'components/FormattedNumber';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 
@@ -20,12 +21,11 @@ type Props = {
 
 const OrdersSection = ({ id }: Props) => {
   const filtersAndSort = {
-    filter: {
+    filterBy: {
       productId: id,
     },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
+    sortBy: {
+      updatedAt: 'DESCENDING',
     },
     perPage: 10,
     page: 1,
@@ -49,7 +49,7 @@ const OrdersSection = ({ id }: Props) => {
               title={
                 <>
                   <FormattedMessage id="modules.Products.orders" defaultMessage="ORDERS" /> (
-                  {getByPathWithDefault([], 'orders.nodes', data).length})
+                  <FormattedNumber value={getByPathWithDefault(0, 'orders.totalCount', data)} />)
                 </>
               }
             />

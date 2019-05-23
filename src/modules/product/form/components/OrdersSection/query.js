@@ -16,6 +16,7 @@ export const ordersInProductQuery = gql`
           ...orderCardFragment
         }
       }
+      totalCount
       page
       totalPage
     }
