@@ -6,6 +6,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
+import { spreadOrderItem } from 'utils/item';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
@@ -116,66 +117,8 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
           {({ originalValues: initialValues, state, setFieldValue }) => {
             const values = { ...initialValues, ...state };
 
-            const { orderItem } = values;
-            let compiledOrderItem = null;
-            let compiledProductProvider = null;
-            let compiledProduct = null;
-            let compiledOrder = null;
-
-            if (orderItem) {
-              const {
-                id,
-                archived,
-                no,
-                quantity,
-                price,
-                tags,
-                totalBatched,
-                totalShipped,
-                batchCount,
-                batchShippedCount,
-                productProvider,
-                order,
-                todo,
-              } = orderItem;
-              const { name: productProviderName, product } = productProvider;
-              compiledProductProvider = { name: productProviderName };
-
-              const {
-                id: productId,
-                name: productName,
-                serial,
-                tags: productTags,
-                files,
-              } = product;
-              compiledProduct = {
-                id: productId,
-                name: productName,
-                serial,
-                tags: productTags,
-                files,
-              };
-
-              compiledOrderItem = {
-                id,
-                archived,
-                no,
-                quantity,
-                price,
-                tags,
-                totalBatched,
-                totalShipped,
-                batchCount,
-                batchShippedCount,
-                todo,
-              };
-
-              const { id: orderId, poNo } = order;
-              compiledOrder = {
-                id: orderId,
-                poNo,
-              };
-            }
+            const { orderItem: rawOrderItem } = values;
+            const { orderItem, productProvider, product, order } = spreadOrderItem(rawOrderItem);
 
             const editable = {
               no: false,
@@ -340,10 +283,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                               />
                             ) : (
                               <ItemCard
-                                orderItem={compiledOrderItem}
-                                productProvider={compiledProductProvider}
-                                product={compiledProduct}
-                                order={compiledOrder}
+                                orderItem={orderItem}
+                                productProvider={productProvider}
+                                product={product}
+                                order={order}
                                 editable={editable}
                                 viewable={viewable}
                                 navigable={navigable}
@@ -394,10 +337,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                       </BooleanValue>
                     ) : (
                       <ItemCard
-                        orderItem={compiledOrderItem}
-                        productProvider={compiledProductProvider}
-                        product={compiledProduct}
-                        order={compiledOrder}
+                        orderItem={orderItem}
+                        productProvider={productProvider}
+                        product={product}
+                        order={order}
                         editable={editable}
                         viewable={viewable}
                         navigable={navigable}

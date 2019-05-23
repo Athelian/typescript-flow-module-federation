@@ -9,6 +9,7 @@ import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ItemCard } from 'components/Cards';
 import GridView from 'components/GridView';
 import usePermission from 'hooks/usePermission';
+import { spreadOrderItem } from 'utils/item';
 
 type Props = {
   items: Array<Object>,
@@ -18,54 +19,8 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = (item: Object) => {
-  const {
-    id,
-    archived,
-    no,
-    quantity,
-    price,
-    tags,
-    todo,
-    totalBatched,
-    totalShipped,
-    batchCount,
-    batchShippedCount,
-    productProvider,
-    order,
-    hasPermission,
-  } = item;
-  const compiledOrderItem = {
-    id,
-    archived,
-    no,
-    quantity,
-    price,
-    tags,
-    todo,
-    totalBatched,
-    totalShipped,
-    batchCount,
-    batchShippedCount,
-  };
-
-  const { name: productProviderName, product } = productProvider;
-  const compiledProductProvider = { name: productProviderName };
-
-  const { id: productId, name, serial, tags: productTags, files } = product;
-  const compiledProduct = {
-    id: productId,
-    name,
-    serial,
-    tags: productTags,
-    files,
-  };
-
-  const { id: orderId, poNo } = order;
-  const compiledOrder = {
-    id: orderId,
-    poNo,
-  };
+const defaultRenderItem = ({ hasPermission, ...item }: Object) => {
+  const { orderItem, productProvider, product, order } = spreadOrderItem(item);
 
   const viewable = {
     price: hasPermission(ORDER_ITEMS_GET_PRICE),
@@ -82,18 +37,18 @@ const defaultRenderItem = (item: Object) => {
 
   return (
     <ItemCard
+      key={orderItem.id}
       onClick={() =>
         hasPermission(ORDER_ITEMS_FORM) ? navigate(`/order-item/${encodeId(item.id)}`) : () => {}
       }
-      viewable={viewable}
-      orderItem={compiledOrderItem}
-      productProvider={compiledProductProvider}
-      product={compiledProduct}
-      order={compiledOrder}
+      orderItem={orderItem}
+      productProvider={productProvider}
+      product={product}
+      order={order}
       actions={[]}
+      viewable={viewable}
       config={config}
       navigable={navigable}
-      key={item.id}
     />
   );
 };

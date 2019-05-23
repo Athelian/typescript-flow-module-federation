@@ -57,4 +57,58 @@ export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantity
   };
 };
 
-export default getItemQuantityChartData;
+export const spreadOrderItem = (item: Object): Object => {
+  const {
+    id,
+    archived,
+    no,
+    quantity,
+    price,
+    tags,
+    todo,
+    totalBatched,
+    totalShipped,
+    batchCount,
+    batchShippedCount,
+    productProvider,
+    order,
+  } = item;
+  const compiledOrderItem = {
+    id,
+    archived,
+    no,
+    quantity,
+    price,
+    tags,
+    todo,
+    totalBatched,
+    totalShipped,
+    batchCount,
+    batchShippedCount,
+  };
+
+  const { name: productProviderName, product } = productProvider;
+  const compiledProductProvider = { name: productProviderName };
+
+  const { id: productId, name, serial, tags: productTags, files } = product;
+  const compiledProduct = {
+    id: productId,
+    name,
+    serial,
+    tags: productTags,
+    files,
+  };
+
+  const { id: orderId, poNo } = order;
+  const compiledOrder = {
+    id: orderId,
+    poNo,
+  };
+
+  return {
+    orderItem: compiledOrderItem,
+    productProvider: compiledProductProvider,
+    product: compiledProduct,
+    order: compiledOrder,
+  };
+};

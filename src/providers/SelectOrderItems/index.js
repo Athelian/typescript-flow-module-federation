@@ -4,22 +4,28 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
+
+import { spreadOrderItem } from 'utils/item';
+import { getByPathWithDefault } from 'utils/fp';
+import { removeTypename } from 'utils/data';
+import loadMore from 'utils/loadMore';
+
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
 import { ItemCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import orderItemsQuery from 'providers/OrderItemsList/query';
-import { getByPathWithDefault } from 'utils/fp';
-import { removeTypename } from 'utils/data';
-import loadMore from 'utils/loadMore';
+
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+
+import orderItemsQuery from 'providers/OrderItemsList/query';
 import useFilter from 'hooks/useFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+
 import { ItemWrapperStyle } from './style';
 
 type Props = {
@@ -154,52 +160,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                   }
                 >
                   {items.map(item => {
-                    const {
-                      id,
-                      archived,
-                      no,
-                      quantity,
-                      price,
-                      tags,
-                      totalBatched,
-                      totalShipped,
-                      batchCount,
-                      batchShippedCount,
-                      productProvider,
-                      todo,
-                      order,
-                    } = item;
-                    const compiledOrderItem = {
-                      id,
-                      archived,
-                      no,
-                      quantity,
-                      price,
-                      tags,
-                      totalBatched,
-                      totalShipped,
-                      batchCount,
-                      batchShippedCount,
-                      todo,
-                    };
-
-                    const { name: productProviderName, product } = productProvider;
-                    const compiledProductProvider = { name: productProviderName };
-
-                    const { id: productId, name, serial, tags: productTags, files } = product;
-                    const compiledProduct = {
-                      id: productId,
-                      name,
-                      serial,
-                      tags: productTags,
-                      files,
-                    };
-
-                    const { id: orderId, poNo } = order;
-                    const compiledOrder = {
-                      id: orderId,
-                      poNo,
-                    };
+                    const { orderItem, productProvider, product, order } = spreadOrderItem(item);
 
                     const viewable = {
                       price: hasPermission(ORDER_ITEMS_GET_PRICE),
@@ -227,10 +188,10 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
                           />
                         )}
                         <ItemCard
-                          orderItem={compiledOrderItem}
-                          productProvider={compiledProductProvider}
-                          product={compiledProduct}
-                          order={compiledOrder}
+                          orderItem={orderItem}
+                          productProvider={productProvider}
+                          product={product}
+                          order={order}
                           viewable={viewable}
                           config={config}
                           selectable
