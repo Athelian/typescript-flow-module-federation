@@ -51,4 +51,41 @@ export default class OrderItemsContainer extends Container<FormState> {
       this.originalValues = { orderItems, hasCalledApiYet };
     }
   };
+
+  resetAmountWithNewCurrency = (currency: string) => {
+    let retry;
+    if (this.state.hasCalledApiYet) {
+      const { orderItems } = this.state;
+      this.setState({
+        orderItems: orderItems.map(orderItem => ({
+          ...orderItem,
+          price: {
+            ...orderItem.price,
+            amount: 0,
+            currency,
+          },
+        })),
+      });
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledApiYet) {
+          const { orderItems } = this.state;
+          this.setState({
+            orderItems: orderItems.map(orderItem => ({
+              ...orderItem,
+              price: {
+                ...orderItem.price,
+                amount: 0,
+                currency,
+              },
+            })),
+          });
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
 }

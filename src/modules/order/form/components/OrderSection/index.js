@@ -125,43 +125,37 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                   <BooleanValue>
                     {({ value: isOpen, set: setPriceDialog }) => (
                       <Subscribe to={[OrderItemsContainer]}>
-                        {({ state: { orderItems }, setFieldValue: setItemFieldValue }) => (
+                        {({
+                          state: { orderItems, hasCalledApiYet },
+                          resetAmountWithNewCurrency,
+                        }) => (
                           <StringValue>
-                            {({ value: previousCurrency, set: setPreviousCurrency }) => (
+                            {({ value: currentCurrency, set: changeCurrency }) => (
                               <>
                                 <PriceDialog
                                   isOpen={isOpen}
                                   onRequestClose={() => {
                                     setFieldValue(
                                       'currency',
-                                      previousCurrency || initialValues.currency
+                                      currentCurrency || initialValues.currency
                                     );
                                     setPriceDialog(false);
                                   }}
                                   onConfirm={() => {
-                                    setItemFieldValue(
-                                      'orderItems',
-                                      orderItems.map(orderItem => ({
-                                        ...orderItem,
-                                        price: {
-                                          ...orderItem.price,
-                                          amount: 0,
-                                        },
-                                      }))
-                                    );
-                                    setPreviousCurrency(values.currency);
+                                    resetAmountWithNewCurrency(values.currency);
+                                    changeCurrency(values.currency);
                                     setPriceDialog(false);
                                   }}
                                   onCancel={() => {
                                     setFieldValue(
                                       'currency',
-                                      previousCurrency || initialValues.currency
+                                      currentCurrency || initialValues.currency
                                     );
                                     setPriceDialog(false);
                                   }}
                                   onDeny={() => {
                                     setPriceDialog(false);
-                                    setPreviousCurrency(values.currency);
+                                    changeCurrency(values.currency);
                                   }}
                                   message={
                                     <>
@@ -213,10 +207,14 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                                       required
                                       onBlur={value => {
                                         onBlur();
-                                        if (value !== values.currency && orderItems.length > 0) {
+                                        if (
+                                          value !== values.currency &&
+                                          ((hasCalledApiYet && orderItems.length) ||
+                                            (!hasCalledApiYet && values.orderItemCount))
+                                        ) {
                                           setPriceDialog(true);
                                         } else {
-                                          setPreviousCurrency(value);
+                                          changeCurrency(value);
                                         }
                                       }}
                                       hideClearButton
