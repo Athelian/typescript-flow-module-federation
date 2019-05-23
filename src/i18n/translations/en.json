@@ -387,7 +387,7 @@
   "modules.Orders.deliveryPlace": "Place of Delivery",
   "modules.Orders.currency": "Currency",
   "modules.Orders.exporter": "EXPORTER",
-  "modules.Orders.exporterName": "EXPORTER",
+  "modules.Orders.exporterName": "Exporter",
   "modules.Orders.exporterCode": "EXPORTER CODE",
   "modules.Orders.forwarder": "FORWARDER",
   "modules.Orders.memo": "MEMO",
