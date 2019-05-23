@@ -19,12 +19,13 @@ const OrderGridView = ({ items, onLoadMore, hasMore, isLoading }: Props): React.
       isLoading={isLoading}
       itemWidth="195px"
       isEmpty={items.length === 0}
+      padding="30px 0"
       emptyMessage={
         <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
       }
     >
       {items.map(item => (
-        <OrderCard order={item} />
+        <OrderCard key={item.id} order={item} />
       ))}
     </GridView>
   );

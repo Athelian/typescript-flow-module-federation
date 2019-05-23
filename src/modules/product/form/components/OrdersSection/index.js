@@ -5,10 +5,9 @@ import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 
-import { SectionWrapper } from 'components/Form';
+import { SectionWrapper, SectionHeader } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 
-import { SectionHeader } from 'modules/relationMap/common/SortFilter/AdvancedFilter/FilterMenu/components';
 import OrderGridView from './OrderGridView';
 
 import { ordersInProductQuery } from './query';

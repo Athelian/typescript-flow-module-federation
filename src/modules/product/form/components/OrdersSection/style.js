@@ -22,7 +22,6 @@ export const SectionBodyStyle: string = css`
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
-  padding: 30px 20px;
 `;
 
 export const EmptyMessageStyle: string = css`
