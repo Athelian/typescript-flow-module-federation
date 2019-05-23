@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
-import { getBatchLatestQuantity } from 'utils/batch';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { Tags } from 'components/RelationMap';
@@ -38,9 +37,8 @@ function getQuantitySummary(item: Object) {
 
   if (item.batches) {
     item.batches.forEach(batch => {
-      const { quantity, batchQuantityRevisions } = batch;
+      const { latestQuantity } = batch;
 
-      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
       batchedQuantity += latestQuantity;
       batched += 1;
 
