@@ -15,6 +15,7 @@ const AsyncProductSection = lazy(() => import('./components/ProductSection'));
 const AsyncProductProvidersSection = lazy(() => import('./components/ProductProvidersSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
+const AsyncBatchesSection = lazy(() => import('./components/BatchesSection'));
 
 type OptionalProps = {
   isNewOrClone: boolean,
@@ -94,6 +95,7 @@ class ProductForm extends React.Component<Props> {
 
           <AsyncOrdersSection id={product.id} />
           <AsyncItemsSection id={product.id} />
+          <AsyncBatchesSection id={product.id} />
         </div>
       </Suspense>
     );
