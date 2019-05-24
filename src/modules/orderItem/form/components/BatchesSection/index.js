@@ -70,6 +70,7 @@ function BatchesSection({ itemInfo, itemIsArchived }: Props) {
                           ...batches,
                           {
                             ...generateBatchByOrderItem(values),
+                            orderItem: itemInfo,
                             no: `batch no ${batches.length + 1}`,
                             archived: itemIsArchived,
                           },
