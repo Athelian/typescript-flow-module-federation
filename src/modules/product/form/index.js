@@ -2,7 +2,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
-import { isEquals, isDataType, isNullOrUndefined } from 'utils/fp';
+import { isEquals, isDataType } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
@@ -94,7 +94,7 @@ class ProductForm extends React.Component<Props> {
             </Subscribe>
           </SectionWrapper>
 
-          {!isNullOrUndefined(product.id) && (
+          {!isNewOrClone && (
             <>
               <AsyncOrdersSection id={product.id} />
               <AsyncItemsSection id={product.id} />
