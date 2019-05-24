@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue May 21 2019 16:21:07 GMT+0900 (Japan Standard Time)
+# timestamp: Fri May 24 2019 16:21:04 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Abu al Bukhoosh"""
@@ -55776,6 +55776,7 @@ input BatchSortInput {
   no: SortOrder
   poNo: SortOrder
   productName: SortOrder
+  productSerial: SortOrder
   producedAt: SortOrder
   deliveredAt: SortOrder
   expiredAt: SortOrder
@@ -58475,6 +58476,7 @@ type MaskEditPayloadPagination {
 input MaskEditSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
 }
 
 enum MaskEditType {
@@ -58622,8 +58624,9 @@ type Mutation {
   integrationConfigurationDelete(id: ID!): EmptyPayload
   integrationLinkCreate(input: IntegrationLinkCreateInput!): IntegrationLinkPayload!
   integrationLinkUpdate(id: ID!, input: IntegrationLinkUpdateInput!): IntegrationLinkPayload!
-  integrationLinkDelete(id: ID!): EmptyPayload
   integrationLinkReset(id: ID!): EmptyPayload
+  integrationLinkExecute(id: ID!): EmptyPayload
+  integrationLinkDelete(id: ID!): EmptyPayload
 }
 
 type NotFound {
@@ -115153,6 +115156,8 @@ enum Seaport {
 
 type Shipment implements Model & Owned & Tagged & Supervised & Documented & Customizable & Memorizable {
   archived: Boolean!
+  importer: GroupPayload!
+  exporter: GroupPayload
   no: String!
   blNo: String
   blDate: DateTime
@@ -115160,6 +115165,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
+  contractNo: String
   incoterm: Incoterm
   loadType: LoadType
   transportType: TransportType
@@ -115167,7 +115173,6 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   cargoReady: TimelineDatePayload!
   voyages: [VoyagePayload!]!
   containerGroups: [ContainerGroupPayload!]!
-  importer: GroupPayload!
   forwarders: [GroupPayload!]!
   totalVolume: MetricValue!
   orderCount: Int!
@@ -115277,6 +115282,7 @@ input ShipmentContainerUpdateInput {
 
 input ShipmentCreateInput {
   importerId: ID!
+  exporterId: ID
   no: String!
   blNo: String
   blDate: DateTime
@@ -115284,6 +115290,7 @@ input ShipmentCreateInput {
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
+  contractNo: String
   loadType: LoadType
   transportType: TransportType
   incoterm: Incoterm
@@ -115361,6 +115368,7 @@ input ShipmentSortInput {
 input ShipmentUpdateInput {
   archived: Boolean
   importerId: ID
+  exporterId: ID
   no: String
   blNo: String
   blDate: DateTime
@@ -115368,6 +115376,7 @@ input ShipmentUpdateInput {
   bookingNo: String
   bookingDate: DateTime
   invoiceNo: String
+  contractNo: String
   loadType: LoadType
   transportType: TransportType
   incoterm: Incoterm
@@ -115690,6 +115699,7 @@ type TaskTemplatePayloadPagination {
 input TaskTemplateSortInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+  name: SortOrder
 }
 
 input TaskTemplateTaskCreateInput {
@@ -115930,6 +115940,8 @@ input UserFilterInput {
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   role: String
+  groupId: ID
+  groupIds: [ID!]
 }
 
 union UserPayload = User | BadRequest | Forbidden | NotFound

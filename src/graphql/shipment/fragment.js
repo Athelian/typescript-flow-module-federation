@@ -17,6 +17,7 @@ export const shipmentFormFragment = gql`
     bookingNo
     bookingDate
     invoiceNo
+    contractNo
     incoterm
     loadType
     transportType

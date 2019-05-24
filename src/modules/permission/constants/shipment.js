@@ -20,6 +20,7 @@ export const SHIPMENT_SET_BOOKING_NO = 'shipment.shipments.setBookingNo';
 export const SHIPMENT_SET_BOOKED = 'shipment.shipments.setBooked';
 export const SHIPMENT_SET_BOOKING_DATE = 'shipment.shipments.setBookingDate';
 export const SHIPMENT_SET_INVOICE_NO = 'shipment.shipments.setInvoiceNo';
+export const SHIPMENT_SET_CONTRACT_NO = 'shipment.shipments.setContractNo';
 export const SHIPMENT_SET_TRANSPORT_TYPE = 'shipment.shipments.setTransportType';
 export const SHIPMENT_SET_LOAD_TYPE = 'shipment.shipments.setLoadType';
 export const SHIPMENT_SET_INCOTERM = 'shipment.shipments.setIncoterm';

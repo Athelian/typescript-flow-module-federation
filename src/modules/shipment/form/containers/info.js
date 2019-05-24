@@ -11,6 +11,7 @@ type FormState = {
   bookingNo?: string,
   bookingDate?: Date,
   invoiceNo?: string,
+  contractNo?: string,
   loadType?: string,
   incoterm?: string,
   carrier?: string,
