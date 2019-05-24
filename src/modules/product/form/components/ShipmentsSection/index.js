@@ -9,15 +9,15 @@ import FormattedNumber from 'components/FormattedNumber';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 
-import ItemGridView from './ItemGridView';
-import { itemsInProductQuery } from './query';
+import ShipmentGridView from './ShipmentGridView';
+import { shipmentsInProductQuery } from './query';
 import { SectionWrapperStyle, SectionBodyStyle } from './style';
 
 type Props = {
   id: string,
 };
 
-const ItemsSection = ({ id }: Props) => {
+const ShipmentsSection = ({ id }: Props) => {
   const filtersAndSort = {
     filterBy: {
       productId: id,
@@ -30,25 +30,24 @@ const ItemsSection = ({ id }: Props) => {
   };
 
   return (
-    <Query query={itemsInProductQuery} variables={filtersAndSort} fetchPolicy="network-only">
+    <Query query={shipmentsInProductQuery} variables={filtersAndSort} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
         if (error) {
           return error.message;
         }
 
-        const nextPage = getByPathWithDefault(1, 'orderItems.page', data) + 1;
-        const totalPage = getByPathWithDefault(1, 'orderItems.totalPage', data);
+        const nextPage = getByPathWithDefault(1, 'shipments.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'shipments.totalPage', data);
         const hasMore = nextPage <= totalPage;
 
         return (
-          <SectionWrapper id="product_itemsSection">
+          <SectionWrapper id="product_shipmentsSection">
             <SectionHeader
-              icon="ORDER_ITEM"
+              icon="SHIPMENT"
               title={
                 <>
-                  <FormattedMessage id="modules.Products.items" defaultMessage="ITEMS" /> (
-                  <FormattedNumber value={getByPathWithDefault(0, 'orderItems.totalCount', data)} />
-                  )
+                  <FormattedMessage id="modules.Products.shipments" defaultMessage="SHIPMENTS" /> (
+                  <FormattedNumber value={getByPathWithDefault(0, 'shipments.totalCount', data)} />)
                 </>
               }
             />
@@ -58,9 +57,9 @@ const ItemsSection = ({ id }: Props) => {
                 <div id="sortandfilterswip" />
               </SectionNavBar>
               <div className={SectionBodyStyle}>
-                <ItemGridView
-                  items={getByPathWithDefault([], 'orderItems.nodes', data)}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
+                <ShipmentGridView
+                  items={getByPathWithDefault([], 'shipments.nodes', data)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'shipments')}
                   hasMore={hasMore}
                   isLoading={loading}
                 />
@@ -73,4 +72,4 @@ const ItemsSection = ({ id }: Props) => {
   );
 };
 
-export default ItemsSection;
+export default ShipmentsSection;

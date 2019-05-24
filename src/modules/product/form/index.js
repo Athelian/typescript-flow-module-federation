@@ -2,10 +2,10 @@
 import React, { lazy, Suspense } from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
+import { isEquals, isDataType } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
-import { isEquals, isDataType } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import { ProductTasksContainer } from './containers';
 import { ProductFormWrapperStyle } from './style';
@@ -16,6 +16,7 @@ const AsyncProductProvidersSection = lazy(() => import('./components/ProductProv
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
 const AsyncBatchesSection = lazy(() => import('./components/BatchesSection'));
+const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
 
 type OptionalProps = {
   isNewOrClone: boolean,
@@ -93,9 +94,14 @@ class ProductForm extends React.Component<Props> {
             </Subscribe>
           </SectionWrapper>
 
-          <AsyncOrdersSection id={product.id} />
-          <AsyncItemsSection id={product.id} />
-          <AsyncBatchesSection id={product.id} />
+          {!isNewOrClone && (
+            <>
+              <AsyncOrdersSection id={product.id} />
+              <AsyncItemsSection id={product.id} />
+              <AsyncBatchesSection id={product.id} />
+              <AsyncShipmentsSection id={product.id} />
+            </>
+          )}
         </div>
       </Suspense>
     );
