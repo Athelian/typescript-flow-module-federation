@@ -54,6 +54,21 @@ export const createShipmentMutation: Object = gql`
     shipmentCreate(input: $input) {
       ... on Shipment {
         id
+        batches {
+          ... on Batch {
+            id
+            orderItem {
+              ... on OrderItem {
+                id
+                order {
+                  ... on Order {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
       }
       ...badRequestFragment
     }
