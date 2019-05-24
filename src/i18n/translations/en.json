@@ -521,7 +521,7 @@
   "modules.OrderItems.list.sort.no": "Item No.",
   "modules.OrderItems.list.sort.currency": "Currency",
   "modules.OrderItems.list.sort.productName": "Product Name",
-  "modules.OrderItems.list.sort.productSerial": "Prodcut Serial",
+  "modules.OrderItems.list.sort.productSerial": "Product Serial",
   "modules.OrderItems.list.sort.productProviderName": "End Product Name",
   "modules.OrderItems.list.sort.supplierName": "Supplier",
   "modules.OrderItems.list.sort.supplierCode": "Supplier Code",

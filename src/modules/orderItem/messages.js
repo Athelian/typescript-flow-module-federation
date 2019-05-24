@@ -44,7 +44,7 @@ export default defineMessages({
   },
   productSerial: {
     id: 'modules.OrderItems.list.sort.productSerial',
-    defaultMessage: 'Prodcut Serial',
+    defaultMessage: 'Product Serial',
   },
   productProviderName: {
     id: 'modules.OrderItems.list.sort.productProviderName',
