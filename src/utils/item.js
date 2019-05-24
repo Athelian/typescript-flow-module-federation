@@ -58,6 +58,15 @@ export const getItemQuantityChartData = ({ orderItem, batches }: GetItemQuantity
 };
 
 export const spreadOrderItem = (item: Object): Object => {
+  if (!item) {
+    return {
+      orderItem: null,
+      productProvider: null,
+      product: null,
+      order: null,
+    };
+  }
+
   const {
     id,
     archived,
