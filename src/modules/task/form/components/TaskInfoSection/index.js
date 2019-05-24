@@ -915,7 +915,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           <FieldItem
                             label={
                               <Label>
-                                <FormattedMessage id="modules.Tasks.order" defaultMessage="ORDER" />
+                                <FormattedMessage id="modules.Tasks.item" defaultMessage="ITEM" />
                               </Label>
                             }
                             vertical
