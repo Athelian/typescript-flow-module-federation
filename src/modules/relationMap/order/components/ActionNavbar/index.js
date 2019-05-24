@@ -21,7 +21,6 @@ import { orderDetailQuery } from 'modules/relationMap/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
-import { getBatchLatestQuantity } from 'utils/batch';
 import { prepareParsedOrderInput } from 'modules/order/form/mutation';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
@@ -726,7 +725,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     const processBatchIds = [];
                     const moveOrderItems = [];
                     const defaultInput = {
-                      isNew: true,
                       todo: {
                         tasks: [],
                       },
@@ -751,7 +749,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 }
                               : {}),
                             batches: [],
-                            isNew: true,
                           });
                         } else {
                           moveOrderItems.push({
@@ -772,13 +769,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 return {
                                   ...defaultInput,
                                   ...inputBatchFields,
+                                  quantity: inputBatchFields.latestQuantity || 0,
+                                  batchQuantityRevisions: [],
                                   shipment: inputBatchFields.shipment
                                     ? shipments[inputBatchFields.shipment.id]
                                     : null,
                                 };
                               }),
-                            isNew: true,
-                            order: null,
                           });
                           processBatchIds.push(...orderItem.batches);
                         }
@@ -795,12 +792,9 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               return currentBatches.includes(batch.id);
                             }
                           );
-                          const { totalAdjusted, ...inputBatchFields } = batch;
                           moveOrderItems.push({
                             ...defaultInput,
                             ...orderItem,
-                            quantity: getBatchLatestQuantity(batch),
-                            isNew: true,
                             ...(needToResetPrice
                               ? {
                                   price: {
@@ -812,19 +806,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             batches: [
                               {
                                 ...defaultInput,
-                                ...inputBatchFields,
-                                shipment: inputBatchFields.shipment
-                                  ? shipments[inputBatchFields.shipment.id]
-                                  : null,
-                                batchQuantityRevisions: inputBatchFields.batchQuantityRevisions
-                                  ? inputBatchFields.batchQuantityRevisions.map(item => ({
-                                      ...item,
-                                      isNew: true,
-                                    }))
-                                  : [],
+                                ...batch,
+                                shipment: batch.shipment ? shipments[batch.shipment.id] : null,
+                                quantity: batch.latestQuantity || 0,
+                                batchQuantityRevisions: [],
                               },
                             ],
-                            order: null,
+                            quantity: batch.latestQuantity || 0,
                           });
                         }
                       }
@@ -961,7 +949,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                               : {}),
                             batches: orderItem.batches
                               .filter(batchId => batchIds.includes(batchId))
-                              .map(batchId => batches[batchId]),
+                              .map(batchId => ({
+                                ...batches[batchId],
+                                quantity: batches[batchId].latestQuantity || 0,
+                                batchQuantityRevisions: [],
+                              })),
                           });
                           processBatchIds.push(...orderItem.batches);
                         }
@@ -988,8 +980,14 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                   },
                                 }
                               : {}),
-                            batches: [batch],
-                            quantity: getBatchLatestQuantity(batch),
+                            batches: [
+                              {
+                                ...batch,
+                                quantity: batch.latestQuantity || 0,
+                                batchQuantityRevisions: [],
+                              },
+                            ],
+                            quantity: batch.latestQuantity || 0,
                           });
                         }
                       }
@@ -1021,7 +1019,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           const orderItem = orderItems[orderItemId];
                           return {
                             ...orderItem,
-                            batches: orderItem.batches.map(batchId => batches[batchId]),
+                            batches: orderItem.batches.map(batchId => ({
+                              ...batches[batchId],
+                              quantity: batches[batchId].latestQuantity || 0,
+                              batchQuantityRevisions: [],
+                            })),
                           };
                         }),
                         orderItems: existOrderItems
@@ -1040,7 +1042,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                 : {}),
                               batches: orderItem.batches
                                 .filter(batchId => !batchIds.includes(batchId))
-                                .map(batchId => batches[batchId]),
+                                .map(batchId => ({
+                                  ...batches[batchId],
+                                  quantity: batches[batchId].latestQuantity || 0,
+                                  batchQuantityRevisions: [],
+                                })),
                             };
                           }),
                       });
