@@ -5,9 +5,7 @@ export const itemsInProductQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ... on OrderItem {
-          ...itemCardFragment
-        }
+        ...itemCardFragment
       }
       totalCount
       page
