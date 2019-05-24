@@ -13,9 +13,7 @@ export const shipmentsInProductQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: ShipmentFilterInput, $sortBy: ShipmentSortInput) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ... on Shipment {
-          ...shipmentCardFragment
-        }
+        ...shipmentCardFragment
       }
       totalCount
       page
