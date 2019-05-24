@@ -326,6 +326,17 @@ class ProductFormModule extends React.Component<Props> {
                         }
                         icon="ORDER_ITEM"
                       />
+
+                      <SectionTabs
+                        link="product_batchesSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Products.batches"
+                            defaultMessage="BATCHES"
+                          />
+                        }
+                        icon="BATCH"
+                      />
                     </JumpToSection>
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) =>
