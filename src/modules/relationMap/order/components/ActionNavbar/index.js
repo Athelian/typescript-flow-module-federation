@@ -668,10 +668,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         if (!batches[batchId]) {
                           return false;
                         }
-                        const { totalAdjusted, ...batch } = batches[batchId];
+                        const batch = batches[batchId];
                         return {
                           ...defaultBatchInput,
                           ...batch,
+                          quantity: batch.latestQuantity || 0,
                           shipment: null,
                           container: null,
                           orderItem: {
