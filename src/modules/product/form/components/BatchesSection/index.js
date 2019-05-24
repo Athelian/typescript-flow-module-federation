@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-
 import { FormattedMessage } from 'react-intl';
 import { Query } from 'react-apollo';
 import { getByPathWithDefault } from 'utils/fp';
@@ -11,7 +10,6 @@ import { SectionWrapper, SectionHeader } from 'components/Form';
 import { SectionNavBar } from 'components/NavBar';
 
 import BatchGridView from './BatchGridView';
-
 import { batchesInProductQuery } from './query';
 import { SectionWrapperStyle, SectionBodyStyle } from './style';
 
