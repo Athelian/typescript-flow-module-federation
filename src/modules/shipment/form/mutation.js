@@ -255,6 +255,11 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'invoiceNo', originalValues),
       newValues.invoiceNo
     ),
+    ...parseGenericField(
+      'contractNo',
+      getByPathWithDefault(null, 'contractNo', originalValues),
+      newValues.contractNo
+    ),
     ...parseEnumField(
       'transportType',
       getByPathWithDefault(null, 'transportType', originalValues),
