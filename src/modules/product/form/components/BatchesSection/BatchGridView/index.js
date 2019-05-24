@@ -11,7 +11,7 @@ type Props = {
   isLoading: boolean,
 };
 
-const OrderGridView = ({ items, onLoadMore, hasMore, isLoading }: Props): React.Node => {
+const BatchGridView = ({ items, onLoadMore, hasMore, isLoading }: Props): React.Node => {
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -31,4 +31,4 @@ const OrderGridView = ({ items, onLoadMore, hasMore, isLoading }: Props): React.
   );
 };
 
-export default OrderGridView;
+export default BatchGridView;
