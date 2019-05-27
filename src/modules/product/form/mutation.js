@@ -195,9 +195,9 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         newProductProvider.packageCapacity
       ),
       ...parseGenericField(
-        'packageWeight',
-        getByPathWithDefault(null, 'packageWeight', oldProductProvider),
-        newProductProvider.packageWeight
+        'packageGrossWeight',
+        getByPathWithDefault(null, 'packageGrossWeight', oldProductProvider),
+        newProductProvider.packageGrossWeight
       ),
       ...parseGenericField(
         'packageVolume',
