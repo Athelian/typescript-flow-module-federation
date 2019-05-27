@@ -8,6 +8,7 @@ import {
   userAvatarFragment,
   metricFragment,
   todoFragment,
+  partnerNameFragment,
 } from 'graphql';
 
 export const shipmentListQuery = gql`
@@ -28,6 +29,7 @@ export const shipmentListQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${todoFragment}
+  ${partnerNameFragment}
 `;
 
 export default shipmentListQuery;
