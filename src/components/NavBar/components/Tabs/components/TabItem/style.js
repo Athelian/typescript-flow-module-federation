@@ -14,7 +14,7 @@ export const TabItemStyle = (isActive: boolean): string => css`
   width: 100%;
   height: 50px;
   text-transform: uppercase;
-  ${fontSizes.MEDIUM};
+  ${fontSizes.SMALL};
   letter-spacing: 2px;
   background-color: ${colors.TRANSPARENT};
   & > span {
