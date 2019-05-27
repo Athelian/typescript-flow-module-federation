@@ -97,7 +97,6 @@ const QuantitySection = ({ isNew }: Props) => {
                         <div key={item.id} className={QuantityRevisionItemStyle}>
                           <DefaultAdjustmentStyle
                             editable={allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)}
-                            isNew={isNew}
                             index={index}
                             adjustment={item}
                             setFieldArrayValue={setFieldArrayValue}
@@ -125,7 +124,7 @@ const QuantitySection = ({ isNew }: Props) => {
                                         setFieldArrayValue(name, inputHandlers.value);
                                         calculatePackageQuantity(setFieldTouched);
                                       }}
-                                      isNew={isNew}
+                                      isNew={item.isNew}
                                       originalValue={item.quantity}
                                       editable={
                                         allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
@@ -170,7 +169,6 @@ const QuantitySection = ({ isNew }: Props) => {
                                       : batchQuantityRevisions[batchQuantityRevisions.length - 1]
                                           .quantity,
                                   memo: '',
-                                  updatedAt: new Date(),
                                 })
                               );
                               calculatePackageQuantity(setFieldTouched);
