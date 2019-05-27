@@ -35,7 +35,7 @@ import {
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
-import BatchFormContainer from 'modules/batch/form/containers';
+import { BatchInfoContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
 import { ItemCard } from 'components/Cards';
@@ -113,9 +113,9 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
         )}
       </SectionHeader>
       <div className={BatchSectionWrapperStyle}>
-        <Subscribe to={[BatchFormContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }) => {
-            const values = { ...initialValues, ...state };
+        <Subscribe to={[BatchInfoContainer]}>
+          {({ originalValues, state, setFieldValue }) => {
+            const values = { ...originalValues, ...state };
 
             const { orderItem: rawOrderItem } = values;
             const { orderItem, productProvider, product, order } = spreadOrderItem(rawOrderItem);
@@ -156,7 +156,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                           {...inputHandlers}
                           isNew={isNew}
                           required
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.batchNo} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_NO])}
                         />
@@ -179,7 +179,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.deliveredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE])}
                         />
@@ -202,7 +202,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.desiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE])}
                         />
@@ -225,7 +225,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.expiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_EXPIRY])}
                         />
@@ -248,7 +248,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.producedAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_PRODUCTION_DATE])}
                         />
@@ -387,7 +387,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                       name={name}
                       {...inputHandlers}
                       isNew={isNew}
-                      originalValue={initialValues[name]}
+                      originalValue={originalValues[name]}
                       label={<FormattedMessage {...messages.memo} />}
                       editable={hasPermission([BATCH_UPDATE, BATCH_SET_MEMO])}
                       vertical

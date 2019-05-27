@@ -15,6 +15,7 @@ import {
   MemoSectionWrapperStyle,
   LastModifiedWrapperStyle,
   UserIconStyle,
+  MemoStyle,
 } from './style';
 
 type OptionalProps = {
@@ -71,8 +72,10 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
 
     const hasMemo = !!adjustment[memoName];
 
-    const updatedByFirstName = adjustment.updatedBy ? adjustment.updatedBy.firstName : null;
-    const updatedByLastName = adjustment.updatedBy ? adjustment.updatedBy.lastName : null;
+    const { updatedAt, updatedBy } = adjustment;
+
+    const updatedByFirstName = updatedBy ? updatedBy.firstName : null;
+    const updatedByLastName = updatedBy ? updatedBy.lastName : null;
 
     return (
       <div className={AdjustmentWrapperStyle}>
@@ -120,43 +123,49 @@ class DefaultAdjustmentStyle extends React.Component<Props, State> {
           )}
         </div>
         <div className={MemoSectionWrapperStyle(isMemoOpen)}>
-          <div className={LastModifiedWrapperStyle}>
-            <Label>
-              <FormattedMessage id="components.form.lastModified" defaultMessage="LAST MODIFIED" />
-            </Label>
-            <GridRow gap="5px">
-              {adjustment.updatedAt && (
+          {updatedAt && (
+            <div className={LastModifiedWrapperStyle}>
+              <Label>
+                <FormattedMessage
+                  id="components.form.lastModified"
+                  defaultMessage="LAST MODIFIED"
+                />
+              </Label>
+              <GridRow gap="5px">
                 <Display>
-                  <FormattedDate value={adjustment.updatedAt} />
+                  <FormattedDate value={updatedAt} />
                 </Display>
+                {updatedByFirstName && updatedByLastName && (
+                  <div className={UserIconStyle}>
+                    <UserAvatar
+                      firstName={updatedByFirstName}
+                      lastName={updatedByLastName}
+                      width="20px"
+                      height="20px"
+                    />
+                  </div>
+                )}
+              </GridRow>
+            </div>
+          )}
+
+          <div className={MemoStyle}>
+            <FormField
+              name={`${targetName}.${index}.${memoName}`}
+              initValue={adjustment[memoName]}
+              setFieldValue={setFieldArrayValue}
+            >
+              {({ ...inputHandlers }) => (
+                <TextAreaInputFactory
+                  {...inputHandlers}
+                  isNew
+                  editable={editable}
+                  inputWidth="360px"
+                  inputHeight="150px"
+                />
               )}
-              {updatedByFirstName && updatedByLastName && (
-                <div className={UserIconStyle}>
-                  <UserAvatar
-                    firstName={updatedByFirstName}
-                    lastName={updatedByLastName}
-                    width="20px"
-                    height="20px"
-                  />
-                </div>
-              )}
-            </GridRow>
+            </FormField>
           </div>
-          <FormField
-            name={`${targetName}.${index}.${memoName}`}
-            initValue={adjustment[memoName]}
-            setFieldValue={setFieldArrayValue}
-          >
-            {({ ...inputHandlers }) => (
-              <TextAreaInputFactory
-                {...inputHandlers}
-                isNew
-                editable={editable}
-                inputWidth="360px"
-                inputHeight="150px"
-              />
-            )}
-          </FormField>
         </div>
       </div>
     );
