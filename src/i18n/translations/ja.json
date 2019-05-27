@@ -1236,6 +1236,7 @@
   "modules.Tasks.noTasks": "タスクが見つかりません",
   "modules.Tasks.newTask": "新規タスク",
   "modules.Tasks.useTemplate": "タスクテンプレートを使う",
+  "modules.Tasks.entity": "アイテム種類",
   "modules.taskTemplate.newTask": "新規タスク",
   "modules.TaskTemplates.template": "タスクテンプレート",
   "modules.TaskTemplates.name": "名前",
