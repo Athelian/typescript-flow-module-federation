@@ -111,11 +111,13 @@ const RelatedSection = ({ intl, id }: Props) => {
                           required
                           forceHoverStyle
                         />
-                        <Label align="left">
-                          {' ('}
-                          <FormattedNumber value={totalCount} />
-                          {')'}
-                        </Label>
+                        {!loading && (
+                          <Label align="left">
+                            {' ('}
+                            <FormattedNumber value={totalCount} />
+                            {')'}
+                          </Label>
+                        )}
                       </div>
                     </SectionNavBar>
                     <div className={SectionBodyStyle(totalCount)}>
