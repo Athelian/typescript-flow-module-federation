@@ -21,6 +21,7 @@ import {
   ProductSerialStyle,
   ProductProvidersWrapperStyle,
   ProductProviderNameStyle,
+  ProductImporterStyle,
   ProductExporterStyle,
   ProductSupplierStyle,
   TagsAndTaskWrapperStyle,
@@ -77,7 +78,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 
     const {
       archived,
-      product: { name, serial, tags, files },
+      product: { name, serial, tags, files, importer },
       unitPrice,
       todo,
     } = productProvider;
@@ -159,6 +160,10 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
             </div>
             <div className={ProductProvidersWrapperStyle}>
               <div className={ProductProviderNameStyle}>{productProvider.name}</div>
+              <div className={ProductImporterStyle}>
+                <Icon icon="IMPORTER" />
+                {importer && importer.name}
+              </div>
               <div className={ProductExporterStyle}>
                 <Icon icon="EXPORTER" />
                 {productProvider.exporter.name}
@@ -184,7 +189,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
 
 export default withForbiddenCard(OrderProductProviderCard, 'productProvider', {
   width: '195px',
-  height: '259px',
+  height: '284px',
   entityIcon: 'PRODUCT_PROVIDER',
   entityColor: 'PRODUCT_PROVIDER',
 });
