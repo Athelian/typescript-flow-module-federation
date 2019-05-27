@@ -82,6 +82,9 @@ export const productProviderCardFragment = gql`
         id
         name
         serial
+        importer {
+          ...partnerNameFragment
+        }
         tags {
           ...tagFragment
         }
