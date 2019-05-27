@@ -8,6 +8,7 @@ import { getByPathWithDefault, compose } from 'utils/fp';
 import { formatToDateLabel } from 'utils/date';
 import logger from 'utils/logger';
 import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
+import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 const formatTimeline = (timeline: Object) => {
   if (!timeline) return null;
@@ -943,22 +944,22 @@ export function getExportRows(info: Object): Array<Array<?string>> {
 export const setPackageBatchData = (batch: Object) => {
   return {
     ...batch,
-    packageGrossWeight: batch.packageGrossWeight || { value: 0, metric: 'kg' },
+    packageGrossWeight: batch.packageGrossWeight || { value: 0, metric: defaultWeightMetric },
     packageVolume: batch.packageVolume || {
-      metric: 'm³',
+      metric: defaultVolumeMetric,
       value: 0,
     },
     packageSize: batch.packageSize || {
       width: {
-        metric: 'cm',
+        metric: defaultDistanceMetric,
         value: 0,
       },
       height: {
-        metric: 'cm',
+        metric: defaultDistanceMetric,
         value: 0,
       },
       length: {
-        metric: 'cm',
+        metric: defaultDistanceMetric,
         value: 0,
       },
     },

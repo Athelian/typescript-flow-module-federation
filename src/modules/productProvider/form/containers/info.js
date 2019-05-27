@@ -4,6 +4,7 @@ import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 import { calculatePackageVolume, calculateUnitVolume } from 'utils/batch';
+import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 type Price = {
   amount: number,
@@ -57,25 +58,25 @@ export const initValues = {
   packageCapacity: 0,
   productionLeadTime: 0,
   unitVolume: {
-    metric: 'm³',
+    metric: defaultVolumeMetric,
     value: 0,
   },
   unitSize: {
     width: {
-      metric: 'cm',
+      metric: defaultDistanceMetric,
       value: 0,
     },
     height: {
-      metric: 'cm',
+      metric: defaultDistanceMetric,
       value: 0,
     },
     length: {
-      metric: 'cm',
+      metric: defaultDistanceMetric,
       value: 0,
     },
   },
   unitWeight: {
-    metric: 'kg',
+    metric: defaultWeightMetric,
     value: 0,
   },
   unitPrice: {
@@ -87,26 +88,26 @@ export const initValues = {
     amount: 0,
   },
   packageGrossWeight: {
-    metric: 'kg',
+    metric: defaultWeightMetric,
     value: 0,
   },
   packageVolume: {
-    metric: 'm³',
+    metric: defaultVolumeMetric,
     value: 0,
   },
   autoCalculatePackageVolume: true,
   autoCalculateUnitVolume: true,
   packageSize: {
     width: {
-      metric: 'cm',
+      metric: defaultDistanceMetric,
       value: 0,
     },
     height: {
-      metric: 'cm',
+      metric: defaultDistanceMetric,
       value: 0,
     },
     length: {
-      metric: 'cm',
+      metric: defaultDistanceMetric,
       value: 0,
     },
   },
