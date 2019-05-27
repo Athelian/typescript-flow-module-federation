@@ -312,52 +312,14 @@ class ProductFormModule extends React.Component<Props> {
                       />
 
                       <SectionTabs
-                        link="product_ordersSection"
-                        label={
-                          <FormattedMessage id="modules.Products.orders" defaultMessage="ORDERS" />
-                        }
-                        icon="ORDER"
-                      />
-
-                      <SectionTabs
-                        link="product_itemsSection"
-                        label={
-                          <FormattedMessage id="modules.Products.items" defaultMessage="ITEMS" />
-                        }
-                        icon="ORDER_ITEM"
-                      />
-
-                      <SectionTabs
-                        link="product_batchesSection"
+                        link="product_relatedSection"
                         label={
                           <FormattedMessage
-                            id="modules.Products.batches"
-                            defaultMessage="BATCHES"
+                            id="modules.Products.related"
+                            defaultMessage="RELATED"
                           />
                         }
-                        icon="BATCH"
-                      />
-
-                      <SectionTabs
-                        link="product_shipmentsSection"
-                        label={
-                          <FormattedMessage
-                            id="modules.Products.shipments"
-                            defaultMessage="SHIPMENTS"
-                          />
-                        }
-                        icon="SHIPMENT"
-                      />
-
-                      <SectionTabs
-                        link="product_containersSection"
-                        label={
-                          <FormattedMessage
-                            id="modules.Products.containers"
-                            defaultMessage="CONTAINERS"
-                          />
-                        }
-                        icon="CONTAINER"
+                        icon="RELATED"
                       />
                     </JumpToSection>
                     <BooleanValue>

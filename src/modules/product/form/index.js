@@ -9,15 +9,11 @@ import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { FormContainer } from 'modules/form';
 import { ProductTasksContainer } from './containers';
 import { ProductFormWrapperStyle } from './style';
+import RelatedSection from './components/RelatedSection';
 
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncProductSection = lazy(() => import('./components/ProductSection'));
 const AsyncProductProvidersSection = lazy(() => import('./components/ProductProvidersSection'));
-const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
-const AsyncItemsSection = lazy(() => import('./components/ItemsSection'));
-const AsyncBatchesSection = lazy(() => import('./components/BatchesSection'));
-const AsyncShipmentsSection = lazy(() => import('./components/ShipmentsSection'));
-const AsyncContainersSection = lazy(() => import('./components/ContainersSection'));
 
 type OptionalProps = {
   isNewOrClone: boolean,
@@ -95,15 +91,7 @@ class ProductForm extends React.Component<Props> {
             </Subscribe>
           </SectionWrapper>
 
-          {!isNewOrClone && (
-            <>
-              <AsyncOrdersSection id={product.id} />
-              <AsyncItemsSection id={product.id} />
-              <AsyncBatchesSection id={product.id} />
-              <AsyncShipmentsSection id={product.id} />
-              <AsyncContainersSection id={product.id} />
-            </>
-          )}
+          {!isNewOrClone && <RelatedSection id={product.id} />}
         </div>
       </Suspense>
     );
