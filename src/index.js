@@ -42,25 +42,25 @@ const renderApp = (Component, renderFn) => {
       <Profiler id="Application" onRender={logger.debug}>
         <div>
           {isAppInProduction && <FullStory org={process.env.ZENPORT_FULLSTORY_ID} />}
-          {isAppInProduction && (
-            <DeployNotifier
-              revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-              revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-            />
-          )}
           <ApolloHookProvider client={apolloClient}>
             <ApolloProvider client={apolloClient}>
               <AuthenticationProvider>
                 <LanguageProvider>
-                  <UIProvider>
-                    {isEnableStrictMode ? (
-                      <React.StrictMode>
+                  <>
+                    <DeployNotifier
+                      revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+                      revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+                    />
+                    <UIProvider>
+                      {isEnableStrictMode ? (
+                        <React.StrictMode>
+                          <Component />
+                        </React.StrictMode>
+                      ) : (
                         <Component />
-                      </React.StrictMode>
-                    ) : (
-                      <Component />
-                    )}
-                  </UIProvider>
+                      )}
+                    </UIProvider>
+                  </>
                 </LanguageProvider>
               </AuthenticationProvider>
             </ApolloProvider>
