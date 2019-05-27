@@ -47,10 +47,12 @@ const renderApp = (Component, renderFn) => {
               <AuthenticationProvider>
                 <LanguageProvider>
                   <>
-                    <DeployNotifier
-                      revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
-                      revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
-                    />
+                    {isAppInProduction && (
+                      <DeployNotifier
+                        revision={process.env.ZENPORT_FIREBASE_DEPLOY_REVISION || ''}
+                        revisionKey={process.env.ZENPORT_FIREBASE_REVISION_KEY || ''}
+                      />
+                    )}
                     <UIProvider>
                       {isEnableStrictMode ? (
                         <React.StrictMode>
