@@ -11,6 +11,7 @@ type OptionalProps = {
   columnGap: string,
   rowGap: string,
   padding: string,
+  loader: React.Node,
 };
 
 type Props = OptionalProps & {
@@ -24,6 +25,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  loader: <LoadingIcon key="loading" />,
   columnGap: '20px',
   rowGap: '30px',
   isReverse: false,
@@ -44,6 +46,7 @@ function GridView(props: Props) {
     columnGap,
     rowGap,
     children,
+    loader,
   } = props;
 
   if (isLoading) {
@@ -68,7 +71,7 @@ function GridView(props: Props) {
       })} InfiniteScroll`}
       loadMore={onLoadMore}
       hasMore={hasMore}
-      loader={<LoadingIcon key="loading" />}
+      loader={loader}
       isReverse={isReverse}
       threshold={500}
       useWindow={false}

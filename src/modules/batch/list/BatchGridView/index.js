@@ -42,7 +42,7 @@ const defaultProps = {
 };
 
 const BatchGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
+  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem, ...rest } = props;
 
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(BATCH_CREATE);
@@ -57,6 +57,7 @@ const BatchGridView = (props: Props) => {
       emptyMessage={
         <FormattedMessage id="modules.Batches.noBatchesFound" defaultMessage="No batches found" />
       }
+      {...rest}
     >
       {items.map(item => renderItem(item, allowCreate))}
     </GridView>
