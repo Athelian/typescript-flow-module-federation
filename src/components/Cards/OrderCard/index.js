@@ -17,6 +17,7 @@ import {
   OrderCardWrapperStyle,
   OrderInfoWrapperStyle,
   PONoWrapperStyle,
+  ImporterWrapperStyle,
   ExporterWrapperStyle,
   DividerStyle,
   ChartWrapperStyle,
@@ -50,6 +51,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
     batchCount,
     batchShippedCount,
     orderItemCount,
+    importer,
     exporter,
     inCharges,
     todo,
@@ -62,9 +64,13 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
           <div className={PONoWrapperStyle}>
             <Display align="left">{poNo}</Display>
           </div>
+          <div className={ImporterWrapperStyle}>
+            <Icon icon="IMPORTER" />
+            {importer && importer.name}
+          </div>
           <div className={ExporterWrapperStyle}>
             <Icon icon="EXPORTER" />
-            {exporter.name}
+            {exporter && exporter.name}
           </div>
           <FieldItem
             label={
@@ -143,7 +149,7 @@ OrderCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderCard, 'order', {
   width: '195px',
-  height: '255px',
+  height: '280px',
   entityIcon: 'ORDER',
   entityColor: 'ORDER',
 });

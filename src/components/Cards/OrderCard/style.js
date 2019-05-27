@@ -7,7 +7,7 @@ export const OrderCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 255px;
+  height: 280px;
 `;
 
 export const OrderInfoWrapperStyle: string = css`
@@ -20,6 +20,18 @@ export const OrderInfoWrapperStyle: string = css`
 export const PONoWrapperStyle: string = css`
   width: 100%;
   padding: 0 15px 0 0px;
+`;
+
+export const ImporterWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  & > svg {
+    margin: 0 5px 0 0;
+    color: ${colors.GRAY_DARK};
+  }
 `;
 
 export const ExporterWrapperStyle: string = css`
