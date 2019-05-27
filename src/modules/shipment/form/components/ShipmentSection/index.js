@@ -75,6 +75,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectImporter from '../SelectImporter';
 import SelectForwarders from '../SelectForwarders';
+import ShipmentSummary from './ShipmentSummary';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
@@ -689,6 +690,8 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
               </div>
 
               <div className={DividerStyle} />
+
+              <ShipmentSummary />
             </div>
           );
         }}
