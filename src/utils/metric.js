@@ -7,6 +7,12 @@ export const volumeMetrics = ['cm³', 'm³'];
 export const weightMetrics = ['g', 'kg', 'ton'];
 export const durationMetrics = ['days', 'weeks', 'months'];
 
+export const defaultDistanceMetric = distanceMetrics[0]; // cm
+export const defaultAreaMetric = areaMetrics[1]; // m²
+export const defaultVolumeMetric = volumeMetrics[1]; // m³
+export const defaultWeightMetric = weightMetrics[1]; // kg
+export const defaultDurationMetric = durationMetrics[0]; // days
+
 export const convertDistance = (value: number, metric: 'cm' | 'm', newMetric: 'cm' | 'm') => {
   if (metric === 'm' && newMetric === 'cm') return times(value, 100);
   if (metric === 'cm' && newMetric === 'm') return divide(value, 100);

@@ -9,6 +9,11 @@ import {
   volumeMetrics,
   weightMetrics,
   durationMetrics,
+  defaultDistanceMetric,
+  defaultAreaMetric,
+  defaultVolumeMetric,
+  defaultWeightMetric,
+  defaultDurationMetric,
 } from 'utils/metric';
 
 export type MetricEnumType = 'distance' | 'area' | 'volume' | 'weight' | 'duration';
@@ -27,6 +32,23 @@ export const getMetrics = (metricType?: MetricEnumType): Array<string> => {
       return durationMetrics;
     default:
       return [];
+  }
+};
+
+export const getDefaultMetric = (metricType?: MetricEnumType): string => {
+  switch (metricType) {
+    case 'distance':
+      return defaultDistanceMetric;
+    case 'area':
+      return defaultAreaMetric;
+    case 'volume':
+      return defaultVolumeMetric;
+    case 'weight':
+      return defaultWeightMetric;
+    case 'duration':
+      return defaultDurationMetric;
+    default:
+      return '';
   }
 };
 

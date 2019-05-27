@@ -3,6 +3,7 @@ import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName, cleanUpData } from 'utils/data';
 import { isEquals } from 'utils/fp';
+import { defaultAreaMetric } from 'utils/metric';
 
 type Metric = {
   value: number,
@@ -31,7 +32,7 @@ const initValues = {
   country: null,
   surface: {
     value: 0,
-    metric: 'm²',
+    metric: defaultAreaMetric,
   },
   customFields: {
     mask: null,

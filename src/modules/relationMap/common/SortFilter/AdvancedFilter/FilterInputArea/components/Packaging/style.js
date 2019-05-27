@@ -25,7 +25,7 @@ export const MetricInputsBodyWrapperStyle: string = css`
 
 export const MetricInputsWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 120px 150px 150px 1fr;
+  grid-template-columns: 120px 150px 150px 60px;
   grid-gap: 20px;
   width: 100%;
   align-items: center;

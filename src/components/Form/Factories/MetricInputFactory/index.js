@@ -14,8 +14,9 @@ import type {
   InputWrapperProps,
   InputProps as StandardInputProps,
 } from 'components/Form/Factories/type';
+import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
 import { CalculatorButton, ExtraToggleButton } from 'components/Form/Factories/components';
-import { getMetrics, getConvert, type MetricEnumType } from './helpers';
+import { getMetrics, getDefaultMetric, getConvert, type MetricEnumType } from './helpers';
 
 type InputProps = StandardInputProps & {
   customMetrics?: Array<string>,
@@ -137,7 +138,14 @@ const MetricInputFactory = ({
     placeholder,
     onChange,
     onBlur,
-    onFocus,
+    onFocus: () => {
+      if (onFocus) {
+        onFocus();
+      }
+      if (onChange && !value) {
+        onChange(convertValueToFormFieldFormat({ metric: getDefaultMetric(metricType), value: 0 }));
+      }
+    },
     align: inputAlign,
     readOnly: !editable,
     metrics: customMetrics || getMetrics(metricType),
