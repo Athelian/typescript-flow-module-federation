@@ -1189,7 +1189,7 @@
   "modules.Tasks.chooseUser": "このタスクの担当を選択してください",
   "modules.Tasks.completedAt": "完了日",
   "modules.Tasks.approval": "承認",
-  "modules.Tasks.assignedToApprove": "商品者",
+  "modules.Tasks.assignedToApprove": "承認者",
   "modules.Tasks.approvalDisabled": "ここに承認の有無が表示されます",
   "modules.Tasks.chooseUserForApproval": "承認をするスタッフを選択してください",
   "modules.Tasks.approvedDate": "承認日",
