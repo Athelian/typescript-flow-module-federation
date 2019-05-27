@@ -1,8 +1,8 @@
 // @flow
 import { Container } from 'unstated';
-import { set, unset, cloneDeep } from 'lodash';
+import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
-import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
+import { cleanFalsyAndTypeName } from 'utils/data';
 import { calculatePackageQuantity, calculatePackageVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
@@ -128,11 +128,13 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     });
   };
 
-  removeArrayItem = (path: string) => {
+  removeBatchQuantityRevisionByIndex = (index: number) => {
     this.setState(prevState => {
-      const cloneState = cloneDeep(prevState);
-      unset(cloneState, path);
-      return removeNulls(cloneState);
+      const batchQuantityRevisions = cloneDeep(prevState.batchQuantityRevisions);
+      batchQuantityRevisions.splice(index, 1);
+      return {
+        batchQuantityRevisions,
+      };
     });
   };
 

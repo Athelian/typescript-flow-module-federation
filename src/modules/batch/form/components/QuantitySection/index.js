@@ -9,7 +9,7 @@ import {
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import BatchFormContainer from 'modules/batch/form/containers';
+import { BatchInfoContainer } from 'modules/batch/form/containers';
 import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { injectUid } from 'utils/id';
@@ -48,12 +48,12 @@ const QuantitySection = ({ isNew }: Props) => {
       <div className={QuantitySectionWrapperStyle}>
         <Subscribe to={[FormContainer]}>
           {({ setFieldTouched }) => (
-            <Subscribe to={[BatchFormContainer]}>
+            <Subscribe to={[BatchInfoContainer]}>
               {({
                 originalValues,
                 state,
                 setFieldArrayValue,
-                removeArrayItem,
+                removeBatchQuantityRevisionByIndex,
                 calculatePackageQuantity,
               }) => {
                 const values = { ...originalValues, ...state };
@@ -101,8 +101,8 @@ const QuantitySection = ({ isNew }: Props) => {
                             index={index}
                             adjustment={item}
                             setFieldArrayValue={setFieldArrayValue}
-                            removeArrayItem={targetName => {
-                              removeArrayItem(targetName);
+                            removeArrayItem={() => {
+                              removeBatchQuantityRevisionByIndex(index);
                               calculatePackageQuantity(setFieldTouched);
                             }}
                             enumType="BatchQuantityRevisionType"
