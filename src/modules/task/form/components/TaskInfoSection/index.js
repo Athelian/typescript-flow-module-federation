@@ -1,15 +1,22 @@
 // @flow
 import React from 'react';
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { ObjectValue } from 'react-values';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
+import { spreadOrderItem } from 'utils/item';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import {
   ShipmentCard,
   OrderCard,
+  ItemCard,
   BatchCard,
   ProductCard,
   OrderProductProviderCard,
@@ -883,6 +890,51 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                         />
                       </GridColumn>
                     )}
+
+                  {!hideParentInfo &&
+                    getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
+                    (() => {
+                      const { orderItem, productProvider, product, order } = spreadOrderItem(
+                        task.entity
+                      );
+
+                      const viewable = {
+                        price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                      };
+
+                      const navigable = {
+                        order: hasPermission(ORDER_FORM),
+                        product: hasPermission(PRODUCT_FORM),
+                      };
+
+                      const config = {
+                        hideOrder: false,
+                      };
+                      return (
+                        <GridColumn>
+                          <FieldItem
+                            label={
+                              <Label>
+                                <FormattedMessage id="modules.Tasks.item" defaultMessage="ITEM" />
+                              </Label>
+                            }
+                            vertical
+                            input={
+                              <ItemCard
+                                orderItem={orderItem}
+                                productProvider={productProvider}
+                                product={product}
+                                order={order}
+                                viewable={viewable}
+                                navigable={navigable}
+                                config={config}
+                                onClick={() => navigate(`/order-item/${encodeId(orderItem.id)}`)}
+                              />
+                            }
+                          />
+                        </GridColumn>
+                      );
+                    })()}
 
                   {!hideParentInfo &&
                     getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (

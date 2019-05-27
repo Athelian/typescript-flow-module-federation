@@ -17,7 +17,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SyncButton } from 'components/Buttons';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
-import BatchFormContainer from 'modules/batch/form/containers';
+import { BatchInfoContainer } from 'modules/batch/form/containers';
 import { FormField, FormContainer } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import {
@@ -63,7 +63,7 @@ const PackagingSection = ({ isNew }: Props) => {
             {({ value: syncDialogIsOpen, set: dialogToggle }) => (
               <>
                 <SyncButton onClick={() => dialogToggle(true)} />
-                <Subscribe to={[BatchFormContainer, FormContainer]}>
+                <Subscribe to={[BatchInfoContainer, FormContainer]}>
                   {({ state, syncProductProvider }, { setFieldTouched }) => (
                     <>
                       <ConfirmDialog
@@ -100,7 +100,7 @@ const PackagingSection = ({ isNew }: Props) => {
         )}
       </SectionHeader>
       <div className={PackagingSectionWrapperStyle}>
-        <Subscribe to={[BatchFormContainer]}>
+        <Subscribe to={[BatchInfoContainer]}>
           {({
             originalValues,
             state,

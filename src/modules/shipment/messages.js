@@ -34,6 +34,10 @@ export default defineMessages({
     id: 'modules.Shipments.invoiceNo',
     defaultMessage: 'INVOICE NO.',
   },
+  contractNo: {
+    id: 'modules.Shipments.contractNo',
+    defaultMessage: 'CONTRACT NO.',
+  },
   incoterms: {
     id: 'modules.Shipments.incoterms',
     defaultMessage: 'INCOTERMS',

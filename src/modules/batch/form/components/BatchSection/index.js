@@ -6,6 +6,7 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
+import { spreadOrderItem } from 'utils/item';
 import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
@@ -34,7 +35,7 @@ import {
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
-import BatchFormContainer from 'modules/batch/form/containers';
+import { BatchInfoContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
 import { ItemCard } from 'components/Cards';
@@ -112,70 +113,12 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
         )}
       </SectionHeader>
       <div className={BatchSectionWrapperStyle}>
-        <Subscribe to={[BatchFormContainer]}>
-          {({ originalValues: initialValues, state, setFieldValue }) => {
-            const values = { ...initialValues, ...state };
+        <Subscribe to={[BatchInfoContainer]}>
+          {({ originalValues, state, setFieldValue }) => {
+            const values = { ...originalValues, ...state };
 
-            const { orderItem } = values;
-            let compiledOrderItem = null;
-            let compiledProductProvider = null;
-            let compiledProduct = null;
-            let compiledOrder = null;
-
-            if (orderItem) {
-              const {
-                id,
-                archived,
-                no,
-                quantity,
-                price,
-                tags,
-                totalBatched,
-                totalShipped,
-                batchCount,
-                batchShippedCount,
-                productProvider,
-                order,
-                todo,
-              } = orderItem;
-              const { name: productProviderName, product } = productProvider;
-              compiledProductProvider = { name: productProviderName };
-
-              const {
-                id: productId,
-                name: productName,
-                serial,
-                tags: productTags,
-                files,
-              } = product;
-              compiledProduct = {
-                id: productId,
-                name: productName,
-                serial,
-                tags: productTags,
-                files,
-              };
-
-              compiledOrderItem = {
-                id,
-                archived,
-                no,
-                quantity,
-                price,
-                tags,
-                totalBatched,
-                totalShipped,
-                batchCount,
-                batchShippedCount,
-                todo,
-              };
-
-              const { id: orderId, poNo } = order;
-              compiledOrder = {
-                id: orderId,
-                poNo,
-              };
-            }
+            const { orderItem: rawOrderItem } = values;
+            const { orderItem, productProvider, product, order } = spreadOrderItem(rawOrderItem);
 
             const editable = {
               no: false,
@@ -213,7 +156,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                           {...inputHandlers}
                           isNew={isNew}
                           required
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.batchNo} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_NO])}
                         />
@@ -236,7 +179,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.deliveredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE])}
                         />
@@ -259,7 +202,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.desiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE])}
                         />
@@ -282,7 +225,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.expiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_EXPIRY])}
                         />
@@ -305,7 +248,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
                           isNew={isNew}
-                          originalValue={initialValues[name]}
+                          originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.producedAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_PRODUCTION_DATE])}
                         />
@@ -340,10 +283,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                               />
                             ) : (
                               <ItemCard
-                                orderItem={compiledOrderItem}
-                                productProvider={compiledProductProvider}
-                                product={compiledProduct}
-                                order={compiledOrder}
+                                orderItem={orderItem}
+                                productProvider={productProvider}
+                                product={product}
+                                order={order}
                                 editable={editable}
                                 viewable={viewable}
                                 navigable={navigable}
@@ -394,10 +337,10 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                       </BooleanValue>
                     ) : (
                       <ItemCard
-                        orderItem={compiledOrderItem}
-                        productProvider={compiledProductProvider}
-                        product={compiledProduct}
-                        order={compiledOrder}
+                        orderItem={orderItem}
+                        productProvider={productProvider}
+                        product={product}
+                        order={order}
                         editable={editable}
                         viewable={viewable}
                         navigable={navigable}
@@ -444,7 +387,7 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                       name={name}
                       {...inputHandlers}
                       isNew={isNew}
-                      originalValue={initialValues[name]}
+                      originalValue={originalValues[name]}
                       label={<FormattedMessage {...messages.memo} />}
                       editable={hasPermission([BATCH_UPDATE, BATCH_SET_MEMO])}
                       vertical

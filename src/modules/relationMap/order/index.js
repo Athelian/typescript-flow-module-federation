@@ -387,6 +387,14 @@ const Order = ({ intl }: Props) => {
                 sort={orderFilterAndSort.sort}
                 sortInputs={[
                   {
+                    title: intl.formatMessage(messages.updatedAtSort),
+                    value: 'updatedAt',
+                  },
+                  {
+                    title: intl.formatMessage(messages.createdAtSort),
+                    value: 'createdAt',
+                  },
+                  {
                     title: intl.formatMessage(messages.poNoSort),
                     value: 'poNo',
                   },
@@ -413,14 +421,6 @@ const Order = ({ intl }: Props) => {
                   {
                     title: intl.formatMessage(messages.deliveryPlaceSort),
                     value: 'deliveryPlace',
-                  },
-                  {
-                    title: intl.formatMessage(messages.updatedAtSort),
-                    value: 'updatedAt',
-                  },
-                  {
-                    title: intl.formatMessage(messages.createdAtSort),
-                    value: 'createdAt',
                   },
                 ]}
                 filter={orderFilterAndSort.filter}

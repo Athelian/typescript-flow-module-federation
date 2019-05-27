@@ -4,15 +4,18 @@ import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
+import { spreadOrderItem } from 'utils/item';
+
 import OrderItemsList from 'providers/OrderItemsList';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import OrderGridView from 'modules/order/list/OrderGridView';
 import { ItemCard } from 'components/Cards';
-import usePermission from 'hooks/usePermission';
+
+import OrderGridView from 'modules/order/list/OrderGridView';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 
 type Props = {
   selected?: ?{
@@ -70,52 +73,7 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
                     onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'orderItems')}
                     items={getByPathWithDefault([], 'orderItems.nodes', data)}
                     renderItem={item => {
-                      const {
-                        id,
-                        archived,
-                        no,
-                        quantity,
-                        todo,
-                        price,
-                        tags,
-                        totalBatched,
-                        totalShipped,
-                        batchCount,
-                        batchShippedCount,
-                        productProvider,
-                        order,
-                      } = item;
-                      const compiledOrderItem = {
-                        id,
-                        archived,
-                        no,
-                        todo,
-                        quantity,
-                        price,
-                        tags,
-                        totalBatched,
-                        totalShipped,
-                        batchCount,
-                        batchShippedCount,
-                      };
-
-                      const { name: productProviderName, product } = productProvider;
-                      const compiledProductProvider = { name: productProviderName };
-
-                      const { id: productId, name, serial, tags: productTags, files } = product;
-                      const compiledProduct = {
-                        id: productId,
-                        name,
-                        serial,
-                        tags: productTags,
-                        files,
-                      };
-
-                      const { id: orderId, poNo } = order;
-                      const compiledOrder = {
-                        id: orderId,
-                        poNo,
-                      };
+                      const { orderItem, productProvider, product, order } = spreadOrderItem(item);
 
                       const viewable = {
                         price: hasPermission(ORDER_ITEMS_GET_PRICE),
@@ -127,16 +85,16 @@ const SelectOrderItem = ({ selected, onCancel, onSelect }: Props) => {
 
                       return (
                         <ItemCard
-                          orderItem={compiledOrderItem}
-                          productProvider={compiledProductProvider}
-                          product={compiledProduct}
-                          order={compiledOrder}
+                          key={orderItem.id}
+                          orderItem={orderItem}
+                          productProvider={productProvider}
+                          product={product}
+                          order={order}
                           viewable={viewable}
                           config={config}
                           selectable
                           selected={value && item.id === value.id}
                           onSelect={() => set(item)}
-                          key={compiledOrderItem.id}
                         />
                       );
                     }}

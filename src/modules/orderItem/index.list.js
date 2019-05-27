@@ -18,8 +18,14 @@ function OrderItemModule(props: Props) {
   const { intl } = props;
 
   const sortFields = [
-    { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.no), value: 'no' },
+    { title: intl.formatMessage(messages.currency), value: 'currency' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
+    { title: intl.formatMessage(messages.productProviderName), value: 'productProviderName' },
+    { title: intl.formatMessage(messages.supplierName), value: 'supplierName' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     {

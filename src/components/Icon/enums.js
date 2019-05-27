@@ -89,6 +89,7 @@ import {
   faRedo as RELOAD,
   faClock as CLOCK,
   faThList as TH_LIST,
+  faSitemap as RELATED,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -192,6 +193,7 @@ export default {
   RELATION_MAP,
   CONNECT,
   SPLIT,
+  RELATED,
 
   BRANCH,
   ACTIVE,

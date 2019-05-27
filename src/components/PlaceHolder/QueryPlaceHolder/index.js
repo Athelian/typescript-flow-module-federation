@@ -8,6 +8,7 @@ import logger from 'utils/logger';
 
 type OptionalProps = {
   entityId: string,
+  fetchPolicy: 'cache-first' | 'network-only' | 'cache-only' | 'no-cache' | 'standby',
   onCompleted: Function,
   query: DocumentNode,
 };
@@ -21,6 +22,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   entityId: '',
   onCompleted: logger.warn,
+  fetchPolicy: 'network-only',
   query: {},
 };
 
@@ -30,6 +32,7 @@ export default function QueryPlaceHolder({
   entityId,
   query,
   onCompleted,
+  fetchPolicy,
   children,
 }: Props) {
   const ref = React.createRef();
@@ -47,7 +50,7 @@ export default function QueryPlaceHolder({
               variables={{
                 id: entityId,
               }}
-              fetchPolicy="network-only"
+              fetchPolicy={fetchPolicy}
               onCompleted={onCompleted}
             >
               {({ loading, data, error }) => {

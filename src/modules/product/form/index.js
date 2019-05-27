@@ -2,18 +2,18 @@
 import React, { lazy, Suspense } from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
+import { isEquals, isDataType } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
-import { isEquals, isDataType } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import { ProductTasksContainer } from './containers';
 import { ProductFormWrapperStyle } from './style';
+import RelatedSection from './components/RelatedSection';
 
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 const AsyncProductSection = lazy(() => import('./components/ProductSection'));
 const AsyncProductProvidersSection = lazy(() => import('./components/ProductProvidersSection'));
-const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 
 type OptionalProps = {
   isNewOrClone: boolean,
@@ -91,7 +91,7 @@ class ProductForm extends React.Component<Props> {
             </Subscribe>
           </SectionWrapper>
 
-          <AsyncOrdersSection id={product.id} />
+          {!isNewOrClone && <RelatedSection id={product.id} />}
         </div>
       </Suspense>
     );

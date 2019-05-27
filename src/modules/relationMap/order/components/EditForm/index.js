@@ -11,6 +11,8 @@ import ActionDispatch from 'modules/relationMap/order/provider';
 import { actionCreators } from 'modules/relationMap/order/store';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
+import logger from 'utils/logger';
+import { getByPath } from 'utils/fp';
 
 type OptionalProps = {
   extra?: any,
@@ -65,6 +67,26 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
           onSuccessCallback={data => {
             if (data.shipmentCreate.id) {
               actions.addNew('SHIPMENT', data.shipmentCreate.id);
+              const allOrderIds = [];
+              const { batches = [] } = data.shipmentCreate;
+              batches.forEach(batch => {
+                const orderId = getByPath('orderItem.order.id', batch);
+                if (orderId && !allOrderIds.includes(orderId)) {
+                  allOrderIds.push(orderId);
+                }
+              });
+              Promise.all(
+                allOrderIds.map(orderId =>
+                  client.query({
+                    query: orderDetailQuery,
+                    variables: {
+                      id: orderId,
+                    },
+                  })
+                )
+              )
+                .then(logger.warn)
+                .catch(logger.error);
             }
             onClose();
           }}
@@ -74,24 +96,7 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
       break;
     }
     case 'ORDER': {
-      form = (
-        <OrderForm
-          orderId={encodeId(id)}
-          isSlideView
-          onSuccessCallback={({ orderUpdate }) => {
-            const queryOption = {
-              query: orderDetailQuery,
-              variables: {
-                id,
-              },
-              data: {
-                order: orderUpdate,
-              },
-            };
-            client.writeQuery(queryOption);
-          }}
-        />
-      );
+      form = <OrderForm orderId={encodeId(id)} isSlideView />;
       break;
     }
     case 'ORDER_ITEM': {

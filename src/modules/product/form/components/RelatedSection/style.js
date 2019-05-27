@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, fontSizes, borderRadiuses, colors, scrollbars } from 'styles/common';
+import { presets, borderRadiuses, colors, scrollbars, layout } from 'styles/common';
 
 export const SectionWrapperStyle: string = css`
   position: relative;
@@ -9,32 +9,22 @@ export const SectionWrapperStyle: string = css`
   height: min-content;
 `;
 
-export const SectionBodyStyle: string = css`
+export const SectionBodyStyle = (totalCount: number): string => css`
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: ${totalCount > 0 ? 'flex-start' : 'center'};
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  max-height: 615px;
-  min-height: 225px;
+  height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
 `;
 
-export const EmptyMessageStyle: string = css`
-  ${fontSizes.MAIN};
-  font-weight: bold;
-  color: ${colors.BLACK};
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  display: flex;
+export const SelectRelatedTypeWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
   align-items: center;
-  justify-content: center;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  padding: 100px 0;
 `;

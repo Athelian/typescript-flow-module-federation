@@ -26,6 +26,7 @@ import {
   SHIPMENT_SET_BOOKED,
   SHIPMENT_SET_BOOKING_DATE,
   SHIPMENT_SET_INVOICE_NO,
+  SHIPMENT_SET_CONTRACT_NO,
   SHIPMENT_SET_TRANSPORT_TYPE,
   SHIPMENT_SET_LOAD_TYPE,
   SHIPMENT_SET_INCOTERM,
@@ -74,6 +75,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectImporter from '../SelectImporter';
 import SelectForwarders from '../SelectForwarders';
+import ShipmentSummary from './ShipmentSummary';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
@@ -292,6 +294,24 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.invoiceNo} />}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="contractNo"
+                    initValue={values.contractNo}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        {...inputHandlers}
+                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_CONTRACT_NO])}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.contractNo} />}
                       />
                     )}
                   </FormField>
@@ -671,6 +691,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
 
               <div className={DividerStyle} />
 
+              <ShipmentSummary />
             </div>
           );
         }}

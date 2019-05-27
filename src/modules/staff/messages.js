@@ -16,11 +16,15 @@ export default defineMessages({
   },
   firstName: {
     id: 'modules.Users.firstName',
-    defaultMessage: 'FIRST NAME',
+    defaultMessage: 'First Name',
   },
   lastName: {
     id: 'modules.Users.lastName',
-    defaultMessage: 'LAST NAME',
+    defaultMessage: 'Last Name',
+  },
+  fullName: {
+    id: 'modules.Users.fullName',
+    defaultMessage: 'Full Name',
   },
   language: {
     id: 'modules.Users.language',
@@ -32,11 +36,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Users.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Users.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   required: {
     id: 'modules.Users.validation.required',
@@ -81,5 +85,25 @@ export default defineMessages({
   noUsers: {
     id: 'modules.Users.noUsers',
     defaultMessage: 'No staff found.',
+  },
+  updatedAtSort: {
+    id: 'modules.Users.list.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAtSort: {
+    id: 'modules.Users.list.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
+  firstNameSort: {
+    id: 'modules.Users.list.sort.firstName',
+    defaultMessage: 'First Name',
+  },
+  lastNameSort: {
+    id: 'modules.Users.list.sort.lastName',
+    defaultMessage: 'Last Name',
+  },
+  fullNameSort: {
+    id: 'modules.Users.list.sort.fullName',
+    defaultMessage: 'Full Name',
   },
 });

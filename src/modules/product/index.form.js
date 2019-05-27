@@ -312,11 +312,14 @@ class ProductFormModule extends React.Component<Props> {
                       />
 
                       <SectionTabs
-                        link="product_ordersSection"
+                        link="product_relatedSection"
                         label={
-                          <FormattedMessage id="modules.Products.orders" defaultMessage="ORDERS" />
+                          <FormattedMessage
+                            id="modules.Products.related"
+                            defaultMessage="RELATED"
+                          />
                         }
-                        icon="ORDER"
+                        icon="RELATED"
                       />
                     </JumpToSection>
                     <BooleanValue>

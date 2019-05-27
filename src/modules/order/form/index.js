@@ -122,7 +122,7 @@ export default class OrderForm extends React.Component<Props> {
               </SectionWrapper>
 
               <SectionWrapper id="order_taskSection">
-                <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
+                <Subscribe to={[OrderTasksContainer]}>
                   {({ initDetailValues }) => (
                     <OrderTasksSection
                       initValues={initDetailValues}

@@ -1,1 +1,619 @@
-{"__schema":{"types":[{"kind":"UNION","name":"BatchesPayload","possibleTypes":[{"name":"Batches"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"CommentPayload","possibleTypes":[{"name":"Comment"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"EmptyPayload","possibleTypes":[{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"FieldDefinitionsPayload","possibleTypes":[{"name":"FieldDefinitions"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"TokenPayload","possibleTypes":[{"name":"Token"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"UserRolesPayload","possibleTypes":[{"name":"UserRoles"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"BatchAdjustmentPayload","possibleTypes":[{"name":"BatchAdjustment"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"BatchAssignmentPayload","possibleTypes":[{"name":"BatchAssignment"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"BatchPayload","possibleTypes":[{"name":"Batch"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"BatchQuantityRevisionPayload","possibleTypes":[{"name":"BatchQuantityRevision"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ContainerGroupPayload","possibleTypes":[{"name":"ContainerGroup"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ContainerPayload","possibleTypes":[{"name":"Container"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"INTERFACE","name":"Customizable","possibleTypes":[{"name":"Batch"},{"name":"Order"},{"name":"OrderItem"},{"name":"Product"},{"name":"ProductProvider"},{"name":"Shipment"},{"name":"Warehouse"}]},{"kind":"INTERFACE","name":"Documented","possibleTypes":[{"name":"Order"},{"name":"OrderItem"},{"name":"Product"},{"name":"ProductProvider"},{"name":"Shipment"}]},{"kind":"UNION","name":"EntityPayload","possibleTypes":[{"name":"Product"},{"name":"ProductProvider"},{"name":"Order"},{"name":"OrderItem"},{"name":"Batch"},{"name":"BatchAssignment"},{"name":"BatchAdjustment"},{"name":"Shipment"},{"name":"Voyage"},{"name":"Container"},{"name":"ContainerGroup"},{"name":"TimelineDate"},{"name":"TimelineDateRevision"},{"name":"Warehouse"},{"name":"Tag"},{"name":"User"},{"name":"Group"},{"name":"Partnership"},{"name":"File"},{"name":"Task"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"Entry","possibleTypes":[{"name":"Event"},{"name":"Comment"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ExportExtensionPayload","possibleTypes":[{"name":"ExportExtension"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ExportTemplatePayload","possibleTypes":[{"name":"ExportTemplate"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"FieldDefinitionPayload","possibleTypes":[{"name":"FieldDefinition"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"FieldValuePayload","possibleTypes":[{"name":"FieldValue"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"FilePayload","possibleTypes":[{"name":"File"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"GroupPayload","possibleTypes":[{"name":"Group"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"IntegrationConfigurationPayload","possibleTypes":[{"name":"IntegrationConfiguration"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"IntegrationLinkPayload","possibleTypes":[{"name":"IntegrationLink"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"IntegrationPayload","possibleTypes":[{"name":"Integration"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"MaskEditPayload","possibleTypes":[{"name":"MaskEdit"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"MaskPayload","possibleTypes":[{"name":"Mask"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"INTERFACE","name":"Memorizable","possibleTypes":[{"name":"Batch"},{"name":"BatchAdjustment"},{"name":"BatchAssignment"},{"name":"BatchQuantityRevision"},{"name":"Container"},{"name":"File"},{"name":"Mask"},{"name":"MaskEdit"},{"name":"Order"},{"name":"OrderItem"},{"name":"Product"},{"name":"ProductProvider"},{"name":"Role"},{"name":"Shipment"},{"name":"Task"},{"name":"TimelineDate"},{"name":"TimelineDateRevision"},{"name":"User"}]},{"kind":"INTERFACE","name":"Model","possibleTypes":[{"name":"Batch"},{"name":"BatchAdjustment"},{"name":"BatchAssignment"},{"name":"BatchQuantityRevision"},{"name":"Comment"},{"name":"Container"},{"name":"ContainerGroup"},{"name":"Event"},{"name":"ExportTemplate"},{"name":"FieldDefinition"},{"name":"File"},{"name":"Group"},{"name":"Integration"},{"name":"IntegrationConfiguration"},{"name":"IntegrationLink"},{"name":"Mask"},{"name":"MaskEdit"},{"name":"Order"},{"name":"OrderItem"},{"name":"Partner"},{"name":"Partnership"},{"name":"Product"},{"name":"ProductProvider"},{"name":"Role"},{"name":"Shipment"},{"name":"Tag"},{"name":"Task"},{"name":"TaskTemplate"},{"name":"TimelineDate"},{"name":"TimelineDateRevision"},{"name":"User"},{"name":"Voyage"},{"name":"Warehouse"}]},{"kind":"UNION","name":"NotificationPayload","possibleTypes":[{"name":"Notification"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"OrderItemPayload","possibleTypes":[{"name":"OrderItem"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"OrderPayload","possibleTypes":[{"name":"Order"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"INTERFACE","name":"Owned","possibleTypes":[{"name":"Batch"},{"name":"BatchAdjustment"},{"name":"BatchAssignment"},{"name":"BatchQuantityRevision"},{"name":"Comment"},{"name":"Container"},{"name":"ContainerGroup"},{"name":"Event"},{"name":"FieldDefinition"},{"name":"File"},{"name":"Integration"},{"name":"IntegrationConfiguration"},{"name":"IntegrationLink"},{"name":"Mask"},{"name":"MaskEdit"},{"name":"Order"},{"name":"OrderItem"},{"name":"Product"},{"name":"ProductProvider"},{"name":"Shipment"},{"name":"Tag"},{"name":"Task"},{"name":"TaskTemplate"},{"name":"TimelineDate"},{"name":"TimelineDateRevision"},{"name":"Voyage"},{"name":"Warehouse"}]},{"kind":"INTERFACE","name":"Package","possibleTypes":[{"name":"Batch"},{"name":"ProductProvider"}]},{"kind":"UNION","name":"PartnerPayload","possibleTypes":[{"name":"Partner"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"PartnershipPayload","possibleTypes":[{"name":"Partnership"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ProductPayload","possibleTypes":[{"name":"Product"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ProductProviderPayload","possibleTypes":[{"name":"ProductProvider"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"RolePayload","possibleTypes":[{"name":"Role"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"ShipmentPayload","possibleTypes":[{"name":"Shipment"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"INTERFACE","name":"Sortable","possibleTypes":[{"name":"BatchAdjustment"},{"name":"BatchAssignment"},{"name":"BatchQuantityRevision"},{"name":"Container"},{"name":"ContainerGroup"},{"name":"FieldDefinition"},{"name":"OrderItem"},{"name":"ProductProvider"},{"name":"Task"},{"name":"TimelineDateRevision"},{"name":"Voyage"}]},{"kind":"INTERFACE","name":"Supervised","possibleTypes":[{"name":"Order"},{"name":"Shipment"},{"name":"Warehouse"}]},{"kind":"UNION","name":"TagPayload","possibleTypes":[{"name":"Tag"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"INTERFACE","name":"Tagged","possibleTypes":[{"name":"Batch"},{"name":"Container"},{"name":"Order"},{"name":"OrderItem"},{"name":"Product"},{"name":"Shipment"},{"name":"Task"},{"name":"User"}]},{"kind":"UNION","name":"TaskPayload","possibleTypes":[{"name":"Task"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"TaskTemplatePayload","possibleTypes":[{"name":"TaskTemplate"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"TimelineDatePayload","possibleTypes":[{"name":"TimelineDate"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"TimelineDateRevisionPayload","possibleTypes":[{"name":"TimelineDateRevision"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"UserPayload","possibleTypes":[{"name":"User"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"Value","possibleTypes":[{"name":"StringValue"},{"name":"IntValue"},{"name":"FloatValue"},{"name":"BooleanValue"},{"name":"DateTimeValue"},{"name":"IntervalValue"},{"name":"Duration"},{"name":"MetricValueValue"},{"name":"SizeValue"},{"name":"EntityValue"},{"name":"Values"}]},{"kind":"UNION","name":"VoyagePayload","possibleTypes":[{"name":"Voyage"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]},{"kind":"UNION","name":"WarehousePayload","possibleTypes":[{"name":"Warehouse"},{"name":"BadRequest"},{"name":"Forbidden"},{"name":"NotFound"}]}]}}
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "BatchesPayload",
+        "possibleTypes": [
+          { "name": "Batches" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "CommentPayload",
+        "possibleTypes": [
+          { "name": "Comment" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "EmptyPayload",
+        "possibleTypes": [{ "name": "BadRequest" }, { "name": "Forbidden" }, { "name": "NotFound" }]
+      },
+      {
+        "kind": "UNION",
+        "name": "FieldDefinitionsPayload",
+        "possibleTypes": [
+          { "name": "FieldDefinitions" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TokenPayload",
+        "possibleTypes": [
+          { "name": "Token" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "UserRolesPayload",
+        "possibleTypes": [
+          { "name": "UserRoles" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "BatchAdjustmentPayload",
+        "possibleTypes": [
+          { "name": "BatchAdjustment" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "BatchAssignmentPayload",
+        "possibleTypes": [
+          { "name": "BatchAssignment" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "BatchPayload",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "BatchQuantityRevisionPayload",
+        "possibleTypes": [
+          { "name": "BatchQuantityRevision" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ContainerGroupPayload",
+        "possibleTypes": [
+          { "name": "ContainerGroup" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ContainerPayload",
+        "possibleTypes": [
+          { "name": "Container" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Customizable",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Shipment" },
+          { "name": "Warehouse" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Documented",
+        "possibleTypes": [
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Shipment" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "EntityPayload",
+        "possibleTypes": [
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Batch" },
+          { "name": "BatchAssignment" },
+          { "name": "BatchAdjustment" },
+          { "name": "Shipment" },
+          { "name": "Voyage" },
+          { "name": "Container" },
+          { "name": "ContainerGroup" },
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "Warehouse" },
+          { "name": "Tag" },
+          { "name": "User" },
+          { "name": "Group" },
+          { "name": "Partnership" },
+          { "name": "File" },
+          { "name": "Task" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Entry",
+        "possibleTypes": [
+          { "name": "Event" },
+          { "name": "Comment" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ExportExtensionPayload",
+        "possibleTypes": [
+          { "name": "ExportExtension" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ExportTemplatePayload",
+        "possibleTypes": [
+          { "name": "ExportTemplate" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "FieldDefinitionPayload",
+        "possibleTypes": [
+          { "name": "FieldDefinition" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "FieldValuePayload",
+        "possibleTypes": [
+          { "name": "FieldValue" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "FilePayload",
+        "possibleTypes": [
+          { "name": "File" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "GroupPayload",
+        "possibleTypes": [
+          { "name": "Group" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationConfigurationPayload",
+        "possibleTypes": [
+          { "name": "IntegrationConfiguration" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationLinkPayload",
+        "possibleTypes": [
+          { "name": "IntegrationLink" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "IntegrationPayload",
+        "possibleTypes": [
+          { "name": "Integration" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "MaskEditPayload",
+        "possibleTypes": [
+          { "name": "MaskEdit" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "MaskPayload",
+        "possibleTypes": [
+          { "name": "Mask" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Memorizable",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "BatchAdjustment" },
+          { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
+          { "name": "Container" },
+          { "name": "File" },
+          { "name": "Mask" },
+          { "name": "MaskEdit" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Role" },
+          { "name": "Shipment" },
+          { "name": "Task" },
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "User" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Model",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "BatchAdjustment" },
+          { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
+          { "name": "Comment" },
+          { "name": "Container" },
+          { "name": "ContainerGroup" },
+          { "name": "Event" },
+          { "name": "ExportTemplate" },
+          { "name": "FieldDefinition" },
+          { "name": "File" },
+          { "name": "Group" },
+          { "name": "Integration" },
+          { "name": "IntegrationConfiguration" },
+          { "name": "IntegrationLink" },
+          { "name": "Mask" },
+          { "name": "MaskEdit" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Partner" },
+          { "name": "Partnership" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Role" },
+          { "name": "Shipment" },
+          { "name": "Tag" },
+          { "name": "Task" },
+          { "name": "TaskTemplate" },
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "User" },
+          { "name": "Voyage" },
+          { "name": "Warehouse" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "NotificationPayload",
+        "possibleTypes": [
+          { "name": "Notification" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "OrderItemPayload",
+        "possibleTypes": [
+          { "name": "OrderItem" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "OrderPayload",
+        "possibleTypes": [
+          { "name": "Order" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Owned",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "BatchAdjustment" },
+          { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
+          { "name": "Comment" },
+          { "name": "Container" },
+          { "name": "ContainerGroup" },
+          { "name": "Event" },
+          { "name": "FieldDefinition" },
+          { "name": "File" },
+          { "name": "Integration" },
+          { "name": "IntegrationConfiguration" },
+          { "name": "IntegrationLink" },
+          { "name": "Mask" },
+          { "name": "MaskEdit" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
+          { "name": "ProductProvider" },
+          { "name": "Shipment" },
+          { "name": "Tag" },
+          { "name": "Task" },
+          { "name": "TaskTemplate" },
+          { "name": "TimelineDate" },
+          { "name": "TimelineDateRevision" },
+          { "name": "Voyage" },
+          { "name": "Warehouse" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Package",
+        "possibleTypes": [{ "name": "Batch" }, { "name": "ProductProvider" }]
+      },
+      {
+        "kind": "UNION",
+        "name": "PartnerPayload",
+        "possibleTypes": [
+          { "name": "Partner" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "PartnershipPayload",
+        "possibleTypes": [
+          { "name": "Partnership" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ProductPayload",
+        "possibleTypes": [
+          { "name": "Product" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ProductProviderPayload",
+        "possibleTypes": [
+          { "name": "ProductProvider" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "RolePayload",
+        "possibleTypes": [
+          { "name": "Role" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ShipmentPayload",
+        "possibleTypes": [
+          { "name": "Shipment" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Sortable",
+        "possibleTypes": [
+          { "name": "BatchAdjustment" },
+          { "name": "BatchAssignment" },
+          { "name": "BatchQuantityRevision" },
+          { "name": "Container" },
+          { "name": "ContainerGroup" },
+          { "name": "FieldDefinition" },
+          { "name": "OrderItem" },
+          { "name": "ProductProvider" },
+          { "name": "Task" },
+          { "name": "TimelineDateRevision" },
+          { "name": "Voyage" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Supervised",
+        "possibleTypes": [{ "name": "Order" }, { "name": "Shipment" }, { "name": "Warehouse" }]
+      },
+      {
+        "kind": "UNION",
+        "name": "TagPayload",
+        "possibleTypes": [
+          { "name": "Tag" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Tagged",
+        "possibleTypes": [
+          { "name": "Batch" },
+          { "name": "Container" },
+          { "name": "Order" },
+          { "name": "OrderItem" },
+          { "name": "Product" },
+          { "name": "Shipment" },
+          { "name": "Task" },
+          { "name": "User" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TaskPayload",
+        "possibleTypes": [
+          { "name": "Task" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TaskTemplatePayload",
+        "possibleTypes": [
+          { "name": "TaskTemplate" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TimelineDatePayload",
+        "possibleTypes": [
+          { "name": "TimelineDate" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "TimelineDateRevisionPayload",
+        "possibleTypes": [
+          { "name": "TimelineDateRevision" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "UserPayload",
+        "possibleTypes": [
+          { "name": "User" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Value",
+        "possibleTypes": [
+          { "name": "StringValue" },
+          { "name": "IntValue" },
+          { "name": "FloatValue" },
+          { "name": "BooleanValue" },
+          { "name": "DateTimeValue" },
+          { "name": "IntervalValue" },
+          { "name": "Duration" },
+          { "name": "MetricValueValue" },
+          { "name": "SizeValue" },
+          { "name": "EntityValue" },
+          { "name": "Values" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "VoyagePayload",
+        "possibleTypes": [
+          { "name": "Voyage" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "WarehousePayload",
+        "possibleTypes": [
+          { "name": "Warehouse" },
+          { "name": "BadRequest" },
+          { "name": "Forbidden" },
+          { "name": "NotFound" }
+        ]
+      }
+    ]
+  }
+}

@@ -11,7 +11,7 @@ export const SectionNavBarStyle = (upsideDown: boolean): string => css`
   height: 50px;
   background: ${colors.WHITE};
   padding: 0 10px;
-  z-index: 1;
+  z-index: 2;
   ${shadows.HEADER};
   ${transitions.EXPAND};
   ${borderRadiuses.MAIN};

@@ -62,7 +62,7 @@ export const MemoSectionWrapperStyle = (isMemoOpen: boolean): string => css`
   ${layout.GRID_VERTICAL};
   grid-gap: 10px;
   ${transitions.EXPAND};
-  height: ${isMemoOpen ? '200px' : '0'};
+  height: ${isMemoOpen ? '210px' : '0'};
   overflow: hidden;
   border-left: 2px solid ${colors.GRAY_VERY_LIGHT};
   padding: 0 0 0 18px;
@@ -73,6 +73,10 @@ export const LastModifiedWrapperStyle: string = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 0 0 0;
+`;
+
+export const MemoStyle: string = css`
   padding: 10px 0 0 0;
 `;
 
