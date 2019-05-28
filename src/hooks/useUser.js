@@ -18,6 +18,18 @@ const useUser = () => {
       const { types = [] } = group;
       return types.includes('Forwarder');
     },
+    isExporter: (): boolean => {
+      const { types = [] } = group;
+      return types.includes('Exporter');
+    },
+    isWarehouser: (): boolean => {
+      const { types = [] } = group;
+      return types.includes('Warehouser');
+    },
+    isSupplier: (): boolean => {
+      const { types = [] } = group;
+      return types.includes('Supplier');
+    },
   };
 };
 

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
@@ -71,6 +71,7 @@ import {
 } from 'components/Form';
 import messages from 'modules/shipment/messages';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectImporter from '../SelectImporter';
@@ -95,7 +96,7 @@ type Props = {
 
 const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
   const { isOwner } = usePartnerPermission();
-  const { isImporter, isForwarder } = useUser();
+  const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
   return (
@@ -536,51 +537,101 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                         />
                       </Label>
                     }
-                    input={(() => {
-                      if (
-                        isForwarder() &&
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Shipments.tooltipImporter"
+                            defaultMessage="The Importer will have access to this Shipment"
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <>
+                        {(isForwarder() || isExporter()) &&
                         (isNew &&
                           hasPermission(PARTNER_LIST) &&
-                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER]))
-                      ) {
-                        return (
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])) ? (
                           <BooleanValue>
-                            {({ value: opened, set: slideToggle }) => (
+                            {({ value: importerSelectorIsOpen, set: importerSelectorToggle }) => (
                               <>
                                 {importer && importer.id ? (
                                   <PartnerCard
                                     partner={importer}
-                                    onClick={() => slideToggle(true)}
+                                    onClick={() => importerSelectorToggle(true)}
                                   />
                                 ) : (
                                   <DashedPlusButton
                                     width="195px"
                                     height="215px"
-                                    onClick={() => slideToggle(true)}
+                                    onClick={() => importerSelectorToggle(true)}
                                   />
                                 )}
                                 <SlideView
-                                  isOpen={opened}
-                                  onRequestClose={() => slideToggle(false)}
+                                  isOpen={importerSelectorIsOpen}
+                                  onRequestClose={() => importerSelectorToggle(false)}
                                 >
-                                  {opened && (
-                                    <SelectImporter
-                                      selected={values.importer}
-                                      onCancel={() => slideToggle(false)}
-                                      onSelect={selected => {
-                                        slideToggle(false);
-                                        setFieldValue('importer', selected);
-                                      }}
-                                    />
+                                  {importerSelectorIsOpen && (
+                                    <BooleanValue>
+                                      {({
+                                        value: importerDialogIsOpen,
+                                        set: importerDialogToggle,
+                                      }) => (
+                                        <ObjectValue defaultValue={values.importer}>
+                                          {({
+                                            value: selectedImporter,
+                                            set: setSelectedImporter,
+                                          }) => (
+                                            <>
+                                              <SelectImporter
+                                                selected={values.importer}
+                                                onCancel={() => importerSelectorToggle(false)}
+                                                onSelect={selected => {
+                                                  if (isExporter() && selectedImporter) {
+                                                    setSelectedImporter(selected);
+                                                    importerDialogToggle(true);
+                                                  } else {
+                                                    setFieldValue('importer', selected);
+                                                    importerSelectorToggle(false);
+                                                  }
+                                                }}
+                                              />
+                                              <ConfirmDialog
+                                                isOpen={importerDialogIsOpen}
+                                                onRequestClose={() => {
+                                                  importerDialogToggle(false);
+                                                }}
+                                                onCancel={() => {
+                                                  importerDialogToggle(false);
+                                                }}
+                                                onConfirm={() => {
+                                                  setFieldValue('importer', selectedImporter);
+                                                  importerDialogToggle(false);
+                                                  importerSelectorToggle(false);
+                                                }}
+                                                message={
+                                                  <FormattedMessage
+                                                    id="modules.Shipment.importerDialogMessage"
+                                                    defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                                  />
+                                                }
+                                              />
+                                            </>
+                                          )}
+                                        </ObjectValue>
+                                      )}
+                                    </BooleanValue>
                                   )}
                                 </SlideView>
                               </>
                             )}
                           </BooleanValue>
-                        );
-                      }
-                      return <PartnerCard partner={importer} readOnly />;
-                    })()}
+                        ) : (
+                          <PartnerCard partner={importer} readOnly />
+                        )}
+                      </>
+                    }
                   />
 
                   <FieldItem
@@ -653,8 +704,8 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                             <div className={ExporterLabelStyle}>
                               <Label>
                                 <FormattedMessage
-                                  id="modules.Shipments.exporter"
-                                  defaultMessage="EXPORTER"
+                                  id="modules.Shipments.relatedExporters"
+                                  defaultMessage="RELATED EXPORTERS"
                                 />
                                 {' ('}
                                 <FormattedNumber value={uniqueExporters.length} />
