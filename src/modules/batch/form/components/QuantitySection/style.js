@@ -44,6 +44,6 @@ export const QuantityRevisionItemStyle: string = css`
 
 export const QuantityRevisionDiffStyle: string = css`
   position: absolute;
-  right: -60px;
+  left: calc(100% + 30px);
   top: 0;
 `;
