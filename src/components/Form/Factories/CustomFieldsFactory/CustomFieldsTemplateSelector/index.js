@@ -39,7 +39,7 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
     variables={{
       page: 1,
       perPage: 10,
-      filter: { entityTypes: entityType },
+      filterBy: { entityTypes: [entityType] },
     }}
     fetchPolicy="network-only"
   >

@@ -10,17 +10,9 @@ const Diff = ({ before, after }: { before: number, after: number }) => {
     return null;
   }
 
-  if (diff < 0) {
-    return (
-      <Display color="RED" height="30px">
-        <FormattedNumber value={diff} />
-      </Display>
-    );
-  }
-
   return (
-    <Display color="TEAL" height="30px">
-      <FormattedNumber value={diff} prefix="+" />
+    <Display color={diff < 0 ? 'RED' : 'TEAL'} height="30px" align="left">
+      <FormattedNumber value={Math.abs(diff)} prefix={diff < 0 ? '-' : '+'} />
     </Display>
   );
 };
