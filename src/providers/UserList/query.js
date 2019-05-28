@@ -1,29 +1,25 @@
 // @flow
 import gql from 'graphql-tag';
+import { staffCardFragment, tagFragment } from 'graphql';
 
 export const userListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: UserFilterInput, $sortBy: UserSortInput) {
+  query userListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: UserFilterInput
+    $sortBy: UserSortInput
+  ) {
     users(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       page
       totalPage
       nodes {
-        ... on User {
-          id
-          firstName
-          lastName
-          email
-          role
-          tags {
-            ... on Tag {
-              id
-              name
-              color
-            }
-          }
-        }
+        ...staffCardFragment
       }
     }
   }
+
+  ${staffCardFragment}
+  ${tagFragment}
 `;
 
 export default userListQuery;

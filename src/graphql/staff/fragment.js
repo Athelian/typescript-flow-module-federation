@@ -23,5 +23,11 @@ export const staffCardFragment = gql`
     tags {
       ...tagFragment
     }
+    group {
+      ... on Group {
+        id
+        name
+      }
+    }
   }
 `;

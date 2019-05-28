@@ -50,3 +50,11 @@ export const StaffTagsWrapperStyle: string = css`
   overflow: hidden;
   height: 18px;
 `;
+
+export const CompanyStyle: string = css`
+  ${fontSizesWithHeights.MEDIUM};
+  ${presets.ELLIPSIS};
+  color: ${colors.BLACK};
+  padding: 0 10px;
+  width: 100%;
+`;

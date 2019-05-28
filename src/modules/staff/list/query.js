@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { staffCardFragment, tagFragment } from 'graphql';
 
 export const staffListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: UserFilterInput, $sortBy: UserSortInput) {
+  query users($page: Int!, $perPage: Int!, $filterBy: UserFilterInput, $sortBy: UserSortInput) {
     users(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...staffCardFragment

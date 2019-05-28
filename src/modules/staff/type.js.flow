@@ -35,6 +35,9 @@ export type User = {
   tags: Array<Tag>,
   createdAt: string,
   updatedAt: string,
+  group: ?{
+    name: string,
+  },
 };
 
 export type EditUser = {

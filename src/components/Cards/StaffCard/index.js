@@ -14,6 +14,7 @@ import {
   StaffEmailStyle,
   StaffRoleStyle,
   StaffTagsWrapperStyle,
+  CompanyStyle,
 } from './style';
 
 type OptionalProps = {
@@ -31,7 +32,7 @@ const defaultProps = {
 };
 
 const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
-  const { firstName, lastName, role: deprecatedRole, roles, email, tags } = staff;
+  const { firstName, lastName, role: deprecatedRole, roles, email, tags, group } = staff;
 
   let userRoleIcon = 'USER';
 
@@ -69,6 +70,7 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
             <FormattedMessage id="components.cards.defaultUser" defaultMessage="User" />
           )}
         </div>
+        <div className={CompanyStyle}>{group && group.name}</div>
         <div className={StaffTagsWrapperStyle}>
           {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
         </div>
