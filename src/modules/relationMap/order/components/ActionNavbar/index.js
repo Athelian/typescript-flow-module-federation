@@ -842,7 +842,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         newCurrency: currency,
                         oldOrderItems: oldOrderItems.map(orderItemId => {
                           const orderItem = orderItems[orderItemId];
-                          return orderItem;
+                          return {
+                            ...orderItem,
+                            batches: orderItem.batches.map(batchId => ({
+                              id: batchId,
+                              isNew: false,
+                            })),
+                          };
                         }),
                         orderItems: oldOrderItems
                           .filter(
