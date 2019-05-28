@@ -129,10 +129,10 @@ export const shipmentCardFragment = gql`
       count
     }
     importer {
-      ... on Group {
-        id
-        name
-      }
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
     }
     cargoReady {
       ...timelineDateMinimalFragment

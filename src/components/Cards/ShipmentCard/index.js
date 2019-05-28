@@ -29,6 +29,9 @@ import {
   ShipmentImporterWrapperStyle,
   ShipmentImporterIconStyle,
   ShipmentImporterStyle,
+  ShipmentExporterWrapperStyle,
+  ShipmentExporterIconStyle,
+  ShipmentExporterStyle,
   ShipmentDataWrapperStyle,
   ShipmentInChargeWrapperStyle,
   InChargeStyle,
@@ -68,6 +71,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
     totalVolume,
     containers,
     importer,
+    exporter,
     todo,
     containerTypeCounts,
     voyages,
@@ -120,6 +124,13 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
                   <Icon icon="IMPORTER" />
                 </div>
                 <div className={ShipmentImporterStyle}>{importer && importer.name}</div>
+              </div>
+
+              <div className={ShipmentExporterWrapperStyle}>
+                <div className={ShipmentExporterIconStyle}>
+                  <Icon icon="EXPORTER" />
+                </div>
+                <div className={ShipmentExporterStyle}>{exporter && exporter.name}</div>
               </div>
             </div>
 

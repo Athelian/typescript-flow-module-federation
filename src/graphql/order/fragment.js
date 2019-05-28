@@ -196,6 +196,9 @@ export const orderCardFragment = gql`
     orderItemCount
     batchCount
     batchShippedCount
+    importer {
+      ...partnerNameFragment
+    }
     exporter {
       ...partnerNameFragment
     }

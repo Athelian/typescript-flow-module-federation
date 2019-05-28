@@ -11,6 +11,7 @@ import {
   taskFormInSlideViewFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
+  partnerNameFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -53,6 +54,7 @@ export const cloneShipmentMutation = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${userAvatarFragment}
   ${metricFragment}
   ${tagFragment}
@@ -115,6 +117,7 @@ export const cloneOrderMutation = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${batchCardRMFragment}
   ${orderCardRMFragment}
   ${timelineDateMinimalFragment}

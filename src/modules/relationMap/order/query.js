@@ -9,6 +9,7 @@ import {
   taskFormInSlideViewFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
+  partnerNameFragment,
 } from 'graphql';
 
 export const batchCardRMFragment = gql`
@@ -164,10 +165,10 @@ export const shipmentCardRMFragment = gql`
     batchCount
     orderItemCount
     importer {
-      ... on Group {
-        id
-        name
-      }
+      ...partnerNameFragment
+    }
+    exporter {
+      ...partnerNameFragment
     }
     totalVolume {
       ...metricFragment
@@ -274,6 +275,7 @@ export const orderDetailQuery = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${batchCardRMFragment}
   ${orderCardRMFragment}
   ${timelineDateMinimalFragment}
@@ -295,6 +297,7 @@ export const shipmentDetailQuery = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${userAvatarFragment}
   ${metricFragment}
   ${tagFragment}
@@ -314,6 +317,7 @@ export const orderListQuery = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${batchCardRMFragment}
   ${orderCardRMFragment}
   ${timelineDateMinimalFragment}
@@ -362,6 +366,7 @@ export const shipmentListQuery = gql`
   }
 
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}

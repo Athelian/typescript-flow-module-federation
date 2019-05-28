@@ -112,4 +112,5 @@ export const shipmentsInProductQuery = gql`
   ${userAvatarFragment}
   ${metricFragment}
   ${todoFragment}
+  ${partnerNameFragment}
 `;
