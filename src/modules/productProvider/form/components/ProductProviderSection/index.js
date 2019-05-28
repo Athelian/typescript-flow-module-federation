@@ -114,10 +114,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
 
                                         setFieldValue('exporter', currentExporter);
                                         if (generatedName !== existName) {
-                                          setFieldValue(
-                                            'name',
-                                            convertValueToFormFieldFormat(generatedName)
-                                          );
+                                          setFieldValue('name', generatedName);
                                         }
                                         onChangeExporter(values.exporter);
                                       }}
