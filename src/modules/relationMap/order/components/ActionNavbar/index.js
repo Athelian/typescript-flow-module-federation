@@ -621,7 +621,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       }
                     });
                     const { shipmentId } = state.connectShipment;
-                    actions.moveToShipment(batchIds);
+                    actions.moveToShipment(batchIds, shipmentIds);
                     try {
                       const updateBatches = await Promise.all(
                         batchIds.map((id, idx) =>
@@ -670,6 +670,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       },
                     };
                     const batchIds = uiSelectors.targetedBatchIds();
+                    const shipmentIds = [];
+                    batchIds.forEach(batchId => {
+                      const batch = batches[batchId];
+                      if (batch && batch.shipment) {
+                        shipmentIds.push(batch.shipment.id);
+                      }
+                    });
                     const initBatches = batchIds
                       .map(batchId => {
                         const [orderItemId, orderItem] =
@@ -706,6 +713,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       })
                       .filter(Boolean);
                     actions.showEditForm('NEW_SHIPMENT', 'new', { batches: initBatches });
+                    actions.moveToNewShipment(batchIds, shipmentIds);
                   }}
                 />
               )}
