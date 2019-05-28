@@ -1,7 +1,8 @@
 // @flow
 import { type IntlShape } from 'react-intl';
 import { toast } from 'react-toastify';
-import { getByPath } from './fp';
+import messages from './messages';
+import { getByPath } from '../fp';
 
 /**
  * Transform Yup ValidationError to a more usable object
@@ -34,12 +35,7 @@ export const showToastError = ({
   intl: IntlShape,
 }) => {
   if (!result) {
-    toast.error(
-      intl.formatMessage({
-        id: 'global.apiErrorMessage',
-        defaultMessage: 'There was an error. Please try again later.',
-      })
-    );
+    toast.error(intl.formatMessage(messages.apiErrorMessage));
     return true;
   }
 
@@ -47,13 +43,7 @@ export const showToastError = ({
     getByPath(`${entity}Create.__typename`, result) ||
     getByPath(`${entity}Update.__typename`, result);
   if (errorType === 'NotFound') {
-    toast.error(
-      intl.formatMessage({
-        id: 'global.apiEntityNotFoundErrorMessage',
-        defaultMessage:
-          'Sorry, but this data has been deleted. Please refresh the page and review the logs to see more details',
-      })
-    );
+    toast.error(intl.formatMessage(messages.apiEntityNotFoundErrorMessage));
     return true;
   }
 
@@ -63,13 +53,7 @@ export const showToastError = ({
         getByPath(`${entity}Update.violations`, result)
     )
   ) {
-    toast.error(
-      intl.formatMessage({
-        id: 'global.notFoundErrorMessage',
-        defaultMessage:
-          'You are using some data that no longer exists. Please refresh the page and try again.',
-      })
-    );
+    toast.error(intl.formatMessage(messages.notFoundErrorMessage));
     return true;
   }
 

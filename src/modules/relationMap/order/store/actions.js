@@ -220,11 +220,20 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
           error,
         },
       }),
-    moveToShipment: (batchIds: Array<string>) =>
+    moveToShipment: (batchIds: Array<string>, shipmentIds: Array<string>) =>
       dispatch({
         type: 'MOVE_TO_SHIPMENT',
         payload: {
           batchIds,
+          shipmentIds,
+        },
+      }),
+    moveToNewShipment: (batchIds: Array<string>, shipmentIds: Array<string>) =>
+      dispatch({
+        type: 'MOVE_TO_NEW_SHIPMENT',
+        payload: {
+          batchIds,
+          shipmentIds,
         },
       }),
     moveToShipmentSuccess: (data: Object) =>

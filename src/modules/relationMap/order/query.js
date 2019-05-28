@@ -267,7 +267,7 @@ export const shipmentCardRMFragment = gql`
 `;
 
 export const orderDetailQuery = gql`
-  query($id: ID!) {
+  query orderDetailQuery($id: ID!) {
     order(id: $id) {
       ...orderCardRMFragment
     }
@@ -288,7 +288,7 @@ export const orderDetailQuery = gql`
 `;
 
 export const shipmentDetailQuery = gql`
-  query($id: ID!) {
+  query shipmentDetailQuery($id: ID!) {
     shipment(id: $id) {
       ...shipmentCardRMFragment
     }
@@ -303,7 +303,12 @@ export const shipmentDetailQuery = gql`
 `;
 
 export const orderListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
+  query orderListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: OrderFilterInput
+    $sortBy: OrderSortInput
+  ) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...orderCardRMFragment
@@ -328,7 +333,12 @@ export const orderListQuery = gql`
 `;
 
 export const shipmentListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: ShipmentFilterInput, $sortBy: ShipmentSortInput) {
+  query shipmentListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ShipmentFilterInput
+    $sortBy: ShipmentSortInput
+  ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ... on Shipment {

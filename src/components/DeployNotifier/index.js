@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, type IntlShape } from 'react-intl';
 import firebase from 'firebase';
 import { toast } from 'react-toastify';
 import apolloClient from 'apollo';
@@ -12,16 +12,16 @@ import {
   ToastButtonWrapperStyle,
   ToastButtonIconStyle,
 } from './style';
+import messages from './messages';
 
 type Props = {
   revision: string,
+  intl: IntlShape,
   revisionKey: string,
 };
 
-export default class DeployNotifier extends React.Component<Props> {
-  componentDidMount() {
-    const { revision, revisionKey } = this.props;
-
+const DeployNotifier = ({ revision, revisionKey, intl }: Props) => {
+  React.useEffect(() => {
     const docRef = firebase.database().ref(`/${revisionKey}`);
 
     docRef.on('value', snapshot => {
@@ -32,6 +32,7 @@ export default class DeployNotifier extends React.Component<Props> {
       const currentRevision = snapshot.val();
       if (revision !== currentRevision) {
         serviceWorker.unregister();
+        toast.dismiss();
         toast(
           <button
             className={ToastButtonWrapperStyle}
@@ -43,10 +44,7 @@ export default class DeployNotifier extends React.Component<Props> {
             }}
             type="button"
           >
-            <FormattedMessage
-              id="components.deployNotifier.newVersionMessage"
-              defaultMessage="An update is available. Please close all other Zenport tabs and click here."
-            />
+            {intl.formatMessage(messages.newVersionMessage)}
             <div className={ToastButtonIconStyle}>
               <Icon icon="RELOAD" />
             </div>
@@ -65,9 +63,9 @@ export default class DeployNotifier extends React.Component<Props> {
         );
       }
     });
-  }
+  }, [intl, intl.locale, revision, revisionKey]);
 
-  render() {
-    return null;
-  }
-}
+  return null;
+};
+
+export default injectIntl(DeployNotifier);

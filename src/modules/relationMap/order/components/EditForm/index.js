@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import client from 'apollo';
-import { orderDetailQuery } from 'modules/relationMap/order/query';
+import { orderDetailQuery, shipmentDetailQuery } from 'modules/relationMap/order/query';
 import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
 import ItemForm from 'modules/orderItem/index.form';
@@ -27,7 +27,7 @@ type Props = OptionalProps & {
 const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
   let form = null;
   const context = React.useContext(ActionDispatch);
-  const { dispatch } = context;
+  const { dispatch, state } = context;
   const actions = actionCreators(dispatch);
   React.useEffect(() => {
     emitter.once('CHANGE_ORDER_STATUS', () => {
@@ -75,16 +75,25 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
                   allOrderIds.push(orderId);
                 }
               });
-              Promise.all(
-                allOrderIds.map(orderId =>
+              const shipmentIds = getByPath('connectShipment.shipmentIds', state);
+              Promise.all([
+                ...allOrderIds.map(entityId =>
                   client.query({
                     query: orderDetailQuery,
                     variables: {
-                      id: orderId,
+                      id: entityId,
                     },
                   })
-                )
-              )
+                ),
+                ...shipmentIds.map(entityId =>
+                  client.query({
+                    query: shipmentDetailQuery,
+                    variables: {
+                      id: entityId,
+                    },
+                  })
+                ),
+              ])
                 .then(logger.warn)
                 .catch(logger.error);
             }
