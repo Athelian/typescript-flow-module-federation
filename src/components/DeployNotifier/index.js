@@ -12,6 +12,7 @@ import {
   ToastButtonWrapperStyle,
   ToastButtonIconStyle,
 } from './style';
+import messages from './messages';
 
 type Props = {
   revision: string,
@@ -43,14 +44,11 @@ const DeployNotifier = ({ revision, revisionKey, intl }: Props) => {
             }}
             type="button"
           >
-            {intl.formatMessage({
-              id: 'components.deployNotifier.newVersionMessage',
-              defaultMessage:
-                'An update is available. Please close all other Zenport tabs and click here.',
-            })}
+            {intl.formatMessage(messages.newVersionMessage)}
             <div className={ToastButtonIconStyle}>
               <Icon icon="RELOAD" />
             </div>
+            s
           </button>,
           {
             position: 'bottom-left',
