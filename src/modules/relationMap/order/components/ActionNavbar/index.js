@@ -17,7 +17,7 @@ import SlideView from 'components/SlideView';
 import { BaseButton } from 'components/Buttons';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
-import { orderDetailQuery } from 'modules/relationMap/order/query';
+import { orderDetailQuery, shipmentDetailQuery } from 'modules/relationMap/order/query';
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
@@ -592,6 +592,14 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   onMoveToExistShipment={async () => {
                     const batchIds = uiSelectors.targetedBatchIds();
                     const allOrderItemIds = [];
+                    const shipmentIds = [];
+                    batchIds.forEach(batchId => {
+                      const batch = batches[batchId];
+                      if (batch && batch.shipment) {
+                        shipmentIds.push(batch.shipment.id);
+                      }
+                    });
+
                     (Object.entries(orderItems || {}): Array<any>).forEach(
                       ([orderItemId, orderItem]) => {
                         if (
@@ -628,12 +636,20 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             },
                             ...(idx === batchIds.length - 1
                               ? {
-                                  refetchQueries: orderIds.map(orderId => ({
-                                    query: orderDetailQuery,
-                                    variables: {
-                                      id: orderId,
-                                    },
-                                  })),
+                                  refetchQueries: [
+                                    ...orderIds.map(entityId => ({
+                                      query: orderDetailQuery,
+                                      variables: {
+                                        id: entityId,
+                                      },
+                                    })),
+                                    ...shipmentIds.map(entityId => ({
+                                      query: shipmentDetailQuery,
+                                      variables: {
+                                        id: entityId,
+                                      },
+                                    })),
+                                  ],
                                 }
                               : {}),
                           })
