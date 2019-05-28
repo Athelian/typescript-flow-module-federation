@@ -1,5 +1,6 @@
 import BaseCard, { CardAction } from './BaseCard';
 import BatchCard from './BatchCard';
+import BatchCardInSelectPage from './BatchCardInSelectPage';
 import BatchesPoolCard from './BatchesPoolCard';
 import ContainerBatchCard from './ContainerBatchCard';
 import ContainerCard from './ContainerCard';
@@ -30,6 +31,7 @@ export default BaseCard;
 export {
   CardAction,
   BatchCard,
+  BatchCardInSelectPage,
   BatchesPoolCard,
   ContainerBatchCard,
   ContainerCard,

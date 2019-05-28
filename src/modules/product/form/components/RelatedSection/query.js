@@ -69,6 +69,7 @@ export const batchesInProductQuery = gql`
   }
 
   ${batchCardFragment}
+  ${partnerNameFragment}
   ${metricFragment}
   ${tagFragment}
   ${priceFragment}

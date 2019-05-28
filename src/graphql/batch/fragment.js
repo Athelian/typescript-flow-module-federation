@@ -183,6 +183,12 @@ export const batchCardFragment = gql`
             id
             poNo
             currency
+            importer {
+              ...partnerNameFragment
+            }
+            exporter {
+              ...partnerNameFragment
+            }
           }
         }
         productProvider {

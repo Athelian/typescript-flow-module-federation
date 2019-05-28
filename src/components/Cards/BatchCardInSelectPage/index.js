@@ -1,17 +1,18 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link, navigate } from '@reach/router';
-import { encodeId } from 'utils/id';
+import { getBatchLatestQuantity } from 'utils/batch';
 import Icon from 'components/Icon';
+import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
-import FormattedDate from 'components/FormattedDate';
-import { getProductImage } from 'components/Cards/utils';
-import withForbiddenCard from 'hoc/withForbiddenCard';
+import { getByPathWithDefault } from 'utils/fp';
 import { FieldItem, Label, Display } from 'components/Form';
 import TaskRing from 'components/TaskRing';
-import BaseCard from '../BaseCard';
+import withForbiddenCard from 'hoc/withForbiddenCard';
+import { getProductImage } from 'components/Cards/utils';
+import BaseCard from 'components/Cards/BaseCard';
+import FormattedDate from 'components/FormattedDate';
 import {
   BatchCardWrapperStyle,
   ProductWrapperStyle,
@@ -27,76 +28,98 @@ import {
   DividerStyle,
   OrderWrapperStyle,
   OrderIconStyle,
-  ShipmentWrapperStyle,
-  ShipmentIconStyle,
   ContainerWrapperStyle,
   ContainerIconStyle,
+  OrderInChargeWrapperStyle,
+  InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   ImporterWrapperStyle,
 } from './style';
 
 type OptionalProps = {
-  actions: Array<React.Node>,
+  onClick: (batch: Object) => void,
+  viewable: {
+    price: boolean,
+    tasks: boolean,
+  },
 };
 
 type Props = OptionalProps & {
   batch: Object,
+  currency: string,
+  saveOnBlur: Function,
+};
+
+const viewableDefault = {
+  price: false,
+  tasks: false,
 };
 
 const defaultProps = {
-  actions: [],
+  onClick: () => {},
 };
 
-const BatchCard = ({ batch, actions, ...rest }: Props) => {
+const BatchCardInSelectPage = ({ batch, onClick, currency, viewable, ...rest }: Props) => {
   const {
-    id,
     archived,
     no,
-    latestQuantity,
+    quantity,
     deliveredAt,
     desiredAt,
+    batchQuantityRevisions,
     packageVolume,
     packageQuantity,
-    orderItem,
-    shipment,
+    tags,
     container,
+    orderItem: {
+      price,
+      productProvider: { name: productProviderName, product },
+      order,
+    },
     todo,
   } = batch;
-  const {
-    productProvider: { product, name: productProviderName },
-    order,
-    price,
-  } = orderItem;
 
-  const { importer, exporter } = order;
+  const mergedViewable = { ...viewableDefault, ...viewable };
+
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
   const productImage = getProductImage(product);
 
+  const { importer, exporter } = order;
+
   return (
-    <BaseCard icon="BATCH" color="BATCH" actions={actions} isArchived={archived} {...rest}>
+    <BaseCard
+      icon="BATCH"
+      color="BATCH"
+      showActionsOnHover
+      selectable
+      isArchived={archived}
+      {...rest}
+    >
       <div
         className={BatchCardWrapperStyle}
-        onClick={() => navigate(`/batch/${encodeId(id)}`)}
+        onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
         role="presentation"
       >
-        <div className={ProductWrapperStyle}>
+        <div
+          className={ProductWrapperStyle}
+          onClick={() => onClick({ ...batch, no, quantity, deliveredAt, desiredAt })}
+          role="presentation"
+        >
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
             <div className={ProductNameWrapperStyle}>
-              <Link
-                className={ProductIconLinkStyle}
-                to={`/product/${encodeId(product.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
+              <div className={ProductIconLinkStyle}>
                 <Icon icon="PRODUCT" />
-              </Link>
+              </div>
+
               <div className={ProductNameStyle}>{product.name}</div>
             </div>
+
             <div className={ProductSerialStyle}>{product.serial}</div>
+
             <div className={ProductProviderNameStyle}>
               <Icon icon="PRODUCT_PROVIDER" />
               {productProviderName}
@@ -121,7 +144,7 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
           <FieldItem
             label={
               <Label>
-                <FormattedMessage id="components.cards.quantity" defaultMessage="QUANTITY" />
+                <FormattedMessage id="components.cards.qty" defaultMessage="QTY" />
               </Label>
             }
             input={
@@ -162,30 +185,14 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
           <FieldItem
             label={
               <Label>
-                <FormattedMessage id="components.cards.unitPrice" defaultMessage="UNIT PRICE" />
-              </Label>
-            }
-            input={
-              <Display>
-                <FormattedNumber
-                  value={orderItem.price && orderItem.price.amount ? orderItem.price.amount : 0}
-                  suffix={order.currency || (orderItem.price && orderItem.currency)}
-                />
-              </Display>
-            }
-          />
-
-          <FieldItem
-            label={
-              <Label>
                 <FormattedMessage id="components.cards.ttlPrice" defaultMessage="TTL PRICE" />
               </Label>
             }
             input={
-              <Display>
+              <Display blackout={!mergedViewable.price}>
                 <FormattedNumber
                   value={(price && price.amount ? price.amount : 0) * latestQuantity}
-                  suffix={order.currency || (orderItem.price && orderItem.currency)}
+                  suffix={currency || (price && price.currency)}
                 />
               </Display>
             }
@@ -210,48 +217,43 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
           />
 
           <div className={OrderWrapperStyle}>
-            <Link
-              className={OrderIconStyle}
-              to={`/order/${encodeId(order.id)}`}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
+            <div className={OrderIconStyle}>
               <Icon icon="ORDER" />
-            </Link>
+            </div>
             <Display align="left">{order.poNo}</Display>
           </div>
 
-          <div className={ShipmentWrapperStyle}>
-            <Link
-              className={ShipmentIconStyle(!!shipment)}
-              to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="SHIPMENT" />
-            </Link>
-            <Display align="left">{shipment && shipment.no}</Display>
+          <div className={ContainerWrapperStyle}>
+            <div className={ContainerIconStyle(false)}>
+              <Icon icon="CONTAINER" />
+            </div>
+            <Display align="left">{getByPathWithDefault(null, 'no', container)}</Display>
           </div>
 
-          <div className={ContainerWrapperStyle}>
-            <Link
-              className={ContainerIconStyle(!!container)}
-              to={container ? `/container/${encodeId(container.id)}` : '.'}
-              onClick={evt => {
-                evt.stopPropagation();
-              }}
-            >
-              <Icon icon="CONTAINER" />
-            </Link>
-            <Display align="left">{container && container.no}</Display>
+          <div className={OrderInChargeWrapperStyle}>
+            <Label>
+              <FormattedMessage
+                id="components.cards.orderInCharge"
+                defaultMessage="ORDER IN CHARGE"
+              />
+            </Label>
+            <div className={InChargeWrapperStyle}>
+              {order.inCharges &&
+                order.inCharges.map(inCharge => (
+                  <UserAvatar
+                    firstName={inCharge.firstName}
+                    lastName={inCharge.lastName}
+                    key={inCharge.id}
+                  />
+                ))}
+            </div>
           </div>
+
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>
-              {batch.tags.length > 0 && batch.tags.map(tag => <Tag key={tag.id} tag={tag} />)}
+              {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
             </div>
-            <TaskRing {...todo} />
+            <TaskRing {...todo} blackout={!mergedViewable.tasks} />
           </div>
         </div>
       </div>
@@ -259,11 +261,11 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
   );
 };
 
-BatchCard.defaultProps = defaultProps;
+BatchCardInSelectPage.defaultProps = defaultProps;
 
-export default withForbiddenCard(BatchCard, 'batch', {
+export default withForbiddenCard(BatchCardInSelectPage, 'batch', {
   width: '195px',
-  height: '406px',
+  height: '416px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

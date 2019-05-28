@@ -14,7 +14,7 @@ export const BatchCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 406px;
+  height: 416px;
 `;
 
 export const ProductWrapperStyle: string = css`
@@ -79,9 +79,24 @@ export const ProductProviderNameStyle: string = css`
   ${fontSizesWithHeights.SMALL};
   color: ${colors.WHITE};
   ${presets.ELLIPSIS};
-  padding: 0 10px;
+  padding: 0 20px 0 10px;
   & > svg {
     margin: 0 5px 0 0;
+  }
+`;
+
+export const RepresentIconStyle = (isRepresented: boolean) => css`
+  position: absolute;
+  bottom: 5px;
+  right: 0;
+  ${fontSizes.SMALL};
+  width: 20px;
+  height: 20px;
+  ${presets.BUTTON};
+  color: ${isRepresented ? colors.YELLOW : 'rgba(255, 255, 255, 0.5)'};
+  &:hover,
+  :focus {
+    color: ${isRepresented ? colors.YELLOW_DARK : colors.WHITE};
   }
 `;
 
@@ -97,18 +112,43 @@ export const BatchNoWrapperStyle: string = css`
   width: 100%;
 `;
 
+export const QuantityWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 95px 90px;
+  width: 100%;
+  padding: 0 5px;
+`;
+
+export const DateInputWrapperStyle: string = css`
+  display: grid;
+  grid-template-columns: 65px 120px;
+  width: 100%;
+  padding: 0 5px;
+`;
+
 export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};
-  margin: 0 5px;
+  margin: 0 10px;
+`;
+
+export const TotalPriceWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+`;
+
+export const VolumeWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
 `;
 
 export const OrderWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 20px 160px;
   width: 100%;
-  padding: 0 0 0 5px;
+  padding: 0 5px;
   align-items: center;
+  grid-gap: 5px;
 `;
 
 export const OrderIconStyle: string = css`
@@ -125,36 +165,13 @@ export const OrderIconStyle: string = css`
   }
 `;
 
-export const ShipmentWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 20px 160px;
-  width: 100%;
-  padding: 0 0 0 5px;
-  align-items: center;
-`;
-
-export const ShipmentIconStyle = (hasShipment: boolean): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.MAIN};
-  width: 20px;
-  height: 20px;
-  background-color: ${hasShipment ? colors.TEAL : colors.GRAY_VERY_LIGHT};
-  color: ${colors.WHITE};
-  font-size: 11px;
-  ${hasShipment &&
-    `
-      &:hover, :focus {
-        background-color: ${colors.TEAL_DARK};
-      }
-    `};
-`;
-
 export const ContainerWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 20px 160px;
   width: 100%;
-  padding: 0 0 0 5px;
+  padding: 0 5px;
   align-items: center;
+  grid-gap: 5px;
 `;
 
 export const ContainerIconStyle = (hasContainer: boolean): string => css`
@@ -162,20 +179,32 @@ export const ContainerIconStyle = (hasContainer: boolean): string => css`
   ${borderRadiuses.MAIN};
   width: 20px;
   height: 20px;
-  background-color: ${hasContainer ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  background-color: ${hasContainer ? colors.TEAL : colors.GRAY_LIGHT};
   color: ${colors.WHITE};
   font-size: 11px;
-  ${hasContainer &&
-    `
-      &:hover, :focus {
-        background-color: ${colors.TEAL_DARK};
-      }
-    `};
+  &:hover,
+  :focus {
+    background-color: ${hasContainer ? colors.TEAL_DARK : colors.GRAY_LIGHT};
+  }
+`;
+
+export const OrderInChargeWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 5px;
+  width: 195px;
+`;
+
+export const InChargeWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  grid-gap: 6.25px;
+  padding: 0 5px;
+  width: 100%;
+  height: 30px;
 `;
 
 export const TagsAndTaskWrapperStyle: string = css`
   display: grid;
-  grid-template-columns: 155px 20px;
+  grid-template-columns: 160px 20px;
   grid-gap: 5px;
   align-items: center;
 `;
@@ -184,8 +213,8 @@ export const BatchTagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   ${borderRadiuses.MAIN};
   grid-gap: 5px;
-  width: 155px;
-  padding: 0 0 0 5px;
+  width: 160px;
+  padding: 0 0 0 10px;
   overflow: hidden;
 `;
 

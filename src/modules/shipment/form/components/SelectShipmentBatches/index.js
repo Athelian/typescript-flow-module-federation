@@ -13,13 +13,13 @@ import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
 import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import LoadingIcon from 'components/LoadingIcon';
-import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import messages from 'modules/batch/messages';
 import useFilter from 'hooks/useFilter';
+import { BatchCardInSelectPage } from 'components/Cards';
 import { selectBatchListQuery } from './query';
 
 type Props = {
@@ -61,6 +61,8 @@ function onSelectBatch({
 function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const viewPrice = hasPermission(ORDER_ITEMS_GET_PRICE);
+  const viewTasks = hasPermission(BATCH_TASK_LIST);
   const ignoreBatches = selectedBatches.map(batch => batch.id);
   const fields = [
     { title: intl.formatMessage(messages.batchNo), value: 'no' },
@@ -212,15 +214,14 @@ function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Pr
             hasMore={hasMore}
             isLoading={isLoading && batches.length === 0}
             renderItem={item => (
-              <ShipmentBatchCard
+              <BatchCardInSelectPage
+                key={item.id}
                 batch={item}
-                selectable
                 selected={selected.includes(item)}
                 onSelect={() => onSelectBatch({ selected, item, onPush, onSet })}
-                key={item.id}
                 viewable={{
-                  price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                  tasks: hasPermission(BATCH_TASK_LIST),
+                  price: viewPrice,
+                  tasks: viewTasks,
                 }}
               />
             )}
