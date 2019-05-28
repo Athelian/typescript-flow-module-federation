@@ -64,6 +64,12 @@ export const userAvatarFragment = gql`
     id
     firstName
     lastName
+    group {
+      ... on Group {
+        id
+        name
+      }
+    }
   }
 `;
 

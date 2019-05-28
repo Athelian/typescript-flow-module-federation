@@ -6,7 +6,10 @@ import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue, ObjectValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
-import { ProductProviderInfoContainer } from 'modules/productProvider/form/containers';
+import {
+  ProductProviderInfoContainer,
+  ProductProviderTasksContainer,
+} from 'modules/productProvider/form/containers';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
 import SelectExporters from 'modules/order/common/SelectExporters';
@@ -82,46 +85,52 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           <ObjectValue defaultValue={null}>
                             {({ value: currentExporter, set: setExporter }) => (
                               <>
-                                <ConfirmDialog
-                                  isOpen={!!currentExporter}
-                                  onRequestClose={() => setExporter(null)}
-                                  onCancel={() => setExporter(null)}
-                                  onConfirm={() => {
-                                    setExporter(null);
-                                    exporterSlideToggle(false);
-                                    const existName = getByPathWithDefault('', 'name', values);
-                                    const entityName = getByPathWithDefault(
-                                      '',
-                                      'name',
-                                      currentExporter
-                                    );
-                                    const generatedName = generateName(
-                                      {
-                                        entityName,
-                                        name: existName,
-                                        type: 'exporter',
-                                      },
-                                      {
-                                        supplier: getByPath('supplier.name', values),
-                                        exporter: getByPath('exporter.name', values),
-                                      }
-                                    );
+                                <Subscribe to={[ProductProviderTasksContainer]}>
+                                  {({ onChangeExporter }) => (
+                                    <ConfirmDialog
+                                      isOpen={!!currentExporter}
+                                      onRequestClose={() => setExporter(null)}
+                                      onCancel={() => setExporter(null)}
+                                      onConfirm={() => {
+                                        setExporter(null);
+                                        exporterSlideToggle(false);
+                                        const existName = getByPathWithDefault('', 'name', values);
+                                        const entityName = getByPathWithDefault(
+                                          '',
+                                          'name',
+                                          currentExporter
+                                        );
+                                        const generatedName = generateName(
+                                          {
+                                            entityName,
+                                            name: existName,
+                                            type: 'exporter',
+                                          },
+                                          {
+                                            supplier: getByPath('supplier.name', values),
+                                            exporter: getByPath('exporter.name', values),
+                                          }
+                                        );
 
-                                    setFieldValue('exporter', currentExporter);
-                                    if (generatedName !== existName) {
-                                      setFieldValue(
-                                        'name',
-                                        convertValueToFormFieldFormat(generatedName)
-                                      );
-                                    }
-                                  }}
-                                  message={
-                                    <FormattedMessage
-                                      id="modules.Products.changeExporterWarning"
-                                      defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks?"
+                                        setFieldValue('exporter', currentExporter);
+                                        if (generatedName !== existName) {
+                                          setFieldValue(
+                                            'name',
+                                            convertValueToFormFieldFormat(generatedName)
+                                          );
+                                        }
+                                        onChangeExporter(values.exporter);
+                                      }}
+                                      message={
+                                        <FormattedMessage
+                                          id="modules.Products.changeExporterWarning"
+                                          defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks?"
+                                        />
+                                      }
                                     />
-                                  }
-                                />
+                                  )}
+                                </Subscribe>
+
                                 <SlideView
                                   isOpen={opened}
                                   onRequestClose={() => exporterSlideToggle(false)}
