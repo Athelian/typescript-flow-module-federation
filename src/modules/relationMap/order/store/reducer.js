@@ -216,6 +216,15 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           sourceOrder: getByPathWithDefault({}, 'payload.targetOrder', action),
         },
       };
+    case 'MOVE_TO_NEW_SHIPMENT':
+      return {
+        ...state,
+        connectShipment: {
+          ...state.connectShipment,
+          ...action.payload,
+          status: false,
+        },
+      };
     case 'SPLIT_BATCH_ERROR':
     case 'AUTO_FILL_BATCHES_ERROR':
     case 'CLONE_ENTITIES_ERROR':
