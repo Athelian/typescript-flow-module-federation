@@ -136,7 +136,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.loadPort" defaultMessage="LOAD PORT" />
+                    <FormattedMessage id="modules.Shipments.loadPort" defaultMessage="LOAD PORT" />
                   </Label>
                 }
                 input={
@@ -151,7 +151,7 @@ const ShipmentSummary = () => {
                 label={
                   <Label>
                     <FormattedMessage
-                      id="modules.shipment.dischargePort"
+                      id="modules.Shipments.dischargePort"
                       defaultMessage="DISCHARGE PORT"
                     />
                   </Label>
@@ -168,7 +168,7 @@ const ShipmentSummary = () => {
                 label={
                   <Label>
                     <FormattedMessage
-                      id="modules.shipment.latestVessel"
+                      id="modules.Shipments.latestVessel"
                       defaultMessage="LAST VESSEL"
                     />
                   </Label>
@@ -180,7 +180,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.voyages" defaultMessage="VOYAGES" />
+                    <FormattedMessage id="modules.Shipments.voyages" defaultMessage="VOYAGES" />
                   </Label>
                 }
                 input={
@@ -193,7 +193,7 @@ const ShipmentSummary = () => {
                 label={
                   <Label>
                     <FormattedMessage
-                      id="modules.shipment.batchedQuantity"
+                      id="modules.Shipments.batchedQuantity"
                       defaultMessage="BATCHED QUANTITY"
                     />
                   </Label>
@@ -208,7 +208,7 @@ const ShipmentSummary = () => {
                 label={
                   <Label>
                     <FormattedMessage
-                      id="modules.shipment.totalPrice"
+                      id="modules.Shipments.totalPrice"
                       defaultMessage="TOTAL PRICE"
                     />
                   </Label>
@@ -218,7 +218,7 @@ const ShipmentSummary = () => {
                     <Tooltip
                       message={
                         <FormattedMessage
-                          id="modules.shipment.totalPriceInvalidMessage"
+                          id="modules.Shipments.totalPriceInvalidMessage"
                           defaultMessage="Cannot compute this field because this Shipment contains Cargo with different Currencies"
                         />
                       }
@@ -226,7 +226,7 @@ const ShipmentSummary = () => {
                       <div>
                         <Display>
                           <FormattedMessage
-                            id="modules.shipment.invalid"
+                            id="modules.Shipments.invalid"
                             defaultMessage="Invalid"
                           />
                         </Display>
@@ -242,7 +242,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.products" defaultMessage="PRODUCTS" />
+                    <FormattedMessage id="modules.Shipments.products" defaultMessage="PRODUCTS" />
                   </Label>
                 }
                 input={
@@ -254,7 +254,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.orders" defaultMessage="ORDERS" />
+                    <FormattedMessage id="modules.Shipments.orders" defaultMessage="ORDERS" />
                   </Label>
                 }
                 input={
@@ -266,7 +266,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.batches" defaultMessage="Batches" />
+                    <FormattedMessage id="modules.Shipments.batches" defaultMessage="Batches" />
                   </Label>
                 }
                 input={
@@ -278,7 +278,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.weight" defaultMessage="WEIGHT" />
+                    <FormattedMessage id="modules.Shipments.weight" defaultMessage="WEIGHT" />
                   </Label>
                 }
                 input={
@@ -290,7 +290,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.volume" defaultMessage="VOLUME" />
+                    <FormattedMessage id="modules.Shipments.volume" defaultMessage="VOLUME" />
                   </Label>
                 }
                 input={
@@ -305,7 +305,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.documents" defaultMessage="DOCUMENTS" />
+                    <FormattedMessage id="modules.Shipments.documents" defaultMessage="DOCUMENTS" />
                   </Label>
                 }
                 input={
@@ -320,7 +320,7 @@ const ShipmentSummary = () => {
                   label={
                     <Label>
                       <FormattedMessage
-                        id="modules.shipment.containers"
+                        id="modules.Shipments.containers"
                         defaultMessage="CONTAINERS"
                       />
                     </Label>
@@ -356,7 +356,7 @@ const ShipmentSummary = () => {
                 <FieldItem
                   label={
                     <Label>
-                      <FormattedMessage id="modules.shipment.tasks" defaultMessage="TASKS" />
+                      <FormattedMessage id="modules.Shipments.tasks" defaultMessage="TASKS" />
                     </Label>
                   }
                   input={
@@ -375,7 +375,7 @@ const ShipmentSummary = () => {
                         </div>
                         <Label>
                           <FormattedMessage
-                            id="modules.shipment.pending"
+                            id="modules.Shipments.pending"
                             defaultMessage="PENDING"
                           />
                         </Label>
@@ -395,7 +395,7 @@ const ShipmentSummary = () => {
                         </div>
                         <Label>
                           <FormattedMessage
-                            id="modules.shipment.inProgress"
+                            id="modules.Shipments.inProgress"
                             defaultMessage="IN PROGRESS"
                           />
                         </Label>
@@ -415,7 +415,7 @@ const ShipmentSummary = () => {
                         </div>
                         <Label color="TEAL">
                           <FormattedMessage
-                            id="modules.shipment.completed"
+                            id="modules.Shipments.completed"
                             defaultMessage="COMPLETED"
                           />
                         </Label>
@@ -435,7 +435,7 @@ const ShipmentSummary = () => {
                         </div>
                         <Label color="BLUE">
                           <FormattedMessage
-                            id="modules.shipment.approved"
+                            id="modules.Shipments.approved"
                             defaultMessage="APPROVED"
                           />
                         </Label>
@@ -455,7 +455,7 @@ const ShipmentSummary = () => {
                         </div>
                         <Label color="RED">
                           <FormattedMessage
-                            id="modules.shipment.rejected"
+                            id="modules.Shipments.rejected"
                             defaultMessage="REJECTED"
                           />
                         </Label>

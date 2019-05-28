@@ -53,15 +53,15 @@ function RemoveContainerConfirmDialog({
         <div className={ConfirmMessageStyle}>
           <div>
             <FormattedMessage
-              id="modules.shipment.containerHasBatches"
+              id="modules.Shipments.containerHasBatches"
               defaultMessage="This {Container} contains some {Batches}."
               values={{
                 Container: spanWithColor(
-                  <FormattedMessage id="modules.shipment.container" defaultMessage="Container" />,
+                  <FormattedMessage id="modules.Shipments.container" defaultMessage="Container" />,
                   'CONTAINER'
                 ),
                 Batches: spanWithColor(
-                  <FormattedMessage id="modules.shipment.batches" defaultMessage="Batches" />,
+                  <FormattedMessage id="modules.Shipments.batches" defaultMessage="Batches" />,
                   'BATCH'
                 ),
               }}
@@ -70,22 +70,22 @@ function RemoveContainerConfirmDialog({
           <div>
             {permission.removeContainer && permission.removeShipmentBatch && (
               <FormattedMessage
-                id="modules.shipment.moveToBatchesPoolOrRemove"
+                id="modules.Shipments.moveToBatchesPoolOrRemove"
                 defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool} or to be {REMOVED}?"
                 values={{
                   Batches: spanWithColor(
-                    <FormattedMessage id="modules.shipment.Batches" defaultMessage="Batches" />,
+                    <FormattedMessage id="modules.Shipments.Batches" defaultMessage="Batches" />,
                     'BATCH'
                   ),
                   BatchesPool: spanWithColor(
                     <FormattedMessage
-                      id="modules.shipment.BatchesPool"
+                      id="modules.Shipments.BatchesPool"
                       defaultMessage="Batches Pool"
                     />,
                     'BATCH'
                   ),
                   REMOVED: spanWithColor(
-                    <FormattedMessage id="modules.shipment.REMOVED" defaultMessage="REMOVED" />,
+                    <FormattedMessage id="modules.Shipments.REMOVED" defaultMessage="REMOVED" />,
                     'RED'
                   ),
                 }}
@@ -93,16 +93,16 @@ function RemoveContainerConfirmDialog({
             )}
             {permission.removeContainer && !permission.removeShipmentBatch && (
               <FormattedMessage
-                id="modules.shipment.moveToBatchesPool"
+                id="modules.Shipments.moveToBatchesPool"
                 defaultMessage="Would you like these {Batches} to be placed in the {BatchesPool}?"
                 values={{
                   Batches: spanWithColor(
-                    <FormattedMessage id="modules.shipment.Batches" defaultMessage="Batches" />,
+                    <FormattedMessage id="modules.Shipments.Batches" defaultMessage="Batches" />,
                     'BATCH'
                   ),
                   BatchesPool: spanWithColor(
                     <FormattedMessage
-                      id="modules.shipment.BatchesPool"
+                      id="modules.Shipments.BatchesPool"
                       defaultMessage="Batches Pool"
                     />,
                     'BATCH'
@@ -117,7 +117,7 @@ function RemoveContainerConfirmDialog({
             <BaseButton
               label={
                 <FormattedMessage
-                  id="modules.shipment.toBatchesPool"
+                  id="modules.Shipments.toBatchesPool"
                   defaultMessage="TO BATCHES POOL"
                 />
               }
@@ -131,7 +131,7 @@ function RemoveContainerConfirmDialog({
           )}
           {permission.removeContainer && permission.removeShipmentBatch && (
             <BaseButton
-              label={<FormattedMessage id="modules.shipment.remove" defaultMessage="REMOVE" />}
+              label={<FormattedMessage id="modules.Shipments.remove" defaultMessage="REMOVE" />}
               icon="CLEAR"
               textColor="WHITE"
               hoverTextColor="WHITE"
