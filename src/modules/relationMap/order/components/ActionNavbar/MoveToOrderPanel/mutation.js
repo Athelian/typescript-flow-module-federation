@@ -11,6 +11,7 @@ import {
   taskFormInSlideViewFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
+  partnerNameFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -78,6 +79,7 @@ export const updateOrderMutation = gql`
   ${orderCardRMFragment}
   ${batchCardRMFragment}
   ${shipmentCardRMFragment}
+  ${partnerNameFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
