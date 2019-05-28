@@ -4,179 +4,105 @@ import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
-import { navigate } from '@reach/router';
 import Layout from 'components/Layout';
 import { showToastError } from 'utils/errors';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SlideViewNavBar } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import { FormContainer, resetFormState } from 'modules/form';
+import { SaveButton, ResetButton } from 'components/Buttons';
+import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { decodeId, encodeId } from 'utils/id';
+import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
+import { getByPath } from 'utils/fp';
 import BatchForm from './form';
 import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
-import { createBatchMutation, updateBatchMutation, prepareParsedBatchInput } from './form/mutation';
+import { updateBatchMutation, prepareParsedBatchInput } from './form/mutation';
 
 type BatchFormState = {
   batchInfoContainer: Object,
   batchTasksContainer: Object,
 };
 
-type OptionalProps = {
-  path: string,
+type Props = {
+  batchId: string,
   isSlideView: boolean,
-};
-
-type Props = OptionalProps & {
-  batchId?: string,
   intl: IntlShape,
 };
 
-const defaultProps = {
-  path: '',
-  batchId: '',
-  isSlideView: false,
-};
-
 const formContainer = new FormContainer();
-class BatchFormModule extends React.PureComponent<Props> {
-  static defaultProps = defaultProps;
-
+class BatchFormModule extends React.Component<Props> {
   componentWillUnmount() {
     formContainer.onReset();
   }
 
-  isNew = () => {
-    const { path } = this.props;
-    return path.startsWith('new');
+  onFormReady = ({ batchInfoContainer, batchTasksContainer }: BatchFormState, batch: Object) => {
+    const hasInitialStateYet =
+      (batchInfoContainer.state.id && batchInfoContainer.state.id === batch.id) ||
+      Object.keys(batchInfoContainer).length === 0;
+    if (hasInitialStateYet) return null;
+    this.initAllValues({ batchInfoContainer, batchTasksContainer }, batch);
+    return null;
   };
 
-  isClone = () => {
-    const { path } = this.props;
-    return path.startsWith('clone');
+  initAllValues = ({ batchInfoContainer, batchTasksContainer }: BatchFormState, batch: Object) => {
+    const { todo = { tasks: [] }, ...rest } = batch;
+    batchInfoContainer.initDetailValues(rest);
+    batchTasksContainer.initDetailValues(todo);
   };
-
-  isNewOrClone = () => this.isNew() || this.isClone();
-
-  onCancel = () => navigate(`/batch`);
 
   onSave = async (
     originalValues: Object,
     formData: Object,
-    saveBatch: Function,
-    onSuccess: Function = () => {},
-    onErrors: Function = () => {}
+    updateBatch: Function,
+    onSuccess: Object => void,
+    onErrors: Function
   ) => {
     const { batchId } = this.props;
-
-    const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedBatchInput(
-      isNewOrClone ? null : removeTypename(originalValues),
+      removeTypename(originalValues),
       removeTypename(formData),
-      {
-        inBatchForm: true,
-      }
+      { inBatchForm: true }
     );
-
-    if (isNewOrClone) {
-      const { data } = await saveBatch({ variables: { input } });
-      const {
-        batchCreate: { violations },
-      } = data;
+    const result = await updateBatch({ variables: { id: decodeId(batchId), input } });
+    if (result && result.data) {
+      const { data } = result;
+      const violations = getByPath('batchUpdate.violations', data);
       if (violations && violations.length) {
         onErrors(violations);
       } else {
-        onSuccess();
-      }
-    } else if (batchId) {
-      const { data } = await saveBatch({ variables: { input, id: decodeId(batchId) } });
-      const {
-        batchUpdate: { violations },
-      } = data;
-      if (violations && violations.length) {
-        onErrors(violations);
-      } else {
-        onSuccess();
+        onSuccess(getByPath('batchUpdate', data));
       }
     }
   };
 
-  onFormReady = ({ batchInfoContainer, batchTasksContainer }: BatchFormState) => (
-    batch: Object
-  ) => {
-    if (this.isClone()) {
-      const {
-        archived,
-        updatedBy,
-        updatedAt,
-        deliveredAt,
-        expiredAt,
-        producedAt,
-        no,
-        todo,
-        ...batchClone
-      } = batch;
-      batchInfoContainer.initDetailValues({
-        ...batchClone,
-        autoCalculatePackageQuantity: true,
-        no: `[cloned] ${no}`,
-        batchQuantityRevisions: [],
-      });
-    } else {
-      const { todo = { tasks: [] }, ...rest } = batch;
-      batchInfoContainer.initDetailValues(rest);
-      batchTasksContainer.initDetailValues(todo);
-    }
-  };
-
-  onMutationCompleted = ({ batchInfoContainer, batchTasksContainer }: BatchFormState) => (
-    result: Object
-  ) => {
+  onMutationCompleted = (result: Object) => {
     const { intl } = this.props;
-    if (showToastError({ result, entity: 'batch', intl })) {
-      return;
-    }
-
-    if (this.isNewOrClone()) {
-      const { batchCreate } = result;
-      navigate(`/batch/${encodeId(batchCreate.id)}`);
-    } else {
-      const { batchUpdate } = result;
-      this.onFormReady({
-        batchInfoContainer,
-        batchTasksContainer,
-      })(batchUpdate);
-    }
+    showToastError({ result, intl, entity: 'batch' });
   };
 
   render() {
     const { batchId, isSlideView } = this.props;
-    const isNewOrClone = this.isNewOrClone();
+    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
+
     let mutationKey = {};
-    if (batchId && !isNewOrClone) {
+    if (batchId) {
       mutationKey = { key: decodeId(batchId) };
     }
-
-    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
     return (
-      <Provider inject={[formContainer]}>
-        <UIConsumer>
-          {uiState => (
+      <UIConsumer>
+        {uiState => (
+          <Provider inject={[formContainer]}>
             <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
               {(batchInfoContainer, batchTasksContainer) => (
                 <Mutation
-                  mutation={isNewOrClone ? createBatchMutation : updateBatchMutation}
-                  onCompleted={this.onMutationCompleted({
-                    batchInfoContainer,
-                    batchTasksContainer,
-                  })}
+                  mutation={updateBatchMutation}
+                  onCompleted={(result: Object) => this.onMutationCompleted(result)}
                   {...mutationKey}
                 >
-                  {(saveBatch, { loading: isLoading, error: apiError }) => (
+                  {(updateBatch, { loading, error }) => (
                     <Layout
                       {...(isSlideView ? {} : uiState)}
                       navBar={
@@ -252,21 +178,23 @@ class BatchFormModule extends React.PureComponent<Props> {
                             />
                           </JumpToSection>
 
-                          {(isNewOrClone ||
-                            batchInfoContainer.isDirty() ||
-                            batchTasksContainer.isDirty()) && (
+                          {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
                             <>
-                              {this.isNewOrClone() ? (
-                                <CancelButton onClick={() => this.onCancel()} />
-                              ) : (
-                                <ResetButton
-                                  onClick={() => {
-                                    resetFormState(batchInfoContainer);
-                                    resetFormState(batchTasksContainer, 'todo');
-                                    formContainer.onReset();
-                                  }}
-                                />
-                              )}
+                              <ResetButton
+                                onClick={() => {
+                                  this.initAllValues(
+                                    {
+                                      batchInfoContainer,
+                                      batchTasksContainer,
+                                    },
+                                    {
+                                      ...batchInfoContainer.originalValues,
+                                      ...batchTasksContainer.originalValues,
+                                    }
+                                  );
+                                  formContainer.onReset();
+                                }}
+                              />
                               <SaveButton
                                 disabled={
                                   !formContainer.isReady(
@@ -274,7 +202,7 @@ class BatchFormModule extends React.PureComponent<Props> {
                                     validator
                                   )
                                 }
-                                isLoading={isLoading}
+                                isLoading={loading}
                                 onClick={() =>
                                   this.onSave(
                                     {
@@ -282,10 +210,15 @@ class BatchFormModule extends React.PureComponent<Props> {
                                       ...batchTasksContainer.originalValues,
                                     },
                                     { ...batchInfoContainer.state, ...batchTasksContainer.state },
-                                    saveBatch,
-                                    () => {
-                                      batchInfoContainer.onSuccess();
-                                      batchTasksContainer.onSuccess();
+                                    updateBatch,
+                                    updateData => {
+                                      this.initAllValues(
+                                        {
+                                          batchInfoContainer,
+                                          batchTasksContainer,
+                                        },
+                                        updateData
+                                      );
                                       formContainer.onReset();
                                     },
                                     formContainer.onErrors
@@ -298,36 +231,36 @@ class BatchFormModule extends React.PureComponent<Props> {
                         </CurrentNavBar>
                       }
                     >
-                      {apiError && <p>Error: Please try again.</p>}
-                      {this.isNew() || !batchId ? (
-                        <BatchForm batch={{}} isNew />
-                      ) : (
-                        <QueryForm
-                          query={batchFormQuery}
-                          entityId={batchId}
-                          entityType="batch"
-                          render={batch => (
+                      {error && <p>Error: Please try again.</p>}
+                      <QueryForm
+                        query={batchFormQuery}
+                        entityId={batchId}
+                        entityType="batch"
+                        render={batch => (
+                          <>
                             <BatchForm
-                              isClone={this.isClone()}
                               batch={batch}
                               onFormReady={() => {
-                                this.onFormReady({
-                                  batchInfoContainer,
-                                  batchTasksContainer,
-                                })(batch);
+                                this.onFormReady(
+                                  {
+                                    batchInfoContainer,
+                                    batchTasksContainer,
+                                  },
+                                  batch
+                                );
                               }}
                             />
-                          )}
-                        />
-                      )}
+                          </>
+                        )}
+                      />
                     </Layout>
                   )}
                 </Mutation>
               )}
             </Subscribe>
-          )}
-        </UIConsumer>
-      </Provider>
+          </Provider>
+        )}
+      </UIConsumer>
     );
   }
 }

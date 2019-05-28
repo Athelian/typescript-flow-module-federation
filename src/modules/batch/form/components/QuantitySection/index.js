@@ -30,11 +30,7 @@ import {
   QuantityRevisionDiffStyle,
 } from './style';
 
-type Props = {
-  isNew: boolean,
-};
-
-const QuantitySection = ({ isNew }: Props) => {
+const QuantitySection = () => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
@@ -78,7 +74,6 @@ const QuantitySection = ({ isNew }: Props) => {
                             setFieldArrayValue('quantity', inputHandlers.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
-                          isNew={isNew}
                           required
                           originalValue={originalValues[name]}
                           label={
@@ -124,7 +119,6 @@ const QuantitySection = ({ isNew }: Props) => {
                                         setFieldArrayValue(name, inputHandlers.value);
                                         calculatePackageQuantity(setFieldTouched);
                                       }}
-                                      isNew={item.isNew}
                                       originalValue={item.quantity}
                                       editable={
                                         allowUpdate || hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS)
@@ -161,7 +155,6 @@ const QuantitySection = ({ isNew }: Props) => {
                               setFieldArrayValue(
                                 `batchQuantityRevisions[${batchQuantityRevisions.length}]`,
                                 injectUid({
-                                  isNew: true,
                                   type: 'Other',
                                   quantity:
                                     batchQuantityRevisions.length === 0

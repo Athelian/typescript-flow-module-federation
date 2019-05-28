@@ -1,9 +1,7 @@
 // @flow
 import React, { lazy, Suspense } from 'react';
-import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { isEquals } from 'utils/fp';
-import { encodeId } from 'utils/id';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { BatchInfoContainer, BatchTasksContainer } from './containers';
@@ -18,8 +16,6 @@ const AsyncOrderSection = lazy(() => import('./components/OrderSection'));
 const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 
 type OptionalProps = {
-  isNew: boolean,
-  isClone: boolean,
   onFormReady: () => void,
 };
 
@@ -28,8 +24,6 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  isNew: false,
-  isClone: false,
   onFormReady: () => {},
 };
 
@@ -38,29 +32,22 @@ export default class BatchForm extends React.Component<Props> {
 
   componentDidMount() {
     const { onFormReady } = this.props;
-
     if (onFormReady) onFormReady();
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { batch, isNew } = this.props;
-
-    return !isEquals(batch, nextProps.batch) || !isEquals(isNew, nextProps.isNew);
+    const { batch } = this.props;
+    return !isEquals(batch, nextProps.batch);
   }
 
-  onClone = () => {
-    const { batch } = this.props;
-    navigate(`/batch/clone/${encodeId(batch.id)}`);
-  };
-
   render() {
-    const { batch, isNew, isClone } = this.props;
+    const { batch } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={BatchFormInSlideStyle}>
-          <AsyncBatchSection isNew={isNew} isClone={isClone} batch={batch} />
-          <AsyncQuantitySection isNew={isNew} />
-          <AsyncPackagingSection isNew={isNew} />
+          <AsyncBatchSection batch={batch} />
+          <AsyncQuantitySection />
+          <AsyncPackagingSection />
           <AsyncTaskSection entityId={batch.id} type="batch" />
           <AsyncShipmentSection shipment={batch.shipment} />
           <AsyncContainerSection container={batch.container} />

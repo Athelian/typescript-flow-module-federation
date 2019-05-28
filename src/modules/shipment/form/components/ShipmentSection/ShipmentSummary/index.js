@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { groupBy } from 'lodash';
 import { Subscribe } from 'unstated';
 import { getByPathWithDefault, isNullOrUndefined, getByPath } from 'utils/fp';
 import { getBatchLatestQuantity, findVolume, findWeight, totalBatchPriceAmount } from 'utils/batch';
@@ -111,7 +110,17 @@ const ShipmentSummary = () => {
           totalVolumeValue += findVolume(batch);
         });
 
-        const containerTypes = groupBy(containers, 'containerType');
+        const containerTypes = CONTAINER_TYPE_ITEMS.map(containerType => {
+          return { ...containerType, count: 0 };
+        });
+        containers.forEach(({ containerType }) => {
+          if (containerType) {
+            const foundType = containerTypes.find(({ value }) => value === containerType);
+            if (foundType) {
+              foundType.count += 1;
+            }
+          }
+        });
 
         const tasksPending = tasks.filter(item => isNullOrUndefined(item.inProgressAt)).length;
         const tasksInProgress = tasks.filter(
@@ -323,32 +332,24 @@ const ShipmentSummary = () => {
                   }
                 />
 
-                {containerTypes !== {} &&
-                  !Object.keys(containerTypes).every(key => key === 'undefined') && (
-                    <div className={ContainerTypesWrapperStyle}>
-                      {Object.entries(containerTypes).map(([key, value]) => {
-                        const label = new Map(
-                          CONTAINER_TYPE_ITEMS.map(item => [item.value, item.label])
-                        ).get(key);
-
-                        if (label)
-                          return (
-                            <FieldItem
-                              key={key}
-                              label={<Label>{label}</Label>}
-                              input={
-                                <Display>
-                                  <FormattedNumber
-                                    value={Array.isArray(value) ? value.length : 0}
-                                  />
-                                </Display>
-                              }
-                            />
-                          );
-                        return null;
-                      })}
-                    </div>
-                  )}
+                {containerTypes.some(({ count }) => count > 0) && (
+                  <div className={ContainerTypesWrapperStyle}>
+                    {containerTypes.map(
+                      ({ label, count }) =>
+                        count > 0 && (
+                          <FieldItem
+                            key={label}
+                            label={<Label>{label}</Label>}
+                            input={
+                              <Display>
+                                <FormattedNumber value={count} />
+                              </Display>
+                            }
+                          />
+                        )
+                    )}
+                  </div>
+                )}
               </GridColumn>
 
               <GridColumn gap="0">

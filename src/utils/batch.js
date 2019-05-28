@@ -208,6 +208,7 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
     autoCalculatePackageQuantity: true,
     todo: {
       tasks: [],
+      taskTemplate: null,
     },
   });
 };
