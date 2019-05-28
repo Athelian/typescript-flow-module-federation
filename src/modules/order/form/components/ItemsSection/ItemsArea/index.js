@@ -390,6 +390,7 @@ function ItemsArea({
                             files: [],
                             todo: {
                               tasks: [],
+                              taskTemplate: null,
                             },
                             tags: [],
                             archived: orderIsArchived,

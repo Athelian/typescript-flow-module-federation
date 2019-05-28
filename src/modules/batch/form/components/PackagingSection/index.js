@@ -30,11 +30,7 @@ import {
 import { getByPath } from 'utils/fp';
 import { PackagingSectionWrapperStyle } from './style';
 
-type Props = {
-  isNew: boolean,
-};
-
-const PackagingSection = ({ isNew }: Props) => {
+const PackagingSection = () => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(BATCH_UPDATE);
@@ -124,7 +120,6 @@ const PackagingSection = ({ isNew }: Props) => {
                     <TextInputFactory
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={originalValues[name]}
                       label={
                         <FormattedMessage
@@ -154,7 +149,6 @@ const PackagingSection = ({ isNew }: Props) => {
                             setFieldValue('packageCapacity', inputHandlers.value);
                             calculatePackageQuantity(setFieldTouched);
                           }}
-                          isNew={isNew}
                           originalValue={originalValues[name]}
                           label={
                             <FormattedMessage
@@ -179,7 +173,6 @@ const PackagingSection = ({ isNew }: Props) => {
                     <NumberInputFactory
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={originalValues[name]}
                       label={
                         <FormattedMessage
@@ -237,7 +230,6 @@ const PackagingSection = ({ isNew }: Props) => {
                       metricType="weight"
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={getByPath('packageGrossWeight', originalValues)}
                       label={
                         <FormattedMessage
@@ -261,7 +253,6 @@ const PackagingSection = ({ isNew }: Props) => {
                       metricType="volume"
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={getByPath('packageVolume', originalValues)}
                       label={
                         <FormattedMessage
@@ -323,7 +314,6 @@ const PackagingSection = ({ isNew }: Props) => {
                       metricType="distance"
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={getByPath('packageSize.length', originalValues)}
                       label={
                         <FormattedMessage
@@ -352,7 +342,6 @@ const PackagingSection = ({ isNew }: Props) => {
                       metricType="distance"
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={getByPath('packageSize.width', originalValues)}
                       label={
                         <FormattedMessage
@@ -381,7 +370,6 @@ const PackagingSection = ({ isNew }: Props) => {
                       metricType="distance"
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={getByPath('packageSize.height', originalValues)}
                       label={
                         <FormattedMessage

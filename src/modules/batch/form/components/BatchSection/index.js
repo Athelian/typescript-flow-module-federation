@@ -1,20 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
 import emitter from 'utils/emitter';
-import { encodeId } from 'utils/id';
 import { spreadOrderItem } from 'utils/item';
-import { CloneButton } from 'components/Buttons';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
-import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
-  BATCH_CREATE,
   BATCH_UPDATE,
   BATCH_SET_NO,
   BATCH_SET_DELIVERY_DATE,
@@ -24,17 +19,10 @@ import {
   BATCH_SET_CUSTOM_FIELDS,
   BATCH_SET_TAGS,
   BATCH_SET_MEMO,
-  BATCH_SET_ORDER_ITEM,
   BATCH_SET_CUSTOM_FIELDS_MASK,
-  BATCH_SET_PACKAGE_NAME,
-  BATCH_SET_PACKAGE_CAPACITY,
-  BATCH_SET_PACKAGE_WEIGHT,
-  BATCH_SET_PACKAGE_VOLUME,
-  BATCH_SET_PACKAGE_SIZE,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import SlideView from 'components/SlideView';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
@@ -48,7 +36,6 @@ import {
   SectionWrapper,
   FieldItem,
   Label,
-  DashedPlusButton,
   TagsInput,
   CustomFieldsFactory,
   TextInputFactory,
@@ -56,7 +43,6 @@ import {
   TextAreaInputFactory,
 } from 'components/Form';
 import messages from 'modules/batch/messages';
-import SelectOrderItem from 'modules/batch/common/SelectOrderItem';
 import {
   StatusStyle,
   StatusLabelStyle,
@@ -67,12 +53,10 @@ import {
 } from './style';
 
 type Props = {
-  isNew: boolean,
-  isClone: boolean,
   batch: Object,
 };
 
-const BatchSection = ({ isNew, isClone, batch }: Props) => {
+const BatchSection = ({ batch }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -105,10 +89,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                 position="bottom"
               />
             </div>
-
-            {!isClone && hasPermission(BATCH_CREATE) && (
-              <CloneButton onClick={() => navigate(`/batch/clone/${encodeId(batch.id)}`)} />
-            )}
           </>
         )}
       </SectionHeader>
@@ -154,7 +134,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                         <TextInputFactory
                           name={name}
                           {...inputHandlers}
-                          isNew={isNew}
                           required
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.batchNo} />}
@@ -178,7 +157,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             inputHandlers.onBlur(evt);
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
-                          isNew={isNew}
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.deliveredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE])}
@@ -201,7 +179,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             inputHandlers.onBlur(evt);
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
-                          isNew={isNew}
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.desiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE])}
@@ -224,7 +201,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             inputHandlers.onBlur(evt);
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
-                          isNew={isNew}
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.expiredAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_EXPIRY])}
@@ -247,7 +223,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                             inputHandlers.onBlur(evt);
                             emitter.emit('AUTO_DATE', name, inputHandlers.value);
                           }}
-                          isNew={isNew}
                           originalValue={originalValues[name]}
                           label={<FormattedMessage {...messages.producedAt} />}
                           editable={hasPermission([BATCH_UPDATE, BATCH_SET_PRODUCTION_DATE])}
@@ -268,86 +243,17 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                     <Label required>
                       <FormattedMessage {...messages.orderItem} />
                     </Label>
-                    {isNew &&
-                    hasPermission([BATCH_UPDATE, BATCH_SET_ORDER_ITEM]) &&
-                    hasPermission(ORDER_ITEMS_LIST) ? (
-                      <BooleanValue>
-                        {({ value: opened, set: slideToggle }) => (
-                          <React.Fragment>
-                            {!values.orderItem ? (
-                              <DashedPlusButton
-                                data-testid="selectOrderItemButton"
-                                width="195px"
-                                height="217px"
-                                onClick={() => slideToggle(true)}
-                              />
-                            ) : (
-                              <ItemCard
-                                orderItem={orderItem}
-                                productProvider={productProvider}
-                                product={product}
-                                order={order}
-                                editable={editable}
-                                viewable={viewable}
-                                navigable={navigable}
-                                config={config}
-                                onClick={() => slideToggle(true)}
-                              />
-                            )}
-
-                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                              {opened && (
-                                <SelectOrderItem
-                                  selected={values.orderItem}
-                                  onCancel={() => slideToggle(false)}
-                                  onSelect={newValue => {
-                                    slideToggle(false);
-                                    setFieldValue('orderItem', newValue);
-                                    if (
-                                      hasPermission(BATCH_UPDATE) ||
-                                      [
-                                        BATCH_SET_PACKAGE_NAME,
-                                        BATCH_SET_PACKAGE_CAPACITY,
-                                        BATCH_SET_PACKAGE_WEIGHT,
-                                        BATCH_SET_PACKAGE_VOLUME,
-                                        BATCH_SET_PACKAGE_SIZE,
-                                      ].every(hasPermission)
-                                    ) {
-                                      const {
-                                        productProvider: {
-                                          packageName,
-                                          packageCapacity,
-                                          packageGrossWeight,
-                                          packageVolume,
-                                          packageSize,
-                                        },
-                                      } = newValue;
-                                      setFieldValue('packageName', packageName);
-                                      setFieldValue('packageCapacity', packageCapacity);
-                                      setFieldValue('packageGrossWeight', packageGrossWeight);
-                                      setFieldValue('packageVolume', packageVolume);
-                                      setFieldValue('packageSize', packageSize);
-                                    }
-                                  }}
-                                />
-                              )}
-                            </SlideView>
-                          </React.Fragment>
-                        )}
-                      </BooleanValue>
-                    ) : (
-                      <ItemCard
-                        orderItem={orderItem}
-                        productProvider={productProvider}
-                        product={product}
-                        order={order}
-                        editable={editable}
-                        viewable={viewable}
-                        navigable={navigable}
-                        config={config}
-                        readOnly
-                      />
-                    )}
+                    <ItemCard
+                      orderItem={orderItem}
+                      productProvider={productProvider}
+                      product={product}
+                      order={order}
+                      editable={editable}
+                      viewable={viewable}
+                      navigable={navigable}
+                      config={config}
+                      readOnly
+                    />
                   </div>
                 </div>
                 <FieldItem
@@ -386,7 +292,6 @@ const BatchSection = ({ isNew, isClone, batch }: Props) => {
                     <TextAreaInputFactory
                       name={name}
                       {...inputHandlers}
-                      isNew={isNew}
                       originalValue={originalValues[name]}
                       label={<FormattedMessage {...messages.memo} />}
                       editable={hasPermission([BATCH_UPDATE, BATCH_SET_MEMO])}

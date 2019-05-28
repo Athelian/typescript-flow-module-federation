@@ -39,19 +39,6 @@ import {
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
-export const createBatchMutation = gql`
-  mutation batchCreate($input: BatchCreateInput!) {
-    batchCreate(input: $input) {
-      ... on Batch {
-        id
-      }
-      ...badRequestFragment
-    }
-  }
-
-  ${badRequestFragment}
-`;
-
 export const updateBatchMutation = gql`
   mutation batchUpdate($id: ID!, $input: BatchUpdateInput!) {
     batchUpdate(id: $id, input: $input) {
