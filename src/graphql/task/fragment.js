@@ -227,6 +227,9 @@ export const taskFormFragment = gql`
     }
     memo
     entity {
+      ... on Model {
+        id
+      }
       ... on Order {
         ...orderCardFragment
       }
@@ -236,14 +239,19 @@ export const taskFormFragment = gql`
       ... on Batch {
         ...batchCardFragment
       }
-      ... on Shipment {
-        ...shipmentCardFragment
-      }
       ... on Product {
         ...productCardFragment
       }
       ... on ProductProvider {
         ...productProviderCardFragment
+      }
+    }
+    shipment: entity {
+      ... on Model {
+        id
+      }
+      ... on Shipment {
+        ...shipmentCardFragment
       }
     }
   }

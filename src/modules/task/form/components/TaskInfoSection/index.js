@@ -284,7 +284,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                         </Label>
                       }
                       vertical
-                      input={<ShipmentCard shipment={task.entity} />}
+                      input={<ShipmentCard shipment={task.shipment} />}
                     />
                   )}
 
