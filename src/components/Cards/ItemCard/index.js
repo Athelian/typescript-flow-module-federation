@@ -160,7 +160,7 @@ const configDefault = {
   hideOrder: false,
 };
 
-let cardHeight = 287;
+let cardHeight = 312;
 
 const ItemCard = ({
   orderItem,
