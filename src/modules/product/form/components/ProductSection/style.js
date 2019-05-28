@@ -13,10 +13,14 @@ import {
 export const ProductSectionWrapperStyle: string = css`
   ${presets.BOX};
   width: 880px;
-  padding: 0 0 40px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 40px 100px;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 20px;
+`;
+
+export const MainFieldsWrapperStyle: string = css`
+  ${layout.GRID_HORIZONTAL};
+  justify-content: space-between;
 `;
 
 export const ProductImagesWrapperStyle = (numOfFiles: number): string => css`

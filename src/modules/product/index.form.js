@@ -9,6 +9,7 @@ import { QueryForm } from 'components/common';
 import { getByPath } from 'utils/fp';
 import { UIConsumer } from 'modules/ui';
 import { showToastError } from 'utils/errors';
+import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
@@ -456,7 +457,54 @@ class ProductFormModule extends React.Component<Props> {
               >
                 {apiError && <p>Error: Please try again.</p>}
                 {!productId ? (
-                  <ProductForm product={{}} isNewOrClone />
+                  <UserConsumer>
+                    {({ user }) => {
+                      const { group } = user;
+                      const { types = [] } = group;
+                      const isImporter = types.includes('Importer');
+                      return (
+                        <>
+                          <ProductForm product={{}} isNewOrClone />
+                          <Subscribe
+                            to={[
+                              ProductInfoContainer,
+                              ProductProvidersContainer,
+                              ProductTagsContainer,
+                              ProductFilesContainer,
+                              ProductTasksContainer,
+                            ]}
+                          >
+                            {(
+                              productInfoState,
+                              productProvidersState,
+                              productTagsState,
+                              productFilesState,
+                              productTasksState
+                            ) =>
+                              this.onFormReady(
+                                {
+                                  productInfoState,
+                                  productProvidersState,
+                                  productTagsState,
+                                  productFilesState,
+                                  productTasksState,
+                                },
+                                {
+                                  id: Date.now(),
+                                  importer: isImporter ? group : {},
+                                  tags: [],
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  files: [],
+                                }
+                              )
+                            }
+                          </Subscribe>
+                        </>
+                      );
+                    }}
+                  </UserConsumer>
                 ) : (
                   <QueryForm
                     query={productFormQuery}

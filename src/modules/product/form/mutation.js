@@ -76,6 +76,11 @@ export const updateProductMutation: Object = gql`
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
+  ...parseParentIdField(
+    'importerId',
+    getByPathWithDefault(null, 'importer', originalValues),
+    newValues.importer
+  ),
   ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
   ...parseGenericField(

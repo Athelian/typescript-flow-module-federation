@@ -22,7 +22,7 @@ import {
 } from 'graphql';
 
 export const productFormQuery = gql`
-  query($id: ID!) {
+  query productFormQuery($id: ID!) {
     product(id: $id) {
       ...productFormFragment
     }

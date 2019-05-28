@@ -5,6 +5,11 @@ import { FormattedMessage } from 'react-intl';
 
 export default Yup.object().shape({
   name: Yup.string().required(),
+  importer: Yup.object()
+    .shape({
+      id: Yup.string().required(),
+    })
+    .required(),
   serial: Yup.string().required(),
   janCode: Yup.string()
     .test(

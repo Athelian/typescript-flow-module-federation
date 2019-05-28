@@ -48,7 +48,6 @@ const DeployNotifier = ({ revision, revisionKey, intl }: Props) => {
             <div className={ToastButtonIconStyle}>
               <Icon icon="RELOAD" />
             </div>
-            s
           </button>,
           {
             position: 'bottom-left',

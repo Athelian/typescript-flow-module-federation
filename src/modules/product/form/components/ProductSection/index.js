@@ -8,6 +8,7 @@ import { encodeId } from 'utils/id';
 import usePermission from 'hooks/usePermission';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
 import { CloneButton } from 'components/Buttons';
+import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
 import {
@@ -38,6 +39,7 @@ import {
   ProductImageWrapperStyle,
   ProductImageStyle,
   ViewImageButtonStyle,
+  MainFieldsWrapperStyle,
   DeleteImageButtonStyle,
   SwapImageButtonStyle,
   ScrollFixStyle,
@@ -105,6 +107,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
       <Subscribe to={[ProductInfoContainer]}>
         {({ originalValues: initialValues, state, setFieldValue }) => {
           const values = { ...initialValues, ...state };
+          const { importer } = values;
           return (
             <div className={ProductSectionWrapperStyle}>
               <Subscribe to={[ProductFilesContainer]}>
@@ -193,172 +196,192 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                   </div>
                 )}
               </Subscribe>
-              <GridColumn maxWidth="400px">
-                <FormField
-                  name="name"
-                  initValue={values.name}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      required
-                      originalValue={initialValues[name]}
-                      label={<FormattedMessage id="modules.Products.name" defaultMessage="NAME" />}
-                      editable={allowUpdate}
-                    />
-                  )}
-                </FormField>
-                <FormField
-                  name="serial"
-                  initValue={values.serial}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      required
-                      originalValue={initialValues[name]}
-                      label={
-                        <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />
-                      }
-                      editable={allowUpdate}
-                    />
-                  )}
-                </FormField>
-                <FormField
-                  name="janCode"
-                  initValue={values.janCode}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={initialValues[name]}
-                      label={
-                        <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />
-                      }
-                      editable={allowUpdate}
-                    />
-                  )}
-                </FormField>
-                <FormField
-                  name="hsCode"
-                  initValue={values.hsCode}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={initialValues[name]}
-                      label={
-                        <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />
-                      }
-                      editable={allowUpdate}
-                    />
-                  )}
-                </FormField>
-                <FormField
-                  name="material"
-                  initValue={values.material}
-                  setFieldValue={setFieldValue}
-                  values={values}
-                  validator={validator}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextInputFactory
-                      name={name}
-                      {...inputHandlers}
-                      isNew={isNew}
-                      originalValue={initialValues[name]}
-                      label={
-                        <FormattedMessage
-                          id="modules.Products.material"
-                          defaultMessage="MATERIAL"
-                        />
-                      }
-                      editable={allowUpdate}
-                    />
-                  )}
-                </FormField>
-                <CustomFieldsFactory
-                  entityType="Product"
-                  customFields={values.customFields}
-                  setFieldValue={setFieldValue}
-                  editable={{
-                    values: allowUpdate,
-                    mask: allowUpdate,
-                  }}
-                />
-                <div className={TagsInputStyle}>
-                  <Subscribe to={[ProductTagsContainer]}>
-                    {({ state: { tags }, setFieldValue: changeTags }) => (
-                      <FieldItem
-                        vertical
+              <div className={MainFieldsWrapperStyle}>
+                <GridColumn>
+                  <FormField
+                    name="name"
+                    initValue={values.name}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
                         label={
-                          <Label height="30px">
-                            <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
-                          </Label>
+                          <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />
                         }
-                        input={
-                          <TagsInput
-                            id="tags"
-                            name="tags"
-                            tagType="Product"
-                            values={tags}
-                            onChange={(field, value) => {
-                              changeTags(field, value);
-                            }}
-                            editable={{
-                              set: hasPermission(TAG_LIST) && hasPermission(PRODUCT_UPDATE),
-                              remove: hasPermission(PRODUCT_UPDATE),
-                            }}
-                          />
-                        }
+                        editable={allowUpdate}
                       />
                     )}
-                  </Subscribe>
-                </div>
+                  </FormField>
+                  <FormField
+                    name="serial"
+                    initValue={values.serial}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        required
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="janCode"
+                    initValue={values.janCode}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.Products.janCode"
+                            defaultMessage="JAN CODE"
+                          />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="hsCode"
+                    initValue={values.hsCode}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <FormField
+                    name="material"
+                    initValue={values.material}
+                    setFieldValue={setFieldValue}
+                    values={values}
+                    validator={validator}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={
+                          <FormattedMessage
+                            id="modules.Products.material"
+                            defaultMessage="MATERIAL"
+                          />
+                        }
+                        editable={allowUpdate}
+                      />
+                    )}
+                  </FormField>
+                  <CustomFieldsFactory
+                    entityType="Product"
+                    customFields={values.customFields}
+                    setFieldValue={setFieldValue}
+                    editable={{
+                      values: allowUpdate,
+                      mask: allowUpdate,
+                    }}
+                  />
+                  <div className={TagsInputStyle}>
+                    <Subscribe to={[ProductTagsContainer]}>
+                      {({ state: { tags }, setFieldValue: changeTags }) => (
+                        <FieldItem
+                          vertical
+                          label={
+                            <Label height="30px">
+                              <FormattedMessage id="modules.Products.tags" defaultMessage="TAGS" />
+                            </Label>
+                          }
+                          input={
+                            <TagsInput
+                              id="tags"
+                              name="tags"
+                              tagType="Product"
+                              values={tags}
+                              onChange={(field, value) => {
+                                changeTags(field, value);
+                              }}
+                              editable={{
+                                set: hasPermission(TAG_LIST) && hasPermission(PRODUCT_UPDATE),
+                                remove: hasPermission(PRODUCT_UPDATE),
+                              }}
+                            />
+                          }
+                        />
+                      )}
+                    </Subscribe>
+                  </div>
 
-                <FormField
-                  name="memo"
-                  initValue={values.memo}
-                  values={values}
-                  validator={validator}
-                  setFieldValue={setFieldValue}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <TextAreaInputFactory
-                      {...inputHandlers}
-                      editable={allowUpdate}
-                      name={name}
-                      isNew={isNew}
-                      originalValue={initialValues[name]}
-                      label={<FormattedMessage id="modules.Product.memo" defaultMessage="MEMO" />}
-                      inputWidth="400px"
-                      inputHeight="120px"
-                    />
-                  )}
-                </FormField>
-
-                <div className={DividerStyle} />
-              </GridColumn>
+                  <FormField
+                    name="memo"
+                    initValue={values.memo}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextAreaInputFactory
+                        {...inputHandlers}
+                        editable={allowUpdate}
+                        name={name}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage id="modules.Product.memo" defaultMessage="MEMO" />}
+                        inputWidth="400px"
+                        inputHeight="120px"
+                      />
+                    )}
+                  </FormField>
+                </GridColumn>
+                <GridColumn>
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label required>
+                        <FormattedMessage
+                          id="modules.Products.importer"
+                          defaultMessage="IMPORTER"
+                        />
+                      </Label>
+                    }
+                    input={<PartnerCard partner={importer} readOnly />}
+                  />
+                </GridColumn>
+              </div>
+              <div className={DividerStyle} />
             </div>
           );
         }}
