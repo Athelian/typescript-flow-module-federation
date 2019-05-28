@@ -7,7 +7,7 @@ export const StaffCardWrapperStyle: string = css`
   grid-gap: 5px;
   grid-template-columns: 195px;
   width: 195px;
-  height: 215px;
+  height: 239px;
   justify-items: center;
   padding: 10px 0 5px 0;
 `;
@@ -57,4 +57,8 @@ export const CompanyStyle: string = css`
   color: ${colors.BLACK};
   padding: 0 10px;
   width: 100%;
+  & > svg {
+    margin: 0 5px 0 0;
+    color: ${colors.GRAY_DARK};
+  }
 `;

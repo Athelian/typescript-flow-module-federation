@@ -70,7 +70,10 @@ const StaffCard = ({ staff, onClick, actions, ...rest }: Props) => {
             <FormattedMessage id="components.cards.defaultUser" defaultMessage="User" />
           )}
         </div>
-        <div className={CompanyStyle}>{group && group.name}</div>
+        <div className={CompanyStyle}>
+          <Icon icon="STAFF" />
+          {group && group.name}
+        </div>
         <div className={StaffTagsWrapperStyle}>
           {tags.length > 0 && tags.map(tag => <Tag key={tag.id} tag={tag} />)}
         </div>
@@ -83,7 +86,7 @@ StaffCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(StaffCard, 'staff', {
   width: '195px',
-  height: '215px',
+  height: '239px',
   entityIcon: 'STAFF',
   entityColor: 'STAFF',
 });

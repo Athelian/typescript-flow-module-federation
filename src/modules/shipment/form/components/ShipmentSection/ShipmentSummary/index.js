@@ -257,7 +257,7 @@ const ShipmentSummary = () => {
               <FieldItem
                 label={
                   <Label>
-                    <FormattedMessage id="modules.shipment.batches" defaultMessage="BATCHES" />
+                    <FormattedMessage id="modules.shipment.batches" defaultMessage="Batches" />
                   </Label>
                 }
                 input={
