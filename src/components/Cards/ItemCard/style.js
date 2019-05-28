@@ -179,6 +179,18 @@ export const OrderIconStyle: string = css`
   }
 `;
 
+export const ImporterWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  & > svg {
+    margin: 0 5px 0 0;
+    color: ${colors.GRAY_DARK};
+  }
+`;
+
 export const TagsAndTaskWrapperStyle: string = css`
   display: grid;
   grid-template-columns: 160px 20px;

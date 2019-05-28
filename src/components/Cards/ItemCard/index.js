@@ -37,6 +37,7 @@ import {
   TotalPriceWrapperStyle,
   OrderWrapperStyle,
   OrderIconStyle,
+  ImporterWrapperStyle,
   TagsAndTaskWrapperStyle,
   ItemTagsWrapperStyle,
 } from './style';
@@ -47,6 +48,8 @@ type OptionalProps = {
     id: string,
     poNo: string,
     currency?: string,
+    importer?: Object,
+    exporter?: Object,
   },
   batches: Array<{
     quantity: number,
@@ -176,7 +179,7 @@ const ItemCard = ({
 }: Props) => {
   const { archived, no, quantity, price, tags, todo } = orderItem;
 
-  const { id: orderId, poNo, currency: orderCurrency } = order;
+  const { id: orderId, poNo, currency: orderCurrency, importer, exporter } = order;
 
   const validation = validator({
     no: `orderItems.${index}.no`,
@@ -413,6 +416,15 @@ const ItemCard = ({
               <Display align="left">{poNo}</Display>
             </div>
           )}
+
+          <div className={ImporterWrapperStyle}>
+            <Icon icon="IMPORTER" />
+            {importer && importer.name}
+          </div>
+          <div className={ImporterWrapperStyle}>
+            <Icon icon="EXPORTER" />
+            {exporter && exporter.name}
+          </div>
 
           <div className={TagsAndTaskWrapperStyle}>
             <div className={ItemTagsWrapperStyle}>

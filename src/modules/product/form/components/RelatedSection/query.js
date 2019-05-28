@@ -49,6 +49,7 @@ export const itemsInProductQuery = gql`
   }
 
   ${itemCardFragment}
+  ${partnerNameFragment}
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}

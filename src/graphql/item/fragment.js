@@ -20,6 +20,12 @@ export const itemCardFragment = gql`
       ... on Order {
         id
         poNo
+        importer {
+          ...partnerNameFragment
+        }
+        exporter {
+          ...partnerNameFragment
+        }
       }
     }
     totalBatched
