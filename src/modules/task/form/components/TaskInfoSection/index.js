@@ -886,7 +886,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<OrderCard order={task.entity} />}
+                          input={<OrderCard order={task.order} />}
                         />
                       </GridColumn>
                     )}
@@ -895,7 +895,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                     getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
                     (() => {
                       const { orderItem, productProvider, product, order } = spreadOrderItem(
-                        task.entity
+                        task.item
                       );
 
                       const viewable = {
@@ -949,7 +949,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<ProductCard product={task.entity} />}
+                          input={<ProductCard product={task.product} />}
                         />
                       </GridColumn>
                     )}
@@ -967,7 +967,9 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<OrderProductProviderCard productProvider={task.entity} />}
+                          input={
+                            <OrderProductProviderCard productProvider={task.productProvider} />
+                          }
                         />
                       </GridColumn>
                     )}
@@ -982,7 +984,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<BatchCard batch={task.entity} />}
+                          input={<BatchCard batch={task.batch} />}
                         />
                       </GridColumn>
                     )}

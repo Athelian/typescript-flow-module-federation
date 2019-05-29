@@ -230,17 +230,42 @@ export const taskFormFragment = gql`
       ... on Model {
         id
       }
+    }
+    order: entity {
+      ... on Model {
+        id
+      }
       ... on Order {
         ...orderCardFragment
+      }
+    }
+    orderItem: entity {
+      ... on Model {
+        id
       }
       ... on OrderItem {
         ...itemCardFragment
       }
+    }
+    batch: entity {
+      ... on Model {
+        id
+      }
       ... on Batch {
         ...batchCardFragment
       }
+    }
+    product: entity {
+      ... on Model {
+        id
+      }
       ... on Product {
         ...productCardFragment
+      }
+    }
+    productProvider: entity {
+      ... on Model {
+        id
       }
       ... on ProductProvider {
         ...productProviderCardFragment
