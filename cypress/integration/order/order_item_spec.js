@@ -1,4 +1,4 @@
-describe('Order', () => {
+describe('Order items section', () => {
   before(() => {
     cy.login();
   });
@@ -17,6 +17,9 @@ describe('Order', () => {
       .wait(1000);
 
     cy.url().should('include', '/order/emV');
+
+    // FIXME: should use scrollTo() method, but it doesn't work.
+    cy.contains('DOCUMENTS').click();
 
     cy.getByTestId('btnNewItems')
       .click()

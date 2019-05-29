@@ -1,4 +1,4 @@
-describe('Order', () => {
+describe('Order create action', () => {
   before(() => {
     cy.login();
   });
