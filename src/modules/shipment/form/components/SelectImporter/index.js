@@ -49,7 +49,7 @@ const SelectImporter = ({ selected, onCancel, onSelect }: Props) => (
                     partner={item}
                     key={item.id}
                     onSelect={() => set(item)}
-                    selected={item && item.id === value.id}
+                    selected={item && value && item.id === value.id}
                   />
                 )}
               />
