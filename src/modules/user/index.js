@@ -14,6 +14,8 @@ type ContextProps = {
   user: {
     id: string,
     group: Object,
+    firstName: string,
+    lastName: string,
   },
   permissions: Array<string>,
 };
@@ -24,6 +26,8 @@ export const UserContext: React.Context<ContextProps> = React.createContext({
     group: {
       id: '-1',
     },
+    firstName: '',
+    lastName: '',
   },
   permissions: [],
 });

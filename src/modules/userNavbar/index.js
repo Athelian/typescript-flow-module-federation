@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Query, Subscription } from 'react-apollo';
+import { UserConsumer } from 'modules/user';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -67,10 +68,6 @@ class UserNavBar extends React.Component<Props, State> {
       <div className={SettingsWrapperStyle}>
         <Query query={countNotificationQuery} fetchPolicy="network-only">
           {({ data, client, refetch }) => {
-            const viewer = {
-              firstName: getByPathWithDefault('TODO', 'viewer.user.firstName', data),
-              lastName: getByPathWithDefault('TODO', 'viewer.user.lastName', data),
-            };
             const unSeen = getByPathWithDefault(0, 'viewer.notificationUnseen', data);
 
             return (
@@ -132,11 +129,15 @@ class UserNavBar extends React.Component<Props, State> {
                     data-testid="setting-button"
                     ref={this.userMenuRef}
                   >
-                    <UserAvatar
-                      firstName={viewer.firstName}
-                      lastName={viewer.lastName}
-                      hideTooltip
-                    />
+                    <UserConsumer>
+                      {({ user }) => (
+                        <UserAvatar
+                          firstName={user.firstName}
+                          lastName={user.lastName}
+                          hideTooltip
+                        />
+                      )}
+                    </UserConsumer>
                   </button>
 
                   <OutsideClickHandler
