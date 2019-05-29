@@ -13,7 +13,7 @@ import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
 import Layout from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import LoadingIcon from 'components/LoadingIcon';
-import { BatchCardInSelectPage } from 'components/Cards';
+import { ShipmentBatchCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
@@ -214,9 +214,10 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches }: P
             hasMore={hasMore}
             isLoading={isLoading && batches.length === 0}
             renderItem={item => (
-              <BatchCardInSelectPage
+              <ShipmentBatchCard
                 key={item.id}
                 batch={item}
+                selectable
                 selected={selected.includes(item)}
                 onSelect={() => onSelectBatch({ selected, item, onPush, onSet })}
                 viewable={{

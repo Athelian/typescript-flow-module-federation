@@ -11,7 +11,12 @@ import {
 } from 'graphql';
 
 export const batchListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: BatchFilterInput, $sortBy: BatchSortInput) {
+  query batchListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: BatchFilterInput
+    $sortBy: BatchSortInput
+  ) {
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...batchCardFragment

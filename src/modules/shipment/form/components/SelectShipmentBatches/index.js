@@ -19,7 +19,7 @@ import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import messages from 'modules/batch/messages';
 import useFilter from 'hooks/useFilter';
-import { BatchCardInSelectPage } from 'components/Cards';
+import { ShipmentBatchCard } from 'components/Cards';
 import { selectBatchListQuery } from './query';
 
 type Props = {
@@ -214,8 +214,9 @@ function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Pr
             hasMore={hasMore}
             isLoading={isLoading && batches.length === 0}
             renderItem={item => (
-              <BatchCardInSelectPage
+              <ShipmentBatchCard
                 key={item.id}
+                selectable
                 batch={item}
                 selected={selected.includes(item)}
                 onSelect={() => onSelectBatch({ selected, item, onPush, onSet })}
