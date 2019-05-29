@@ -157,13 +157,12 @@ const ShipmentBatchCard = ({
     packageQuantity,
     tags,
     container,
-    orderItem: {
-      price,
-      productProvider: { name: productProviderName, product },
-      order,
-    },
+    orderItem: { price, productProvider, order },
     todo,
   } = batch;
+
+  if (!productProvider) return null;
+  const { name: productProviderName, product } = productProvider;
 
   const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 
