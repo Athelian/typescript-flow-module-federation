@@ -84,6 +84,9 @@ export const orderFormFragment = gql`
         ...taskTemplateCardFragment
       }
     }
+    importer {
+      ...partnerCardFragment
+    }
     exporter {
       ...partnerCardFragment
     }
