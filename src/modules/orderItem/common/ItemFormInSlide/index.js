@@ -143,13 +143,13 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                 isSlideView
                 orderItem={orderItem}
                 onFormReady={() => {
-                  const {
-                    batches = [],
-                    files = [],
-                    todo = { tasks: [] },
-                    shipments = [],
-                    ...rest
-                  } = orderItem;
+                  const { batches = [], files = [], todo = { tasks: [] }, ...rest } = orderItem;
+                  const shipments = [];
+                  batches.forEach(batch => {
+                    if (batch.shipment && !shipments.includes(batch.shipment)) {
+                      shipments.push(batch.shipment);
+                    }
+                  });
                   orderItemInfoContainer.initDetailValues(rest);
                   orderItemBatchesContainer.initDetailValues({ batches });
                   orderItemFilesContainer.initDetailValues({ files });
