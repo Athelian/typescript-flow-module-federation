@@ -33,7 +33,7 @@ describe('Product', () => {
           .click()
           .getByTestId('selectExportersButton')
           .click()
-          .getByTestId('partnerCard')
+          .get('[data-testid="partnerCard"]')
           .first()
           .click()
           .getByTestId('saveButtonOnSelectExporters')
