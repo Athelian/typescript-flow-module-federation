@@ -11,20 +11,16 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { PartnerCard } from 'components/Cards';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 
-type Props = {
-  selected?: ?{
+type OptionalProps = {
+  selected: {
     id: string,
     name: string,
   },
-  onSelect: (item: Object) => void,
-  onCancel: Function,
 };
 
-const defaultProps = {
-  selected: {
-    id: '',
-    name: '',
-  },
+type Props = OptionalProps & {
+  onSelect: (item: Object) => void,
+  onCancel: Function,
 };
 
 const isEquals = (value: ?Object, selected: ?Object): boolean => {
@@ -50,8 +46,11 @@ const SelectExporter = ({ selected, onCancel, onSelect }: Props) => {
                     data-testid="btnSaveExporter"
                     disabled={isEquals(value, selected)}
                     onClick={() => {
-                      if (!selected || selected.id !== value.id) {
+                      if (selected && selected.id !== value.id) {
                         setOpenConfirmDialog(true);
+                      } else {
+                        onSelect(value);
+                        setOpenConfirmDialog(false);
                       }
                     }}
                   />
@@ -96,7 +95,5 @@ const SelectExporter = ({ selected, onCancel, onSelect }: Props) => {
     </PartnerListProvider>
   );
 };
-
-SelectExporter.defaultProps = defaultProps;
 
 export default SelectExporter;
