@@ -107,7 +107,7 @@ function BatchesSection({ containerIsArchived }: Props) {
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                       <>
                         <NewButton
-                          data-testid="selectBatchesButton"
+                          data-testid="btnSelectBatches"
                           label={
                             <FormattedMessage
                               id="modules.Shipments.selectBatches"

@@ -166,7 +166,7 @@ function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Pr
               />
               <CancelButton onClick={onCancel} />
               <SaveButton
-                data-testid="saveButtonOnSelectShipmentBatches"
+                data-testid="btnSaveSelectBatches"
                 disabled={selected.length === 0}
                 onClick={() => {
                   onSelect(removeTypename(selected));
