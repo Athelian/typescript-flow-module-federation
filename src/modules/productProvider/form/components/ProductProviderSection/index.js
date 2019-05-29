@@ -121,7 +121,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                       message={
                                         <FormattedMessage
                                           id="modules.Products.changeExporterWarning"
-                                          defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks?"
+                                          defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
                                         />
                                       }
                                     />
