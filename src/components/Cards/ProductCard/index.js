@@ -66,7 +66,7 @@ class ProductCard extends React.PureComponent<Props, State> {
   render() {
     const { product, actions, ...rest } = this.props;
     const { activeImage } = this.state;
-    const { id, archived, name, serial, tags, files, productProviders, todo } = product;
+    const { id, archived, name, serial, tags, files, productProviders, todo, importer } = product;
 
     const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
@@ -116,6 +116,10 @@ class ProductCard extends React.PureComponent<Props, State> {
             <div className={ProductSerialStyle}>{serial}</div>
             <div className={ProductProvidersWrapperStyle}>
               <div className={ProductExporterStyle}>
+                <Icon icon="IMPORTER" />
+                {importer && importer.name}
+              </div>
+              <div className={ProductExporterStyle}>
                 <Icon icon="EXPORTER" />
                 {productProviders.length > 0 && productProviders[0].exporter.name}
               </div>
@@ -146,7 +150,7 @@ class ProductCard extends React.PureComponent<Props, State> {
 
 export default withForbiddenCard(ProductCard, 'product', {
   width: '195px',
-  height: '209px',
+  height: '227px',
   entityIcon: 'PRODUCT',
   entityColor: 'PRODUCT',
 });

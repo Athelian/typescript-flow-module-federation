@@ -50,6 +50,9 @@ export const productCardFragment = gql`
     archived
     name
     serial
+    importer {
+      ...partnerNameFragment
+    }
     productProviders {
       ... on ProductProvider {
         id
