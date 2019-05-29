@@ -34,18 +34,6 @@ export const ImporterWrapperStyle: string = css`
   }
 `;
 
-export const ExporterWrapperStyle: string = css`
-  width: 100%;
-  padding: 0 5px;
-  ${fontSizesWithHeights.SMALL};
-  color: ${colors.BLACK};
-  ${presets.ELLIPSIS};
-  & > svg {
-    margin: 0 5px 0 0;
-    color: ${colors.GRAY_DARK};
-  }
-`;
-
 export const DividerStyle: string = css`
   height: 1px;
   background-color: ${colors.GRAY_VERY_LIGHT};

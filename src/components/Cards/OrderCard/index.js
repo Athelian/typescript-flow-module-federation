@@ -18,7 +18,6 @@ import {
   OrderInfoWrapperStyle,
   PONoWrapperStyle,
   ImporterWrapperStyle,
-  ExporterWrapperStyle,
   DividerStyle,
   ChartWrapperStyle,
   InChargeWrapperStyle,
@@ -68,7 +67,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             <Icon icon="IMPORTER" />
             {importer && importer.name}
           </div>
-          <div className={ExporterWrapperStyle}>
+          <div className={ImporterWrapperStyle}>
             <Icon icon="EXPORTER" />
             {exporter && exporter.name}
           </div>

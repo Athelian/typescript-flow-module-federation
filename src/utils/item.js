@@ -108,10 +108,12 @@ export const spreadOrderItem = (item: Object): Object => {
     files,
   };
 
-  const { id: orderId, poNo } = order;
+  const { id: orderId, poNo, importer, exporter } = order;
   const compiledOrder = {
     id: orderId,
     poNo,
+    importer,
+    exporter,
   };
 
   return {
