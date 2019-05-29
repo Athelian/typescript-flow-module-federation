@@ -219,3 +219,15 @@ export const BatchTagsWrapperStyle: string = css`
   padding: 0 0 0 10px;
   overflow: hidden;
 `;
+
+export const ImporterWrapperStyle: string = css`
+  width: 100%;
+  padding: 0 5px;
+  ${fontSizesWithHeights.SMALL};
+  color: ${colors.BLACK};
+  ${presets.ELLIPSIS};
+  & > svg {
+    margin: 0 5px 0 0;
+    color: ${colors.GRAY_DARK};
+  }
+`;

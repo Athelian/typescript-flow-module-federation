@@ -49,6 +49,7 @@ import {
   InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
+  ImporterWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -178,6 +179,8 @@ const ShipmentBatchCard = ({
     [`batch.${id}.no`]: no,
   };
 
+  const { importer, exporter } = order;
+
   return (
     <BaseCard
       icon="BATCH"
@@ -279,6 +282,15 @@ const ShipmentBatchCard = ({
                 />
               )}
             </FormField>
+          </div>
+
+          <div className={ImporterWrapperStyle}>
+            <Icon icon="IMPORTER" />
+            {importer && importer.name}
+          </div>
+          <div className={ImporterWrapperStyle}>
+            <Icon icon="EXPORTER" />
+            {exporter && exporter.name}
           </div>
 
           <div
