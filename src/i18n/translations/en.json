@@ -644,7 +644,7 @@
   "modules.ProductProviders.packageVolumeTooltipReadonlyOn": "This field is being automatically calculated by multiplying Package Length, Package Width, and Package Height.",
   "modules.ProductProviders.packageVolumeTooltipReadonlyOff": "This field is not being automatically calculated by multiplying Package Length, Package Width, and Package Height.",
   "modules.ProductProviders.exporter": "EXPORTER",
-  "modules.Products.changeExporterWarning": "Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks?",
+  "modules.Products.changeExporterWarning": "Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?",
   "modules.ProductProviders.supplier": "SUPPLIER",
   "modules.ProductProviders.name": "NAME",
   "modules.productProvider.mustBeUniqueName": "The name of End Product with the same Exporter and Supplier must be unique",
