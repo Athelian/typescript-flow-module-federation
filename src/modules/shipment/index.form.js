@@ -622,7 +622,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                     },
                                     {
                                       id: Date.now(),
-                                      importer: isImporter ? group : {},
+                                      importer: isImporter ? group : null,
                                       forwarders: isForwarder ? [group] : [],
                                       inCharges: [],
                                       booked: false,
@@ -636,6 +636,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       tags: [],
                                       todo: {
                                         tasks: [],
+                                        taskTemplate: null,
                                       },
                                       files: [],
                                       containers: [],

@@ -573,55 +573,68 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                   onRequestClose={() => importerSelectorToggle(false)}
                                 >
                                   {importerSelectorIsOpen && (
-                                    <BooleanValue>
-                                      {({
-                                        value: importerDialogIsOpen,
-                                        set: importerDialogToggle,
-                                      }) => (
-                                        <ObjectValue defaultValue={values.importer}>
+                                    <>
+                                      {isExporter() ? (
+                                        <BooleanValue>
                                           {({
-                                            value: selectedImporter,
-                                            set: setSelectedImporter,
+                                            value: importerDialogIsOpen,
+                                            set: importerDialogToggle,
                                           }) => (
-                                            <>
-                                              <SelectImporter
-                                                selected={values.importer}
-                                                onCancel={() => importerSelectorToggle(false)}
-                                                onSelect={selected => {
-                                                  if (isExporter() && selectedImporter) {
-                                                    setSelectedImporter(selected);
-                                                    importerDialogToggle(true);
-                                                  } else {
-                                                    setFieldValue('importer', selected);
-                                                    importerSelectorToggle(false);
-                                                  }
-                                                }}
-                                              />
-                                              <ConfirmDialog
-                                                isOpen={importerDialogIsOpen}
-                                                onRequestClose={() => {
-                                                  importerDialogToggle(false);
-                                                }}
-                                                onCancel={() => {
-                                                  importerDialogToggle(false);
-                                                }}
-                                                onConfirm={() => {
-                                                  setFieldValue('importer', selectedImporter);
-                                                  importerDialogToggle(false);
-                                                  importerSelectorToggle(false);
-                                                }}
-                                                message={
-                                                  <FormattedMessage
-                                                    id="modules.Shipment.importerDialogMessage"
-                                                    defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                            <ObjectValue defaultValue={values.importer}>
+                                              {({
+                                                value: selectedImporter,
+                                                set: setSelectedImporter,
+                                              }) => (
+                                                <>
+                                                  <SelectImporter
+                                                    selected={values.importer}
+                                                    onCancel={() => importerSelectorToggle(false)}
+                                                    onSelect={selected => {
+                                                      if (selectedImporter) {
+                                                        setSelectedImporter(selected);
+                                                        importerDialogToggle(true);
+                                                      } else {
+                                                        setFieldValue('importer', selected);
+                                                        importerSelectorToggle(false);
+                                                      }
+                                                    }}
                                                   />
-                                                }
-                                              />
-                                            </>
+                                                  <ConfirmDialog
+                                                    isOpen={importerDialogIsOpen}
+                                                    onRequestClose={() => {
+                                                      importerDialogToggle(false);
+                                                    }}
+                                                    onCancel={() => {
+                                                      importerDialogToggle(false);
+                                                    }}
+                                                    onConfirm={() => {
+                                                      setFieldValue('importer', selectedImporter);
+                                                      importerDialogToggle(false);
+                                                      importerSelectorToggle(false);
+                                                    }}
+                                                    message={
+                                                      <FormattedMessage
+                                                        id="modules.Shipment.importerDialogMessage"
+                                                        defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                                      />
+                                                    }
+                                                  />
+                                                </>
+                                              )}
+                                            </ObjectValue>
                                           )}
-                                        </ObjectValue>
+                                        </BooleanValue>
+                                      ) : (
+                                        <SelectImporter
+                                          selected={values.importer}
+                                          onCancel={() => importerSelectorToggle(false)}
+                                          onSelect={selected => {
+                                            setFieldValue('importer', selected);
+                                            importerSelectorToggle(false);
+                                          }}
+                                        />
                                       )}
-                                    </BooleanValue>
+                                    </>
                                   )}
                                 </SlideView>
                               </>
