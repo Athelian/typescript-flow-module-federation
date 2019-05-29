@@ -20,7 +20,7 @@ type ShipmentInfoType = {
   inCharges: Array<{ id: string, firstName: string, lastName: string }>,
   importer: ?{ id: string, name: string },
   forwarders: Array<{ id: string, name: string }>,
-  // exporter?: ?{ id: string, name: string },
+  exporter: ?{ id: string, name: string },
 };
 
 const initValues = {
@@ -43,7 +43,7 @@ const initValues = {
   inCharges: [],
   importer: null,
   forwarders: [],
-  // exporter: null,
+  exporter: null,
 };
 
 export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {

@@ -14,6 +14,7 @@ import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
   SHIPMENT_SET_IMPORTER,
+  SHIPMENT_SET_EXPORTER,
   SHIPMENT_SET_IN_CHARGE,
   SHIPMENT_SET_TAGS,
   SHIPMENT_SET_CUSTOM_FIELDS,
@@ -45,6 +46,7 @@ import {
   ShipmentTagsContainer,
 } from 'modules/shipment/form/containers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
+import SelectExporters from 'modules/order/common/SelectExporters';
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -140,7 +142,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
       <Subscribe to={[ShipmentInfoContainer]}>
         {({ originalValues: initialValues, state, setFieldValue }) => {
           const values: Object = { ...initialValues, ...state };
-          const { forwarders = [], importer } = values;
+          const { forwarders = [], importer, exporter } = values;
 
           return (
             <div className={ShipmentSectionWrapperStyle}>
@@ -642,6 +644,125 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                           </BooleanValue>
                         ) : (
                           <PartnerCard partner={importer} readOnly />
+                        )}
+                      </>
+                    }
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label>
+                        <FormattedMessage
+                          id="modules.Shipments.mainExporter"
+                          defaultMessage="MAIN EXPORTER"
+                        />
+                      </Label>
+                    }
+                    tooltip={
+                      <FormTooltip
+                        infoMessage={
+                          <FormattedMessage
+                            id="modules.Shipments.tooltipExporter"
+                            defaultMessage="The Exporter chosen here will have access to this Shipment"
+                          />
+                        }
+                      />
+                    }
+                    input={
+                      <>
+                        {(isForwarder() || isImporter()) &&
+                        (hasPermission(PARTNER_LIST) &&
+                          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_EXPORTER])) ? (
+                          <BooleanValue>
+                            {({ value: exporterSelectorIsOpen, set: exporterSelectorToggle }) => (
+                              <>
+                                {exporter && exporter.id ? (
+                                  <PartnerCard
+                                    partner={exporter}
+                                    onClick={() => exporterSelectorToggle(true)}
+                                  />
+                                ) : (
+                                  <DashedPlusButton
+                                    width="195px"
+                                    height="215px"
+                                    onClick={() => exporterSelectorToggle(true)}
+                                  />
+                                )}
+                                <SlideView
+                                  isOpen={exporterSelectorIsOpen}
+                                  onRequestClose={() => exporterSelectorToggle(false)}
+                                >
+                                  {exporterSelectorIsOpen && (
+                                    <>
+                                      {isImporter() ? (
+                                        <BooleanValue>
+                                          {({
+                                            value: exporterDialogIsOpen,
+                                            set: exporterDialogToggle,
+                                          }) => (
+                                            <ObjectValue defaultValue={values.exporter}>
+                                              {({
+                                                value: selectedImporter,
+                                                set: setSelectedImporter,
+                                              }) => (
+                                                <>
+                                                  <SelectExporters
+                                                    selected={values.exporter}
+                                                    onCancel={() => exporterSelectorToggle(false)}
+                                                    onSelect={selected => {
+                                                      if (selectedImporter) {
+                                                        setSelectedImporter(selected);
+                                                        exporterDialogToggle(true);
+                                                      } else {
+                                                        setFieldValue('exporter', selected);
+                                                        exporterSelectorToggle(false);
+                                                      }
+                                                    }}
+                                                  />
+                                                  <ConfirmDialog
+                                                    isOpen={exporterDialogIsOpen}
+                                                    onRequestClose={() => {
+                                                      exporterDialogToggle(false);
+                                                    }}
+                                                    onCancel={() => {
+                                                      exporterDialogToggle(false);
+                                                    }}
+                                                    onConfirm={() => {
+                                                      setFieldValue('exporter', selectedImporter);
+                                                      exporterDialogToggle(false);
+                                                      exporterSelectorToggle(false);
+                                                    }}
+                                                    message={
+                                                      <FormattedMessage
+                                                        id="modules.Shipment.exporterDialogMessage"
+                                                        defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                                      />
+                                                    }
+                                                  />
+                                                </>
+                                              )}
+                                            </ObjectValue>
+                                          )}
+                                        </BooleanValue>
+                                      ) : (
+                                        <SelectExporters
+                                          selected={values.exporter}
+                                          onCancel={() => exporterSelectorToggle(false)}
+                                          onSelect={selected => {
+                                            setFieldValue('exporter', selected);
+                                            exporterSelectorToggle(false);
+                                          }}
+                                        />
+                                      )}
+                                    </>
+                                  )}
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+                        ) : (
+                          <PartnerCard partner={exporter} readOnly />
                         )}
                       </>
                     }
