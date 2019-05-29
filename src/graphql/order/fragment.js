@@ -75,15 +75,6 @@ export const orderFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
-    todo {
-      ...todoFragment
-      tasks {
-        ...taskFormInSlideViewFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
     importer {
       ...partnerCardFragment
     }
@@ -95,6 +86,15 @@ export const orderFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     files {
       ...documentFragment
