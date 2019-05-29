@@ -12,7 +12,7 @@ import {
 } from 'modules/productProvider/form/containers';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { convertValueToFormFieldFormat } from 'components/Form/Factories/helpers';
-import SelectExporters from 'modules/order/common/SelectExporters';
+import SelectExporter from 'modules/order/common/SelectExporter';
 import SlideView from 'components/SlideView';
 import validator from 'modules/product/form/validator';
 import GridRow from 'components/GridRow';
@@ -144,7 +144,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                     >
                                       {({ onChange }) => (
                                         <>
-                                          <SelectExporters
+                                          <SelectExporter
                                             selected={values.exporter}
                                             onCancel={() => exporterSlideToggle(false)}
                                             onSelect={newValue => {

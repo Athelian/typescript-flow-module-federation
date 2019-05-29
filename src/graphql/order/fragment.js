@@ -32,6 +32,9 @@ export const orderFormQueryFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    importer {
+      ...partnerCardFragment
+    }
     exporter {
       ...partnerCardFragment
     }

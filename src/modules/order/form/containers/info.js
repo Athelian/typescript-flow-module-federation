@@ -9,6 +9,7 @@ type FormState = {
   poNo: ?string,
   currency: ?string,
   deliveryPlace: ?string,
+  importer?: Object,
   exporter?: { id: string, name: string },
   incoterm: ?string,
   issuedAt: ?Date,

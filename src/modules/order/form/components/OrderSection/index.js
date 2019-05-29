@@ -11,6 +11,7 @@ import {
   OrderInfoContainer,
   OrderTagsContainer,
   OrderItemsContainer,
+  OrderTasksContainer,
 } from 'modules/order/form/containers';
 import validator from 'modules/order/form/validator';
 import { FormField } from 'modules/form';
@@ -31,7 +32,7 @@ import {
 import { getQuantityForOrderSummary } from 'modules/order/helpers';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
-import SelectExporters from 'modules/order/common/SelectExporters';
+import SelectExporter from 'modules/order/common/SelectExporter';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import OrderSummary from './components/OrderSummary';
@@ -305,6 +306,12 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                   />
 
                   <Label required>
+                    <FormattedMessage {...messages.importer} />
+                  </Label>
+
+                  <PartnerCard partner={values.importer} readOnly />
+
+                  <Label required>
                     <FormattedMessage {...messages.exporter} />
                   </Label>
 
@@ -327,14 +334,15 @@ const OrderSection = ({ isNew, isClone }: Props) => {
 
                           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                             {opened && (
-                              <Subscribe to={[OrderItemsContainer]}>
-                                {({ setFieldValue: resetOrderItems }) => (
-                                  <SelectExporters
+                              <Subscribe to={[OrderItemsContainer, OrderTasksContainer]}>
+                                {({ setFieldValue: resetOrderItems }, { changeExporter }) => (
+                                  <SelectExporter
                                     selected={values.exporter}
                                     onCancel={() => slideToggle(false)}
                                     onSelect={newValue => {
                                       slideToggle(false);
                                       setFieldValue('exporter', newValue);
+                                      changeExporter(values.exporter);
                                       resetOrderItems('orderItems', []);
                                     }}
                                   />

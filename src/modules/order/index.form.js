@@ -10,6 +10,7 @@ import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
+import { UserConsumer } from 'modules/user';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryFormV2 from 'components/common/QueryFormV2';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
@@ -496,54 +497,64 @@ class OrderFormModule extends React.PureComponent<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   {this.isNew() || !orderId ? (
-                    <>
-                      <OrderForm isNew />
-                      <Subscribe
-                        to={[
-                          OrderItemsContainer,
-                          OrderInfoContainer,
-                          OrderTagsContainer,
-                          OrderFilesContainer,
-                          OrderTasksContainer,
-                        ]}
-                      >
-                        {(
-                          orderItemState,
-                          orderInfoState,
-                          orderTagsState,
-                          orderFilesState,
-                          orderTasksState
-                        ) =>
-                          this.onFormReady(
-                            {
-                              orderItemState,
-                              orderInfoState,
-                              orderTagsState,
-                              orderFilesState,
-                              orderTasksState,
-                            },
-                            {
-                              id: Date.now(),
-                              inCharges: [],
-                              currency: 'USD',
-                              customFields: {
-                                fieldValues: [],
-                                fieldDefinitions: [],
-                              },
-                              tags: [],
-                              todo: {
-                                tasks: [],
-                              },
-                              files: [],
-                              orderItems: [],
-                              shipments: [],
-                              containers: [],
-                              ...initDataForSlideView,
-                            }
-                          )
-                        }
-                      </Subscribe>
-                    </>
+                    <UserConsumer>
+                      {({ user }) => {
+                        const { group } = user;
+                        const { types = [] } = group;
+                        const isImporter = types.includes('Importer');
+                        return (
+                          <>
+                            <OrderForm isNew />
+                            <Subscribe
+                              to={[
+                                OrderItemsContainer,
+                                OrderInfoContainer,
+                                OrderTagsContainer,
+                                OrderFilesContainer,
+                                OrderTasksContainer,
+                              ]}
+                            >
+                              {(
+                                orderItemState,
+                                orderInfoState,
+                                orderTagsState,
+                                orderFilesState,
+                                orderTasksState
+                              ) =>
+                                this.onFormReady(
+                                  {
+                                    orderItemState,
+                                    orderInfoState,
+                                    orderTagsState,
+                                    orderFilesState,
+                                    orderTasksState,
+                                  },
+                                  {
+                                    id: Date.now(),
+                                    inCharges: [],
+                                    currency: 'USD',
+                                    customFields: {
+                                      fieldValues: [],
+                                      fieldDefinitions: [],
+                                    },
+                                    tags: [],
+                                    importer: isImporter ? group : {},
+                                    todo: {
+                                      tasks: [],
+                                    },
+                                    files: [],
+                                    orderItems: [],
+                                    shipments: [],
+                                    containers: [],
+                                    ...initDataForSlideView,
+                                  }
+                                )
+                              }
+                            </Subscribe>
+                          </>
+                        );
+                      }}
+                    </UserConsumer>
                   ) : (
                     <QueryFormV2
                       query={orderFormQuery}

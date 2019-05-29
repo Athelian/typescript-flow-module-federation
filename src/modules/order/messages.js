@@ -122,6 +122,10 @@ export default defineMessages({
     id: 'modules.Orders.currency',
     defaultMessage: 'Currency',
   },
+  importer: {
+    id: 'modules.Orders.importer',
+    defaultMessage: 'IMPORTER',
+  },
   exporter: {
     id: 'modules.Orders.exporter',
     defaultMessage: 'EXPORTER',

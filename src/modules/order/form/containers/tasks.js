@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPath } from 'utils/fp';
 import emitter from 'utils/emitter';
 
 type FormState = {
@@ -42,6 +42,38 @@ export default class OrderTasksContainer extends Container<FormState> {
     setTimeout(() => {
       emitter.emit('AUTO_DATE');
     }, 200);
+  };
+
+  changeExporter = (prevExporter: Object) => {
+    const { todo } = this.state;
+    this.setState({
+      todo: {
+        ...todo,
+        tasks: todo.tasks.map(task => ({
+          ...task,
+          assignedTo: task.assignedTo.filter(
+            user => getByPath('group.id', user) !== prevExporter.id
+          ),
+          approvers: task.approvers.filter(user => getByPath('group.id', user) !== prevExporter.id),
+          inProgressAt:
+            getByPath('inProgressBy.group.id', task) === prevExporter.id ? null : task.inProgressAt,
+          inProgressBy:
+            getByPath('inProgressBy.group.id', task) === prevExporter.id ? null : task.inProgressBy,
+          completedAt:
+            getByPath('completedBy.group.id', task) === prevExporter.id ? null : task.completedAt,
+          completedBy:
+            getByPath('completedBy.group.id', task) === prevExporter.id ? null : task.completedBy,
+          rejectedAt:
+            getByPath('rejectedBy.group.id', task) === prevExporter.id ? null : task.rejectedAt,
+          rejectedBy:
+            getByPath('rejectedBy.group.id', task) === prevExporter.id ? null : task.rejectedBy,
+          approvedAt:
+            getByPath('approvedBy.group.id', task) === prevExporter.id ? null : task.approvedAt,
+          approvedBy:
+            getByPath('approvedBy.group.id', task) === prevExporter.id ? null : task.approvedBy,
+        })),
+      },
+    });
   };
 
   initDetailValues = (todo: { tasks: Array<Object> }) => {
