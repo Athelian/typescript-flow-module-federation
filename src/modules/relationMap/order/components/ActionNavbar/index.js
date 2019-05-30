@@ -6,6 +6,8 @@ import { intersection } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
+import usePermission from 'hooks/usePermission';
+import { RM_CLONE_ORDER } from 'modules/permission/constants/relationMap';
 import logger from 'utils/logger';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
@@ -59,6 +61,7 @@ type Props = {
 
 export default function ActionNavbar({ highLightEntities, entities }: Props) {
   const { orders, orderItems, batches, shipments, exporters } = entities;
+  const { hasPermission } = usePermission();
   const [activeAction, setActiveAction] = React.useState('clone');
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
@@ -89,6 +92,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 <TabItem
                   className={TabItemStyled}
                   allowClickOnDisable
+                  disabled={uiSelectors.isDisableCloneOrder(!hasPermission(RM_CLONE_ORDER))}
                   label={
                     <FormattedMessage
                       id="modules.RelationMaps.label.clone"
@@ -220,7 +224,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   )}
                 </BooleanValue>
               </TargetToolBar>
-              {['split', 'autoFillBatch', 'connectOrder', 'connectShipment'].includes(
+              {['clone', 'split', 'autoFillBatch', 'connectOrder', 'connectShipment'].includes(
                 activeAction
               ) && (
                 <ConstraintPanel
@@ -232,6 +236,9 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       activeAction === 'connectShipment' && !uiSelectors.isAllowToConnectShipment(),
                     disabledMoveToOrder:
                       activeAction === 'connectOrder' && !uiSelectors.isAllowToConnectOrder(),
+                    disabledCloneOrder:
+                      activeAction === 'clone' &&
+                      uiSelectors.isDisableCloneOrder(!hasPermission(RM_CLONE_ORDER)),
                   }}
                 />
               )}
@@ -256,238 +263,239 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                   </Dialog>
                 </OutsideClickHandler>
               )}
-              {activeAction === 'clone' && (
-                <ClonePanel
-                  onClick={async () => {
-                    const batchIds = uiSelectors.targetedBatchIds();
-                    const shipmentIds = uiSelectors.targetedShipmentIds();
-                    const orderItemIds = uiSelectors.targetedOrderItemIds();
-                    const allOrderItemIds = [...orderItemIds];
-                    (Object.entries(orderItems || {}): Array<any>).forEach(
-                      ([orderItemId, orderItem]) => {
-                        if (
-                          !allOrderItemIds.includes(orderItemId) &&
-                          intersection(orderItem.batches, batchIds).length > 0
-                        ) {
-                          allOrderItemIds.push(orderItemId);
+              {activeAction === 'clone' &&
+                !uiSelectors.isDisableCloneOrder(!hasPermission(RM_CLONE_ORDER)) && (
+                  <ClonePanel
+                    onClick={async () => {
+                      const batchIds = uiSelectors.targetedBatchIds();
+                      const shipmentIds = uiSelectors.targetedShipmentIds();
+                      const orderItemIds = uiSelectors.targetedOrderItemIds();
+                      const allOrderItemIds = [...orderItemIds];
+                      (Object.entries(orderItems || {}): Array<any>).forEach(
+                        ([orderItemId, orderItem]) => {
+                          if (
+                            !allOrderItemIds.includes(orderItemId) &&
+                            intersection(orderItem.batches, batchIds).length > 0
+                          ) {
+                            allOrderItemIds.push(orderItemId);
+                          }
                         }
-                      }
-                    );
-                    const orderIds = uiSelectors.targetedOrderIds();
-                    const allOrderIds = [...orderIds];
-                    (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
-                      if (
-                        !allOrderIds.includes(orderId) &&
-                        intersection(order.orderItems, allOrderItemIds).length > 0
-                      ) {
-                        allOrderIds.push(orderId);
-                      }
-                    });
-                    actions.cloneEntities([
-                      {
-                        type: ORDER,
-                        ids: orderIds,
-                      },
-                      {
-                        type: ORDER_ITEM,
-                        ids: orderItemIds,
-                      },
-                      {
-                        type: BATCH,
-                        ids: batchIds,
-                      },
-                      {
-                        type: SHIPMENT,
-                        ids: shipmentIds,
-                      },
-                    ]);
-
-                    const processBatchIds = [];
-                    const processOrderItemIds = [];
-                    try {
-                      const result = [];
-                      if (orderIds.length > 0) {
-                        const cloneOrders = await Promise.all(
-                          orderIds.map(orderId => {
-                            const selectedOrderItemIds = intersection(
-                              orders[orderId].orderItems,
-                              orderItemIds
-                            );
-                            if (selectedOrderItemIds.length > 0) {
-                              processOrderItemIds.push(...selectedOrderItemIds);
-                            }
-                            return client.mutate({
-                              mutation: cloneOrderMutation,
-                              variables: {
-                                id: orderId,
-                                input: {
-                                  poNo: `[cloned] ${orders[orderId].poNo}`,
-                                  orderItems: selectedOrderItemIds.map(orderItemId => {
-                                    const selectedBatchIds = intersection(
-                                      orderItems[orderItemId]
-                                        ? orderItems[orderItemId].batches
-                                        : [],
-                                      batchIds
-                                    );
-                                    if (selectedBatchIds.length > 0) {
-                                      processBatchIds.push(...selectedBatchIds);
-                                    }
-                                    return {
-                                      id: orderItemId,
-                                      batches: selectedBatchIds.map(id => ({ id })),
-                                    };
-                                  }),
-                                },
-                              },
-                            });
-                          })
-                        );
-                        // TODO: show error message from violations
-                        result.push({
+                      );
+                      const orderIds = uiSelectors.targetedOrderIds();
+                      const allOrderIds = [...orderIds];
+                      (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
+                        if (
+                          !allOrderIds.includes(orderId) &&
+                          intersection(order.orderItems, allOrderItemIds).length > 0
+                        ) {
+                          allOrderIds.push(orderId);
+                        }
+                      });
+                      actions.cloneEntities([
+                        {
                           type: ORDER,
-                          items: cloneOrders
-                            .map((item, index) => ({
-                              id: orderIds[index],
-                              order: getByPathWithDefault([], 'data.orderClone', item),
-                            }))
-                            .filter(item => !item.order.violations),
-                        });
-                      }
+                          ids: orderIds,
+                        },
+                        {
+                          type: ORDER_ITEM,
+                          ids: orderItemIds,
+                        },
+                        {
+                          type: BATCH,
+                          ids: batchIds,
+                        },
+                        {
+                          type: SHIPMENT,
+                          ids: shipmentIds,
+                        },
+                      ]);
 
-                      if (orderItemIds.length > 0) {
-                        const cloneOrderItems = await Promise.all(
-                          orderItemIds
-                            .filter(orderItemId => !processOrderItemIds.includes(orderItemId))
-                            .map(orderItemId => {
-                              const selectedBatchIds = intersection(
-                                orderItems[orderItemId] ? orderItems[orderItemId].batches : [],
-                                batchIds
+                      const processBatchIds = [];
+                      const processOrderItemIds = [];
+                      try {
+                        const result = [];
+                        if (orderIds.length > 0) {
+                          const cloneOrders = await Promise.all(
+                            orderIds.map(orderId => {
+                              const selectedOrderItemIds = intersection(
+                                orders[orderId].orderItems,
+                                orderItemIds
                               );
-                              if (selectedBatchIds.length > 0) {
-                                processBatchIds.push(...selectedBatchIds);
+                              if (selectedOrderItemIds.length > 0) {
+                                processOrderItemIds.push(...selectedOrderItemIds);
                               }
                               return client.mutate({
-                                mutation: cloneOrderItemMutation,
+                                mutation: cloneOrderMutation,
                                 variables: {
-                                  id: orderItemId,
+                                  id: orderId,
                                   input: {
-                                    batches: selectedBatchIds.map(id => ({ id })),
+                                    poNo: `[cloned] ${orders[orderId].poNo}`,
+                                    orderItems: selectedOrderItemIds.map(orderItemId => {
+                                      const selectedBatchIds = intersection(
+                                        orderItems[orderItemId]
+                                          ? orderItems[orderItemId].batches
+                                          : [],
+                                        batchIds
+                                      );
+                                      if (selectedBatchIds.length > 0) {
+                                        processBatchIds.push(...selectedBatchIds);
+                                      }
+                                      return {
+                                        id: orderItemId,
+                                        batches: selectedBatchIds.map(id => ({ id })),
+                                      };
+                                    }),
                                   },
                                 },
-                                refetchQueries: allOrderIds.map(orderId => ({
-                                  query: orderDetailQuery,
-                                  variables: {
-                                    id: orderId,
-                                  },
-                                })),
                               });
                             })
-                        );
-                        // TODO: show error message from violations
-                        result.push({
-                          type: ORDER_ITEM,
-                          items: cloneOrderItems
-                            .map((item, index) => ({
-                              id: orderItemIds[index],
-                              orderItem: getByPathWithDefault([], 'data.orderItemClone', item),
-                            }))
-                            .filter(item => !item.orderItem.violations),
-                        });
-                      }
-
-                      if (batchIds.length > 0) {
-                        const cloneBatches = await Promise.all(
-                          batchIds
-                            .filter(batchId => !processBatchIds.includes(batchId))
-                            .map(batchId =>
-                              client.mutate({
-                                mutation: cloneBatchMutation,
-                                variables: {
-                                  id: batchId,
-                                  input: {
-                                    deliveredAt: null,
-                                    desiredAt: null,
-                                    expiredAt: null,
-                                    customFields: null,
-                                    producedAt: null,
-                                    tagIds: [],
-                                    batchQuantityRevisions: [],
-                                  },
-                                },
-                                refetchQueries: allOrderIds.map(orderId => ({
-                                  query: orderDetailQuery,
-                                  variables: {
-                                    id: orderId,
-                                  },
-                                })),
-                              })
-                            )
-                        );
-                        // TODO: show error message from violations
-                        result.push({
-                          type: BATCH,
-                          items: cloneBatches
-                            .map((item, index) => ({
-                              id: batchIds[index],
-                              batch: getByPathWithDefault([], 'data.batchClone', item),
-                            }))
-                            .filter(item => !item.batch.violations),
-                        });
-                      }
-
-                      if (shipmentIds.length > 0) {
-                        const cloneShipments: any = await Promise.all(
-                          shipmentIds.map(shipmentId =>
-                            client.mutate({
-                              mutation: cloneShipmentMutation,
-                              variables: {
-                                id: shipmentId,
-                                input: {
-                                  batches: [],
-                                  containers: [],
-                                  no: `[cloned][${Date.now()}] ${uiSelectors.shipmentNo(
-                                    shipmentId
-                                  )}`,
-                                },
-                              },
-                            })
-                          )
-                        );
-                        const shipmentItems = cloneShipments
-                          .map((item, index) => ({
-                            id: shipmentIds[index],
-                            shipment: getByPathWithDefault([], 'data.shipmentClone', item),
-                          }))
-                          .filter(item => !item.shipment.violations);
-
-                        const refetchShipment = shipmentItems[shipmentItems.length - 1];
-                        if (refetchShipment) {
-                          actions.refetchQueryBy('SHIPMENT', [refetchShipment.shipment.id]);
+                          );
+                          // TODO: show error message from violations
+                          result.push({
+                            type: ORDER,
+                            items: cloneOrders
+                              .map((item, index) => ({
+                                id: orderIds[index],
+                                order: getByPathWithDefault([], 'data.orderClone', item),
+                              }))
+                              .filter(item => !item.order.violations),
+                          });
                         }
 
-                        cloneShipments.forEach(item => {
-                          if (item.data.shipmentClone && item.data.shipmentClone.violations) {
-                            toast.error(
-                              `[Clone] error: ${item.data.shipmentClone.violations[0].message}`
-                            );
-                          }
-                        });
+                        if (orderItemIds.length > 0) {
+                          const cloneOrderItems = await Promise.all(
+                            orderItemIds
+                              .filter(orderItemId => !processOrderItemIds.includes(orderItemId))
+                              .map(orderItemId => {
+                                const selectedBatchIds = intersection(
+                                  orderItems[orderItemId] ? orderItems[orderItemId].batches : [],
+                                  batchIds
+                                );
+                                if (selectedBatchIds.length > 0) {
+                                  processBatchIds.push(...selectedBatchIds);
+                                }
+                                return client.mutate({
+                                  mutation: cloneOrderItemMutation,
+                                  variables: {
+                                    id: orderItemId,
+                                    input: {
+                                      batches: selectedBatchIds.map(id => ({ id })),
+                                    },
+                                  },
+                                  refetchQueries: allOrderIds.map(orderId => ({
+                                    query: orderDetailQuery,
+                                    variables: {
+                                      id: orderId,
+                                    },
+                                  })),
+                                });
+                              })
+                          );
+                          // TODO: show error message from violations
+                          result.push({
+                            type: ORDER_ITEM,
+                            items: cloneOrderItems
+                              .map((item, index) => ({
+                                id: orderItemIds[index],
+                                orderItem: getByPathWithDefault([], 'data.orderItemClone', item),
+                              }))
+                              .filter(item => !item.orderItem.violations),
+                          });
+                        }
 
-                        result.push({
-                          type: SHIPMENT,
-                          items: shipmentItems,
-                        });
+                        if (batchIds.length > 0) {
+                          const cloneBatches = await Promise.all(
+                            batchIds
+                              .filter(batchId => !processBatchIds.includes(batchId))
+                              .map(batchId =>
+                                client.mutate({
+                                  mutation: cloneBatchMutation,
+                                  variables: {
+                                    id: batchId,
+                                    input: {
+                                      deliveredAt: null,
+                                      desiredAt: null,
+                                      expiredAt: null,
+                                      customFields: null,
+                                      producedAt: null,
+                                      tagIds: [],
+                                      batchQuantityRevisions: [],
+                                    },
+                                  },
+                                  refetchQueries: allOrderIds.map(orderId => ({
+                                    query: orderDetailQuery,
+                                    variables: {
+                                      id: orderId,
+                                    },
+                                  })),
+                                })
+                              )
+                          );
+                          // TODO: show error message from violations
+                          result.push({
+                            type: BATCH,
+                            items: cloneBatches
+                              .map((item, index) => ({
+                                id: batchIds[index],
+                                batch: getByPathWithDefault([], 'data.batchClone', item),
+                              }))
+                              .filter(item => !item.batch.violations),
+                          });
+                        }
+
+                        if (shipmentIds.length > 0) {
+                          const cloneShipments: any = await Promise.all(
+                            shipmentIds.map(shipmentId =>
+                              client.mutate({
+                                mutation: cloneShipmentMutation,
+                                variables: {
+                                  id: shipmentId,
+                                  input: {
+                                    batches: [],
+                                    containers: [],
+                                    no: `[cloned][${Date.now()}] ${uiSelectors.shipmentNo(
+                                      shipmentId
+                                    )}`,
+                                  },
+                                },
+                              })
+                            )
+                          );
+                          const shipmentItems = cloneShipments
+                            .map((item, index) => ({
+                              id: shipmentIds[index],
+                              shipment: getByPathWithDefault([], 'data.shipmentClone', item),
+                            }))
+                            .filter(item => !item.shipment.violations);
+
+                          const refetchShipment = shipmentItems[shipmentItems.length - 1];
+                          if (refetchShipment) {
+                            actions.refetchQueryBy('SHIPMENT', [refetchShipment.shipment.id]);
+                          }
+
+                          cloneShipments.forEach(item => {
+                            if (item.data.shipmentClone && item.data.shipmentClone.violations) {
+                              toast.error(
+                                `[Clone] error: ${item.data.shipmentClone.violations[0].message}`
+                              );
+                            }
+                          });
+
+                          result.push({
+                            type: SHIPMENT,
+                            items: shipmentItems,
+                          });
+                        }
+                        actions.cloneEntitiesSuccess(result);
+                        if (orderIds.length) {
+                          actions.setRefetchAll(true);
+                        }
+                      } catch (error) {
+                        actions.cloneEntitiesFailed(error);
                       }
-                      actions.cloneEntitiesSuccess(result);
-                      if (orderIds.length) {
-                        actions.setRefetchAll(true);
-                      }
-                    } catch (error) {
-                      actions.cloneEntitiesFailed(error);
-                    }
-                  }}
-                />
-              )}
+                    }}
+                  />
+                )}
               {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
                 <SplitBalancePanel
                   onClick={async () => {

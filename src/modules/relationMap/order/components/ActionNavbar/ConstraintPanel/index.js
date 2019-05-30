@@ -12,6 +12,7 @@ type Props = {
     disableAutoFillBatch: boolean,
     disabledMoveToShipment: boolean,
     disabledMoveToOrder: boolean,
+    disabledCloneOrder: boolean,
   },
 };
 
@@ -21,12 +22,25 @@ const ConstraintPanel = ({ disable }: Props) => {
     disabledMoveToOrder,
     disabledMoveToShipment,
     disableAutoFillBatch,
+    disabledCloneOrder,
   } = disable;
-  if (!disabledSplit && !disabledMoveToOrder && !disabledMoveToShipment && !disableAutoFillBatch) {
+  if (
+    !disabledSplit &&
+    !disabledMoveToOrder &&
+    !disabledMoveToShipment &&
+    !disableAutoFillBatch &&
+    !disabledCloneOrder
+  ) {
     return null;
   }
   return (
     <div className={ConstraintPanelWrapperStyle}>
+      {disabledCloneOrder && (
+        <Label align="center">
+          <FormattedMessage {...messages.clone} />{' '}
+          <FormattedMessage {...messages.actionNotAvailable} /> <Icon icon="ORDER" />{' '}
+        </Label>
+      )}
       {disabledSplit && (
         <Label align="center">
           <FormattedMessage {...messages.split} />{' '}

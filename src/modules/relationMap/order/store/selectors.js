@@ -161,6 +161,8 @@ function selectors(state: UIState) {
     isNewOrder: (id: string) => state.new.orders.includes(id),
     isNewShipment: (id: string) => state.new.shipments.includes(id),
     shipmentNo: (id: string) => state.clone.shipmentNo[id],
+    isDisableCloneOrder: (noPermission: boolean) =>
+      noPermission && targetedIds(state, ORDER).length > 0,
   };
 }
 
