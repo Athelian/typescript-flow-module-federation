@@ -3,36 +3,50 @@ import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals } from 'utils/fp';
 
-type FormState = {
-  no?: string,
-  blNo?: string,
-  blDate?: Date,
+type ShipmentInfoType = {
+  no: ?string,
+  blNo: ?string,
+  blDate: ?Date,
+  bookingNo: ?string,
   booked: boolean,
-  bookingNo?: string,
-  bookingDate?: Date,
-  invoiceNo?: string,
-  contractNo?: string,
-  loadType?: string,
-  incoterm?: string,
-  carrier?: string,
-  forwarders: Array<{ id: string, name: string }>,
-  importer: { id: string, name: string },
-  inCharges: Array<{ id: string, firstName: string, lastName: string }>,
+  bookingDate: ?Date,
+  invoiceNo: ?string,
+  contractNo: ?string,
+  loadType: ?string,
+  incoterm: ?string,
+  carrier: ?string,
   customFields: Object,
+  memo: ?string,
+  inCharges: Array<{ id: string, firstName: string, lastName: string }>,
+  importer: ?{ id: string, name: string },
+  forwarders: Array<{ id: string, name: string }>,
+  exporter: ?{ id: string, name: string },
 };
 
 const initValues = {
-  forwarders: [],
-  importer: {},
-  inCharges: [],
+  no: null,
+  blNo: null,
+  blDate: null,
+  bookingNo: null,
   booked: false,
+  bookingDate: null,
+  invoiceNo: null,
+  contractNo: null,
+  loadType: null,
+  incoterm: null,
+  carrier: null,
   customFields: {
     fieldValues: [],
     fieldDefinitions: [],
   },
+  memo: null,
+  inCharges: [],
+  importer: null,
+  forwarders: [],
+  exporter: null,
 };
 
-export default class ShipmentInfoContainer extends Container<FormState> {
+export default class ShipmentInfoContainer extends Container<ShipmentInfoType> {
   state = initValues;
 
   originalValues = initValues;

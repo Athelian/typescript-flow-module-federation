@@ -583,6 +583,7 @@ class ShipmentFormModule extends React.Component<Props> {
                           const { group } = user;
                           const { types = [] } = group;
                           const isImporter = types.includes('Importer');
+                          const isExporter = types.includes('Exporter');
                           const isForwarder = types.includes('Forwarder');
                           return (
                             <>
@@ -622,7 +623,8 @@ class ShipmentFormModule extends React.Component<Props> {
                                     },
                                     {
                                       id: Date.now(),
-                                      importer: isImporter ? group : {},
+                                      importer: isImporter ? group : null,
+                                      exporter: isExporter ? group : null,
                                       forwarders: isForwarder ? [group] : [],
                                       inCharges: [],
                                       booked: false,
@@ -636,6 +638,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       tags: [],
                                       todo: {
                                         tasks: [],
+                                        taskTemplate: null,
                                       },
                                       files: [],
                                       containers: [],

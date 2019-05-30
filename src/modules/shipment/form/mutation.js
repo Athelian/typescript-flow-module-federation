@@ -239,6 +239,11 @@ export const prepareParsedShipmentInput = ({
       getByPathWithDefault(null, 'importer', originalValues),
       newValues.importer
     ),
+    ...parseParentIdField(
+      'exporterId',
+      getByPathWithDefault(null, 'exporter', originalValues),
+      newValues.exporter
+    ),
     ...parseGenericField('no', getByPathWithDefault(null, 'no', originalValues), newValues.no),
     ...parseGenericField(
       'blNo',

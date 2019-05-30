@@ -61,33 +61,31 @@ const PackagingSection = () => {
                 <SyncButton onClick={() => dialogToggle(true)} />
                 <Subscribe to={[BatchInfoContainer, FormContainer]}>
                   {({ state, syncProductProvider }, { setFieldTouched }) => (
-                    <>
-                      <ConfirmDialog
-                        isOpen={syncDialogIsOpen}
-                        onRequestClose={() => dialogToggle(false)}
-                        onCancel={() => dialogToggle(false)}
-                        onConfirm={() => {
-                          if (state.orderItem && state.orderItem.productProvider) {
-                            syncProductProvider(state.orderItem.productProvider);
-                            setFieldTouched('packageName');
-                            setFieldTouched('packageCapacity');
-                            setFieldTouched('packageQuantity');
-                            setFieldTouched('packageGrossWeight');
-                            setFieldTouched('packageVolume');
-                            setFieldTouched('packageSize.length');
-                            setFieldTouched('packageSize.width');
-                            setFieldTouched('packageSize.height');
-                          }
-                          dialogToggle(false);
-                        }}
-                        message={
-                          <FormattedMessage
-                            id="modules.Batches.syncPackagingMessage"
-                            defaultMessage="Are you sure sync the packaging?"
-                          />
+                    <ConfirmDialog
+                      isOpen={syncDialogIsOpen}
+                      onRequestClose={() => dialogToggle(false)}
+                      onCancel={() => dialogToggle(false)}
+                      onConfirm={() => {
+                        if (state.orderItem && state.orderItem.productProvider) {
+                          syncProductProvider(state.orderItem.productProvider);
+                          setFieldTouched('packageName');
+                          setFieldTouched('packageCapacity');
+                          setFieldTouched('packageQuantity');
+                          setFieldTouched('packageGrossWeight');
+                          setFieldTouched('packageVolume');
+                          setFieldTouched('packageSize.length');
+                          setFieldTouched('packageSize.width');
+                          setFieldTouched('packageSize.height');
                         }
-                      />
-                    </>
+                        dialogToggle(false);
+                      }}
+                      message={
+                        <FormattedMessage
+                          id="modules.Batches.syncPackagingMessage"
+                          defaultMessage="Syncing the packaging data from the End Product will replace your current packaging values. Are you sure?"
+                        />
+                      }
+                    />
                   )}
                 </Subscribe>
               </>

@@ -32,7 +32,7 @@ import {
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
-  query($id: ID!) {
+  query shipmentFormQuery($id: ID!) {
     shipment(id: $id) {
       ...shipmentFormFragment
     }

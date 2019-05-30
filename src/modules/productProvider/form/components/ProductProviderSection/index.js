@@ -44,8 +44,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const allowUpdate = hasPermission(PRODUCT_PROVIDER_UPDATE);
 
   return (
-    <Subscribe to={[ProductProviderInfoContainer, ProductProviderTasksContainer]}>
-      {({ originalValues, state, setFieldValue }, { onChangeExporter }) => {
+    <Subscribe to={[ProductProviderInfoContainer]}>
+      {({ originalValues, state, setFieldValue }) => {
         const values = { ...originalValues, ...state };
 
         return (
@@ -87,33 +87,41 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                             onRequestClose={() => exporterSlideToggle(false)}
                           >
                             {opened && (
-                              <>
-                                <SelectExporter
-                                  selected={values.exporter}
-                                  onCancel={() => exporterSlideToggle(false)}
-                                  onSelect={newValue => {
-                                    exporterSlideToggle(false);
-                                    const existName = getByPathWithDefault('', 'name', values);
-                                    const entityName = getByPathWithDefault('', 'name', newValue);
-                                    const generatedName = generateName(
-                                      {
-                                        entityName,
-                                        name: existName,
-                                        type: 'exporter',
-                                      },
-                                      {
-                                        supplier: getByPath('supplier.name', values),
-                                        exporter: getByPath('exporter.name', values),
-                                      }
-                                    );
-                                    if (generatedName !== existName) {
-                                      setFieldValue('name', generatedName);
+                              <Subscribe to={[ProductProviderTasksContainer]}>
+                                {({ onChangeExporter }) => (
+                                  <SelectExporter
+                                    selected={values.exporter}
+                                    onCancel={() => exporterSlideToggle(false)}
+                                    warningMessage={
+                                      <FormattedMessage
+                                        id="modules.ProductProviders.changeExporterWarning"
+                                        defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
+                                      />
                                     }
-                                    setFieldValue('exporter', newValue);
-                                    onChangeExporter(values.exporter);
-                                  }}
-                                />
-                              </>
+                                    onSelect={newValue => {
+                                      exporterSlideToggle(false);
+                                      const existName = getByPathWithDefault('', 'name', values);
+                                      const entityName = getByPathWithDefault('', 'name', newValue);
+                                      const generatedName = generateName(
+                                        {
+                                          entityName,
+                                          name: existName,
+                                          type: 'exporter',
+                                        },
+                                        {
+                                          supplier: getByPath('supplier.name', values),
+                                          exporter: getByPath('exporter.name', values),
+                                        }
+                                      );
+                                      if (generatedName !== existName) {
+                                        setFieldValue('name', generatedName);
+                                      }
+                                      setFieldValue('exporter', newValue);
+                                      onChangeExporter(values.exporter);
+                                    }}
+                                  />
+                                )}
+                              </Subscribe>
                             )}
                           </SlideView>
                         </>

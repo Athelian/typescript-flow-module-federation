@@ -1,7 +1,7 @@
 import faker from 'faker';
 import Task, { initValues } from '../tasks';
 
-describe('task end product container', () => {
+describe('shipment task container', () => {
   it('should init empty array on creation', () => {
     const container = new Task();
     expect(container.state).toEqual(initValues);
@@ -87,12 +87,13 @@ describe('task end product container', () => {
       ],
       taskTemplate: null,
     };
+
     await container.initDetailValues(initTodo);
 
     expect(container.originalValues.todo).toEqual(initTodo);
     expect(container.state.todo).toEqual(initTodo);
 
-    await container.onChangeExporter(group);
+    await container.onChangePartner(group);
 
     expect(container.state.todo.tasks).toEqual([
       {

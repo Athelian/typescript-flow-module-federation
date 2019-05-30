@@ -41,7 +41,9 @@ const PageNotFound = () => (
           <ReactSVG
             src="error.svg"
             className={PageNotFoundGraphicsWrapperStyle}
-            svgClassName={PageNotFoundGraphicStyle}
+            beforeInjection={svg => {
+              svg.classList.add(PageNotFoundGraphicStyle);
+            }}
           />
         </div>
       </Layout>

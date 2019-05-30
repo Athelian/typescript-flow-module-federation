@@ -42,6 +42,9 @@ export const shipmentFormFragment = gql`
     importer {
       ...partnerCardFragment
     }
+    exporter {
+      ...partnerCardFragment
+    }
     inCharges {
       ...userAvatarFragment
     }
