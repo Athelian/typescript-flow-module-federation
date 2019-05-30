@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { capitalize } from 'lodash';
+import useUser from 'hooks/useUser';
 import { FormField } from 'modules/form';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import TableDisableCell from '../TableDisableCell';
@@ -55,6 +56,7 @@ function renderItem({
   meta,
   values,
   editData,
+  isExporter,
 }: {
   id: string,
   value: any,
@@ -63,6 +65,7 @@ function renderItem({
   values: Object,
   editData: Object,
   meta?: Object,
+  isExporter: boolean,
 }) {
   switch (type) {
     case 'number':
@@ -114,7 +117,18 @@ function renderItem({
       return <InlineForwarderInput name={name} values={values} {...meta} id={id} />;
 
     case 'tags':
-      return <InlineTagInput name={name} values={value} {...meta} id={id} />;
+      return (
+        <InlineTagInput
+          name={name}
+          values={value}
+          {...meta}
+          id={id}
+          editable={{
+            set: !isExporter,
+            remove: !isExporter,
+          }}
+        />
+      );
 
     case 'productProvider':
       return (
@@ -181,7 +195,10 @@ function renderItem({
 }
 
 function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo }: Props) {
+  const { isExporter } = useUser();
   if (!values) return null;
+
+  const isExporterAccount = isExporter();
 
   return (
     <div className={WrapperStyle}>
@@ -202,6 +219,7 @@ function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo 
                   value,
                   values,
                   editData,
+                  isExporter: isExporterAccount,
                 })
               }
             </FormField>

@@ -4,23 +4,27 @@ import { TagsInput } from 'components/Form';
 import { useTagInput } from 'modules/form/hooks';
 import emitter from 'utils/emitter';
 
-type Props = {
+type OptionalProps = {
+  editable: {
+    set: boolean,
+    remove: boolean,
+  },
+};
+
+type Props = OptionalProps & {
   name: string,
   tagType: string,
   id: string,
   values: Array<Object>,
 };
 
-export default function InlineTagInput({ name, tagType, values, id }: Props) {
+export default function InlineTagInput({ name, tagType, values, id, editable }: Props) {
   const { onChange } = useTagInput(values);
   return (
     <TagsInput
       id={`input-${id}`}
       name={name}
-      editable={{
-        set: true,
-        remove: true,
-      }}
+      editable={editable}
       tagType={tagType}
       values={values}
       onChange={(field, value) => {
