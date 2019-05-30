@@ -11,13 +11,13 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
-import {
-  READONLY,
-  type ItemConfigType,
-  type ShipmentConfigType,
-  type ContainerConfigType,
-  type OrderConfigType,
-} from 'modules/batch/form/type';
+import { READONLY } from 'modules/batch/constants';
+import type {
+  ItemConfigType,
+  ShipmentConfigType,
+  ContainerConfigType,
+  OrderConfigType,
+} from 'modules/batch/type';
 
 type OptionalProps = {
   itemConfig: ItemConfigType,

@@ -1,8 +1,5 @@
 // @flow
-
-export const HIDE = 'hide';
-export const NAVIGABLE = 'navigable';
-export const READONLY = 'readOnly';
+import { HIDE, NAVIGABLE, READONLY } from 'modules/batch/constants';
 
 export type ItemConfigType = typeof HIDE | typeof NAVIGABLE | typeof READONLY;
 export type ShipmentConfigType = typeof HIDE | typeof NAVIGABLE;

@@ -18,7 +18,7 @@ import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import { OrderItemBatchesContainer } from 'modules/orderItem/form/containers';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
-import { HIDE, NAVIGABLE } from 'modules/batch/form/type';
+import { HIDE, NAVIGABLE } from 'modules/batch/constants';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,

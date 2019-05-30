@@ -9,7 +9,8 @@ import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { ContainerCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
-import { HIDE, NAVIGABLE, READONLY, type ContainerConfigType } from 'modules/batch/form/type';
+import { HIDE, NAVIGABLE, READONLY } from 'modules/batch/constants';
+import type { ContainerConfigType } from 'modules/batch/type';
 import {
   ContainerSectionWrapperStyle,
   ContainerSectionBodyStyle,

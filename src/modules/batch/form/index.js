@@ -5,6 +5,13 @@ import { isEquals } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import TaskSection from 'modules/task/common/TaskSection';
+import { NAVIGABLE } from 'modules/batch/constants';
+import type {
+  ItemConfigType,
+  ShipmentConfigType,
+  ContainerConfigType,
+  OrderConfigType,
+} from 'modules/batch/type';
 import { BatchInfoContainer, BatchTasksContainer } from './containers';
 import BatchSection from './components/BatchSection';
 import QuantitySection from './components/QuantitySection';
@@ -12,13 +19,6 @@ import PackagingSection from './components/PackagingSection';
 import ShipmentSection from './components/ShipmentSection';
 import ContainerSection from './components/ContainerSection';
 import OrderSection from './components/OrderSection';
-import {
-  NAVIGABLE,
-  type ItemConfigType,
-  type ShipmentConfigType,
-  type ContainerConfigType,
-  type OrderConfigType,
-} from './type';
 import { BatchFormInSlideStyle } from './style';
 
 type OptionalProps = {

@@ -41,7 +41,7 @@ import SlideView from 'components/SlideView';
 import { ContainerBatchesContainer } from 'modules/container/form/containers';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import SelectOrderItems from 'providers/SelectOrderItems';
-import { HIDE, NAVIGABLE } from 'modules/batch/form/type';
+import { HIDE, NAVIGABLE } from 'modules/batch/constants';
 import SelectContainerBatches from '../SelectContainerBatches';
 import {
   BatchesSectionWrapperStyle,
