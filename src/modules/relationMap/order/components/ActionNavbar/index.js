@@ -8,6 +8,8 @@ import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import usePermission from 'hooks/usePermission';
 import { RM_CLONE_ORDER } from 'modules/permission/constants/relationMap';
+import { ORDER_CREATE, ORDER_FORM } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import logger from 'utils/logger';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
@@ -727,6 +729,11 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'connectOrder' && uiSelectors.isAllowToConnectOrder() && (
                 <MoveToOrderPanel
+                  allowToMoveToNew={
+                    hasPermission(ORDER_CREATE) &&
+                    hasPermission(ORDER_ITEMS_CREATE) &&
+                    hasPermission(ORDER_FORM)
+                  }
                   status={state.connectOrder.status}
                   hasSelectedOrderItem={uiSelectors.targetedOrderItemIds().length > 0}
                   hasSelectedOrder={uiSelectors.isSelectedOrder()}

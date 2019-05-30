@@ -37,6 +37,7 @@ type Props = {
    * Have targeted all batches inside an order item
    */
   hasSelectedAllBatches: boolean,
+  allowToMoveToNew: boolean,
   status: boolean,
   currencies: Array<string>,
 };
@@ -46,6 +47,7 @@ const MoveToOrderPanel = ({
   hasSelectedOrder,
   hasSelectedOrderItem,
   hasSelectedAllBatches,
+  allowToMoveToNew,
   onMoveToNewOrder,
   onMoveToExistOrder,
   onDelete,
@@ -87,16 +89,17 @@ const MoveToOrderPanel = ({
           </Label>
         </div>
       </div>
-
-      <div className={MoveToNewOrderWrapperStyle}>
-        <Label color="TEAL_DARK">
-          <FormattedMessage {...messages.moveTo} />
-        </Label>
-        <NewButton
-          label={<FormattedMessage {...messages.newOrder} />}
-          onClick={() => onMoveToNewOrder({ currencies })}
-        />
-      </div>
+      {allowToMoveToNew && (
+        <div className={MoveToNewOrderWrapperStyle}>
+          <Label color="TEAL_DARK">
+            <FormattedMessage {...messages.moveTo} />
+          </Label>
+          <NewButton
+            label={<FormattedMessage {...messages.newOrder} />}
+            onClick={() => onMoveToNewOrder({ currencies })}
+          />
+        </div>
+      )}
 
       <BooleanValue>
         {({ value: isOpen, set: dialogToggle }) => (
