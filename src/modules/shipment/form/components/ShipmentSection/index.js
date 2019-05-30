@@ -48,7 +48,7 @@ import {
   ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import SelectExporters from 'modules/order/common/SelectExporters';
+import SelectExporter from 'modules/order/common/SelectExporter';
 import validator from 'modules/shipment/form/validator';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
@@ -731,100 +731,39 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                   onRequestClose={() => exporterSelectorToggle(false)}
                                 >
                                   {exporterSelectorIsOpen && (
-                                    <>
-                                      {isImporter() ? (
-                                        <BooleanValue>
-                                          {({
-                                            value: exporterDialogIsOpen,
-                                            set: exporterDialogToggle,
-                                          }) => (
-                                            <ObjectValue defaultValue={values.exporter}>
-                                              {({
-                                                value: selectedImporter,
-                                                set: setSelectedImporter,
-                                              }) => (
-                                                <>
-                                                  <SelectExporters
-                                                    selected={values.exporter}
-                                                    onCancel={() => exporterSelectorToggle(false)}
-                                                    onSelect={selected => {
-                                                      if (selectedImporter) {
-                                                        setSelectedImporter(selected);
-                                                        exporterDialogToggle(true);
-                                                      } else {
-                                                        setFieldValue('exporter', selected);
-                                                        exporterSelectorToggle(false);
-                                                      }
-                                                    }}
-                                                  />
-                                                  <Subscribe
-                                                    to={[
-                                                      ShipmentTasksContainer,
-                                                      ShipmentTimelineContainer,
-                                                      ShipmentContainersContainer,
-                                                    ]}
-                                                  >
-                                                    {(
-                                                      taskContainer,
-                                                      timelineContainer,
-                                                      containersContainer
-                                                    ) => (
-                                                      <ConfirmDialog
-                                                        isOpen={exporterDialogIsOpen}
-                                                        onRequestClose={() => {
-                                                          exporterDialogToggle(false);
-                                                        }}
-                                                        onCancel={() => {
-                                                          exporterDialogToggle(false);
-                                                        }}
-                                                        onConfirm={() => {
-                                                          setFieldValue(
-                                                            'exporter',
-                                                            selectedImporter
-                                                          );
-                                                          exporterDialogToggle(false);
-                                                          exporterSelectorToggle(false);
-                                                          setFieldValue(
-                                                            'inCharges',
-                                                            values.inCharges.filter(
-                                                              user =>
-                                                                getByPath('group.id', user) !==
-                                                                importer.id
-                                                            )
-                                                          );
-                                                          taskContainer.onChangePartner(exporter);
-                                                          timelineContainer.onChangePartner(
-                                                            exporter
-                                                          );
-                                                          containersContainer.onChangePartner(
-                                                            exporter
-                                                          );
-                                                        }}
-                                                        message={
-                                                          <FormattedMessage
-                                                            id="modules.Shipment.exporterDialogMessage"
-                                                            defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
-                                                          />
-                                                        }
-                                                      />
-                                                    )}
-                                                  </Subscribe>
-                                                </>
-                                              )}
-                                            </ObjectValue>
-                                          )}
-                                        </BooleanValue>
-                                      ) : (
-                                        <SelectExporters
+                                    <Subscribe
+                                      to={[
+                                        ShipmentTasksContainer,
+                                        ShipmentTimelineContainer,
+                                        ShipmentContainersContainer,
+                                      ]}
+                                    >
+                                      {(taskContainer, timelineContainer, containersContainer) => (
+                                        <SelectExporter
                                           selected={values.exporter}
                                           onCancel={() => exporterSelectorToggle(false)}
-                                          onSelect={selected => {
-                                            setFieldValue('exporter', selected);
+                                          warningMessage={
+                                            <FormattedMessage
+                                              id="modules.Shipment.exporterDialogMessage"
+                                              defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                            />
+                                          }
+                                          onSelect={selectedImporter => {
+                                            setFieldValue('exporter', selectedImporter);
                                             exporterSelectorToggle(false);
+                                            setFieldValue(
+                                              'inCharges',
+                                              values.inCharges.filter(
+                                                user => getByPath('group.id', user) !== importer.id
+                                              )
+                                            );
+                                            taskContainer.onChangePartner(exporter);
+                                            timelineContainer.onChangePartner(exporter);
+                                            containersContainer.onChangePartner(exporter);
                                           }}
                                         />
                                       )}
-                                    </>
+                                    </Subscribe>
                                   )}
                                 </SlideView>
                               </>

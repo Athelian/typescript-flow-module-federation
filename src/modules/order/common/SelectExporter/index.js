@@ -1,6 +1,5 @@
 // @flow
-import React, { useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import * as React from 'react';
 import { ObjectValue } from 'react-values';
 import { cleanUpData } from 'utils/data';
 import PartnerListProvider from 'providers/PartnerList';
@@ -19,6 +18,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  warningMessage: React.Node,
   onSelect: (item: Object) => void,
   onCancel: Function,
 };
@@ -29,8 +29,8 @@ const isEquals = (value: ?Object, selected: ?Object): boolean => {
   return newId === oldId;
 };
 
-const SelectExporter = ({ selected, onCancel, onSelect }: Props) => {
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props) => {
+  const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
   return (
     <PartnerListProvider types={['Exporter']}>
@@ -62,12 +62,7 @@ const SelectExporter = ({ selected, onCancel, onSelect }: Props) => {
                       onSelect(value);
                       setOpenConfirmDialog(false);
                     }}
-                    message={
-                      <FormattedMessage
-                        id="modules.order.changeExporterWarning"
-                        defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
-                      />
-                    }
+                    message={warningMessage}
                   />
                 </SlideViewNavBar>
               }
@@ -83,7 +78,7 @@ const SelectExporter = ({ selected, onCancel, onSelect }: Props) => {
                     partner={item}
                     onSelect={() => set(cleanUpData(item))}
                     selectable
-                    selected={value && item.id === value.id}
+                    selected={item && value && item.id === value.id}
                     key={item.id}
                   />
                 )}

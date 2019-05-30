@@ -91,6 +91,12 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                 <SelectExporter
                                   selected={values.exporter}
                                   onCancel={() => exporterSlideToggle(false)}
+                                  warningMessage={
+                                    <FormattedMessage
+                                      id="modules.ProductProviders.changeExporterWarning"
+                                      defaultMessage="Changing the Exporter will remove all assigned Staff of the current Exporter from all Tasks. Are you sure you want to change the Exporter?"
+                                    />
+                                  }
                                   onSelect={newValue => {
                                     exporterSlideToggle(false);
                                     const existName = getByPathWithDefault('', 'name', values);
