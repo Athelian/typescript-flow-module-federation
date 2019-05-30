@@ -30,7 +30,7 @@ import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
 import { ItemCard } from 'components/Cards';
 import GridColumn from 'components/GridColumn';
-import { HIDE, NAVIGABLE, READONLY, type ItemConfigType } from 'modules/batch/form';
+import { HIDE, NAVIGABLE, READONLY, type ItemConfigType } from 'modules/batch/form/type';
 import {
   SectionHeader,
   LastModified,

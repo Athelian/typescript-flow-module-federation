@@ -15,6 +15,7 @@ import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
+import { NAVIGABLE } from 'modules/batch/form/type';
 import BatchForm from './form';
 import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
@@ -249,6 +250,10 @@ class BatchFormModule extends React.Component<Props> {
                                   batch
                                 );
                               }}
+                              itemConfig={NAVIGABLE}
+                              shipmentConfig={NAVIGABLE}
+                              containerConfig={NAVIGABLE}
+                              orderConfig={NAVIGABLE}
                             />
                           </>
                         )}

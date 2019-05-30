@@ -6,7 +6,7 @@ import { encodeId } from 'utils/id';
 import { ShipmentCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
-import { HIDE, NAVIGABLE, type ShipmentConfigType } from 'modules/batch/form';
+import { HIDE, NAVIGABLE, type ShipmentConfigType } from 'modules/batch/form/type';
 import { ShipmentSectionWrapperStyle, ShipmentSectionBodyStyle, EmptyMessageStyle } from './style';
 
 type Props = {

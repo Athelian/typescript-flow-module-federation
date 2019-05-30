@@ -19,6 +19,7 @@ import SlideView from 'components/SlideView';
 import { Display } from 'components/Form';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import { HIDE, NAVIGABLE, READONLY } from 'modules/batch/form/type';
 import {
   BatchesAreaWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -211,6 +212,10 @@ function BatchesArea({
                                 updatedBatch
                               );
                             }}
+                            itemConfig={READONLY}
+                            shipmentConfig={NAVIGABLE}
+                            containerConfig={NAVIGABLE}
+                            orderConfig={HIDE}
                           />
                         )}
                       </SlideView>

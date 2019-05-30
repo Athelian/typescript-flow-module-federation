@@ -11,10 +11,31 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
+import {
+  READONLY,
+  type ItemConfigType,
+  type ShipmentConfigType,
+  type ContainerConfigType,
+  type OrderConfigType,
+} from 'modules/batch/form/type';
 
-type Props = {
+type OptionalProps = {
+  itemConfig: ItemConfigType,
+  shipmentConfig: ShipmentConfigType,
+  containerConfig: ContainerConfigType,
+  orderConfig: OrderConfigType,
+};
+
+type Props = OptionalProps & {
   batch: Object,
   onSave: Function,
+};
+
+const defaultProps = {
+  itemConfig: READONLY,
+  shipmentConfig: READONLY,
+  containerConfig: READONLY,
+  orderConfig: READONLY,
 };
 
 const formContainer = new FormContainer();
@@ -128,5 +149,7 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
     </Provider>
   );
 };
+
+BatchFormInSlide.defaultProps = defaultProps;
 
 export default BatchFormInSlide;

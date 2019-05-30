@@ -18,6 +18,7 @@ import { NewButton, BaseButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
 import { OrderItemBatchesContainer } from 'modules/orderItem/form/containers';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
+import { HIDE, NAVIGABLE } from 'modules/batch/form/type';
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -33,9 +34,10 @@ type Props = {
     productProvider: ?Object,
   },
   itemIsArchived: boolean,
+  isSlideView: boolean,
 };
 
-function BatchesSection({ itemInfo, itemIsArchived }: Props) {
+function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
   const { hasPermission } = usePermission();
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
 
@@ -128,6 +130,10 @@ function BatchesSection({ itemInfo, itemIsArchived }: Props) {
                                     batchSlideToggle(false);
                                     setDeepFieldValue(`batches.${index}`, value);
                                   }}
+                                  itemConfig={HIDE}
+                                  shipmentConfig={NAVIGABLE}
+                                  containerConfig={NAVIGABLE}
+                                  orderConfig={isSlideView ? HIDE : NAVIGABLE}
                                 />
                               )}
                             </SlideView>

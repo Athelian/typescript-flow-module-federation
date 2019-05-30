@@ -12,16 +12,14 @@ import PackagingSection from './components/PackagingSection';
 import ShipmentSection from './components/ShipmentSection';
 import ContainerSection from './components/ContainerSection';
 import OrderSection from './components/OrderSection';
+import {
+  NAVIGABLE,
+  type ItemConfigType,
+  type ShipmentConfigType,
+  type ContainerConfigType,
+  type OrderConfigType,
+} from './type';
 import { BatchFormInSlideStyle } from './style';
-
-export const HIDE = 'hide';
-export const NAVIGABLE = 'navigable';
-export const READONLY = 'readOnly';
-
-export type ItemConfigType = typeof HIDE | typeof NAVIGABLE | typeof READONLY;
-export type ShipmentConfigType = typeof HIDE | typeof NAVIGABLE;
-export type ContainerConfigType = typeof HIDE | typeof NAVIGABLE | typeof READONLY;
-export type OrderConfigType = typeof HIDE | typeof NAVIGABLE;
 
 type OptionalProps = {
   onFormReady: () => void,

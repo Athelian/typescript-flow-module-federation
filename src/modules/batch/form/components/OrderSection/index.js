@@ -12,7 +12,7 @@ import { BatchInfoContainer } from 'modules/batch/form/containers';
 import { BATCH_ORDERS_LIST } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { HIDE, NAVIGABLE, type OrderConfigType } from 'modules/batch/form';
+import { HIDE, NAVIGABLE, type OrderConfigType } from 'modules/batch/form/type';
 import { OrderSectionWrapperStyle, OrderSectionBodyStyle, EmptyMessageStyle } from './style';
 
 type Props = {
