@@ -1,5 +1,6 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon May 27 2019 18:03:27 GMT+0900 (Japan Standard Time)
+# timestamp: Thu May 30 2019 18:40:01 GMT+0900 (Japan Standard Time)
+
 enum Airport {
   """Andorra la Vella"""
   ADALV
@@ -26641,10 +26642,7 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   deliveredAt: DateTime
   expiredAt: DateTime
   desiredAt: DateTime
-  totalAdjusted: Float! @deprecated(reason: "Batch adjustment is deprecated")
   totalVolume: MetricValue!
-  batchAssignments: [BatchAssignmentPayload!]!
-  batchAdjustments: [BatchAdjustmentPayload!]! @deprecated(reason: "Batch adjustment is deprecated")
   batchQuantityRevisions: [BatchQuantityRevisionPayload!]!
   container: ContainerPayload
   todo: Todo!
@@ -26667,82 +26665,6 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   memo: String
 }
 
-type BatchAdjustment implements Model & Owned & Sortable & Memorizable {
-  batch: BatchPayload!
-  reason: BatchAdjustmentReason!
-  quantity: Float!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: GroupPayload!
-  sort: Int!
-  memo: String
-}
-
-input BatchAdjustmentCreateInput {
-  reason: BatchAdjustmentReason!
-  quantity: Float!
-  memo: String
-}
-
-union BatchAdjustmentPayload = BatchAdjustment | BadRequest | Forbidden | NotFound
-
-enum BatchAdjustmentReason {
-  """Inspection"""
-  Inspection
-
-  """Lost"""
-  Lost
-
-  """Split"""
-  Split
-
-  """Other"""
-  Other
-}
-
-input BatchAdjustmentUpdateInput {
-  id: ID
-  reason: BatchAdjustmentReason
-  quantity: Float
-  memo: String
-}
-
-type BatchAssignment implements Model & Owned & Sortable & Memorizable {
-  batch: BatchPayload!
-  user: UserPayload!
-  quantity: Float!
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  createdBy: UserPayload
-  updatedBy: UserPayload
-  deletedBy: UserPayload
-  ownedBy: GroupPayload!
-  sort: Int!
-  memo: String
-}
-
-input BatchAssignmentCreateInput {
-  userId: ID!
-  quantity: Float!
-  memo: String
-}
-
-union BatchAssignmentPayload = BatchAssignment | BadRequest | Forbidden | NotFound
-
-input BatchAssignmentUpdateInput {
-  id: ID
-  userId: ID
-  quantity: Float
-  memo: String
-}
-
 input BatchCreateInput {
   no: String!
   quantity: Float!
@@ -26761,8 +26683,6 @@ input BatchCreateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchAssignments: [BatchAssignmentCreateInput!]
-  batchAdjustments: [BatchAdjustmentCreateInput!]
   batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
   todo: TodoInput
   orderItemId: ID!
@@ -26894,8 +26814,6 @@ input BatchUpdateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchAssignments: [BatchAssignmentUpdateInput!]
-  batchAdjustments: [BatchAdjustmentUpdateInput!]
   batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   orderItemId: ID
@@ -27008,8 +26926,6 @@ input ContainerBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchAssignments: [BatchAssignmentUpdateInput!]
-  batchAdjustments: [BatchAdjustmentUpdateInput!]
   batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
@@ -28484,7 +28400,7 @@ input EntityInput {
   taskId: ID
 }
 
-union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | BatchAssignment | BatchAdjustment | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | File | Task | BadRequest | Forbidden | NotFound
+union EntityPayload = Product | ProductProvider | Order | OrderItem | Batch | Shipment | Voyage | Container | ContainerGroup | TimelineDate | TimelineDateRevision | Warehouse | Tag | User | Group | Partnership | File | Task | BadRequest | Forbidden | NotFound
 
 type EntityValue {
   entity: EntityPayload
@@ -29674,6 +29590,7 @@ type Mutation {
   batchSimpleSplit(id: ID!, input: BatchSimpleSplitInput!): BatchesPayload!
   batchEqualSplit(id: ID!, input: BatchEqualSplitInput!): BatchesPayload!
   batchBalanceSplit(orderItemId: ID!): BatchesPayload!
+  batchBalanceSplitMany(orderItemIds: [ID!]!): [BatchesPayload!]!
   batchClone(id: ID!, input: BatchUpdateInput!): BatchPayload!
   shipmentCreate(input: ShipmentCreateInput!): ShipmentPayload!
   shipmentUpdate(id: ID!, input: ShipmentUpdateInput!): ShipmentPayload!
@@ -29687,6 +29604,7 @@ type Mutation {
   entitiesUpdateMany(products: [ProductUpdateWrapperInput!], orders: [OrderUpdateWrapperInput!], orderItems: [OrderItemUpdateWrapperInput!], batches: [BatchUpdateWrapperInput!], shipments: [ShipmentUpdateWrapperInput!], containers: [ContainerUpdateWrapperInput!], warehouses: [WarehouseUpdateWrapperInput!]): EntitiesMany!
   tagCreate(input: TagCreateInput!): TagPayload!
   tagUpdate(id: ID!, input: TagUpdateInput!): TagPayload!
+  tagDelete(id: ID!): EmptyPayload
   fieldDefinitionsUpdate(input: FieldDefinitionsInput!): FieldDefinitionsPayload!
   maskCreate(input: MaskCreateInput!): MaskPayload!
   maskUpdate(id: ID!, input: MaskUpdateInput!): MaskPayload!
@@ -30062,8 +29980,6 @@ input OrderItemBatchCreateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchAssignments: [BatchAssignmentCreateInput!]
-  batchAdjustments: [BatchAdjustmentCreateInput!]
   batchQuantityRevisions: [BatchQuantityRevisionCreateInput!]
   todo: TodoInput
   shipmentId: ID
@@ -30088,8 +30004,6 @@ input OrderItemBatchUpdateInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchAssignments: [BatchAssignmentUpdateInput!]
-  batchAdjustments: [BatchAdjustmentUpdateInput!]
   batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
@@ -86319,8 +86233,6 @@ input ShipmentBatchInput {
   memo: String
   tagIds: [ID!]
   customFields: CustomFieldsInput
-  batchAssignments: [BatchAssignmentUpdateInput!]
-  batchAdjustments: [BatchAdjustmentUpdateInput!]
   batchQuantityRevisions: [BatchQuantityRevisionUpdateInput!]
   todo: TodoInput
   id: ID
