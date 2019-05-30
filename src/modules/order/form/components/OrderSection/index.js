@@ -334,16 +334,23 @@ const OrderSection = ({ isNew, isClone }: Props) => {
 
                           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                             {opened && (
-                              <Subscribe to={[OrderItemsContainer, OrderTasksContainer]}>
-                                {({ setFieldValue: resetOrderItems }, { changeExporter }) => (
+                              <Subscribe
+                                to={[OrderItemsContainer, OrderTasksContainer, OrderInfoContainer]}
+                              >
+                                {(
+                                  { setFieldValue: updateOrderItems },
+                                  { changeExporter: updateTasks },
+                                  { changeExporter: updateOrderInfo }
+                                ) => (
                                   <SelectExporter
                                     selected={values.exporter}
                                     onCancel={() => slideToggle(false)}
                                     onSelect={newValue => {
                                       slideToggle(false);
                                       setFieldValue('exporter', newValue);
-                                      changeExporter(values.exporter);
-                                      resetOrderItems('orderItems', []);
+                                      updateTasks(values.exporter);
+                                      updateOrderInfo(values.exporter);
+                                      updateOrderItems('orderItems', []);
                                     }}
                                   />
                                 )}
