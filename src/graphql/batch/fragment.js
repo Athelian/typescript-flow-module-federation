@@ -5,7 +5,6 @@ export const batchFormFragment = gql`
   fragment batchFormFragment on Batch {
     id
     archived
-    totalAdjusted
     autoCalculatePackageQuantity
     autoCalculatePackageVolume
     updatedAt

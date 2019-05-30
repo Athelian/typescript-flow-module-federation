@@ -790,7 +790,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             batches: orderItem.batches
                               .filter(batchId => batchIds.includes(batchId))
                               .map(batchId => {
-                                const { totalAdjusted, ...inputBatchFields } = batches[batchId];
+                                const { ...inputBatchFields } = batches[batchId];
                                 return {
                                   ...defaultInput,
                                   ...inputBatchFields,
