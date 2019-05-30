@@ -700,7 +700,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                       <FormTooltip
                         infoMessage={
                           <FormattedMessage
-                            id="modules.Shipments.tooltipExporter"
+                            id="modules.Shipments.tooltipMainExporter"
                             defaultMessage="The Exporter chosen here will have access to this Shipment"
                           />
                         }
