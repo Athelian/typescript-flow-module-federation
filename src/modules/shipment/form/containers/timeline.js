@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPath } from 'utils/fp';
 import { removeNulls } from 'utils/data';
 import emitter from 'utils/emitter';
 
@@ -14,7 +14,7 @@ type ActionDetail = {
 };
 
 type FormState = {
-  cargoReady?: ActionDetail,
+  cargoReady: ActionDetail,
   containerGroups: Array<{
     customClearance?: ActionDetail,
     deliveryReady?: ActionDetail,
@@ -36,10 +36,31 @@ type FormState = {
   }>,
 };
 
-const initValues: FormState = {
+export const initValues: FormState = {
   cargoReady: {},
   containerGroups: [{}],
   voyages: [{}],
+};
+
+const removeOldImporterStaff = ({
+  entity,
+  field,
+  importer,
+}: {
+  entity: Object,
+  field: string,
+  importer: Object,
+}) => {
+  return {
+    [field]: {
+      ...entity,
+      assignedTo: entity.assignedTo.filter(user => getByPath('group.id', user) !== importer.id),
+      approvedAt:
+        getByPath('approvedBy.group.id', entity) === importer.id ? null : entity.approvedAt,
+      approvedBy:
+        getByPath('approvedBy.group.id', entity) === importer.id ? null : entity.approvedBy,
+    },
+  };
 };
 
 export default class ShipmentTimelineContainer extends Container<FormState> {
@@ -104,5 +125,57 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
 
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
+  };
+
+  onChangeImporter = (importer: Object) => {
+    const { cargoReady, containerGroups, voyages } = this.state;
+    this.setState({
+      ...(Object.keys(cargoReady).length > 0
+        ? removeOldImporterStaff({
+            entity: cargoReady,
+            field: 'cargoReady',
+            importer,
+          })
+        : { cargoReady }),
+      containerGroups: containerGroups.map(group =>
+        Object.keys(group).length > 0
+          ? {
+              ...group,
+              ...removeOldImporterStaff({
+                entity: group.customClearance,
+                field: 'customClearance',
+                importer,
+              }),
+              ...removeOldImporterStaff({
+                entity: group.deliveryReady,
+                field: 'deliveryReady',
+                importer,
+              }),
+              ...removeOldImporterStaff({
+                entity: group.warehouseArrival,
+                field: 'warehouseArrival',
+                importer,
+              }),
+            }
+          : group
+      ),
+      voyages: voyages.map(voyage =>
+        Object.keys(voyage).length > 0
+          ? {
+              ...voyage,
+              ...removeOldImporterStaff({
+                entity: voyage.arrival,
+                field: 'arrival',
+                importer,
+              }),
+              ...removeOldImporterStaff({
+                entity: voyage.departure,
+                field: 'departure',
+                importer,
+              }),
+            }
+          : voyage
+      ),
+    });
   };
 }
