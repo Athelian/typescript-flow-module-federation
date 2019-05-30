@@ -749,8 +749,8 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                             />
                                           }
                                           onSelect={selectedImporter => {
-                                            setFieldValue('exporter', selectedImporter);
                                             exporterSelectorToggle(false);
+                                            setFieldValue('exporter', selectedImporter);
                                             setFieldValue(
                                               'inCharges',
                                               values.inCharges.filter(
