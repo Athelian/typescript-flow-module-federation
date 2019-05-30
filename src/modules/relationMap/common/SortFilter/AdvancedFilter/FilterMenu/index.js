@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import useUser from 'hooks/useUser';
 import type { EntityTypes, ActiveFilters, FilterToggles } from '../type';
 import { BaseFilterMenu } from './components';
 import messages from './messages';
@@ -47,6 +48,7 @@ const getFilterMenu = ({
   parsedRadioFilters,
   parsedFilterToggles,
   dispatch,
+  isExporter,
 }: {
   selectedEntityType: EntityTypes,
   selectedItems: {
@@ -60,6 +62,7 @@ const getFilterMenu = ({
   parsedRadioFilters: Object,
   parsedFilterToggles: Object,
   dispatch: (action: { type: string, payload: Object }) => void,
+  isExporter: boolean,
 }) => {
   const getSelectData = getSelectDataByType(selectedEntityType);
   switch (selectedEntityType) {
@@ -75,24 +78,32 @@ const getFilterMenu = ({
               label: <FormattedMessage {...messages.order} />,
               data: getSelectData(selectedItems, 'ids'),
             },
-            {
-              name: 'exporter',
-              field: 'group.name',
-              label: <FormattedMessage {...messages.exporter} />,
-              data: getSelectData(selectedItems, 'exporter'),
-            },
+            ...(isExporter
+              ? []
+              : [
+                  {
+                    name: 'exporter',
+                    field: 'group.name',
+                    label: <FormattedMessage {...messages.exporter} />,
+                    data: getSelectData(selectedItems, 'exporter'),
+                  },
+                ]),
             {
               name: 'inCharge',
               field: 'id',
               label: <FormattedMessage {...messages.inCharge} />,
               data: getSelectData(selectedItems, 'inCharge'),
             },
-            {
-              name: 'tags',
-              field: 'name',
-              label: <FormattedMessage {...messages.tags} />,
-              data: getSelectData(selectedItems, 'tags'),
-            },
+            ...(isExporter
+              ? []
+              : [
+                  {
+                    name: 'tags',
+                    field: 'name',
+                    label: <FormattedMessage {...messages.tags} />,
+                    data: getSelectData(selectedItems, 'tags'),
+                  },
+                ]),
             {
               name: 'createdAt',
               field: 'createdAt',
@@ -203,12 +214,16 @@ const getFilterMenu = ({
               label: <FormattedMessage {...messages.totalVolume} />,
               data: getSelectData(selectedItems, 'totalVolume'),
             },
-            {
-              name: 'tags',
-              field: 'name',
-              label: <FormattedMessage {...messages.tags} />,
-              data: getSelectData(selectedItems, 'tags'),
-            },
+            ...(isExporter
+              ? []
+              : [
+                  {
+                    name: 'tags',
+                    field: 'name',
+                    label: <FormattedMessage {...messages.tags} />,
+                    data: getSelectData(selectedItems, 'tags'),
+                  },
+                ]),
           ],
         },
       ];
@@ -304,12 +319,16 @@ const getFilterMenu = ({
               label: <FormattedMessage {...messages.deliveryReady} />,
               data: getSelectData(selectedItems, 'deliveryReady'),
             },
-            {
-              name: 'tags',
-              field: 'name',
-              label: <FormattedMessage {...messages.tags} />,
-              data: getSelectData(selectedItems, 'tags'),
-            },
+            ...(isExporter
+              ? []
+              : [
+                  {
+                    name: 'tags',
+                    field: 'name',
+                    label: <FormattedMessage {...messages.tags} />,
+                    data: getSelectData(selectedItems, 'tags'),
+                  },
+                ]),
             {
               name: 'createdAt',
               label: <FormattedMessage {...messages.createdAt} />,
@@ -374,6 +393,8 @@ function FilterMenu({
   selectedItems,
   dispatch,
 }: Props) {
+  const { isExporter } = useUser();
+
   const parsedActiveFilters = activeFilters[selectedEntityType];
   const parsedRadioFilters = radioFilters[selectedEntityType];
   const parsedFilterToggles = filterToggles[selectedEntityType];
@@ -388,6 +409,7 @@ function FilterMenu({
         parsedRadioFilters,
         parsedFilterToggles,
         dispatch,
+        isExporter: isExporter(),
       })}
     </div>
   );
