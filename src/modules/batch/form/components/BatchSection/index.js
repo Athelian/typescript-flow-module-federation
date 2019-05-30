@@ -1,8 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import emitter from 'utils/emitter';
+import { encodeId } from 'utils/id';
 import { spreadOrderItem } from 'utils/item';
 import Icon from 'components/Icon';
 import { TAG_LIST } from 'modules/permission/constants/tag';
@@ -27,8 +29,8 @@ import { BatchInfoContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
 import { FormField } from 'modules/form';
 import { ItemCard } from 'components/Cards';
-
 import GridColumn from 'components/GridColumn';
+import { HIDE, NAVIGABLE, READONLY, type ItemConfigType } from 'modules/batch/form';
 import {
   SectionHeader,
   LastModified,
@@ -54,9 +56,10 @@ import {
 
 type Props = {
   batch: Object,
+  itemConfig: ItemConfigType,
 };
 
-const BatchSection = ({ batch }: Props) => {
+const BatchSection = ({ batch, itemConfig }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -239,22 +242,29 @@ const BatchSection = ({ batch }: Props) => {
                       }}
                     />
                   </GridColumn>
-                  <div className={ItemSectionStyle}>
-                    <Label required>
-                      <FormattedMessage {...messages.orderItem} />
-                    </Label>
-                    <ItemCard
-                      orderItem={orderItem}
-                      productProvider={productProvider}
-                      product={product}
-                      order={order}
-                      editable={editable}
-                      viewable={viewable}
-                      navigable={navigable}
-                      config={config}
-                      readOnly
-                    />
-                  </div>
+                  {itemConfig !== HIDE && (
+                    <div className={ItemSectionStyle}>
+                      <Label required>
+                        <FormattedMessage {...messages.orderItem} />
+                      </Label>
+                      <ItemCard
+                        orderItem={orderItem}
+                        productProvider={productProvider}
+                        product={product}
+                        order={order}
+                        editable={editable}
+                        viewable={viewable}
+                        navigable={navigable}
+                        config={config}
+                        readOnly={itemConfig === READONLY}
+                        onClick={() => {
+                          if (itemConfig === NAVIGABLE) {
+                            navigate(`/order-item/${encodeId(orderItem.id)}`);
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
                 <FieldItem
                   vertical

@@ -52,6 +52,7 @@ const defaultRenderItem = (item: Object, hasPermission: string => boolean) => (
             ),
           ].filter(Boolean)}
           showActionsOnHover
+          onClick={() => navigate(`/shipment/${encodeId(item.id)}`)}
         />
       </>
     )}

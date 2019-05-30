@@ -56,6 +56,7 @@ const defaultRenderItem = ({ canCreate, canUpdate, ...item }: Object): React.Nod
               : []),
           ]}
           showActionsOnHover
+          onClick={() => navigate(`/order/${encodeId(item.id)}`)}
         />
       </>
     )}

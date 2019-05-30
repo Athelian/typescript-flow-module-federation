@@ -1,8 +1,6 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from '@reach/router';
-import { encodeId } from 'utils/id';
 import QuantityChart from 'components/QuantityChart';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
@@ -28,6 +26,7 @@ import {
 
 type OptionalProps = {
   actions: Array<React.Node>,
+  onClick: Function,
 };
 
 type Props = OptionalProps & {
@@ -38,9 +37,8 @@ const defaultProps = {
   actions: [],
 };
 
-const OrderCard = ({ order, actions, ...rest }: Props) => {
+const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
   const {
-    id,
     archived,
     poNo,
     issuedAt,
@@ -59,7 +57,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
 
   return (
     <BaseCard icon="ORDER" color="ORDER" actions={actions} isArchived={archived} {...rest}>
-      <Link className={OrderCardWrapperStyle} to={`/order/${encodeId(id)}`}>
+      <div className={OrderCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={OrderInfoWrapperStyle}>
           <div className={PONoWrapperStyle}>
             <Display align="left">{poNo}</Display>
@@ -142,7 +140,7 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
             <TaskRing {...todo} />
           </div>
         </div>
-      </Link>
+      </div>
     </BaseCard>
   );
 };

@@ -284,7 +284,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                         </Label>
                       }
                       vertical
-                      input={<ShipmentCard shipment={task.shipment} />}
+                      input={
+                        <ShipmentCard
+                          shipment={task.shipment}
+                          onClick={() => navigate(`/shipment/${encodeId(task.shipment.id)}`)}
+                        />
+                      }
                     />
                   )}
 
@@ -886,7 +891,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<OrderCard order={task.order} />}
+                          input={
+                            <OrderCard
+                              order={task.order}
+                              onClick={() => navigate(`/order/${encodeId(task.order.id)}`)}
+                            />
+                          }
                         />
                       </GridColumn>
                     )}

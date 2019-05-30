@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { CONTAINER_ORDER_LIST } from 'modules/permission/constants/container';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -47,7 +49,11 @@ function OrdersSection({ orders }: Props) {
         ) : (
           <div className={OrdersSectionBodyStyle}>
             {orders.map(order => (
-              <OrderCard order={order} key={order.id} />
+              <OrderCard
+                order={order}
+                key={order.id}
+                onClick={() => navigate(`/order/${encodeId(order.id)}`)}
+              />
             ))}
           </div>
         )}

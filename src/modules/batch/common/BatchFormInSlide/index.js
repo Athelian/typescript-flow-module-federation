@@ -5,7 +5,6 @@ import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
-
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -20,7 +19,7 @@ type Props = {
 
 const formContainer = new FormContainer();
 
-const BatchFormInSlide = ({ batch, onSave }: Props) => {
+const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -120,6 +119,7 @@ const BatchFormInSlide = ({ batch, onSave }: Props) => {
                   batchInfoContainer.initDetailValues(info);
                   batchTasksContainer.initDetailValues(todo);
                 }}
+                {...rest}
               />
             </Layout>
           );

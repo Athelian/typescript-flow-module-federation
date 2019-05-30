@@ -1,12 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { ContainerCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
+import { HIDE, NAVIGABLE, READONLY, type ContainerConfigType } from 'modules/batch/form';
 import {
   ContainerSectionWrapperStyle,
   ContainerSectionBodyStyle,
@@ -15,11 +18,17 @@ import {
 
 type Props = {
   container: ?Object,
+  containerConfig: ContainerConfigType,
 };
 
-function ContainerSection({ container }: Props) {
+function ContainerSection({ container, containerConfig }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
+  if (containerConfig === HIDE) {
+    return null;
+  }
+
   return (
     <SectionWrapper id="batch_containerSection">
       <SectionHeader
@@ -36,6 +45,12 @@ function ContainerSection({ container }: Props) {
               container={container}
               permission={{
                 viewWarehouse: hasPermission([WAREHOUSE_FORM]),
+              }}
+              readOnly={containerConfig === READONLY}
+              onClick={() => {
+                if (containerConfig === NAVIGABLE) {
+                  navigate(`/container/${encodeId(container.id)}`);
+                }
               }}
             />
           ) : (

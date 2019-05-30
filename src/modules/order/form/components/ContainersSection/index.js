@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { SectionHeader } from 'components/Form';
 import { ContainerCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
@@ -55,7 +57,11 @@ function ContainersSection({ entityId, isLoading }: Props) {
               ) : (
                 <div className={ContainersSectionBodyStyle}>
                   {containers.map(container => (
-                    <ContainerCard container={container} key={container.id} />
+                    <ContainerCard
+                      container={container}
+                      key={container.id}
+                      onClick={() => navigate(`/container/${encodeId(container.id)}`)}
+                    />
                   ))}
                 </div>
               )}

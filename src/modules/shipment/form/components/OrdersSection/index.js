@@ -2,6 +2,8 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { SHIPMENT_ORDER_LIST } from 'modules/permission/constants/shipment';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -49,7 +51,11 @@ function OrdersSection() {
                 ) : (
                   <div className={OrdersSectionBodyStyle}>
                     {orders.map(order => (
-                      <OrderCard order={order} key={order.id} />
+                      <OrderCard
+                        order={order}
+                        key={order.id}
+                        onClick={() => navigate(`/order/${encodeId(order.id)}`)}
+                      />
                     ))}
                   </div>
                 )}

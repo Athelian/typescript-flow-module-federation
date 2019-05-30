@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -17,7 +19,12 @@ type Props = {
 };
 
 const defaultRenderItem = (item: Object, permission: Object) => (
-  <ContainerCard key={item.id} container={item} permission={permission} />
+  <ContainerCard
+    key={item.id}
+    container={item}
+    permission={permission}
+    onClick={() => navigate(`/container/${encodeId(item.id)}`)}
+  />
 );
 
 const defaultProps = {
