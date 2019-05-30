@@ -1,85 +1,8 @@
 // @flow
-import type { Tag as TagNameAndColor } from 'modules/tags/type.js.flow';
 
 export type MetricValue = {
   value: number,
   metric: string,
-};
-
-export type UserNameAndAvatar = {
-  firstName: string,
-  lastName: string,
-  avatar: ?string,
-  id: string,
-};
-
-export type BatchQuery = {
-  archived: boolean,
-  orderItem: {
-    id: string,
-    quantity: number,
-    price: {
-      amount: number,
-      currency: string,
-    },
-    order: {
-      id: string,
-      poNo: string,
-    },
-    productProvider: {
-      id: string,
-      product: {
-        id: string,
-        name: string,
-        serial: string,
-      },
-      exporter: {
-        id: string,
-        name: string,
-      },
-      supplier: {
-        id: string,
-        name: string,
-      },
-    },
-  },
-  shipment: ?{
-    id: string,
-    blNo: string,
-    containerGroups: Array<{
-      warehouseArrival: {
-        date: Date,
-      },
-    }>,
-  },
-  no: string,
-  quantity: number,
-  packageQuantity: ?number,
-  producedAt: ?string,
-  deliveredAt: ?string,
-  expiredAt: ?string,
-  batchAdjustments: ?Array<{
-    reason: 'Inspection' | 'Lost' | 'Other',
-    quantity: number,
-    memo: ?string,
-    id: string,
-    updatedAt: string,
-    updatedBy: ?UserNameAndAvatar,
-    sort: number,
-  }>,
-  id: string,
-  updatedAt: string,
-  updatedBy: ?UserNameAndAvatar,
-  packageName: ?string,
-  packageGrossWeight: ?MetricValue,
-  packageVolume: ?MetricValue,
-  packageSize: ?{
-    length: MetricValue,
-    width: MetricValue,
-    height: MetricValue,
-  },
-  packageCapacity: ?number,
-  tags: Array<TagNameAndColor>,
 };
 
 export type BatchCreate = {
@@ -101,11 +24,6 @@ export type BatchCreate = {
   },
   packageCapacity?: ?number,
   tagIds?: ?Array<string>,
-  batchAdjustments?: ?Array<{
-    reason: 'Inspection' | 'Lost' | 'Other',
-    quantity: number,
-    memo?: ?string,
-  }>,
 };
 
 export type BatchUpdate = {
@@ -128,10 +46,4 @@ export type BatchUpdate = {
   packageCapacity?: ?number,
   tagIds?: ?Array<string>,
   orderItemId?: ?string,
-  batchAdjustments?: ?Array<{
-    id?: ?string,
-    reason: 'Inspection' | 'Lost' | 'Other',
-    quantity: number,
-    memo?: ?string,
-  }>,
 };
