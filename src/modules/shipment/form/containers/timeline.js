@@ -45,20 +45,20 @@ export const initValues: FormState = {
 const removeOldImporterStaff = ({
   entity,
   field,
-  importer,
+  partner,
 }: {
   entity: Object,
   field: string,
-  importer: Object,
+  partner: Object,
 }) => {
   return {
     [field]: {
       ...entity,
-      assignedTo: entity.assignedTo.filter(user => getByPath('group.id', user) !== importer.id),
+      assignedTo: entity.assignedTo.filter(user => getByPath('group.id', user) !== partner.id),
       approvedAt:
-        getByPath('approvedBy.group.id', entity) === importer.id ? null : entity.approvedAt,
+        getByPath('approvedBy.group.id', entity) === partner.id ? null : entity.approvedAt,
       approvedBy:
-        getByPath('approvedBy.group.id', entity) === importer.id ? null : entity.approvedBy,
+        getByPath('approvedBy.group.id', entity) === partner.id ? null : entity.approvedBy,
     },
   };
 };
@@ -127,14 +127,14 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     this.originalValues = { ...parsedValues };
   };
 
-  onChangeImporter = (importer: Object) => {
+  onChangePartner = (partner: Object) => {
     const { cargoReady, containerGroups, voyages } = this.state;
     this.setState({
       ...(Object.keys(cargoReady).length > 0
         ? removeOldImporterStaff({
             entity: cargoReady,
             field: 'cargoReady',
-            importer,
+            partner,
           })
         : { cargoReady }),
       containerGroups: containerGroups.map(group =>
@@ -144,17 +144,17 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
               ...removeOldImporterStaff({
                 entity: group.customClearance,
                 field: 'customClearance',
-                importer,
+                partner,
               }),
               ...removeOldImporterStaff({
                 entity: group.deliveryReady,
                 field: 'deliveryReady',
-                importer,
+                partner,
               }),
               ...removeOldImporterStaff({
                 entity: group.warehouseArrival,
                 field: 'warehouseArrival',
-                importer,
+                partner,
               }),
             }
           : group
@@ -166,12 +166,12 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
               ...removeOldImporterStaff({
                 entity: voyage.arrival,
                 field: 'arrival',
-                importer,
+                partner,
               }),
               ...removeOldImporterStaff({
                 entity: voyage.departure,
                 field: 'departure',
-                importer,
+                partner,
               }),
             }
           : voyage

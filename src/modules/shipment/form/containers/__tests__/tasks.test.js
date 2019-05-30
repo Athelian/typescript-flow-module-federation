@@ -93,7 +93,7 @@ describe('shipment task container', () => {
     expect(container.originalValues.todo).toEqual(initTodo);
     expect(container.state.todo).toEqual(initTodo);
 
-    await container.onChangeImporter(group);
+    await container.onChangePartner(group);
 
     expect(container.state.todo.tasks).toEqual([
       {

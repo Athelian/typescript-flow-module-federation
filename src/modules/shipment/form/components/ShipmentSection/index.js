@@ -641,11 +641,11 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                                             )
                                                           );
                                                           batchContainer.initDetailValues([]);
-                                                          taskContainer.onChangeImporter(importer);
-                                                          timelineContainer.onChangeImporter(
+                                                          taskContainer.onChangePartner(importer);
+                                                          timelineContainer.onChangePartner(
                                                             importer
                                                           );
-                                                          containersContainer.onChangeImporter(
+                                                          containersContainer.onChangePartner(
                                                             importer
                                                           );
                                                         }}

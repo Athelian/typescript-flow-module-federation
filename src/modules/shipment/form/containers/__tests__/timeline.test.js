@@ -14,7 +14,7 @@ describe('shipment timeline container', () => {
       name: faker.name.findName(),
     };
 
-    await container.onChangeImporter(group);
+    await container.onChangePartner(group);
 
     expect(container.state).toEqual(initValues);
   });
@@ -84,7 +84,7 @@ describe('shipment timeline container', () => {
       voyages: [voyage],
     });
 
-    await container.onChangeImporter(group);
+    await container.onChangePartner(group);
 
     expect(container.state).toEqual({
       cargoReady: {
@@ -210,7 +210,7 @@ describe('shipment timeline container', () => {
       voyages: [voyage],
     });
 
-    await container.onChangeImporter(group);
+    await container.onChangePartner(group);
 
     expect(container.state).toEqual({
       cargoReady: {

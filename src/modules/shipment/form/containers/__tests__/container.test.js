@@ -76,7 +76,7 @@ describe('shipment task container', () => {
     expect(container.originalValues.containers).toEqual(containers);
     expect(container.state.containers).toEqual(containers);
 
-    await container.onChangeImporter(group);
+    await container.onChangePartner(group);
 
     expect(container.state.containers).toEqual([
       {

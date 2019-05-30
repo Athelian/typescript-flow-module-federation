@@ -43,43 +43,43 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.originalValues = { containers };
   };
 
-  onChangeImporter = (importer: Object) => {
+  onChangePartner = (partner: Object) => {
     const { containers } = this.state;
 
     this.setState({
       containers: containers.map(container => ({
         ...container,
         warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== importer.id
+          user => getByPath('group.id', user) !== partner.id
         ),
         warehouseArrivalAgreedDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== importer.id
+          user => getByPath('group.id', user) !== partner.id
         ),
         departureDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== importer.id
+          user => getByPath('group.id', user) !== partner.id
         ),
         warehouseArrivalActualDateApprovedAt:
-          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) === importer.id
+          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) === partner.id
             ? null
             : container.warehouseArrivalActualDateApprovedAt,
         warehouseArrivalActualDateApprovedBy:
-          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) === importer.id
+          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) === partner.id
             ? null
             : container.warehouseArrivalActualDateApprovedBy,
         warehouseArrivalAgreedDateApprovedAt:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) === importer.id
+          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) === partner.id
             ? null
             : container.warehouseArrivalAgreedDateApprovedAt,
         warehouseArrivalAgreedDateApprovedBy:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) === importer.id
+          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) === partner.id
             ? null
             : container.warehouseArrivalAgreedDateApprovedBy,
         departureDateApprovedAt:
-          getByPath('departureDateApprovedBy.group.id', container) === importer.id
+          getByPath('departureDateApprovedBy.group.id', container) === partner.id
             ? null
             : container.departureDateApprovedAt,
         departureDateApprovedBy:
-          getByPath('departureDateApprovedBy.group.id', container) === importer.id
+          getByPath('departureDateApprovedBy.group.id', container) === partner.id
             ? null
             : container.departureDateApprovedBy,
       })),
