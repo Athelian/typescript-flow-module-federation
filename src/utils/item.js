@@ -96,10 +96,10 @@ export const spreadOrderItem = (item: Object): Object => {
     batchShippedCount,
   };
 
-  const { name: productProviderName, product } = productProvider;
+  const { name: productProviderName, product } = productProvider || {};
   const compiledProductProvider = { name: productProviderName };
 
-  const { id: productId, name, serial, tags: productTags, files } = product;
+  const { id: productId, name, serial, tags: productTags, files } = product || {};
   const compiledProduct = {
     id: productId,
     name,

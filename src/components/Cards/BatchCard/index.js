@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isForbidden } from 'utils/data';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
@@ -84,23 +85,27 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameWrapperStyle}>
-              <Link
-                className={ProductIconLinkStyle}
-                to={`/product/${encodeId(product.id)}`}
-                onClick={evt => {
-                  evt.stopPropagation();
-                }}
-              >
-                <Icon icon="PRODUCT" />
-              </Link>
-              <div className={ProductNameStyle}>{product.name}</div>
-            </div>
-            <div className={ProductSerialStyle}>{product.serial}</div>
-            <div className={ProductProviderNameStyle}>
-              <Icon icon="PRODUCT_PROVIDER" />
-              {productProviderName}
-            </div>
+            {product && product.id && (
+              <>
+                <div className={ProductNameWrapperStyle}>
+                  <Link
+                    className={ProductIconLinkStyle}
+                    to={`/product/${encodeId(product.id)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="PRODUCT" />
+                  </Link>
+                  <div className={ProductNameStyle}>{product.name}</div>
+                </div>
+                <div className={ProductSerialStyle}>{product.serial}</div>
+                <div className={ProductProviderNameStyle}>
+                  <Icon icon="PRODUCT_PROVIDER" />
+                  {productProviderName}
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -225,27 +230,31 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
           <div className={ShipmentWrapperStyle}>
             <Link
               className={ShipmentIconStyle(!!shipment)}
-              to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
+              to={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
               <Icon icon="SHIPMENT" />
             </Link>
-            <Display align="left">{shipment && shipment.no}</Display>
+            <Display blackout={isForbidden(shipment)} align="left">
+              {shipment && shipment.no}
+            </Display>
           </div>
 
           <div className={ContainerWrapperStyle}>
             <Link
               className={ContainerIconStyle(!!container)}
-              to={container ? `/container/${encodeId(container.id)}` : '.'}
+              to={container && container.id ? `/container/${encodeId(container.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
               <Icon icon="CONTAINER" />
             </Link>
-            <Display align="left">{container && container.no}</Display>
+            <Display blackout={isForbidden(container)} align="left">
+              {container && container.no}
+            </Display>
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>

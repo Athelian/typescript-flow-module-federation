@@ -9,6 +9,7 @@ import HoverWrapper from 'components/common/HoverWrapper';
 import Tag from 'components/Tag';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
+import { isForbidden } from 'utils/data';
 import {
   WrapperStyle,
   SelectionWrapperStyle,
@@ -164,25 +165,27 @@ export default class TagsInput extends React.Component<Props, State> {
                 <div className={WrapperStyle(focused, !!disabled, !!editable)}>
                   <div className={SelectionWrapperStyle}>
                     {values &&
-                      values.map(tag => (
-                        <Tag
-                          key={tag.id}
-                          tag={tag}
-                          suffix={
-                            editable.remove && (
-                              <button
-                                type="button"
-                                className={RemoveStyle}
-                                onClick={() => {
-                                  this.handleRemove(tag);
-                                }}
-                              >
-                                <Icon icon="CLEAR" />
-                              </button>
-                            )
-                          }
-                        />
-                      ))}
+                      (values || [])
+                        .filter(item => !isForbidden(item))
+                        .map(tag => (
+                          <Tag
+                            key={tag.id}
+                            tag={tag}
+                            suffix={
+                              editable.remove && (
+                                <button
+                                  type="button"
+                                  className={RemoveStyle}
+                                  onClick={() => {
+                                    this.handleRemove(tag);
+                                  }}
+                                >
+                                  <Icon icon="CLEAR" />
+                                </button>
+                              )
+                            }
+                          />
+                        ))}
                     {editable.set && (
                       <div className={InputStyle(isHover)}>
                         <input

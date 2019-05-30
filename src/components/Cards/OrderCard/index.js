@@ -12,6 +12,7 @@ import Tag from 'components/Tag';
 import TaskRing from 'components/TaskRing';
 import { Label, Display, FieldItem } from 'components/Form';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import { isForbidden } from 'utils/data';
 import BaseCard from '../BaseCard';
 import {
   OrderCardWrapperStyle,
@@ -132,9 +133,11 @@ const OrderCard = ({ order, actions, ...rest }: Props) => {
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={TagsWrapperStyle}>
-              {((order && order.tags) || []).map(tag => (
-                <Tag key={tag.id} tag={tag} />
-              ))}
+              {((order && order.tags) || [])
+                .filter(item => !isForbidden(item))
+                .map(tag => (
+                  <Tag key={tag.id} tag={tag} />
+                ))}
             </div>
             <TaskRing {...todo} />
           </div>

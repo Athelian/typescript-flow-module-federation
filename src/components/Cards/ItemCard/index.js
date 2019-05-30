@@ -219,38 +219,41 @@ const ItemCard = ({
       <div className={OrderItemCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ProductWrapperStyle}>
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
-
           <div className={ProductInfoWrapperStyle}>
-            <div className={ProductNameWrapperStyle}>
-              {mergedNavigable.product ? (
-                <Link
-                  className={ProductIconLinkStyle}
-                  to={`/product/${encodeId(productId)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="PRODUCT" />
-                </Link>
-              ) : (
-                <div className={ProductIconLinkStyle}>
-                  <Icon icon="PRODUCT" />
+            {productId && (
+              <>
+                <div className={ProductNameWrapperStyle}>
+                  {mergedNavigable.product ? (
+                    <Link
+                      className={ProductIconLinkStyle}
+                      to={`/product/${encodeId(productId)}`}
+                      onClick={evt => {
+                        evt.stopPropagation();
+                      }}
+                    >
+                      <Icon icon="PRODUCT" />
+                    </Link>
+                  ) : (
+                    <div className={ProductIconLinkStyle}>
+                      <Icon icon="PRODUCT" />
+                    </div>
+                  )}
+
+                  <div className={ProductNameStyle}>{productName}</div>
                 </div>
-              )}
 
-              <div className={ProductNameStyle}>{productName}</div>
-            </div>
+                <div className={ProductSerialStyle}>{productSerial}</div>
 
-            <div className={ProductSerialStyle}>{productSerial}</div>
+                <div className={ProductProviderNameStyle}>
+                  <Icon icon="PRODUCT_PROVIDER" />
+                  {productProviderName}
+                </div>
 
-            <div className={ProductProviderNameStyle}>
-              <Icon icon="PRODUCT_PROVIDER" />
-              {productProviderName}
-            </div>
-
-            <div className={ProductTagsWrapperStyle}>
-              {productTags && productTags.map(tag => <Tag key={tag.id} tag={tag} />)}
-            </div>
+                <div className={ProductTagsWrapperStyle}>
+                  {productTags && productTags.map(tag => <Tag key={tag.id} tag={tag} />)}
+                </div>
+              </>
+            )}
           </div>
         </div>
 

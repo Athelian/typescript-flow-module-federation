@@ -43,9 +43,7 @@ type Props = {
 const RMOrderItemCard = ({
   orderItem: {
     archived,
-    productProvider: {
-      product: { name, serial, files },
-    },
+    productProvider,
     orderedQuantity,
     batchedQuantity,
     shippedQuantity,
@@ -54,6 +52,10 @@ const RMOrderItemCard = ({
     todo,
   },
 }: Props) => {
+  const { product } = productProvider || {};
+
+  const { name, serial, files } = product || {};
+
   const productImage = files && files.length > 0 ? files[0].pathSmall : FALLBACK_IMAGE;
 
   return (
