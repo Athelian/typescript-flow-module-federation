@@ -757,26 +757,58 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                                       }
                                                     }}
                                                   />
-                                                  <ConfirmDialog
-                                                    isOpen={exporterDialogIsOpen}
-                                                    onRequestClose={() => {
-                                                      exporterDialogToggle(false);
-                                                    }}
-                                                    onCancel={() => {
-                                                      exporterDialogToggle(false);
-                                                    }}
-                                                    onConfirm={() => {
-                                                      setFieldValue('exporter', selectedImporter);
-                                                      exporterDialogToggle(false);
-                                                      exporterSelectorToggle(false);
-                                                    }}
-                                                    message={
-                                                      <FormattedMessage
-                                                        id="modules.Shipment.exporterDialogMessage"
-                                                        defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                                  <Subscribe
+                                                    to={[
+                                                      ShipmentTasksContainer,
+                                                      ShipmentTimelineContainer,
+                                                      ShipmentContainersContainer,
+                                                    ]}
+                                                  >
+                                                    {(
+                                                      taskContainer,
+                                                      timelineContainer,
+                                                      containersContainer
+                                                    ) => (
+                                                      <ConfirmDialog
+                                                        isOpen={exporterDialogIsOpen}
+                                                        onRequestClose={() => {
+                                                          exporterDialogToggle(false);
+                                                        }}
+                                                        onCancel={() => {
+                                                          exporterDialogToggle(false);
+                                                        }}
+                                                        onConfirm={() => {
+                                                          setFieldValue(
+                                                            'exporter',
+                                                            selectedImporter
+                                                          );
+                                                          exporterDialogToggle(false);
+                                                          exporterSelectorToggle(false);
+                                                          setFieldValue(
+                                                            'inCharges',
+                                                            values.inCharges.filter(
+                                                              user =>
+                                                                getByPath('group.id', user) !==
+                                                                importer.id
+                                                            )
+                                                          );
+                                                          taskContainer.onChangePartner(exporter);
+                                                          timelineContainer.onChangePartner(
+                                                            exporter
+                                                          );
+                                                          containersContainer.onChangePartner(
+                                                            exporter
+                                                          );
+                                                        }}
+                                                        message={
+                                                          <FormattedMessage
+                                                            id="modules.Shipment.exporterDialogMessage"
+                                                            defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                                          />
+                                                        }
                                                       />
-                                                    }
-                                                  />
+                                                    )}
+                                                  </Subscribe>
                                                 </>
                                               )}
                                             </ObjectValue>
