@@ -6,6 +6,7 @@ import {
   parseArrayOfIdsField,
   parseParentIdField,
   parseArrayOfChildrenField,
+  isForbidden,
 } from '../data';
 
 describe('Functions to parse update mutations', () => {
@@ -244,5 +245,15 @@ describe('Functions to parse update mutations', () => {
         { productProviderId: '3', quantity: 200, price: { amount: 100, currency: 'JPY' } },
       ],
     });
+  });
+
+  it('should be forbidden', () => {
+    expect(isForbidden()).toBeTruthy();
+    expect(isForbidden({ __typename: 'Forbidden' })).toBeTruthy();
+  });
+
+  it('should be not forbidden', () => {
+    expect(isForbidden({})).toBeFalsy();
+    expect(isForbidden({ __typename: 'others' })).toBeFalsy();
   });
 });
