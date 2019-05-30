@@ -1,7 +1,7 @@
 // @flow
 import { Container } from 'unstated';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPath } from 'utils/fp';
 
 type FormState = {
   archived?: boolean,
@@ -9,6 +9,7 @@ type FormState = {
   poNo: ?string,
   currency: ?string,
   deliveryPlace: ?string,
+  importer?: Object,
   exporter?: { id: string, name: string },
   incoterm: ?string,
   issuedAt: ?Date,
@@ -75,5 +76,14 @@ export default class OrderInfoContainer extends Container<FormState> {
     const parsedValues: Object = { ...initValues, ...values };
     this.setState(parsedValues);
     this.originalValues = Object.assign({}, parsedValues);
+  };
+
+  changeExporter = (prevExporter: Object) => {
+    this.setState(state => {
+      const { inCharges } = state;
+      return {
+        inCharges: inCharges.filter(user => getByPath('group.id', user) !== prevExporter.id),
+      };
+    });
   };
 }

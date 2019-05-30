@@ -32,6 +32,9 @@ export const orderFormQueryFragment = gql`
     customFields {
       ...customFieldsFragment
     }
+    importer {
+      ...partnerCardFragment
+    }
     exporter {
       ...partnerCardFragment
     }
@@ -72,14 +75,8 @@ export const orderFormFragment = gql`
     customFields {
       ...customFieldsFragment
     }
-    todo {
-      ...todoFragment
-      tasks {
-        ...taskFormInSlideViewFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
+    importer {
+      ...partnerCardFragment
     }
     exporter {
       ...partnerCardFragment
@@ -89,6 +86,15 @@ export const orderFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    todo {
+      ...todoFragment
+      tasks {
+        ...taskFormInSlideViewFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
     }
     files {
       ...documentFragment
