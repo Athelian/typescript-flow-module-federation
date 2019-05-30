@@ -5,7 +5,7 @@ import { BooleanValue, ObjectValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { isNullOrUndefined } from 'utils/fp';
+import { getByPath, isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
@@ -44,6 +44,8 @@ import {
   ShipmentTimelineContainer,
   ShipmentBatchesContainer,
   ShipmentTagsContainer,
+  ShipmentTasksContainer,
+  ShipmentContainersContainer,
 } from 'modules/shipment/form/containers';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import SelectExporters from 'modules/order/common/SelectExporters';
@@ -601,26 +603,61 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                                       }
                                                     }}
                                                   />
-                                                  <ConfirmDialog
-                                                    isOpen={importerDialogIsOpen}
-                                                    onRequestClose={() => {
-                                                      importerDialogToggle(false);
-                                                    }}
-                                                    onCancel={() => {
-                                                      importerDialogToggle(false);
-                                                    }}
-                                                    onConfirm={() => {
-                                                      setFieldValue('importer', selectedImporter);
-                                                      importerDialogToggle(false);
-                                                      importerSelectorToggle(false);
-                                                    }}
-                                                    message={
-                                                      <FormattedMessage
-                                                        id="modules.Shipment.importerDialogMessage"
-                                                        defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                                  <Subscribe
+                                                    to={[
+                                                      ShipmentBatchesContainer,
+                                                      ShipmentTasksContainer,
+                                                      ShipmentTimelineContainer,
+                                                      ShipmentContainersContainer,
+                                                    ]}
+                                                  >
+                                                    {(
+                                                      batchContainer,
+                                                      taskContainer,
+                                                      timelineContainer,
+                                                      containersContainer
+                                                    ) => (
+                                                      <ConfirmDialog
+                                                        isOpen={importerDialogIsOpen}
+                                                        onRequestClose={() => {
+                                                          importerDialogToggle(false);
+                                                        }}
+                                                        onCancel={() => {
+                                                          importerDialogToggle(false);
+                                                        }}
+                                                        onConfirm={() => {
+                                                          importerDialogToggle(false);
+                                                          importerSelectorToggle(false);
+                                                          setFieldValue(
+                                                            'importer',
+                                                            selectedImporter
+                                                          );
+                                                          setFieldValue(
+                                                            'inCharges',
+                                                            values.inCharges.filter(
+                                                              user =>
+                                                                getByPath('group.id', user) !==
+                                                                importer.id
+                                                            )
+                                                          );
+                                                          batchContainer.initDetailValues([]);
+                                                          taskContainer.onChangeImporter(importer);
+                                                          timelineContainer.onChangeImporter(
+                                                            importer
+                                                          );
+                                                          containersContainer.onChangeImporter(
+                                                            importer
+                                                          );
+                                                        }}
+                                                        message={
+                                                          <FormattedMessage
+                                                            id="modules.Shipment.importerDialogMessage"
+                                                            defaultMessage="Changing the Importer will remove all Batches. It will also remove all assigned Staff of the current Importer from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Importer?"
+                                                          />
+                                                        }
                                                       />
-                                                    }
-                                                  />
+                                                    )}
+                                                  </Subscribe>
                                                 </>
                                               )}
                                             </ObjectValue>

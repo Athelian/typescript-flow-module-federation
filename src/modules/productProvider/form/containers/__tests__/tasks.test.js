@@ -18,6 +18,7 @@ describe('task end product container', () => {
       id: faker.random.uuid(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
+      group,
     };
 
     const remainUsers = [
