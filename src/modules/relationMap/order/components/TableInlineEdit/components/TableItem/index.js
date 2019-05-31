@@ -149,9 +149,7 @@ function renderItem({
         set:
           hasPermission(TAG_LIST) &&
           (canUpdate || hasPermission(TagsSettingPermissionMap[entityType])),
-        remove:
-          hasPermission(TAG_LIST) &&
-          (canUpdate || hasPermission(TagsSettingPermissionMap[entityType])),
+        remove: canUpdate || hasPermission(TagsSettingPermissionMap[entityType]),
       };
 
       return <InlineTagInput name={name} values={value} {...meta} id={id} editable={editable} />;
