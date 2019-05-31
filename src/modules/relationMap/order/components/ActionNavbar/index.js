@@ -24,7 +24,6 @@ import { orderDetailQuery, shipmentDetailQuery } from 'modules/relationMap/order
 import { ORDER, ORDER_ITEM, BATCH, SHIPMENT } from 'constants/keywords';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import messages from 'modules/relationMap/messages';
-import { prepareParsedOrderInput } from 'modules/order/form/mutation';
 import { TabItemStyled, LoadingContainerStyle, MoveToWrapper } from './style';
 import TargetToolBar from './TargetToolBar';
 import HighLightToolBar from './HighLightToolBar';
@@ -35,7 +34,7 @@ import ConstraintPanel from './ConstraintPanel';
 import MoveToOrderPanel from './MoveToOrderPanel';
 import MoveToShipmentPanel from './MoveToShipmentPanel';
 import ErrorPanel from './ErrorPanel';
-import { batchBalanceSplitMutation } from './SplitBalancePanel/mutation';
+import { batchBalanceSplitManyMutation } from './SplitBalancePanel/mutation';
 import { batchEqualSplitMutation, batchSimpleSplitMutation } from './SplitPanel/mutation';
 import {
   cloneOrderMutation,
@@ -512,23 +511,23 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     });
                     actions.autoFillBatches(orderItemIds);
                     try {
-                      const balanceSplitBatches = await Promise.all(
-                        orderItemIds.map(orderItemId =>
-                          client.mutate({
-                            mutation: batchBalanceSplitMutation,
-                            variables: { orderItemId },
-                            refetchQueries: orderIds.map(orderId => ({
-                              query: orderDetailQuery,
-                              variables: {
-                                id: orderId,
-                              },
-                            })),
-                          })
-                        )
-                      );
-                      const result = balanceSplitBatches.map((item, index) => ({
+                      const balanceSplitBatches = await client.mutate({
+                        mutation: batchBalanceSplitManyMutation,
+                        variables: { orderItemIds },
+                        refetchQueries: orderIds.map(orderId => ({
+                          query: orderDetailQuery,
+                          variables: {
+                            id: orderId,
+                          },
+                        })),
+                      });
+                      const result = getByPathWithDefault(
+                        [],
+                        'data.batchBalanceSplitManyMutation',
+                        balanceSplitBatches
+                      ).map((item, index) => ({
                         id: orderItemIds[index],
-                        batches: getByPathWithDefault([], 'data.batchBalanceSplit.batches', item),
+                        batches: getByPathWithDefault([], 'batches', item),
                       }));
                       actions.autoFillBatchesSuccess(result);
                     } catch (error) {
@@ -1166,7 +1165,15 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       const { orderItems: oldOrderItems } = orders[orderId];
                       updateOrdersInput.push({
                         id: orderId,
-                        oldOrderItems,
+                        oldOrderItems: oldOrderItems.map(orderItemId => {
+                          const orderItem = orderItems[orderItemId];
+                          return {
+                            ...orderItem,
+                            batches: orderItem.batches
+                              .filter(batchId => !batchIds.includes(batchId))
+                              .map(batchId => ({ id: batchId, isNew: false })),
+                          };
+                        }),
                         orderItems: oldOrderItems
                           .filter(orderItemId => !orderItemIds.includes(orderItemId))
                           .map(orderItemId => {
@@ -1188,24 +1195,12 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                             mutation: updateOrderMutation,
                             variables: {
                               id: item.id,
-                              input: prepareParsedOrderInput(
+                              input: prepareOrderInput(
                                 {
-                                  tags: [],
-                                  inCharges: [],
-                                  files: [],
-                                  todo: {
-                                    tasks: [],
-                                  },
                                   currency: currencies.length > 0 ? currencies[0] : 'USD',
                                   orderItems: item.oldOrderItems,
                                 },
                                 {
-                                  tags: [],
-                                  inCharges: [],
-                                  files: [],
-                                  todo: {
-                                    tasks: [],
-                                  },
                                   currency: currencies.length > 0 ? currencies[0] : 'USD',
                                   orderItems: item.orderItems,
                                 }

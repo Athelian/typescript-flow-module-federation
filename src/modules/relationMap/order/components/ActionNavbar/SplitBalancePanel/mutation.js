@@ -11,9 +11,9 @@ import {
 } from 'graphql';
 import { batchCardRMFragment } from 'modules/relationMap/order/query';
 
-export const batchBalanceSplitMutation = gql`
-  mutation batchBalanceSplit($orderItemId: ID!) {
-    batchBalanceSplit(orderItemId: $orderItemId) {
+export const batchBalanceSplitManyMutation = gql`
+  mutation batchBalanceSplitMany($orderItemIds: [ID!]!) {
+    batchBalanceSplitMany(orderItemIds: $orderItemIds) {
       ... on Batches {
         batches {
           ...batchCardRMFragment
@@ -32,4 +32,4 @@ export const batchBalanceSplitMutation = gql`
   ${taskTemplateCardFragment}
 `;
 
-export default batchBalanceSplitMutation;
+export default batchBalanceSplitManyMutation;
