@@ -13,6 +13,8 @@ type OptionalProps = {
   isRequired: boolean,
   disabled: boolean,
   width: string,
+  height: string,
+  forceHoverStyle: boolean,
 };
 
 type Props = OptionalProps & {
@@ -27,9 +29,21 @@ const defaultProps = {
   isRequired: false,
   disabled: false,
   width: '200px',
+  height: '30px',
+  forceHoverStyle: false,
 };
 
-function InlineSelectEnumInput({ name, value, enumType, isRequired, width, id, intl }: Props) {
+function InlineSelectEnumInput({
+  name,
+  value,
+  enumType,
+  isRequired,
+  width,
+  height,
+  forceHoverStyle,
+  id,
+  intl,
+}: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   const itemToString = enumMessages[enumType]
     ? (enumValue: ?string | ?{ description: string, name: string }) => {
@@ -65,7 +79,9 @@ function InlineSelectEnumInput({ name, value, enumType, isRequired, width, id, i
                     hasError={hasError}
                     isOpen={isFocused}
                     width={width}
+                    height={height}
                     align="left"
+                    forceHoverStyle={forceHoverStyle}
                   />
                 )}
                 renderOptions={({ ...optionProps }) => (
