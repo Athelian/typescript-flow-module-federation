@@ -239,7 +239,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       activeAction === 'connectOrder' && !uiSelectors.isAllowToConnectOrder(),
                     disabledCloneOrder:
                       activeAction === 'clone' &&
-                      uiSelectors.isDisableCloneOrder(!hasPermission(RM_CLONE_ORDER)),
+                      uiSelectors.isDisableCloneOrder(!hasPermission(ORDER_CREATE)),
                   }}
                 />
               )}
@@ -265,7 +265,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 </OutsideClickHandler>
               )}
               {activeAction === 'clone' &&
-                !uiSelectors.isDisableCloneOrder(!hasPermission(RM_CLONE_ORDER)) && (
+                !uiSelectors.isDisableCloneOrder(!hasPermission(ORDER_CREATE)) && (
                   <ClonePanel
                     onClick={async () => {
                       const batchIds = uiSelectors.targetedBatchIds();
