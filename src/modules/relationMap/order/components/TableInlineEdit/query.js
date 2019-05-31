@@ -232,6 +232,11 @@ export const containerEntityFragment = gql`
     tags {
       ...tagFragment
     }
+    shipment {
+      ... on Shipment {
+        id
+      }
+    }
   }
 `;
 

@@ -21,10 +21,12 @@ export function calculateShipmentTotalBatchQuantity(shipmentId: string, editData
     ([, batch]) => batch.shipment === shipmentId
   );
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  return allBatches
-    .map(([, batch]) => batch)
-    .map(batch => getBatchLatestQuantity(batch))
-    .reduce(reducer);
+  return allBatches.length > 0
+    ? allBatches
+        .map(([, batch]) => batch)
+        .map(batch => getBatchLatestQuantity(batch))
+        .reduce(reducer)
+    : 0;
 }
 
 export function calculateShipmentTotalVolume(shipmentId: string, editData: Object) {

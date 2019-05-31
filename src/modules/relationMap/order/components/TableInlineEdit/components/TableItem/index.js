@@ -155,6 +155,27 @@ function renderItem({
       );
     }
 
+    case 'assignTo': {
+      const ownId = user.group.id;
+      const shipmentId = getByPath('shipment.id', values);
+      const importerPartnerId = getByPath(
+        `shipments.${shipmentId}.importer.partner.group.id`,
+        editData
+      );
+      const exporterPartnerId = getByPath(
+        `shipments.${shipmentId}.exporter.partner.group.id`,
+        values
+      );
+
+      const groupIds = [ownId, importerPartnerId, exporterPartnerId].filter(
+        item => !isNullOrUndefined(item)
+      );
+
+      return (
+        <InlineInChargeInput name={name} values={value} {...meta} id={id} groupIds={groupIds} />
+      );
+    }
+
     case 'forwarders':
       return <InlineForwarderInput name={name} values={values} {...meta} id={id} />;
 
