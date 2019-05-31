@@ -1,7 +1,7 @@
 // @flow
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { capitalize } from 'lodash';
-import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
@@ -12,6 +12,7 @@ import { PRODUCT_UPDATE, PRODUCT_PROVIDER_UPDATE } from 'modules/permission/cons
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import { UserContext } from 'modules/user';
 import TableDisableCell from '../TableDisableCell';
 import { WrapperStyle, ItemStyle } from './style';
 import {
@@ -82,6 +83,7 @@ function renderItem({
   values,
   editData,
   hasPermission,
+  user,
 }: {
   id: string,
   value: any,
@@ -91,6 +93,7 @@ function renderItem({
   editData: Object,
   meta?: Object,
   hasPermission: (string | Array<string>) => boolean,
+  user: Object,
 }) {
   const { __typename: entityType } = values;
   const canUpdate = hasPermission(UpdatePermissionMap[entityType]);
@@ -138,8 +141,19 @@ function renderItem({
     case 'enumSelect':
       return <InlineEnumInput name={name} value={value} {...meta} id={id} />;
 
-    case 'inCharges':
-      return <InlineInChargeInput name={name} values={value} {...meta} id={id} />;
+    case 'inCharges': {
+      const ownId = user.group.id;
+      const importerPartnerId = getByPath('importer.partner.group.id', values);
+      const exporterPartnerId = getByPath('exporter.partner.group.id', values);
+
+      const groupIds = [ownId, importerPartnerId, exporterPartnerId].filter(
+        item => !isNullOrUndefined(item)
+      );
+
+      return (
+        <InlineInChargeInput name={name} values={value} {...meta} id={id} groupIds={groupIds} />
+      );
+    }
 
     case 'forwarders':
       return <InlineForwarderInput name={name} values={values} {...meta} id={id} />;
@@ -222,7 +236,7 @@ function renderItem({
 function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-
+  const { user } = useContext(UserContext);
   if (!values) return null;
 
   return (
@@ -245,6 +259,7 @@ function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo 
                   values,
                   editData,
                   hasPermission,
+                  user,
                 })
               }
             </FormField>

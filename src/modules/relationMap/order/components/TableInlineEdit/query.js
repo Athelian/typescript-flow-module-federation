@@ -21,6 +21,9 @@ export const orderEntityFragment = gql`
     poNo
     piNo
     issuedAt
+    importer {
+      ...partnerCardFragment
+    }
     exporter {
       ...partnerCardFragment
     }
@@ -142,6 +145,12 @@ export const shipmentEntityFragment = gql`
       ...customFieldsFragment
     }
     forwarders {
+      ...partnerCardFragment
+    }
+    importer {
+      ...partnerCardFragment
+    }
+    exporter {
       ...partnerCardFragment
     }
     inCharges {
