@@ -21,3 +21,4 @@ export const PRODUCT_PROVIDER_SET_TASKS = 'product.productProviders.setTasks';
 export const PRODUCT_PROVIDER_SET_TASK_TEMPLATE = 'product.productProviders.setTaskTemplate';
 export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
+export const PRODUCT_SET_TAGS = 'product.products.setTags';

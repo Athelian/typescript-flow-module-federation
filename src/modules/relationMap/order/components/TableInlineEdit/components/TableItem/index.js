@@ -1,9 +1,16 @@
 // @flow
 import * as React from 'react';
 import { capitalize } from 'lodash';
-import useUser from 'hooks/useUser';
-import { FormField } from 'modules/form';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { FormField } from 'modules/form';
+import { ORDER_UPDATE, ORDER_SET_TAGS } from 'modules/permission/constants/order';
+import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import { BATCH_UPDATE, BATCH_SET_TAGS } from 'modules/permission/constants/batch';
+import { SHIPMENT_UPDATE, SHIPMENT_SET_TAGS } from 'modules/permission/constants/shipment';
+import { CONTAINER_UPDATE, CONTAINER_SET_TAGS } from 'modules/permission/constants/container';
+import { PRODUCT_UPDATE, PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 import TableDisableCell from '../TableDisableCell';
 import { WrapperStyle, ItemStyle } from './style';
 import {
@@ -48,6 +55,23 @@ const defaultProps = {
   columnNo: 0,
 };
 
+const UpdatePermissionMap = {
+  Order: ORDER_UPDATE,
+  OrderItem: ORDER_ITEMS_UPDATE,
+  Batch: BATCH_UPDATE,
+  Shipment: SHIPMENT_UPDATE,
+  Container: CONTAINER_UPDATE,
+  Product: PRODUCT_UPDATE,
+  ProductProvider: PRODUCT_PROVIDER_UPDATE,
+};
+
+const TagsSettingPermissionMap = {
+  Order: ORDER_SET_TAGS,
+  Batch: BATCH_SET_TAGS,
+  Shipment: SHIPMENT_SET_TAGS,
+  Container: CONTAINER_SET_TAGS,
+};
+
 function renderItem({
   id,
   type,
@@ -56,7 +80,7 @@ function renderItem({
   meta,
   values,
   editData,
-  isExporter,
+  hasPermission,
 }: {
   id: string,
   value: any,
@@ -65,8 +89,11 @@ function renderItem({
   values: Object,
   editData: Object,
   meta?: Object,
-  isExporter: boolean,
+  hasPermission: (string | Array<string>) => boolean,
 }) {
+  const { __typename: entityType } = values;
+  const canUpdate = hasPermission(UpdatePermissionMap[entityType]);
+
   switch (type) {
     case 'number':
       return <InlineNumberInput name={name} value={value} {...meta} id={id} />;
@@ -116,19 +143,14 @@ function renderItem({
     case 'forwarders':
       return <InlineForwarderInput name={name} values={values} {...meta} id={id} />;
 
-    case 'tags':
-      return (
-        <InlineTagInput
-          name={name}
-          values={value}
-          {...meta}
-          id={id}
-          editable={{
-            set: !isExporter,
-            remove: !isExporter,
-          }}
-        />
-      );
+    case 'tags': {
+      const editable = {
+        set: canUpdate || hasPermission(TagsSettingPermissionMap[entityType]),
+        remove: canUpdate || hasPermission(TagsSettingPermissionMap[entityType]),
+      };
+
+      return <InlineTagInput name={name} values={value} {...meta} id={id} editable={editable} />;
+    }
 
     case 'productProvider':
       return (
@@ -195,10 +217,10 @@ function renderItem({
 }
 
 function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo }: Props) {
-  const { isExporter } = useUser();
-  if (!values) return null;
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
 
-  const isExporterAccount = isExporter();
+  if (!values) return null;
 
   return (
     <div className={WrapperStyle}>
@@ -219,7 +241,7 @@ function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo 
                   value,
                   values,
                   editData,
-                  isExporter: isExporterAccount,
+                  hasPermission,
                 })
               }
             </FormField>
