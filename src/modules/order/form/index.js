@@ -65,7 +65,7 @@ export default class OrderForm extends React.Component<Props> {
           return (
             <div className={OrderFormWrapperStyle}>
               <SectionWrapper id="order_orderSection">
-                <MainSectionPlaceholder height={816} isLoading={loading}>
+                <MainSectionPlaceholder height={866} isLoading={loading}>
                   <SectionHeader
                     icon="ORDER"
                     title={<FormattedMessage id="modules.Orders.order" defaultMessage="ORDER" />}

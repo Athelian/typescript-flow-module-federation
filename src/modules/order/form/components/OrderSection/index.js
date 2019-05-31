@@ -83,6 +83,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       />
                     )}
                   </FormField>
+
                   <FormField
                     name="piNo"
                     initValue={values.piNo}
@@ -101,6 +102,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       />
                     )}
                   </FormField>
+
                   <FormField
                     name="issuedAt"
                     initValue={values.issuedAt}
@@ -123,6 +125,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       />
                     )}
                   </FormField>
+
                   <BooleanValue>
                     {({ value: isOpen, set: setPriceDialog }) => (
                       <Subscribe to={[OrderItemsContainer]}>
@@ -230,6 +233,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       </Subscribe>
                     )}
                   </BooleanValue>
+
                   <FormField
                     name="incoterm"
                     initValue={values.incoterm}
@@ -249,6 +253,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       />
                     )}
                   </FormField>
+
                   <FormField
                     name="deliveryPlace"
                     initValue={values.deliveryPlace}
@@ -267,6 +272,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       />
                     )}
                   </FormField>
+
                   <CustomFieldsFactory
                     entityType="Order"
                     customFields={values.customFields}
@@ -276,9 +282,59 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       mask: allowUpdate,
                     }}
                   />
+
+                  <Subscribe to={[OrderTagsContainer]}>
+                    {({ state: { tags }, setFieldValue: changeTags }) => (
+                      <FieldItem
+                        vertical
+                        label={
+                          <Label height="30px">
+                            <FormattedMessage {...messages.tags} />
+                          </Label>
+                        }
+                        input={
+                          <TagsInput
+                            id="tags"
+                            name="tags"
+                            tagType="Order"
+                            values={tags}
+                            onChange={(field, value) => {
+                              changeTags(field, value);
+                            }}
+                            editable={{
+                              set: hasPermission(TAG_LIST) && hasPermission(ORDER_UPDATE),
+                              remove: hasPermission(ORDER_UPDATE),
+                            }}
+                          />
+                        }
+                      />
+                    )}
+                  </Subscribe>
+
+                  <FormField
+                    name="memo"
+                    initValue={values.memo}
+                    values={values}
+                    validator={validator}
+                    setFieldValue={setFieldValue}
+                  >
+                    {({ name, ...inputHandlers }) => (
+                      <TextAreaInputFactory
+                        name={name}
+                        {...inputHandlers}
+                        isNew={isNew}
+                        originalValue={initialValues[name]}
+                        label={<FormattedMessage {...messages.memo} />}
+                        editable={allowUpdate}
+                        vertical
+                        inputWidth="400px"
+                        inputHeight="115px"
+                      />
+                    )}
+                  </FormField>
                 </GridColumn>
 
-                <GridColumn gap="10px">
+                <GridColumn>
                   <UserAssignmentInputFactory
                     name="inCharges"
                     values={values.inCharges}
@@ -305,130 +361,95 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                     editable={allowUpdate}
                   />
 
-                  <Label required>
-                    <FormattedMessage {...messages.importer} />
-                  </Label>
-
-                  <PartnerCard partner={values.importer} readOnly />
-
-                  <Label required>
-                    <FormattedMessage {...messages.exporter} />
-                  </Label>
-
-                  {allowUpdate ? (
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          {!values.exporter ? (
-                            <DashedPlusButton
-                              width="195px"
-                              height="215px"
-                              onClick={() => slideToggle(true)}
-                            />
-                          ) : (
-                            <PartnerCard
-                              partner={values.exporter}
-                              onClick={() => slideToggle(true)}
-                            />
-                          )}
-
-                          <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                            {opened && (
-                              <Subscribe
-                                to={[OrderItemsContainer, OrderTasksContainer, OrderInfoContainer]}
-                              >
-                                {(
-                                  { setFieldValue: updateOrderItems },
-                                  { changeExporter: updateTasks },
-                                  { changeExporter: updateOrderInfo }
-                                ) => (
-                                  <SelectExporter
-                                    selected={values.exporter}
-                                    onCancel={() => slideToggle(false)}
-                                    onSelect={newValue => {
-                                      slideToggle(false);
-                                      setFieldValue('exporter', newValue);
-                                      updateTasks(values.exporter);
-                                      updateOrderInfo(values.exporter);
-                                      updateOrderItems('orderItems', []);
-                                    }}
-                                    warningMessage={
-                                      <FormattedMessage
-                                        id="modules.Orders.changeExporterWarning"
-                                        defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Export from all Tasks and In Charge. Are you sure you want to change the Exporter?"
-                                      />
-                                    }
-                                  />
-                                )}
-                              </Subscribe>
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  ) : (
-                    <>
-                      {values.exporter ? (
-                        <PartnerCard partner={values.exporter} readOnly />
-                      ) : (
-                        <GrayCard width="195px" height="215px" />
-                      )}
-                    </>
-                  )}
-                </GridColumn>
-              </div>
-
-              <Subscribe to={[OrderTagsContainer]}>
-                {({ state: { tags }, setFieldValue: changeTags }) => (
                   <FieldItem
                     vertical
                     label={
-                      <Label height="30px">
-                        <FormattedMessage {...messages.tags} />
+                      <Label required>
+                        <FormattedMessage {...messages.importer} />
+                      </Label>
+                    }
+                    input={<PartnerCard partner={values.importer} readOnly />}
+                  />
+
+                  <FieldItem
+                    vertical
+                    label={
+                      <Label required>
+                        <FormattedMessage {...messages.exporter} />
                       </Label>
                     }
                     input={
-                      <TagsInput
-                        id="tags"
-                        name="tags"
-                        tagType="Order"
-                        values={tags}
-                        onChange={(field, value) => {
-                          changeTags(field, value);
-                        }}
-                        editable={{
-                          set: hasPermission(TAG_LIST) && hasPermission(ORDER_UPDATE),
-                          remove: hasPermission(ORDER_UPDATE),
-                        }}
-                      />
+                      allowUpdate ? (
+                        <BooleanValue>
+                          {({ value: opened, set: slideToggle }) => (
+                            <>
+                              {!values.exporter ? (
+                                <DashedPlusButton
+                                  width="195px"
+                                  height="215px"
+                                  onClick={() => slideToggle(true)}
+                                />
+                              ) : (
+                                <PartnerCard
+                                  partner={values.exporter}
+                                  onClick={() => slideToggle(true)}
+                                />
+                              )}
+
+                              <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                                {opened && (
+                                  <Subscribe
+                                    to={[
+                                      OrderItemsContainer,
+                                      OrderTasksContainer,
+                                      OrderInfoContainer,
+                                    ]}
+                                  >
+                                    {(
+                                      { setFieldValue: updateOrderItems },
+                                      { changeExporter: updateTasks },
+                                      { changeExporter: updateOrderInfo }
+                                    ) => (
+                                      <SelectExporter
+                                        selected={values.exporter}
+                                        onCancel={() => slideToggle(false)}
+                                        onSelect={newValue => {
+                                          slideToggle(false);
+                                          setFieldValue('exporter', newValue);
+                                          updateTasks(values.exporter);
+                                          updateOrderInfo(values.exporter);
+                                          updateOrderItems('orderItems', []);
+                                        }}
+                                        warningMessage={
+                                          <FormattedMessage
+                                            id="modules.Orders.changeExporterWarning"
+                                            defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Export from all Tasks and In Charge. Are you sure you want to change the Exporter?"
+                                          />
+                                        }
+                                      />
+                                    )}
+                                  </Subscribe>
+                                )}
+                              </SlideView>
+                            </>
+                          )}
+                        </BooleanValue>
+                      ) : (
+                        <>
+                          {values.exporter ? (
+                            <PartnerCard partner={values.exporter} readOnly />
+                          ) : (
+                            <GrayCard width="195px" height="215px" />
+                          )}
+                        </>
+                      )
                     }
                   />
-                )}
-              </Subscribe>
-
-              <FormField
-                name="memo"
-                initValue={values.memo}
-                values={values}
-                validator={validator}
-                setFieldValue={setFieldValue}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextAreaInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={initialValues[name]}
-                    label={<FormattedMessage {...messages.memo} />}
-                    editable={allowUpdate}
-                    vertical
-                    inputWidth="680px"
-                    inputHeight="65px"
-                  />
-                )}
-              </FormField>
+                </GridColumn>
+              </div>
 
               <div className={DividerStyle} />
+
               <Subscribe to={[OrderItemsContainer]}>
                 {({ state: { orderItems, hasCalledApiYet } }) => {
                   return (
