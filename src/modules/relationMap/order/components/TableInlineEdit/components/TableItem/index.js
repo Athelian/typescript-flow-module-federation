@@ -9,6 +9,7 @@ import { BATCH_UPDATE, BATCH_SET_TAGS } from 'modules/permission/constants/batch
 import { SHIPMENT_UPDATE, SHIPMENT_SET_TAGS } from 'modules/permission/constants/shipment';
 import { CONTAINER_UPDATE, CONTAINER_SET_TAGS } from 'modules/permission/constants/container';
 import { PRODUCT_UPDATE, PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import TableDisableCell from '../TableDisableCell';
@@ -145,8 +146,12 @@ function renderItem({
 
     case 'tags': {
       const editable = {
-        set: canUpdate || hasPermission(TagsSettingPermissionMap[entityType]),
-        remove: canUpdate || hasPermission(TagsSettingPermissionMap[entityType]),
+        set:
+          hasPermission(TAG_LIST) &&
+          (canUpdate || hasPermission(TagsSettingPermissionMap[entityType])),
+        remove:
+          hasPermission(TAG_LIST) &&
+          (canUpdate || hasPermission(TagsSettingPermissionMap[entityType])),
       };
 
       return <InlineTagInput name={name} values={value} {...meta} id={id} editable={editable} />;
