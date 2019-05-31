@@ -114,7 +114,9 @@ function renderItem({
 
       if (position > batchQuantityRevisions.length) return <TableDisableCell />;
 
-      return <InlineNumberAdjustmentInput name={name} value={value} {...meta} id={id} />;
+      return (
+        <InlineNumberAdjustmentInput name={name} value={value} {...meta} id={id} values={values} />
+      );
     }
 
     case 'date':
