@@ -65,10 +65,7 @@ export const cleanFalsyAndTypeName: Function = pipe(
 );
 
 export const isForbidden = (data: Object): boolean => {
-  if (data) {
-    return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
-  }
-  return true;
+  return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
 };
 
 export const getSelectLabel = (value: ?string, items: Array<{ value: string, label: string }>) => {
