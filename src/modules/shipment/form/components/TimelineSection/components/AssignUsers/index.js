@@ -16,6 +16,7 @@ type OptionalProps = {
     firstName: string,
     lastName: string,
   }>,
+  filterBy: Object,
 };
 
 type Props = OptionalProps & {
@@ -72,8 +73,8 @@ const selectedItems = (
   return [];
 };
 
-const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
-  <UserListProvider>
+const AssignUsers = ({ selected, onCancel, onSelect, filterBy }: Props) => (
+  <UserListProvider filterBy={filterBy}>
     {({ loading, error, data }) => {
       if (error) {
         return error.message;

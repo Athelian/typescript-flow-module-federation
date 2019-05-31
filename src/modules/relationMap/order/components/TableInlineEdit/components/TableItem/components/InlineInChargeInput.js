@@ -16,6 +16,7 @@ import { useInChargeInput } from 'modules/form/hooks';
 
 type OptionalProps = {
   max: number,
+  groupIds: Array<string>,
 };
 
 type Props = OptionalProps & {
@@ -28,7 +29,7 @@ const defaultProps = {
   max: 5,
 };
 
-export default function InlineInChargeInput({ name, values, max, id: inputId }: Props) {
+export default function InlineInChargeInput({ name, values, max, id: inputId, groupIds }: Props) {
   const { isRemain, onChange } = useInChargeInput(values, { max });
   return (
     <div className={AssignmentWrapperStyle}>
@@ -76,6 +77,9 @@ export default function InlineInChargeInput({ name, values, max, id: inputId }: 
                         hasError: false,
                         value: selected,
                       });
+                    }}
+                    filterBy={{
+                      groupIds,
                     }}
                     onCancel={() => slideToggle(false)}
                   />

@@ -7,6 +7,7 @@ import query from './query';
 type OptionalProps = {
   filterBy: {
     query?: string,
+    groupIds?: Array<string>,
   },
   sortBy: {
     createdAt?: string,

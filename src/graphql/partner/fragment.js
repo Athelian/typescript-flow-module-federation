@@ -16,6 +16,12 @@ export const partnerCardFragment = gql`
       ... on Partner {
         id
         code
+        group {
+          ... on Group {
+            id
+            name
+          }
+        }
       }
     }
   }
