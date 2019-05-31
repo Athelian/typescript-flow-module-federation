@@ -216,7 +216,7 @@ export default defineMessages({
   },
   connectSuccess: {
     id: 'modules.RelationMaps.label.connectSuccess',
-    defaultMessage: 'Connected SuccessFully',
+    defaultMessage: 'Connected Successfully',
   },
   toConnectToTheList: {
     id: 'modules.RelationMaps.label.toConnectToTheList',

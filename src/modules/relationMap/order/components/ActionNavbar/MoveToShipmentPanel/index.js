@@ -9,7 +9,6 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import DisconnectConfirmMessage from './DisconnectConfirmMessage';
 import ApplyPanel from './ApplyPanel';
-import SuccessPanel from './SuccessPanel';
 import {
   MoveToShipmentPanelWrapperStyle,
   MoveToShipmentLabelAndMessageWrapperStyle,
@@ -23,23 +22,17 @@ type Props = {
   onMoveToNewShipment: Function,
   onMoveToExistShipment: Function,
   onClearSelectShipment: Function,
-  onClear: Function,
   onDisconnect: Function,
   hasSelectedShipment: boolean,
-  status: boolean,
 };
 
 const MoveToShipmentPanel = ({
-  status,
   hasSelectedShipment,
   onMoveToNewShipment,
   onMoveToExistShipment,
   onDisconnect,
   onClearSelectShipment,
-  onClear,
 }: Props) => {
-  if (status) return <SuccessPanel onClick={onClear} />;
-
   if (hasSelectedShipment)
     return <ApplyPanel onConfirm={onMoveToExistShipment} onReset={onClearSelectShipment} />;
 

@@ -538,9 +538,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               )}
               {activeAction === 'connectShipment' && uiSelectors.isAllowToConnectShipment() && (
                 <MoveToShipmentPanel
-                  status={state.connectShipment.status}
                   hasSelectedShipment={uiSelectors.isSelectedShipment()}
-                  onClear={actions.clearConnectMessage}
                   onClearSelectShipment={() => actions.toggleSelectedShipment('')}
                   onDisconnect={async () => {
                     const batchIds = uiSelectors.targetedBatchIds();
@@ -666,6 +664,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       actions.moveToShipmentSuccess(
                         updateBatches.map(result => (result.data ? result.data.BatchUpdate : {}))
                       );
+                      toast.success(<FormattedMessage {...messages.connectSuccess} />);
                     } catch (error) {
                       actions.moveToShipmentFailed(error);
                     }
@@ -732,12 +731,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     hasPermission(ORDER_ITEMS_CREATE) &&
                     hasPermission(ORDER_FORM)
                   }
-                  status={state.connectOrder.status}
                   hasSelectedOrderItem={uiSelectors.targetedOrderItemIds().length > 0}
                   hasSelectedOrder={uiSelectors.isSelectedOrder()}
                   hasSelectedAllBatches={uiSelectors.hasSelectedAllBatches(orderItems)}
                   currencies={uiSelectors.findAllCurrencies(orders, orderItems)}
-                  onClear={actions.clearConnectMessage}
                   onMoveToNewOrder={() => {
                     const currencies = [];
                     const needToResetPrice = currencies.length > 1;
@@ -1126,6 +1123,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       actions.moveToOrderSuccess(
                         updateOrders.map(result => (result.data ? result.data.orderUpdate : {}))
                       );
+                      toast.success(<FormattedMessage {...messages.connectSuccess} />);
                     } catch (error) {
                       actions.moveToOrderFailed(error);
                     }

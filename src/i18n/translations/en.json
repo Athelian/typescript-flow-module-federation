@@ -787,7 +787,7 @@
   "modules.RelationMaps.label.confirmDeleteOrderItem": "Confirm To delete order item",
   "modules.RelationMaps.label.confirmDeleteShipment": "Confirm To delete shipment",
   "modules.RelationMaps.label.connectType": "Do you want to connect to",
-  "modules.RelationMaps.label.connectSuccess": "Connected SuccessFully",
+  "modules.RelationMaps.label.connectSuccess": "Connected Successfully",
   "modules.RelationMaps.label.toConnectToTheList": "to connect on the list",
   "modules.RelationMaps.label.waiting": "Please wait for a moment",
   "modules.RelationMaps.label.cloning": "Cloning",

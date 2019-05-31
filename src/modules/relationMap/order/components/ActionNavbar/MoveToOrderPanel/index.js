@@ -9,7 +9,6 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import messages from 'modules/relationMap/messages';
 import DeleteConfirmDialog from './DeleteConfirmDialog';
 import ApplyPanel from './ApplyPanel';
-import SuccessPanel from './SuccessPanel';
 import {
   MoveToOrderPanelWrapperStyle,
   MoveToOrderLabelAndMessageWrapperStyle,
@@ -23,7 +22,6 @@ type Props = {
   onMoveToNewOrder: Function,
   onMoveToExistOrder: Function,
   onClearSelectOrder: Function,
-  onClear: Function,
   onDelete: Function,
   /**
    * Have selected an order for connect
@@ -38,12 +36,10 @@ type Props = {
    */
   hasSelectedAllBatches: boolean,
   allowToMoveToNew: boolean,
-  status: boolean,
   currencies: Array<string>,
 };
 
 const MoveToOrderPanel = ({
-  status,
   hasSelectedOrder,
   hasSelectedOrderItem,
   hasSelectedAllBatches,
@@ -52,11 +48,8 @@ const MoveToOrderPanel = ({
   onMoveToExistOrder,
   onDelete,
   onClearSelectOrder,
-  onClear,
   currencies,
 }: Props) => {
-  if (status) return <SuccessPanel onClick={onClear} />;
-
   if (hasSelectedOrder)
     return (
       <ApplyPanel

@@ -1,6 +1,9 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { toast } from 'react-toastify';
 import client from 'apollo';
+import messages from 'modules/relationMap/messages';
 import { orderDetailQuery, shipmentDetailQuery } from 'modules/relationMap/order/query';
 import SlideView from 'components/SlideView';
 import OrderForm from 'modules/order/index.form';
@@ -48,6 +51,7 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
             if (data.orderCreate.id) {
+              toast.success(<FormattedMessage {...messages.connectSuccess} />);
               actions.addNew('ORDER', data.orderCreate.id);
             }
             onClose();
@@ -66,6 +70,7 @@ const EditForm = ({ type, selectedId: id, onClose, extra }: Props) => {
           redirectAfterSuccess={false}
           onSuccessCallback={data => {
             if (data.shipmentCreate.id) {
+              toast.success(<FormattedMessage {...messages.connectSuccess} />);
               actions.addNew('SHIPMENT', data.shipmentCreate.id);
               const allOrderIds = [];
               const { batches = [] } = data.shipmentCreate;
