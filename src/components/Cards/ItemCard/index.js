@@ -160,7 +160,7 @@ const configDefault = {
   hideOrder: false,
 };
 
-let cardHeight = 312;
+let cardHeight = 287;
 
 const ItemCard = ({
   orderItem,
@@ -206,7 +206,8 @@ const ItemCard = ({
   const mergedViewable = { ...viewableDefault, ...viewable };
   const mergedNavigable = { ...navigableDefault, ...navigable };
   const mergedConfig = { ...configDefault, ...config };
-  if (!mergedConfig.hideOrder) cardHeight += 25;
+
+  if (!mergedConfig.hideOrder) cardHeight += 71;
 
   return (
     <BaseCard
@@ -399,35 +400,36 @@ const ItemCard = ({
           </div>
 
           {!mergedConfig.hideOrder && (
-            <div className={OrderWrapperStyle}>
-              {mergedNavigable.order ? (
-                <Link
-                  className={OrderIconStyle}
-                  to={`/order/${encodeId(orderId)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="ORDER" />
-                </Link>
-              ) : (
-                <div className={OrderIconStyle}>
-                  <Icon icon="ORDER" />
-                </div>
-              )}
+            <>
+              <div className={OrderWrapperStyle}>
+                {mergedNavigable.order ? (
+                  <Link
+                    className={OrderIconStyle}
+                    to={`/order/${encodeId(orderId)}`}
+                    onClick={evt => {
+                      evt.stopPropagation();
+                    }}
+                  >
+                    <Icon icon="ORDER" />
+                  </Link>
+                ) : (
+                  <div className={OrderIconStyle}>
+                    <Icon icon="ORDER" />
+                  </div>
+                )}
 
-              <Display align="left">{poNo}</Display>
-            </div>
+                <Display align="left">{poNo}</Display>
+              </div>
+              <div className={ImporterWrapperStyle}>
+                <Icon icon="IMPORTER" />
+                {importer && importer.name}
+              </div>
+              <div className={ImporterWrapperStyle}>
+                <Icon icon="EXPORTER" />
+                {exporter && exporter.name}
+              </div>
+            </>
           )}
-
-          <div className={ImporterWrapperStyle}>
-            <Icon icon="IMPORTER" />
-            {importer && importer.name}
-          </div>
-          <div className={ImporterWrapperStyle}>
-            <Icon icon="EXPORTER" />
-            {exporter && exporter.name}
-          </div>
 
           <div className={TagsAndTaskWrapperStyle}>
             <div className={ItemTagsWrapperStyle}>
