@@ -523,7 +523,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                       });
                       const result = getByPathWithDefault(
                         [],
-                        'data.batchBalanceSplitManyMutation',
+                        'data.batchBalanceSplitMany',
                         balanceSplitBatches
                       ).map((item, index) => ({
                         id: orderItemIds[index],
