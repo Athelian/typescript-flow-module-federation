@@ -88,7 +88,11 @@ export default class ItemForm extends React.Component<Props> {
 
           <Subscribe to={[OrderItemInfoContainer]}>
             {({ state: itemInfo }) => (
-              <AsyncBatchesSection itemInfo={itemInfo} itemIsArchived={orderItem.archived} />
+              <AsyncBatchesSection
+                itemInfo={itemInfo}
+                itemIsArchived={orderItem.archived}
+                isSlideView={isSlideView}
+              />
             )}
           </Subscribe>
 

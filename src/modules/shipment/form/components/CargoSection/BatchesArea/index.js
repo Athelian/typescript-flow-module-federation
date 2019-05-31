@@ -49,6 +49,7 @@ import {
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectShipmentBatches from 'modules/shipment/form/components/SelectShipmentBatches';
+import { HIDE, NAVIGABLE } from 'modules/batch/constants';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -289,6 +290,10 @@ function BatchesArea({
                                             }
                                           }
                                         }}
+                                        itemConfig={NAVIGABLE}
+                                        shipmentConfig={HIDE}
+                                        containerConfig={HIDE}
+                                        orderConfig={NAVIGABLE}
                                       />
                                     )}
                                   </SlideView>

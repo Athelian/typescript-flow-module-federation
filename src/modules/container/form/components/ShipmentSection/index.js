@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import { ShipmentCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { ShipmentSectionWrapperStyle, ShipmentSectionBodyStyle, EmptyMessageStyle } from './style';
@@ -17,7 +19,10 @@ function ShipmentSection({ shipment }: Props) {
       </SectionNavBar>
       <div className={ShipmentSectionBodyStyle}>
         {shipment ? (
-          <ShipmentCard shipment={shipment} />
+          <ShipmentCard
+            shipment={shipment}
+            onClick={() => navigate(`/shipment/${encodeId(shipment.id)}`)}
+          />
         ) : (
           <div className={EmptyMessageStyle}>
             <FormattedMessage

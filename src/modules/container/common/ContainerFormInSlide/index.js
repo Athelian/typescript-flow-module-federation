@@ -107,7 +107,7 @@ class ContainerFormInSlide extends React.Component<Props> {
             </SlideViewNavBar>
           }
         >
-          <ContainerForm inShipmentForm container={container} />
+          <ContainerForm isSlideView container={container} />
         </Layout>
       </Provider>
     );

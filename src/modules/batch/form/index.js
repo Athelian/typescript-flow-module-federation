@@ -1,22 +1,32 @@
 // @flow
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Subscribe } from 'unstated';
 import { isEquals } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
+import TaskSection from 'modules/task/common/TaskSection';
+import { NAVIGABLE } from 'modules/batch/constants';
+import type {
+  ItemConfigType,
+  ShipmentConfigType,
+  ContainerConfigType,
+  OrderConfigType,
+} from 'modules/batch/type';
 import { BatchInfoContainer, BatchTasksContainer } from './containers';
+import BatchSection from './components/BatchSection';
+import QuantitySection from './components/QuantitySection';
+import PackagingSection from './components/PackagingSection';
+import ShipmentSection from './components/ShipmentSection';
+import ContainerSection from './components/ContainerSection';
+import OrderSection from './components/OrderSection';
 import { BatchFormInSlideStyle } from './style';
-
-const AsyncBatchSection = lazy(() => import('./components/BatchSection'));
-const AsyncQuantitySection = lazy(() => import('./components/QuantitySection'));
-const AsyncPackagingSection = lazy(() => import('./components/PackagingSection'));
-const AsyncShipmentSection = lazy(() => import('./components/ShipmentSection'));
-const AsyncContainerSection = lazy(() => import('./components/ContainerSection'));
-const AsyncOrderSection = lazy(() => import('./components/OrderSection'));
-const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 
 type OptionalProps = {
   onFormReady: () => void,
+  itemConfig: ItemConfigType,
+  shipmentConfig: ShipmentConfigType,
+  containerConfig: ContainerConfigType,
+  orderConfig: OrderConfigType,
 };
 
 type Props = OptionalProps & {
@@ -25,6 +35,10 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onFormReady: () => {},
+  itemConfig: NAVIGABLE,
+  shipmentConfig: NAVIGABLE,
+  containerConfig: NAVIGABLE,
+  orderConfig: NAVIGABLE,
 };
 
 export default class BatchForm extends React.Component<Props> {
@@ -41,17 +55,18 @@ export default class BatchForm extends React.Component<Props> {
   }
 
   render() {
-    const { batch } = this.props;
+    const { batch, itemConfig, shipmentConfig, containerConfig, orderConfig } = this.props;
+
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={BatchFormInSlideStyle}>
-          <AsyncBatchSection batch={batch} />
-          <AsyncQuantitySection />
-          <AsyncPackagingSection />
-          <AsyncTaskSection entityId={batch.id} type="batch" />
-          <AsyncShipmentSection shipment={batch.shipment} />
-          <AsyncContainerSection container={batch.container} />
-          <AsyncOrderSection />
+          <BatchSection batch={batch} itemConfig={itemConfig} />
+          <QuantitySection />
+          <PackagingSection />
+          <TaskSection entityId={batch.id} type="batch" />
+          <ShipmentSection shipment={batch.shipment} shipmentConfig={shipmentConfig} />
+          <ContainerSection container={batch.container} containerConfig={containerConfig} />
+          <OrderSection orderConfig={orderConfig} />
           <Subscribe to={[BatchTasksContainer, BatchInfoContainer]}>
             {(
               {

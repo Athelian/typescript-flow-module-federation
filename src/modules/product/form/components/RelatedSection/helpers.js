@@ -49,7 +49,13 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         ),
         renderItems: (items: Array<Object>) => {
-          return (items.map(item => <OrderCard key={item.id} order={item} />): Array<React.Node>);
+          return (items.map(item => (
+            <OrderCard
+              key={item.id}
+              order={item}
+              onClick={() => navigate(`/order/${encodeId(item.id)}`)}
+            />
+          )): Array<React.Node>);
         },
       };
 
@@ -122,7 +128,11 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
         ),
         renderItems: (items: Array<Object>) => {
           return (items.map(item => (
-            <ContainerCard key={item.id} container={item} />
+            <ContainerCard
+              key={item.id}
+              container={item}
+              onClick={() => navigate(`/container/${encodeId(item.id)}`)}
+            />
           )): Array<React.Node>);
         },
       };
@@ -138,7 +148,11 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
         ),
         renderItems: (items: Array<Object>) => {
           return (items.map(item => (
-            <ShipmentCard key={item.id} shipment={item} />
+            <ShipmentCard
+              key={item.id}
+              shipment={item}
+              onClick={() => navigate(`/shipment/${encodeId(item.id)}`)}
+            />
           )): Array<React.Node>);
         },
       };
@@ -150,7 +164,13 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         ),
         renderItems: (items: Array<Object>) => {
-          return (items.map(item => <OrderCard key={item.id} order={item} />): Array<React.Node>);
+          return (items.map(item => (
+            <OrderCard
+              key={item.id}
+              order={item}
+              onClick={() => navigate(`/order/${encodeId(item.id)}`)}
+            />
+          )): Array<React.Node>);
         },
       };
   }

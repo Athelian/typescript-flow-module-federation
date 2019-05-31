@@ -5,22 +5,42 @@ import { Provider, Subscribe } from 'unstated';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
-
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
 import validator from 'modules/batch/form/validator';
+import { READONLY } from 'modules/batch/constants';
+import type {
+  ItemConfigType,
+  ShipmentConfigType,
+  ContainerConfigType,
+  OrderConfigType,
+} from 'modules/batch/type';
 
-type Props = {
+type OptionalProps = {
+  itemConfig: ItemConfigType,
+  shipmentConfig: ShipmentConfigType,
+  containerConfig: ContainerConfigType,
+  orderConfig: OrderConfigType,
+};
+
+type Props = OptionalProps & {
   batch: Object,
   onSave: Function,
 };
 
+const defaultProps = {
+  itemConfig: READONLY,
+  shipmentConfig: READONLY,
+  containerConfig: READONLY,
+  orderConfig: READONLY,
+};
+
 const formContainer = new FormContainer();
 
-const BatchFormInSlide = ({ batch, onSave }: Props) => {
+const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -120,6 +140,7 @@ const BatchFormInSlide = ({ batch, onSave }: Props) => {
                   batchInfoContainer.initDetailValues(info);
                   batchTasksContainer.initDetailValues(todo);
                 }}
+                {...rest}
               />
             </Layout>
           );
@@ -128,5 +149,7 @@ const BatchFormInSlide = ({ batch, onSave }: Props) => {
     </Provider>
   );
 };
+
+BatchFormInSlide.defaultProps = defaultProps;
 
 export default BatchFormInSlide;

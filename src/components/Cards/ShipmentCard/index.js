@@ -1,9 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { navigate } from '@reach/router';
 import { getByPathWithDefault } from 'utils/fp';
-import { encodeId } from 'utils/id';
 import Tag from 'components/Tag';
 import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
@@ -47,6 +45,7 @@ import {
 
 type OptionalProps = {
   actions: Array<React.Node>,
+  onClick: Function,
 };
 
 type Props = OptionalProps & {
@@ -57,10 +56,9 @@ const defaultProps = {
   actions: [],
 };
 
-const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
+const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
   const {
     archived,
-    id,
     no,
     blNo,
     booked,
@@ -93,11 +91,7 @@ const ShipmentCard = ({ shipment, actions, ...rest }: Props) => {
 
   return (
     <BaseCard icon="SHIPMENT" color="SHIPMENT" actions={actions} isArchived={archived} {...rest}>
-      <div
-        className={ShipmentCardWrapperStyle}
-        onClick={() => navigate(`/shipment/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <div className={ShipmentCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ShipmentInfoWrapperStyle}>
           <div className={ShipmentLeftWrapperStyle}>
             <div className={ShipmentNoWrapperStyle}>

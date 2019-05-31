@@ -15,7 +15,7 @@ const AsyncBatchesSection = lazy(() => import('./components/BatchesSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 
 type OptionalProps = {
-  inShipmentForm: boolean,
+  isSlideView: boolean,
 };
 
 type Props = OptionalProps & {
@@ -23,7 +23,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  inShipmentForm: false,
+  isSlideView: false,
 };
 
 export default class ContainerForm extends React.Component<Props> {
@@ -35,7 +35,7 @@ export default class ContainerForm extends React.Component<Props> {
   }
 
   render() {
-    const { container, inShipmentForm } = this.props;
+    const { container, isSlideView } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={FormWrapperStyle}>
@@ -78,7 +78,7 @@ export default class ContainerForm extends React.Component<Props> {
             <ContainerSection />
           </SectionWrapper>
 
-          {!inShipmentForm && (
+          {!isSlideView && (
             <SectionWrapper id="container_shipmentSection">
               <SectionHeader
                 icon="SHIPMENT"
@@ -90,7 +90,7 @@ export default class ContainerForm extends React.Component<Props> {
             </SectionWrapper>
           )}
 
-          <AsyncBatchesSection containerIsArchived={container.archived} />
+          <AsyncBatchesSection containerIsArchived={container.archived} isSlideView={isSlideView} />
 
           <Subscribe to={[ContainerBatchesContainer]}>
             {({ state: values }) => {

@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
+import { encodeId } from 'utils/id';
 import FormattedNumber from 'components/FormattedNumber';
 import { ShipmentCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
@@ -40,7 +42,13 @@ const ShipmentsSection = () => (
                   />
                 </div>
               ) : (
-                shipments.map(shipment => <ShipmentCard shipment={shipment} key={shipment.id} />)
+                shipments.map(shipment => (
+                  <ShipmentCard
+                    shipment={shipment}
+                    key={shipment.id}
+                    onClick={() => navigate(`/shipment/${encodeId(shipment.id)}`)}
+                  />
+                ))
               )}
             </div>
           </div>

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link, navigate } from '@reach/router';
+import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { getSelectLabel } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
@@ -41,6 +41,7 @@ import {
 
 type OptionalProps = {
   actions: Array<React.Node>,
+  onClick: Function,
   permission: {
     viewWarehouse: boolean,
   },
@@ -57,11 +58,10 @@ const defaultProps = {
   },
 };
 
-const ContainerCard = ({ container, permission, ...rest }: Props) => {
+const ContainerCard = ({ container, permission, onClick, ...rest }: Props) => {
   const {
     representativeBatch,
     shipment,
-    id,
     archived,
     no,
     containerType,
@@ -85,11 +85,7 @@ const ContainerCard = ({ container, permission, ...rest }: Props) => {
   const productImage = getProductImage(product);
   return (
     <BaseCard icon="CONTAINER" color="CONTAINER" isArchived={archived} {...rest}>
-      <div
-        className={CardWrapperStyle}
-        onClick={() => navigate(`/container/${encodeId(id)}`)}
-        role="presentation"
-      >
+      <div className={CardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ImagePartWrapperStyle}>
           <div className={ImageWrapperStyle}>
             <img className={ImageStyle} src={productImage} alt="product_image" />
