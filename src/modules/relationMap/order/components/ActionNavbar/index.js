@@ -7,7 +7,6 @@ import { BooleanValue } from 'react-values';
 import { ApolloConsumer } from 'react-apollo';
 import { toast } from 'react-toastify';
 import usePermission from 'hooks/usePermission';
-import { RM_CLONE_ORDER } from 'modules/permission/constants/relationMap';
 import { ORDER_CREATE, ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import logger from 'utils/logger';
@@ -94,7 +93,7 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                 <TabItem
                   className={TabItemStyled}
                   allowClickOnDisable
-                  disabled={uiSelectors.isDisableCloneOrder(!hasPermission(RM_CLONE_ORDER))}
+                  disabled={uiSelectors.isDisableCloneOrder(!hasPermission(ORDER_CREATE))}
                   label={
                     <FormattedMessage
                       id="modules.RelationMaps.label.clone"
