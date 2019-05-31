@@ -1167,9 +1167,10 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                           const orderItem = orderItems[orderItemId];
                           return {
                             ...orderItem,
-                            batches: orderItem.batches
-                              .filter(batchId => !batchIds.includes(batchId))
-                              .map(batchId => ({ id: batchId, isNew: false })),
+                            batches: orderItem.batches.map(batchId => ({
+                              id: batchId,
+                              isNew: false,
+                            })),
                           };
                         }),
                         orderItems: oldOrderItems
