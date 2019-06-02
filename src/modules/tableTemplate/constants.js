@@ -83,8 +83,8 @@ export const orderItemColumns = [
       'orderItem.totalPrice',
     ],
     columns: [
-      <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
-      <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
+      <FormattedMessage id="modules.Products.name" defaultMessage="Name" />,
+      <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />,
       <FormattedMessage
         id="modules.ProductProviders.exporterName"
         defaultMessage="EXPORTER NAME"
@@ -125,8 +125,8 @@ export const productColumns = [
       'product.tags',
     ],
     columns: [
-      <FormattedMessage id="modules.Products.name" defaultMessage="NAME" />,
-      <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />,
+      <FormattedMessage id="modules.Products.name" defaultMessage="Nam" />,
+      <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />,
       <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />,
       <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />,
       <FormattedMessage id="modules.Products.material" defaultMessage="MATERIAL" />,

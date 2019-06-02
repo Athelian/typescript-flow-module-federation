@@ -234,7 +234,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                         required
                         originalValue={initialValues[name]}
                         label={
-                          <FormattedMessage id="modules.Products.serial" defaultMessage="SERIAL" />
+                          <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />
                         }
                         editable={allowUpdate}
                       />
