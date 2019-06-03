@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { NewButton } from 'components/Buttons';
 import emitter from 'utils/emitter';
+import { getBatchLatestQuantity } from 'utils/batch';
 import Icon from 'components/Icon';
+import { NewButton } from 'components/Buttons';
 import { RemoveAssignmentButtonStyle } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import InlineSelectEnumInput from './InlineSelectEnumInput';
 import InlineNumberInput from './InlineNumberInput';
@@ -36,7 +37,8 @@ export default function InlineNumberAdjustmentInput({
   values,
 }: Props) {
   const hasQuantityYet = !!value;
-  const numOfBatchAdjustments = values.batchQuantityRevisions.length;
+  const { quantity, batchQuantityRevisions } = values;
+  const numOfBatchAdjustments = batchQuantityRevisions.length;
   const isLastAdjustment = Number(name.charAt(name.length - 1)) === numOfBatchAdjustments - 1;
 
   return hasQuantityYet ? (
@@ -63,7 +65,7 @@ export default function InlineNumberAdjustmentInput({
             emitter.emit('INLINE_CHANGE', {
               name: name.substring(0, name.length - 2),
               hasError: false,
-              value: values.batchQuantityRevisions.slice(0, numOfBatchAdjustments - 1),
+              value: batchQuantityRevisions.slice(0, numOfBatchAdjustments - 1),
             });
           }}
           type="button"
@@ -80,7 +82,7 @@ export default function InlineNumberAdjustmentInput({
           name,
           hasError: false,
           value: {
-            quantity: 0,
+            quantity: getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
             type: 'Other',
           },
         });
