@@ -63,22 +63,10 @@ function Product(props: Props) {
             <SortFilter
               sort={filterAndSort.sort}
               sortInputs={[
-                {
-                  title: intl.formatMessage(messages.productName),
-                  value: 'name',
-                },
-                {
-                  title: intl.formatMessage(messages.productSerial),
-                  value: 'serial',
-                },
-                {
-                  title: intl.formatMessage(messages.updatedAtSort),
-                  value: 'updatedAt',
-                },
-                {
-                  title: intl.formatMessage(messages.createdAtSort),
-                  value: 'createdAt',
-                },
+                { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+                { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+                { title: intl.formatMessage(messages.name), value: 'name' },
+                { title: intl.formatMessage(messages.serial), value: 'serial' },
               ]}
               filter={filterAndSort.filter}
               onChange={onChangeFilter}

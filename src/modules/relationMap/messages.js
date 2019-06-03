@@ -38,25 +38,17 @@ export default defineMessages({
     id: 'global.items',
     defaultMessage: 'ITEMS',
   },
-  updatedAtSort: {
-    id: 'modules.RelationMaps.sort.updatedAt',
-    defaultMessage: 'Last Modified',
-  },
-  createdAtSort: {
-    id: 'modules.RelationMaps.sort.createdAt',
-    defaultMessage: 'Date Created',
-  },
   poNoSort: {
     id: 'modules.RelationMaps.sort.poNo',
-    defaultMessage: 'PO No.',
+    defaultMessage: 'PO No',
   },
   piNoSort: {
     id: 'modules.RelationMaps.sort.piNo',
-    defaultMessage: 'PI No.',
+    defaultMessage: 'PI No',
   },
   issuedAtSort: {
     id: 'modules.RelationMaps.sort.issuedAt',
-    defaultMessage: 'PO Date',
+    defaultMessage: 'PO Issuance Date',
   },
   exporterSort: {
     id: 'modules.RelationMaps.sort.exporter',
@@ -68,11 +60,27 @@ export default defineMessages({
   },
   incotermSort: {
     id: 'modules.RelationMaps.sort.incoterm',
-    defaultMessage: 'Incoterms',
+    defaultMessage: 'Incoterm',
   },
   deliveryPlaceSort: {
     id: 'modules.RelationMaps.sort.deliveryPlace',
     defaultMessage: 'Place of Delivery',
+  },
+  updatedAt: {
+    id: 'modules.RelationMaps.sort.updatedAt',
+    defaultMessage: 'Last Modified',
+  },
+  createdAt: {
+    id: 'modules.RelationMaps.sort.createdAt',
+    defaultMessage: 'Date Created',
+  },
+  name: {
+    id: 'modules.RelationMaps.sort.name',
+    defaultMessage: 'Name',
+  },
+  serial: {
+    id: 'modules.RelationMaps.sort.serial',
+    defaultMessage: 'Serial',
   },
   all: {
     id: 'modules.RelationMaps.label.all',
@@ -311,13 +319,5 @@ export default defineMessages({
     id: 'modules.RelationMaps.action.diffCurrencyAction',
     defaultMessage:
       'If you want to move your selection,  the prices of the items in your selection will be reset to 0',
-  },
-  productName: {
-    id: 'modules.RelationMaps.sortFilter.productName',
-    defaultMessage: 'name',
-  },
-  productSerial: {
-    id: 'modules.RelationMaps.sortFilter.productSerial',
-    defaultMessage: 'serial',
   },
 });

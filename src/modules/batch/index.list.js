@@ -34,32 +34,14 @@ const BatchListModule = (props: Props) => {
   const { intl } = props;
 
   const sortFields = [
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.batchNo), value: 'no' },
-    { title: intl.formatMessage(messages.PO), value: 'poNo' },
-    {
-      title: intl.formatMessage(messages.productName),
-      value: 'productName',
-    },
-    {
-      title: intl.formatMessage(messages.deliveredAt),
-      value: 'deliveredAt',
-    },
-    {
-      title: intl.formatMessage(messages.expiredAt),
-      value: 'expiredAt',
-    },
-    {
-      title: intl.formatMessage(messages.producedAt),
-      value: 'producedAt',
-    },
-    {
-      title: intl.formatMessage(messages.updatedAt),
-      value: 'updatedAt',
-    },
-    {
-      title: intl.formatMessage(messages.createdAt),
-      value: 'createdAt',
-    },
+    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
+    { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
+    { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),

@@ -4,11 +4,11 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   name: {
     id: 'modules.Products.name',
-    defaultMessage: 'NAME',
+    defaultMessage: 'Name',
   },
   serial: {
     id: 'modules.Products.serial',
-    defaultMessage: 'SERIAL',
+    defaultMessage: 'Serial',
   },
   JANCode: {
     id: 'modules.Products.JANCode',
@@ -52,11 +52,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Products.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Products.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   status: {
     id: 'modules.Products.status',

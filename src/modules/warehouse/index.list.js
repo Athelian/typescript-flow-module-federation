@@ -34,8 +34,8 @@ const WarehouseModule = (props: Props) => {
   const { intl } = props;
 
   const sortFields = [
-    { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
