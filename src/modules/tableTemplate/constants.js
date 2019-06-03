@@ -959,7 +959,7 @@ export const batchColumnFields = [
       convert: convertWeight,
     },
     getExportValue: ({ packageGrossWeight }: { packageGrossWeight: Object } = {}) =>
-      packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`,
+      (packageGrossWeight && `${packageGrossWeight.value} ${packageGrossWeight.metric}`) || '',
   },
   {
     messageId: batchMessages.packageVolume.id,
@@ -971,7 +971,7 @@ export const batchColumnFields = [
       convert: convertVolume,
     },
     getExportValue: ({ packageVolume }: { packageVolume: Object } = {}) =>
-      packageVolume && `${packageVolume.value} ${packageVolume.metric}`,
+      (packageVolume && `${packageVolume.value} ${packageVolume.metric}`) || '',
   },
   {
     messageId: 'modules.Batches.pkgWidth',
@@ -985,7 +985,10 @@ export const batchColumnFields = [
       destPath: 'width',
     },
     getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
-      packageSize && packageSize.width && `${packageSize.width.value} ${packageSize.width.metric}`,
+      (packageSize &&
+        packageSize.width &&
+        `${packageSize.width.value} ${packageSize.width.metric}`) ||
+      '',
   },
   {
     messageId: 'modules.Batches.pkgHeight',
@@ -999,9 +1002,10 @@ export const batchColumnFields = [
       destPath: 'height',
     },
     getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
-      packageSize &&
-      packageSize.height &&
-      `${packageSize.height.value} ${packageSize.height.metric}`,
+      (packageSize &&
+        packageSize.height &&
+        `${packageSize.height.value} ${packageSize.height.metric}`) ||
+      '',
   },
   {
     messageId: 'modules.Batches.pkgLength',
@@ -1015,9 +1019,10 @@ export const batchColumnFields = [
       destPath: 'length',
     },
     getExportValue: ({ packageSize }: { packageSize: Object } = {}) =>
-      packageSize &&
-      packageSize.length &&
-      `${packageSize.length.value} ${packageSize.length.metric}`,
+      (packageSize &&
+        packageSize.length &&
+        `${packageSize.length.value} ${packageSize.length.metric}`) ||
+      '',
   },
 ];
 

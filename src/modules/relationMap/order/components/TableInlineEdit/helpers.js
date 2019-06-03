@@ -723,12 +723,36 @@ export function getCustomFieldValues(fields: Array<Object>, values: Array<Object
   return customFieldValues;
 }
 
+const parseQuantityFromValue = (value: string) => {
+  const [, quantity] = value.split('-') || [];
+  return quantity || '';
+};
+
+const parseTypeFromValue = (value: string) => {
+  const [type] = value.split('-') || [];
+  return type || '';
+};
+
 const expandQuantityColumn = (batchColumnFieldsFilter: Array<Object>) => {
   const columns = batchColumnFieldsFilter.map(batchField =>
     batchField.messageId.includes('newQuantity')
       ? [
-          { ...batchField, messageId: `${batchField.messageId}.type` },
-          { ...batchField, messageId: `${batchField.messageId}.quantity` },
+          {
+            ...batchField,
+            getExportValue: compose(
+              parseTypeFromValue,
+              batchField.getExportValue
+            ),
+            messageId: `${batchField.messageId}.type`,
+          },
+          {
+            ...batchField,
+            getExportValue: compose(
+              parseQuantityFromValue,
+              batchField.getExportValue
+            ),
+            messageId: `${batchField.messageId}.quantity`,
+          },
         ]
       : batchField
   );
@@ -775,7 +799,6 @@ export function getExportRows(info: Object): Array<Array<?string>> {
     columns: {
       orderColumnFieldsFilter,
       orderItemColumnFieldsFilter,
-      batchColumnFieldsFilter,
       containerColumnFieldsFilter,
       shipmentColumnFieldsFilter,
       orderCustomFieldsFilter,
@@ -786,6 +809,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
       productCustomFieldsFilter,
     },
   } = info;
+  const batchColumnFieldsFilter = expandQuantityColumn(info.columns.batchColumnFieldsFilter);
   const rows = [];
   // Shipment which has no relation
   (Object.entries(mappingObjects.shipmentNoRelation): Array<any>).forEach(([shipmentId]) => {
