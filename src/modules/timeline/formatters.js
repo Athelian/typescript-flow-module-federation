@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this,no-underscore-dangle */
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -16,17 +15,26 @@ import messages from './messages';
 export type LogFormatter = (log: LogItem) => *;
 
 export const CreateFormatter = (log: LogItem): * => {
-  const entityType = log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
+  let message = null;
+  let values = {
+    user: <User user={log.createdBy} />,
+  };
 
-  return (
-    <FormattedMessage
-      {...messages.create}
-      values={{
-        user: <User user={log.createdBy} />,
-        entityType: <FormattedMessage {...messages[entityType]} />,
-      }}
-    />
-  );
+  if (log.entityType !== log.parentEntityType) {
+    message = messages.createChild;
+    values = {
+      ...values,
+      child: <EntityIdentifier log={log} />,
+    };
+  } else {
+    message = messages.create;
+    values = {
+      ...values,
+      entityType: <FormattedMessage {...messages[log.entityType]} />,
+    };
+  }
+
+  return <FormattedMessage {...message} values={values} />;
 };
 
 export const UpdateFormatter = (log: LogItem): * => {
@@ -39,28 +47,21 @@ export const UpdateFormatter = (log: LogItem): * => {
   };
 
   if (log.parameters.old === null) {
-    message =
-      log.entity.__typename === log.parentEntity.__typename
-        ? messages.setField
-        : messages.setChildField;
+    message = log.entityType === log.parentEntityType ? messages.setField : messages.setChildField;
     values = {
       ...values,
       value: <Value value={log.parameters.new} />,
     };
   } else if (log.parameters.new === null) {
     message =
-      log.entity.__typename === log.parentEntity.__typename
-        ? messages.clearField
-        : messages.clearChildField;
+      log.entityType === log.parentEntityType ? messages.clearField : messages.clearChildField;
     values = {
       ...values,
       value: <Value value={log.parameters.old} />,
     };
   } else {
     message =
-      log.entity.__typename === log.parentEntity.__typename
-        ? messages.updateField
-        : messages.updateChildField;
+      log.entityType === log.parentEntityType ? messages.updateField : messages.updateChildField;
     values = {
       ...values,
       oldValue: <Value value={log.parameters.old} />,
@@ -68,7 +69,7 @@ export const UpdateFormatter = (log: LogItem): * => {
     };
   }
 
-  if (log.entity.__typename !== log.parentEntity.__typename) {
+  if (log.entityType !== log.parentEntityType) {
     values = {
       ...values,
       child: <EntityIdentifier log={log} />,
@@ -79,14 +80,12 @@ export const UpdateFormatter = (log: LogItem): * => {
 };
 
 export const ArchivedFormatter = (log: LogItem): * => {
-  const entityType = log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
-
   let message = null;
   let values = {
     user: <User user={log.createdBy} />,
   };
 
-  if (log.entity.__typename !== log.parentEntity.__typename) {
+  if (log.entityType !== log.parentEntityType) {
     message = messages.archivedChild;
     values = {
       ...values,
@@ -96,7 +95,7 @@ export const ArchivedFormatter = (log: LogItem): * => {
     message = messages.archived;
     values = {
       ...values,
-      entityType: <FormattedMessage {...messages[entityType]} />,
+      entityType: <FormattedMessage {...messages[log.entityType]} />,
     };
   }
 
@@ -104,14 +103,12 @@ export const ArchivedFormatter = (log: LogItem): * => {
 };
 
 export const UnarchivedFormatter = (log: LogItem): * => {
-  const entityType = log.entity.__typename.charAt(0).toLowerCase() + log.entity.__typename.slice(1);
-
   let message = null;
   let values = {
     user: <User user={log.createdBy} />,
   };
 
-  if (log.entity.__typename !== log.parentEntity.__typename) {
+  if (log.entityType !== log.parentEntityType) {
     message = messages.unarchivedChild;
     values = {
       ...values,
@@ -121,7 +118,7 @@ export const UnarchivedFormatter = (log: LogItem): * => {
     message = messages.unarchived;
     values = {
       ...values,
-      entityType: <FormattedMessage {...messages[entityType]} />,
+      entityType: <FormattedMessage {...messages[log.entityType]} />,
     };
   }
 
@@ -157,7 +154,7 @@ export const TagsFormatter = (log: LogItem): * => {
     removedCount: removed.length,
   };
 
-  if (log.entity.__typename !== log.parentEntity.__typename) {
+  if (log.entityType !== log.parentEntityType) {
     values = {
       ...values,
       child: <EntityIdentifier log={log} />,
@@ -166,19 +163,15 @@ export const TagsFormatter = (log: LogItem): * => {
 
   if (added.length > 0 && removed.length > 0) {
     message =
-      log.entity.__typename !== log.parentEntity.__typename
+      log.entityType !== log.parentEntityType
         ? messages.addedAndRemovedTagsChild
         : messages.addedAndRemovedTags;
   } else if (added.length > 0) {
     message =
-      log.entity.__typename !== log.parentEntity.__typename
-        ? messages.addedTagsChild
-        : messages.addedTags;
+      log.entityType !== log.parentEntityType ? messages.addedTagsChild : messages.addedTags;
   } else {
     message =
-      log.entity.__typename !== log.parentEntity.__typename
-        ? messages.removedTagsChild
-        : messages.removedTags;
+      log.entityType !== log.parentEntityType ? messages.removedTagsChild : messages.removedTags;
   }
 
   return <FormattedMessage {...message} values={values} />;
@@ -215,7 +208,7 @@ export const InChargesFormatter = (log: LogItem): * => {
     ),
   };
 
-  if (log.entity.__typename !== log.parentEntity.__typename) {
+  if (log.entityType !== log.parentEntityType) {
     values = {
       ...values,
       child: <EntityIdentifier log={log} />,
@@ -224,17 +217,17 @@ export const InChargesFormatter = (log: LogItem): * => {
 
   if (added.length > 0 && removed.length > 0) {
     message =
-      log.entity.__typename !== log.parentEntity.__typename
+      log.entityType !== log.parentEntityType
         ? messages.addedAndRemovedInChargesChild
         : messages.addedAndRemovedInCharges;
   } else if (added.length > 0) {
     message =
-      log.entity.__typename !== log.parentEntity.__typename
+      log.entityType !== log.parentEntityType
         ? messages.addedInChargesChild
         : messages.addedInCharges;
   } else {
     message =
-      log.entity.__typename !== log.parentEntity.__typename
+      log.entityType !== log.parentEntityType
         ? messages.removedInChargesChild
         : messages.removedInCharges;
   }
