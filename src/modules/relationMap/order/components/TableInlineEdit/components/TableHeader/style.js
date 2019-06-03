@@ -22,6 +22,7 @@ export const TableHeaderGroupStyle: string = css`
 `;
 
 export const TableColumnHeaderStyle = (entity: string): string => css`
+  position: relative;
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   width: 200px;
