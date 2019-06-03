@@ -10,7 +10,7 @@ import { orderFormTasksQuery } from './query';
 type Props = {
   isLoading: boolean,
   entityId: string,
-  initValues: Object => void,
+  initValues: (Object, boolean) => void,
 };
 
 export default function OrderTasksSection({ isLoading, entityId, initValues }: Props) {
@@ -22,7 +22,7 @@ export default function OrderTasksSection({ isLoading, entityId, initValues }: P
       isLoading={isLoading}
       onCompleted={result => {
         const todo = getByPathWithDefault({ tasks: [] }, 'order.todo', result);
-        initValues(todo);
+        initValues(todo, true);
       }}
     >
       {() => {

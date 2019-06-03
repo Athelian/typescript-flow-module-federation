@@ -6,12 +6,12 @@ import { isEquals } from 'utils/fp';
 
 type FormState = {
   orderItems: Array<Object>,
-  hasCalledApiYet: boolean,
+  hasCalledItemsApiYet: boolean,
 };
 
 const initValues: FormState = {
   orderItems: [],
-  hasCalledApiYet: false,
+  hasCalledItemsApiYet: false,
 };
 
 export default class OrderItemsContainer extends Container<FormState> {
@@ -45,16 +45,16 @@ export default class OrderItemsContainer extends Container<FormState> {
     );
   };
 
-  initDetailValues = (orderItems: Array<Object>, hasCalledApiYet: boolean = false) => {
-    this.setState({ orderItems, hasCalledApiYet });
-    if (hasCalledApiYet) {
-      this.originalValues = { orderItems, hasCalledApiYet };
+  initDetailValues = (orderItems: Array<Object>, hasCalledItemsApiYet: boolean = false) => {
+    this.setState({ orderItems, hasCalledItemsApiYet });
+    if (hasCalledItemsApiYet) {
+      this.originalValues = { orderItems, hasCalledItemsApiYet };
     }
   };
 
   resetAmountWithNewCurrency = (currency: string, isReset: boolean = true) => {
     let retry;
-    if (this.state.hasCalledApiYet) {
+    if (this.state.hasCalledItemsApiYet) {
       const { orderItems } = this.state;
       this.setState({
         orderItems: orderItems.map(orderItem => ({
@@ -68,7 +68,7 @@ export default class OrderItemsContainer extends Container<FormState> {
       });
     } else {
       const waitForApiReady = () => {
-        if (this.state.hasCalledApiYet) {
+        if (this.state.hasCalledItemsApiYet) {
           const { orderItems } = this.state;
           this.setState({
             orderItems: orderItems.map(orderItem => ({

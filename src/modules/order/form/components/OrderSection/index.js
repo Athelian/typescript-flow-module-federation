@@ -103,34 +103,41 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                     )}
                   </FormField>
 
-                  <FormField
-                    name="issuedAt"
-                    initValue={values.issuedAt}
-                    values={values}
-                    validator={validator}
-                    setFieldValue={setFieldValue}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <DateInputFactory
-                        name={name}
-                        {...inputHandlers}
-                        onBlur={evt => {
-                          inputHandlers.onBlur(evt);
-                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                        }}
-                        isNew={isNew}
-                        originalValue={initialValues[name]}
-                        label={<FormattedMessage {...messages.date} />}
-                        editable={allowUpdate}
-                      />
+                  <Subscribe to={[OrderTasksContainer]}>
+                    {taskContainer => (
+                      <FormField
+                        name="issuedAt"
+                        initValue={values.issuedAt}
+                        values={values}
+                        validator={validator}
+                        setFieldValue={setFieldValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              if (!taskContainer.state.hasCalledTasksApiYet) {
+                                taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
+                              }
+                            }}
+                            isNew={isNew}
+                            originalValue={initialValues[name]}
+                            label={<FormattedMessage {...messages.date} />}
+                            editable={allowUpdate}
+                          />
+                        )}
+                      </FormField>
                     )}
-                  </FormField>
+                  </Subscribe>
 
                   <BooleanValue>
                     {({ value: isOpen, set: setPriceDialog }) => (
                       <Subscribe to={[OrderItemsContainer]}>
                         {({
-                          state: { orderItems, hasCalledApiYet },
+                          state: { orderItems, hasCalledItemsApiYet },
                           resetAmountWithNewCurrency,
                         }) => (
                           <StringValue>
@@ -214,8 +221,8 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                                         onBlur();
                                         if (
                                           value !== values.currency &&
-                                          ((hasCalledApiYet && orderItems.length) ||
-                                            (!hasCalledApiYet && values.orderItemCount))
+                                          ((hasCalledItemsApiYet && orderItems.length) ||
+                                            (!hasCalledItemsApiYet && values.orderItemCount))
                                         ) {
                                           setPriceDialog(true);
                                         } else {
@@ -451,10 +458,10 @@ const OrderSection = ({ isNew, isClone }: Props) => {
               <div className={DividerStyle} />
 
               <Subscribe to={[OrderItemsContainer]}>
-                {({ state: { orderItems, hasCalledApiYet } }) => {
+                {({ state: { orderItems, hasCalledItemsApiYet } }) => {
                   return (
                     <div className={QuantitySummaryStyle}>
-                      {hasCalledApiYet || isClone ? (
+                      {hasCalledItemsApiYet || isClone ? (
                         <OrderSummary
                           currency={currency}
                           {...getQuantityForOrderSummary(orderItems)}

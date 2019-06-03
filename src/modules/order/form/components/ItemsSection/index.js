@@ -30,14 +30,14 @@ const ItemsSection = ({ isNew, orderIsArchived, isLoading, entityId }: Props) =>
     <BooleanValue value={storedValue} onChange={setValue}>
       {({ value: itemsIsExpanded, set: setItemsUI }) => (
         <Subscribe to={[OrderItemsContainer]}>
-          {({ state: { orderItems, hasCalledApiYet }, initDetailValues, setFieldValue }) => (
+          {({ state: { orderItems, hasCalledItemsApiYet }, initDetailValues, setFieldValue }) => (
             <QueryPlaceHolder
               PlaceHolder={ListCardPlaceHolder}
               query={orderFormItemsQuery}
               entityId={entityId}
               isLoading={isLoading}
               onCompleted={result => {
-                if (!hasCalledApiYet) {
+                if (!hasCalledItemsApiYet) {
                   initDetailValues(getByPathWithDefault([], 'order.orderItems', result), true);
                 }
               }}

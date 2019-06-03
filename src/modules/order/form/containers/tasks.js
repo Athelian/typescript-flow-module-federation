@@ -6,16 +6,17 @@ import emitter from 'utils/emitter';
 
 type FormState = {
   todo: {
-    tasks?: Array<Object>,
+    tasks: Array<Object>,
     taskTemplate?: ?Object,
   },
+  hasCalledTasksApiYet: boolean,
 };
 
-const initValues = {
+const initValues: FormState = {
   todo: {
     tasks: [],
-    taskTemplate: null,
   },
+  hasCalledTasksApiYet: false,
 };
 
 export default class OrderTasksContainer extends Container<FormState> {
@@ -76,9 +77,32 @@ export default class OrderTasksContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (todo: { tasks: Array<Object> }) => {
-    const parsedValues: Object = { ...initValues, todo };
+  initDetailValues = (todo: { tasks: Array<Object> }, hasCalledTasksApiYet: boolean = false) => {
+    const parsedValues: Object = { ...initValues, todo, hasCalledTasksApiYet };
     this.setState(parsedValues);
-    this.originalValues = parsedValues;
+    if (hasCalledTasksApiYet) {
+      this.originalValues = parsedValues;
+    }
+  };
+
+  waitForTasksSectionReady = (name: string, value: ?Date) => {
+    let retry;
+    if (this.state.hasCalledTasksApiYet) {
+      setTimeout(() => {
+        emitter.emit('AUTO_DATE', name, value);
+      }, 200);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledTasksApiYet) {
+          setTimeout(() => {
+            emitter.emit('AUTO_DATE', name, value);
+          }, 200);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
   };
 }

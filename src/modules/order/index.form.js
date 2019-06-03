@@ -156,16 +156,17 @@ class OrderFormModule extends React.PureComponent<Props> {
   ) => {
     const {
       orderItems = [],
-      hasCalledApiYet = false,
+      hasCalledItemsApiYet = false,
+      hasCalledTasksApiYet = false,
       tags = [],
       files = [],
       todo = { tasks: [] },
       ...info
     } = order;
     orderInfoState.initDetailValues(info);
-    orderItemState.initDetailValues(orderItems, hasCalledApiYet || orderItems.length > 0);
+    orderItemState.initDetailValues(orderItems, hasCalledItemsApiYet || orderItems.length > 0);
     orderFilesState.initDetailValues(files);
-    orderTasksState.initDetailValues(todo);
+    orderTasksState.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
     orderTagsState.initDetailValues(tags);
     return null;
   };
@@ -182,7 +183,8 @@ class OrderFormModule extends React.PureComponent<Props> {
   ) => {
     const {
       orderItems,
-      hasCalledApiYet = false,
+      hasCalledItemsApiYet = false,
+      hasCalledTasksApiYet = false,
       tags,
       files,
       todo,
@@ -195,11 +197,11 @@ class OrderFormModule extends React.PureComponent<Props> {
       shipments: [],
       poNo: `[cloned] ${poNo}`,
     });
-    if (hasCalledApiYet) {
+    if (hasCalledItemsApiYet) {
       orderItemState.initDetailValues(orderItems.map(item => ({ ...item, batches: [] })));
     }
     orderFilesState.initDetailValues([]);
-    orderTasksState.initDetailValues({ tasks: [] });
+    orderTasksState.initDetailValues({ tasks: [] }, hasCalledTasksApiYet);
     orderTagsState.initDetailValues(tags);
     return null;
   };
@@ -471,7 +473,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                                           },
                                           {
                                             ...updateOrder,
-                                            hasCalledApiYet: true,
+                                            hasCalledItemsApiYet: true,
+                                            hasCalledTasksApiYet: true,
                                           }
                                         );
                                         form.onReset();
