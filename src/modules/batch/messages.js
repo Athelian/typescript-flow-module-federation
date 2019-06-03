@@ -19,21 +19,61 @@ export default defineMessages({
     id: 'components.BatchItem.newQuantity1',
     defaultMessage: 'NEW QUANTITY #1',
   },
+  newQuantityType1Type: {
+    id: 'components.BatchItem.newQuantity1.type',
+    defaultMessage: 'NEW QUANTITY #1 - TYPE',
+  },
+  newQuantityType1Quantity: {
+    id: 'components.BatchItem.newQuantity1.quantity',
+    defaultMessage: 'NEW QUANTITY #1 - QUANTITY',
+  },
   newQuantity2: {
     id: 'components.BatchItem.newQuantity2',
     defaultMessage: 'NEW QUANTITY #2',
+  },
+  newQuantityType2Type: {
+    id: 'components.BatchItem.newQuantity2.type',
+    defaultMessage: 'NEW QUANTITY #2 - TYPE',
+  },
+  newQuantityType2Quantity: {
+    id: 'components.BatchItem.newQuantity2.quantity',
+    defaultMessage: 'NEW QUANTITY #2 - QUANTITY',
   },
   newQuantity3: {
     id: 'components.BatchItem.newQuantity3',
     defaultMessage: 'NEW QUANTITY #3',
   },
+  newQuantityType3Type: {
+    id: 'components.BatchItem.newQuantity3.type',
+    defaultMessage: 'NEW QUANTITY #3 - TYPE',
+  },
+  newQuantityType3Quantity: {
+    id: 'components.BatchItem.newQuantity3.quantity',
+    defaultMessage: 'NEW QUANTITY #3 - QUANTITY',
+  },
   newQuantity4: {
     id: 'components.BatchItem.newQuantity4',
     defaultMessage: 'NEW QUANTITY #4',
   },
+  newQuantityType4Type: {
+    id: 'components.BatchItem.newQuantity4.type',
+    defaultMessage: 'NEW QUANTITY #4 - TYPE',
+  },
+  newQuantityType4Quantity: {
+    id: 'components.BatchItem.newQuantity4.quantity',
+    defaultMessage: 'NEW QUANTITY #4 - QUANTITY',
+  },
   newQuantity5: {
     id: 'components.BatchItem.newQuantity5',
     defaultMessage: 'NEW QUANTITY #5',
+  },
+  newQuantityType5Type: {
+    id: 'components.BatchItem.newQuantity5.type',
+    defaultMessage: 'NEW QUANTITY #5 - TYPE',
+  },
+  newQuantityType5Quantity: {
+    id: 'components.BatchItem.newQuantity5.quantity',
+    defaultMessage: 'NEW QUANTITY #5 - QUANTITY',
   },
   shortQuantity: {
     id: 'components.BatchItem.shortQuantity',

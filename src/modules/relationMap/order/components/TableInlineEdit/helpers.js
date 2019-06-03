@@ -1,5 +1,5 @@
 // @flow
-import { cloneDeep, intersection } from 'lodash';
+import { cloneDeep, flatten, intersection } from 'lodash';
 import type { IntlShape } from 'react-intl';
 // $FlowFixMe missing define for partialRight
 import { partialRight } from 'ramda';
@@ -723,6 +723,18 @@ export function getCustomFieldValues(fields: Array<Object>, values: Array<Object
   return customFieldValues;
 }
 
+const expandQuantityColumn = (batchColumnFieldsFilter: Array<Object>) => {
+  const columns = batchColumnFieldsFilter.map(batchField =>
+    batchField.messageId.includes('newQuantity')
+      ? [
+          { ...batchField, messageId: `${batchField.messageId}.type` },
+          { ...batchField, messageId: `${batchField.messageId}.quantity` },
+        ]
+      : batchField
+  );
+  return flatten(columns);
+};
+
 export function getExportColumns(
   intl: IntlShape,
   {
@@ -744,7 +756,7 @@ export function getExportColumns(
     ...orderCustomFieldsFilter,
     ...orderItemColumnFieldsFilter,
     ...orderItemCustomFieldsFilter,
-    ...batchColumnFieldsFilter,
+    ...expandQuantityColumn(batchColumnFieldsFilter),
     ...batchCustomFieldsFilter,
     ...containerColumnFieldsFilter,
     ...shipmentColumnFieldsFilter,
