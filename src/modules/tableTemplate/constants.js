@@ -1066,14 +1066,14 @@ export const containerColumnFields = [
     messageId: containerMessages.warehouseArrivalAgreedDateAssignedTo.id,
     name: 'warehouseArrivalAgreedDateAssignedTo',
     columnName: 'container.warehouseArrivalAgreedDateAssignedTo',
-    type: 'inCharges',
+    type: 'assignTo',
     meta: {
       max: 5,
     },
     getExportValue: ({
-      warehouseArrivalAgreedDateAssignedTo: inCharges,
+      warehouseArrivalAgreedDateAssignedTo,
     }: { warehouseArrivalAgreedDateAssignedTo: Array<Object> } = {}) =>
-      (inCharges || []).reduce(
+      (warehouseArrivalAgreedDateAssignedTo || []).reduce(
         (field, value) => `${field}${value.firstName} ${value.lastName}, `,
         ''
       ),
@@ -1095,14 +1095,14 @@ export const containerColumnFields = [
     messageId: containerMessages.warehouseArrivalActualDateAssignedTo.id,
     name: 'warehouseArrivalActualDateAssignedTo',
     columnName: 'container.warehouseArrivalActualDateAssignedTo',
-    type: 'inCharges',
+    type: 'assignTo',
     meta: {
       max: 5,
     },
     getExportValue: ({
-      warehouseArrivalActualDateAssignedTo: inCharges,
+      warehouseArrivalActualDateAssignedTo,
     }: { warehouseArrivalActualDateAssignedTo: Array<Object> } = {}) =>
-      (inCharges || []).reduce(
+      (warehouseArrivalActualDateAssignedTo || []).reduce(
         (field, value) => `${field}${value.firstName} ${value.lastName}, `,
         ''
       ),
