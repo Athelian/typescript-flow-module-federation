@@ -191,7 +191,7 @@
   "components.BatchItem.desiredAt": "DESIRED DATE",
   "components.BatchItem.shortDeliveryAt": "DELIVERY",
   "components.BatchItem.expiredAt": "Expiry Date",
-  "components.BatchItem.producedAt": "Productino Date",
+  "components.BatchItem.producedAt": "Production Date",
   "components.BatchItem.updatedAt": "Last Modified",
   "components.BatchItem.createdAt": "Date Created",
   "components.BatchItem.adjustmentType": "CATEGORY",
