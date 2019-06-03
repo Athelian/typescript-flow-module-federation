@@ -32,10 +32,12 @@ const TaskModule = (props: Props) => {
   const { intl } = props;
 
   const sortFields = [
-    { title: intl.formatMessage(messages.createdAt), value: 'updatedAt' },
-    { title: intl.formatMessage(messages.updatedAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.startDate), value: 'startDate' },
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
+    { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
