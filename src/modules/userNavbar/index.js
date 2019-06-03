@@ -114,10 +114,12 @@ class UserNavBar extends React.Component<Props, State> {
                         : []
                     }
                   >
-                    <NotificationsDropdown
-                      isOpen={isNotificationOpen}
-                      toggleNotification={this.toggleNotification}
-                    />
+                    {isNotificationOpen && (
+                      <NotificationsDropdown
+                        isOpen={isNotificationOpen}
+                        toggleNotification={this.toggleNotification}
+                      />
+                    )}
                   </OutsideClickHandler>
                 </div>
 
