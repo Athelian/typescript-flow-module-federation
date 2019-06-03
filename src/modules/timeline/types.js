@@ -32,14 +32,11 @@ export type LogItem = {
   parameters: {
     [key: string]: any,
   },
-  entity: {
-    __typename: string,
-    id: string,
-  },
+  entityType: string,
   parentEntity: {
-    __typename: string,
     id: string,
   },
+  parentEntityType: string,
   createdAt: Date,
   createdBy: UserInfo,
 };

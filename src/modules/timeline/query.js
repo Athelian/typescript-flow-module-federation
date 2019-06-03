@@ -128,11 +128,6 @@ export const eventFragment = gql`
     createdAt
     logs {
       id
-      entity {
-        ... on Model {
-          id
-        }
-      }
       translationKey
       parameters {
         key

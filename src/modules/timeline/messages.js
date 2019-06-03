@@ -7,6 +7,10 @@ export default defineMessages({
     id: 'modules.timeline.create',
     defaultMessage: '{user} has created this {entityType}',
   },
+  createChild: {
+    id: 'modules.timeline.createChild',
+    defaultMessage: '{user} has created {child}',
+  },
   setField: {
     id: 'modules.timeline.setField',
     defaultMessage: '{user} has set {field} to {value}',
