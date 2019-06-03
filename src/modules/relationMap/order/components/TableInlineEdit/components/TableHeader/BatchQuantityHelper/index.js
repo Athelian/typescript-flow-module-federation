@@ -65,7 +65,11 @@ export default function BatchQuantityHelper({ index }: Props) {
                         <button
                           className={BatchQuantityHelperButtonStyle}
                           onClick={() => {
-                            emitter.emit('EDIT_VIEW_BATCH_CREATE_QUANTITY', index);
+                            emitter.emit('INLINE_CHANGE', {
+                              name: 'batches.-1.batchQuantityRevisionsHeader.create',
+                              value: index,
+                              hasError: false,
+                            });
                             toggleHelperIsShown(false);
                           }}
                           type="button"
@@ -89,9 +93,10 @@ export default function BatchQuantityHelper({ index }: Props) {
                         <button
                           className={BatchQuantityHelperButtonStyle}
                           onClick={() => {
-                            emitter.emit('EDIT_VIEW_BATCH_CHANGE_TYPE', {
-                              index,
-                              type: quantityType,
+                            emitter.emit('INLINE_CHANGE', {
+                              name: 'batches.-1.batchQuantityRevisionsHeader.apply',
+                              value: { index, type: quantityType },
+                              hasError: false,
                             });
                             toggleHelperIsShown(false);
                           }}
