@@ -1,12 +1,12 @@
 // @flow
-import * as React from 'react';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import emitter from 'utils/emitter';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
+import { EnumInput } from 'components/Form/Inputs';
 import OutsideClickHandler from 'components/OutsideClickHandler';
-import InlineSelectEnumInput from 'modules/relationMap/order/components/TableInlineEdit/components/TableItem/components/InlineSelectEnumInput';
 import {
   BatchQuantityHelperWandStyle,
   BatchQuantityHelperWrapperStyle,
@@ -18,6 +18,7 @@ type Props = {
 };
 
 export default function BatchQuantityHelper({ index }: Props) {
+  const [quantityType, setQuantityType] = useState('Other');
   return (
     <BooleanValue>
       {({ value: helperIsShown, set: toggleHelperIsShown }) => {
@@ -74,21 +75,24 @@ export default function BatchQuantityHelper({ index }: Props) {
                       </>
                     ) : (
                       <>
-                        <InlineSelectEnumInput
-                          id="TODO"
-                          name="TODO"
-                          value="TODO"
+                        <EnumInput
+                          id="batchQuantityRevisions"
+                          name="batchQuantityRevisions.type"
+                          value={quantityType}
                           enumType="BatchQuantityRevisionType"
-                          isRequired
                           width="97.5px"
                           height="22px"
                           forceHoverStyle
+                          onChange={type => setQuantityType(type)}
                         />
 
                         <button
                           className={BatchQuantityHelperButtonStyle}
                           onClick={() => {
-                            console.warn('TODO');
+                            emitter.emit('EDIT_VIEW_BATCH_CHANGE_TYPE', {
+                              index,
+                              type: quantityType,
+                            });
                             toggleHelperIsShown(false);
                           }}
                           type="button"

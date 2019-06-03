@@ -302,6 +302,38 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
   }, [prevEntities, entities, isChangeData]);
 
   useEffect(() => {
+    const listener = emitter.once('EDIT_VIEW_BATCH_CHANGE_TYPE', ({ index, type }) => {
+      const newEditData = cloneDeep(editData);
+      const { batches } = newEditData;
+      const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
+        const [batchId, batch] = entries;
+        const { batchQuantityRevisions } = batch;
+        if (batchQuantityRevisions.length >= index) {
+          set(batch, `batchQuantityRevisions[${index - 1}].type`, type);
+        }
+        return [batchId, batch];
+      });
+      const newBatches = Object.fromEntries(newBatchEntries);
+
+      if (isEqual(batches, newBatches)) {
+        setTouched({
+          ...touched,
+          batchQuantityRevisions: true,
+        });
+      }
+
+      setEditData({
+        ...editData,
+        batches: newBatches,
+      });
+    });
+
+    return function clean() {
+      listener.remove();
+    };
+  });
+
+  useEffect(() => {
     const listener = emitter.once('EDIT_VIEW_BATCH_CREATE_QUANTITY', index => {
       const newEditData = cloneDeep(editData);
       const { batches } = newEditData;

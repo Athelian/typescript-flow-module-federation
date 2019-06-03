@@ -30,7 +30,7 @@ export const HeaderWrapperStyle: string = css`
   left: 30px;
   background: ${colors.WHITE};
   ${shadows.HEADER};
-  overflow: hidden;
+  // overflow: hidden;
 `;
 
 export const SidebarWrapperStyle: string = css`
