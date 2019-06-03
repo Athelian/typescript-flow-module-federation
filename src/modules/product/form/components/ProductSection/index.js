@@ -19,7 +19,21 @@ import {
 import validator from 'modules/product/form/validator';
 import GridColumn from 'components/GridColumn';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import { PRODUCT_CREATE, PRODUCT_UPDATE } from 'modules/permission/constants/product';
+import {
+  PRODUCT_CREATE,
+  PRODUCT_UPDATE,
+  PRODUCT_SET_ARCHIVED,
+  PRODUCT_SET_NAME,
+  PRODUCT_SET_SERIAL,
+  PRODUCT_SET_JAN_CODE,
+  PRODUCT_SET_HS_CODE,
+  PRODUCT_SET_MATERIAL,
+  PRODUCT_SET_DOCUMENTS,
+  PRODUCT_SET_CUSTOM_FIELDS,
+  PRODUCT_SET_CUSTOM_FIELDS_MASK,
+  PRODUCT_SET_TAGS,
+  PRODUCT_SET_MEMO,
+} from 'modules/permission/constants/product';
 import {
   SectionHeader,
   LastModified,
@@ -64,7 +78,6 @@ const swapItems = (items: Array<Object>, from: number, to: number) => {
 
 const ProductSection = ({ isNew, isOwner, product }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(PRODUCT_UPDATE);
   const { updatedAt, updatedBy, archived } = product;
   return (
     <>
@@ -78,7 +91,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
-                  readOnly={!hasPermission(PRODUCT_UPDATE)}
+                  readOnly={!hasPermission(PRODUCT_UPDATE) && !hasPermission(PRODUCT_SET_ARCHIVED)}
                   archived={archived}
                   openStatusDialog={() => dialogToggle(true)}
                   activateDialog={
@@ -140,7 +153,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                     onRequestClose={() => dialogToggle(false)}
                                     image={selectedImage}
                                   />
-                                  {allowUpdate && (
+                                  {hasPermission([PRODUCT_UPDATE, PRODUCT_SET_DOCUMENTS]) && (
                                     <>
                                       <button
                                         className={DeleteImageButtonStyle}
@@ -177,7 +190,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                   )}
                                 </div>
                               ))}
-                              {allowUpdate && (
+                              {hasPermission([PRODUCT_UPDATE, PRODUCT_SET_DOCUMENTS]) && (
                                 <ImagesUploadInput
                                   id="files"
                                   name="files"
@@ -215,7 +228,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                         label={
                           <FormattedMessage id="modules.Products.name" defaultMessage="Name" />
                         }
-                        editable={allowUpdate}
+                        editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_NAME])}
                       />
                     )}
                   </FormField>
@@ -236,7 +249,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                         label={
                           <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />
                         }
-                        editable={allowUpdate}
+                        editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_SERIAL])}
                       />
                     )}
                   </FormField>
@@ -259,7 +272,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                             defaultMessage="JAN CODE"
                           />
                         }
-                        editable={allowUpdate}
+                        editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_JAN_CODE])}
                       />
                     )}
                   </FormField>
@@ -279,7 +292,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                         label={
                           <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />
                         }
-                        editable={allowUpdate}
+                        editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_HS_CODE])}
                       />
                     )}
                   </FormField>
@@ -302,7 +315,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                             defaultMessage="MATERIAL"
                           />
                         }
-                        editable={allowUpdate}
+                        editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_MATERIAL])}
                       />
                     )}
                   </FormField>
@@ -311,8 +324,8 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
                     editable={{
-                      values: allowUpdate,
-                      mask: allowUpdate,
+                      values: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_CUSTOM_FIELDS]),
+                      mask: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
                   <div className={TagsInputStyle}>
@@ -335,8 +348,10 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                                 changeTags(field, value);
                               }}
                               editable={{
-                                set: hasPermission(TAG_LIST) && hasPermission(PRODUCT_UPDATE),
-                                remove: hasPermission(PRODUCT_UPDATE),
+                                set:
+                                  hasPermission(TAG_LIST) &&
+                                  hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
+                                remove: hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TAGS]),
                               }}
                             />
                           }
@@ -355,7 +370,7 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                     {({ name, ...inputHandlers }) => (
                       <TextAreaInputFactory
                         {...inputHandlers}
-                        editable={allowUpdate}
+                        editable={hasPermission([PRODUCT_UPDATE, PRODUCT_SET_MEMO])}
                         name={name}
                         isNew={isNew}
                         originalValue={initialValues[name]}
