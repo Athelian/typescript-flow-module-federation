@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import emitter from 'utils/emitter';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
@@ -12,7 +13,11 @@ import {
   BatchQuantityHelperButtonStyle,
 } from './style';
 
-export default function BatchQuantityHelper() {
+type Props = {
+  index: number,
+};
+
+export default function BatchQuantityHelper({ index }: Props) {
   return (
     <BooleanValue>
       {({ value: helperIsShown, set: toggleHelperIsShown }) => {
@@ -59,7 +64,7 @@ export default function BatchQuantityHelper() {
                         <button
                           className={BatchQuantityHelperButtonStyle}
                           onClick={() => {
-                            console.warn('TODO');
+                            emitter.emit('EDIT_VIEW_BATCH_CREATE_QUANTITY', index);
                             toggleHelperIsShown(false);
                           }}
                           type="button"

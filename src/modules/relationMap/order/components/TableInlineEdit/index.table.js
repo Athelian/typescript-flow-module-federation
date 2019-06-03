@@ -12,7 +12,7 @@ import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
-import { calculatePackageQuantity } from 'utils/batch';
+import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -300,6 +300,50 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
       setIsChangeData(false);
     }
   }, [prevEntities, entities, isChangeData]);
+
+  useEffect(() => {
+    const listener = emitter.once('EDIT_VIEW_BATCH_CREATE_QUANTITY', index => {
+      const newEditData = cloneDeep(editData);
+      const { batches } = newEditData;
+      const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
+        const [batchId, batch] = entries;
+        const { quantity, batchQuantityRevisions } = batch;
+        const lastQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+        for (let i = 0; i < index; i += 1) {
+          if (!batchQuantityRevisions[i]) {
+            batchQuantityRevisions[i] = {
+              type: 'Other',
+              quantity: lastQuantity,
+            };
+          }
+        }
+        return [
+          batchId,
+          {
+            ...batch,
+            batchQuantityRevisions,
+          },
+        ];
+      });
+      const newBatches = Object.fromEntries(newBatchEntries);
+
+      if (isEqual(batches, newBatches)) {
+        setTouched({
+          ...touched,
+          batchQuantityRevisions: true,
+        });
+      }
+
+      setEditData({
+        ...editData,
+        batches: newBatches,
+      });
+    });
+    return function clean() {
+      listener.remove();
+    };
+  });
+
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
       const listener = emitter.once('INLINE_CHANGE', newData => {
