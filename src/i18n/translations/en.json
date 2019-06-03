@@ -362,7 +362,7 @@
   "modules.Orders.totalBatches": "TOTAL BATCHES",
   "components.inputs.inCharge": "IN CHARGE",
   "modules.Orders.inChargeExplanation": "You can choose up to 5 people in charge.",
-  "modules.Orders.changeExporterWarning": "Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Export from all Tasks and In Charge. Are you sure you want to change the Exporter?",
+  "modules.Orders.changeExporterWarning": "Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks and In Charge. Are you sure you want to change the Exporter?",
   "modules.Orders.shipments": "SHIPMENTS",
   "modules.Orders.noShipmentFound": "No shipments found",
   "modules.Orders.order": "ORDER",

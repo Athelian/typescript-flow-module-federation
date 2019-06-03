@@ -430,7 +430,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                                         warningMessage={
                                           <FormattedMessage
                                             id="modules.Orders.changeExporterWarning"
-                                            defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Export from all Tasks and In Charge. Are you sure you want to change the Exporter?"
+                                            defaultMessage="Changing the Exporter will remove all Items and Batches. It will also remove all assigned Staff of the current Exporter from all Tasks and In Charge. Are you sure you want to change the Exporter?"
                                           />
                                         }
                                       />
