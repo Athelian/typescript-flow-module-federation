@@ -125,7 +125,7 @@ export const productColumns = [
       'product.tags',
     ],
     columns: [
-      <FormattedMessage id="modules.Products.name" defaultMessage="Nam" />,
+      <FormattedMessage id="modules.Products.name" defaultMessage="Name" />,
       <FormattedMessage id="modules.Products.serial" defaultMessage="Serial" />,
       <FormattedMessage id="modules.Products.janCode" defaultMessage="JAN CODE" />,
       <FormattedMessage id="modules.Products.hsCode" defaultMessage="HS CODE" />,
