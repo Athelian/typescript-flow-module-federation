@@ -10,9 +10,15 @@ export const WrapperStyle: string = css`
 `;
 
 export const InlineRowStyle: string = css`
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 5px;
+  &:hover {
+    & > button {
+      opacity: 1;
+    }
+  }
 `;
 
 export default WrapperStyle;
