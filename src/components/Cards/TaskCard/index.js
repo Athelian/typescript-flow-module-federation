@@ -142,8 +142,6 @@ const TaskCard = ({
   hideParentInfo,
   onClick,
   saveOnBlur,
-  onActivateUser,
-  onDeactivateUser,
   editable,
   isInTemplate,
   actions,

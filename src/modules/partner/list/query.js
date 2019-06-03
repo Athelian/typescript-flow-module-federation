@@ -3,7 +3,12 @@ import gql from 'graphql-tag';
 import { partnerCardFragment } from 'graphql';
 
 export const partnerListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: PartnerFilterInput, $sortBy: PartnerSortInput) {
+  query partnerListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: PartnerFilterInput
+    $sortBy: PartnerSortInput
+  ) {
     viewer {
       user {
         ... on User {

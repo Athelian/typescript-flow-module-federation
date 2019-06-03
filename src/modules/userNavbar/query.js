@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const countNotificationQuery = gql`
-  query {
+  query countNotificationQuery {
     viewer {
       notificationUnread
       notificationUnseen

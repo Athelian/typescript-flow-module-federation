@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const authenticationQuery = gql`
-  query {
+  query authenticationQuery {
     authenticated
   }
 `;

@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const userDetailQuery = gql`
-  query {
+  query userDetailQuery {
     viewer {
       user {
         ... on User {

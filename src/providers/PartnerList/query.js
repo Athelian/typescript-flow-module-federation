@@ -2,7 +2,12 @@
 import gql from 'graphql-tag';
 
 export const partnerListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: PartnerFilterInput, $sortBy: PartnerSortInput) {
+  query partnerListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: PartnerFilterInput
+    $sortBy: PartnerSortInput
+  ) {
     viewer {
       user {
         ... on User {

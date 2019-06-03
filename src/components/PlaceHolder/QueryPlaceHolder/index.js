@@ -72,7 +72,7 @@ export default function QueryPlaceHolder({
 
         if (!isReady || isLoading) return <PlaceHolder />;
 
-        return children({});
+        return children({ data: null });
       })()}
     </div>
   );

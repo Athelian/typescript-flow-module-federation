@@ -21,6 +21,7 @@ type OptionalProps = {
   align: 'left' | 'right' | 'center',
   hideClearButton: boolean,
   placeholder: ?string,
+  itemToString: Function,
 };
 
 type Props = OptionalProps &
@@ -42,6 +43,7 @@ const defaultProps = {
   align: 'right',
   hideClearButton: false,
   placeholder: null,
+  itemToString: () => {},
 };
 
 function DefaultSearchSelect({
