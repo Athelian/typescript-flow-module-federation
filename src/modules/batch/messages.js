@@ -145,7 +145,7 @@ export default defineMessages({
   },
   producedAt: {
     id: 'components.BatchItem.producedAt',
-    defaultMessage: 'Productino Date',
+    defaultMessage: 'Production Date',
   },
   updatedAt: {
     id: 'components.BatchItem.updatedAt',
