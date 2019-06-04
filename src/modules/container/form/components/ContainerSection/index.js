@@ -115,6 +115,9 @@ const ContainerSection = () => {
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(CONTAINER_UPDATE);
 
+  const allowSetWarehouse =
+    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+
   return (
     <div className={ContainerSectionWrapperStyle}>
       <Subscribe to={[ContainerInfoContainer]}>
@@ -490,8 +493,7 @@ const ContainerSection = () => {
                   <Label>
                     <FormattedMessage id="modules.container.warehouse" defaultMessage="WAREHOUSE" />
                   </Label>
-                  {hasPermission(WAREHOUSE_LIST) &&
-                  (allowUpdate || hasPermission(CONTAINER_SET_WAREHOUSE)) ? (
+                  {allowSetWarehouse ? (
                     <BooleanValue>
                       {({ value: opened, set: slideToggle }) => (
                         <>

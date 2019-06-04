@@ -47,6 +47,9 @@ const TimelineSection = ({ isNew }: Props) => {
   const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
 
+  const allowSetWarehouse =
+    hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+
   return (
     <Subscribe
       to={[ShipmentTimelineContainer, ShipmentTransportTypeContainer, ShipmentContainersContainer]}
@@ -322,8 +325,7 @@ const TimelineSection = ({ isNew }: Props) => {
                   removeArrayItem={removeArrayItem}
                   renderBelowHeader={
                     <>
-                      {hasPermission(WAREHOUSE_LIST) &&
-                      hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) ? (
+                      {allowSetWarehouse ? (
                         <BooleanValue>
                           {({ value: opened, set: slideToggle }) => (
                             <>

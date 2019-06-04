@@ -120,6 +120,9 @@ function ContainersArea({
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
+  const allowSetWarehouse =
+    hasPermission([CONTAINER_UPDATE, CONTAINER_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+
   return (
     <Subscribe
       to={[ShipmentContainersContainer, ShipmentBatchesContainer, ShipmentTimelineContainer]}
@@ -381,12 +384,7 @@ function ContainersArea({
                                                   CONTAINER_UPDATE,
                                                   CONTAINER_SET_CONTAINER_OPTION,
                                                 ]),
-                                                warehouse:
-                                                  hasPermission(WAREHOUSE_LIST) &&
-                                                  hasPermission([
-                                                    CONTAINER_UPDATE,
-                                                    CONTAINER_SET_WAREHOUSE,
-                                                  ]),
+                                                warehouse: allowSetWarehouse,
                                                 viewWarehouse: hasPermission([WAREHOUSE_FORM]),
                                                 warehouseArrivalAgreedDate: hasPermission([
                                                   CONTAINER_UPDATE,
