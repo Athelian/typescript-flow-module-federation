@@ -757,9 +757,11 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                                 user => getByPath('group.id', user) !== importer.id
                                               )
                                             );
-                                            taskContainer.onChangePartner(exporter);
-                                            timelineContainer.onChangePartner(exporter);
-                                            containersContainer.onChangePartner(exporter);
+                                            if (exporter) {
+                                              taskContainer.onChangePartner(exporter);
+                                              timelineContainer.onChangePartner(exporter);
+                                              containersContainer.onChangePartner(exporter);
+                                            }
                                           }}
                                         />
                                       )}
