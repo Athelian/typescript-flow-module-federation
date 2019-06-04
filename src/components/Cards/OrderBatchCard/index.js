@@ -45,7 +45,14 @@ import {
 
 type OptionalProps = {
   onClick: (batch: Object) => void,
-  editable: boolean,
+  editable: {
+    clone: boolean,
+    changeStatus: boolean,
+    no: boolean,
+    quantity: boolean,
+    deliveredAt: boolean,
+    desiredAt: boolean,
+  },
 };
 
 type Props = OptionalProps & {
@@ -62,7 +69,14 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   onClick: () => {},
-  editable: false,
+  editable: {
+    clone: false,
+    changeStatus: false,
+    no: false,
+    quantity: false,
+    deliveredAt: false,
+    desiredAt: false,
+  },
 };
 
 const OrderBatchCard = ({
@@ -76,53 +90,55 @@ const OrderBatchCard = ({
   editable,
   ...rest
 }: Props) => {
-  const actions = editable
-    ? [
-        <CardAction icon="CLONE" onClick={() => onClone(batch)} />,
-        <BooleanValue>
-          {({ value: isOpen, set: dialogToggle }) => (
-            <>
-              <RemoveDialog
-                isOpen={isOpen}
-                onRequestClose={() => dialogToggle(false)}
-                onCancel={() => dialogToggle(false)}
-                onRemove={() => {
-                  onRemove(batch);
-                  dialogToggle(false);
-                }}
-                message={
-                  <div>
-                    <div>
-                      <FormattedMessage
-                        id="components.cards.deleteBatchItem"
-                        defaultMessage="Are you sure you want to delete this Batch?"
-                      />
-                    </div>
-                    <div>
-                      <FormattedMessage
-                        id="components.cards.deleteBatchItemShipment"
-                        defaultMessage="It is being used in a Shipment"
-                      />
-                    </div>
-                  </div>
-                }
-              />
-              <CardAction
-                icon="REMOVE"
-                hoverColor="RED"
-                onClick={() => {
-                  if (batch.shipment) {
-                    dialogToggle(true);
-                  } else {
+  const actions = [
+    ...(editable.clone ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />] : []),
+    ...(editable.changeStatus
+      ? [
+          <BooleanValue>
+            {({ value: isOpen, set: dialogToggle }) => (
+              <>
+                <RemoveDialog
+                  isOpen={isOpen}
+                  onRequestClose={() => dialogToggle(false)}
+                  onCancel={() => dialogToggle(false)}
+                  onRemove={() => {
                     onRemove(batch);
+                    dialogToggle(false);
+                  }}
+                  message={
+                    <div>
+                      <div>
+                        <FormattedMessage
+                          id="components.cards.deleteBatchItem"
+                          defaultMessage="Are you sure you want to delete this Batch?"
+                        />
+                      </div>
+                      <div>
+                        <FormattedMessage
+                          id="components.cards.deleteBatchItemShipment"
+                          defaultMessage="It is being used in a Shipment"
+                        />
+                      </div>
+                    </div>
                   }
-                }}
-              />
-            </>
-          )}
-        </BooleanValue>,
-      ]
-    : [];
+                />
+                <CardAction
+                  icon="REMOVE"
+                  hoverColor="RED"
+                  onClick={() => {
+                    if (batch.shipment) {
+                      dialogToggle(true);
+                    } else {
+                      onRemove(batch);
+                    }
+                  }}
+                />
+              </>
+            )}
+          </BooleanValue>,
+        ]
+      : []),
+  ];
 
   const {
     id,
@@ -182,7 +198,7 @@ const OrderBatchCard = ({
                     saveOnBlur({ ...batch, no: inputHandlers.value });
                   },
                 }}
-                editable={editable}
+                editable={editable.no}
                 inputWidth="165px"
                 inputHeight="20px"
                 inputAlign="left"
@@ -211,7 +227,7 @@ const OrderBatchCard = ({
               <NumberInputFactory
                 inputWidth="90px"
                 inputHeight="20px"
-                editable={editable}
+                editable={editable.quantity}
                 {...{
                   ...inputHandlers,
                   onBlur: evt => {
@@ -242,7 +258,7 @@ const OrderBatchCard = ({
                 inputWidth="120px"
                 inputHeight="20px"
                 name={fieldName}
-                editable={editable}
+                editable={editable.deliveredAt}
                 hideTooltip
                 {...{
                   ...inputHandlers,
@@ -273,7 +289,7 @@ const OrderBatchCard = ({
                 inputWidth="120px"
                 inputHeight="20px"
                 name={fieldName}
-                editable={editable}
+                editable={editable.desiredAt}
                 hideTooltip
                 {...{
                   ...inputHandlers,

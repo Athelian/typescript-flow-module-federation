@@ -3,10 +3,18 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
-import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import {
+  BATCH_CREATE,
+  BATCH_UPDATE,
+  BATCH_SET_ARCHIVED,
+  BATCH_SET_NO,
+  BATCH_SET_QUANTITY,
+  BATCH_SET_DELIVERY_DATE,
+  BATCH_SET_DESIRED_DATE,
+  BATCH_SET_QUANTITY_ADJUSTMENTS,
+} from 'modules/permission/constants/batch';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   findTotalAutoFillBatches,
@@ -43,7 +51,16 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
-  const allowCreateBatches = hasPermission([ORDER_ITEMS_UPDATE, BATCH_CREATE]);
+  const allowCreateBatches = hasPermission(BATCH_CREATE);
+
+  const allowCloneBatch = hasPermission(BATCH_CREATE);
+  const allowUpdateBatchStatus = hasPermission([BATCH_UPDATE, BATCH_SET_ARCHIVED]);
+  const allowUpdateBatchNo = hasPermission([BATCH_UPDATE, BATCH_SET_NO]);
+  const allowUpdateBatchQuantity =
+    hasPermission(BATCH_UPDATE) ||
+    (hasPermission(BATCH_SET_QUANTITY) && hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS));
+  const allowUpdateBatchDelivery = hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]);
+  const allowUpdateBatchDesired = hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]);
 
   return (
     <Subscribe to={[OrderItemBatchesContainer]}>
@@ -143,8 +160,15 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                             </SlideView>
                             <div className={ItemStyle}>
                               <OrderBatchCard
-                                // TODO: field level permission
-                                editable={hasPermission([ORDER_ITEMS_UPDATE, BATCH_UPDATE])}
+                                editable={{
+                                  clone: allowCloneBatch,
+                                  changeStatus: allowUpdateBatchStatus,
+                                  no: allowUpdateBatchNo,
+                                  // FIXME:
+                                  quantity: allowUpdateBatchQuantity,
+                                  deliveredAt: allowUpdateBatchDelivery,
+                                  desiredAt: allowUpdateBatchDesired,
+                                }}
                                 batch={batch}
                                 currency={itemInfo.price && itemInfo.price.currency}
                                 price={itemInfo.price}

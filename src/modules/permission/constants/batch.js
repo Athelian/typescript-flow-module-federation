@@ -4,6 +4,7 @@ export const BATCH_LIST = 'batch.batches.list';
 export const BATCH_FORM = 'batch.batches.form';
 export const BATCH_CREATE = 'batch.batches.create';
 export const BATCH_UPDATE = 'batch.batches.update';
+export const BATCH_SET_ARCHIVED = 'batch.batches.setArchived';
 export const BATCH_SET_NO = 'batch.batches.setNo';
 export const BATCH_SET_QUANTITY = 'batch.batches.setQuantity';
 export const BATCH_SET_DELIVERY_DATE = 'batch.batches.setDeliveredAt';
