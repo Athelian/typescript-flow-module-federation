@@ -48,3 +48,24 @@ export const BatchQuantityHelperButtonStyle: string = css`
     background-color: ${colors.TEAL_DARK};
   }
 `;
+
+export const ChangeTypeDialogWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
+
+export const ChangeTypeDialogMessageStyle: string = css`
+  margin: 20px 0;
+  text-align: center;
+  font-weight: bold;
+  ${fontSizes.MAIN};
+  color: ${colors.BLACK};
+`;
+
+export const ChangeTypeDialogInputWrapperStyle: string = css`
+  margin: 0 0 80px 0;
+  width: min-content;
+`;

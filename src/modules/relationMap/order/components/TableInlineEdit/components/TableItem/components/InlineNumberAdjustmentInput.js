@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { getBatchLatestQuantity } from 'utils/batch';
 import Icon from 'components/Icon';
+import { Tooltip } from 'components/Tooltip';
 import { NewButton } from 'components/Buttons';
 import { RemoveAssignmentButtonStyle } from 'modules/shipment/form/components/TimelineSection/components/TimelineInfoSection/style';
 import InlineSelectEnumInput from './InlineSelectEnumInput';
@@ -75,20 +76,31 @@ export default function InlineNumberAdjustmentInput({
       )}
     </div>
   ) : (
-    <NewButton
-      label={<FormattedMessage id="components.button.newQuantity" defaultMessage="NEW QUANTITY" />}
-      onClick={() => {
-        emitter.emit('INLINE_CHANGE', {
-          name,
-          hasError: false,
-          value: {
-            quantity: getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
-            type: 'Other',
-          },
-        });
-      }}
-      id={`input-${id}`}
-    />
+    <Tooltip
+      message={
+        <FormattedMessage
+          id="modules.RelationalMap.batchAdjustmentNewButton"
+          defaultMessage="Create a New Quantity. Note: The quantity will automatically be set using the previous quantity."
+        />
+      }
+    >
+      <NewButton
+        label={
+          <FormattedMessage id="components.button.newQuantity" defaultMessage="NEW QUANTITY" />
+        }
+        onClick={() => {
+          emitter.emit('INLINE_CHANGE', {
+            name,
+            hasError: false,
+            value: {
+              quantity: getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
+              type: 'Other',
+            },
+          });
+        }}
+        id={`input-${id}`}
+      />
+    </Tooltip>
   );
 }
 
