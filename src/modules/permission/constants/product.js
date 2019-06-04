@@ -37,6 +37,7 @@ export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.dow
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS = 'product.productProviders.setCustomFields';
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK =
   'product.productProviders.setCustomFieldsMask';
+export const PRODUCT_PROVIDER_SET_NAME = 'product.productProviders.setName';
 export const PRODUCT_PROVIDER_SET_TAGS = 'product.productProviders.setTags';
 export const PRODUCT_PROVIDER_SET_MEMO = 'product.productProviders.setMemo';
 export const PRODUCT_PROVIDER_SET_EXPORTER = 'product.productProviders.setExporter';

@@ -28,7 +28,19 @@ import {
   TextInputFactory,
   TextAreaInputFactory,
 } from 'components/Form';
-import { PRODUCT_PROVIDER_UPDATE } from 'modules/permission/constants/product';
+import { PARTNER_LIST } from 'modules/permission/constants/partner';
+import {
+  PRODUCT_PROVIDER_UPDATE,
+  PRODUCT_PROVIDER_SET_EXPORTER,
+  PRODUCT_PROVIDER_SET_SUPPLIER,
+  PRODUCT_PROVIDER_SET_NAME,
+  PRODUCT_PROVIDER_SET_ORIGIN,
+  PRODUCT_PROVIDER_SET_PRODUCTION_LEAD_TIME,
+  PRODUCT_PROVIDER_SET_INSPECTION_FEE,
+  PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
+  PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
+  PRODUCT_PROVIDER_SET_MEMO,
+} from 'modules/permission/constants/product';
 import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 import { generateName } from './helper';
@@ -41,8 +53,6 @@ type Props = {
 
 const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(PRODUCT_PROVIDER_UPDATE);
-
   return (
     <Subscribe to={[ProductProviderInfoContainer]}>
       {({ originalValues, state, setFieldValue }) => {
@@ -64,7 +74,9 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                     }
                   />
 
-                  {values.isNew ? (
+                  {values.isNew &&
+                  hasPermission(PARTNER_LIST) &&
+                  hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_EXPORTER]) ? (
                     <BooleanValue>
                       {({ value: opened, set: exporterSlideToggle }) => (
                         <>
@@ -149,7 +161,9 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                       </Label>
                     }
                   />
-                  {values.isNew ? (
+                  {values.isNew &&
+                  hasPermission(PARTNER_LIST) &&
+                  hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_SUPPLIER]) ? (
                     <BooleanValue>
                       {({ value: opened, set: supplierSlideToggle }) => (
                         <>
@@ -251,7 +265,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                           ),
                         }
                       : {})}
-                    editable={allowUpdate}
+                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_NAME])}
                   />
                 )}
               </FormField>
@@ -275,7 +289,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="COUNTRY OF ORIGIN"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_ORIGIN])}
                     enumType="Country"
                   />
                 )}
@@ -298,7 +312,10 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="PRODUCTION LEAD TIME"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PRODUCTION_LEAD_TIME,
+                    ])}
                   />
                 )}
               </FormField>
@@ -320,7 +337,10 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="INSPECTION FEE"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_INSPECTION_FEE,
+                    ])}
                   />
                 )}
               </FormField>
@@ -342,7 +362,10 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                         defaultMessage="INSPECTION FEE CURRENCY"
                       />
                     }
-                    editable={allowUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_INSPECTION_FEE,
+                    ])}
                     enumType="Currency"
                     hideClearButton
                   />
@@ -353,8 +376,14 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 customFields={values.customFields}
                 setFieldValue={setFieldValue}
                 editable={{
-                  values: allowUpdate,
-                  mask: allowUpdate,
+                  values: hasPermission([
+                    PRODUCT_PROVIDER_UPDATE,
+                    PRODUCT_PROVIDER_SET_CUSTOM_FIELDS,
+                  ]),
+                  mask: hasPermission([
+                    PRODUCT_PROVIDER_UPDATE,
+                    PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
+                  ]),
                 }}
               />
               <FormField
@@ -367,7 +396,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                 {({ name, ...inputHandlers }) => (
                   <TextAreaInputFactory
                     {...inputHandlers}
-                    editable={allowUpdate}
+                    editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_MEMO])}
                     name={name}
                     isNew={isNew}
                     originalValue={originalValues[name]}
