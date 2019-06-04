@@ -15,6 +15,8 @@ type OptionalProps = {
   width: string,
   height: string,
   forceHoverStyle: boolean,
+  onChange?: any => void,
+  onBlur?: Function,
 };
 
 type Props = OptionalProps & {
@@ -43,6 +45,8 @@ function InlineSelectEnumInput({
   forceHoverStyle,
   id,
   intl,
+  onChange,
+  onBlur,
 }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
   const itemToString = enumMessages[enumType]
@@ -105,54 +109,67 @@ function InlineSelectEnumInput({
                   }, 0);
                 }}
                 onBlur={() => {
-                  logger.warn('SelectInput onBlur', inputHandlers.value);
-                  if (data.find(item => item.name === inputHandlers.value)) {
-                    inputHandlers.onBlur();
-                    emitter.emit('INLINE_CHANGE', {
-                      name,
-                      hasError: false,
-                      value: inputHandlers.value,
-                    });
+                  if (onBlur) {
+                    onBlur();
                   } else {
-                    inputHandlers.onChange({
-                      currentTarget: {
-                        value: '',
-                      },
-                    });
-                    setTimeout(() => {
+                    logger.warn('SelectInput onBlur', inputHandlers.value);
+                    if (data.find(item => item.name === inputHandlers.value)) {
                       inputHandlers.onBlur();
                       emitter.emit('INLINE_CHANGE', {
                         name,
-                        hasError: !!isRequired,
-                        value: '',
+                        hasError: false,
+                        value: inputHandlers.value,
                       });
-                    }, 0);
+                    } else {
+                      inputHandlers.onChange({
+                        currentTarget: {
+                          value: '',
+                        },
+                      });
+                      setTimeout(() => {
+                        inputHandlers.onBlur();
+                        emitter.emit('INLINE_CHANGE', {
+                          name,
+                          hasError: !!isRequired,
+                          value: '',
+                        });
+                      }, 0);
+                    }
                   }
                 }}
                 onChange={(item: ?{ name: string }) => {
-                  logger.warn('SelectInput onChange', item);
-                  if (!item) {
-                    inputHandlers.onChange({
-                      currentTarget: {
-                        value: '',
-                      },
-                    });
-                    emitter.emit('INLINE_CHANGE', {
-                      name,
-                      hasError: !!isRequired,
-                      value: '',
-                    });
-                  } else {
+                  if (onChange) {
                     inputHandlers.onChange({
                       currentTarget: {
                         value: item && item.name,
                       },
                     });
-                    emitter.emit('INLINE_CHANGE', {
-                      name,
-                      hasError: false,
-                      value: item && item.name,
-                    });
+                    onChange(item && item.name);
+                  } else {
+                    logger.warn('SelectInput onChange', item);
+                    if (!item) {
+                      inputHandlers.onChange({
+                        currentTarget: {
+                          value: '',
+                        },
+                      });
+                      emitter.emit('INLINE_CHANGE', {
+                        name,
+                        hasError: !!isRequired,
+                        value: '',
+                      });
+                    } else {
+                      inputHandlers.onChange({
+                        currentTarget: {
+                          value: item && item.name,
+                        },
+                      });
+                      emitter.emit('INLINE_CHANGE', {
+                        name,
+                        hasError: false,
+                        value: item && item.name,
+                      });
+                    }
                   }
                 }}
               />

@@ -12,7 +12,7 @@ import { UserConsumer } from 'modules/user';
 import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
-import { calculatePackageQuantity } from 'utils/batch';
+import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -300,6 +300,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
       setIsChangeData(false);
     }
   }, [prevEntities, entities, isChangeData]);
+
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
       const listener = emitter.once('INLINE_CHANGE', newData => {
@@ -310,7 +311,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
 
         let newEditData = cloneDeep(editData);
         const [entityType, id, ...fields] = name.split('.');
-        const [field] = fields || [];
+        const [field, subField] = fields || [];
 
         // init empty values for custom field in case there is empty from api
         if (field === 'customFields') {
@@ -367,6 +368,50 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                   ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
                 })
               );
+            }
+          }
+
+          if (field === 'batchQuantityRevisionsHeader') {
+            if (subField === 'create') {
+              const { batches } = newEditData;
+              const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
+                const [batchId, batch] = entries;
+                const { quantity, batchQuantityRevisions } = batch;
+                const lastQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+                for (let i = 0; i < Number(value); i += 1) {
+                  if (!batchQuantityRevisions[i]) {
+                    batchQuantityRevisions[i] = {
+                      type: 'Other',
+                      quantity: lastQuantity,
+                    };
+                  }
+                }
+                return [
+                  batchId,
+                  {
+                    ...batch,
+                    batchQuantityRevisions,
+                  },
+                ];
+              });
+              const newBatches = Object.fromEntries(newBatchEntries);
+
+              set(newEditData, `batches`, newBatches);
+            }
+            if (subField === 'apply') {
+              const { batches } = newEditData;
+              // $FlowFixMe Don't know how to fix this flow-type error.
+              const { index, type } = value;
+              const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
+                const [batchId, batch] = entries;
+                const { batchQuantityRevisions } = batch;
+                if (batchQuantityRevisions.length >= index) {
+                  set(batch, `batchQuantityRevisions[${index - 1}].type`, type);
+                }
+                return [batchId, batch];
+              });
+              const newBatches = Object.fromEntries(newBatchEntries);
+              set(newEditData, `batches`, newBatches);
             }
           }
         }
@@ -429,22 +474,25 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
           }
         }
 
-        newEditData = set(newEditData, name, value);
+        if (field !== 'batchQuantityRevisionsHeader') {
+          newEditData = set(newEditData, name, value);
+
+          if (!touched[name]) {
+            setTouched({
+              ...touched,
+              [name]: true,
+            });
+          }
+
+          if (hasError) {
+            setErrors({ ...errors, [name]: true });
+          } else {
+            delete errors[name];
+            setErrors(errors);
+          }
+        }
+
         setEditData(newEditData);
-
-        if (!touched[name]) {
-          setTouched({
-            ...touched,
-            [name]: true,
-          });
-        }
-
-        if (hasError) {
-          setErrors({ ...errors, [name]: true });
-        } else {
-          delete errors[name];
-          setErrors(errors);
-        }
       });
       return () => {
         listener.remove();
@@ -667,13 +715,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                           trackingError(error);
                         }
                       }}
-                      disabled={
-                        !(
-                          !isEqual(entities, editData) &&
-                          Object.keys(touched).length > 0 &&
-                          Object.keys(errors).length === 0
-                        )
-                      }
+                      disabled={isEqual(entities, editData) || Object.keys(errors).length > 0}
                     />
                     <ExportGenericButton
                       columns={() => getExportColumns(intl, allColumns)}

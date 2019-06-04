@@ -61,7 +61,11 @@ export default function TableHeader({ entity, info, onToggle, templateColumns, s
                       />
                     )}
                     <div className={TableColumnStyle}>{column}</div>
-                    {fieldId.startsWith('batch.newQuantity') && <BatchQuantityHelper />}
+                    {fieldId.startsWith('batch.newQuantity') && (
+                      <BatchQuantityHelper
+                        index={Number(fieldId.replace('batch.newQuantity', ''))}
+                      />
+                    )}
                   </div>
                 );
               })}
