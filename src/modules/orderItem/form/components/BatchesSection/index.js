@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import { BATCH_CREATE, BATCH_UPDATE } from 'modules/permission/constants/batch';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import FormattedNumber from 'components/FormattedNumber';
 import {
@@ -38,8 +40,10 @@ type Props = {
 };
 
 function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
-  const { hasPermission } = usePermission();
-  const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+
+  const allowCreateBatches = hasPermission([ORDER_ITEMS_UPDATE, BATCH_CREATE]);
 
   return (
     <Subscribe to={[OrderItemBatchesContainer]}>
@@ -58,7 +62,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
             />
             <div className={BatchesSectionWrapperStyle}>
               <SectionNavBar>
-                {allowUpdate && (
+                {allowCreateBatches && (
                   <>
                     <NewButton
                       label={
@@ -139,7 +143,8 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                             </SlideView>
                             <div className={ItemStyle}>
                               <OrderBatchCard
-                                editable={allowUpdate}
+                                // TODO: field level permission
+                                editable={hasPermission([ORDER_ITEMS_UPDATE, BATCH_UPDATE])}
                                 batch={batch}
                                 currency={itemInfo.price && itemInfo.price.currency}
                                 price={itemInfo.price}

@@ -3,8 +3,19 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import {
+  ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_SET_NO,
+  ORDER_ITEMS_SET_QUANTITY,
+  ORDER_ITEMS_SET_PRICE,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
+  ORDER_ITEMS_SET_TAGS,
+  ORDER_ITEMS_SET_MEMO,
+} from 'modules/permission/constants/orderItem';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { getItemQuantityChartData } from 'utils/item';
@@ -33,7 +44,8 @@ type Props = {
 };
 
 const ItemSection = ({ isSlideView }: Props) => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
   return (
     <div className={ItemSectionWrapperStyle}>
@@ -67,7 +79,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                         label={
                           <FormattedMessage id="module.OrderItems.no" defaultMessage="ITEM NO" />
                         }
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_NO)}
                       />
                     )}
                   </FormField>
@@ -91,7 +103,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                             defaultMessage="QUANTITY"
                           />
                         }
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_QUANTITY)}
                       />
                     )}
                   </FormField>
@@ -116,7 +128,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                           />
                         }
                         suffix={getByPathWithDefault('', 'order.currency', values)}
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_PRICE)}
                       />
                     )}
                   </FormField>
@@ -126,8 +138,8 @@ const ItemSection = ({ isSlideView }: Props) => {
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
                     editable={{
-                      values: allowUpdate,
-                      mask: allowUpdate,
+                      values: allowUpdate || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS),
+                      mask: allowUpdate || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK),
                     }}
                   />
 
@@ -148,8 +160,10 @@ const ItemSection = ({ isSlideView }: Props) => {
                           setFieldValue(field, value);
                         }}
                         editable={{
-                          set: allowUpdate,
-                          remove: allowUpdate,
+                          set:
+                            hasPermission(TAG_LIST) &&
+                            (allowUpdate || hasPermission(ORDER_ITEMS_SET_TAGS)),
+                          remove: allowUpdate || hasPermission(ORDER_ITEMS_SET_TAGS),
                         }}
                       />
                     }
@@ -170,7 +184,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                         label={
                           <FormattedMessage id="modules.OrderItems.memo" defaultMessage="MEMO" />
                         }
-                        editable={allowUpdate}
+                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_MEMO)}
                         vertical
                         inputWidth="400px"
                         inputHeight="65px"
