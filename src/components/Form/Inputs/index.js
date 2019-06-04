@@ -4,7 +4,6 @@ import DateTimeInput from './DateTimeInput';
 import DayInput from './DayInput';
 import EmailInput from './EmailInput';
 import MetricInput from './MetricInput';
-import EnumInput from './EnumInput';
 import NumberInput from './NumberInput';
 import PasswordInput from './PasswordInput';
 import SearchSelectInput from './SearchSelectInput';
@@ -34,7 +33,6 @@ export {
   DayInput,
   EmailInput,
   MetricInput,
-  EnumInput,
   NumberInput,
   PasswordInput,
   SearchSelectInput,

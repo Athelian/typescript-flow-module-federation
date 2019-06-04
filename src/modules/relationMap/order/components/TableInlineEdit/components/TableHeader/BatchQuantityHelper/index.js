@@ -5,8 +5,8 @@ import { BooleanValue } from 'react-values';
 import emitter from 'utils/emitter';
 import Icon from 'components/Icon';
 import { Label } from 'components/Form';
-import { EnumInput } from 'components/Form/Inputs';
 import OutsideClickHandler from 'components/OutsideClickHandler';
+import InlineSelectEnumInput from 'modules/relationMap/order/components/TableInlineEdit/components/TableItem/components/InlineSelectEnumInput';
 import {
   BatchQuantityHelperWandStyle,
   BatchQuantityHelperWrapperStyle,
@@ -79,7 +79,7 @@ export default function BatchQuantityHelper({ index }: Props) {
                       </>
                     ) : (
                       <>
-                        <EnumInput
+                        <InlineSelectEnumInput
                           id="batchQuantityRevisions"
                           name="batchQuantityRevisions.type"
                           value={quantityType}
@@ -88,6 +88,7 @@ export default function BatchQuantityHelper({ index }: Props) {
                           height="22px"
                           forceHoverStyle
                           onChange={type => setQuantityType(type)}
+                          onBlur={() => {}}
                         />
 
                         <button

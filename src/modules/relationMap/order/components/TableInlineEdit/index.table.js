@@ -400,7 +400,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
             }
             if (subField === 'apply') {
               const { batches } = newEditData;
-              // $FlowFixMe later
+              // $FlowFixMe Don't know how to fix this flow-type error.
               const { index, type } = value;
               const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
                 const [batchId, batch] = entries;
