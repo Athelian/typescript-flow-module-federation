@@ -47,7 +47,7 @@ type OptionalProps = {
   onClick: (batch: Object) => void,
   editable: {
     clone: boolean,
-    changeStatus: boolean,
+    remove: boolean,
     no: boolean,
     quantity: boolean,
     deliveredAt: boolean,
@@ -71,7 +71,7 @@ const defaultProps = {
   onClick: () => {},
   editable: {
     clone: false,
-    changeStatus: false,
+    remove: false,
     no: false,
     quantity: false,
     deliveredAt: false,
@@ -92,7 +92,7 @@ const OrderBatchCard = ({
 }: Props) => {
   const actions = [
     ...(editable.clone ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />] : []),
-    ...(editable.changeStatus
+    ...(editable.remove
       ? [
           <BooleanValue>
             {({ value: isOpen, set: dialogToggle }) => (

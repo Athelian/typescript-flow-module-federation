@@ -8,7 +8,7 @@ import usePermission from 'hooks/usePermission';
 import {
   BATCH_CREATE,
   BATCH_UPDATE,
-  BATCH_SET_ARCHIVED,
+  BATCH_DELETE,
   BATCH_SET_NO,
   BATCH_SET_QUANTITY,
   BATCH_SET_DELIVERY_DATE,
@@ -54,7 +54,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
   const allowCreateBatches = hasPermission(BATCH_CREATE);
 
   const allowCloneBatch = hasPermission(BATCH_CREATE);
-  const allowUpdateBatchStatus = hasPermission([BATCH_UPDATE, BATCH_SET_ARCHIVED]);
+  const allowDeleteBatch = hasPermission(BATCH_DELETE);
   const allowUpdateBatchNo = hasPermission([BATCH_UPDATE, BATCH_SET_NO]);
   const allowUpdateBatchQuantity =
     hasPermission(BATCH_UPDATE) ||
@@ -162,7 +162,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                               <OrderBatchCard
                                 editable={{
                                   clone: allowCloneBatch,
-                                  changeStatus: allowUpdateBatchStatus,
+                                  remove: allowDeleteBatch,
                                   no: allowUpdateBatchNo,
                                   // FIXME:
                                   quantity: allowUpdateBatchQuantity,
