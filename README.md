@@ -1,6 +1,6 @@
 # Zenport Web App
 
-Web application for Zenport with [create-react-app-v2](https://github.com/facebook/create-react-app/issues/5103)
+Web application for Zenport with [create-react-app-v3](https://github.com/facebook/create-react-app/releases/tag/v3.0.1)
 
 ## Getting Started
 
