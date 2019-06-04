@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 
 export const productListQuery = gql`
-  query products(
+  query productListQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: ProductFilterInput
