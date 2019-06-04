@@ -89,15 +89,13 @@ const getConfig = (type: string, hasPermission: Function): Object => {
         tasksContainer: OrderTasksContainer,
       };
     case 'orderItem': {
+      const allowSetTasks = hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]);
       return {
         canViewList: hasPermission(ORDER_ITEMS_TASK_LIST),
         canViewForm: hasPermission(ORDER_ITEMS_TASK_FORM),
-        canAddTasks:
-          hasPermission(TASK_CREATE) && hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]),
-        canDeleteTasks:
-          hasPermission(TASK_DELETE) && hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]),
-        canUpdateTasks:
-          hasPermission(TASK_UPDATE) && hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]),
+        canAddTasks: hasPermission(TASK_CREATE) && allowSetTasks,
+        canDeleteTasks: hasPermission(TASK_DELETE) && allowSetTasks,
+        canUpdateTasks: hasPermission(TASK_UPDATE) && allowSetTasks,
         canUpdateTaskTemplate:
           (hasPermission(TASK_CREATE) &&
             hasPermission(TASK_DELETE) &&
