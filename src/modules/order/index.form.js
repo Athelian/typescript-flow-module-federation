@@ -563,9 +563,14 @@ class OrderFormModule extends React.PureComponent<Props> {
                       query={orderFormQuery}
                       entityId={orderId}
                       entityType="order"
-                      render={(order, loading) => (
+                      render={(order, { isLoading: loading, isOwner }) => (
                         <>
-                          <OrderForm order={order} loading={loading} isClone={this.isClone()} />
+                          <OrderForm
+                            order={order}
+                            loading={loading}
+                            isOwner={isOwner}
+                            isClone={this.isClone()}
+                          />
                           <Subscribe
                             to={[
                               OrderItemsContainer,

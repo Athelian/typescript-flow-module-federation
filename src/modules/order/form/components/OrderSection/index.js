@@ -30,7 +30,19 @@ import {
   UserAssignmentInputFactory,
 } from 'components/Form';
 import { getQuantityForOrderSummary } from 'modules/order/helpers';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import {
+  ORDER_UPDATE,
+  ORDER_SET_PO_NO,
+  ORDER_SET_PI_NO,
+  ORDER_SET_CURRENCY,
+  ORDER_SET_DELIVERY_PLACE,
+  ORDER_SET_ISSUE_AT,
+  ORDER_SET_CUSTOM_FIELDS,
+  ORDER_SET_CUSTOM_FIELDS_MASK,
+  ORDER_SET_MEMO,
+  ORDER_SET_IN_CHARGES,
+  ORDER_SET_IMPORTER,
+} from 'modules/permission/constants/order';
 import messages from 'modules/order/messages';
 import SelectExporter from 'modules/order/common/SelectExporter';
 import { PartnerCard, GrayCard } from 'components/Cards';
@@ -48,12 +60,11 @@ import {
 type Props = {
   isNew: boolean,
   isClone: boolean,
+  isOwner: boolean,
 };
 
-const OrderSection = ({ isNew, isClone }: Props) => {
-  const { hasPermission } = usePermission();
-  const allowUpdate = hasPermission(ORDER_UPDATE);
-
+const OrderSection = ({ isNew, isClone, isOwner }: Props) => {
+  const { hasPermission } = usePermission(isOwner);
   return (
     <div className={OrderSectionWrapperStyle}>
       <Subscribe to={[OrderInfoContainer]}>
@@ -79,7 +90,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                         required
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.PO} />}
-                        editable={allowUpdate}
+                        editable={hasPermission([ORDER_UPDATE, ORDER_SET_PO_NO])}
                       />
                     )}
                   </FormField>
@@ -98,7 +109,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.PI} />}
-                        editable={allowUpdate}
+                        editable={hasPermission([ORDER_UPDATE, ORDER_SET_PI_NO])}
                       />
                     )}
                   </FormField>
@@ -126,7 +137,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                             isNew={isNew}
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.date} />}
-                            editable={allowUpdate}
+                            editable={hasPermission([ORDER_UPDATE, ORDER_SET_ISSUE_AT])}
                           />
                         )}
                       </FormField>
@@ -214,7 +225,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                                       isNew={isNew}
                                       originalValue={initialValues[name]}
                                       label={<FormattedMessage {...messages.currency} />}
-                                      editable={allowUpdate}
+                                      editable={hasPermission([ORDER_UPDATE, ORDER_SET_CURRENCY])}
                                       enumType="Currency"
                                       required
                                       onBlur={value => {
@@ -255,7 +266,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.incoterm} />}
-                        editable={allowUpdate}
+                        editable={hasPermission([ORDER_UPDATE, ORDER_SET_CURRENCY])}
                         enumType="Incoterm"
                       />
                     )}
@@ -275,7 +286,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.deliveryPlace} />}
-                        editable={allowUpdate}
+                        editable={hasPermission([ORDER_UPDATE, ORDER_SET_DELIVERY_PLACE])}
                       />
                     )}
                   </FormField>
@@ -285,8 +296,8 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
                     editable={{
-                      values: allowUpdate,
-                      mask: allowUpdate,
+                      values: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS]),
+                      mask: hasPermission([ORDER_UPDATE, ORDER_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
 
@@ -332,7 +343,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                         isNew={isNew}
                         originalValue={initialValues[name]}
                         label={<FormattedMessage {...messages.memo} />}
-                        editable={allowUpdate}
+                        editable={hasPermission([ORDER_UPDATE, ORDER_SET_MEMO])}
                         vertical
                         inputWidth="400px"
                         inputHeight="115px"
@@ -365,7 +376,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                         defaultMessage="You can choose up to 5 people in charge."
                       />
                     }
-                    editable={allowUpdate}
+                    editable={hasPermission([ORDER_UPDATE, ORDER_SET_IN_CHARGES])}
                   />
 
                   <FieldItem
@@ -386,7 +397,7 @@ const OrderSection = ({ isNew, isClone }: Props) => {
                       </Label>
                     }
                     input={
-                      allowUpdate ? (
+                      hasPermission([ORDER_UPDATE, ORDER_SET_IMPORTER]) ? (
                         <BooleanValue>
                           {({ value: opened, set: slideToggle }) => (
                             <>

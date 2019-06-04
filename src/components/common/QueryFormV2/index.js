@@ -18,7 +18,7 @@ type Props = OptionalProps & {
   query: DocumentNode,
   entityId: string,
   entityType: string,
-  render: (result: Object, isLoading: boolean) => React.Node,
+  render: (result: Object, { isLoading: boolean, isOwner: boolean }) => React.Node,
 };
 
 const defaultProps = {
@@ -44,7 +44,7 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
           return error.message;
         }
 
-        if (loading) return render({}, loading);
+        if (loading) return render({}, { isLoading: loading, isOwner: false });
 
         const errorType = getByPath(`${entityType}.__typename`, data);
         if (['NotFound', 'Forbidden'].includes(errorType)) {
@@ -63,7 +63,11 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
               fetchPolicy="cache-first"
             >
               {({ loading: isLoading, data: permissionData, error: permissionError }) => {
-                if (isLoading) return render(getByPathWithDefault({}, entityType, data), isLoading);
+                if (isLoading)
+                  return render(getByPathWithDefault({}, entityType, data), {
+                    isLoading: true,
+                    isOwner: false,
+                  });
                 if (permissionError) {
                   if (permissionError.message && permissionError.message.includes('403')) {
                     navigate('/403');
@@ -82,7 +86,10 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
                       ),
                     }}
                   >
-                    {render(getByPathWithDefault({}, entityType, data), false)}
+                    {render(getByPathWithDefault({}, entityType, data), {
+                      isLoading: false,
+                      isOwner: false,
+                    })}
                   </QueryFormPermissionContext.Provider>
                 );
               }}
@@ -97,7 +104,10 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
                 permissions: [],
               }}
             >
-              {render(getByPathWithDefault({}, entityType, data), false)}
+              {render(getByPathWithDefault({}, entityType, data), {
+                isLoading: false,
+                isOwner: true,
+              })}
             </QueryFormPermissionContext.Provider>
           );
         }

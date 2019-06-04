@@ -27,6 +27,7 @@ type OptionalProps = {
   isNew: boolean,
   loading: boolean,
   isClone: boolean,
+  isOwner: boolean,
   order: Object,
 };
 
@@ -35,6 +36,7 @@ type Props = OptionalProps & {};
 const defaultProps = {
   isNew: false,
   isClone: false,
+  isOwner: true,
   loading: false,
   order: {},
 };
@@ -43,9 +45,8 @@ export default class OrderForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
   shouldComponentUpdate(nextProps: Props) {
-    const { order } = this.props;
-
-    return !isEquals(order, nextProps.order);
+    const { order, isOwner } = this.props;
+    return !isEquals(order, nextProps.order) || nextProps.isOwner !== isOwner;
   }
 
   onClone = () => {
@@ -54,7 +55,7 @@ export default class OrderForm extends React.Component<Props> {
   };
 
   render() {
-    const { isNew, isClone, order, loading } = this.props;
+    const { isNew, isClone, order, loading, isOwner } = this.props;
     const { updatedAt, updatedBy, archived } = order;
     return (
       <PermissionConsumer>
@@ -101,13 +102,14 @@ export default class OrderForm extends React.Component<Props> {
                     )}
                   </SectionHeader>
 
-                  <OrderSection isNew={isNew} isClone={isClone} />
+                  <OrderSection isNew={isNew} isClone={isClone} isOwner={isOwner} />
                 </MainSectionPlaceholder>
               </SectionWrapper>
 
               <SectionWrapper id="order_itemsSection">
                 <ItemsSection
                   isNew={isNew}
+                  isOwner={isOwner}
                   entityId={!isClone && order.id ? order.id : ''}
                   isLoading={loading}
                   orderIsArchived={order.archived}
@@ -116,6 +118,7 @@ export default class OrderForm extends React.Component<Props> {
 
               <SectionWrapper id="order_documentsSection">
                 <DocumentsSection
+                  isOwner={isOwner}
                   entityId={!isClone && order.id ? order.id : ''}
                   isLoading={loading}
                 />
@@ -125,6 +128,7 @@ export default class OrderForm extends React.Component<Props> {
                 <Subscribe to={[OrderTasksContainer]}>
                   {({ initDetailValues }) => (
                     <OrderTasksSection
+                      isOwner={isOwner}
                       initValues={initDetailValues}
                       isLoading={loading}
                       entityId={!isClone && order.id ? order.id : ''}
