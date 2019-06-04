@@ -2522,6 +2522,11 @@
     "@sentry/types" "5.4.0"
     tslib "^1.9.3"
 
+"@sheerun/mutationobserver-shim@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
+  integrity sha512-vTCdPp/T/Q3oSqwHmZ5Kpa9oI7iLtGl3RQaA/NyLHikvcrPxACkkKVr/XzkSPJWXHRhKGzVvb0urJsbMlRxi1Q==
+
 "@storybook/addon-a11y@^5.0.11":
   version "5.0.11"
   resolved "https://registry.yarnpkg.com/@storybook/addon-a11y/-/addon-a11y-5.0.11.tgz#b045a99c2582722db8b34e2edee11aa5521eba26"
@@ -3090,6 +3095,24 @@
   integrity sha512-zovY5L5gAV5ZE3Vt2pjG3JdPfCZPVIECijwXckN8mx7tKqbVDgNuWIYYGMqyA2iu0fIDqPUpdOMZFbIsQURyFg==
   dependencies:
     "@babel/runtime" "^7.4.5"
+
+"@testing-library/cypress@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/cypress/-/cypress-4.0.2.tgz#d1503a73fbd91fd40aa14c2a27230820e487b4d2"
+  integrity sha512-oSxcFOMRDZGUUv4wKxIzdAS3hc7dJJ+gzS4K+GB/G4/z9wSFgNLZj2Vp9oBHyfQMffp9VcuX3p8SXkeK/GsYNQ==
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+    "@testing-library/dom" "^5.0.1"
+
+"@testing-library/dom@^5.0.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-5.1.1.tgz#091a30b1ca058080bf432cd1aeb2b7c646022f97"
+  integrity sha512-twpAkqomsI0xeOLehijOAmPxeKvs6+WZC/6/nXD0+HNQupP3OZeZho/PBlNhrGL+8nQWiPjdvmxeyU0tq+hctA==
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+    "@sheerun/mutationobserver-shim" "^0.3.2"
+    pretty-format "^24.8.0"
+    wait-for-expect "^1.2.0"
 
 "@tippy.js/react@^2.2.0":
   version "2.2.0"
@@ -16522,6 +16545,11 @@ w3c-xmlserializer@^1.0.1:
     domexception "^1.0.1"
     webidl-conversions "^4.0.2"
     xml-name-validator "^3.0.0"
+
+wait-for-expect@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/wait-for-expect/-/wait-for-expect-1.2.0.tgz#fdab6a26e87d2039101db88bff3d8158e5c3e13f"
+  integrity sha512-EJhKpA+5UHixduMBEGhTFuLuVgQBKWxkFbefOdj2bbk2/OpA5Opsc4aUTGmF+qJ+v3kTGxDRNYwKaT4j6g5n8Q==
 
 walker@^1.0.7, walker@~1.0.5:
   version "1.0.7"
