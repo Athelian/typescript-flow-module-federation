@@ -49,6 +49,8 @@ const PartnerModule = (props: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.name), value: 'name' },
+    { title: intl.formatMessage(messages.code), value: 'code' },
   ];
 
   return (

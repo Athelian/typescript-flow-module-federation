@@ -12,7 +12,11 @@ export default defineMessages({
   },
   name: {
     id: 'modules.Partners.name',
-    defaultMessage: 'NAME',
+    defaultMessage: 'Name',
+  },
+  code: {
+    id: 'modules.Partners.code',
+    defaultMessage: 'Code',
   },
   type: {
     id: 'modules.Partners.type',
@@ -44,10 +48,10 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Partners.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Partners.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
 });
