@@ -905,7 +905,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                     getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
                     (() => {
                       const { orderItem, productProvider, product, order } = spreadOrderItem(
-                        task.item
+                        task.orderItem
                       );
 
                       const viewable = {
