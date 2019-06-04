@@ -12,7 +12,7 @@ import {
 } from 'graphql';
 
 export const productProvidersListQuery = gql`
-  query productProviders(
+  query productProvidersListQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: ProductProviderFilterInput

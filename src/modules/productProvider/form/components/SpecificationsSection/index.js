@@ -13,10 +13,14 @@ import {
 } from 'components/Form';
 import GridColumn from 'components/GridColumn';
 import {
-  PRODUCT_PROVIDER_CREATE,
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_GET_UNIT_TYPE,
   PRODUCT_PROVIDER_GET_UNIT_PRICE,
+  PRODUCT_PROVIDER_SET_UNIT_TYPE,
+  PRODUCT_PROVIDER_SET_UNIT_PRICE,
+  PRODUCT_PROVIDER_SET_UNIT_WEIGHT,
+  PRODUCT_PROVIDER_SET_UNIT_VOLUME,
+  PRODUCT_PROVIDER_SET_UNIT_SIZE,
 } from 'modules/permission/constants/product';
 import { getByPath } from 'utils/fp';
 import { SpecificationsSectionWrapperStyle } from './style';
@@ -28,8 +32,6 @@ type Props = {
 
 const SpecificationsSection = ({ isNew, isOwner }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const canCreateOrUpdate =
-    hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
 
   return (
     <div className={SpecificationsSectionWrapperStyle}>
@@ -59,7 +61,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT TYPE"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_TYPE,
+                    ])}
                     blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_TYPE)}
                   />
                 )}
@@ -82,7 +87,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT PRICE"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_PRICE,
+                    ])}
                     blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE)}
                   />
                 )}
@@ -105,7 +113,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT PRICE CURRENCY"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_PRICE,
+                    ])}
                     enumType="Currency"
                     blackout={!hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE)}
                     hideClearButton
@@ -131,7 +142,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT WEIGHT"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_WEIGHT,
+                    ])}
                   />
                 )}
               </FormField>
@@ -155,8 +169,14 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT VOLUME"
                       />
                     }
-                    editable={canCreateOrUpdate}
-                    showExtraToggleButton={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_VOLUME,
+                    ])}
+                    showExtraToggleButton={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_VOLUME,
+                    ])}
                     autoCalculateIsToggled={values.autoCalculateUnitVolume}
                     autoCalculateToggleMessages={{
                       editable: {
@@ -198,7 +218,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 initValue={getByPath('unitSize.length', values)}
                 setFieldValue={(field, value) => {
                   setFieldArrayValue('unitSize.length', value);
-                  if (canCreateOrUpdate && values.autoCalculateUnitVolume) {
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_UNIT_VOLUME]) &&
+                    values.autoCalculateUnitVolume
+                  ) {
                     calculateUnitVolume();
                   }
                 }}
@@ -216,7 +239,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT LENGTH"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_SIZE,
+                    ])}
                   />
                 )}
               </FormField>
@@ -226,7 +252,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 initValue={getByPath('unitSize.width', values)}
                 setFieldValue={(field, value) => {
                   setFieldArrayValue('unitSize.width', value);
-                  if (canCreateOrUpdate && values.autoCalculateUnitVolume) {
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_UNIT_VOLUME]) &&
+                    values.autoCalculateUnitVolume
+                  ) {
                     calculateUnitVolume();
                   }
                 }}
@@ -244,7 +273,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT WIDTH"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_SIZE,
+                    ])}
                   />
                 )}
               </FormField>
@@ -254,7 +286,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                 initValue={getByPath('unitSize.height', values)}
                 setFieldValue={(field, value) => {
                   setFieldArrayValue('unitSize.height', value);
-                  if (canCreateOrUpdate && values.autoCalculateUnitVolume) {
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_UNIT_VOLUME]) &&
+                    values.autoCalculateUnitVolume
+                  ) {
                     calculateUnitVolume();
                   }
                 }}
@@ -272,7 +307,10 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="UNIT HEIGHT"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_SIZE,
+                    ])}
                   />
                 )}
               </FormField>

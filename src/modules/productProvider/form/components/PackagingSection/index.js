@@ -9,8 +9,12 @@ import { TextInputFactory, NumberInputFactory, MetricInputFactory } from 'compon
 import GridColumn from 'components/GridColumn';
 import { getByPath } from 'utils/fp';
 import {
-  PRODUCT_PROVIDER_CREATE,
   PRODUCT_PROVIDER_UPDATE,
+  PRODUCT_PROVIDER_SET_PACKAGE_NAME,
+  PRODUCT_PROVIDER_SET_PACKAGE_CAPACITY,
+  PRODUCT_PROVIDER_SET_PACKAGE_WEIGHT,
+  PRODUCT_PROVIDER_SET_PACKAGE_VOLUME,
+  PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
 } from 'modules/permission/constants/product';
 import { PackagingSectionWrapperStyle } from './style';
 
@@ -21,8 +25,6 @@ type Props = {
 
 const PackagingSection = ({ isNew, isOwner }: Props) => {
   const { hasPermission } = usePermission(isOwner);
-  const canCreateOrUpdate =
-    hasPermission(PRODUCT_PROVIDER_CREATE) || hasPermission(PRODUCT_PROVIDER_UPDATE);
 
   return (
     <div className={PackagingSectionWrapperStyle}>
@@ -56,7 +58,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PACKAGE NAME"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_NAME,
+                    ])}
                   />
                 )}
               </FormField>
@@ -78,7 +83,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PACKAGE CAPACITY"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_CAPACITY,
+                    ])}
                   />
                 )}
               </FormField>
@@ -101,7 +109,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PKG GROSS WEIGHT"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_WEIGHT,
+                    ])}
                   />
                 )}
               </FormField>
@@ -125,7 +136,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PKG VOLUME"
                       />
                     }
-                    showExtraToggleButton={canCreateOrUpdate}
+                    showExtraToggleButton={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_VOLUME,
+                    ])}
                     autoCalculateIsToggled={values.autoCalculatePackageVolume}
                     onToggleAutoCalculate={() => toggleAutoCalculatePackageVolume()}
                     autoCalculateToggleMessages={{
@@ -158,7 +172,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         ),
                       },
                     }}
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_VOLUME,
+                    ])}
                   />
                 )}
               </FormField>
@@ -168,7 +185,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                 initValue={getByPath('packageSize.length', values)}
                 setFieldValue={(field, value) => {
                   setFieldArrayValue('packageSize.length', value);
-                  if (canCreateOrUpdate && values.autoCalculatePackageVolume) {
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_VOLUME]) &&
+                    values.autoCalculatePackageVolume
+                  ) {
                     calculatePackageVolume();
                   }
                 }}
@@ -186,7 +206,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PKG LENGTH"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
+                    ])}
                   />
                 )}
               </FormField>
@@ -197,7 +220,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                 setFieldValue={(field, value) => {
                   setFieldArrayValue('packageSize.width', value);
 
-                  if (canCreateOrUpdate && values.autoCalculatePackageVolume) {
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_VOLUME]) &&
+                    values.autoCalculatePackageVolume
+                  ) {
                     calculatePackageVolume();
                   }
                 }}
@@ -215,7 +241,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PKG WIDTH"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
+                    ])}
                   />
                 )}
               </FormField>
@@ -225,7 +254,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                 initValue={getByPath('packageSize.height', values)}
                 setFieldValue={(field, value) => {
                   setFieldArrayValue('packageSize.height', value);
-                  if (canCreateOrUpdate && values.autoCalculatePackageVolume) {
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_VOLUME]) &&
+                    values.autoCalculatePackageVolume
+                  ) {
                     calculatePackageVolume();
                   }
                 }}
@@ -243,7 +275,10 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                         defaultMessage="PKG HEIGHT"
                       />
                     }
-                    editable={canCreateOrUpdate}
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
+                    ])}
                   />
                 )}
               </FormField>

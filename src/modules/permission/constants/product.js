@@ -33,3 +33,25 @@ export const PRODUCT_PROVIDER_SET_TASKS = 'product.productProviders.setTasks';
 export const PRODUCT_PROVIDER_SET_TASK_TEMPLATE = 'product.productProviders.setTaskTemplate';
 export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
+
+export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS = 'product.productProviders.setCustomFields';
+export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK =
+  'product.productProviders.setCustomFieldsMask';
+export const PRODUCT_PROVIDER_SET_TAGS = 'product.productProviders.setTags';
+export const PRODUCT_PROVIDER_SET_MEMO = 'product.productProviders.setMemo';
+export const PRODUCT_PROVIDER_SET_EXPORTER = 'product.productProviders.setExporter';
+export const PRODUCT_PROVIDER_SET_INSPECTION_FEE = 'product.productProviders.setInspectionFee';
+export const PRODUCT_PROVIDER_SET_ORIGIN = 'product.productProviders.setOrigin';
+export const PRODUCT_PROVIDER_SET_PACKAGE_CAPACITY = 'product.productProviders.setPackageCapacity';
+export const PRODUCT_PROVIDER_SET_PACKAGE_NAME = 'product.productProviders.setPackageName';
+export const PRODUCT_PROVIDER_SET_PACKAGE_SIZE = 'product.productProviders.setPackageSize';
+export const PRODUCT_PROVIDER_SET_PACKAGE_VOLUME = 'product.productProviders.setPackageVolume';
+export const PRODUCT_PROVIDER_SET_PACKAGE_WEIGHT = 'product.productProviders.setPackageWeight';
+export const PRODUCT_PROVIDER_SET_PRODUCTION_LEAD_TIME =
+  'product.productProviders.setProductionLeadTime';
+export const PRODUCT_PROVIDER_SET_SUPPLIER = 'product.productProviders.setSupplier';
+export const PRODUCT_PROVIDER_SET_UNIT_PRICE = 'product.productProviders.setUnitPrice';
+export const PRODUCT_PROVIDER_SET_UNIT_SIZE = 'product.productProviders.setUnitSize';
+export const PRODUCT_PROVIDER_SET_UNIT_TYPE = 'product.productProviders.setUnitType';
+export const PRODUCT_PROVIDER_SET_UNIT_VOLUME = 'product.productProviders.setUnitVolume';
+export const PRODUCT_PROVIDER_SET_UNIT_WEIGHT = 'product.productProviders.setUnitWeight';
