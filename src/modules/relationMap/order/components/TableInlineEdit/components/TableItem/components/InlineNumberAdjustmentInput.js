@@ -84,22 +84,24 @@ export default function InlineNumberAdjustmentInput({
         />
       }
     >
-      <NewButton
-        label={
-          <FormattedMessage id="components.button.newQuantity" defaultMessage="NEW QUANTITY" />
-        }
-        onClick={() => {
-          emitter.emit('INLINE_CHANGE', {
-            name,
-            hasError: false,
-            value: {
-              quantity: getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
-              type: 'Other',
-            },
-          });
-        }}
-        id={`input-${id}`}
-      />
+      <div>
+        <NewButton
+          label={
+            <FormattedMessage id="components.button.newQuantity" defaultMessage="NEW QUANTITY" />
+          }
+          onClick={() => {
+            emitter.emit('INLINE_CHANGE', {
+              name,
+              hasError: false,
+              value: {
+                quantity: getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
+                type: 'Other',
+              },
+            });
+          }}
+          id={`input-${id}`}
+        />
+      </div>
     </Tooltip>
   );
 }
