@@ -476,23 +476,23 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
 
         if (field !== 'batchQuantityRevisionsHeader') {
           newEditData = set(newEditData, name, value);
+
+          if (!touched[name]) {
+            setTouched({
+              ...touched,
+              [name]: true,
+            });
+          }
+
+          if (hasError) {
+            setErrors({ ...errors, [name]: true });
+          } else {
+            delete errors[name];
+            setErrors(errors);
+          }
         }
 
         setEditData(newEditData);
-
-        if (!touched[name]) {
-          setTouched({
-            ...touched,
-            [name]: true,
-          });
-        }
-
-        if (hasError) {
-          setErrors({ ...errors, [name]: true });
-        } else {
-          delete errors[name];
-          setErrors(errors);
-        }
       });
       return () => {
         listener.remove();
@@ -715,13 +715,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                           trackingError(error);
                         }
                       }}
-                      disabled={
-                        !(
-                          !isEqual(entities, editData) &&
-                          Object.keys(touched).length > 0 &&
-                          Object.keys(errors).length === 0
-                        )
-                      }
+                      disabled={isEqual(entities, editData) || Object.keys(errors).length > 0}
                     />
                     <ExportGenericButton
                       columns={() => getExportColumns(intl, allColumns)}
