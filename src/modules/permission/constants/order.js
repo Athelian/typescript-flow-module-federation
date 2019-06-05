@@ -24,6 +24,3 @@ export const ORDER_SET_PI_NO = 'order.orders.setPiNo';
 export const ORDER_SET_PO_NO = 'order.orders.setPoNo';
 export const ORDER_SET_TASKS = 'order.orders.setTasks';
 export const ORDER_SET_TASK_TEMPLATE = 'order.orders.setTaskTemplate';
-export const ORDER_ORDER_ITEMS_SET_PRICE = 'order.orderItems.setPrice';
-export const ORDER_ORDER_ITEMS_CREATE = 'order.orderItems.create';
-export const ORDER_ORDER_ITEMS_DELETE = 'order.orderItems.delete';

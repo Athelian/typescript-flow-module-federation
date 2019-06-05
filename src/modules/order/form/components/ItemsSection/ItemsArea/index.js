@@ -16,17 +16,20 @@ import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { Display } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
-import {
-  ORDER_UPDATE,
-  ORDER_ORDER_ITEMS_SET_PRICE,
-  ORDER_ORDER_ITEMS_CREATE,
-  ORDER_ORDER_ITEMS_DELETE,
-} from 'modules/permission/constants/order';
+import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import {
   PRODUCT_FORM,
   PRODUCT_PROVIDER_GET_UNIT_PRICE,
+  PRODUCT_PROVIDER_LIST,
 } from 'modules/permission/constants/product';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
+import {
+  ORDER_ITEMS_CREATE,
+  ORDER_ITEMS_DELETE,
+  ORDER_ITEMS_GET_PRICE,
+  ORDER_ITEMS_SET_NO,
+  ORDER_ITEMS_SET_QUANTITY,
+  ORDER_ITEMS_SET_PRICE,
+} from 'modules/permission/constants/orderItem';
 import {
   ItemsAreaWrapperStyle,
   ItemsNavbarWrapperStyle,
@@ -94,7 +97,7 @@ function ItemsArea({
 
           <div className={SyncButtonWrapperStyle}>
             {orderItems.length > 0 &&
-              hasPermission([ORDER_UPDATE, ORDER_ORDER_ITEMS_SET_PRICE]) &&
+              hasPermission([ORDER_UPDATE, ORDER_ITEMS_SET_PRICE]) &&
               hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE) && (
                 <BaseButton
                   icon="SYNC"
@@ -174,7 +177,7 @@ function ItemsArea({
               };
 
               const actions = [
-                hasPermission([ORDER_UPDATE, ORDER_ORDER_ITEMS_CREATE]) && (
+                hasPermission([ORDER_UPDATE, ORDER_ITEMS_CREATE]) && (
                   <CardAction
                     icon="CLONE"
                     onClick={() => {
@@ -193,7 +196,7 @@ function ItemsArea({
                     }}
                   />
                 ),
-                hasPermission([ORDER_UPDATE, ORDER_ORDER_ITEMS_DELETE]) && (
+                hasPermission([ORDER_UPDATE, ORDER_ITEMS_DELETE]) && (
                   <BooleanValue>
                     {({ value: isOpen, set: dialogToggle }) => {
                       const onRemove = () => {
@@ -263,11 +266,10 @@ function ItemsArea({
                 ),
               ].filter(Boolean);
 
-              // TODO: add permission from order item modules
               const editable = {
-                no: hasPermission([ORDER_UPDATE]),
-                quantity: hasPermission([ORDER_UPDATE]),
-                price: hasPermission([ORDER_UPDATE]),
+                no: hasPermission([ORDER_UPDATE, ORDER_ITEMS_SET_NO]),
+                quantity: hasPermission([ORDER_UPDATE, ORDER_ITEMS_SET_QUANTITY]),
+                price: hasPermission([ORDER_UPDATE, ORDER_ITEMS_SET_PRICE]),
               };
 
               const viewable = {
@@ -339,84 +341,89 @@ function ItemsArea({
       </div>
 
       <div className={ItemsFooterWrapperStyle}>
-        <BooleanValue>
-          {({ value: opened, set: slideToggle }) => (
-            <>
-              {(order.exporter && order.exporter.id) || !isNew ? (
-                <NewButton
-                  label={
-                    <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
-                  }
-                  onClick={() => {
-                    slideToggle(true);
-                  }}
-                  data-testid="btnNewItems"
-                />
-              ) : (
-                <Tooltip
-                  message={
-                    <FormattedMessage
-                      id="modules.Orders.chooseExporterFirst"
-                      defaultMessage="Please choose an Exporter first"
-                    />
-                  }
-                >
-                  <div>
-                    <NewButton
-                      disabled
-                      label={
-                        <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
-                      }
-                    />
-                  </div>
-                </Tooltip>
-              )}
-
-              <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                {opened && (
-                  <SelectProducts
-                    onSelect={selectedItems => {
-                      setFieldValue('orderItems', [
-                        ...orderItems,
-                        ...selectedItems.map((productProvider, position) =>
-                          injectUid({
-                            productProvider,
-                            isNew: true,
-                            batches: [],
-                            no: `${getByPath('product.name', productProvider)} - ${getByPath(
-                              'product.serial',
-                              productProvider
-                            )} - ${position + 1}`,
-                            quantity: 0,
-                            price: {
-                              amount:
-                                getByPath('unitPrice.currency', productProvider) === currency
-                                  ? getByPath('unitPrice.amount', productProvider) || 0
-                                  : 0,
-                              currency,
-                            },
-                            files: [],
-                            todo: {
-                              tasks: [],
-                              taskTemplate: null,
-                            },
-                            tags: [],
-                            archived: orderIsArchived,
-                          })
-                        ),
-                      ]);
-                      setFieldTouched('orderItems');
-                      slideToggle(false);
+        {hasPermission([ORDER_UPDATE, ORDER_ITEMS_CREATE]) && hasPermission(PRODUCT_PROVIDER_LIST) && (
+          <BooleanValue>
+            {({ value: opened, set: slideToggle }) => (
+              <>
+                {(order.exporter && order.exporter.id) || !isNew ? (
+                  <NewButton
+                    label={
+                      <FormattedMessage id="modules.Orders.newItems" defaultMessage="NEW ITEMS" />
+                    }
+                    onClick={() => {
+                      slideToggle(true);
                     }}
-                    exporter={(order.exporter && order.exporter.id) || ''}
-                    orderCurrency={currency}
-                    onCancel={() => slideToggle(false)}
+                    data-testid="btnNewItems"
                   />
+                ) : (
+                  <Tooltip
+                    message={
+                      <FormattedMessage
+                        id="modules.Orders.chooseExporterFirst"
+                        defaultMessage="Please choose an Exporter first"
+                      />
+                    }
+                  >
+                    <div>
+                      <NewButton
+                        disabled
+                        label={
+                          <FormattedMessage
+                            id="modules.Orders.newItems"
+                            defaultMessage="NEW ITEMS"
+                          />
+                        }
+                      />
+                    </div>
+                  </Tooltip>
                 )}
-              </SlideView>
-            </>
-          )}
-        </BooleanValue>
+
+                <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                  {opened && (
+                    <SelectProducts
+                      onSelect={selectedItems => {
+                        setFieldValue('orderItems', [
+                          ...orderItems,
+                          ...selectedItems.map((productProvider, position) =>
+                            injectUid({
+                              productProvider,
+                              isNew: true,
+                              batches: [],
+                              no: `${getByPath('product.name', productProvider)} - ${getByPath(
+                                'product.serial',
+                                productProvider
+                              )} - ${position + 1}`,
+                              quantity: 0,
+                              price: {
+                                amount:
+                                  getByPath('unitPrice.currency', productProvider) === currency
+                                    ? getByPath('unitPrice.amount', productProvider) || 0
+                                    : 0,
+                                currency,
+                              },
+                              files: [],
+                              todo: {
+                                tasks: [],
+                                taskTemplate: null,
+                              },
+                              tags: [],
+                              archived: orderIsArchived,
+                            })
+                          ),
+                        ]);
+                        setFieldTouched('orderItems');
+                        slideToggle(false);
+                      }}
+                      exporter={(order.exporter && order.exporter.id) || ''}
+                      orderCurrency={currency}
+                      onCancel={() => slideToggle(false)}
+                    />
+                  )}
+                </SlideView>
+              </>
+            )}
+          </BooleanValue>
+        )}
       </div>
     </div>
   );

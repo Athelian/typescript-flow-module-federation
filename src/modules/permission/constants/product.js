@@ -22,6 +22,7 @@ export const PRODUCT_SET_CUSTOM_FIELDS_MASK = 'product.products.setCustomFieldsM
 export const PRODUCT_SET_TAGS = 'product.products.setTags';
 export const PRODUCT_SET_MEMO = 'product.products.setMemo';
 export const PRODUCT_PROVIDER_FORM = 'product.productProviders.form';
+export const PRODUCT_PROVIDER_LIST = 'product.productProviders.list';
 export const PRODUCT_PROVIDER_GET = 'product.productProviders.get';
 export const PRODUCT_PROVIDER_GET_UNIT_TYPE = 'product.productProviders.getUnitType';
 export const PRODUCT_PROVIDER_GET_UNIT_PRICE = 'product.productProviders.getUnitPrice';
