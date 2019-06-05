@@ -3,14 +3,19 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import { getByPathWithDefault } from 'utils/fp';
 import { OrderFilesContainer } from 'modules/order/form/containers';
 import messages from 'modules/order/messages';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
-import { ORDER_UPDATE, ORDER_DOWNLOAD_DOCUMENTS } from 'modules/permission/constants/order';
+import {
+  ORDER_UPDATE,
+  ORDER_SET_DOCUMENTS,
+  ORDER_DOWNLOAD_DOCUMENTS,
+} from 'modules/permission/constants/order';
 import { DocumentsInput, SectionHeader } from 'components/Form';
-import usePermission from 'hooks/usePermission';
 import { orderFormFilesQuery } from './query';
 
 type Props = {
@@ -20,9 +25,8 @@ type Props = {
 };
 
 function DocumentsSection({ intl, isLoading, entityId }: Props) {
-  const { hasPermission } = usePermission();
-  const allowUpdate = hasPermission(ORDER_UPDATE);
-  const allowDownload = hasPermission(ORDER_DOWNLOAD_DOCUMENTS);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
 
   return (
     <Subscribe to={[OrderFilesContainer]}>
@@ -49,8 +53,8 @@ function DocumentsSection({ intl, isLoading, entityId }: Props) {
                   }
                 />
                 <DocumentsInput
-                  editable={allowUpdate}
-                  downloadable={allowDownload}
+                  editable={hasPermission([ORDER_UPDATE, ORDER_SET_DOCUMENTS])}
+                  downloadable={hasPermission(ORDER_DOWNLOAD_DOCUMENTS)}
                   id="files"
                   name="files"
                   values={files}
