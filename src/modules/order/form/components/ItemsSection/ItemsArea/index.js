@@ -177,7 +177,7 @@ function ItemsArea({
               };
 
               const actions = [
-                hasPermission([ORDER_UPDATE, ORDER_ITEMS_CREATE]) && (
+                hasPermission(ORDER_ITEMS_CREATE) && (
                   <CardAction
                     icon="CLONE"
                     onClick={() => {
@@ -196,7 +196,7 @@ function ItemsArea({
                     }}
                   />
                 ),
-                hasPermission([ORDER_UPDATE, ORDER_ITEMS_DELETE]) && (
+                hasPermission([ORDER_ITEMS_DELETE]) && (
                   <BooleanValue>
                     {({ value: isOpen, set: dialogToggle }) => {
                       const onRemove = () => {
@@ -341,7 +341,7 @@ function ItemsArea({
       </div>
 
       <div className={ItemsFooterWrapperStyle}>
-        {hasPermission([ORDER_UPDATE, ORDER_ITEMS_CREATE]) && hasPermission(PRODUCT_PROVIDER_LIST) && (
+        {hasPermission(ORDER_ITEMS_CREATE) && hasPermission(PRODUCT_PROVIDER_LIST) && (
           <BooleanValue>
             {({ value: opened, set: slideToggle }) => (
               <>

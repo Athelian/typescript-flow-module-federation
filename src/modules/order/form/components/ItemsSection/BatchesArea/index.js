@@ -28,7 +28,6 @@ import Icon from 'components/Icon';
 import SlideView from 'components/SlideView';
 import { Display } from 'components/Form';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
 import { HIDE, NAVIGABLE, READONLY } from 'modules/batch/constants';
 import {
   BatchesAreaWrapperStyle,
@@ -89,7 +88,6 @@ function BatchesArea({
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(ORDER_UPDATE);
 
   const allowCloneBatch = hasPermission(BATCH_CREATE);
   const allowDeleteBatch = hasPermission(BATCH_DELETE);
@@ -129,7 +127,7 @@ function BatchesArea({
           </div>
 
           <div className={AutofillButtonWrapperStyle}>
-            {orderItems.length > 0 && hasPermission(ORDER_UPDATE) && hasPermission(BATCH_CREATE) && (
+            {orderItems.length > 0 && hasPermission(BATCH_CREATE) && (
               <BaseButton
                 label={
                   focusedItemIndex === -1 ? (
@@ -289,7 +287,7 @@ function BatchesArea({
       </div>
 
       <div className={BatchesFooterWrapperStyle}>
-        {allowUpdate && focusedItemIndex >= 0 && (
+        {hasPermission(BATCH_CREATE) && focusedItemIndex >= 0 && (
           <NewButton
             label={<FormattedMessage id="modules.Orders.newBatch" defaultMessage="NEW BATCH" />}
             onClick={() => {
