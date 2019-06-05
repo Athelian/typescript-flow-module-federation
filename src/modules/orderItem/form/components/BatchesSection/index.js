@@ -162,9 +162,8 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                               <OrderBatchCard
                                 editable={{
                                   clone: allowCloneBatch,
-                                  remove: allowDeleteBatch,
+                                  delete: allowDeleteBatch,
                                   no: allowUpdateBatchNo,
-                                  // FIXME:
                                   quantity: allowUpdateBatchQuantity,
                                   deliveredAt: allowUpdateBatchDelivery,
                                   desiredAt: allowUpdateBatchDesired,

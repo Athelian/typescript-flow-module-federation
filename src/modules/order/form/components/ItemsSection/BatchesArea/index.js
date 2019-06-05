@@ -242,7 +242,7 @@ function BatchesArea({
                         price={orderItems[orderItemPosition].price}
                         editable={{
                           clone: allowCloneBatch,
-                          remove: allowDeleteBatch,
+                          delete: allowDeleteBatch,
                           no: allowUpdateBatchNo,
                           quantity: allowUpdateBatchQuantity,
                           deliveredAt: allowUpdateBatchDelivery,
