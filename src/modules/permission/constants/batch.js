@@ -1,5 +1,4 @@
 // @flow
-
 export const BATCH_LIST = 'batch.batches.list';
 export const BATCH_FORM = 'batch.batches.form';
 export const BATCH_CREATE = 'batch.batches.create';
@@ -29,3 +28,20 @@ export const BATCH_SET_TASK_TEMPLATE = 'batch.batches.setTaskTemplate';
 export const BATCH_ORDERS_LIST = 'batch.orders.list';
 export const BATCH_TASK_LIST = 'batch.tasks.list';
 export const BATCH_TASK_FORM = 'batch.tasks.form';
+export const BATCH_TASK_SET_APPROVABLE = 'batch.tasks.setApprovable';
+export const BATCH_TASK_SET_APPROVED = 'batch.tasks.setApproved';
+export const BATCH_TASK_SET_APPROVERS = 'batch.tasks.setApprovers';
+export const BATCH_TASK_SET_ASSIGNEES = 'batch.tasks.setAssignees';
+export const BATCH_TASK_SET_COMPLETED = 'batch.tasks.setCompleted';
+export const BATCH_TASK_SET_DESCRIPTION = 'batch.tasks.setDescription';
+export const BATCH_TASK_SET_DUE_DATE = 'batch.tasks.setDueDate';
+export const BATCH_TASK_SET_DUE_DATE_BINDING = 'batch.tasks.setDueDateBinding';
+export const BATCH_TASK_SET_ENTITY = 'batch.tasks.setEntity';
+export const BATCH_TASK_SET_IN_PROGRESS = 'batch.tasks.setInProgress';
+export const BATCH_TASK_SET_MEMO = 'batch.tasks.setMemo';
+export const BATCH_TASK_SET_NAME = 'batch.tasks.setName';
+export const BATCH_TASK_SET_REJECTED = 'batch.tasks.setRejected';
+export const BATCH_TASK_SET_START_DATE = 'batch.tasks.setStartDate';
+export const BATCH_TASK_SET_START_DATE_BINDING = 'batch.tasks.setStartDateBinding';
+export const BATCH_TASK_SET_TAGS = 'batch.tasks.setTags';
+export const BATCH_TASK_SET_TEMPLATE = 'batch.tasks.setTaskTemplate';

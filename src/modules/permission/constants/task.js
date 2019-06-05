@@ -1,14 +1,29 @@
 // @flow
-
 export const TASK_LIST = 'task.tasks.list';
 export const TASK_FORM = 'task.tasks.form';
 export const TASK_CREATE = 'task.tasks.create';
 export const TASK_UPDATE = 'task.tasks.update';
 export const TASK_DELETE = 'task.tasks.delete';
-
 export const TASK_TEMPLATE_LIST = 'task.taskTemplates.list';
 export const TASK_TEMPLATE_GET = 'task.taskTemplates.get';
 export const TASK_TEMPLATE_FORM = 'task.taskTemplates.form';
 export const TASK_TEMPLATE_CREATE = 'task.taskTemplates.create';
 export const TASK_TEMPLATE_UPDATE = 'task.taskTemplates.update';
 export const TASK_TEMPLATE_DELETE = 'task.taskTemplates.delete';
+export const TASK_SET_APPROVABLE = 'task.tasks.setApprovable';
+export const TASK_SET_APPROVED = 'task.tasks.setApproved';
+export const TASK_SET_APPROVERS = 'task.tasks.setApprovers';
+export const TASK_SET_ASSIGNEES = 'task.tasks.setAssignees';
+export const TASK_SET_COMPLETED = 'task.tasks.setCompleted';
+export const TASK_SET_DESCRIPTION = 'task.tasks.setDescription';
+export const TASK_SET_DUE_DATE = 'task.tasks.setDueDate';
+export const TASK_SET_DUE_DATE_BINDING = 'task.tasks.setDueDateBinding';
+export const TASK_SET_ENTITY = 'task.tasks.setEntity';
+export const TASK_SET_IN_PROGRESS = 'task.tasks.setInProgress';
+export const TASK_SET_MEMO = 'task.tasks.setMemo';
+export const TASK_SET_NAME = 'task.tasks.setName';
+export const TASK_SET_REJECTED = 'task.tasks.setRejected';
+export const TASK_SET_START_DATE = 'task.tasks.setStartDate';
+export const TASK_SET_START_DATE_BINDING = 'task.tasks.setStartDateBinding';
+export const TASK_SET_TAGS = 'task.tasks.setTags';
+export const TASK_SET_TEMPLATE = 'task.tasks.setTaskTemplate';

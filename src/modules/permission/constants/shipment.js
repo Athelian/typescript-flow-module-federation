@@ -1,5 +1,4 @@
 // @flow
-
 export const SHIPMENT_LIST = 'shipment.shipments.list';
 export const SHIPMENT_ORDER_LIST = 'shipment.orders.list';
 export const SHIPMENT_FORM = 'shipment.shipments.form';
@@ -45,3 +44,20 @@ export const SHIPMENT_SET_TASKS = 'shipment.shipments.setTasks';
 export const SHIPMENT_SET_TASK_TEMPLATE = 'shipment.shipments.setTaskTemplate';
 export const SHIPMENT_TASK_LIST = 'shipment.tasks.list';
 export const SHIPMENT_TASK_FORM = 'shipment.tasks.form';
+export const SHIPMENT_TASK_SET_APPROVABLE = 'shipment.tasks.setApprovable';
+export const SHIPMENT_TASK_SET_APPROVED = 'shipment.tasks.setApproved';
+export const SHIPMENT_TASK_SET_APPROVERS = 'shipment.tasks.setApprovers';
+export const SHIPMENT_TASK_SET_ASSIGNEES = 'shipment.tasks.setAssignees';
+export const SHIPMENT_TASK_SET_COMPLETED = 'shipment.tasks.setCompleted';
+export const SHIPMENT_TASK_SET_DESCRIPTION = 'shipment.tasks.setDescription';
+export const SHIPMENT_TASK_SET_DUE_DATE = 'shipment.tasks.setDueDate';
+export const SHIPMENT_TASK_SET_DUE_DATE_BINDING = 'shipment.tasks.setDueDateBinding';
+export const SHIPMENT_TASK_SET_ENTITY = 'shipment.tasks.setEntity';
+export const SHIPMENT_TASK_SET_IN_PROGRESS = 'shipment.tasks.setInProgress';
+export const SHIPMENT_TASK_SET_MEMO = 'shipment.tasks.setMemo';
+export const SHIPMENT_TASK_SET_NAME = 'shipment.tasks.setName';
+export const SHIPMENT_TASK_SET_REJECTED = 'shipment.tasks.setRejected';
+export const SHIPMENT_TASK_SET_START_DATE = 'shipment.tasks.setStartDate';
+export const SHIPMENT_TASK_SET_START_DATE_BINDING = 'shipment.tasks.setStartDateBinding';
+export const SHIPMENT_TASK_SET_TAGS = 'shipment.tasks.setTags';
+export const SHIPMENT_TASK_SET_TEMPLATE = 'shipment.tasks.setTaskTemplate';

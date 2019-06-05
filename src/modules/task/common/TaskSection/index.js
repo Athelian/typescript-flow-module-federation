@@ -15,7 +15,12 @@ import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { TASK_CREATE, TASK_UPDATE, TASK_DELETE } from 'modules/permission/constants/task';
-import { ORDER_TASK_FORM, ORDER_TASK_LIST, ORDER_UPDATE } from 'modules/permission/constants/order';
+import {
+  ORDER_TASK_CREATE,
+  ORDER_TASK_FORM,
+  ORDER_TASK_LIST,
+  ORDER_UPDATE,
+} from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_TASK_LIST,
   ORDER_ITEMS_TASK_FORM,
@@ -81,7 +86,7 @@ const getConfig = (type: string, hasPermission: Function): Object => {
       return {
         canViewList: hasPermission(ORDER_TASK_LIST),
         canViewForm: hasPermission(ORDER_TASK_FORM),
-        canAddTasks: hasPermission(TASK_CREATE) && hasPermission(ORDER_UPDATE),
+        canAddTasks: hasPermission([ORDER_TASK_CREATE, TASK_CREATE]),
         canDeleteTasks: hasPermission(TASK_DELETE) && hasPermission(ORDER_UPDATE),
         canUpdateTasks: hasPermission(TASK_UPDATE) && hasPermission(ORDER_UPDATE),
         canUpdateTaskTemplate:

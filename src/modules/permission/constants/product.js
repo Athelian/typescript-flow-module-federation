@@ -1,5 +1,4 @@
 // @flow
-
 export const PRODUCT_LIST = 'product.products.list';
 export const PRODUCT_EXPORT_LIST = 'product.products.exportList';
 export const PRODUCT_FORM = 'product.products.form';
@@ -34,7 +33,6 @@ export const PRODUCT_PROVIDER_SET_TASKS = 'product.productProviders.setTasks';
 export const PRODUCT_PROVIDER_SET_TASK_TEMPLATE = 'product.productProviders.setTaskTemplate';
 export const PRODUCT_PROVIDER_SET_DOCUMENTS = 'product.productProviders.setDocuments';
 export const PRODUCT_PROVIDER_DOWNLOAD_DOCUMENTS = 'product.productProviders.downloadDocuments';
-
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS = 'product.productProviders.setCustomFields';
 export const PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK =
   'product.productProviders.setCustomFieldsMask';
@@ -57,3 +55,39 @@ export const PRODUCT_PROVIDER_SET_UNIT_SIZE = 'product.productProviders.setUnitS
 export const PRODUCT_PROVIDER_SET_UNIT_TYPE = 'product.productProviders.setUnitType';
 export const PRODUCT_PROVIDER_SET_UNIT_VOLUME = 'product.productProviders.setUnitVolume';
 export const PRODUCT_PROVIDER_SET_UNIT_WEIGHT = 'product.productProviders.setUnitWeight';
+export const PRODUCT_TASK_SET_APPROVABLE = 'product.tasks.setApprovable';
+export const PRODUCT_TASK_SET_APPROVED = 'product.tasks.setApproved';
+export const PRODUCT_TASK_SET_APPROVERS = 'product.tasks.setApprovers';
+export const PRODUCT_TASK_SET_ASSIGNEES = 'product.tasks.setAssignees';
+export const PRODUCT_TASK_SET_COMPLETED = 'product.tasks.setCompleted';
+export const PRODUCT_TASK_SET_DESCRIPTION = 'product.tasks.setDescription';
+export const PRODUCT_TASK_SET_DUE_DATE = 'product.tasks.setDueDate';
+export const PRODUCT_TASK_SET_DUE_DATE_BINDING = 'product.tasks.setDueDateBinding';
+export const PRODUCT_TASK_SET_ENTITY = 'product.tasks.setEntity';
+export const PRODUCT_TASK_SET_IN_PROGRESS = 'product.tasks.setInProgress';
+export const PRODUCT_TASK_SET_MEMO = 'product.tasks.setMemo';
+export const PRODUCT_TASK_SET_NAME = 'product.tasks.setName';
+export const PRODUCT_TASK_SET_REJECTED = 'product.tasks.setRejected';
+export const PRODUCT_TASK_SET_START_DATE = 'product.tasks.setStartDate';
+export const PRODUCT_TASK_SET_START_DATE_BINDING = 'product.tasks.setStartDateBinding';
+export const PRODUCT_TASK_SET_TAGS = 'product.tasks.setTags';
+export const PRODUCT_TASK_SET_TEMPLATE = 'product.tasks.setTaskTemplate';
+export const PRODUCT_PROVIDER_TASK_SET_APPROVABLE = 'product.productProviderTasks.setApprovable';
+export const PRODUCT_PROVIDER_TASK_SET_APPROVED = 'product.productProviderTasks.setApproved';
+export const PRODUCT_PROVIDER_TASK_SET_APPROVERS = 'product.productProviderTasks.setApprovers';
+export const PRODUCT_PROVIDER_TASK_SET_ASSIGNEES = 'product.productProviderTasks.setAssignees';
+export const PRODUCT_PROVIDER_TASK_SET_COMPLETED = 'product.productProviderTasks.setCompleted';
+export const PRODUCT_PROVIDER_TASK_SET_DESCRIPTION = 'product.productProviderTasks.setDescription';
+export const PRODUCT_PROVIDER_TASK_SET_DUE_DATE = 'product.productProviderTasks.setDueDate';
+export const PRODUCT_PROVIDER_TASK_SET_DUE_DATE_BINDING =
+  'product.productProviderTasks.setDueDateBinding';
+export const PRODUCT_PROVIDER_TASK_SET_ENTITY = 'product.productProviderTasks.setEntity';
+export const PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS = 'product.productProviderTasks.setInProgress';
+export const PRODUCT_PROVIDER_TASK_SET_MEMO = 'product.productProviderTasks.setMemo';
+export const PRODUCT_PROVIDER_TASK_SET_NAME = 'product.productProviderTasks.setName';
+export const PRODUCT_PROVIDER_TASK_SET_REJECTED = 'product.productProviderTasks.setRejected';
+export const PRODUCT_PROVIDER_TASK_SET_START_DATE = 'product.productProviderTasks.setStartDate';
+export const PRODUCT_PROVIDER_TASK_SET_START_DATE_BINDING =
+  'product.productProviderTasks.setStartDateBinding';
+export const PRODUCT_PROVIDER_TASK_SET_TAGS = 'product.productProviderTasks.setTags';
+export const PRODUCT_PROVIDER_TASK_SET_TEMPLATE = 'product.productProviderTasks.setTaskTemplate';
