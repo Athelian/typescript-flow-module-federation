@@ -129,7 +129,7 @@ function BatchesArea({
           </div>
 
           <div className={AutofillButtonWrapperStyle}>
-            {orderItems.length > 0 && (
+            {orderItems.length > 0 && hasPermission(ORDER_UPDATE) && hasPermission(BATCH_CREATE) && (
               <BaseButton
                 label={
                   focusedItemIndex === -1 ? (
