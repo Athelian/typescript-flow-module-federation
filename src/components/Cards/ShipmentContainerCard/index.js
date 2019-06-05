@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
+import { isForbidden } from 'utils/data';
 import FormattedDate from 'components/FormattedDate';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
@@ -267,7 +268,6 @@ const ShipmentContainerCard = ({
 
               <div className={IconInputStyle}>
                 {warehouse &&
-                  warehouse.id &&
                   (editable.viewWarehouse ? (
                     <Link
                       className={WarehouseIconStyle(true)}
@@ -299,13 +299,13 @@ const ShipmentContainerCard = ({
                     }}
                   >
                     <DefaultStyle type="button" width="155px" height="20px">
-                      <Display align="left">
+                      <Display blackout={isForbidden(warehouse)} align="left">
                         {isNullOrUndefined(warehouse) ? '' : warehouse.name}
                       </Display>
                     </DefaultStyle>
                   </button>
                 ) : (
-                  <Display align="left" width="155px">
+                  <Display blackout={isForbidden(warehouse)} align="left" width="155px">
                     {isNullOrUndefined(warehouse) ? '' : warehouse.name}
                   </Display>
                 )}
