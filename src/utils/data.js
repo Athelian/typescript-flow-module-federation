@@ -3,7 +3,7 @@ import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
 import { type UserAvatarType } from 'types';
-import { isEquals, getByPathWithDefault } from './fp';
+import { isEquals, getByPathWithDefault, getByPath } from './fp';
 
 export const replaceUndefined: Function = when(
   either(is(Array), is(Object)),
@@ -65,7 +65,7 @@ export const cleanFalsyAndTypeName: Function = pipe(
 );
 
 export const isForbidden = (data: Object): boolean => {
-  return getByPathWithDefault(null, '__typename', data) === 'Forbidden';
+  return getByPath('__typename', data) === 'Forbidden';
 };
 
 export const getSelectLabel = (value: ?string, items: Array<{ value: string, label: string }>) => {

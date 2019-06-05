@@ -3,7 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { getSelectLabel } from 'utils/data';
+import { getSelectLabel, isForbidden } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -150,7 +150,9 @@ const ContainerCard = ({ container, permission, onClick, ...rest }: Props) => {
                     <Icon icon="WAREHOUSE" />
                   </div>
                 )}
-                <Display align="left">{warehouse.name}</Display>
+                <Display blackout={isForbidden(warehouse)} align="left">
+                  {warehouse.name}
+                </Display>
               </>
             )}
           </div>
