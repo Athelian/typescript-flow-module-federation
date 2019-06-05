@@ -11,6 +11,16 @@ import {
 import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import {
+  BATCH_CREATE,
+  BATCH_UPDATE,
+  BATCH_DELETE,
+  BATCH_SET_NO,
+  BATCH_SET_QUANTITY,
+  BATCH_SET_DELIVERY_DATE,
+  BATCH_SET_DESIRED_DATE,
+  BATCH_SET_QUANTITY_ADJUSTMENTS,
+} from 'modules/permission/constants/batch';
 import { NewButton, BaseButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import { OrderBatchCard } from 'components/Cards';
@@ -80,6 +90,15 @@ function BatchesArea({
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowUpdate = hasPermission(ORDER_UPDATE);
+
+  const allowCloneBatch = hasPermission(BATCH_CREATE);
+  const allowDeleteBatch = hasPermission(BATCH_DELETE);
+  const allowUpdateBatchNo = hasPermission([BATCH_UPDATE, BATCH_SET_NO]);
+  const allowUpdateBatchQuantity =
+    hasPermission(BATCH_UPDATE) ||
+    (hasPermission(BATCH_SET_QUANTITY) && hasPermission(BATCH_SET_QUANTITY_ADJUSTMENTS));
+  const allowUpdateBatchDelivery = hasPermission([BATCH_UPDATE, BATCH_SET_DELIVERY_DATE]);
+  const allowUpdateBatchDesired = hasPermission([BATCH_UPDATE, BATCH_SET_DESIRED_DATE]);
 
   const batches =
     focusedItemIndex === -1
@@ -221,7 +240,14 @@ function BatchesArea({
                       </SlideView>
                       <OrderBatchCard
                         price={orderItems[orderItemPosition].price}
-                        editable={allowUpdate}
+                        editable={{
+                          clone: allowCloneBatch,
+                          delete: allowDeleteBatch,
+                          no: allowUpdateBatchNo,
+                          quantity: allowUpdateBatchQuantity,
+                          deliveredAt: allowUpdateBatchDelivery,
+                          desiredAt: allowUpdateBatchDesired,
+                        }}
                         currency={order && order.currency}
                         batch={batch}
                         onClick={() => slideToggle(true)}

@@ -3,8 +3,12 @@ import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { ORDER_ITEMS_UPDATE } from 'modules/permission/constants/orderItem';
+import {
+  ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_SET_DOCUMENTS,
+} from 'modules/permission/constants/orderItem';
 import { DocumentsInput, SectionWrapper, SectionHeader } from 'components/Form';
 import { OrderItemFilesContainer } from 'modules/orderItem/form/containers';
 import FormattedNumber from 'components/FormattedNumber';
@@ -15,8 +19,9 @@ type Props = {
 };
 
 function DocumentsSection({ intl }: Props) {
-  const { hasPermission } = usePermission();
-  const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
+  const allowSetDocuments = hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_DOCUMENTS]);
 
   return (
     <SectionWrapper id="orderItem_documentsSection">
@@ -35,7 +40,7 @@ function DocumentsSection({ intl }: Props) {
             <DocumentsInput
               id="files"
               name="files"
-              editable={allowUpdate}
+              editable={allowSetDocuments}
               downloadable
               values={files}
               onChange={(field, value) => {
