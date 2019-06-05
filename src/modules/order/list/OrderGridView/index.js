@@ -4,10 +4,11 @@ import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
-import { ORDER_CREATE, ORDER_UPDATE } from 'modules/permission/constants/order';
+import { ORDER_CREATE, ORDER_UPDATE, ORDER_FORM } from 'modules/permission/constants/order';
 import GridView from 'components/GridView';
 import { OrderCard, CardAction } from 'components/Cards';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 
 type Props = {
@@ -18,7 +19,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = ({ canCreate, canUpdate, ...item }: Object): React.Node => (
+const defaultRenderItem = ({ canCreate, canUpdate, canViewForm, ...item }: Object): React.Node => (
   <BooleanValue key={item.id}>
     {({ value: statusDialogIsOpen, set: dialogToggle }) => (
       <>
@@ -56,7 +57,11 @@ const defaultRenderItem = ({ canCreate, canUpdate, ...item }: Object): React.Nod
               : []),
           ]}
           showActionsOnHover
-          onClick={() => navigate(`/order/${encodeId(item.id)}`)}
+          onClick={() => {
+            if (canViewForm) {
+              navigate(`/order/${encodeId(item.id)}`);
+            }
+          }}
         />
       </>
     )}
@@ -70,9 +75,11 @@ const OrderGridView = ({
   isLoading,
   renderItem = defaultRenderItem,
 }: Props): React.Node => {
-  const { hasPermission } = usePermission();
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const canCreate = hasPermission(ORDER_CREATE);
   const canUpdate = hasPermission(ORDER_UPDATE);
+  const canViewForm = hasPermission(ORDER_FORM);
 
   return (
     <GridView
@@ -85,7 +92,7 @@ const OrderGridView = ({
         <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
       }
     >
-      {items.map(item => renderItem({ ...item, canCreate, canUpdate }))}
+      {items.map(item => renderItem({ ...item, canCreate, canUpdate, canViewForm }))}
     </GridView>
   );
 };

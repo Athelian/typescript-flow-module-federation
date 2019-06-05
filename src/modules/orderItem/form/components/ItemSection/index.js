@@ -15,6 +15,7 @@ import {
   ORDER_ITEMS_SET_TAGS,
   ORDER_ITEMS_SET_MEMO,
 } from 'modules/permission/constants/orderItem';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
@@ -235,7 +236,11 @@ const ItemSection = ({ isSlideView }: Props) => {
                       </Label>
                       <OrderCard
                         order={originalValues.order}
-                        onClick={() => navigate(`/order/${encodeId(originalValues.order.id)}`)}
+                        onClick={() => {
+                          if (hasPermission(ORDER_FORM)) {
+                            navigate(`/order/${encodeId(originalValues.order.id)}`);
+                          }
+                        }}
                       />
                     </>
                   )}

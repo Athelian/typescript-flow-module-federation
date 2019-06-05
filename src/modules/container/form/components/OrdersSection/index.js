@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { CONTAINER_ORDER_LIST } from 'modules/permission/constants/container';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { OrderCard } from 'components/Cards';
@@ -22,6 +23,8 @@ function OrdersSection({ orders }: Props) {
   const { hasPermission } = usePermission(isOwner);
 
   if (!hasPermission(CONTAINER_ORDER_LIST)) return null;
+
+  const canViewOrderForm = hasPermission(ORDER_FORM);
 
   return (
     <SectionWrapper id="container_ordersSection">
@@ -52,7 +55,11 @@ function OrdersSection({ orders }: Props) {
               <OrderCard
                 order={order}
                 key={order.id}
-                onClick={() => navigate(`/order/${encodeId(order.id)}`)}
+                onClick={() => {
+                  if (canViewOrderForm) {
+                    navigate(`/order/${encodeId(order.id)}`);
+                  }
+                }}
               />
             ))}
           </div>

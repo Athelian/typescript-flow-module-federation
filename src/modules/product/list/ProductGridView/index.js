@@ -3,6 +3,7 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { ProductCard, CardAction } from 'components/Cards';
@@ -11,6 +12,7 @@ import {
   PRODUCT_CREATE,
   PRODUCT_UPDATE,
   PRODUCT_SET_ARCHIVED,
+  PRODUCT_FORM,
 } from 'modules/permission/constants/product';
 import { encodeId } from 'utils/id';
 
@@ -26,8 +28,12 @@ function onClone(productId: string) {
 }
 
 const ProductGridView = (props: Props) => {
+  const { isOwner } = usePartnerPermission();
+  const { hasPermission } = usePermission(isOwner);
   const { items, onLoadMore, hasMore, isLoading } = props;
-  const { hasPermission } = usePermission();
+
+  const canViewForm = hasPermission(PRODUCT_FORM);
+
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -72,6 +78,7 @@ const ProductGridView = (props: Props) => {
                     : []),
                 ]}
                 showActionsOnHover
+                onClick={() => (canViewForm ? navigate(`/product/${encodeId(item.id)}`) : {})}
               />
             </>
           )}

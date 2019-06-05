@@ -49,11 +49,16 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         ),
         renderItems: (items: Array<Object>) => {
+          const canViewForm = hasPermission(ORDER_FORM);
           return (items.map(item => (
             <OrderCard
               key={item.id}
               order={item}
-              onClick={() => navigate(`/order/${encodeId(item.id)}`)}
+              onClick={() => {
+                if (canViewForm) {
+                  navigate(`/order/${encodeId(item.id)}`);
+                }
+              }}
             />
           )): Array<React.Node>);
         },
@@ -164,11 +169,16 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         ),
         renderItems: (items: Array<Object>) => {
+          const canViewForm = hasPermission(ORDER_FORM);
           return (items.map(item => (
             <OrderCard
               key={item.id}
               order={item}
-              onClick={() => navigate(`/order/${encodeId(item.id)}`)}
+              onClick={() => {
+                if (canViewForm) {
+                  navigate(`/order/${encodeId(item.id)}`);
+                }
+              }}
             />
           )): Array<React.Node>);
         },

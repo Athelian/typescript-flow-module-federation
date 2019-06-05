@@ -511,6 +511,11 @@ const getConfig = (
 const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const editable = hasPermission(TASK_UPDATE);
+
+  const canViewOrderForm = hasPermission(ORDER_FORM);
+  const canViewProductForm = hasPermission(PRODUCT_FORM);
+
   const initDuration = {};
   if (task && task.startDateBinding) {
     const { months = 0, weeks = 0, days = 0 } = task.startDateInterval || {};
@@ -1280,7 +1285,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           input={
                             <OrderCard
                               order={task.order}
-                              onClick={() => navigate(`/order/${encodeId(task.order.id)}`)}
+                              onClick={() => {
+                                if (canViewOrderForm) {
+                                  navigate(`/order/${encodeId(task.order.id)}`);
+                                }
+                              }}
                             />
                           }
                         />
@@ -1345,7 +1354,16 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<ProductCard product={task.product} />}
+                          input={
+                            <ProductCard
+                              product={task.product}
+                              onClick={() => {
+                                if (canViewProductForm) {
+                                  navigate(`/product/${encodeId(task.product.id)}`);
+                                }
+                              }}
+                            />
+                          }
                         />
                       </GridColumn>
                     )}

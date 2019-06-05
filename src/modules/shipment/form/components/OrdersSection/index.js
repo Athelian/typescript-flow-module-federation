@@ -5,6 +5,7 @@ import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { SHIPMENT_ORDER_LIST } from 'modules/permission/constants/shipment';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import FormattedNumber from 'components/FormattedNumber';
@@ -19,6 +20,9 @@ function OrdersSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   if (!hasPermission(SHIPMENT_ORDER_LIST)) return null;
+
+  const canViewOrderForm = hasPermission(ORDER_FORM);
+
   return (
     <SectionWrapper id="shipment_orderSection">
       <Subscribe to={[ShipmentBatchesContainer]}>
@@ -54,7 +58,11 @@ function OrdersSection() {
                       <OrderCard
                         order={order}
                         key={order.id}
-                        onClick={() => navigate(`/order/${encodeId(order.id)}`)}
+                        onClick={() => {
+                          if (canViewOrderForm) {
+                            navigate(`/order/${encodeId(order.id)}`);
+                          }
+                        }}
                       />
                     ))}
                   </div>

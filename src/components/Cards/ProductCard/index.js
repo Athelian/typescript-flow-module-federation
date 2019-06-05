@@ -1,7 +1,5 @@
 // @flow
 import * as React from 'react';
-import { Link } from '@reach/router';
-import { encodeId } from 'utils/id';
 import FALLBACK_IMAGE from 'media/logo_fallback.jpg';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
@@ -29,6 +27,7 @@ import {
 
 type OptionalProps = {
   actions: Array<React.Node>,
+  onClick: Function,
 };
 
 type Props = OptionalProps & {
@@ -64,15 +63,15 @@ class ProductCard extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { product, actions, ...rest } = this.props;
+    const { product, actions, onClick, ...rest } = this.props;
     const { activeImage } = this.state;
-    const { id, archived, name, serial, tags, files, productProviders, todo, importer } = product;
+    const { archived, name, serial, tags, files, productProviders, todo, importer } = product;
 
     const productImage = files && files.length > 0 ? files[activeImage].pathMedium : FALLBACK_IMAGE;
 
     return (
       <BaseCard icon="PRODUCT" color="PRODUCT" actions={actions} isArchived={archived} {...rest}>
-        <Link className={ProductCardWrapperStyle} to={`/product/${encodeId(id)}`}>
+        <div className={ProductCardWrapperStyle} onClick={onClick} role="presentation">
           <div className={ProductImageWrapperStyle}>
             <img className={ProductImageStyle} src={productImage} alt="product_image" />
             {files && files.length > 1 && (
@@ -142,7 +141,7 @@ class ProductCard extends React.PureComponent<Props, State> {
               <TaskRing {...todo} />
             </div>
           </div>
-        </Link>
+        </div>
       </BaseCard>
     );
   }
