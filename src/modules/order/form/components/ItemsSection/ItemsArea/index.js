@@ -16,8 +16,16 @@ import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { Display } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
-import { ORDER_UPDATE } from 'modules/permission/constants/order';
-import { PRODUCT_FORM } from 'modules/permission/constants/product';
+import {
+  ORDER_UPDATE,
+  ORDER_ORDER_ITEMS_SET_PRICE,
+  ORDER_ORDER_ITEMS_CREATE,
+  ORDER_ORDER_ITEMS_DELETE,
+} from 'modules/permission/constants/order';
+import {
+  PRODUCT_FORM,
+  PRODUCT_PROVIDER_GET_UNIT_PRICE,
+} from 'modules/permission/constants/product';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import {
   ItemsAreaWrapperStyle,
@@ -64,10 +72,7 @@ function ItemsArea({
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(ORDER_UPDATE);
-
   const { currency } = order;
-
   return (
     <div className={ItemsAreaWrapperStyle(itemsIsExpanded)}>
       <div className={ItemsNavbarWrapperStyle} />
@@ -88,28 +93,30 @@ function ItemsArea({
           </div>
 
           <div className={SyncButtonWrapperStyle}>
-            {orderItems.length > 0 && (
-              <BaseButton
-                icon="SYNC"
-                label={
-                  <FormattedMessage
-                    id="modules.Orders.syncAllPrice"
-                    defaultMessage="SYNC ALL PRICES"
-                  />
-                }
-                onClick={() => {
-                  const newOrderItems = orderItems.map(orderItem => {
-                    const unitPrice = getByPath('productProvider.unitPrice', orderItem);
-                    if (unitPrice && unitPrice.currency === currency) {
-                      return { ...orderItem, price: unitPrice };
-                    }
-                    return orderItem;
-                  });
+            {orderItems.length > 0 &&
+              hasPermission([ORDER_UPDATE, ORDER_ORDER_ITEMS_SET_PRICE]) &&
+              hasPermission(PRODUCT_PROVIDER_GET_UNIT_PRICE) && (
+                <BaseButton
+                  icon="SYNC"
+                  label={
+                    <FormattedMessage
+                      id="modules.Orders.syncAllPrice"
+                      defaultMessage="SYNC ALL PRICES"
+                    />
+                  }
+                  onClick={() => {
+                    const newOrderItems = orderItems.map(orderItem => {
+                      const unitPrice = getByPath('productProvider.unitPrice', orderItem);
+                      if (unitPrice && unitPrice.currency === currency) {
+                        return { ...orderItem, price: unitPrice };
+                      }
+                      return orderItem;
+                    });
 
-                  setFieldValue('orderItems', newOrderItems);
-                }}
-              />
-            )}
+                    setFieldValue('orderItems', newOrderItems);
+                  }}
+                />
+              )}
           </div>
         </div>
 
@@ -167,7 +174,7 @@ function ItemsArea({
               };
 
               const actions = [
-                allowUpdate && (
+                hasPermission([ORDER_UPDATE, ORDER_ORDER_ITEMS_CREATE]) && (
                   <CardAction
                     icon="CLONE"
                     onClick={() => {
@@ -186,7 +193,7 @@ function ItemsArea({
                     }}
                   />
                 ),
-                allowUpdate && (
+                hasPermission([ORDER_UPDATE, ORDER_ORDER_ITEMS_DELETE]) && (
                   <BooleanValue>
                     {({ value: isOpen, set: dialogToggle }) => {
                       const onRemove = () => {
@@ -256,10 +263,11 @@ function ItemsArea({
                 ),
               ].filter(Boolean);
 
+              // TODO: add permission from order item modules
               const editable = {
-                no: allowUpdate,
-                quantity: allowUpdate,
-                price: allowUpdate,
+                no: hasPermission([ORDER_UPDATE]),
+                quantity: hasPermission([ORDER_UPDATE]),
+                price: hasPermission([ORDER_UPDATE]),
               };
 
               const viewable = {
