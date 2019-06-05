@@ -73,4 +73,5 @@ export default withForbiddenCard(WarehouseCard, 'warehouse', {
   height: '215px',
   entityIcon: 'WAREHOUSE',
   entityColor: 'WAREHOUSE',
+  forceAbleToClick: true,
 });

@@ -10,15 +10,16 @@ type OptionsType = {
   height: string,
   entityIcon: string,
   entityColor: string,
+  forceAbleToClick?: boolean,
 };
 
 export default function withForbiddenCard(
   Card: React.ComponentType<any>,
   dataField: string,
-  { width, height, entityIcon, entityColor }: OptionsType
+  { width, height, entityIcon, entityColor, forceAbleToClick = false }: OptionsType
 ) {
   return function ParsedForbiddenCard(props: any) {
-    const { [dataField]: data, ...rest } = props;
+    const { [dataField]: data, onClick, ...rest } = props;
 
     if (!data) {
       return <GrayCard width={width} height={height} />;
@@ -26,7 +27,12 @@ export default function withForbiddenCard(
 
     if (isForbidden(data)) {
       return (
-        <BaseCard icon={entityIcon} color={entityColor} {...rest}>
+        <BaseCard
+          icon={entityIcon}
+          color={entityColor}
+          {...(forceAbleToClick ? { onClick } : {})}
+          {...rest}
+        >
           <Blackout width={width} height={height} />
         </BaseCard>
       );
