@@ -4,6 +4,7 @@ import { upperFirst, omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
+import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
@@ -20,17 +21,7 @@ type Props = OptionalProps & {
   onSwap: Function,
   onRemove: Function,
   onSave: Function,
-  editable: {
-    name: boolean,
-    startDate: boolean,
-    dueDate: boolean,
-    inProgress: boolean,
-    completed: boolean,
-    assignedTo: boolean,
-    approved: boolean,
-    rejected: boolean,
-    approvers: boolean,
-  },
+  editable: TaskEditable,
   removable: boolean,
   sortable: boolean,
   viewForm: boolean,

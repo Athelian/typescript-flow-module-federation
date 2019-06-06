@@ -1,0 +1,13 @@
+// @flow
+
+export type TaskEditable = {
+  name: boolean,
+  startDate: boolean,
+  dueDate: boolean,
+  inProgress: boolean,
+  completed: boolean,
+  assignedTo: boolean,
+  approved: boolean,
+  rejected: boolean,
+  approvers: boolean,
+};

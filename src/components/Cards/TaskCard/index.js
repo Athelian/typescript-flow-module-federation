@@ -32,6 +32,7 @@ import {
   ApproveRejectMenu,
   TaskApprovalStatusInput,
 } from 'components/Form';
+import type { TaskEditable } from './type.js.flow';
 import BaseCard from '../BaseCard';
 import validator from './validator';
 import {
@@ -59,17 +60,7 @@ type OptionalProps = {
   hideParentInfo: boolean,
   onClick: Function,
   saveOnBlur: Function,
-  editable: {
-    name: boolean,
-    startDate: boolean,
-    dueDate: boolean,
-    inProgress: boolean,
-    completed: boolean,
-    assignedTo: boolean,
-    approved: boolean,
-    rejected: boolean,
-    approvers: boolean,
-  },
+  editable: TaskEditable,
   actions: Array<React.Node>,
   isInTemplate: boolean,
 };

@@ -11,6 +11,7 @@ import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
 import { TemplateCard, GrayCard } from 'components/Cards';
+import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -164,17 +165,7 @@ const getConfig = (
   canOrderingTasks: boolean,
   canUpdateTaskTemplate: boolean,
   tasksContainer: Object,
-  editable: {
-    name: boolean,
-    startDate: boolean,
-    dueDate: boolean,
-    inProgress: boolean,
-    completed: boolean,
-    assignedTo: boolean,
-    approved: boolean,
-    rejected: boolean,
-    approvers: boolean,
-  },
+  editable: TaskEditable,
 } => {
   switch (type) {
     case 'order':
