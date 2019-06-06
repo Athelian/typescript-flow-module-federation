@@ -951,7 +951,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   );
                                 }
 
-                                return editable ? (
+                                return editable.startDateBinding ? (
                                   <FormattedMessage
                                     id="modules.Tasks.chooseDataBinding"
                                     defaultMessage="Choose data to sync from"
@@ -1112,7 +1112,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           metricOptionWidth="65px"
                                           inputWidth="135px"
                                           {...inputHandlers}
-                                          editable={editable}
+                                          editable={editable.dueDate}
                                           hideTooltip
                                         />
                                       )}
@@ -1135,7 +1135,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           ]}
                                           inputWidth="55px"
                                           {...inputHandlers}
-                                          editable={editable}
+                                          editable={editable.dueDate}
                                           required
                                           hideDropdownArrow
                                           hideTooltip
@@ -1187,7 +1187,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                                 ...getFieldsByEntity(entity, intl),
                                               ]
                                         }
-                                        editable={editable}
+                                        editable={editable.dueDate}
                                         required
                                         hideTooltip
                                       />
@@ -1198,7 +1198,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </ObjectValue>
                           ) : (
                             <Display color="GRAY_LIGHT" width="200px" height="30px">
-                              {editable ? (
+                              {editable.dueDateBinding ? (
                                 <FormattedMessage
                                   id="modules.Tasks.chooseDataBinding"
                                   defaultMessage="Choose data to sync from"
@@ -1617,7 +1617,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       rejectedAt: null,
                                     });
                                   }}
-                                  editable={editable}
+                                  editable={editable.assignedTo && editable.inProgress}
                                 />
                               }
                             />
@@ -1679,7 +1679,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       </>
                                     ) : (
                                       <TaskApprovalStatusInput
-                                        editable={editable}
+                                        editable={editable.approved && editable.rejected}
                                         approval={
                                           values.approvedBy && values.approvedBy.id
                                             ? {
@@ -1724,7 +1724,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   defaultMessage="APPROVED DATE"
                                 />
                               }
-                              editable={editable}
+                              editable={editable.approved}
                             />
                           )}
                         </FormField>
@@ -1748,7 +1748,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   defaultMessage="REJECTED DATE"
                                 />
                               }
-                              editable={editable}
+                              editable={editable.rejected}
                             />
                           )}
                         </FormField>
