@@ -22,7 +22,7 @@ import {
 } from 'graphql';
 
 export const taskFormQuery = gql`
-  query($id: ID!) {
+  query taskFormQuery($id: ID!) {
     task(id: $id) {
       ...taskFormFragment
     }

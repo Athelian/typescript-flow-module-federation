@@ -5,9 +5,118 @@ import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import { isBefore } from 'date-fns';
 import { ObjectValue } from 'react-values';
-import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
-import { ORDER_FORM } from 'modules/permission/constants/order';
-import { PRODUCT_FORM } from 'modules/permission/constants/product';
+import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
+import { TAG_LIST } from 'modules/permission/constants/tag';
+import { TASK_UPDATE } from 'modules/permission/constants/task';
+import {
+  ORDER_FORM,
+  ORDER_TASK_UPDATE,
+  ORDER_TASK_SET_NAME,
+  ORDER_TASK_SET_DUE_DATE,
+  ORDER_TASK_SET_START_DATE,
+  ORDER_TASK_SET_IN_PROGRESS,
+  ORDER_TASK_SET_COMPLETED,
+  ORDER_TASK_SET_ASSIGNEES,
+  ORDER_TASK_SET_APPROVED,
+  ORDER_TASK_SET_REJECTED,
+  ORDER_TASK_SET_APPROVERS,
+  ORDER_TASK_SET_START_DATE_BINDING,
+  ORDER_TASK_SET_DUE_DATE_BINDING,
+  ORDER_TASK_SET_APPROVABLE,
+  ORDER_TASK_SET_DESCRIPTION,
+  ORDER_TASK_SET_MEMO,
+  ORDER_TASK_SET_TAGS,
+} from 'modules/permission/constants/order';
+import {
+  ORDER_ITEMS_GET_PRICE,
+  ORDER_ITEMS_TASK_UPDATE,
+  ORDER_ITEMS_TASK_SET_NAME,
+  ORDER_ITEMS_TASK_SET_DUE_DATE,
+  ORDER_ITEMS_TASK_SET_START_DATE,
+  ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+  ORDER_ITEMS_TASK_SET_COMPLETED,
+  ORDER_ITEMS_TASK_SET_ASSIGNEES,
+  ORDER_ITEMS_TASK_SET_APPROVED,
+  ORDER_ITEMS_TASK_SET_REJECTED,
+  ORDER_ITEMS_TASK_SET_APPROVERS,
+  ORDER_ITEMS_TASK_SET_START_DATE_BINDING,
+  ORDER_ITEMS_TASK_SET_DUE_DATE_BINDING,
+  ORDER_ITEMS_TASK_SET_APPROVABLE,
+  ORDER_ITEMS_TASK_SET_DESCRIPTION,
+  ORDER_ITEMS_TASK_SET_MEMO,
+  ORDER_ITEMS_TASK_SET_TAGS,
+} from 'modules/permission/constants/orderItem';
+import {
+  BATCH_TASK_UPDATE,
+  BATCH_TASK_SET_NAME,
+  BATCH_TASK_SET_DUE_DATE,
+  BATCH_TASK_SET_START_DATE,
+  BATCH_TASK_SET_IN_PROGRESS,
+  BATCH_TASK_SET_COMPLETED,
+  BATCH_TASK_SET_ASSIGNEES,
+  BATCH_TASK_SET_APPROVED,
+  BATCH_TASK_SET_REJECTED,
+  BATCH_TASK_SET_APPROVERS,
+  BATCH_TASK_SET_START_DATE_BINDING,
+  BATCH_TASK_SET_DUE_DATE_BINDING,
+  BATCH_TASK_SET_APPROVABLE,
+  BATCH_TASK_SET_DESCRIPTION,
+  BATCH_TASK_SET_MEMO,
+  BATCH_TASK_SET_TAGS,
+} from 'modules/permission/constants/batch';
+import {
+  PRODUCT_FORM,
+  PRODUCT_TASK_UPDATE,
+  PRODUCT_TASK_SET_NAME,
+  PRODUCT_TASK_SET_DUE_DATE,
+  PRODUCT_TASK_SET_START_DATE,
+  PRODUCT_TASK_SET_IN_PROGRESS,
+  PRODUCT_TASK_SET_COMPLETED,
+  PRODUCT_TASK_SET_ASSIGNEES,
+  PRODUCT_TASK_SET_APPROVED,
+  PRODUCT_TASK_SET_REJECTED,
+  PRODUCT_TASK_SET_APPROVERS,
+  PRODUCT_TASK_SET_START_DATE_BINDING,
+  PRODUCT_TASK_SET_DUE_DATE_BINDING,
+  PRODUCT_TASK_SET_DESCRIPTION,
+  PRODUCT_TASK_SET_APPROVABLE,
+  PRODUCT_TASK_SET_MEMO,
+  PRODUCT_TASK_SET_TAGS,
+  PRODUCT_PROVIDER_TASK_UPDATE,
+  PRODUCT_PROVIDER_TASK_SET_NAME,
+  PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
+  PRODUCT_PROVIDER_TASK_SET_START_DATE,
+  PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+  PRODUCT_PROVIDER_TASK_SET_COMPLETED,
+  PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
+  PRODUCT_PROVIDER_TASK_SET_APPROVED,
+  PRODUCT_PROVIDER_TASK_SET_REJECTED,
+  PRODUCT_PROVIDER_TASK_SET_APPROVERS,
+  PRODUCT_PROVIDER_TASK_SET_START_DATE_BINDING,
+  PRODUCT_PROVIDER_TASK_SET_DUE_DATE_BINDING,
+  PRODUCT_PROVIDER_TASK_SET_APPROVABLE,
+  PRODUCT_PROVIDER_TASK_SET_DESCRIPTION,
+  PRODUCT_PROVIDER_TASK_SET_MEMO,
+  PRODUCT_PROVIDER_TASK_SET_TAGS,
+} from 'modules/permission/constants/product';
+import {
+  SHIPMENT_TASK_UPDATE,
+  SHIPMENT_TASK_SET_NAME,
+  SHIPMENT_TASK_SET_DUE_DATE,
+  SHIPMENT_TASK_SET_START_DATE,
+  SHIPMENT_TASK_SET_IN_PROGRESS,
+  SHIPMENT_TASK_SET_COMPLETED,
+  SHIPMENT_TASK_SET_ASSIGNEES,
+  SHIPMENT_TASK_SET_APPROVED,
+  SHIPMENT_TASK_SET_REJECTED,
+  SHIPMENT_TASK_SET_APPROVERS,
+  SHIPMENT_TASK_SET_START_DATE_BINDING,
+  SHIPMENT_TASK_SET_DUE_DATE_BINDING,
+  SHIPMENT_TASK_SET_APPROVABLE,
+  SHIPMENT_TASK_SET_DESCRIPTION,
+  SHIPMENT_TASK_SET_MEMO,
+  SHIPMENT_TASK_SET_TAGS,
+} from 'modules/permission/constants/shipment';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
@@ -51,8 +160,6 @@ import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { TASK_UPDATE } from 'modules/permission/constants/task';
-import { TAG_LIST } from 'modules/permission/constants/tag';
 import {
   orderBinding,
   orderItemBinding,
@@ -122,10 +229,288 @@ const getStatusState = ({
   };
 };
 
+const getConfig = (
+  type: string,
+  hasPermission: Function
+): TaskEditable & {
+  startDateBinding: boolean,
+  dueDateBinding: boolean,
+  approvable: boolean,
+  description: boolean,
+  memo: boolean,
+  tags: boolean,
+} => {
+  switch (type) {
+    case 'Order':
+      return {
+        name: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_NAME]),
+        startDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_START_DATE]),
+        dueDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DUE_DATE]),
+        inProgress: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_IN_PROGRESS]),
+        completed: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_COMPLETED]),
+        assignedTo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_ASSIGNEES]),
+        approved: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVED]),
+        rejected: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_REJECTED]),
+        approvers: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVERS]),
+        startDateBinding: hasPermission([
+          TASK_UPDATE,
+          ORDER_TASK_UPDATE,
+          ORDER_TASK_SET_START_DATE_BINDING,
+        ]),
+        dueDateBinding: hasPermission([
+          TASK_UPDATE,
+          ORDER_TASK_UPDATE,
+          ORDER_TASK_SET_DUE_DATE_BINDING,
+        ]),
+        approvable: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVABLE]),
+        description: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DESCRIPTION]),
+        memo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_MEMO]),
+        tags: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_TAGS]),
+      };
+    case 'OrderItem':
+      return {
+        name: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_NAME]),
+        startDate: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_START_DATE,
+        ]),
+        dueDate: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_DUE_DATE,
+        ]),
+        inProgress: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+        ]),
+        completed: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_COMPLETED,
+        ]),
+        assignedTo: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_ASSIGNEES,
+        ]),
+        approved: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_APPROVED,
+        ]),
+        rejected: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_REJECTED,
+        ]),
+        approvers: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_APPROVERS,
+        ]),
+        startDateBinding: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_START_DATE_BINDING,
+        ]),
+        dueDateBinding: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_DUE_DATE_BINDING,
+        ]),
+        approvable: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_APPROVABLE,
+        ]),
+        description: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_DESCRIPTION,
+        ]),
+        memo: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_MEMO]),
+        tags: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_TAGS]),
+      };
+    case 'Batch':
+      return {
+        name: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_NAME]),
+        startDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_START_DATE]),
+        dueDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DUE_DATE]),
+        inProgress: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_IN_PROGRESS]),
+        completed: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_COMPLETED]),
+        assignedTo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_ASSIGNEES]),
+        approved: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVED]),
+        rejected: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_REJECTED]),
+        approvers: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVERS]),
+        startDateBinding: hasPermission([
+          TASK_UPDATE,
+          BATCH_TASK_UPDATE,
+          BATCH_TASK_SET_START_DATE_BINDING,
+        ]),
+        dueDateBinding: hasPermission([
+          TASK_UPDATE,
+          BATCH_TASK_UPDATE,
+          BATCH_TASK_SET_DUE_DATE_BINDING,
+        ]),
+        approvable: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVABLE]),
+        description: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DESCRIPTION]),
+        memo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_MEMO]),
+        tags: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_TAGS]),
+      };
+    case 'Product':
+      return {
+        name: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_NAME]),
+        startDate: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_START_DATE]),
+        dueDate: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_DUE_DATE]),
+        inProgress: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_IN_PROGRESS]),
+        completed: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_COMPLETED]),
+        assignedTo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_ASSIGNEES]),
+        approved: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVED]),
+        rejected: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_REJECTED]),
+        approvers: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVERS]),
+        startDateBinding: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_TASK_UPDATE,
+          PRODUCT_TASK_SET_START_DATE_BINDING,
+        ]),
+        dueDateBinding: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_TASK_UPDATE,
+          PRODUCT_TASK_SET_DUE_DATE_BINDING,
+        ]),
+        approvable: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVABLE]),
+        description: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_TASK_UPDATE,
+          PRODUCT_TASK_SET_DESCRIPTION,
+        ]),
+        memo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_MEMO]),
+        tags: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_TAGS]),
+      };
+    case 'ProductProvider':
+      return {
+        name: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_NAME,
+        ]),
+        startDate: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_START_DATE,
+        ]),
+        dueDate: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
+        ]),
+        inProgress: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+        ]),
+        completed: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_COMPLETED,
+        ]),
+        assignedTo: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
+        ]),
+        approved: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_APPROVED,
+        ]),
+        rejected: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_REJECTED,
+        ]),
+        approvers: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_APPROVERS,
+        ]),
+        startDateBinding: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_START_DATE_BINDING,
+        ]),
+        dueDateBinding: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_DUE_DATE_BINDING,
+        ]),
+        approvable: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_APPROVABLE,
+        ]),
+        description: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_DESCRIPTION,
+        ]),
+        memo: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_MEMO,
+        ]),
+        tags: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_TAGS,
+        ]),
+      };
+    default:
+      return {
+        name: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_NAME]),
+        startDate: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_START_DATE]),
+        dueDate: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_DUE_DATE]),
+        inProgress: hasPermission([
+          TASK_UPDATE,
+          SHIPMENT_TASK_UPDATE,
+          SHIPMENT_TASK_SET_IN_PROGRESS,
+        ]),
+        completed: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_COMPLETED]),
+        assignedTo: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_ASSIGNEES]),
+        approved: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_APPROVED]),
+        rejected: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_REJECTED]),
+        approvers: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_APPROVERS]),
+        startDateBinding: hasPermission([
+          TASK_UPDATE,
+          SHIPMENT_TASK_UPDATE,
+          SHIPMENT_TASK_SET_START_DATE_BINDING,
+        ]),
+        dueDateBinding: hasPermission([
+          TASK_UPDATE,
+          SHIPMENT_TASK_UPDATE,
+          SHIPMENT_TASK_SET_DUE_DATE_BINDING,
+        ]),
+        approvable: hasPermission([
+          TASK_UPDATE,
+          SHIPMENT_TASK_UPDATE,
+          SHIPMENT_TASK_SET_APPROVABLE,
+        ]),
+        description: hasPermission([
+          TASK_UPDATE,
+          SHIPMENT_TASK_UPDATE,
+          SHIPMENT_TASK_SET_DESCRIPTION,
+        ]),
+        memo: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_MEMO]),
+        tags: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_TAGS]),
+      };
+  }
+};
+
 const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const editable = hasPermission(TASK_UPDATE);
   const initDuration = {};
   if (task && task.startDateBinding) {
     const { months = 0, weeks = 0, days = 0 } = task.startDateInterval || {};
@@ -271,6 +656,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
             };
 
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
+            const editable = getConfig(entity, hasPermission);
             const startDateSyncUnavailable = ['Product', 'ProductProvider'].includes(entity);
 
             return (
@@ -322,7 +708,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           required
                           {...inputHandlers}
                           originalValue={originalValues[name]}
-                          editable={editable}
+                          editable={editable.name}
                         />
                       )}
                     </FormField>
@@ -358,7 +744,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                     })
                                   : () => {}
                               }
-                              editable={editable}
+                              editable={editable.startDate}
                             />
                           </div>
 
@@ -377,7 +763,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       })
                                     : () => {}
                                 }
-                                editable={editable}
+                                editable={editable.startDate}
                               />
                             </div>
                           )}
@@ -418,7 +804,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   name={name}
                                   {...inputHandlers}
                                   originalValue={originalValues[name]}
-                                  editable={editable && manualSettings.startDate}
+                                  editable={editable.startDate && manualSettings.startDate}
                                   hideTooltip={!manualSettings.startDate}
                                 />
                               )}
@@ -490,7 +876,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           metricOptionWidth="65px"
                                           inputWidth="135px"
                                           {...inputHandlers}
-                                          editable={editable}
+                                          editable={editable.startDate}
                                           hideTooltip
                                         />
                                       )}
@@ -513,7 +899,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           ]}
                                           inputWidth="55px"
                                           {...inputHandlers}
-                                          editable={editable}
+                                          editable={editable.startDate}
                                           required
                                           hideDropdownArrow
                                           hideTooltip
@@ -544,7 +930,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       <SelectInputFactory
                                         {...inputHandlers}
                                         items={getFieldsByEntity(entity, intl)}
-                                        editable={editable}
+                                        editable={editable.startDate}
                                         required
                                         hideTooltip
                                       />
@@ -611,7 +997,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                     })
                                   : () => {}
                               }
-                              editable={editable}
+                              editable={editable.dueDate}
                             />
                           </div>
 
@@ -629,7 +1015,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                     })
                                   : () => {}
                               }
-                              editable={editable}
+                              editable={editable.dueDate}
                             />
                           </div>
 
@@ -663,7 +1049,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   }
                                   {...inputHandlers}
                                   originalValue={originalValues[name]}
-                                  editable={editable && manualSettings.dueDate}
+                                  editable={editable.dueDate && manualSettings.dueDate}
                                   hideTooltip={!manualSettings.dueDate}
                                 />
                               )}
@@ -851,7 +1237,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           inputWidth="200px"
                           inputAlign="right"
                           vertical={false}
-                          editable={editable}
+                          editable={editable.description}
                         />
                       )}
                     </FormField>
@@ -873,8 +1259,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             setFieldValue(field, value);
                           }}
                           editable={{
-                            set: hasPermission(TAG_LIST) && editable,
-                            remove: editable,
+                            set: hasPermission(TAG_LIST) && editable.tags,
+                            remove: editable.tags,
                           }}
                         />
                       }
@@ -1035,7 +1421,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           vertical
                           inputWidth="680px"
                           inputHeight="65px"
-                          editable={editable}
+                          editable={editable.memo}
                         />
                       )}
                     </FormField>
@@ -1088,7 +1474,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                               setFieldTouched('inProgressAt');
                             }
                           }}
-                          editable={editable}
+                          editable={editable.assignedTo && editable.inProgress}
                         />
                       }
                     />
@@ -1122,7 +1508,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                   setFieldTouched('completedBy');
                                   setFieldTouched('completedAt');
                                 }}
-                                editable={editable}
+                                editable={
+                                  activeUser
+                                    ? editable.completed
+                                    : editable.inProgress && editable.completed
+                                }
                               />
                             ) : (
                               <Display color="GRAY_DARK">
@@ -1157,7 +1547,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                               defaultMessage="DATE COMPLETED"
                             />
                           }
-                          editable={editable}
+                          editable={editable.completed}
                         />
                       )}
                     </FormField>
@@ -1185,7 +1575,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                         setFieldValue('approvable', !values.approvable);
                         setFieldTouched('approvable');
                       }}
-                      editable={editable}
+                      editable={editable.approvable}
                     />
                   </div>
 

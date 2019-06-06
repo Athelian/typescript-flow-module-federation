@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment } from 'graphql';
+import { badRequestFragment, forbiddenFragment } from 'graphql';
 import { parseTaskField } from 'utils/data';
 
 export const createTaskMutation = gql`
@@ -10,9 +10,11 @@ export const createTaskMutation = gql`
         id
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const updateTaskMutation = gql`
@@ -22,9 +24,11 @@ export const updateTaskMutation = gql`
         id
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
