@@ -5,11 +5,8 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
 import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 import { TaskCard, CardAction } from 'components/Cards';
-import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { ItemStyle, EmptyMessageStyle } from './style';
 
 type OptionalProps = {
@@ -46,8 +43,6 @@ const Tasks = ({
   entityId,
   isInTemplate,
 }: Props) => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
   if (tasks.length === 0 && isInTemplate)
     return (
       <div className={EmptyMessageStyle}>
@@ -55,6 +50,7 @@ const Tasks = ({
       </div>
     );
 
+  const isEditable = Object.keys(editable).some(key => editable[key]);
   return (tasks.map((task, index) => (
     <div id={`task_${task.id}`} className={ItemStyle} key={task.id}>
       <BooleanValue>
@@ -104,7 +100,7 @@ const Tasks = ({
                   }}
                   parentEntity={upperFirst(type)}
                   isInTemplate={isInTemplate}
-                  editable={hasPermission(TASK_UPDATE)}
+                  editable={isEditable}
                   task={{ ...omit(task, ['entity']), sort: index }}
                   onSave={value => {
                     selectTaskSlideToggle(false);
