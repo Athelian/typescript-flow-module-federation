@@ -76,20 +76,24 @@ type OptionalProps = {
 
 type Props = OptionalProps;
 
+const defaultEditable = {
+  name: false,
+  startDate: false,
+  dueDate: false,
+  inProgress: false,
+  completed: false,
+  assignedTo: false,
+  approved: false,
+  rejected: false,
+  approvers: false,
+};
+
 const defaultProps = {
   position: 0,
   hideParentInfo: false,
   onClick: null,
   saveOnBlur: () => {},
-  editable: {
-    name: false,
-    startDate: false,
-    dueDate: false,
-    status: false,
-    assignedTo: false,
-    approvers: false,
-    approvable: false,
-  },
+  editable: defaultEditable,
   actions: [],
   isInTemplate: false,
 };
@@ -160,7 +164,7 @@ const TaskCard = ({
   hideParentInfo,
   onClick,
   saveOnBlur,
-  editable,
+  editable: orignalEditable,
   isInTemplate,
   actions,
   ...rest
@@ -197,6 +201,8 @@ const TaskCard = ({
     startDateBinding,
     dueDateBinding,
   };
+
+  const editable = { ...defaultEditable, ...orignalEditable };
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
 
@@ -446,7 +452,9 @@ const TaskCard = ({
                   status={completedBy ? COMPLETED : IN_PROGRESS}
                   showCompletedDate
                   completedDate={completedAt}
-                  editable={completedBy ? editable.inProgress : editable.completed}
+                  editable={
+                    completedBy ? editable.completed : editable.inProgress && editable.completed
+                  }
                   onClick={() =>
                     saveOnBlur({
                       ...task,
@@ -568,8 +576,7 @@ const TaskCard = ({
                                 showUser
                                 showDate
                                 width="175px"
-                                // FIXME: check the permission string
-                                editable={editable.approved || editable.rejected}
+                                editable={editable.approved && editable.rejected}
                                 onClickUser={() => {
                                   saveOnBlur({
                                     ...task,
