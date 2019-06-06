@@ -1360,14 +1360,18 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           }
                           vertical
                           input={
-                            <ProductCard
-                              product={task.product}
-                              onClick={() => {
-                                if (canViewProductForm) {
-                                  navigate(`/product/${encodeId(task.product.id)}`);
-                                }
-                              }}
-                            />
+                            <PartnerPermissionsWrapper data={task.product}>
+                              {permissions => (
+                                <ProductCard
+                                  product={task.product}
+                                  onClick={() => {
+                                    if (permissions.includes(PRODUCT_FORM)) {
+                                      navigate(`/product/${encodeId(task.product.id)}`);
+                                    }
+                                  }}
+                                />
+                              )}
+                            </PartnerPermissionsWrapper>
                           }
                         />
                       </GridColumn>
