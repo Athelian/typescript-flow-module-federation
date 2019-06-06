@@ -26,6 +26,7 @@ export const notFoundFragment = gql`
 
 export const forbiddenFragment = gql`
   fragment forbiddenFragment on Forbidden {
+    reason
     reference {
       id
     }

@@ -25,6 +25,7 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
+  forbiddenFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -44,6 +45,7 @@ export const updateBatchMutation = gql`
     batchUpdate(id: $id, input: $input) {
       ...batchFormFragment
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
 
@@ -71,6 +73,7 @@ export const updateBatchMutation = gql`
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const prepareParsedBatchInput = (

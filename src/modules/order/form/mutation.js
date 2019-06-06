@@ -29,6 +29,7 @@ import {
   containerCardFragment,
   itemInOrderFormFragment,
   itemInBatchFormFragment,
+  forbiddenFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -53,9 +54,11 @@ export const createOrderMutation = gql`
         id
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const updateOrderMutation = gql`
@@ -63,6 +66,7 @@ export const updateOrderMutation = gql`
     orderUpdate(id: $id, input: $input) {
       ...orderFormFragment
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
 
@@ -94,6 +98,7 @@ export const updateOrderMutation = gql`
   ${itemInOrderFormFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
+  ${forbiddenFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({

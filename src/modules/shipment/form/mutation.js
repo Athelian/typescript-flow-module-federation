@@ -30,6 +30,7 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
+  forbiddenFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -71,9 +72,11 @@ export const createShipmentMutation: Object = gql`
         }
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const updateShipmentMutation: Object = gql`
@@ -81,6 +84,7 @@ export const updateShipmentMutation: Object = gql`
     shipmentUpdate(id: $id, input: $input) {
       ...shipmentFormFragment
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
 
@@ -113,6 +117,7 @@ export const updateShipmentMutation: Object = gql`
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
+  ${forbiddenFragment}
 `;
 
 type DateRevisionType = {

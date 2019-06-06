@@ -20,6 +20,7 @@ import {
   taskTemplateCardFragment,
   taskFormInSlideViewFragment,
   taskFormInTemplateFragment,
+  forbiddenFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -41,9 +42,11 @@ export const createProductMutation: Object = gql`
         id
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const updateProductMutation: Object = gql`
@@ -52,6 +55,7 @@ export const updateProductMutation: Object = gql`
       __typename
       ...productFormFragment
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
   ${badRequestFragment}
@@ -73,6 +77,7 @@ export const updateProductMutation: Object = gql`
   ${taskTemplateCardFragment}
   ${taskFormInSlideViewFragment}
   ${taskFormInTemplateFragment}
+  ${forbiddenFragment}
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({
