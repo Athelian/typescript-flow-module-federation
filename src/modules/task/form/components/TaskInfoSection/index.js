@@ -512,7 +512,6 @@ const getConfig = (
 const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const editable = hasPermission(TASK_UPDATE);
 
   const canViewOrderForm = hasPermission(ORDER_FORM);
   const canViewProductForm = hasPermission(PRODUCT_FORM);
