@@ -84,7 +84,6 @@ const defaultProps = {
   hideParentInfo: false,
   onClick: null,
   saveOnBlur: () => {},
-  editable: defaultEditable,
   actions: [],
   isInTemplate: false,
 };
@@ -155,7 +154,7 @@ const TaskCard = ({
   hideParentInfo,
   onClick,
   saveOnBlur,
-  editable: orignalEditable,
+  editable: originalEditable,
   isInTemplate,
   actions,
   ...rest
@@ -193,7 +192,7 @@ const TaskCard = ({
     dueDateBinding,
   };
 
-  const editable = { ...defaultEditable, ...orignalEditable };
+  const editable = { ...defaultEditable, ...originalEditable };
 
   const { parentType, parentIcon, parentData } = getParentInfo(parent);
 
@@ -356,7 +355,7 @@ const TaskCard = ({
                           emitter.emit('AUTO_DATE');
                         }, 200);
                       }}
-                      editable={isEditable && !startDateBinding}
+                      editable={editable.startDate && !startDateBinding}
                       inputWidth="120px"
                       inputHeight="20px"
                       name={fieldName}
@@ -486,7 +485,7 @@ const TaskCard = ({
                             inProgressAt: formatToGraphql(startOfToday()),
                           })
                   }
-                  editable={editable.assignedTo}
+                  editable={editable.assignedTo && editable.inProgress}
                 />
               )}
             </div>

@@ -78,7 +78,7 @@ const Tasks = ({
                 sortable && index - 1 > -1 && (
                   <CardAction
                     icon="CHEVRON_DOUBLE_LEFT"
-                    hoverColr="BLUE"
+                    hoverColor="BLUE"
                     onClick={() => onSwap(index, 'left')}
                   />
                 ),
