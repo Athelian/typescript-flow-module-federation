@@ -21,7 +21,12 @@ import {
 } from 'graphql';
 
 const editableTaskListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: TaskFilterInput, $sortBy: TaskSortInput) {
+  query editableTaskListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: TaskFilterInput
+    $sortBy: TaskSortInput
+  ) {
     tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...taskFormFragment

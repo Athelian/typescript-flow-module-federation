@@ -45,7 +45,8 @@ export default function InlineNumberAdjustmentInput({
   return hasQuantityYet ? (
     <div className={InlineRowStyle}>
       <InlineSelectEnumInput
-        id={`input-${id}`}
+        // TODO: need to support the 2 inputs on a cell
+        id={`type-${id}`}
         name={`${name}.type`}
         value={value && value.type ? value.type : ''}
         enumType="BatchQuantityRevisionType"
@@ -53,7 +54,7 @@ export default function InlineNumberAdjustmentInput({
         width="97.5px"
       />
       <InlineNumberInput
-        id={`input-${id}`}
+        id={id}
         name={`${name}.quantity`}
         value={value && value.quantity ? value.quantity : 0}
         isRequired={isRequired}

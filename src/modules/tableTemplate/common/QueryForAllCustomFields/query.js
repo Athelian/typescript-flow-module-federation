@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { fieldDefinitionFragment } from 'graphql';
 
 export const allCustomFieldDefinitionsQuery = gql`
-  query {
+  query allCustomFieldDefinitionsQuery {
     order: fieldDefinitions(entityType: Order) {
       ...fieldDefinitionFragment
     }
