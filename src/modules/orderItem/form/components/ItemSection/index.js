@@ -5,7 +5,6 @@ import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import {
   ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_SET_NO,
@@ -235,18 +234,14 @@ const ItemSection = ({ isSlideView }: Props) => {
                       <Label>
                         <FormattedMessage id="modules.OrderItems.order" defaultMessage="ORDER" />
                       </Label>
-                      <PartnerPermissionsWrapper data={originalValues.order}>
-                        {permissions => (
-                          <OrderCard
-                            order={originalValues.order}
-                            onClick={() => {
-                              if (permissions.includes(ORDER_FORM)) {
-                                navigate(`/order/${encodeId(originalValues.order.id)}`);
-                              }
-                            }}
-                          />
-                        )}
-                      </PartnerPermissionsWrapper>
+                      <OrderCard
+                        order={originalValues.order}
+                        onClick={() => {
+                          if (hasPermission(ORDER_FORM)) {
+                            navigate(`/order/${encodeId(originalValues.order.id)}`);
+                          }
+                        }}
+                      />
                     </>
                   )}
                 </GridColumn>

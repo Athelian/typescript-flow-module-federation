@@ -8,7 +8,6 @@ import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionWrapper, SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
-import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { SHIPMENT_ORDER_LIST } from 'modules/permission/constants/shipment';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
@@ -54,19 +53,15 @@ function OrdersSection() {
                 ) : (
                   <div className={OrdersSectionBodyStyle}>
                     {orders.map(order => (
-                      <PartnerPermissionsWrapper data={order}>
-                        {permissions => (
-                          <OrderCard
-                            order={order}
-                            key={order.id}
-                            onClick={() => {
-                              if (permissions.includes(ORDER_FORM)) {
-                                navigate(`/order/${encodeId(order.id)}`);
-                              }
-                            }}
-                          />
-                        )}
-                      </PartnerPermissionsWrapper>
+                      <OrderCard
+                        order={order}
+                        key={order.id}
+                        onClick={() => {
+                          if (hasPermission(ORDER_FORM)) {
+                            navigate(`/order/${encodeId(order.id)}`);
+                          }
+                        }}
+                      />
                     ))}
                   </div>
                 )}

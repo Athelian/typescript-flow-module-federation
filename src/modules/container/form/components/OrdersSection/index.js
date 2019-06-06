@@ -7,7 +7,6 @@ import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import FormattedNumber from 'components/FormattedNumber';
 import { SectionHeader, SectionWrapper } from 'components/Form';
-import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { CONTAINER_ORDER_LIST } from 'modules/permission/constants/container';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -51,19 +50,15 @@ function OrdersSection({ orders }: Props) {
         ) : (
           <div className={OrdersSectionBodyStyle}>
             {orders.map(order => (
-              <PartnerPermissionsWrapper data={order}>
-                {permissions => (
-                  <OrderCard
-                    order={order}
-                    key={order.id}
-                    onClick={() => {
-                      if (permissions.includes(ORDER_FORM)) {
-                        navigate(`/order/${encodeId(order.id)}`);
-                      }
-                    }}
-                  />
-                )}
-              </PartnerPermissionsWrapper>
+              <OrderCard
+                order={order}
+                key={order.id}
+                onClick={() => {
+                  if (hasPermission(ORDER_FORM)) {
+                    navigate(`/order/${encodeId(order.id)}`);
+                  }
+                }}
+              />
             ))}
           </div>
         )}

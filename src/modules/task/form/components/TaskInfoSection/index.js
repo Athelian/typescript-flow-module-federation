@@ -1283,18 +1283,14 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           }
                           vertical
                           input={
-                            <PartnerPermissionsWrapper data={task.order}>
-                              {permissions => (
-                                <OrderCard
-                                  order={task.order}
-                                  onClick={() => {
-                                    if (permissions.includes(ORDER_FORM)) {
-                                      navigate(`/order/${encodeId(task.order.id)}`);
-                                    }
-                                  }}
-                                />
-                              )}
-                            </PartnerPermissionsWrapper>
+                            <OrderCard
+                              order={task.order}
+                              onClick={() => {
+                                if (hasPermission(ORDER_FORM)) {
+                                  navigate(`/order/${encodeId(task.order.id)}`);
+                                }
+                              }}
+                            />
                           }
                         />
                       </GridColumn>
