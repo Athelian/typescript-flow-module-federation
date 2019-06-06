@@ -876,7 +876,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           metricOptionWidth="65px"
                                           inputWidth="135px"
                                           {...inputHandlers}
-                                          editable={editable.startDate}
+                                          editable={editable.startDateBinding}
                                           hideTooltip
                                         />
                                       )}
@@ -899,7 +899,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           ]}
                                           inputWidth="55px"
                                           {...inputHandlers}
-                                          editable={editable.startDate}
+                                          editable={editable.startDateBinding}
                                           required
                                           hideDropdownArrow
                                           hideTooltip
@@ -1112,7 +1112,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           metricOptionWidth="65px"
                                           inputWidth="135px"
                                           {...inputHandlers}
-                                          editable={editable.dueDate}
+                                          editable={editable.dueDateBinding}
                                           hideTooltip
                                         />
                                       )}
@@ -1135,7 +1135,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                           ]}
                                           inputWidth="55px"
                                           {...inputHandlers}
-                                          editable={editable.dueDate}
+                                          editable={editable.dueDateBinding}
                                           required
                                           hideDropdownArrow
                                           hideTooltip
@@ -1187,7 +1187,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                                 ...getFieldsByEntity(entity, intl),
                                               ]
                                         }
-                                        editable={editable.dueDate}
+                                        editable={editable.dueDateBinding}
                                         required
                                         hideTooltip
                                       />
@@ -1617,7 +1617,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                                       rejectedAt: null,
                                     });
                                   }}
-                                  editable={editable.assignedTo && editable.inProgress}
+                                  editable={editable.approvers}
                                 />
                               }
                             />
