@@ -4,7 +4,12 @@ import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
-import { ORDER_CREATE, ORDER_UPDATE, ORDER_FORM } from 'modules/permission/constants/order';
+import {
+  ORDER_CREATE,
+  ORDER_UPDATE,
+  ORDER_FORM,
+  ORDER_SET_ARCHIVED,
+} from 'modules/permission/constants/order';
 import GridView from 'components/GridView';
 import { OrderCard, CardAction } from 'components/Cards';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
@@ -22,7 +27,8 @@ const defaultRenderItem = (item: Object): React.Node => (
   <PartnerPermissionsWrapper key={item.id} data={item}>
     {permissions => {
       const canCreate = permissions.includes(ORDER_CREATE);
-      const canUpdate = permissions.includes(ORDER_UPDATE);
+      const canChangeStatus =
+        permissions.includes(ORDER_UPDATE) || permissions.includes(ORDER_SET_ARCHIVED);
       const canViewForm = permissions.includes(ORDER_FORM);
       return (
         <BooleanValue>
@@ -52,7 +58,7 @@ const defaultRenderItem = (item: Object): React.Node => (
                         />,
                       ]
                     : []),
-                  ...(canUpdate
+                  ...(canChangeStatus
                     ? [
                         <CardAction
                           icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
