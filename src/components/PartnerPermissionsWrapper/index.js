@@ -1,10 +1,10 @@
 // @flow
-import React from 'react';
+import React, { useContext } from 'react';
 import { Query } from 'react-apollo';
 import { navigate } from '@reach/router';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
-import QueryFormPermissionContext from 'components/common/QueryForm/context';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
+import PermissionContext from 'modules/permission/PermissionContext';
 import LoadingIcon from 'components/LoadingIcon';
 import useUser from 'hooks/useUser';
 
@@ -12,18 +12,10 @@ const PartnerPermissionsWrapper = ({ data, children }: { data: Object, children:
   const { isOwnerBy } = useUser();
   const partnerId = getByPath('ownedBy.partner.id', data);
   const isOwner = isOwnerBy(partnerId);
+  const { permissions } = useContext(PermissionContext);
 
   if (isOwner) {
-    return (
-      <QueryFormPermissionContext.Provider
-        value={{
-          isOwner: true,
-          permissions: [],
-        }}
-      >
-        {children(data)}
-      </QueryFormPermissionContext.Provider>
-    );
+    return children(permissions);
   }
 
   return (
@@ -41,20 +33,7 @@ const PartnerPermissionsWrapper = ({ data, children }: { data: Object, children:
 
           return permissionError.message;
         }
-        return (
-          <QueryFormPermissionContext.Provider
-            value={{
-              isOwner: false,
-              permissions: getByPathWithDefault(
-                [],
-                'viewer.permissionsFromPartner',
-                permissionsData
-              ),
-            }}
-          >
-            {children(data)}
-          </QueryFormPermissionContext.Provider>
-        );
+        return children(getByPathWithDefault([], 'viewer.permissionsFromPartner', permissionsData));
       }}
     </Query>
   );

@@ -117,6 +117,7 @@ import {
   SHIPMENT_TASK_SET_MEMO,
   SHIPMENT_TASK_SET_TAGS,
 } from 'modules/permission/constants/shipment';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
@@ -1283,14 +1284,18 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           }
                           vertical
                           input={
-                            <OrderCard
-                              order={task.order}
-                              onClick={() => {
-                                if (canViewOrderForm) {
-                                  navigate(`/order/${encodeId(task.order.id)}`);
-                                }
-                              }}
-                            />
+                            <PartnerPermissionsWrapper data={task.order}>
+                              {permissions => (
+                                <OrderCard
+                                  order={task.order}
+                                  onClick={() => {
+                                    if (permissions.includes(ORDER_FORM)) {
+                                      navigate(`/order/${encodeId(task.order.id)}`);
+                                    }
+                                  }}
+                                />
+                              )}
+                            </PartnerPermissionsWrapper>
                           }
                         />
                       </GridColumn>

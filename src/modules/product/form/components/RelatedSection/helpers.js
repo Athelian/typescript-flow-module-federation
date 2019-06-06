@@ -2,9 +2,10 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
-import { OrderCard, ItemCard, BatchCard, ContainerCard, ShipmentCard } from 'components/Cards';
 import { encodeId } from 'utils/id';
 import { spreadOrderItem } from 'utils/item';
+import { OrderCard, ItemCard, BatchCard, ContainerCard, ShipmentCard } from 'components/Cards';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE, ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
@@ -49,17 +50,20 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         ),
         renderItems: (items: Array<Object>) => {
-          const canViewForm = hasPermission(ORDER_FORM);
           return (items.map(item => (
-            <OrderCard
-              key={item.id}
-              order={item}
-              onClick={() => {
-                if (canViewForm) {
-                  navigate(`/order/${encodeId(item.id)}`);
-                }
-              }}
-            />
+            <PartnerPermissionsWrapper data={item}>
+              {permissions => (
+                <OrderCard
+                  key={item.id}
+                  order={item}
+                  onClick={() => {
+                    if (permissions.includes(ORDER_FORM)) {
+                      navigate(`/order/${encodeId(item.id)}`);
+                    }
+                  }}
+                />
+              )}
+            </PartnerPermissionsWrapper>
           )): Array<React.Node>);
         },
       };
@@ -169,17 +173,20 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
         ),
         renderItems: (items: Array<Object>) => {
-          const canViewForm = hasPermission(ORDER_FORM);
           return (items.map(item => (
-            <OrderCard
-              key={item.id}
-              order={item}
-              onClick={() => {
-                if (canViewForm) {
-                  navigate(`/order/${encodeId(item.id)}`);
-                }
-              }}
-            />
+            <PartnerPermissionsWrapper data={item}>
+              {permissions => (
+                <OrderCard
+                  key={item.id}
+                  order={item}
+                  onClick={() => {
+                    if (permissions.includes(ORDER_FORM)) {
+                      navigate(`/order/${encodeId(item.id)}`);
+                    }
+                  }}
+                />
+              )}
+            </PartnerPermissionsWrapper>
           )): Array<React.Node>);
         },
       };

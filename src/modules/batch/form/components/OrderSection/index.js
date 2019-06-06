@@ -8,6 +8,7 @@ import { getByPath } from 'utils/fp';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
 import { BATCH_ORDERS_LIST } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
@@ -46,14 +47,18 @@ function OrderSection({ orderConfig }: Props) {
               </SectionNavBar>
               <div className={OrderSectionBodyStyle}>
                 {order ? (
-                  <OrderCard
-                    order={order}
-                    onClick={() => {
-                      if (orderConfig === NAVIGABLE && hasPermission(ORDER_FORM)) {
-                        navigate(`/order/${encodeId(order.id)}`);
-                      }
-                    }}
-                  />
+                  <PartnerPermissionsWrapper data={order}>
+                    {permissions => (
+                      <OrderCard
+                        order={order}
+                        onClick={() => {
+                          if (orderConfig === NAVIGABLE && permissions.includes(ORDER_FORM)) {
+                            navigate(`/order/${encodeId(order.id)}`);
+                          }
+                        }}
+                      />
+                    )}
+                  </PartnerPermissionsWrapper>
                 ) : (
                   <div className={EmptyMessageStyle}>
                     <FormattedMessage

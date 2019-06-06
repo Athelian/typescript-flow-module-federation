@@ -18,6 +18,7 @@ import {
   portFragment,
   todoFragment,
   sizeFragment,
+  ownedByFragment,
 } from 'graphql';
 import { parseTaskField } from 'utils/data';
 import { isEquals } from 'utils/fp';
@@ -38,7 +39,7 @@ export const taskUpdateManyMutation = gql`
   ${productProviderCardFragment}
   ${batchCardFragment}
   ${shipmentCardFragment}
-  ${orderCardFragment}
+  ${ownedByFragment}
   ${itemCardFragment}
   ${partnerNameFragment}
   ${priceFragment}
