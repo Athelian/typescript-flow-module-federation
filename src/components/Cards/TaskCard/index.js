@@ -59,7 +59,17 @@ type OptionalProps = {
   hideParentInfo: boolean,
   onClick: Function,
   saveOnBlur: Function,
-  editable: boolean,
+  editable: {
+    name: boolean,
+    startDate: boolean,
+    dueDate: boolean,
+    inProgress: boolean,
+    completed: boolean,
+    assignedTo: boolean,
+    approved: boolean,
+    rejected: boolean,
+    approvers: boolean,
+  },
   actions: Array<React.Node>,
   isInTemplate: boolean,
 };
@@ -71,7 +81,15 @@ const defaultProps = {
   hideParentInfo: false,
   onClick: null,
   saveOnBlur: () => {},
-  editable: false,
+  editable: {
+    name: false,
+    startDate: false,
+    dueDate: false,
+    status: false,
+    assignedTo: false,
+    approvers: false,
+    approvable: false,
+  },
   actions: [],
   isInTemplate: false,
 };
@@ -206,13 +224,15 @@ const TaskCard = ({
   const taskEl = React.useRef(null);
   const isUnapproved = !((approvedBy && approvedBy.id) || (rejectedBy && rejectedBy.id));
 
+  const isEditable = Object.keys(editable).some(key => editable[key]);
+
   return (
     <BaseCard
       icon="TASK"
       color="TASK"
       showActionsOnHover
       actions={actions}
-      readOnly={!editable && !onClick}
+      readOnly={!isEditable && !onClick}
       {...rest}
     >
       <BooleanValue>
@@ -222,12 +242,12 @@ const TaskCard = ({
             className={TaskCardWrapperStyle(hideParentInfo || isInTemplate)}
             onClick={onClick}
             onMouseEnter={() => {
-              if (editable) {
+              if (isEditable) {
                 changeHoverState(true);
               }
             }}
             onMouseLeave={() => {
-              if (editable) {
+              if (isEditable) {
                 changeHoverState(false);
               }
             }}
@@ -263,13 +283,13 @@ const TaskCard = ({
             <div
               className={TaskNameWrapperStyle}
               onClick={evt => {
-                if (editable) {
+                if (isEditable) {
                   evt.stopPropagation();
                 }
               }}
               role="presentation"
             >
-              {editable && isHovered && IS_DND_DEVELOPED ? (
+              {isEditable && isHovered && IS_DND_DEVELOPED ? (
                 <button className={DragButtonWrapperStyle} type="button">
                   <Icon icon="DRAG_HANDLE" />
                 </button>
@@ -292,7 +312,7 @@ const TaskCard = ({
                       inputHandlers.onBlur(evt);
                       saveOnBlur({ ...task, name: inputHandlers.value });
                     }}
-                    editable={editable}
+                    editable={editable.name}
                     inputWidth={nameWidth}
                     inputHeight="20px"
                     inputAlign="left"
@@ -305,9 +325,9 @@ const TaskCard = ({
             </div>
 
             <div
-              className={DateInputWrapperStyle(editable && !isInTemplate && !startDateBinding)}
+              className={DateInputWrapperStyle(isEditable && !isInTemplate && !startDateBinding)}
               onClick={evt => {
-                if (editable) {
+                if (isEditable) {
                   evt.stopPropagation();
                 }
               }}
@@ -339,7 +359,7 @@ const TaskCard = ({
                           emitter.emit('AUTO_DATE');
                         }, 200);
                       }}
-                      editable={editable && !startDateBinding}
+                      editable={isEditable && !startDateBinding}
                       inputWidth="120px"
                       inputHeight="20px"
                       name={fieldName}
@@ -358,9 +378,9 @@ const TaskCard = ({
             </div>
 
             <div
-              className={DateInputWrapperStyle(editable && !isInTemplate && !dueDateBinding)}
+              className={DateInputWrapperStyle(isEditable && !isInTemplate && !dueDateBinding)}
               onClick={evt => {
-                if (editable) {
+                if (isEditable) {
                   evt.stopPropagation();
                 }
               }}
@@ -392,7 +412,7 @@ const TaskCard = ({
                           emitter.emit('AUTO_DATE');
                         }, 200);
                       }}
-                      editable={editable && !dueDateBinding}
+                      editable={editable.dueDate && !dueDateBinding}
                       inputWidth="120px"
                       inputHeight="20px"
                       name={fieldName}
@@ -426,7 +446,7 @@ const TaskCard = ({
                   status={completedBy ? COMPLETED : IN_PROGRESS}
                   showCompletedDate
                   completedDate={completedAt}
-                  editable={editable}
+                  editable={completedBy ? editable.inProgress : editable.completed}
                   onClick={() =>
                     saveOnBlur({
                       ...task,
@@ -467,7 +487,7 @@ const TaskCard = ({
                             inProgressAt: formatToGraphql(startOfToday()),
                           })
                   }
-                  editable={editable}
+                  editable={editable.assignedTo}
                 />
               )}
             </div>
@@ -539,7 +559,7 @@ const TaskCard = ({
                                     onToggleSlideView={isOpen => {
                                       set('isSlideViewOpen', isOpen);
                                     }}
-                                    editable={editable}
+                                    editable={editable.approvers}
                                   />
                                 )}
                               </>
@@ -548,7 +568,8 @@ const TaskCard = ({
                                 showUser
                                 showDate
                                 width="175px"
-                                editable={editable}
+                                // FIXME: check the permission string
+                                editable={editable.approved || editable.rejected}
                                 onClickUser={() => {
                                   saveOnBlur({
                                     ...task,
