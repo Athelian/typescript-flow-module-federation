@@ -33,6 +33,8 @@ const ProductGridView = (props: Props) => {
   const { items, onLoadMore, hasMore, isLoading } = props;
 
   const canViewForm = hasPermission(PRODUCT_FORM);
+  const canCreate = hasPermission(PRODUCT_CREATE);
+  const canUpdateStatus = hasPermission([PRODUCT_UPDATE, PRODUCT_SET_ARCHIVED]);
 
   return (
     <GridView
@@ -65,10 +67,10 @@ const ProductGridView = (props: Props) => {
               <ProductCard
                 product={item}
                 actions={[
-                  ...(hasPermission(PRODUCT_CREATE)
+                  ...(canCreate
                     ? [<CardAction icon="CLONE" onClick={() => onClone(item.id)} />]
                     : []),
-                  ...(hasPermission([PRODUCT_UPDATE, PRODUCT_SET_ARCHIVED])
+                  ...(canUpdateStatus
                     ? [
                         <CardAction
                           icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}

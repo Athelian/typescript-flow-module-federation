@@ -1308,8 +1308,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                       };
 
                       const navigable = {
-                        order: hasPermission(ORDER_FORM),
-                        product: hasPermission(PRODUCT_FORM),
+                        order: canViewOrderForm,
+                        product: canViewProductForm,
                       };
 
                       const config = {
