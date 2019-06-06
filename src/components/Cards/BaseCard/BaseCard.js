@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { cx } from 'react-emotion';
+import { omit } from 'utils/fp';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { CardStyle, SelectableCardStyle } from './style';
 import Actions from './Actions';
@@ -118,7 +119,7 @@ export default class BaseCard extends React.Component<Props, State> {
             this.closeActions();
           }
         }}
-        {...rest}
+        {...omit(['onRemove', 'onClone'], rest)}
       >
         {!disabled && actions.length > 0 && (
           <OutsideClickHandler
