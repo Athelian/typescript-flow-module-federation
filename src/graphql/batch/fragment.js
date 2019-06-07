@@ -210,3 +210,12 @@ export const batchCardFragment = gql`
     }
   }
 `;
+
+export const batchCardWithOwnedFragment = gql`
+  fragment batchCardWithOwnedFragment on Batch {
+    ...batchCardFragment
+    ownedBy {
+      ...ownedByFragment
+    }
+  }
+`;

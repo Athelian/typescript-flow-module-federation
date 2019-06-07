@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link, navigate } from '@reach/router';
+import { Link } from '@reach/router';
 import { encodeId } from 'utils/id';
 import { isForbidden } from 'utils/data';
 import Icon from 'components/Icon';
@@ -38,7 +38,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  actions: Array<React.Node>,
+  onClick: Function,
 };
 
 type Props = OptionalProps & {
@@ -46,12 +46,11 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  actions: [],
+  onClick: () => {},
 };
 
-const BatchCard = ({ batch, actions, ...rest }: Props) => {
+const BatchCard = ({ batch, onClick, ...rest }: Props) => {
   const {
-    id,
     archived,
     no,
     latestQuantity,
@@ -75,12 +74,8 @@ const BatchCard = ({ batch, actions, ...rest }: Props) => {
   const productImage = getProductImage(product);
 
   return (
-    <BaseCard icon="BATCH" color="BATCH" actions={actions} isArchived={archived} {...rest}>
-      <div
-        className={BatchCardWrapperStyle}
-        onClick={() => navigate(`/batch/${encodeId(id)}`)}
-        role="presentation"
-      >
+    <BaseCard icon="BATCH" color="BATCH" isArchived={archived} {...rest}>
+      <div className={BatchCardWrapperStyle} onClick={onClick} role="presentation">
         <div className={ProductWrapperStyle}>
           <img className={ProductImageStyle} src={productImage} alt="product_image" />
 

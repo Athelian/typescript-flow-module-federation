@@ -1402,7 +1402,12 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<BatchCard batch={task.batch} />}
+                          input={
+                            <BatchCard
+                              batch={task.batch}
+                              onClick={() => navigate(`/batch/${encodeId(task.batch.id)}`)}
+                            />
+                          }
                         />
                       </GridColumn>
                     )}
