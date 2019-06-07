@@ -248,11 +248,11 @@ describe('Functions to parse update mutations', () => {
   });
 
   it('should be forbidden', () => {
-    expect(isForbidden()).toBeTruthy();
     expect(isForbidden({ __typename: 'Forbidden' })).toBeTruthy();
   });
 
-  it('should be not forbidden', () => {
+  it('should not be a forbidden', () => {
+    expect(isForbidden()).toBeFalsy();
     expect(isForbidden({})).toBeFalsy();
     expect(isForbidden({ __typename: 'others' })).toBeFalsy();
   });
