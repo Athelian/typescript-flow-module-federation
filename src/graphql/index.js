@@ -2,6 +2,7 @@ import { batchFormFragment, batchCardFragment } from './batch/fragment';
 import {
   itemFormFragment,
   itemCardFragment,
+  itemCardWithOwnedFragment,
   itemInSelectorFragment,
   itemInOrderFormFragment,
   itemInBatchFormFragment,
@@ -10,10 +11,15 @@ import {
   orderFormFragment,
   orderFormQueryFragment,
   orderCardFragment,
+  orderCardWithOwnedFragment,
   orderBasicFragment,
 } from './order/fragment';
 import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
-import { productFormFragment, productCardFragment } from './product/fragment';
+import {
+  productFormFragment,
+  productCardFragment,
+  productCardWithOwnedFragment,
+} from './product/fragment';
 import { containerFormFragment, containerCardFragment } from './container/fragment';
 import {
   productProviderFormFragment,
@@ -60,17 +66,20 @@ export {
   containerCardFragment,
   itemFormFragment,
   itemCardFragment,
+  itemCardWithOwnedFragment,
   itemInSelectorFragment,
   itemInOrderFormFragment,
   itemInBatchFormFragment,
   orderFormFragment,
   orderFormQueryFragment,
   orderCardFragment,
+  orderCardWithOwnedFragment,
   orderBasicFragment,
   partnerFormFragment,
   partnerCardFragment,
   productFormFragment,
   productCardFragment,
+  productCardWithOwnedFragment,
   productProviderFormFragment,
   productProviderCardFragment,
   shipmentFormFragment,

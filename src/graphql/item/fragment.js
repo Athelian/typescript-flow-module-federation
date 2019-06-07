@@ -54,6 +54,16 @@ export const itemCardFragment = gql`
   }
 `;
 
+export const itemCardWithOwnedFragment = gql`
+  fragment itemCardWithOwnedFragment on OrderItem {
+    ...itemCardFragment
+
+    ownedBy {
+      ...ownedByFragment
+    }
+  }
+`;
+
 export const itemFormFragment = gql`
   fragment itemFormFragment on OrderItem {
     id

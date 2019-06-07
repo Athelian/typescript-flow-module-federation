@@ -1,12 +1,13 @@
 // @flow
 import gql from 'graphql-tag';
 import {
+  productCardWithOwnedFragment,
   productCardFragment,
+  ownedByFragment,
   partnerNameFragment,
   tagFragment,
   todoFragment,
   imageFragment,
-  ownedByFragment,
 } from 'graphql';
 
 export const productListQuery = gql`
@@ -18,19 +19,20 @@ export const productListQuery = gql`
   ) {
     products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...productCardFragment
+        ...productCardWithOwnedFragment
       }
       page
       totalPage
     }
   }
 
+  ${productCardWithOwnedFragment}
   ${productCardFragment}
+  ${ownedByFragment}
   ${partnerNameFragment}
   ${tagFragment}
   ${todoFragment}
   ${imageFragment}
-  ${ownedByFragment}
 `;
 
 export default productListQuery;

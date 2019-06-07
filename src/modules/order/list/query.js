@@ -1,12 +1,13 @@
 import gql from 'graphql-tag';
 import {
+  orderCardWithOwnedFragment,
   orderCardFragment,
+  ownedByFragment,
   partnerNameFragment,
   tagFragment,
   priceFragment,
   userAvatarFragment,
   todoFragment,
-  ownedByFragment,
 } from 'graphql';
 
 export const orderListQuery = gql`
@@ -14,7 +15,7 @@ export const orderListQuery = gql`
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ... on Order {
-          ...orderCardFragment
+          ...orderCardWithOwnedFragment
           batchCount
           batchShippedCount
         }
@@ -23,7 +24,7 @@ export const orderListQuery = gql`
       totalPage
     }
   }
-
+  ${orderCardWithOwnedFragment}
   ${orderCardFragment}
   ${ownedByFragment}
   ${partnerNameFragment}

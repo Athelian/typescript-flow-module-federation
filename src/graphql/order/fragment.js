@@ -223,3 +223,12 @@ export const orderCardFragment = gql`
     currency
   }
 `;
+
+export const orderCardWithOwnedFragment = gql`
+  fragment orderCardWithOwnedFragment on Order {
+    ...orderCardFragment
+    ownedBy {
+      ...ownedByFragment
+    }
+  }
+`;

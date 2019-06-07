@@ -78,3 +78,12 @@ export const productCardFragment = gql`
     }
   }
 `;
+
+export const productCardWithOwnedFragment = gql`
+  fragment productCardWithOwnedFragment on Product {
+    ...productCardFragment
+    ownedBy {
+      ...ownedByFragment
+    }
+  }
+`;

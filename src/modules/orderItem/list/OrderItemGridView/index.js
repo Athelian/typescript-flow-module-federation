@@ -8,8 +8,8 @@ import { ORDER_ITEMS_GET_PRICE, ORDER_ITEMS_FORM } from 'modules/permission/cons
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { ItemCard } from 'components/Cards';
 import GridView from 'components/GridView';
-import usePermission from 'hooks/usePermission';
 import { spreadOrderItem } from 'utils/item';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 
 type Props = {
   items: Array<Object>,
@@ -19,39 +19,44 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const defaultRenderItem = ({ hasPermission, ...item }: Object) => {
-  const { orderItem, productProvider, product, order } = spreadOrderItem(item);
+const defaultRenderItem = (item: Object) => (
+  <PartnerPermissionsWrapper key={item.id} data={item}>
+    {permissions => {
+      const { orderItem, productProvider, product, order } = spreadOrderItem(item);
 
-  const viewable = {
-    price: hasPermission(ORDER_ITEMS_GET_PRICE),
-  };
+      const viewable = {
+        price: permissions.includes(ORDER_ITEMS_GET_PRICE),
+      };
 
-  const config = {
-    hideOrder: false,
-  };
+      const config = {
+        hideOrder: false,
+      };
 
-  const navigable = {
-    order: hasPermission(ORDER_FORM),
-    product: hasPermission(PRODUCT_FORM),
-  };
+      const navigable = {
+        order: permissions.includes(ORDER_FORM),
+        product: permissions.includes(PRODUCT_FORM),
+      };
 
-  return (
-    <ItemCard
-      key={orderItem.id}
-      onClick={() =>
-        hasPermission(ORDER_ITEMS_FORM) ? navigate(`/order-item/${encodeId(item.id)}`) : () => {}
-      }
-      orderItem={orderItem}
-      productProvider={productProvider}
-      product={product}
-      order={order}
-      actions={[]}
-      viewable={viewable}
-      config={config}
-      navigable={navigable}
-    />
-  );
-};
+      return (
+        <ItemCard
+          onClick={() =>
+            permissions.includes(ORDER_ITEMS_FORM)
+              ? navigate(`/order-item/${encodeId(item.id)}`)
+              : () => {}
+          }
+          orderItem={orderItem}
+          productProvider={productProvider}
+          product={product}
+          order={order}
+          actions={[]}
+          viewable={viewable}
+          config={config}
+          navigable={navigable}
+        />
+      );
+    }}
+  </PartnerPermissionsWrapper>
+);
 
 const OrderItemGridView = ({
   items,
@@ -60,8 +65,6 @@ const OrderItemGridView = ({
   isLoading,
   renderItem = defaultRenderItem,
 }: Props): React.Node => {
-  const { hasPermission } = usePermission();
-
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -76,12 +79,7 @@ const OrderItemGridView = ({
         />
       }
     >
-      {items.map(item =>
-        renderItem({
-          ...item,
-          hasPermission,
-        })
-      )}
+      {items.map(renderItem)}
     </GridView>
   );
 };
