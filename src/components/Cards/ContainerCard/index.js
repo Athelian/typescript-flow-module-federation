@@ -130,26 +130,35 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
               </div>
             ) : (
               <>
-                <PartnerPermissionsWrapper data={warehouse}>
-                  {permissions => (
-                    <Link
-                      className={WarehouseIconStyle(true)}
-                      to={
-                        permissions.includes(WAREHOUSE_FORM)
-                          ? `/warehouse/${encodeId(warehouse.id)}`
-                          : ''
-                      }
-                      onClick={evt => {
-                        evt.stopPropagation();
-                      }}
-                    >
+                {isForbidden(warehouse) ? (
+                  <>
+                    <div className={WarehouseIconStyle(true)} role="presentation">
                       <Icon icon="WAREHOUSE" />
-                    </Link>
-                  )}
-                </PartnerPermissionsWrapper>
-                <Display blackout={isForbidden(warehouse)} align="left">
-                  {warehouse.name}
-                </Display>
+                    </div>
+                    <Display blackout={isForbidden(warehouse)} align="left" />
+                  </>
+                ) : (
+                  <>
+                    <PartnerPermissionsWrapper data={warehouse}>
+                      {permissions => (
+                        <Link
+                          className={WarehouseIconStyle(true)}
+                          to={
+                            permissions.includes(WAREHOUSE_FORM)
+                              ? `/warehouse/${encodeId(warehouse.id)}`
+                              : ''
+                          }
+                          onClick={evt => {
+                            evt.stopPropagation();
+                          }}
+                        >
+                          <Icon icon="WAREHOUSE" />
+                        </Link>
+                      )}
+                    </PartnerPermissionsWrapper>
+                    <Display align="left">{warehouse.name}</Display>
+                  </>
+                )}
               </>
             )}
           </div>
