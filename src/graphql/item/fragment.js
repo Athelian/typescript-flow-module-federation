@@ -54,6 +54,62 @@ export const itemCardFragment = gql`
   }
 `;
 
+export const itemCardWithOwnedFragment = gql`
+  fragment itemCardWithOwnedFragment on OrderItem {
+    id
+    ownedBy {
+      ...ownedByFragment
+    }
+    archived
+    no
+    quantity
+    price {
+      ...priceFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    todo {
+      ...todoFragment
+    }
+    order {
+      ... on Order {
+        id
+        poNo
+        importer {
+          ...partnerNameFragment
+        }
+        exporter {
+          ...partnerNameFragment
+        }
+      }
+    }
+    totalBatched
+    totalShipped
+    batchCount
+    batchShippedCount
+    productProvider {
+      ... on ProductProvider {
+        id
+        name
+        product {
+          ... on Product {
+            id
+            name
+            serial
+            tags {
+              ...tagFragment
+            }
+            files {
+              ...imageFragment
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const itemFormFragment = gql`
   fragment itemFormFragment on OrderItem {
     id
