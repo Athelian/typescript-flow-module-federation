@@ -39,7 +39,6 @@ const DefaultRenderItem = (item: Object) => (
 
       return (
         <ItemCard
-          key={orderItem.id}
           onClick={() =>
             permissions.includes(ORDER_ITEMS_FORM)
               ? navigate(`/order-item/${encodeId(item.id)}`)
