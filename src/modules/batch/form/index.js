@@ -1,7 +1,7 @@
 // @flow
 import React, { Suspense } from 'react';
 import { Subscribe } from 'unstated';
-import { isEquals } from 'utils/fp';
+import { getByPath, isEquals } from 'utils/fp';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import TaskSection from 'modules/task/common/TaskSection';
@@ -63,8 +63,14 @@ export default class BatchForm extends React.Component<Props> {
           <BatchSection batch={batch} itemConfig={itemConfig} />
           <QuantitySection />
           <PackagingSection />
-          {/* TODO: send partner ids */}
-          <TaskSection groupIds={[]} entityId={batch.id} type="batch" />
+          <TaskSection
+            groupIds={[
+              getByPath('orderItem.order.importer.id', batch),
+              getByPath('orderItem.order.exporter.id', batch),
+            ].filter(Boolean)}
+            entityId={batch.id}
+            type="batch"
+          />
           <ShipmentSection shipment={batch.shipment} shipmentConfig={shipmentConfig} />
           <ContainerSection container={batch.container} containerConfig={containerConfig} />
           <OrderSection orderConfig={orderConfig} />

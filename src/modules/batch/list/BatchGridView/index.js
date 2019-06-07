@@ -20,10 +20,9 @@ type Props = OptionalProps & {
 };
 
 const defaultRenderItem = (item: Object) => (
-  <PartnerPermissionsWrapper data={item}>
+  <PartnerPermissionsWrapper data={item} key={item.id}>
     {permissions => (
       <BatchCard
-        key={item.id}
         batch={item}
         onClick={() => {
           if (permissions.includes(BATCH_FORM)) {

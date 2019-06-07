@@ -2,7 +2,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
-import { isEquals } from 'utils/fp';
+import { getByPath, isEquals } from 'utils/fp';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { SectionWrapper, SectionHeader, LastModified, FormTooltip } from 'components/Form';
 import { OrderItemInfoContainer, OrderItemTasksContainer } from 'modules/orderItem/form/containers';
@@ -98,8 +98,14 @@ export default class ItemForm extends React.Component<Props> {
 
           <AsyncDocumentsSection />
 
-          {/* TODO: send partner ids */}
-          <AsyncTaskSection groupIds={[]} entityId={orderItem.id} type="orderItem" />
+          <AsyncTaskSection
+            groupIds={[
+              getByPath('order.importer.id', orderItem),
+              getByPath('order.exporter.id', orderItem),
+            ].filter(Boolean)}
+            entityId={orderItem.id}
+            type="orderItem"
+          />
 
           <AsyncShipmentsSection />
 
