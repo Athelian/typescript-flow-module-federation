@@ -19,7 +19,9 @@ type OptionalProps = {
   name: string,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  groupIds: Array<string>,
+};
 
 const defaultProps = {
   assignmentsName: '',
@@ -45,6 +47,7 @@ const AssignmentApprovalFactory = ({
   setFieldValue,
   assignable,
   approvable,
+  groupIds,
 }: Props) => {
   const userAssignmentInputFactoryConfig = {
     name: assignmentsName,
@@ -64,6 +67,7 @@ const AssignmentApprovalFactory = ({
   };
 
   const approvalInputConfig = {
+    groupIds,
     approvedAt,
     approvedBy,
     onApprove: (user: UserAvatarType) => {

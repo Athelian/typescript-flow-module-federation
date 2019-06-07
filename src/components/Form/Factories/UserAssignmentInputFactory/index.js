@@ -14,6 +14,7 @@ type InputProps = {
   name: string,
   values: Array<UserAvatarType>,
   editable?: boolean,
+  groupIds: Array<string>,
 };
 
 type Props = LabelProps &
@@ -44,6 +45,7 @@ const UserAssignmentInputFactory = ({
   name,
   onChange,
   editable,
+  groupIds,
 }: Props): React.Node => {
   const labelConfig = { required, align: labelAlign, width: labelWidth, height: labelHeight };
 
@@ -56,6 +58,7 @@ const UserAssignmentInputFactory = ({
     name,
     onChange,
     editable,
+    groupIds,
   };
 
   return (

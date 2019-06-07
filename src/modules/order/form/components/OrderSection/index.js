@@ -5,6 +5,7 @@ import { navigate } from '@reach/router';
 import { BooleanValue, StringValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { encodeId } from 'utils/id';
+import { getByPath } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
 import { CloneButton } from 'components/Buttons';
 import { OrderActivateDialog, OrderArchiveDialog } from 'modules/order/common/Dialog';
@@ -405,6 +406,10 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
 
                   <GridColumn>
                     <UserAssignmentInputFactory
+                      groupIds={[
+                        getByPath('id', values.importer),
+                        getByPath('id', values.exporter),
+                      ].filter(Boolean)}
                       name="inCharges"
                       values={values.inCharges}
                       onChange={(name: string, assignments: Array<Object>) =>

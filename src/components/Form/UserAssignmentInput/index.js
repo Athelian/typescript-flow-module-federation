@@ -21,7 +21,9 @@ type OptionalProps = {
   editable: boolean,
 };
 
-type Props = OptionalProps;
+type Props = OptionalProps & {
+  groupIds: Array<string>,
+};
 
 const defaultProps = {
   users: [],
@@ -30,7 +32,7 @@ const defaultProps = {
   editable: false,
 };
 
-const UserAssignmentInput = ({ users, name, onChange, editable }: Props) => (
+const UserAssignmentInput = ({ users, name, groupIds, onChange, editable }: Props) => (
   <div className={AssignmentWrapperStyle}>
     {users.map(({ id, firstName, lastName }) => (
       <div className={AssignmentStyle} key={id}>
@@ -61,6 +63,7 @@ const UserAssignmentInput = ({ users, name, onChange, editable }: Props) => (
             <SlideView isOpen={isOpen} onRequestClose={() => slideToggle(false)}>
               {isOpen && (
                 <AssignUsers
+                  filterBy={{ groupIds }}
                   selected={users}
                   onSelect={selected => {
                     slideToggle(false);

@@ -53,9 +53,11 @@ export default class OrderTasksContainer extends Container<FormState> {
         tasks: todo.tasks.map(task => ({
           ...task,
           assignedTo: task.assignedTo.filter(
-            user => getByPath('group.id', user) !== prevExporter.id
+            user => getByPath('group.id', user) !== getByPath('id', prevExporter)
           ),
-          approvers: task.approvers.filter(user => getByPath('group.id', user) !== prevExporter.id),
+          approvers: task.approvers.filter(
+            user => getByPath('group.id', user) !== getByPath('id', prevExporter)
+          ),
           inProgressAt:
             getByPath('inProgressBy.group.id', task) === prevExporter.id ? null : task.inProgressAt,
           inProgressBy:
