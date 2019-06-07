@@ -7,12 +7,14 @@ import { getSelectLabel, isForbidden } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'modules/container/utils';
+import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {
@@ -40,11 +42,7 @@ import {
 } from './style';
 
 type OptionalProps = {
-  actions: Array<React.Node>,
   onClick: Function,
-  permissions: {
-    viewWarehouse: boolean,
-  },
 };
 
 type Props = OptionalProps & {
@@ -52,13 +50,10 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  actions: [],
-  permissions: {
-    viewWarehouse: false,
-  },
+  onClick: () => {},
 };
 
-const ContainerCard = ({ container, permissions, onClick, ...rest }: Props) => {
+const ContainerCard = ({ container, onClick, ...rest }: Props) => {
   const {
     representativeBatch,
     shipment,
@@ -135,21 +130,23 @@ const ContainerCard = ({ container, permissions, onClick, ...rest }: Props) => {
               </div>
             ) : (
               <>
-                {permissions.viewWarehouse ? (
-                  <Link
-                    className={WarehouseIconStyle(true)}
-                    to={`/warehouse/${encodeId(warehouse.id)}`}
-                    onClick={evt => {
-                      evt.stopPropagation();
-                    }}
-                  >
-                    <Icon icon="WAREHOUSE" />
-                  </Link>
-                ) : (
-                  <div className={WarehouseIconStyle(true)}>
-                    <Icon icon="WAREHOUSE" />
-                  </div>
-                )}
+                <PartnerPermissionsWrapper data={warehouse}>
+                  {permissions => (
+                    <Link
+                      className={WarehouseIconStyle(true)}
+                      to={
+                        permissions.includes(WAREHOUSE_FORM)
+                          ? `/warehouse/${encodeId(warehouse.id)}`
+                          : ''
+                      }
+                      onClick={evt => {
+                        evt.stopPropagation();
+                      }}
+                    >
+                      <Icon icon="WAREHOUSE" />
+                    </Link>
+                  )}
+                </PartnerPermissionsWrapper>
                 <Display blackout={isForbidden(warehouse)} align="left">
                   {warehouse.name}
                 </Display>

@@ -6,7 +6,6 @@ import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
 import { ContainerCard } from 'components/Cards';
 import messages from 'modules/container/messages';
-import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { CONTAINER_FORM } from 'modules/permission/constants/container';
 
@@ -26,9 +25,6 @@ const defaultRenderItem = (item: Object) => (
     {permissions => (
       <ContainerCard
         container={item}
-        permissions={{
-          viewWarehouse: permissions.includes(WAREHOUSE_FORM),
-        }}
         onClick={() => {
           if (permissions.includes(CONTAINER_FORM)) {
             navigate(`/container/${encodeId(item.id)}`);

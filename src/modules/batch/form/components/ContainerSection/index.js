@@ -3,9 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import usePermission from 'hooks/usePermission';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { ContainerCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
@@ -23,9 +20,6 @@ type Props = {
 };
 
 function ContainerSection({ container, containerConfig }: Props) {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
-
   if (containerConfig === HIDE) {
     return null;
   }
@@ -44,9 +38,6 @@ function ContainerSection({ container, containerConfig }: Props) {
           {container ? (
             <ContainerCard
               container={container}
-              permissions={{
-                viewWarehouse: hasPermission([WAREHOUSE_FORM]),
-              }}
               readOnly={containerConfig === READONLY}
               onClick={() => {
                 if (containerConfig === NAVIGABLE) {
