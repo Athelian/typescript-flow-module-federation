@@ -7,14 +7,12 @@ import { getSelectLabel, isForbidden } from 'utils/data';
 import { getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
-import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { calculateDueDate } from 'modules/container/utils';
-import { WAREHOUSE_FORM } from 'modules/permission/constants/warehouse';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
 import BaseCard from '../BaseCard';
 import {
@@ -130,26 +128,27 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
               </div>
             ) : (
               <>
-                <PartnerPermissionsWrapper data={warehouse}>
-                  {permissions => (
+                {isForbidden(warehouse) ? (
+                  <>
+                    <div className={WarehouseIconStyle(true)}>
+                      <Icon icon="WAREHOUSE" />
+                    </div>
+                    <Display blackout align="left" />
+                  </>
+                ) : (
+                  <>
                     <Link
                       className={WarehouseIconStyle(true)}
-                      to={
-                        permissions.includes(WAREHOUSE_FORM)
-                          ? `/warehouse/${encodeId(warehouse.id)}`
-                          : ''
-                      }
+                      to={`/warehouse/${encodeId(warehouse.id)}`}
                       onClick={evt => {
                         evt.stopPropagation();
                       }}
                     >
                       <Icon icon="WAREHOUSE" />
                     </Link>
-                  )}
-                </PartnerPermissionsWrapper>
-                <Display blackout={isForbidden(warehouse)} align="left">
-                  {warehouse.name}
-                </Display>
+                    <Display align="left">{warehouse.name}</Display>
+                  </>
+                )}
               </>
             )}
           </div>
