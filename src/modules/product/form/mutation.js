@@ -132,111 +132,111 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
       ...parseParentIdField(
         'exporterId',
         getByPathWithDefault(null, 'exporter', oldProductProvider),
-        newProductProvider.exporter
+        getByPathWithDefault(null, 'exporter', newProductProvider)
       ),
       ...parseParentIdField(
         'supplierId',
         getByPathWithDefault(null, 'supplier', oldProductProvider),
-        newProductProvider.supplier
+        getByPathWithDefault(null, 'supplier', newProductProvider)
       ),
       ...parseGenericField(
         'name',
         getByPathWithDefault(null, 'name', oldProductProvider),
-        newProductProvider.name
+        getByPathWithDefault(null, 'name', newProductProvider)
       ),
       ...parseEnumField(
         'origin',
         getByPathWithDefault(null, 'origin', oldProductProvider),
-        newProductProvider.origin
+        getByPathWithDefault(null, 'origin', newProductProvider)
       ),
       ...parseGenericField(
         'productionLeadTime',
         getByPathWithDefault(null, 'productionLeadTime', oldProductProvider),
-        newProductProvider.productionLeadTime
+        getByPathWithDefault(null, 'productionLeadTime', newProductProvider)
       ),
       ...parseGenericField(
         'inspectionFee',
         getByPathWithDefault(null, 'inspectionFee', oldProductProvider),
-        newProductProvider.inspectionFee
+        getByPathWithDefault(null, 'inspectionFee', newProductProvider)
       ),
       ...parseCustomFieldsField(
         'customFields',
         getByPathWithDefault(null, 'customFields', oldProductProvider),
-        newProductProvider.customFields
+        getByPathWithDefault(null, 'customFields', newProductProvider)
       ),
       ...parseMemoField(
         'memo',
         getByPathWithDefault(null, 'memo', oldProductProvider),
-        newProductProvider.memo
+        getByPathWithDefault(null, 'memo', newProductProvider)
       ),
       ...parseGenericField(
         'unitType',
         getByPathWithDefault(null, 'unitType', oldProductProvider),
-        newProductProvider.unitType
+        getByPathWithDefault(null, 'unitType', newProductProvider)
       ),
       ...parseGenericField(
         'unitPrice',
         getByPathWithDefault(null, 'unitPrice', oldProductProvider),
-        newProductProvider.unitPrice
+        getByPathWithDefault(null, 'unitPrice', newProductProvider)
       ),
       ...parseGenericField(
         'unitWeight',
         getByPathWithDefault(null, 'unitWeight', oldProductProvider),
-        newProductProvider.unitWeight
+        getByPathWithDefault(null, 'unitWeight', newProductProvider)
       ),
       ...parseGenericField(
         'unitVolume',
         getByPathWithDefault(null, 'unitVolume', oldProductProvider),
-        newProductProvider.unitVolume
+        getByPathWithDefault(null, 'unitVolume', newProductProvider)
       ),
       ...parseGenericField(
         'unitSize',
         getByPathWithDefault(null, 'unitSize', oldProductProvider),
-        newProductProvider.unitSize
+        getByPathWithDefault(null, 'unitSize', newProductProvider)
       ),
       ...parseGenericField(
         'packageName',
         getByPathWithDefault(null, 'packageName', oldProductProvider),
-        newProductProvider.packageName
+        getByPathWithDefault(null, 'packageName', newProductProvider)
       ),
       ...parseGenericField(
         'packageCapacity',
         getByPathWithDefault(null, 'packageCapacity', oldProductProvider),
-        newProductProvider.packageCapacity
+        getByPathWithDefault(null, 'packageCapacity', newProductProvider)
       ),
       ...parseGenericField(
         'packageGrossWeight',
         getByPathWithDefault(null, 'packageGrossWeight', oldProductProvider),
-        newProductProvider.packageGrossWeight
+        getByPathWithDefault(null, 'packageGrossWeight', newProductProvider)
       ),
       ...parseGenericField(
         'packageVolume',
         getByPathWithDefault(null, 'packageVolume', oldProductProvider),
-        newProductProvider.packageVolume
+        getByPathWithDefault(null, 'packageVolume', newProductProvider)
       ),
       ...parseGenericField(
         'packageSize',
         getByPathWithDefault(null, 'packageSize', oldProductProvider),
-        newProductProvider.packageSize
+        getByPathWithDefault(null, 'packageSize', newProductProvider)
       ),
       ...parseGenericField(
         'autoCalculatePackageVolume',
         getByPathWithDefault(null, 'autoCalculatePackageVolume', oldProductProvider),
-        newProductProvider.autoCalculatePackageVolume
+        getByPathWithDefault(null, 'autoCalculatePackageVolume', newProductProvider)
       ),
       ...parseGenericField(
         'autoCalculateUnitVolume',
         getByPathWithDefault(null, 'autoCalculateUnitVolume', oldProductProvider),
-        newProductProvider.autoCalculateUnitVolume
+        getByPathWithDefault(null, 'autoCalculateUnitVolume', newProductProvider)
       ),
       ...parseFilesField(
         'files',
         getByPathWithDefault([], 'files', oldProductProvider),
-        newProductProvider.files
+        getByPathWithDefault([], 'files', newProductProvider)
       ),
       ...parseTodoField(
         getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', oldProductProvider),
-        newProductProvider.todo
+        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', newProductProvider)
       ),
     })
   ),

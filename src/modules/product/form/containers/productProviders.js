@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import { set, unset, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
 import { isEquals } from 'utils/fp';
-import { removeNulls } from 'utils/data';
+import { removeNulls, extractForbiddenId } from 'utils/data';
 
 type Price = {
   amount: number,
@@ -77,7 +77,10 @@ export default class ProductProvidersContainer extends Container<FormState> {
   };
 
   initDetailValues = (productProviders: Array<Object>) => {
-    const parsedValues: Array<any> = [...productProviders];
+    const parsedValues: Array<any> = [
+      ...productProviders.map(productProvider => extractForbiddenId(productProvider)),
+    ];
+
     this.setState({ productProviders: parsedValues });
     this.originalValues = { productProviders: parsedValues };
   };
