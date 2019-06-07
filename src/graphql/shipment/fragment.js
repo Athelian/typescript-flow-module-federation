@@ -209,3 +209,12 @@ export const shipmentCardFragment = gql`
     }
   }
 `;
+
+export const shipmentCardWithOwnedFragment = gql`
+  fragment shipmentCardWithOwnedFragment on Shipment {
+    ...shipmentCardFragment
+    ownedBy {
+      ...ownedByFragment
+    }
+  }
+`;

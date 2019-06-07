@@ -4,59 +4,74 @@ import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { encodeId } from 'utils/id';
-import usePermission from 'hooks/usePermission';
-import { SHIPMENT_CREATE, SHIPMENT_UPDATE } from 'modules/permission/constants/shipment';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import GridView from 'components/GridView';
 import { ShipmentCard, CardAction } from 'components/Cards';
+import {
+  SHIPMENT_CREATE,
+  SHIPMENT_UPDATE,
+  SHIPMENT_FORM,
+} from 'modules/permission/constants/shipment';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
 
-type Props = {
+type OptionalProps = {
+  renderItem: (item: Object) => React.Node,
+};
+
+type Props = OptionalProps & {
   items: Array<Object>,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
-  renderItem?: (item: Object, hasPermission: (string) => boolean) => React.Node,
 };
 
-const defaultRenderItem = (item: Object, hasPermission: string => boolean) => (
-  <BooleanValue key={item.id}>
-    {({ value: statusDialogIsOpen, set: dialogToggle }) => (
-      <>
-        {item.archived ? (
-          <ShipmentActivateDialog
-            onRequestClose={() => dialogToggle(false)}
-            isOpen={statusDialogIsOpen}
-            shipment={item}
-          />
-        ) : (
-          <ShipmentArchiveDialog
-            onRequestClose={() => dialogToggle(false)}
-            isOpen={statusDialogIsOpen}
-            shipment={item}
-          />
+const defaultRenderItem = item => (
+  <PartnerPermissionsWrapper data={item}>
+    {permissions => (
+      <BooleanValue key={item.id}>
+        {({ value: statusDialogIsOpen, set: dialogToggle }) => (
+          <>
+            {item.archived ? (
+              <ShipmentActivateDialog
+                onRequestClose={() => dialogToggle(false)}
+                isOpen={statusDialogIsOpen}
+                shipment={item}
+              />
+            ) : (
+              <ShipmentArchiveDialog
+                onRequestClose={() => dialogToggle(false)}
+                isOpen={statusDialogIsOpen}
+                shipment={item}
+              />
+            )}
+            <ShipmentCard
+              shipment={item}
+              actions={[
+                permissions.includes(SHIPMENT_CREATE) && (
+                  <CardAction
+                    icon="CLONE"
+                    onClick={() => navigate(`/shipment/clone/${encodeId(item.id)}`)}
+                  />
+                ),
+                permissions.includes(SHIPMENT_UPDATE) && (
+                  <CardAction
+                    icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+                    onClick={() => dialogToggle(true)}
+                  />
+                ),
+              ].filter(Boolean)}
+              showActionsOnHover
+              onClick={() => {
+                if (permissions.includes(SHIPMENT_FORM)) {
+                  navigate(`/shipment/${encodeId(item.id)}`);
+                }
+              }}
+            />
+          </>
         )}
-        <ShipmentCard
-          shipment={item}
-          actions={[
-            hasPermission(SHIPMENT_CREATE) && (
-              <CardAction
-                icon="CLONE"
-                onClick={() => navigate(`/shipment/clone/${encodeId(item.id)}`)}
-              />
-            ),
-            hasPermission(SHIPMENT_UPDATE) && (
-              <CardAction
-                icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
-                onClick={() => dialogToggle(true)}
-              />
-            ),
-          ].filter(Boolean)}
-          showActionsOnHover
-          onClick={() => navigate(`/shipment/${encodeId(item.id)}`)}
-        />
-      </>
+      </BooleanValue>
     )}
-  </BooleanValue>
+  </PartnerPermissionsWrapper>
 );
 
 const defaultProps = {
@@ -64,8 +79,8 @@ const defaultProps = {
 };
 
 const ShipmentGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem } = props;
-  const { hasPermission } = usePermission();
+  const { items, onLoadMore, hasMore, isLoading, renderItem } = props;
+
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -77,7 +92,7 @@ const ShipmentGridView = (props: Props) => {
         <FormattedMessage id="modules.Shipments.noItem" defaultMessage="No shipments found" />
       }
     >
-      {items.map(item => renderItem(item, hasPermission))}
+      {items.map(renderItem)}
     </GridView>
   );
 };
