@@ -4,6 +4,7 @@ import {
   priceFragment,
   imageFragment,
   todoFragment,
+  itemCardFragment,
   itemCardWithOwnedFragment,
   partnerNameFragment,
   ownedByFragment,
@@ -21,12 +22,13 @@ export const orderItemListQuery = gql`
   }
 
   ${itemCardWithOwnedFragment}
+  ${itemCardFragment}
+  ${ownedByFragment}
   ${partnerNameFragment}
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}
   ${todoFragment}
-  ${ownedByFragment}
 `;
 
 export default orderItemListQuery;
