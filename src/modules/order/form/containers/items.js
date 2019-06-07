@@ -76,31 +76,11 @@ export default class OrderItemsContainer extends Container<FormState> {
   resetAmountWithNewCurrency = (currency: string, isReset: boolean = true) => {
     let retry;
     if (this.state.hasCalledItemsApiYet) {
-      const { orderItems } = this.state;
-      this.setState({
-        orderItems: orderItems.map(orderItem => ({
-          ...orderItem,
-          price: {
-            ...orderItem.price,
-            ...(isReset ? { amount: 0 } : {}),
-            currency,
-          },
-        })),
-      });
+      this.changeCurrency(isReset, currency);
     } else {
       const waitForApiReady = () => {
         if (this.state.hasCalledItemsApiYet) {
-          const { orderItems } = this.state;
-          this.setState({
-            orderItems: orderItems.map(orderItem => ({
-              ...orderItem,
-              price: {
-                ...orderItem.price,
-                ...(isReset ? { amount: 0 } : {}),
-                currency,
-              },
-            })),
-          });
+          this.changeCurrency(isReset, currency);
           cancelAnimationFrame(retry);
         } else {
           retry = requestAnimationFrame(waitForApiReady);
@@ -109,4 +89,18 @@ export default class OrderItemsContainer extends Container<FormState> {
       retry = requestAnimationFrame(waitForApiReady);
     }
   };
+
+  changeCurrency(isReset: boolean, currency: string) {
+    const { orderItems } = this.state;
+    this.setState({
+      orderItems: orderItems.map(orderItem => ({
+        ...orderItem,
+        price: {
+          ...orderItem.price,
+          ...(isReset ? { amount: 0 } : {}),
+          currency,
+        },
+      })),
+    });
+  }
 }
