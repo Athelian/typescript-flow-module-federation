@@ -19,7 +19,7 @@ type Props = {
   renderItem?: (item: Object) => React.Node,
 };
 
-const DefaultRenderItem = (item: Object) => (
+const defaultRenderItem = (item: Object) => (
   <PartnerPermissionsWrapper key={item.id} data={item}>
     {permissions => {
       const { orderItem, productProvider, product, order } = spreadOrderItem(item);
@@ -63,7 +63,7 @@ const OrderItemGridView = ({
   onLoadMore,
   hasMore,
   isLoading,
-  renderItem = DefaultRenderItem,
+  renderItem = defaultRenderItem,
 }: Props): React.Node => {
   return (
     <GridView
@@ -79,7 +79,7 @@ const OrderItemGridView = ({
         />
       }
     >
-      {items.map(item => renderItem(item))}
+      {items.map(renderItem)}
     </GridView>
   );
 };
