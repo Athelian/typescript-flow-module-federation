@@ -52,6 +52,27 @@ export default class OrderItemsContainer extends Container<FormState> {
     }
   };
 
+  changeExporter = () => {
+    let retry;
+    if (this.state.hasCalledItemsApiYet) {
+      this.setState({
+        orderItems: [],
+      });
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledItemsApiYet) {
+          this.setState({
+            orderItems: [],
+          });
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
   resetAmountWithNewCurrency = (currency: string, isReset: boolean = true) => {
     let retry;
     if (this.state.hasCalledItemsApiYet) {

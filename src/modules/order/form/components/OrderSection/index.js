@@ -483,7 +483,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                       ]}
                                     >
                                       {(
-                                        { setFieldValue: updateOrderItems },
+                                        { changeExporter: updateOrderItems },
                                         { changeExporter: updateTasks },
                                         { changeExporter: updateOrderInfo }
                                       ) => (
@@ -495,7 +495,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                             setFieldValue('exporter', newValue);
                                             updateTasks(values.exporter);
                                             updateOrderInfo(values.exporter);
-                                            updateOrderItems('orderItems', []);
+                                            updateOrderItems();
                                           }}
                                           warningMessage={
                                             <FormattedMessage
