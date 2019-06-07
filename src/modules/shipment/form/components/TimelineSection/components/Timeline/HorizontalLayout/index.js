@@ -17,9 +17,14 @@ class HorizontalLayout extends React.PureComponent<Props> {
     return (
       <PartnerPermissionsWrapper data={shipment}>
         {permissions => (
-          <div className={HorizontalLayoutWrapperStyle(permissions.includes(SHIPMENT_FORM))}>
+          <div className={HorizontalLayoutWrapperStyle}>
             <HorizontalPortNames shipment={shipment} />
-            <HorizontalTimeline shipment={shipment} />
+            <HorizontalTimeline
+              shipment={shipment}
+              navigable={{
+                form: permissions.includes(SHIPMENT_FORM),
+              }}
+            />
             <HorizontalDates shipment={shipment} />
           </div>
         )}
