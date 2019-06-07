@@ -25,7 +25,6 @@ const defaultRenderItem = (item: Object) => (
   <PartnerPermissionsWrapper key={item.id} data={item}>
     {permissions => (
       <ContainerCard
-        key={item.id}
         container={item}
         permissions={{
           viewWarehouse: permissions.includes(WAREHOUSE_FORM),
