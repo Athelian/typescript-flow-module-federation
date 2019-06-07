@@ -98,7 +98,8 @@ export default class ItemForm extends React.Component<Props> {
 
           <AsyncDocumentsSection />
 
-          <AsyncTaskSection entityId={orderItem.id} type="orderItem" />
+          {/* TODO: send partner ids */}
+          <AsyncTaskSection groupIds={[]} entityId={orderItem.id} type="orderItem" />
 
           <AsyncShipmentsSection />
 

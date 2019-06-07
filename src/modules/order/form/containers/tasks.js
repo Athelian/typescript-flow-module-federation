@@ -59,21 +59,37 @@ export default class OrderTasksContainer extends Container<FormState> {
             user => getByPath('group.id', user) !== getByPath('id', prevExporter)
           ),
           inProgressAt:
-            getByPath('inProgressBy.group.id', task) === prevExporter.id ? null : task.inProgressAt,
+            getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.inProgressAt,
           inProgressBy:
-            getByPath('inProgressBy.group.id', task) === prevExporter.id ? null : task.inProgressBy,
+            getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.inProgressBy,
           completedAt:
-            getByPath('completedBy.group.id', task) === prevExporter.id ? null : task.completedAt,
+            getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.completedAt,
           completedBy:
-            getByPath('completedBy.group.id', task) === prevExporter.id ? null : task.completedBy,
+            getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.completedBy,
           rejectedAt:
-            getByPath('rejectedBy.group.id', task) === prevExporter.id ? null : task.rejectedAt,
+            getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.rejectedAt,
           rejectedBy:
-            getByPath('rejectedBy.group.id', task) === prevExporter.id ? null : task.rejectedBy,
+            getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.rejectedBy,
           approvedAt:
-            getByPath('approvedBy.group.id', task) === prevExporter.id ? null : task.approvedAt,
+            getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.approvedAt,
           approvedBy:
-            getByPath('approvedBy.group.id', task) === prevExporter.id ? null : task.approvedBy,
+            getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
+              ? null
+              : task.approvedBy,
         })),
       },
     });

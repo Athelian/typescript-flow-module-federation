@@ -125,7 +125,8 @@ class ShipmentForm extends React.Component<Props> {
             </Subscribe>
             <AsyncDocumentsSection />
           </SectionWrapper>
-          <AsyncTaskSection entityId={shipment.id} type="shipment" />
+          {/* TODO: send partner ids */}
+          <AsyncTaskSection groupIds={[]} entityId={shipment.id} type="shipment" />
           <AsyncOrdersSection />
           <Subscribe
             to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}

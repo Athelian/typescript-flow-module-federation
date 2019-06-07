@@ -15,6 +15,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   tasks: Array<Object>,
+  groupIds: Array<string>,
   onSwap: Function,
   onRemove: Function,
   onSave: Function,
@@ -32,6 +33,7 @@ const defaultProps = {
 
 const Tasks = ({
   tasks,
+  groupIds,
   onSwap,
   onRemove,
   onSave,
@@ -57,6 +59,7 @@ const Tasks = ({
         {({ value: opened, set: selectTaskSlideToggle }) => (
           <>
             <TaskCard
+              groupIds={groupIds}
               isInTemplate={isInTemplate}
               editable={editable}
               task={{
@@ -106,6 +109,7 @@ const Tasks = ({
                     selectTaskSlideToggle(false);
                     onSave(index, value);
                   }}
+                  groupIds={groupIds}
                 />
               )}
             </SlideView>

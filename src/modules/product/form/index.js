@@ -48,7 +48,8 @@ class ProductForm extends React.Component<Props> {
             <AsyncProductSection isOwner={isOwner} isNew={isNewOrClone} product={product} />
           </SectionWrapper>
 
-          <AsyncTaskSection entityId={product.id} type="product" />
+          {/* TODO: send partner ids */}
+          <AsyncTaskSection groupIds={[]} entityId={product.id} type="product" />
 
           <SectionWrapper id="product_productProvidersSection">
             <SectionHeader

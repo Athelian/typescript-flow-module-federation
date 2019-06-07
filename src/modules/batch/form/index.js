@@ -63,7 +63,8 @@ export default class BatchForm extends React.Component<Props> {
           <BatchSection batch={batch} itemConfig={itemConfig} />
           <QuantitySection />
           <PackagingSection />
-          <TaskSection entityId={batch.id} type="batch" />
+          {/* TODO: send partner ids */}
+          <TaskSection groupIds={[]} entityId={batch.id} type="batch" />
           <ShipmentSection shipment={batch.shipment} shipmentConfig={shipmentConfig} />
           <ContainerSection container={batch.container} containerConfig={containerConfig} />
           <OrderSection orderConfig={orderConfig} />

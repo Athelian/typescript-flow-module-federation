@@ -23,6 +23,7 @@ import {
   TASK_LIST,
 } from 'modules/permission/constants/task';
 import {
+  ORDER_UPDATE,
   ORDER_TASK_CREATE,
   ORDER_TASK_DELETE,
   ORDER_TASK_UPDATE,
@@ -41,6 +42,7 @@ import {
   ORDER_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/order';
 import {
+  ORDER_ITEMS_UPDATE,
   ORDER_ITEMS_TASK_CREATE,
   ORDER_ITEMS_TASK_DELETE,
   ORDER_ITEMS_TASK_UPDATE,
@@ -59,6 +61,7 @@ import {
   ORDER_ITEMS_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/orderItem';
 import {
+  BATCH_UPDATE,
   BATCH_TASK_CREATE,
   BATCH_TASK_DELETE,
   BATCH_TASK_UPDATE,
@@ -77,6 +80,7 @@ import {
   BATCH_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/batch';
 import {
+  PRODUCT_UPDATE,
   PRODUCT_TASK_CREATE,
   PRODUCT_TASK_DELETE,
   PRODUCT_TASK_UPDATE,
@@ -93,6 +97,7 @@ import {
   PRODUCT_TASK_SET_APPROVED,
   PRODUCT_TASK_SET_REJECTED,
   PRODUCT_TASK_SET_APPROVERS,
+  PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_TASK_CREATE,
   PRODUCT_PROVIDER_TASK_DELETE,
   PRODUCT_PROVIDER_TASK_UPDATE,
@@ -111,6 +116,7 @@ import {
   PRODUCT_PROVIDER_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/product';
 import {
+  SHIPMENT_UPDATE,
   SHIPMENT_TASK_CREATE,
   SHIPMENT_TASK_DELETE,
   SHIPMENT_TASK_UPDATE,
@@ -152,6 +158,7 @@ type Props = {
   type: CompatibleEntityTypes,
   intl: IntlShape,
   entityId: string,
+  groupIds: Array<string>,
 };
 
 const getConfig = (
@@ -175,7 +182,11 @@ const getConfig = (
         canAddTasks: hasPermission([ORDER_TASK_CREATE, ORDER_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(ORDER_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
-        canUpdateTaskTemplate: hasPermission([ORDER_SET_TASK_TEMPLATE]),
+        canUpdateTaskTemplate:
+          hasPermission([ORDER_UPDATE, ORDER_SET_TASK_TEMPLATE]) &&
+          hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]) &&
+          hasPermission([ORDER_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
         tasksContainer: OrderTasksContainer,
         editable: {
           name: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_NAME]),
@@ -196,7 +207,11 @@ const getConfig = (
         canAddTasks: hasPermission([ORDER_ITEMS_TASK_CREATE, ORDER_ITEMS_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(ORDER_ITEMS_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
-        canUpdateTaskTemplate: hasPermission([ORDER_ITEMS_SET_TASK_TEMPLATE]),
+        canUpdateTaskTemplate:
+          hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASK_TEMPLATE]) &&
+          hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]) &&
+          hasPermission([ORDER_ITEMS_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
         tasksContainer: OrderItemTasksContainer,
         editable: {
           name: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_NAME]),
@@ -249,7 +264,11 @@ const getConfig = (
         canAddTasks: hasPermission([BATCH_TASK_CREATE, BATCH_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(BATCH_SET_TASKS),
         canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
-        canUpdateTaskTemplate: hasPermission([BATCH_SET_TASK_TEMPLATE]),
+        canUpdateTaskTemplate:
+          hasPermission([BATCH_UPDATE, BATCH_SET_TASK_TEMPLATE]) &&
+          hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]) &&
+          hasPermission([BATCH_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
         tasksContainer: BatchTasksContainer,
         editable: {
           name: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_NAME]),
@@ -270,7 +289,11 @@ const getConfig = (
         canAddTasks: hasPermission([PRODUCT_TASK_CREATE, PRODUCT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(PRODUCT_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
-        canUpdateTaskTemplate: hasPermission([PRODUCT_SET_TASK_TEMPLATE]),
+        canUpdateTaskTemplate:
+          hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASK_TEMPLATE]) &&
+          hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]) &&
+          hasPermission([PRODUCT_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
         tasksContainer: ProductTasksContainer,
         editable: {
           name: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_NAME]),
@@ -299,7 +322,11 @@ const getConfig = (
         ]),
         canOrderingTasks: hasPermission(PRODUCT_PROVIDER_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
-        canUpdateTaskTemplate: hasPermission([PRODUCT_PROVIDER_SET_TASK_TEMPLATE]),
+        canUpdateTaskTemplate:
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASK_TEMPLATE]) &&
+          hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]) &&
+          hasPermission([PRODUCT_PROVIDER_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
         tasksContainer: ProductProviderTasksContainer,
         editable: {
           name: hasPermission([
@@ -356,7 +383,11 @@ const getConfig = (
         canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(SHIPMENT_SET_TASKS),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
-        canUpdateTaskTemplate: hasPermission([SHIPMENT_SET_TASK_TEMPLATE]),
+        canUpdateTaskTemplate:
+          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASK_TEMPLATE]) &&
+          hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]) &&
+          hasPermission([SHIPMENT_TASK_CREATE, TASK_CREATE]) &&
+          hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
         tasksContainer: ShipmentTasksContainer,
         editable: {
           name: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_NAME]),
@@ -393,7 +424,7 @@ const getConfig = (
   }
 };
 
-function TaskSection({ type, entityId, intl }: Props) {
+function TaskSection({ type, entityId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -514,6 +545,7 @@ function TaskSection({ type, entityId, intl }: Props) {
                 </BooleanValue>
               }
               <Tasks
+                groupIds={groupIds}
                 entityId={entityId}
                 type={type}
                 editable={editable}
