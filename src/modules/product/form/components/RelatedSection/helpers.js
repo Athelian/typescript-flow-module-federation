@@ -51,7 +51,7 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
         ),
         renderItems: (items: Array<Object>) => {
           return (items.map(item => (
-            <PartnerPermissionsWrapper data={item}>
+            <PartnerPermissionsWrapper key={item.id} data={item}>
               {permissions => (
                 <OrderCard
                   key={item.id}
@@ -174,7 +174,7 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
         ),
         renderItems: (items: Array<Object>) => {
           return (items.map(item => (
-            <PartnerPermissionsWrapper data={item}>
+            <PartnerPermissionsWrapper key={item.id} data={item}>
               {permissions => (
                 <OrderCard
                   key={item.id}

@@ -1286,7 +1286,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             <OrderCard
                               order={task.order}
                               onClick={() => {
-                                if (hasPermission(ORDER_FORM)) {
+                                if (canViewOrderForm) {
                                   navigate(`/order/${encodeId(task.order.id)}`);
                                 }
                               }}
