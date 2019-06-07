@@ -145,5 +145,14 @@ export const containerCardWithOwnedFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
+    warehouse {
+      ... on Warehouse {
+        id
+        name
+        ownedBy {
+          ...ownedByFragment
+        }
+      }
+    }
   }
 `;
