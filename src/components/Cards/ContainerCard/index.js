@@ -42,7 +42,7 @@ import {
 type OptionalProps = {
   actions: Array<React.Node>,
   onClick: Function,
-  permission: {
+  permissions: {
     viewWarehouse: boolean,
   },
 };
@@ -53,12 +53,12 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   actions: [],
-  permission: {
+  permissions: {
     viewWarehouse: false,
   },
 };
 
-const ContainerCard = ({ container, permission, onClick, ...rest }: Props) => {
+const ContainerCard = ({ container, permissions, onClick, ...rest }: Props) => {
   const {
     representativeBatch,
     shipment,
@@ -135,7 +135,7 @@ const ContainerCard = ({ container, permission, onClick, ...rest }: Props) => {
               </div>
             ) : (
               <>
-                {permission.viewWarehouse ? (
+                {permissions.viewWarehouse ? (
                   <Link
                     className={WarehouseIconStyle(true)}
                     to={`/warehouse/${encodeId(warehouse.id)}`}

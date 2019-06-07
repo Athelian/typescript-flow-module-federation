@@ -138,3 +138,12 @@ export const containerCardFragment = gql`
     }
   }
 `;
+
+export const containerCardWithOwnedFragment = gql`
+  fragment containerCardWithOwnedFragment on Container {
+    ...containerCardFragment
+    ownedBy {
+      ...ownedByFragment
+    }
+  }
+`;

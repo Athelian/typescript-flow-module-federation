@@ -44,7 +44,7 @@ function ContainerSection({ container, containerConfig }: Props) {
           {container ? (
             <ContainerCard
               container={container}
-              permission={{
+              permissions={{
                 viewWarehouse: hasPermission([WAREHOUSE_FORM]),
               }}
               readOnly={containerConfig === READONLY}
