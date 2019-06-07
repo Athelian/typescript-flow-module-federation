@@ -94,7 +94,7 @@ const AssignUsers = ({ selected, onCancel, onSelect, filterBy }: Props) => (
               <StaffGridView
                 hasMore={hasMore}
                 isLoading={loading}
-                onLoadMore={() => loadMore({ fetchMore, data }, {}, 'users')}
+                onLoadMore={() => loadMore({ fetchMore, data }, { filterBy }, 'users')}
                 items={getByPathWithDefault([], 'users.nodes', data)}
                 renderItem={item => (
                   <StaffCard
