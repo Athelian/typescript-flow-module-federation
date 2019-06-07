@@ -24,11 +24,11 @@ export default defineMessages({
   },
   createdAt: {
     id: 'modules.Orders.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Orders.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   completelyBatched: {
     id: 'modules.Orders.completelyBatched',
