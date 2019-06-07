@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPath } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import { SectionWrapper } from 'components/Form';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
@@ -70,9 +70,10 @@ export default class OrderForm extends React.Component<Props> {
         </SectionWrapper>
 
         <SectionWrapper id="order_taskSection">
-          <Subscribe to={[OrderTasksContainer]}>
-            {({ initDetailValues }) => (
+          <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
+            {({ initDetailValues }, { state: { importer, exporter } }) => (
               <OrderTasksSection
+                groupIds={[getByPath('id', importer), getByPath('id', exporter)].filter(Boolean)}
                 initValues={initDetailValues}
                 isLoading={loading}
                 entityId={!isClone && order.id ? order.id : ''}

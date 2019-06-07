@@ -65,7 +65,9 @@ type OptionalProps = {
   isInTemplate: boolean,
 };
 
-type Props = OptionalProps;
+type Props = OptionalProps & {
+  groupIds: Array<string>,
+};
 
 const defaultEditable = {
   name: false,
@@ -157,6 +159,7 @@ const TaskCard = ({
   editable: originalEditable,
   isInTemplate,
   actions,
+  groupIds,
   ...rest
 }: Props) => {
   const {
@@ -468,6 +471,7 @@ const TaskCard = ({
                 />
               ) : (
                 <TaskAssignmentInput
+                  groupIds={groupIds}
                   onChange={newAssignedTo =>
                     saveOnBlur({
                       ...task,
@@ -544,6 +548,7 @@ const TaskCard = ({
                                   />
                                 ) : (
                                   <TaskAssignmentInput
+                                    groupIds={groupIds}
                                     onChange={newAssignedTo =>
                                       saveOnBlur({
                                         ...task,
