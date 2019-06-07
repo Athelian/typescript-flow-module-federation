@@ -157,7 +157,7 @@ export const parseArrayOfChildrenField = (
   forceSendIds: boolean = false
 ) => {
   if (!forceSendIds && isEquals(originalChildren, newChildren)) return {};
-  console.warn(originalChildren, newChildren);
+
   const parsedNewChildren = newChildren.map(
     (newChild: Object): Array<Object> => {
       const oldChild =
