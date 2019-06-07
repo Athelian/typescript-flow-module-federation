@@ -70,6 +70,7 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches }: P
     { title: intl.formatMessage(messages.batchNo), value: 'no' },
     { title: intl.formatMessage(messages.poNo), value: 'poNo' },
     { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
     { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
     { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },

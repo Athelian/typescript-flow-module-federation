@@ -165,7 +165,7 @@ export default defineMessages({
   },
   productSerial: {
     id: 'components.BatchItem.productSerial',
-    defaultMessage: 'PRODUCT SERIAL',
+    defaultMessage: 'Product Serial',
   },
   deliveredAt: {
     id: 'components.BatchItem.deliveredAt',
