@@ -1,5 +1,6 @@
 // @flow
 import * as Sentry from '@sentry/browser';
+import { toast } from 'react-toastify';
 import { navigate } from '@reach/router';
 import { getOperationAST } from 'graphql/utilities/getOperationAST';
 import { print } from 'graphql/language/printer';
@@ -81,6 +82,8 @@ const errorLogger = errors => {
     if (!isDevEnvironment) {
       if (!(path && path.includes('login'))) Sentry.captureException(error);
     } else {
+      // this is toast message only shows on develop environment
+      toast.error(error.message);
       logger.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
     }
   });
