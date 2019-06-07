@@ -7,6 +7,7 @@ import {
   todoFragment,
   userAvatarFragment,
   tagFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const orderFormTasksQuery = gql`
@@ -18,9 +19,11 @@ export const orderFormTasksQuery = gql`
           ...todoFragment
           tasks {
             ...taskFormInSlideViewFragment
+            ...forbiddenFragment
           }
           taskTemplate {
             ...taskTemplateCardFragment
+            ...forbiddenFragment
           }
         }
       }
@@ -33,6 +36,7 @@ export const orderFormTasksQuery = gql`
   ${todoFragment}
   ${userAvatarFragment}
   ${tagFragment}
+  ${forbiddenFragment}
 `;
 
 export default orderFormTasksQuery;
