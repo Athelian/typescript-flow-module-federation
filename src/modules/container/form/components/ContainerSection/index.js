@@ -242,8 +242,8 @@ const ContainerSection = () => {
                       </FormField>
                       <AssignmentApprovalFactory
                         groupIds={[
-                          getByPath('importer.id', values),
-                          getByPath('exporter.id', values),
+                          getByPath('shipment.importer.id', values),
+                          getByPath('shipment.exporter.id', values),
                         ].filter(Boolean)}
                         assignmentsName="warehouseArrivalAgreedDateAssignedTo"
                         assignments={values.warehouseArrivalAgreedDateAssignedTo}
@@ -291,8 +291,8 @@ const ContainerSection = () => {
 
                       <AssignmentApprovalFactory
                         groupIds={[
-                          getByPath('importer.id', values),
-                          getByPath('exporter.id', values),
+                          getByPath('shipment.importer.id', values),
+                          getByPath('shipment.exporter.id', values),
                         ].filter(Boolean)}
                         assignmentsName="warehouseArrivalActualDateAssignedTo"
                         assignments={values.warehouseArrivalActualDateAssignedTo}
@@ -485,8 +485,8 @@ const ContainerSection = () => {
 
                     <AssignmentApprovalFactory
                       groupIds={[
-                        getByPath('importer.id', values),
-                        getByPath('exporter.id', values),
+                        getByPath('shipment.importer.id', values),
+                        getByPath('shipment.exporter.id', values),
                       ].filter(Boolean)}
                       assignmentsName="departureDateAssignedTo"
                       assignments={values.departureDateAssignedTo}
