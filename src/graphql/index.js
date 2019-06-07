@@ -11,10 +11,15 @@ import {
   orderFormFragment,
   orderFormQueryFragment,
   orderCardFragment,
+  orderCardWithOwnedFragment,
   orderBasicFragment,
 } from './order/fragment';
 import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
-import { productFormFragment, productCardFragment } from './product/fragment';
+import {
+  productFormFragment,
+  productCardFragment,
+  productCardWithOwnedFragment,
+} from './product/fragment';
 import { containerFormFragment, containerCardFragment } from './container/fragment';
 import {
   productProviderFormFragment,
@@ -68,11 +73,13 @@ export {
   orderFormFragment,
   orderFormQueryFragment,
   orderCardFragment,
+  orderCardWithOwnedFragment,
   orderBasicFragment,
   partnerFormFragment,
   partnerCardFragment,
   productFormFragment,
   productCardFragment,
+  productCardWithOwnedFragment,
   productProviderFormFragment,
   productProviderCardFragment,
   shipmentFormFragment,
