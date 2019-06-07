@@ -51,6 +51,7 @@ type Props = OptionalProps & {
   sourceName: string,
   setFieldDeepValue: (field: string, value: any) => void,
   removeArrayItem: (path: string) => void,
+  groupIds: Array<string>,
 };
 
 const defaultProps = {
@@ -67,6 +68,7 @@ const TimelineInfoSection = (props: Props) => {
     setFieldDeepValue,
     removeArrayItem,
     renderBelowHeader,
+    groupIds,
     ...rest
   } = props;
   const { user } = useUser();
@@ -87,6 +89,7 @@ const TimelineInfoSection = (props: Props) => {
         </SectionHeader>
 
         <AssignmentApprovalFactory
+          groupIds={groupIds}
           name={sourceName}
           assignmentsName={`${sourceName}.assignedTo`}
           assignments={assignedTo}

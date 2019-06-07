@@ -50,6 +50,7 @@ const AssignmentApprovalFactory = ({
   groupIds,
 }: Props) => {
   const userAssignmentInputFactoryConfig = {
+    groupIds,
     name: assignmentsName,
     values: assignments,
     onChange: (fieldName: string, assigns: Array<Object>) => {

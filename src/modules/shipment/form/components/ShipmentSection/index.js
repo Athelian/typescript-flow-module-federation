@@ -504,6 +504,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                 <GridColumn>
                   <UserAssignmentInputFactory
                     name="inCharges"
+                    groupIds={[
+                      getByPath('importer.id', values),
+                      getByPath('exporter.id', values),
+                    ].filter(Boolean)}
                     values={values.inCharges}
                     onChange={(name: string, assignments: Array<Object>) =>
                       setFieldValue(name, assignments)
@@ -629,16 +633,16 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                                           importerDialogToggle(false);
                                                           importerSelectorToggle(false);
                                                           setFieldValue(
-                                                            'importer',
-                                                            selectedImporter
-                                                          );
-                                                          setFieldValue(
                                                             'inCharges',
                                                             values.inCharges.filter(
                                                               user =>
                                                                 getByPath('group.id', user) !==
-                                                                importer.id
+                                                                getByPath('id', importer)
                                                             )
+                                                          );
+                                                          setFieldValue(
+                                                            'importer',
+                                                            selectedImporter
                                                           );
                                                           batchContainer.initDetailValues([]);
                                                           taskContainer.onChangePartner(importer);
@@ -750,13 +754,15 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                                           }
                                           onSelect={selectedImporter => {
                                             exporterSelectorToggle(false);
-                                            setFieldValue('exporter', selectedImporter);
                                             setFieldValue(
                                               'inCharges',
                                               values.inCharges.filter(
-                                                user => getByPath('group.id', user) !== importer.id
+                                                user =>
+                                                  getByPath('group.id', user) !==
+                                                  getByPath('id', exporter)
                                               )
                                             );
+                                            setFieldValue('exporter', selectedImporter);
                                             if (exporter) {
                                               taskContainer.onChangePartner(exporter);
                                               timelineContainer.onChangePartner(exporter);

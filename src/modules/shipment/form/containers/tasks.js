@@ -54,24 +54,44 @@ export default class ShipmentTasksContainer extends Container<FormState> {
         ...todo,
         tasks: todo.tasks.map(task => ({
           ...task,
-          assignedTo: task.assignedTo.filter(user => getByPath('group.id', user) !== partner.id),
-          approvers: task.approvers.filter(user => getByPath('group.id', user) !== partner.id),
+          assignedTo: task.assignedTo.filter(
+            user => getByPath('group.id', user) !== getByPath('id', partner)
+          ),
+          approvers: task.approvers.filter(
+            user => getByPath('group.id', user) !== getByPath('id', partner)
+          ),
           inProgressAt:
-            getByPath('inProgressBy.group.id', task) === partner.id ? null : task.inProgressAt,
+            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.inProgressAt,
           inProgressBy:
-            getByPath('inProgressBy.group.id', task) === partner.id ? null : task.inProgressBy,
+            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.inProgressBy,
           completedAt:
-            getByPath('completedBy.group.id', task) === partner.id ? null : task.completedAt,
+            getByPath('completedBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.completedAt,
           completedBy:
-            getByPath('completedBy.group.id', task) === partner.id ? null : task.completedBy,
+            getByPath('completedBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.completedBy,
           rejectedAt:
-            getByPath('rejectedBy.group.id', task) === partner.id ? null : task.rejectedAt,
+            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.rejectedAt,
           rejectedBy:
-            getByPath('rejectedBy.group.id', task) === partner.id ? null : task.rejectedBy,
+            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.rejectedBy,
           approvedAt:
-            getByPath('approvedBy.group.id', task) === partner.id ? null : task.approvedAt,
+            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.approvedAt,
           approvedBy:
-            getByPath('approvedBy.group.id', task) === partner.id ? null : task.approvedBy,
+            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
+              ? null
+              : task.approvedBy,
         })),
       },
     });

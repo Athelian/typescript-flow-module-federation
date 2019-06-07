@@ -3,7 +3,7 @@ import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
-import { isEquals } from 'utils/fp';
+import { getByPath, isEquals } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import FormattedNumber from 'components/FormattedNumber';
@@ -125,8 +125,18 @@ class ShipmentForm extends React.Component<Props> {
             </Subscribe>
             <AsyncDocumentsSection />
           </SectionWrapper>
-          {/* TODO: send partner ids */}
-          <AsyncTaskSection groupIds={[]} entityId={shipment.id} type="shipment" />
+          <Subscribe to={[ShipmentInfoContainer]}>
+            {({ state: info }) => (
+              <AsyncTaskSection
+                groupIds={[getByPath('importer.id', info), getByPath('exporter.id', info)].filter(
+                  Boolean
+                )}
+                entityId={shipment.id}
+                type="shipment"
+              />
+            )}
+          </Subscribe>
+
           <AsyncOrdersSection />
           <Subscribe
             to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}

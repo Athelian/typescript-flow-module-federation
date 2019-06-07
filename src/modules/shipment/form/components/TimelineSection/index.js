@@ -5,12 +5,14 @@ import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import { getByPath } from 'utils/fp';
 import {
   SHIPMENT_UPDATE,
   SHIPMENT_SET_VOYAGES,
   SHIPMENT_SET_WAREHOUSE,
 } from 'modules/permission/constants/shipment';
 import {
+  ShipmentInfoContainer,
   ShipmentTransportTypeContainer,
   ShipmentTimelineContainer,
   ShipmentContainersContainer,
@@ -52,9 +54,15 @@ const TimelineSection = ({ isNew }: Props) => {
 
   return (
     <Subscribe
-      to={[ShipmentTimelineContainer, ShipmentTransportTypeContainer, ShipmentContainersContainer]}
+      to={[
+        ShipmentInfoContainer,
+        ShipmentTimelineContainer,
+        ShipmentTransportTypeContainer,
+        ShipmentContainersContainer,
+      ]}
     >
       {(
+        { state: shipment },
         { originalValues: initialValues, state, setFieldDeepValue, removeArrayItem },
         { state: transportTypeState },
         { state: containersState, setFieldValue: setShipmentContainers }
@@ -85,6 +93,10 @@ const TimelineSection = ({ isNew }: Props) => {
             <div className={BodyWrapperStyle} id="timelineInfoSection">
               <TimelineInfoSection
                 id="cargoReady"
+                groupIds={[
+                  getByPath('importer.id', shipment),
+                  getByPath('exporter.id', shipment),
+                ].filter(Boolean)}
                 isNew={isNew}
                 icon="CARGO_READY"
                 title={
@@ -100,6 +112,10 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="loadPortDeparture"
+                groupIds={[
+                  getByPath('importer.id', shipment),
+                  getByPath('exporter.id', shipment),
+                ].filter(Boolean)}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -142,6 +158,10 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="firstTransitPortArrival"
+                    groupIds={[
+                      getByPath('importer.id', shipment),
+                      getByPath('exporter.id', shipment),
+                    ].filter(Boolean)}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -164,6 +184,10 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="firstTransitPortDeparture"
+                    groupIds={[
+                      getByPath('importer.id', shipment),
+                      getByPath('exporter.id', shipment),
+                    ].filter(Boolean)}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -220,6 +244,10 @@ const TimelineSection = ({ isNew }: Props) => {
                 <>
                   <TimelineInfoSection
                     id="secondTransitPortArrival"
+                    groupIds={[
+                      getByPath('importer.id', shipment),
+                      getByPath('exporter.id', shipment),
+                    ].filter(Boolean)}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -235,6 +263,10 @@ const TimelineSection = ({ isNew }: Props) => {
                   />
                   <TimelineInfoSection
                     id="secondTransitPortDeparture"
+                    groupIds={[
+                      getByPath('importer.id', shipment),
+                      getByPath('exporter.id', shipment),
+                    ].filter(Boolean)}
                     isNew={isNew}
                     icon="TRANSIT"
                     title={
@@ -276,6 +308,10 @@ const TimelineSection = ({ isNew }: Props) => {
 
               <DischargePortArrival
                 id="dischargePortArrival"
+                groupIds={[
+                  getByPath('importer.id', shipment),
+                  getByPath('exporter.id', shipment),
+                ].filter(Boolean)}
                 isNew={isNew}
                 icon="PORT"
                 title={
@@ -293,6 +329,10 @@ const TimelineSection = ({ isNew }: Props) => {
               />
               <TimelineInfoSection
                 id="customClearance"
+                groupIds={[
+                  getByPath('importer.id', shipment),
+                  getByPath('exporter.id', shipment),
+                ].filter(Boolean)}
                 isNew={isNew}
                 icon="CUSTOMS"
                 title={
@@ -311,6 +351,10 @@ const TimelineSection = ({ isNew }: Props) => {
               ) : (
                 <TimelineInfoSection
                   id="warehouseArrival"
+                  groupIds={[
+                    getByPath('importer.id', shipment),
+                    getByPath('exporter.id', shipment),
+                  ].filter(Boolean)}
                   isNew={isNew}
                   icon="WAREHOUSE"
                   title={
@@ -377,6 +421,10 @@ const TimelineSection = ({ isNew }: Props) => {
               )}
               <TimelineInfoSection
                 id="deliveryReady"
+                groupIds={[
+                  getByPath('importer.id', shipment),
+                  getByPath('exporter.id', shipment),
+                ].filter(Boolean)}
                 isNew={isNew}
                 icon="DELIVERY_READY"
                 title={

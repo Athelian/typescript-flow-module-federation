@@ -14,7 +14,12 @@ import {
 } from 'graphql';
 
 export const shipmentListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: ShipmentFilterInput, $sortBy: ShipmentSortInput) {
+  query shipmentListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ShipmentFilterInput
+    $sortBy: ShipmentSortInput
+  ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...shipmentCardWithOwnedFragment

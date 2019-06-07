@@ -52,6 +52,7 @@ type Props = OptionalProps & {
   setShipmentContainers: Function,
   shipmentContainers: Array<Object>,
   removeArrayItem: (path: string) => void,
+  groupIds: Array<string>,
 };
 
 const defaultProps = {
@@ -77,6 +78,7 @@ const DischargePortArrival = (props: Props) => {
     shipmentContainers,
     removeArrayItem,
     renderBelowHeader,
+    groupIds,
     ...rest
   } = props;
   const { user } = useUser();
@@ -91,6 +93,7 @@ const DischargePortArrival = (props: Props) => {
         </SectionHeader>
 
         <AssignmentApprovalFactory
+          groupIds={groupIds}
           name={sourceName}
           assignmentsName={`${sourceName}.assignedTo`}
           assignments={timelineDate && timelineDate.assignedTo}

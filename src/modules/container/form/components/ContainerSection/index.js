@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { differenceInCalendarDays } from 'date-fns';
-import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
+import { isNullOrUndefined, getByPathWithDefault, getByPath } from 'utils/fp';
 import { startOfToday } from 'utils/date';
 import FormattedDate from 'components/FormattedDate';
 import { WAREHOUSE_LIST } from 'modules/permission/constants/warehouse';
@@ -241,6 +241,10 @@ const ContainerSection = () => {
                         )}
                       </FormField>
                       <AssignmentApprovalFactory
+                        groupIds={[
+                          getByPath('importer.id', values),
+                          getByPath('exporter.id', values),
+                        ].filter(Boolean)}
                         assignmentsName="warehouseArrivalAgreedDateAssignedTo"
                         assignments={values.warehouseArrivalAgreedDateAssignedTo}
                         approvedAtName="warehouseArrivalAgreedDateApprovedAt"
@@ -286,6 +290,10 @@ const ContainerSection = () => {
                       </FormField>
 
                       <AssignmentApprovalFactory
+                        groupIds={[
+                          getByPath('importer.id', values),
+                          getByPath('exporter.id', values),
+                        ].filter(Boolean)}
                         assignmentsName="warehouseArrivalActualDateAssignedTo"
                         assignments={values.warehouseArrivalActualDateAssignedTo}
                         approvedAtName="warehouseArrivalActualDateApprovedAt"
@@ -476,6 +484,10 @@ const ContainerSection = () => {
                     </FormField>
 
                     <AssignmentApprovalFactory
+                      groupIds={[
+                        getByPath('importer.id', values),
+                        getByPath('exporter.id', values),
+                      ].filter(Boolean)}
                       assignmentsName="departureDateAssignedTo"
                       assignments={values.departureDateAssignedTo}
                       approvedAtName="departureDateApprovedAt"
