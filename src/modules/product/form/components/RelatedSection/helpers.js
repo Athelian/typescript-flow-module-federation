@@ -122,7 +122,13 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
           <FormattedMessage id="modules.Batches.noBatchesFound" defaultMessage="No batches found" />
         ),
         renderItems: (items: Array<Object>) => {
-          return (items.map(item => <BatchCard key={item.id} batch={item} />): Array<React.Node>);
+          return (items.map(item => (
+            <BatchCard
+              key={item.id}
+              batch={item}
+              onClick={() => navigate(`/batch/${encodeId(item.id)}`)}
+            />
+          )): Array<React.Node>);
         },
       };
 

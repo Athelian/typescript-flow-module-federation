@@ -1,7 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import {
+  batchCardWithOwnedFragment,
   batchCardFragment,
+  ownedByFragment,
   metricFragment,
   tagFragment,
   priceFragment,
@@ -19,14 +21,15 @@ export const batchListQuery = gql`
   ) {
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...batchCardFragment
+        ...batchCardWithOwnedFragment
       }
       page
       totalPage
     }
   }
-
+  ${batchCardWithOwnedFragment}
   ${batchCardFragment}
+  ${ownedByFragment}
   ${partnerNameFragment}
   ${metricFragment}
   ${tagFragment}

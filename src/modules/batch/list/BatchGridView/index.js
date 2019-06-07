@@ -1,11 +1,15 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { navigate } from '@reach/router';
+import { encodeId } from 'utils/id';
 import GridView from 'components/GridView';
 import { BatchCard } from 'components/Cards';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
+import { BATCH_FORM } from 'modules/permission/constants/batch';
 
 type OptionalProps = {
-  renderItem?: Function,
+  renderItem: Function,
 };
 
 type Props = OptionalProps & {
@@ -15,14 +19,28 @@ type Props = OptionalProps & {
   isLoading: boolean,
 };
 
-const defaultRenderItem = (item: Object) => <BatchCard key={item.id} batch={item} />;
+const defaultRenderItem = (item: Object) => (
+  <PartnerPermissionsWrapper data={item}>
+    {permissions => (
+      <BatchCard
+        key={item.id}
+        batch={item}
+        onClick={() => {
+          if (permissions.includes(BATCH_FORM)) {
+            navigate(`/batch/${encodeId(item.id)}`);
+          }
+        }}
+      />
+    )}
+  </PartnerPermissionsWrapper>
+);
 
 const defaultProps = {
   renderItem: defaultRenderItem,
 };
 
 const BatchGridView = (props: Props) => {
-  const { items, onLoadMore, hasMore, isLoading, renderItem = defaultRenderItem, ...rest } = props;
+  const { items, onLoadMore, hasMore, isLoading, renderItem, ...rest } = props;
 
   return (
     <GridView
@@ -36,7 +54,7 @@ const BatchGridView = (props: Props) => {
       }
       {...rest}
     >
-      {items.map(item => renderItem(item))}
+      {items.map(renderItem)}
     </GridView>
   );
 };

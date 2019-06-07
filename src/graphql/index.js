@@ -1,4 +1,4 @@
-import { batchFormFragment, batchCardFragment } from './batch/fragment';
+import { batchFormFragment, batchCardFragment, batchCardWithOwnedFragment } from './batch/fragment';
 import {
   itemFormFragment,
   itemCardFragment,
@@ -62,6 +62,7 @@ import {
 export {
   batchFormFragment,
   batchCardFragment,
+  batchCardWithOwnedFragment,
   containerFormFragment,
   containerCardFragment,
   itemFormFragment,
