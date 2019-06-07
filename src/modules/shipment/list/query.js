@@ -1,7 +1,9 @@
 // @flow
 import gql from 'graphql-tag';
 import {
+  shipmentCardWithOwnedFragment,
   shipmentCardFragment,
+  ownedByFragment,
   timelineDateMinimalFragment,
   tagFragment,
   portFragment,
@@ -15,14 +17,16 @@ export const shipmentListQuery = gql`
   query($page: Int!, $perPage: Int!, $filterBy: ShipmentFilterInput, $sortBy: ShipmentSortInput) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...shipmentCardFragment
+        ...shipmentCardWithOwnedFragment
       }
       page
       totalPage
     }
   }
 
+  ${shipmentCardWithOwnedFragment}
   ${shipmentCardFragment}
+  ${ownedByFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}

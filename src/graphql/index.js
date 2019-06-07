@@ -25,7 +25,11 @@ import {
   productProviderFormFragment,
   productProviderCardFragment,
 } from './productProvider/fragment';
-import { shipmentFormFragment, shipmentCardFragment } from './shipment/fragment';
+import {
+  shipmentFormFragment,
+  shipmentCardFragment,
+  shipmentCardWithOwnedFragment,
+} from './shipment/fragment';
 import { staffFormFragment, staffCardFragment } from './staff/fragment';
 import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
@@ -85,6 +89,7 @@ export {
   productProviderCardFragment,
   shipmentFormFragment,
   shipmentCardFragment,
+  shipmentCardWithOwnedFragment,
   staffFormFragment,
   staffCardFragment,
   tagFormFragment,
