@@ -44,6 +44,8 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
               <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
                 {isOpen && (
                   <TaskFormInSlide
+                    // TODO: fix partner id for staff query
+                    groupIds={[]}
                     editable
                     entity={task.entity}
                     task={{ ...task, sort: index }}

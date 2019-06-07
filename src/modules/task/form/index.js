@@ -13,7 +13,9 @@ type OptionalProps = {
   isInTemplate: boolean,
 };
 
-type Props = OptionalProps & {};
+type Props = OptionalProps & {
+  groupIds: Array<string>,
+};
 
 const defaultProps = {
   task: {},
@@ -37,10 +39,15 @@ export default class TaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { task, entity, parentEntity, hideParentInfo, isInTemplate } = this.props;
+    const { task, groupIds, entity, parentEntity, hideParentInfo, isInTemplate } = this.props;
     return (
       <>
-        <TaskInfoSection parentEntity={parentEntity} task={task} isInTemplate={isInTemplate} />
+        <TaskInfoSection
+          groupIds={groupIds}
+          parentEntity={parentEntity}
+          task={task}
+          isInTemplate={isInTemplate}
+        />
         <ParentEntity inForm={!!hideParentInfo} entity={entity} />
       </>
     );

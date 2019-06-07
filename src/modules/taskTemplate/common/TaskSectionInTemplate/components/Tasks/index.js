@@ -91,6 +91,8 @@ const Tasks = ({
             <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
+                  // TODO: fix partner id for staff query
+                  groupIds={[]}
                   entity={{
                     ...task.entity,
                     __typename: type,

@@ -197,6 +197,7 @@ type OptionalProps = {
 
 type Props = OptionalProps & {
   task: Object,
+  groupIds: Array<string>,
   intl: IntlShape,
 };
 
@@ -509,7 +510,14 @@ const getConfig = (
   }
 };
 
-const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntity }: Props) => {
+const TaskInfoSection = ({
+  intl,
+  groupIds,
+  task,
+  isInTemplate,
+  hideParentInfo,
+  parentEntity,
+}: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -1469,6 +1477,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                       }
                       input={
                         <TaskAssignmentInput
+                          groupIds={groupIds}
                           users={values.assignedTo}
                           onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
                           activeUserId={activeUser && activeUser.id}
@@ -1623,6 +1632,7 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                               }
                               input={
                                 <TaskAssignmentInput
+                                  groupIds={groupIds}
                                   users={values.approvers}
                                   onChange={newApprovers =>
                                     setFieldValue('approvers', newApprovers)

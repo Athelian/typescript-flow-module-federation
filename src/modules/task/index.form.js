@@ -176,7 +176,12 @@ class TaskFormModule extends React.Component<Props> {
                           entityId={taskId}
                           entityType="task"
                           render={task => (
-                            <TaskForm task={task} onFormReady={() => initDetailValues(task)} />
+                            // TODO: fix partner id for staff query
+                            <TaskForm
+                              groupIds={[]}
+                              task={task}
+                              onFormReady={() => initDetailValues(task)}
+                            />
                           )}
                         />
                       </Layout>
