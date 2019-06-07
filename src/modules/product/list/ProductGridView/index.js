@@ -3,7 +3,6 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
-import usePermission from 'hooks/usePermission';
 import GridView from 'components/GridView';
 import { ProductCard, CardAction } from 'components/Cards';
 import { ProductActivateDialog, ProductArchiveDialog } from 'modules/product/common/Dialog';
@@ -11,8 +10,10 @@ import {
   PRODUCT_CREATE,
   PRODUCT_UPDATE,
   PRODUCT_SET_ARCHIVED,
+  PRODUCT_FORM,
 } from 'modules/permission/constants/product';
 import { encodeId } from 'utils/id';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 
 type Props = {
   items: Array<Object>,
@@ -27,7 +28,7 @@ function onClone(productId: string) {
 
 const ProductGridView = (props: Props) => {
   const { items, onLoadMore, hasMore, isLoading } = props;
-  const { hasPermission } = usePermission();
+
   return (
     <GridView
       onLoadMore={onLoadMore}
@@ -56,23 +57,33 @@ const ProductGridView = (props: Props) => {
                   product={item}
                 />
               )}
-              <ProductCard
-                product={item}
-                actions={[
-                  ...(hasPermission(PRODUCT_CREATE)
-                    ? [<CardAction icon="CLONE" onClick={() => onClone(item.id)} />]
-                    : []),
-                  ...(hasPermission([PRODUCT_UPDATE, PRODUCT_SET_ARCHIVED])
-                    ? [
-                        <CardAction
-                          icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
-                          onClick={() => dialogToggle(true)}
-                        />,
-                      ]
-                    : []),
-                ]}
-                showActionsOnHover
-              />
+              <PartnerPermissionsWrapper data={item}>
+                {permissions => (
+                  <ProductCard
+                    product={item}
+                    actions={[
+                      ...(permissions.includes(PRODUCT_CREATE)
+                        ? [<CardAction icon="CLONE" onClick={() => onClone(item.id)} />]
+                        : []),
+                      ...(permissions.includes(PRODUCT_UPDATE) ||
+                      permissions.includes(PRODUCT_SET_ARCHIVED)
+                        ? [
+                            <CardAction
+                              icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
+                              onClick={() => dialogToggle(true)}
+                            />,
+                          ]
+                        : []),
+                    ]}
+                    showActionsOnHover
+                    onClick={() => {
+                      if (permissions.includes(PRODUCT_FORM)) {
+                        navigate(`/product/${encodeId(item.id)}`);
+                      }
+                    }}
+                  />
+                )}
+              </PartnerPermissionsWrapper>
             </>
           )}
         </BooleanValue>

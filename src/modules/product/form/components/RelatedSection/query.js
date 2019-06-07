@@ -14,6 +14,7 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const ordersInProductQuery = gql`
@@ -34,6 +35,7 @@ export const ordersInProductQuery = gql`
   ${priceFragment}
   ${userAvatarFragment}
   ${todoFragment}
+  ${ownedByFragment}
 `;
 
 export const itemsInProductQuery = gql`

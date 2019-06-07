@@ -190,6 +190,9 @@ export const orderBasicFragment = gql`
 export const orderCardFragment = gql`
   fragment orderCardFragment on Order {
     id
+    ownedBy {
+      ...ownedByFragment
+    }
     archived
     poNo
     issuedAt

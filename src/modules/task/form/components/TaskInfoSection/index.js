@@ -117,6 +117,7 @@ import {
   SHIPMENT_TASK_SET_MEMO,
   SHIPMENT_TASK_SET_TAGS,
 } from 'modules/permission/constants/shipment';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
@@ -511,6 +512,10 @@ const getConfig = (
 const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntity }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
+  const canViewOrderForm = hasPermission(ORDER_FORM);
+  const canViewProductForm = hasPermission(PRODUCT_FORM);
+
   const initDuration = {};
   if (task && task.startDateBinding) {
     const { months = 0, weeks = 0, days = 0 } = task.startDateInterval || {};
@@ -1280,7 +1285,11 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                           input={
                             <OrderCard
                               order={task.order}
-                              onClick={() => navigate(`/order/${encodeId(task.order.id)}`)}
+                              onClick={() => {
+                                if (canViewOrderForm) {
+                                  navigate(`/order/${encodeId(task.order.id)}`);
+                                }
+                              }}
                             />
                           }
                         />
@@ -1299,8 +1308,8 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                       };
 
                       const navigable = {
-                        order: hasPermission(ORDER_FORM),
-                        product: hasPermission(PRODUCT_FORM),
+                        order: canViewOrderForm,
+                        product: canViewProductForm,
                       };
 
                       const config = {
@@ -1345,7 +1354,20 @@ const TaskInfoSection = ({ intl, task, isInTemplate, hideParentInfo, parentEntit
                             </Label>
                           }
                           vertical
-                          input={<ProductCard product={task.product} />}
+                          input={
+                            <PartnerPermissionsWrapper data={task.product}>
+                              {permissions => (
+                                <ProductCard
+                                  product={task.product}
+                                  onClick={() => {
+                                    if (permissions.includes(PRODUCT_FORM)) {
+                                      navigate(`/product/${encodeId(task.product.id)}`);
+                                    }
+                                  }}
+                                />
+                              )}
+                            </PartnerPermissionsWrapper>
+                          }
                         />
                       </GridColumn>
                     )}

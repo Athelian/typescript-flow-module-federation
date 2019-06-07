@@ -6,6 +6,7 @@ import {
   priceFragment,
   userAvatarFragment,
   todoFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const orderListQuery = gql`
@@ -24,6 +25,7 @@ export const orderListQuery = gql`
   }
 
   ${orderCardFragment}
+  ${ownedByFragment}
   ${partnerNameFragment}
   ${tagFragment}
   ${priceFragment}

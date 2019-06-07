@@ -47,6 +47,9 @@ export const productFormFragment = gql`
 export const productCardFragment = gql`
   fragment productCardFragment on Product {
     id
+    ownedBy {
+      ...ownedByFragment
+    }
     archived
     name
     serial

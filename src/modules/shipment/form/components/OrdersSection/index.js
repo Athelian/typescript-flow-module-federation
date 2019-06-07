@@ -4,21 +4,23 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { SHIPMENT_ORDER_LIST } from 'modules/permission/constants/shipment';
-import usePermission from 'hooks/usePermission';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import FormattedNumber from 'components/FormattedNumber';
-import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
-import { SectionWrapper, SectionHeader } from 'components/Form';
-import { uniqueOrders } from 'modules/container/utils';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
+import { SectionWrapper, SectionHeader } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
+import { SHIPMENT_ORDER_LIST } from 'modules/permission/constants/shipment';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
+import { uniqueOrders } from 'modules/container/utils';
+import usePermission from 'hooks/usePermission';
+import usePartnerPermission from 'hooks/usePartnerPermission';
 import { OrdersSectionWrapperStyle, OrdersSectionBodyStyle, EmptyMessageStyle } from './style';
 
 function OrdersSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   if (!hasPermission(SHIPMENT_ORDER_LIST)) return null;
+
   return (
     <SectionWrapper id="shipment_orderSection">
       <Subscribe to={[ShipmentBatchesContainer]}>
@@ -54,7 +56,11 @@ function OrdersSection() {
                       <OrderCard
                         order={order}
                         key={order.id}
-                        onClick={() => navigate(`/order/${encodeId(order.id)}`)}
+                        onClick={() => {
+                          if (hasPermission(ORDER_FORM)) {
+                            navigate(`/order/${encodeId(order.id)}`);
+                          }
+                        }}
                       />
                     ))}
                   </div>

@@ -10,6 +10,7 @@ import { SectionNavBar } from 'components/NavBar';
 import { SectionHeader, SectionWrapper } from 'components/Form';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
 import { BATCH_ORDERS_LIST } from 'modules/permission/constants/batch';
+import { ORDER_FORM } from 'modules/permission/constants/order';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { HIDE, NAVIGABLE } from 'modules/batch/constants';
@@ -48,7 +49,7 @@ function OrderSection({ orderConfig }: Props) {
                   <OrderCard
                     order={order}
                     onClick={() => {
-                      if (orderConfig === NAVIGABLE) {
+                      if (orderConfig === NAVIGABLE && hasPermission(ORDER_FORM)) {
                         navigate(`/order/${encodeId(order.id)}`);
                       }
                     }}

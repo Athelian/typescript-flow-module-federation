@@ -3,13 +3,14 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { CONTAINER_ORDER_LIST } from 'modules/permission/constants/container';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import FormattedNumber from 'components/FormattedNumber';
 import { SectionHeader, SectionWrapper } from 'components/Form';
+import { CONTAINER_ORDER_LIST } from 'modules/permission/constants/container';
+import { ORDER_FORM } from 'modules/permission/constants/order';
+import usePartnerPermission from 'hooks/usePartnerPermission';
+import usePermission from 'hooks/usePermission';
 
 import { OrdersSectionWrapperStyle, OrdersSectionBodyStyle, EmptyMessageStyle } from './style';
 
@@ -52,7 +53,11 @@ function OrdersSection({ orders }: Props) {
               <OrderCard
                 order={order}
                 key={order.id}
-                onClick={() => navigate(`/order/${encodeId(order.id)}`)}
+                onClick={() => {
+                  if (hasPermission(ORDER_FORM)) {
+                    navigate(`/order/${encodeId(order.id)}`);
+                  }
+                }}
               />
             ))}
           </div>

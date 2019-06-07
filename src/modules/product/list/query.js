@@ -6,6 +6,7 @@ import {
   tagFragment,
   todoFragment,
   imageFragment,
+  ownedByFragment,
 } from 'graphql';
 
 export const productListQuery = gql`
@@ -29,6 +30,7 @@ export const productListQuery = gql`
   ${tagFragment}
   ${todoFragment}
   ${imageFragment}
+  ${ownedByFragment}
 `;
 
 export default productListQuery;
