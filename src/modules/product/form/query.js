@@ -19,12 +19,14 @@ import {
   taskTemplateCardFragment,
   taskFormInSlideViewFragment,
   taskFormInTemplateFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const productFormQuery = gql`
   query productFormQuery($id: ID!) {
     product(id: $id) {
       ...productFormFragment
+      ...forbiddenFragment
     }
   }
 
@@ -46,6 +48,7 @@ export const productFormQuery = gql`
   ${taskTemplateCardFragment}
   ${taskFormInSlideViewFragment}
   ${taskFormInTemplateFragment}
+  ${forbiddenFragment}
 `;
 
 export default productFormQuery;

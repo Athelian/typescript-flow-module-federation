@@ -40,6 +40,7 @@ export const productFormFragment = gql`
     }
     productProviders {
       ...productProviderFormFragment
+      ...forbiddenFragment
     }
   }
 `;

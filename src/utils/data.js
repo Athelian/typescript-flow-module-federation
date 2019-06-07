@@ -68,6 +68,16 @@ export const isForbidden = (data: Object): boolean => {
   return getByPath('__typename', data) === 'Forbidden';
 };
 
+export const extractForbiddenId = (data: Object): Object => {
+  if (isForbidden(data)) {
+    const id = getByPathWithDefault(null, 'reference.id', data);
+    if (id) {
+      return { ...data, id };
+    }
+  }
+  return data;
+};
+
 export const getSelectLabel = (value: ?string, items: Array<{ value: string, label: string }>) => {
   if (value) {
     const foundItem = items.find(item => item.value === value);
@@ -147,7 +157,7 @@ export const parseArrayOfChildrenField = (
   forceSendIds: boolean = false
 ) => {
   if (!forceSendIds && isEquals(originalChildren, newChildren)) return {};
-
+  console.warn(originalChildren, newChildren);
   const parsedNewChildren = newChildren.map(
     (newChild: Object): Array<Object> => {
       const oldChild =
