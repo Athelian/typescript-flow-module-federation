@@ -27,7 +27,9 @@ type OptionalProps = {
   onToggleSlideView: boolean => void,
 };
 
-type Props = OptionalProps;
+type Props = OptionalProps & {
+  groupIds: Array<string>,
+};
 
 const defaultProps = {
   users: [],
@@ -46,6 +48,7 @@ const TaskAssignmentInput = ({
   onDeactivateUser,
   onToggleSlideView,
   editable,
+  groupIds,
 }: Props) => {
   return (
     <div className={TaskAssignmentWrapperStyle}>
@@ -139,6 +142,7 @@ const TaskAssignmentInput = ({
                       onChange(selected);
                     }}
                     onCancel={() => slideToggle(false)}
+                    filterBy={{ groupIds }}
                   />
                 )}
               </SlideView>

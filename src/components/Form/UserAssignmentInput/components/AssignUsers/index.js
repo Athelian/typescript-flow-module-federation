@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
+import loadMore from 'utils/loadMore';
 import UserListProvider from 'providers/UserList';
 import Layout from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
@@ -13,6 +14,7 @@ import { type UserAvatarType } from 'types';
 
 type OptionalProps = {
   selected: Array<UserAvatarType>,
+  filterBy: Object,
 };
 
 type Props = OptionalProps & {
@@ -22,6 +24,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   selected: [],
+  filterBy: {},
 };
 
 const MAX_SELECTIONS = 5;
@@ -55,13 +58,18 @@ const selectedItems = (
   return [];
 };
 
-const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
-  <UserListProvider>
-    {({ loading, error, data }) => {
+const AssignUsers = ({ selected, onCancel, onSelect, filterBy }: Props) => (
+  <UserListProvider filterBy={filterBy}>
+    {({ loading, error, fetchMore, data }) => {
       if (error) {
         return error.message;
       }
+
       if (loading) return <LoadingIcon />;
+
+      const nextPage = getByPathWithDefault(1, 'users.page', data) + 1;
+      const totalPage = getByPathWithDefault(1, 'users.totalPage', data);
+      const hasMore = nextPage <= totalPage;
       return (
         <ArrayValue
           defaultValue={selectedItems(selected, getByPathWithDefault([], 'users.nodes', data))}
@@ -83,11 +91,10 @@ const AssignUsers = ({ selected, onCancel, onSelect }: Props) => (
                 </SlideViewNavBar>
               }
             >
-              {/* TODO: Add pagination */}
               <StaffGridView
-                hasMore={false}
+                hasMore={hasMore}
                 isLoading={loading}
-                onLoadMore={() => {}}
+                onLoadMore={() => loadMore({ fetchMore, data }, {}, 'users')}
                 items={getByPathWithDefault([], 'users.nodes', data)}
                 renderItem={item => (
                   <StaffCard

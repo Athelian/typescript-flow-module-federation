@@ -3,8 +3,9 @@ import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
+// TODO: how to detect the partner id from RM
+import AssignUsers from 'components/Form/UserAssignmentInput/components/AssignUsers';
 import UserAvatar from 'components/UserAvatar';
-import AssignUsers from 'modules/shipment/form/components/TimelineSection/components/AssignUsers';
 import {
   AssignmentWrapperStyle,
   AssignmentStyle,
