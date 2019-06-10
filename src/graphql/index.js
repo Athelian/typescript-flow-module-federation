@@ -20,7 +20,11 @@ import {
   productCardFragment,
   productCardWithOwnedFragment,
 } from './product/fragment';
-import { containerFormFragment, containerCardFragment } from './container/fragment';
+import {
+  containerFormFragment,
+  containerCardFragment,
+  containerCardWithOwnedFragment,
+} from './container/fragment';
 import {
   productProviderFormFragment,
   productProviderCardFragment,
@@ -69,6 +73,7 @@ export {
   batchCardWithOwnedFragment,
   containerFormFragment,
   containerCardFragment,
+  containerCardWithOwnedFragment,
   itemFormFragment,
   itemCardFragment,
   itemCardWithOwnedFragment,

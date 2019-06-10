@@ -58,8 +58,8 @@ function ContainersSection({ entityId, isLoading }: Props) {
                 <div className={ContainersSectionBodyStyle}>
                   {containers.map(container => (
                     <ContainerCard
-                      container={container}
                       key={container.id}
+                      container={container}
                       onClick={() => navigate(`/container/${encodeId(container.id)}`)}
                     />
                   ))}
