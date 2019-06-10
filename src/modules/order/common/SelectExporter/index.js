@@ -52,7 +52,7 @@ const SelectExporter = ({ isRequired, selected, onCancel, onSelect, warningMessa
                     data-testid="btnSaveExporter"
                     disabled={isEquals(value, selected)}
                     onClick={() => {
-                      if (getByPath('id', selected) !== getByPath('id', value)) {
+                      if (selected && selected.id !== getByPath('id', value)) {
                         setOpenConfirmDialog(true);
                       } else {
                         onSelect(value);
