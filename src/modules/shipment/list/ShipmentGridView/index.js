@@ -10,6 +10,7 @@ import { ShipmentCard, CardAction } from 'components/Cards';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_ARCHIVED,
   SHIPMENT_FORM,
 } from 'modules/permission/constants/shipment';
 import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/common/Dialog';
@@ -53,7 +54,8 @@ const defaultRenderItem = (item: Object) => (
                     onClick={() => navigate(`/shipment/clone/${encodeId(item.id)}`)}
                   />
                 ),
-                permissions.includes(SHIPMENT_UPDATE) && (
+                (permissions.includes(SHIPMENT_UPDATE) ||
+                  permissions.includes(SHIPMENT_SET_ARCHIVED)) && (
                   <CardAction
                     icon={item.archived ? 'ACTIVE' : 'ARCHIVE'}
                     onClick={() => dialogToggle(true)}
