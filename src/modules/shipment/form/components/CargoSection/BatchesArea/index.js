@@ -73,6 +73,7 @@ type Props = {
   selectedBatches: Array<Object>,
   onSelectBatch: Function,
   shipmentIsArchived: boolean,
+  exporterId: string,
 };
 
 function BatchesArea({
@@ -83,6 +84,7 @@ function BatchesArea({
   selectedBatches,
   onSelectBatch,
   shipmentIsArchived,
+  exporterId,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -500,6 +502,9 @@ function BatchesArea({
                           >
                             {createBatchesIsOpen && (
                               <SelectOrderItems
+                                filter={{
+                                  exporterId,
+                                }}
                                 onSelect={selectedOrderItems => {
                                   const createdBatches = selectedOrderItems.map(
                                     (orderItem, index) => ({

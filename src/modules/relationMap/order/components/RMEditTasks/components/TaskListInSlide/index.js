@@ -38,6 +38,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
               <TaskCard
                 task={task}
                 position={index + 1}
+                // FIXME: should editable
                 editable
                 saveOnBlur={value => onChange(`tasks.${index}`, value)}
                 onClick={() => toggleTaskForm(true)}

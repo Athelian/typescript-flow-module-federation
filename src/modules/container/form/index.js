@@ -2,7 +2,7 @@
 import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { ContainerBatchesContainer } from 'modules/container/form/containers';
 import LoadingIcon from 'components/LoadingIcon';
 import Icon from 'components/Icon';
@@ -90,7 +90,11 @@ export default class ContainerForm extends React.Component<Props> {
             </SectionWrapper>
           )}
 
-          <AsyncBatchesSection containerIsArchived={container.archived} isSlideView={isSlideView} />
+          <AsyncBatchesSection
+            exporterId={getByPathWithDefault('', 'shipment.exporter.id', container)}
+            containerIsArchived={container.archived}
+            isSlideView={isSlideView}
+          />
 
           <Subscribe to={[ContainerBatchesContainer]}>
             {({ state: values }) => {

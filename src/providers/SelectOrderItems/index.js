@@ -28,6 +28,7 @@ import { ItemWrapperStyle } from './style';
 type Props = {
   onCancel: Function,
   onSelect: Function,
+  filter: Object,
   intl: IntlShape,
 };
 
@@ -67,7 +68,7 @@ function onChangeProductQuantity({
   set(orderItems.concat(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id)));
 }
 
-function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
+function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const fields = [
@@ -81,6 +82,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
       filter: {
         query: '',
         archived: false,
+        ...filter,
       },
       sort: { field: 'updatedAt', direction: 'DESCENDING' },
     },

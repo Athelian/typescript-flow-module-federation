@@ -16,9 +16,10 @@ const POOL = -1;
 
 type Props = {
   shipmentIsArchived: boolean,
+  exporterId: string,
 };
 
-const CargoSection = ({ shipmentIsArchived }: Props) => {
+const CargoSection = ({ shipmentIsArchived, exporterId }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [focusedContainerIndex, setFocusedCardIndex] = React.useState(UNSELECTED);
@@ -67,6 +68,7 @@ const CargoSection = ({ shipmentIsArchived }: Props) => {
         shipmentIsArchived={shipmentIsArchived}
       />
       <BatchesArea
+        exporterId={exporterId}
         isFocusedBatchesPool={focusedContainerIndex === POOL}
         focusedContainerIndex={focusedContainerIndex}
         isSelectBatchesMode={isSelectBatchesMode}

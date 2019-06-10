@@ -16,7 +16,12 @@ import {
 } from 'graphql';
 
 export const orderItemsListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
+  query orderItemsListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: OrderItemFilterInput
+    $sortBy: OrderItemSortInput
+  ) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       page
       totalPage
