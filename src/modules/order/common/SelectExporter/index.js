@@ -2,15 +2,17 @@
 import * as React from 'react';
 import { ObjectValue } from 'react-values';
 import { cleanUpData } from 'utils/data';
+import { getByPath } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { PartnerCard } from 'components/Cards';
-import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type OptionalProps = {
+  isRequired: boolean,
   selected: {
     id: string,
     name: string,
@@ -23,13 +25,17 @@ type Props = OptionalProps & {
   onCancel: Function,
 };
 
+const defaultProps = {
+  isRequired: false,
+};
+
 const isEquals = (value: ?Object, selected: ?Object): boolean => {
   const { id: newId } = value || {};
   const { id: oldId } = selected || {};
   return newId === oldId;
 };
 
-const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props) => {
+const SelectExporter = ({ isRequired, selected, onCancel, onSelect, warningMessage }: Props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
   return (
@@ -46,7 +52,7 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
                     data-testid="btnSaveExporter"
                     disabled={isEquals(value, selected)}
                     onClick={() => {
-                      if (selected && selected.id !== value.id) {
+                      if (getByPath('id', selected) !== getByPath('id', value)) {
                         setOpenConfirmDialog(true);
                       } else {
                         onSelect(value);
@@ -74,12 +80,18 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
                 items={data.filter(partner => partner.types.includes('Exporter'))}
                 renderItem={item => (
                   <PartnerCard
+                    key={item.id}
                     data-testid="partnerCard"
                     partner={item}
-                    onSelect={() => set(cleanUpData(item))}
+                    onSelect={() => {
+                      if (!isRequired && (value && value.id === item.id)) {
+                        set(null);
+                      } else {
+                        set(cleanUpData(item));
+                      }
+                    }}
                     selectable
-                    selected={item && value && item.id === value.id}
-                    key={item.id}
+                    selected={value && value.id === item.id}
                   />
                 )}
               />
@@ -90,5 +102,7 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
     </PartnerListProvider>
   );
 };
+
+SelectExporter.defaultProps = defaultProps;
 
 export default SelectExporter;

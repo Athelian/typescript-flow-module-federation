@@ -488,6 +488,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                         { changeExporter: updateOrderInfo }
                                       ) => (
                                         <SelectExporter
+                                          isRequired
                                           selected={values.exporter}
                                           onCancel={() => slideToggle(false)}
                                           onSelect={newValue => {
