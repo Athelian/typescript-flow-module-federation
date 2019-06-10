@@ -7,6 +7,7 @@ import useUser from 'hooks/useUser';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
+import { parseRoute } from 'utils/route';
 import QueryFormPermissionContext from '../QueryForm/context';
 import { partnerPermissionQuery } from '../QueryForm/query';
 
@@ -111,7 +112,7 @@ export default function QueryFormV2({ query, entityId, entityType, render, onCom
             </QueryFormPermissionContext.Provider>
           );
         }
-        navigate(`/${entityType}`);
+        navigate(`/${parseRoute(entityType)}`);
         return null;
       }}
     </Query>

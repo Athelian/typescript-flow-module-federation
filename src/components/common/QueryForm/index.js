@@ -8,6 +8,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import { decodeId } from 'utils/id';
 import logger from 'utils/logger';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
+import { parseRoute } from 'utils/route';
 import QueryFormPermissionContext from './context';
 import { partnerPermissionQuery } from './query';
 
@@ -98,7 +99,7 @@ export default function QueryForm({ query, entityId, entityType, render, onCompl
             </QueryFormPermissionContext.Provider>
           );
         }
-        navigate(`/${entityType}`);
+        navigate(`/${parseRoute(entityType)}`);
         return <LoadingIcon />;
       }}
     </Query>
