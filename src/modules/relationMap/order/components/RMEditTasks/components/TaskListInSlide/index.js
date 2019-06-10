@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { BooleanValue } from 'react-values';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
-import { BooleanValue } from 'react-values';
+import { parseGroupIds } from 'utils/task';
 import { TaskCard } from 'components/Cards';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 
@@ -44,8 +45,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
               <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
                 {isOpen && (
                   <TaskFormInSlide
-                    // TODO: fix partner id for staff query
-                    groupIds={[]}
+                    groupIds={parseGroupIds(task)}
                     editable
                     entity={task.entity}
                     task={{ ...task, sort: index }}

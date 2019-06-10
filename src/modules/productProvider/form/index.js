@@ -2,6 +2,7 @@
 import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { getByPath } from 'utils/fp';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
@@ -111,8 +112,14 @@ class ProductProviderForm extends React.Component<Props> {
             <AsyncDocumentsSection isOwner={isOwner} />
           </SectionWrapper>
 
-          {/* TODO: send partner ids */}
-          <AsyncTaskSection groupIds={[]} entityId={productProvider.id} type="productProvider" />
+          <AsyncTaskSection
+            groupIds={[
+              getByPath('product.importer.id', productProvider),
+              getByPath('exporter.id', productProvider),
+            ].filter(Boolean)}
+            entityId={productProvider.id}
+            type="productProvider"
+          />
 
           <Subscribe to={[ProductProviderTasksContainer]}>
             {({

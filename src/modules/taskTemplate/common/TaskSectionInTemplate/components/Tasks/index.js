@@ -3,6 +3,7 @@ import * as React from 'react';
 import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { parseGroupIds } from 'utils/task';
 import SlideView from 'components/SlideView';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -91,8 +92,7 @@ const Tasks = ({
             <SlideView isOpen={opened} onRequestClose={() => selectTaskSlideToggle(false)}>
               {opened && (
                 <TaskFormInSlide
-                  // TODO: fix partner id for staff query
-                  groupIds={[]}
+                  groupIds={parseGroupIds(task)}
                   entity={{
                     ...task.entity,
                     __typename: type,
