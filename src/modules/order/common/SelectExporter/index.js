@@ -2,13 +2,14 @@
 import * as React from 'react';
 import { ObjectValue } from 'react-values';
 import { cleanUpData } from 'utils/data';
+import { getByPath } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
+import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { PartnerCard } from 'components/Cards';
-import ConfirmDialog from 'components/Dialog/ConfirmDialog';
+import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type OptionalProps = {
   selected: {
@@ -29,6 +30,7 @@ const isEquals = (value: ?Object, selected: ?Object): boolean => {
   return newId === oldId;
 };
 
+// TODO: isRequired
 const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
@@ -46,7 +48,7 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
                     data-testid="btnSaveExporter"
                     disabled={isEquals(value, selected)}
                     onClick={() => {
-                      if (selected && selected.id !== value.id) {
+                      if (getByPath('id', selected) !== getByPath('id', value)) {
                         setOpenConfirmDialog(true);
                       } else {
                         onSelect(value);
@@ -76,7 +78,13 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
                   <PartnerCard
                     data-testid="partnerCard"
                     partner={item}
-                    onSelect={() => set(cleanUpData(item))}
+                    onSelect={() => {
+                      if (item && value && item.id === value.id) {
+                        set(null);
+                      } else {
+                        set(cleanUpData(item));
+                      }
+                    }}
                     selectable
                     selected={item && value && item.id === value.id}
                     key={item.id}
