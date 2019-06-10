@@ -8,6 +8,7 @@ import { getByPath } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
+import { Tooltip } from 'components/Tooltip';
 import {
   CONTAINER_FORM,
   CONTAINER_UPDATE,
@@ -432,17 +433,42 @@ function BatchesArea({
                     <BooleanValue>
                       {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                         <>
-                          <NewButton
-                            data-testid="btnSelectBatches"
-                            label={
-                              <FormattedMessage
-                                id="modules.Shipments.selectBatches"
-                                defaultMessage="SELECT BATCHES"
-                              />
-                            }
-                            disabled={importerId.length === 0}
-                            onClick={() => selectBatchesSlideToggle(true)}
-                          />
+                          {importerId.length === 0 ? (
+                            <Tooltip
+                              message={
+                                <FormattedMessage
+                                  id="modules.Shipments.chooseImporterFirst"
+                                  defaultMessage="Please choose an Importer first"
+                                />
+                              }
+                            >
+                              <div>
+                                <NewButton
+                                  data-testid="btnSelectBatches"
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.Shipments.selectBatches"
+                                      defaultMessage="SELECT BATCHES"
+                                    />
+                                  }
+                                  disabled
+                                  onClick={() => selectBatchesSlideToggle(true)}
+                                />
+                              </div>
+                            </Tooltip>
+                          ) : (
+                            <NewButton
+                              data-testid="btnSelectBatches"
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.selectBatches"
+                                  defaultMessage="SELECT BATCHES"
+                                />
+                              }
+                              onClick={() => selectBatchesSlideToggle(true)}
+                            />
+                          )}
+
                           <SlideView
                             isOpen={selectBatchesIsOpen}
                             onRequestClose={() => selectBatchesSlideToggle(false)}
@@ -491,16 +517,40 @@ function BatchesArea({
                     <BooleanValue>
                       {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                         <>
-                          <NewButton
-                            label={
-                              <FormattedMessage
-                                id="modules.Shipments.newBatch"
-                                defaultMessage="NEW BATCH"
-                              />
-                            }
-                            disabled={importerId.length === 0}
-                            onClick={() => createBatchesSlideToggle(true)}
-                          />
+                          {importerId.length === 0 ? (
+                            <Tooltip
+                              message={
+                                <FormattedMessage
+                                  id="modules.Shipments.chooseImporterFirst"
+                                  defaultMessage="Please choose an Importer first"
+                                />
+                              }
+                            >
+                              <div>
+                                <NewButton
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.Shipments.newBatch"
+                                      defaultMessage="NEW BATCH"
+                                    />
+                                  }
+                                  disabled
+                                  onClick={() => createBatchesSlideToggle(true)}
+                                />
+                              </div>
+                            </Tooltip>
+                          ) : (
+                            <NewButton
+                              label={
+                                <FormattedMessage
+                                  id="modules.Shipments.newBatch"
+                                  defaultMessage="NEW BATCH"
+                                />
+                              }
+                              onClick={() => createBatchesSlideToggle(true)}
+                            />
+                          )}
+
                           <SlideView
                             isOpen={createBatchesIsOpen}
                             onRequestClose={() => createBatchesSlideToggle(false)}
