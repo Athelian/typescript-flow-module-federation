@@ -113,11 +113,7 @@ function ItemsArea({
                       if (unitPrice && unitPrice.currency === currency) {
                         return {
                           ...orderItem,
-                          price: {
-                            currency,
-                            amount: unitPrice.amount,
-                            __typename: getByPath('price.__typename', orderItem),
-                          },
+                          price: { ...unitPrice },
                         };
                       }
                       return orderItem;
