@@ -104,7 +104,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
 
             <div className={BatchesSectionWrapperStyle}>
               <SectionNavBar>
-                {allowAddBatches && (
+                {allowAddBatches && importerId.length > 0 && (
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                       <>
@@ -124,6 +124,9 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                         >
                           {selectBatchesIsOpen && (
                             <SelectContainerBatches
+                              filter={{
+                                importerId,
+                              }}
                               selectedBatches={batches}
                               onSelect={selected => {
                                 const selectedBatches = selected.map(selectedBatch => ({
@@ -146,7 +149,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                     )}
                   </BooleanValue>
                 )}
-                {allowCreateBatches && (
+                {allowCreateBatches && importerId.length > 0 && (
                   <BooleanValue>
                     {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                       <>

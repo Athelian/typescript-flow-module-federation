@@ -448,6 +448,9 @@ function BatchesArea({
                           >
                             {selectBatchesIsOpen && (
                               <SelectShipmentBatches
+                                filter={{
+                                  importerId,
+                                }}
                                 selectedBatches={batches}
                                 onSelect={selected => {
                                   const newSelectBatches = selected.map(selectedBatch => ({

@@ -26,16 +26,18 @@ type Props = {
   onCancel: Function,
   onSelect: Function,
   intl: IntlShape,
+  filter: Object,
   selectedBatches: Array<Object>,
 };
 
-const getInitFilter = () => ({
+const getInitFilter = (filter: Object) => ({
   perPage: 20,
   page: 1,
   filter: {
     query: '',
     hasShipment: false,
     archived: false,
+    ...filter,
   },
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
@@ -58,7 +60,7 @@ function onSelectBatch({
   }
 }
 
-function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Props) {
+function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches, filter }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const viewPrice = hasPermission(ORDER_ITEMS_GET_PRICE);
@@ -76,7 +78,7 @@ function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches }: Pr
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
-    getInitFilter(),
+    getInitFilter(filter),
     'filterSelectShipmentBatches'
   );
 
