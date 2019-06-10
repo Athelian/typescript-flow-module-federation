@@ -41,6 +41,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
               <PartnerPermissionsWrapper data={task}>
                 {permissions => (
                   <TaskCard
+                    groupIds={parseGroupIds(task)}
                     task={{
                       ...task,
                       entity: {
