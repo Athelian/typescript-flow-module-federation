@@ -189,6 +189,9 @@ export const taskFormFragment = gql`
     updatedBy {
       ...userAvatarFragment
     }
+    ownedBy {
+      ...ownedByFragment
+    }
     name
     approvable
     startDate
