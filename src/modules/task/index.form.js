@@ -5,6 +5,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
 import { showToastError } from 'utils/errors';
+import { getByPath } from 'utils/fp';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import { decodeId } from 'utils/id';
@@ -30,6 +31,44 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & { intl: IntlShape };
+
+const parseGroupIds = (task: Object) => {
+  const entity = getByPath('entity.__typename', task);
+
+  switch (entity) {
+    case 'Batch':
+      return [
+        getByPath('batch.orderItem.order.importer.id', task),
+        getByPath('batch.orderItem.order.exporter.id', task),
+      ].filter(Boolean);
+
+    case 'OrderItem':
+      return [
+        getByPath('orderItem.order.importer.id', task),
+        getByPath('orderItem.order.exporter.id', task),
+      ].filter(Boolean);
+
+    case 'Order':
+      return [getByPath('order.importer.id', task), getByPath('order.exporter.id', task)].filter(
+        Boolean
+      );
+
+    case 'Shipment':
+      return [
+        getByPath('shipment.importer.id', task),
+        getByPath('shipment.exporter.id', task),
+      ].filter(Boolean);
+
+    case 'ProductProvider':
+      return [
+        getByPath('productProvider.product.importer.id', task),
+        getByPath('productProvider.exporter.id', task),
+      ].filter(Boolean);
+
+    default:
+      return [];
+  }
+};
 
 class TaskFormModule extends React.Component<Props> {
   onReset = (taskContainer: Object, formReset: Function) => {
@@ -176,9 +215,8 @@ class TaskFormModule extends React.Component<Props> {
                           entityId={taskId}
                           entityType="task"
                           render={task => (
-                            // TODO: fix partner id for staff query
                             <TaskForm
-                              groupIds={[]}
+                              groupIds={parseGroupIds(task)}
                               task={task}
                               onFormReady={() => initDetailValues(task)}
                             />
