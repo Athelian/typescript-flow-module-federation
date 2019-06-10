@@ -12,6 +12,7 @@ import { PartnerCard } from 'components/Cards';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 
 type OptionalProps = {
+  isRequired: boolean,
   selected: {
     id: string,
     name: string,
@@ -24,14 +25,17 @@ type Props = OptionalProps & {
   onCancel: Function,
 };
 
+const defaultProps = {
+  isRequired: false,
+};
+
 const isEquals = (value: ?Object, selected: ?Object): boolean => {
   const { id: newId } = value || {};
   const { id: oldId } = selected || {};
   return newId === oldId;
 };
 
-// TODO: isRequired
-const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props) => {
+const SelectExporter = ({ isRequired, selected, onCancel, onSelect, warningMessage }: Props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
   return (
@@ -76,18 +80,18 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
                 items={data.filter(partner => partner.types.includes('Exporter'))}
                 renderItem={item => (
                   <PartnerCard
+                    key={item.id}
                     data-testid="partnerCard"
                     partner={item}
                     onSelect={() => {
-                      if (item && value && item.id === value.id) {
+                      if (!isRequired && (value && value.id === item.id)) {
                         set(null);
                       } else {
                         set(cleanUpData(item));
                       }
                     }}
                     selectable
-                    selected={item && value && item.id === value.id}
-                    key={item.id}
+                    selected={value && value.id === item.id}
                   />
                 )}
               />
@@ -98,5 +102,7 @@ const SelectExporter = ({ selected, onCancel, onSelect, warningMessage }: Props)
     </PartnerListProvider>
   );
 };
+
+SelectExporter.defaultProps = defaultProps;
 
 export default SelectExporter;
