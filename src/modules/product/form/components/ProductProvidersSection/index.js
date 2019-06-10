@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { isForbidden } from 'utils/data';
 import usePermission from 'hooks/usePermission';
 import { SectionNavBar } from 'components/NavBar';
 import { ProductProviderCard } from 'components/Cards';
@@ -88,8 +89,9 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                 </div>
               ) : (
                 <div className={ItemGridStyle}>
-                  {productProviders.map(
-                    (productProvider, index): React.Node => (
+                  {productProviders
+                    .filter(item => !isForbidden(item))
+                    .map((productProvider, index): React.Node => (
                       <BooleanValue key={productProvider.id}>
                         {({ value: opened, set: slideToggle }) => (
                           <>
@@ -125,8 +127,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
                           </>
                         )}
                       </BooleanValue>
-                    )
-                  )}
+                    ))}
                 </div>
               )}
             </div>
