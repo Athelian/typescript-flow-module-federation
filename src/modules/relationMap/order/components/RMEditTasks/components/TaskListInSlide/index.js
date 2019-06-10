@@ -41,7 +41,18 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
               <PartnerPermissionsWrapper data={task}>
                 {permissions => (
                   <TaskCard
-                    task={task}
+                    task={{
+                      ...task,
+                      entity: {
+                        ...task.entity,
+                        ...task.order,
+                        ...task.orderItem,
+                        ...task.batch,
+                        ...task.product,
+                        ...task.productProvider,
+                        ...task.shipment,
+                      },
+                    }}
                     position={index + 1}
                     editable={checkEditableFromEntity(
                       getByPath('entity.__typename', task),
