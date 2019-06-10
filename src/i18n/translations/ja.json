@@ -177,7 +177,6 @@
   "components.BatchItem.shortQuantity": "梱包数",
   "components.BatchItem.inventory": "フリー在庫(自動計算)",
   "components.BatchItem.user": "予約在庫",
-  "components.BatchItem.request": "REQUEST(No need)",
   "components.BatchItem.memo": "メモ",
   "components.BatchItem.product": "商品マスタ",
   "components.BatchItem.batchItem": "商品(バッチ済)",

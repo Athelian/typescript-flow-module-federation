@@ -87,10 +87,6 @@ export default defineMessages({
     id: 'components.BatchItem.user',
     defaultMessage: 'STAFF',
   },
-  request: {
-    id: 'components.BatchItem.request',
-    defaultMessage: 'REQUEST',
-  },
   memo: {
     id: 'components.BatchItem.memo',
     defaultMessage: 'MEMO',
