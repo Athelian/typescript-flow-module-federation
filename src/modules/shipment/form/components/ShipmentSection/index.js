@@ -13,6 +13,7 @@ import { STAFF_LIST } from 'modules/permission/constants/staff';
 import {
   SHIPMENT_CREATE,
   SHIPMENT_UPDATE,
+  SHIPMENT_SET_ARCHIVED,
   SHIPMENT_SET_IMPORTER,
   SHIPMENT_SET_EXPORTER,
   SHIPMENT_SET_IN_CHARGE,
@@ -118,7 +119,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
             <BooleanValue>
               {({ value: statusDialogIsOpen, set: dialogToggle }) => (
                 <StatusToggle
-                  readOnly={!hasPermission(SHIPMENT_UPDATE)}
+                  readOnly={!hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_ARCHIVED])}
                   archived={archived}
                   openStatusDialog={() => dialogToggle(true)}
                   activateDialog={
