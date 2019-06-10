@@ -28,6 +28,12 @@ export const taskCardFragment = gql`
       }
       ... on ProductProvider {
         name
+        product {
+          ... on Product {
+            id
+            name
+          }
+        }
       }
     }
     assignedTo {

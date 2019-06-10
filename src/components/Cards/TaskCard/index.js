@@ -90,7 +90,14 @@ const defaultProps = {
   isInTemplate: false,
 };
 
-const getParentInfo = (parent: Object) => {
+const getParentInfo = (
+  parent: Object
+): {
+  parentType: string,
+  parentIcon: string,
+  parentData: mixed,
+  link: string,
+} => {
   const { __typename } = parent;
 
   if (__typename === 'Order') {
@@ -98,6 +105,7 @@ const getParentInfo = (parent: Object) => {
       parentType: 'order',
       parentIcon: 'ORDER',
       parentData: parent.poNo,
+      link: `/order/${encodeId(parent.id)}`,
     };
   }
   if (__typename === 'OrderItem') {
@@ -105,6 +113,7 @@ const getParentInfo = (parent: Object) => {
       parentType: 'orderItem',
       parentIcon: 'ORDER_ITEM',
       parentData: parent.no,
+      link: `/order-item/${encodeId(parent.id)}`,
     };
   }
   if (__typename === 'Batch') {
@@ -112,6 +121,7 @@ const getParentInfo = (parent: Object) => {
       parentType: 'batch',
       parentIcon: 'BATCH',
       parentData: parent.no,
+      link: `/batch/${encodeId(parent.id)}`,
     };
   }
   if (__typename === 'Shipment') {
@@ -119,6 +129,7 @@ const getParentInfo = (parent: Object) => {
       parentType: 'shipment',
       parentIcon: 'SHIPMENT',
       parentData: parent.no,
+      link: `/shipment/${encodeId(parent.id)}`,
     };
   }
   if (__typename === 'Product') {
@@ -126,6 +137,7 @@ const getParentInfo = (parent: Object) => {
       parentType: 'product',
       parentIcon: 'PRODUCT',
       parentData: parent.name,
+      link: `/product/${encodeId(parent.id)}`,
     };
   }
   if (__typename === 'ProductProvider') {
@@ -133,6 +145,7 @@ const getParentInfo = (parent: Object) => {
       parentType: 'product',
       parentIcon: 'PRODUCT_PROVIDER',
       parentData: parent.name,
+      link: `/product/${encodeId(parent.product.id)}`,
     };
   }
   return {};
@@ -197,7 +210,7 @@ const TaskCard = ({
 
   const editable = { ...defaultEditable, ...originalEditable };
 
-  const { parentType, parentIcon, parentData } = getParentInfo(parent);
+  const { parentType, parentIcon, parentData, link } = getParentInfo(parent);
 
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -263,7 +276,7 @@ const TaskCard = ({
                 {viewPermissions[parentType] ? (
                   <Link
                     className={TaskParentIconStyle}
-                    to={`/${parentType}/${encodeId(parent.id)}`}
+                    to={link}
                     onClick={evt => {
                       evt.stopPropagation();
                     }}
