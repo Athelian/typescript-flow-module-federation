@@ -428,7 +428,7 @@ function BatchesArea({
             <div className={BatchesFooterWrapperStyle}>
               {!isSelectBatchesMode && (
                 <>
-                  {allowSelectBatches && importerId.length > 0 && (
+                  {allowSelectBatches && (
                     <BooleanValue>
                       {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                         <>
@@ -440,6 +440,7 @@ function BatchesArea({
                                 defaultMessage="SELECT BATCHES"
                               />
                             }
+                            disabled={importerId.length === 0}
                             onClick={() => selectBatchesSlideToggle(true)}
                           />
                           <SlideView
@@ -486,7 +487,7 @@ function BatchesArea({
                     </BooleanValue>
                   )}
 
-                  {allowNewBatches && importerId.length > 0 && (
+                  {allowNewBatches && (
                     <BooleanValue>
                       {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                         <>
@@ -497,6 +498,7 @@ function BatchesArea({
                                 defaultMessage="NEW BATCH"
                               />
                             }
+                            disabled={importerId.length === 0}
                             onClick={() => createBatchesSlideToggle(true)}
                           />
                           <SlideView

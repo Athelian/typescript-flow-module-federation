@@ -104,7 +104,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
 
             <div className={BatchesSectionWrapperStyle}>
               <SectionNavBar>
-                {allowAddBatches && importerId.length > 0 && (
+                {allowAddBatches && (
                   <BooleanValue>
                     {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                       <>
@@ -116,6 +116,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                               defaultMessage="SELECT BATCHES"
                             />
                           }
+                          disabled={importerId.length === 0}
                           onClick={() => selectBatchesSlideToggle(true)}
                         />
                         <SlideView
@@ -149,7 +150,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                     )}
                   </BooleanValue>
                 )}
-                {allowCreateBatches && importerId.length > 0 && (
+                {allowCreateBatches && (
                   <BooleanValue>
                     {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                       <>
@@ -160,6 +161,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                               defaultMessage="NEW BATCH"
                             />
                           }
+                          disabled={importerId.length === 0}
                           onClick={() => createBatchesSlideToggle(true)}
                         />
                         <SlideView
