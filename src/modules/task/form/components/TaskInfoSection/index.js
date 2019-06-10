@@ -1394,7 +1394,12 @@ const TaskInfoSection = ({
                           }
                           vertical
                           input={
-                            <OrderProductProviderCard productProvider={task.productProvider} />
+                            <OrderProductProviderCard
+                              productProvider={task.productProvider}
+                              onClick={() =>
+                                navigate(`/product/${encodeId(task.productProvider.product.id)}`)
+                              }
+                            />
                           }
                         />
                       </GridColumn>
