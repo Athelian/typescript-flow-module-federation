@@ -26,8 +26,8 @@ type Props = OptionalProps & {
   isLoading: boolean,
 };
 
-const defaultRenderItem = (item: Object) => (
-  <PartnerPermissionsWrapper key={item.id} data={item}>
+const defaultRenderItem = item => (
+  <PartnerPermissionsWrapper data={item} key={item.id}>
     {permissions => (
       <BooleanValue>
         {({ value: statusDialogIsOpen, set: dialogToggle }) => (
