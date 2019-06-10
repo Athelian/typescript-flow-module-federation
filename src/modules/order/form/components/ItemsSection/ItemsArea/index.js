@@ -116,6 +116,7 @@ function ItemsArea({
                           price: {
                             currency,
                             amount: unitPrice.amount,
+                            __typename: getByPath('price.__typename', orderItem),
                           },
                         };
                       }
