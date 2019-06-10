@@ -54,10 +54,10 @@ import {
 type Props = {
   containerIsArchived: boolean,
   isSlideView: boolean,
-  exporterId: string,
+  importerId: string,
 };
 
-function BatchesSection({ containerIsArchived, isSlideView, exporterId }: Props) {
+function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
@@ -166,7 +166,7 @@ function BatchesSection({ containerIsArchived, isSlideView, exporterId }: Props)
                           {createBatchesIsOpen && (
                             <SelectOrderItems
                               filter={{
-                                exporterId,
+                                importerId,
                               }}
                               onSelect={selectedOrderItems => {
                                 const createdBatches = selectedOrderItems.map(

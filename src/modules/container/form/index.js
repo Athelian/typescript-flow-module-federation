@@ -91,7 +91,7 @@ export default class ContainerForm extends React.Component<Props> {
           )}
 
           <AsyncBatchesSection
-            exporterId={getByPathWithDefault('', 'shipment.exporter.id', container)}
+            importerId={getByPathWithDefault('', 'shipment.importer.id', container)}
             containerIsArchived={container.archived}
             isSlideView={isSlideView}
           />

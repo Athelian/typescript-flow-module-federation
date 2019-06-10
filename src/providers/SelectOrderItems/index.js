@@ -32,6 +32,19 @@ type Props = {
   intl: IntlShape,
 };
 
+function initFilterBy(filter: Object) {
+  return {
+    perPage: 20,
+    page: 1,
+    filter: {
+      query: '',
+      archived: false,
+      ...filter,
+    },
+    sort: { field: 'updatedAt', direction: 'DESCENDING' },
+  };
+}
+
 function onSelectProduct({
   selected,
   item,
@@ -76,16 +89,7 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
-    {
-      perPage: 20,
-      page: 1,
-      filter: {
-        query: '',
-        archived: false,
-        ...filter,
-      },
-      sort: { field: 'updatedAt', direction: 'DESCENDING' },
-    },
+    initFilterBy(filter),
     'filterSelectOrderItems'
   );
 

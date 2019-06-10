@@ -73,7 +73,7 @@ type Props = {
   selectedBatches: Array<Object>,
   onSelectBatch: Function,
   shipmentIsArchived: boolean,
-  exporterId: string,
+  importerId: string,
 };
 
 function BatchesArea({
@@ -84,7 +84,7 @@ function BatchesArea({
   selectedBatches,
   onSelectBatch,
   shipmentIsArchived,
-  exporterId,
+  importerId,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
@@ -428,7 +428,7 @@ function BatchesArea({
             <div className={BatchesFooterWrapperStyle}>
               {!isSelectBatchesMode && (
                 <>
-                  {allowSelectBatches && (
+                  {allowSelectBatches && importerId.length > 0 && (
                     <BooleanValue>
                       {({ value: selectBatchesIsOpen, set: selectBatchesSlideToggle }) => (
                         <>
@@ -483,7 +483,7 @@ function BatchesArea({
                     </BooleanValue>
                   )}
 
-                  {allowNewBatches && (
+                  {allowNewBatches && importerId.length > 0 && (
                     <BooleanValue>
                       {({ value: createBatchesIsOpen, set: createBatchesSlideToggle }) => (
                         <>
@@ -503,7 +503,7 @@ function BatchesArea({
                             {createBatchesIsOpen && (
                               <SelectOrderItems
                                 filter={{
-                                  exporterId,
+                                  importerId,
                                 }}
                                 onSelect={selectedOrderItems => {
                                   const createdBatches = selectedOrderItems.map(

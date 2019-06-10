@@ -101,10 +101,14 @@ class ShipmentForm extends React.Component<Props> {
                 />
               )}
             </Subscribe>
-            <AsyncCargoSection
-              exporterId={getByPathWithDefault('', 'exporter.id', shipment)}
-              shipmentIsArchived={shipment.archived}
-            />
+            <Subscribe to={[ShipmentInfoContainer]}>
+              {({ state: shipmentInfo }) => (
+                <AsyncCargoSection
+                  importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
+                  shipmentIsArchived={shipment.archived}
+                />
+              )}
+            </Subscribe>
           </SectionWrapper>
 
           <SectionWrapper id="shipment_documentsSection">
