@@ -54,7 +54,6 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
             <PartnerPermissionsWrapper key={item.id} data={item}>
               {permissions => (
                 <OrderCard
-                  key={item.id}
                   order={item}
                   onClick={() => {
                     if (permissions.includes(ORDER_FORM)) {
@@ -183,7 +182,6 @@ export const getRelatedConfig = (relatedType: RelatedType, hasPermission: Functi
             <PartnerPermissionsWrapper key={item.id} data={item}>
               {permissions => (
                 <OrderCard
-                  key={item.id}
                   order={item}
                   onClick={() => {
                     if (permissions.includes(ORDER_FORM)) {

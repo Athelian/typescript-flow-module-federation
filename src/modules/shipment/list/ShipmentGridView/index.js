@@ -28,7 +28,7 @@ type Props = OptionalProps & {
 const defaultRenderItem = (item: Object) => (
   <PartnerPermissionsWrapper key={item.id} data={item}>
     {permissions => (
-      <BooleanValue key={item.id}>
+      <BooleanValue>
         {({ value: statusDialogIsOpen, set: dialogToggle }) => (
           <>
             {item.archived ? (
