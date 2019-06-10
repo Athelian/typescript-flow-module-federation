@@ -111,7 +111,10 @@ function ItemsArea({
                     const newOrderItems = orderItems.map(orderItem => {
                       const unitPrice = getByPath('productProvider.unitPrice', orderItem);
                       if (unitPrice && unitPrice.currency === currency) {
-                        return { ...orderItem, price: unitPrice };
+                        return {
+                          ...orderItem,
+                          price: { ...unitPrice },
+                        };
                       }
                       return orderItem;
                     });
