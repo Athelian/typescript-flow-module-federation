@@ -11,6 +11,8 @@ import {
   metricFragment,
   todoFragment,
   partnerNameFragment,
+  badRequestFragment,
+  notFoundFragment,
   forbiddenFragment,
 } from 'graphql';
 
@@ -24,7 +26,9 @@ export const shipmentListQuery = gql`
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...shipmentCardWithOwnedFragment
+        ...badRequestFragment
         ...forbiddenFragment
+        ...notFoundFragment
       }
       page
       totalPage
@@ -42,6 +46,8 @@ export const shipmentListQuery = gql`
   ${todoFragment}
   ${partnerNameFragment}
   ${forbiddenFragment}
+  ${badRequestFragment}
+  ${notFoundFragment}
 `;
 
 export default shipmentListQuery;

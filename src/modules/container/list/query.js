@@ -6,28 +6,39 @@ import {
   imageFragment,
   tagFragment,
   metricFragment,
+  badRequestFragment,
   forbiddenFragment,
+  notFoundFragment,
 } from 'graphql';
 
 export const containerListQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: ContainerFilterInput, $sortBy: ContainerSortInput) {
+  query containerListQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ContainerFilterInput
+    $sortBy: ContainerSortInput
+  ) {
     containers(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...containerCardWithOwnedFragment
+        ...badRequestFragment
         ...forbiddenFragment
+        ...notFoundFragment
       }
       page
       totalPage
     }
   }
 
+  ${badRequestFragment}
+  ${forbiddenFragment}
+  ${notFoundFragment}
   ${containerCardWithOwnedFragment}
   ${containerCardFragment}
   ${ownedByFragment}
   ${imageFragment}
   ${tagFragment}
   ${metricFragment}
-  ${forbiddenFragment}
 `;
 
 export default containerListQuery;
