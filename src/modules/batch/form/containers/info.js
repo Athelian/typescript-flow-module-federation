@@ -60,8 +60,8 @@ export const initValues = {
   expiredAt: null,
   producedAt: null,
   customFields: {
+    mask: null,
     fieldValues: [],
-    fieldDefinitions: [],
   },
   tags: [],
   memo: null,

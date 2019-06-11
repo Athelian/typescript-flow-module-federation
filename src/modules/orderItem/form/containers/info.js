@@ -48,7 +48,6 @@ export const initValues = {
   customFields: {
     mask: null,
     fieldValues: [],
-    fieldDefinitions: [],
   },
   tags: [],
   memo: null,

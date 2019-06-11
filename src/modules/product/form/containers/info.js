@@ -18,7 +18,6 @@ const initValues = {
   customFields: {
     mask: null,
     fieldValues: [],
-    fieldDefinitions: [],
   },
   memo: null,
 };

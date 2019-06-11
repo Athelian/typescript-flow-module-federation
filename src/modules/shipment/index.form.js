@@ -629,8 +629,8 @@ class ShipmentFormModule extends React.Component<Props> {
                                       inCharges: [],
                                       booked: false,
                                       customFields: {
+                                        mask: null,
                                         fieldValues: [],
-                                        fieldDefinitions: [],
                                       },
                                       cargoReady: {},
                                       containerGroups: [{}],
