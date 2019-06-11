@@ -28,8 +28,22 @@ import { ItemWrapperStyle } from './style';
 type Props = {
   onCancel: Function,
   onSelect: Function,
+  filter: Object,
   intl: IntlShape,
 };
+
+function initFilterBy(filter: Object) {
+  return {
+    perPage: 20,
+    page: 1,
+    filter: {
+      query: '',
+      archived: false,
+      ...filter,
+    },
+    sort: { field: 'updatedAt', direction: 'DESCENDING' },
+  };
+}
 
 function onSelectProduct({
   selected,
@@ -67,7 +81,7 @@ function onChangeProductQuantity({
   set(orderItems.concat(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id)));
 }
 
-function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
+function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const fields = [
@@ -75,15 +89,7 @@ function SelectOrderItems({ intl, onCancel, onSelect }: Props) {
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
   const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
-    {
-      perPage: 20,
-      page: 1,
-      filter: {
-        query: '',
-        archived: false,
-      },
-      sort: { field: 'updatedAt', direction: 'DESCENDING' },
-    },
+    initFilterBy(filter),
     'filterSelectOrderItems'
   );
 

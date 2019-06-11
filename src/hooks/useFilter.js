@@ -15,8 +15,8 @@ function useFilter(state: State, cacheKey: string) {
   const localFilter = window.localStorage.getItem(cacheKey);
   const initialFilter = localFilter
     ? {
-        ...state,
         ...JSON.parse(localFilter),
+        ...state,
       }
     : state;
 

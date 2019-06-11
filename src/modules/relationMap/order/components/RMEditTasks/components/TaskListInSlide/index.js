@@ -38,7 +38,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
         <BooleanValue key={task.id}>
           {({ value: isOpen, set: toggleTaskForm }) => (
             <>
-              <PartnerPermissionsWrapper data={task}>
+            <PartnerPermissionsWrapper data={task}>
                 {permissions => (
                   <TaskCard
                     groupIds={parseGroupIds(task)}

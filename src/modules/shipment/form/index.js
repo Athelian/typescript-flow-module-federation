@@ -3,7 +3,7 @@ import React, { lazy, Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import LoadingIcon from 'components/LoadingIcon';
-import { getByPath, isEquals } from 'utils/fp';
+import { getByPath, isEquals, getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import FormattedNumber from 'components/FormattedNumber';
@@ -101,7 +101,14 @@ class ShipmentForm extends React.Component<Props> {
                 />
               )}
             </Subscribe>
-            <AsyncCargoSection shipmentIsArchived={shipment.archived} />
+            <Subscribe to={[ShipmentInfoContainer]}>
+              {({ state: shipmentInfo }) => (
+                <AsyncCargoSection
+                  importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
+                  shipmentIsArchived={shipment.archived}
+                />
+              )}
+            </Subscribe>
           </SectionWrapper>
 
           <SectionWrapper id="shipment_documentsSection">
