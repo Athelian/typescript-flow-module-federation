@@ -413,7 +413,7 @@ function BatchesArea({
                                           container => container.id === value.container.id
                                         );
                                         setDeepFieldValue(`containers.${index}.batches`, [
-                                          ...currentBatches,
+                                          ...containers[index].batches,
                                           newBatch,
                                         ]);
                                       }
