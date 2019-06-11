@@ -1,10 +1,13 @@
 // @flow
 import * as React from 'react';
+import { intersection } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
+import { getByPath } from 'utils/fp';
+import { checkEditableFromEntity, parseGroupIds } from 'utils/task';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
-import { parseGroupIds } from 'utils/task';
 import { TaskCard } from 'components/Cards';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 
@@ -35,14 +38,37 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
         <BooleanValue key={task.id}>
           {({ value: isOpen, set: toggleTaskForm }) => (
             <>
-              <TaskCard
-                task={task}
-                position={index + 1}
-                // FIXME: should editable
-                editable
-                saveOnBlur={value => onChange(`tasks.${index}`, value)}
-                onClick={() => toggleTaskForm(true)}
-              />
+            <PartnerPermissionsWrapper data={task}>
+                {permissions => (
+                  <TaskCard
+                    groupIds={parseGroupIds(task)}
+                    task={{
+                      ...task,
+                      entity: {
+                        ...task.entity,
+                        ...task.order,
+                        ...task.orderItem,
+                        ...task.batch,
+                        ...task.product,
+                        ...task.productProvider,
+                        ...task.shipment,
+                      },
+                    }}
+                    position={index + 1}
+                    editable={checkEditableFromEntity(
+                      getByPath('entity.__typename', task),
+                      (checkPermission: string | Array<string>) => {
+                        if (Array.isArray(checkPermission)) {
+                          return intersection(permissions, checkPermission).length > 0;
+                        }
+                        return permissions.includes(checkPermission);
+                      }
+                    )}
+                    saveOnBlur={value => onChange(`tasks.${index}`, value)}
+                    onClick={() => toggleTaskForm(true)}
+                  />
+                )}
+              </PartnerPermissionsWrapper>
               <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
                 {isOpen && (
                   <TaskFormInSlide
