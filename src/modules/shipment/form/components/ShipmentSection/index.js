@@ -441,6 +441,7 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                   </FormField>
 
                   <CustomFieldsFactory
+                    isNew={isNew}
                     entityType="Shipment"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
