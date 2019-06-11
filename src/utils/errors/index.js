@@ -47,6 +47,11 @@ export const showToastError = ({
     return true;
   }
 
+  if (errorType === 'Forbidden') {
+    toast.error(intl.formatMessage(messages.apiEntityForbiddenErrorMessage));
+    return true;
+  }
+
   if (
     hasNotFoundError(
       getByPath(`${entity}Create.violations`, result) ||

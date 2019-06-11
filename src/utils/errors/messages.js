@@ -11,6 +11,11 @@ export default defineMessages({
     defaultMessage:
       'Sorry, but this data has been deleted. Please refresh the page and review the logs to see more details',
   },
+  apiEntityForbiddenErrorMessage: {
+    id: 'global.apiEntityForbiddenErrorMessage',
+    defaultMessage:
+      'Sorry, but there was an error with your permission. Please refresh the page and review the logs to see more details',
+  },
   notFoundErrorMessage: {
     id: 'global.notFoundErrorMessage',
     defaultMessage:

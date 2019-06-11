@@ -68,6 +68,10 @@ export const isForbidden = (data: Object): boolean => {
   return getByPath('__typename', data) === 'Forbidden';
 };
 
+export const isNotFound = (data: Object): boolean => {
+  return getByPath('__typename', data) === 'NotFound';
+};
+
 export const extractForbiddenId = (data: Object): Object => {
   if (isForbidden(data)) {
     const id = getByPathWithDefault(null, 'reference.id', data);
@@ -158,16 +162,14 @@ export const parseArrayOfChildrenField = (
 ) => {
   if (!forceSendIds && isEquals(originalChildren, newChildren)) return {};
 
-  const parsedNewChildren = newChildren.map(
-    (newChild: Object): Array<Object> => {
-      const oldChild =
-        (originalChildren || []).find(
-          (originalChild: Object): Object => originalChild.id === newChild.id
-        ) || null;
+  const parsedNewChildren = newChildren.map((newChild: Object): Array<Object> => {
+    const oldChild =
+      (originalChildren || []).find(
+        (originalChild: Object): Object => originalChild.id === newChild.id
+      ) || null;
 
-      return parseInside(oldChild, newChild);
-    }
-  );
+    return parseInside(oldChild, newChild);
+  });
 
   return { [key]: parsedNewChildren };
 };
