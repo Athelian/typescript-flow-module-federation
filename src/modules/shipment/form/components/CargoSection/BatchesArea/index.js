@@ -119,7 +119,7 @@ function BatchesArea({
           onChangeSelectMode(false);
         }
 
-        if (containerId) {
+        if (isFocusedContainer) {
           const container = containers[focusedContainerIndex];
           representativeBatchId = getByPath(`representativeBatch.id`, container);
 
@@ -407,11 +407,15 @@ function BatchesArea({
                                       const newBatch = generateCloneBatch(value);
 
                                       setFieldValue('batches', [...batches, newBatch]);
-                                      if (isFocusedContainer) {
-                                        setDeepFieldValue(
-                                          `containers.${focusedContainerIndex}.batches`,
-                                          [...currentBatches, newBatch]
+
+                                      if (value.container) {
+                                        const index = containers.findIndex(
+                                          container => container.id === value.container.id
                                         );
+                                        setDeepFieldValue(`containers.${index}.batches`, [
+                                          ...containers[index].batches,
+                                          newBatch,
+                                        ]);
                                       }
                                     }}
                                   />
