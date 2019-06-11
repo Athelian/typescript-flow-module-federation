@@ -248,6 +248,7 @@
   "modules.container.container": "CONTAINER",
   "modules.container.batches": "BATCHES",
   "modules.container.orders": "ORDERS",
+  "modules.Containers.chooseShipmentImporterFirst": "Please select an Importer in the Shipment first",
   "modules.Shipments.selectBatches": "SELECT BATCHES",
   "modules.Shipments.newBatch": "NEW BATCH",
   "modules.container.noBatches": "No batches found",
@@ -875,6 +876,7 @@
   "modules.Shipments.allBatches": "ALL BATCHES",
   "modules.Shipments.selected": "SELECTED {numOfBatches}",
   "modules.Shipments.moveBatches": "MOVE BATCHES",
+  "modules.Shipments.chooseImporterFirst": "Please choose an Importer first",
   "modules.Shipments.containerHasBatches": "This {Container} contains some {Batches}.",
   "modules.Shipments.container": "Container",
   "modules.Shipments.moveToBatchesPoolOrRemove": "Would you like these {Batches} to be placed in the {BatchesPool} or to be {REMOVED}?",
@@ -1329,5 +1331,6 @@
   "modules.Batches.noOrderItemsFound": "No orderItems found",
   "global.apiErrorMessage": "There was an error. Please try again later.",
   "global.apiEntityNotFoundErrorMessage": "Sorry, but this data has been deleted. Please refresh the page and review the logs to see more details",
+  "global.apiEntityForbiddenErrorMessage": "Sorry, but there was an error with your permission. Please refresh the page and review the logs to see more details",
   "global.notFoundErrorMessage": "You are using some data that no longer exists. Please refresh the page and try again."
 }

@@ -248,6 +248,7 @@
   "modules.container.container": "コンテナ",
   "modules.container.batches": "バッチ",
   "modules.container.orders": "発注",
+  "modules.Containers.chooseShipmentImporterFirst": "Please select an Importer in the Shipment first",
   "modules.Shipments.selectBatches": "バッチを選択する",
   "modules.Shipments.newBatch": "新規バッチ",
   "modules.container.noBatches": "バッチ情報がありません",
@@ -875,6 +876,7 @@
   "modules.Shipments.allBatches": "全バッチ",
   "modules.Shipments.selected": "選択されているバッチ{numOfBatches}",
   "modules.Shipments.moveBatches": "バッチを移動する",
+  "modules.Shipments.chooseImporterFirst": "Please choose an Importer first",
   "modules.Shipments.containerHasBatches": "この{Container}はいくつかの{Batches}を含んでいます。",
   "modules.Shipments.container": "コンテナ",
   "modules.Shipments.moveToBatchesPoolOrRemove": "これらの{Batches}を{BatchesPool}と{REMOVED}どちらに移しますか?",
@@ -1329,5 +1331,6 @@
   "modules.Batches.noOrderItemsFound": "商品が見つかりません",
   "global.apiErrorMessage": "エラーが発生したため、もう一度お試しください。",
   "global.apiEntityNotFoundErrorMessage": "申し訳ございませんが、このデータは削除されています。ページを更新し、ログから詳細をご確認ください。",
+  "global.apiEntityForbiddenErrorMessage": "Sorry, but there was an error with your permission. Please refresh the page and review the logs to see more details",
   "global.notFoundErrorMessage": "すでに存在しないデータを操作しています。ページを更新し、再度お試しください。"
 }
