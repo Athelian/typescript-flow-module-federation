@@ -47,7 +47,6 @@ type Props = {
 const ItemSection = ({ isSlideView }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  const allowUpdate = hasPermission(ORDER_ITEMS_UPDATE);
   return (
     <div className={ItemSectionWrapperStyle}>
       <Subscribe to={[OrderItemInfoContainer]}>
@@ -80,7 +79,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                         label={
                           <FormattedMessage id="module.OrderItems.no" defaultMessage="ITEM NO" />
                         }
-                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_NO)}
+                        editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_NO])}
                       />
                     )}
                   </FormField>
@@ -104,7 +103,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                             defaultMessage="QUANTITY"
                           />
                         }
-                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_QUANTITY)}
+                        editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_QUANTITY])}
                       />
                     )}
                   </FormField>
@@ -129,7 +128,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                           />
                         }
                         suffix={getByPathWithDefault('', 'order.currency', values)}
-                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_PRICE)}
+                        editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_PRICE])}
                       />
                     )}
                   </FormField>
@@ -139,8 +138,8 @@ const ItemSection = ({ isSlideView }: Props) => {
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
                     editable={{
-                      values: allowUpdate || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS),
-                      mask: allowUpdate || hasPermission(ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK),
+                      values: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_CUSTOM_FIELDS]),
+                      mask: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK]),
                     }}
                   />
 
@@ -163,8 +162,8 @@ const ItemSection = ({ isSlideView }: Props) => {
                         editable={{
                           set:
                             hasPermission(TAG_LIST) &&
-                            (allowUpdate || hasPermission(ORDER_ITEMS_SET_TAGS)),
-                          remove: allowUpdate || hasPermission(ORDER_ITEMS_SET_TAGS),
+                            hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS]),
+                          remove: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS]),
                         }}
                       />
                     }
@@ -185,7 +184,7 @@ const ItemSection = ({ isSlideView }: Props) => {
                         label={
                           <FormattedMessage id="modules.OrderItems.memo" defaultMessage="MEMO" />
                         }
-                        editable={allowUpdate || hasPermission(ORDER_ITEMS_SET_MEMO)}
+                        editable={hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_MEMO])}
                         vertical
                         inputWidth="400px"
                         inputHeight="65px"

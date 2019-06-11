@@ -17,12 +17,23 @@ import { getByPath } from 'utils/fp';
 import { Display } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
+import { TASK_CREATE, TASK_DELETE, TASK_UPDATE } from 'modules/permission/constants/task';
 import {
   PRODUCT_FORM,
   PRODUCT_PROVIDER_GET_UNIT_PRICE,
   PRODUCT_PROVIDER_LIST,
 } from 'modules/permission/constants/product';
 import {
+  ORDER_ITEMS_UPDATE,
+  ORDER_ITEMS_SET_TAGS,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS,
+  ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
+  ORDER_ITEMS_TASK_CREATE,
+  ORDER_ITEMS_TASK_DELETE,
+  ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_SET_TASK_TEMPLATE,
+  ORDER_ITEMS_TASK_UPDATE,
+  ORDER_ITEMS_TASK_SET_TAGS,
   ORDER_ITEMS_CREATE,
   ORDER_ITEMS_DELETE,
   ORDER_ITEMS_GET_PRICE,
@@ -185,16 +196,49 @@ function ItemsArea({
                     icon="CLONE"
                     onClick={() => {
                       const { id: itemId, ...rest } = item;
-
                       setFieldValue('orderItems', [
                         ...orderItems,
                         injectUid({
                           ...rest,
                           isNew: true,
                           batches: [],
+                          tags: hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TAGS])
+                            ? rest.tags
+                            : [],
+                          customFields: {
+                            ...rest.customFields,
+                            fieldValues: hasPermission([
+                              ORDER_ITEMS_UPDATE,
+                              ORDER_ITEMS_SET_CUSTOM_FIELDS,
+                            ])
+                              ? rest.customFields.fieldValues
+                              : [],
+                            mask: hasPermission([
+                              ORDER_ITEMS_UPDATE,
+                              ORDER_ITEMS_SET_CUSTOM_FIELDS_MASK,
+                            ])
+                              ? rest.customFields.mask
+                              : null,
+                          },
+                          todo: {
+                            ...rest.todo,
+                            taskTemplate:
+                              hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASK_TEMPLATE]) &&
+                              hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]) &&
+                              hasPermission([ORDER_ITEMS_TASK_CREATE, TASK_CREATE]) &&
+                              hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE])
+                                ? rest.todo.taskTemplate
+                                : null,
+                            tasks: hasPermission([
+                              TASK_UPDATE,
+                              ORDER_ITEMS_TASK_UPDATE,
+                              ORDER_ITEMS_TASK_SET_TAGS,
+                            ])
+                              ? rest.todo.tasks
+                              : rest.todo.tasks.map(task => ({ ...task, tags: [] })),
+                          },
                         }),
                       ]);
-
                       setFieldTouched(`orderItems.${id}`);
                     }}
                   />
