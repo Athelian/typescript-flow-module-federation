@@ -29,12 +29,14 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
   query shipmentFormQuery($id: ID!) {
     shipment(id: $id) {
       ...shipmentFormFragment
+      ...forbiddenFragment
     }
   }
 
@@ -66,6 +68,7 @@ export const shipmentFormQuery = gql`
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
+  ${forbiddenFragment}
 `;
 
 export default shipmentFormQuery;

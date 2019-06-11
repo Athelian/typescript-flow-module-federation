@@ -1,5 +1,5 @@
 // @flow
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 type State = {
   filter: Object,
@@ -11,15 +11,7 @@ type State = {
   },
 };
 
-function useFilter(state: State, cacheKey: string) {
-  const localFilter = window.localStorage.getItem(cacheKey);
-  const initialFilter = localFilter
-    ? {
-        ...state,
-        ...JSON.parse(localFilter),
-      }
-    : state;
-
+function useSortAndFilter(initialFilter: State) {
   const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
 
   const onChangeFilter = useCallback((newFilter: Object) => {
@@ -28,12 +20,6 @@ function useFilter(state: State, cacheKey: string) {
       ...newFilter,
     }));
   }, []);
-
-  useEffect(() => {
-    if (window.localStorage) {
-      window.localStorage.setItem(cacheKey, JSON.stringify(filterAndSort));
-    }
-  }, [cacheKey, filterAndSort]);
 
   return {
     filterAndSort,
@@ -47,4 +33,4 @@ function useFilter(state: State, cacheKey: string) {
   };
 }
 
-export default useFilter;
+export default useSortAndFilter;

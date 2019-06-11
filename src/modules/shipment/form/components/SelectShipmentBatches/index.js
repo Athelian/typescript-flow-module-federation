@@ -18,7 +18,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import messages from 'modules/batch/messages';
-import useFilter from 'hooks/useFilter';
+import useSortAndFilter from 'hooks/useSortAndFilter';
 import { ShipmentBatchCard } from 'components/Cards';
 import { selectBatchListQuery } from './query';
 
@@ -77,10 +77,11 @@ function SelectShipmentBatches({ intl, onCancel, onSelect, selectedBatches, filt
     { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
-    getInitFilter(filter),
-    'filterSelectShipmentBatches'
-  );
+  const {
+    filterAndSort: filtersAndSort,
+    queryVariables,
+    onChangeFilter: onChange,
+  } = useSortAndFilter(getInitFilter(filter));
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);

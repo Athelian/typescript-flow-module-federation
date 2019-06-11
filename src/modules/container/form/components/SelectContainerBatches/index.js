@@ -19,7 +19,7 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import messages from 'modules/batch/messages';
-import useFilter from 'hooks/useFilter';
+import useSortAndFilter from 'hooks/useSortAndFilter';
 import { selectBatchListQuery } from './query';
 
 type Props = {
@@ -77,10 +77,11 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
     { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
-    getInitFilter(filter),
-    'filterSelectContainerBatches'
-  );
+  const {
+    filterAndSort: filtersAndSort,
+    queryVariables,
+    onChangeFilter: onChange,
+  } = useSortAndFilter(getInitFilter(filter));
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);

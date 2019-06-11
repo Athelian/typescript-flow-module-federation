@@ -20,7 +20,7 @@ import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import orderItemsQuery from 'providers/OrderItemsList/query';
-import useFilter from 'hooks/useFilter';
+import useSortAndFilter from 'hooks/useSortAndFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { ItemWrapperStyle } from './style';
@@ -88,10 +88,11 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
-    initFilterBy(filter),
-    'filterSelectOrderItems'
-  );
+  const {
+    filterAndSort: filtersAndSort,
+    queryVariables,
+    onChangeFilter: onChange,
+  } = useSortAndFilter(initFilterBy(filter));
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);

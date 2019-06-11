@@ -589,9 +589,6 @@ function ContainersArea({
                           voyages.length === 0
                             ? null
                             : getLatestDate(voyages[voyages.length - 1].arrival),
-                        shipment: {
-                          voyages,
-                        },
                         archived: shipmentIsArchived,
                       },
                     ]);
