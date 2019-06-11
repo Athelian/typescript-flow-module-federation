@@ -66,7 +66,7 @@ const Tasks = ({
                 ...task,
                 entity: {
                   ...task.entity,
-                  __typename: type,
+                  __typename: upperFirst(type),
                 },
               }}
               position={index + 1}
@@ -98,7 +98,7 @@ const Tasks = ({
                 <TaskFormInSlide
                   entity={{
                     ...task.entity,
-                    __typename: type,
+                    __typename: upperFirst(type),
                     id: entityId,
                   }}
                   parentEntity={upperFirst(type)}
