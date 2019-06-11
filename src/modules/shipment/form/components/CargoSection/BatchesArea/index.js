@@ -119,7 +119,7 @@ function BatchesArea({
           onChangeSelectMode(false);
         }
 
-        if (containerId) {
+        if (isFocusedContainer) {
           const container = containers[focusedContainerIndex];
           representativeBatchId = getByPath(`representativeBatch.id`, container);
 
