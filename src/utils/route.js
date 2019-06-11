@@ -1,11 +1,10 @@
 // @flow
 
+const mappingRoutes = {
+  orderItem: 'order-item',
+};
 export const parseRoute = (entityType: string) => {
-  const specialRoutes = {
-    orderItem: 'order-item',
-  };
-
-  return specialRoutes[entityType] ? specialRoutes[entityType] : entityType;
+  return mappingRoutes[entityType] || entityType;
 };
 
 export default parseRoute;
