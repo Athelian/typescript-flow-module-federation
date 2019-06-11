@@ -132,6 +132,11 @@ export const taskFormInSlideViewFragment = gql`
       ...userAvatarFragment
     }
     name
+    entity {
+      ... on Model {
+        id
+      }
+    }
     startDate
     startDateInterval {
       months
