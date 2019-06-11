@@ -3,7 +3,7 @@
 import * as React from 'react';
 import BaseCard, { GrayCard } from 'components/Cards';
 import { Blackout } from 'components/Form';
-import { isForbidden } from 'utils/data';
+import { isForbidden, isNotFound } from 'utils/data';
 
 type OptionsType = {
   width: string,
@@ -25,7 +25,7 @@ export default function withForbiddenCard(
       return <GrayCard width={width} height={height} />;
     }
 
-    if (isForbidden(data)) {
+    if (isForbidden(data) || isNotFound(data)) {
       return (
         <BaseCard
           icon={entityIcon}
