@@ -5,7 +5,6 @@ import CustomFieldsProvider from 'providers/customFields';
 import CustomFieldsInput from './CustomFieldsInput';
 
 type OptionalProps = {
-  isNew: boolean,
   editable: {
     values: boolean,
     mask: boolean,
@@ -22,56 +21,49 @@ type Props = OptionalProps & {
   setFieldValue: Function,
 };
 
-const defaultProps = {
-  isNew: false,
-};
-
 const CustomFieldsFactory = ({
-  isNew,
   entityType,
   customFields,
   setFieldValue,
   editable,
 }: Props): React.Node => {
-  const { fieldDefinitions: originalFieldDefinitions, mask, fieldValues } = customFields;
-  if (isNew) {
+  const { fieldDefinitions, mask, fieldValues } = customFields;
+  if (fieldDefinitions) {
     return (
-      <CustomFieldsProvider entityType={entityType}>
-        {({ error, loading, data: fieldDefinitions }) => {
-          if (error) {
-            if (error.message && error.message.includes('403')) {
-              navigate('/403');
-            }
-            return error.message;
-          }
-
-          return (
-            <CustomFieldsInput
-              loading={loading}
-              entityType={entityType}
-              fieldDefinitions={fieldDefinitions}
-              mask={mask}
-              fieldValues={fieldValues}
-              setFieldValue={setFieldValue}
-              editable={editable}
-            />
-          );
-        }}
-      </CustomFieldsProvider>
+      <CustomFieldsInput
+        entityType={entityType}
+        fieldDefinitions={fieldDefinitions}
+        mask={mask}
+        fieldValues={fieldValues}
+        setFieldValue={setFieldValue}
+        editable={editable}
+      />
     );
   }
   return (
-    <CustomFieldsInput
-      entityType={entityType}
-      fieldDefinitions={originalFieldDefinitions}
-      mask={mask}
-      fieldValues={fieldValues}
-      setFieldValue={setFieldValue}
-      editable={editable}
-    />
+    <CustomFieldsProvider entityType={entityType}>
+      {({ error, loading, data }) => {
+        if (error) {
+          if (error.message && error.message.includes('403')) {
+            navigate('/403');
+          }
+          return error.message;
+        }
+
+        return (
+          <CustomFieldsInput
+            loading={loading}
+            entityType={entityType}
+            fieldDefinitions={data}
+            mask={mask}
+            fieldValues={fieldValues}
+            setFieldValue={setFieldValue}
+            editable={editable}
+          />
+        );
+      }}
+    </CustomFieldsProvider>
   );
 };
-
-CustomFieldsFactory.defaultProps = defaultProps;
 
 export default CustomFieldsFactory;

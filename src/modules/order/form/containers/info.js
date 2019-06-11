@@ -40,8 +40,8 @@ const initValues: FormState = {
   containers: [],
   inCharges: [],
   customFields: {
+    mask: null,
     fieldValues: [],
-    fieldDefinitions: [],
   },
   totalPrice: null,
   totalOrdered: 0,

@@ -37,7 +37,6 @@ const initValues = {
   customFields: {
     mask: null,
     fieldValues: [],
-    fieldDefinitions: [],
   },
   inCharges: [],
   groups: [],

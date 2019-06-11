@@ -117,7 +117,7 @@ class OrderFormModule extends React.PureComponent<Props> {
 
     if (isNewOrClone) {
       const { data } = await saveOrder({ variables: { input } });
-      if(!data) return;
+      if (!data) return;
 
       const {
         orderCreate: { violations },
@@ -132,7 +132,7 @@ class OrderFormModule extends React.PureComponent<Props> {
       }
     } else if (orderId) {
       const { data } = await saveOrder({ variables: { input, id: decodeId(orderId) } });
-      if(!data) return;
+      if (!data) return;
 
       const {
         orderUpdate: { violations },
@@ -541,8 +541,8 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     inCharges: [],
                                     currency: 'USD',
                                     customFields: {
+                                      mask: null,
                                       fieldValues: [],
-                                      fieldDefinitions: [],
                                     },
                                     tags: [],
                                     importer: isImporter ? group : {},

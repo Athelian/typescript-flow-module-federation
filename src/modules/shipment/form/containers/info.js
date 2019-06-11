@@ -36,8 +36,8 @@ const initValues = {
   incoterm: null,
   carrier: null,
   customFields: {
+    mask: null,
     fieldValues: [],
-    fieldDefinitions: [],
   },
   memo: null,
   inCharges: [],
