@@ -51,10 +51,9 @@ const removeOldImporterStaff = ({
   field: string,
   partner: Object,
 }) => {
-  if (Object.keys(entity || {}).length < 1) {
-    return {};
+  if (!entity) {
+   return {}
   }
-
   return {
     [field]: {
       ...entity,
