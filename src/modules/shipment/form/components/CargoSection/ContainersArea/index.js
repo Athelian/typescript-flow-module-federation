@@ -29,6 +29,7 @@ import { NewButton } from 'components/Buttons';
 import FormattedNumber from 'components/FormattedNumber';
 import Action from 'modules/shipment/form/components/Action';
 import {
+  ShipmentInfoContainer,
   ShipmentContainersContainer,
   ShipmentBatchesContainer,
   ShipmentTimelineContainer,
@@ -525,32 +526,41 @@ function ContainersArea({
                                     </>
                                   )}
                                 </BooleanValue>
-                                <SlideView
-                                  isOpen={isOpenContainerForm}
-                                  onRequestClose={() => toggleContainerForm(false)}
-                                >
-                                  {isOpenContainerForm && (
-                                    <ContainerFormInSlide
-                                      container={container}
-                                      onSave={newContainer => {
-                                        const { batches: newBatches } = newContainer;
-                                        setBatchesState('batches', [
-                                          ...batches.filter(
-                                            ({ container: batchContainer }) =>
-                                              isNullOrUndefined(batchContainer) ||
-                                              batchContainer.id !== container.id
-                                          ),
-                                          ...newBatches.map(batch => ({
-                                            ...batch,
-                                            container: newContainer,
-                                          })),
-                                        ]);
-                                        setDeepFieldValue(`containers.${index}`, newContainer);
-                                        toggleContainerForm(false);
-                                      }}
-                                    />
+                                <Subscribe to={[ShipmentInfoContainer]}>
+                                  {({ state: shipmentInfo }) => (
+                                    <SlideView
+                                      isOpen={isOpenContainerForm}
+                                      onRequestClose={() => toggleContainerForm(false)}
+                                    >
+                                      {isOpenContainerForm && (
+                                        <ContainerFormInSlide
+                                          container={{
+                                            ...container,
+                                            shipment: container.shipment
+                                              ? { ...container.shipment, ...shipmentInfo }
+                                              : shipmentInfo,
+                                          }}
+                                          onSave={newContainer => {
+                                            const { batches: newBatches } = newContainer;
+                                            setBatchesState('batches', [
+                                              ...batches.filter(
+                                                ({ container: batchContainer }) =>
+                                                  isNullOrUndefined(batchContainer) ||
+                                                  batchContainer.id !== container.id
+                                              ),
+                                              ...newBatches.map(batch => ({
+                                                ...batch,
+                                                container: newContainer,
+                                              })),
+                                            ]);
+                                            setDeepFieldValue(`containers.${index}`, newContainer);
+                                            toggleContainerForm(false);
+                                          }}
+                                        />
+                                      )}
+                                    </SlideView>
                                   )}
-                                </SlideView>
+                                </Subscribe>
                               </>
                             )}
                           </BooleanValue>
