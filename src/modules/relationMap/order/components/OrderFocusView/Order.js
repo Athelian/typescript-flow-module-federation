@@ -70,108 +70,114 @@ export default function Order({
             }}
           />
           {(showCloneBadge || isNewOrder) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
-          {uiSelectors.isAllowToConnectOrder() && state.connectOrder.enableSelectMode ? (
-            (() => {
-              if (!uiSelectors.isAllowToSelectOrder(exporter.id)) {
-                return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
-              }
-              if (uiSelectors.selectedConnectOrder(id)) {
-                return (
-                  <ActionCard show>
-                    {() => <SelectedOrder onClick={() => actions.toggleSelectedOrder(id)} />}
-                  </ActionCard>
-                );
-              }
-              return (
+          {id && (
+            <>
+              {uiSelectors.isAllowToConnectOrder() && state.connectOrder.enableSelectMode ? (
+                (() => {
+                  if (!uiSelectors.isAllowToSelectOrder(exporter.id)) {
+                    return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
+                  }
+                  if (uiSelectors.selectedConnectOrder(id)) {
+                    return (
+                      <ActionCard show>
+                        {() => <SelectedOrder onClick={() => actions.toggleSelectedOrder(id)} />}
+                      </ActionCard>
+                    );
+                  }
+                  return (
+                    <ActionCard show={hovered}>
+                      {() => (
+                        <Action icon="CHECKED" onClick={() => actions.toggleSelectedOrder(id)} />
+                      )}
+                    </ActionCard>
+                  );
+                })()
+              ) : (
                 <ActionCard show={hovered}>
-                  {() => <Action icon="CHECKED" onClick={() => actions.toggleSelectedOrder(id)} />}
-                </ActionCard>
-              );
-            })()
-          ) : (
-            <ActionCard show={hovered}>
-              {({ targeted, toggle }) => (
-                <>
-                  <Action
-                    icon="MAGIC"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.toggleHighLight(ORDER, id)}
-                    tooltipMessage={
-                      <FormattedMessage
-                        id="modules.RelationMaps.highlightTooltip"
-                        defaultMessage="Highlight / Unhighlight"
-                      />
-                    }
-                  />
-                  <Action
-                    icon="DOCUMENT"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.showEditForm(ORDER, id)}
-                    tooltipMessage={
-                      <FormattedMessage
-                        id="modules.RelationMaps.viewFormTooltip"
-                        defaultMessage="View Form"
-                      />
-                    }
-                  />
-                  {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                  {({ targeted, toggle }) => (
                     <>
                       <Action
-                        icon="BRANCH"
+                        icon="MAGIC"
                         targeted={targeted}
                         toggle={toggle}
-                        onClick={() =>
-                          actions.selectBranch([
-                            {
-                              entity: ORDER,
-                              id,
-                              exporterId: `${ORDER}-${exporter.id}`,
-                            },
-                            ...orderItems.map(orderItem => ({
-                              entity: ORDER_ITEM,
-                              id: orderItem.id,
-                              exporterId: `${ORDER_ITEM}-${exporter.id}`,
-                            })),
-                            ...orderItems.reduce(
-                              (result, orderItem) =>
-                                result.concat(
-                                  orderItem.batches.map(batch => ({
-                                    entity: BATCH,
-                                    id: batch.id,
-                                    exporterId: `${BATCH}-${exporter.id}`,
-                                  }))
-                                ),
-                              []
-                            ),
-                          ])
-                        }
-                        className={RotateIcon}
+                        onClick={() => actions.toggleHighLight(ORDER, id)}
                         tooltipMessage={
                           <FormattedMessage
-                            id="modules.RelationMaps.targetTreeTooltip"
-                            defaultMessage="Target / Untarget Tree"
+                            id="modules.RelationMaps.highlightTooltip"
+                            defaultMessage="Highlight / Unhighlight"
                           />
                         }
                       />
                       <Action
-                        icon="CHECKED"
+                        icon="DOCUMENT"
                         targeted={targeted}
                         toggle={toggle}
-                        onClick={() => actions.targetOrderEntity(id, `${ORDER}-${exporter.id}`)}
+                        onClick={() => actions.showEditForm(ORDER, id)}
                         tooltipMessage={
                           <FormattedMessage
-                            id="modules.RelationMaps.targetTooltip"
-                            defaultMessage="Target / Untarget"
+                            id="modules.RelationMaps.viewFormTooltip"
+                            defaultMessage="View Form"
                           />
                         }
                       />
+                      {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                        <>
+                          <Action
+                            icon="BRANCH"
+                            targeted={targeted}
+                            toggle={toggle}
+                            onClick={() =>
+                              actions.selectBranch([
+                                {
+                                  entity: ORDER,
+                                  id,
+                                  exporterId: `${ORDER}-${exporter.id}`,
+                                },
+                                ...orderItems.map(orderItem => ({
+                                  entity: ORDER_ITEM,
+                                  id: orderItem.id,
+                                  exporterId: `${ORDER_ITEM}-${exporter.id}`,
+                                })),
+                                ...orderItems.reduce(
+                                  (result, orderItem) =>
+                                    result.concat(
+                                      orderItem.batches.map(batch => ({
+                                        entity: BATCH,
+                                        id: batch.id,
+                                        exporterId: `${BATCH}-${exporter.id}`,
+                                      }))
+                                    ),
+                                  []
+                                ),
+                              ])
+                            }
+                            className={RotateIcon}
+                            tooltipMessage={
+                              <FormattedMessage
+                                id="modules.RelationMaps.targetTreeTooltip"
+                                defaultMessage="Target / Untarget Tree"
+                              />
+                            }
+                          />
+                          <Action
+                            icon="CHECKED"
+                            targeted={targeted}
+                            toggle={toggle}
+                            onClick={() => actions.targetOrderEntity(id, `${ORDER}-${exporter.id}`)}
+                            tooltipMessage={
+                              <FormattedMessage
+                                id="modules.RelationMaps.targetTooltip"
+                                defaultMessage="Target / Untarget"
+                              />
+                            }
+                          />
+                        </>
+                      )}
                     </>
                   )}
-                </>
+                </ActionCard>
               )}
-            </ActionCard>
+            </>
           )}
           {state.showTag && <Tags dataSource={tags} />}
         </div>

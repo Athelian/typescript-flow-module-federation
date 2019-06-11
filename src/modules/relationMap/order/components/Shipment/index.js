@@ -49,68 +49,74 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
             actions={[]}
           />
           {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
-          {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
-            (() => {
-              if (uiSelectors.selectedConnectShipment(id)) {
-                return (
-                  <ActionCard show>
-                    {() => <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />}
-                  </ActionCard>
-                );
-              }
-              return (
+          {id && (
+            <>
+              {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
+                (() => {
+                  if (uiSelectors.selectedConnectShipment(id)) {
+                    return (
+                      <ActionCard show>
+                        {() => (
+                          <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />
+                        )}
+                      </ActionCard>
+                    );
+                  }
+                  return (
+                    <ActionCard show={hovered}>
+                      {() => (
+                        <Action icon="CHECKED" onClick={() => actions.toggleSelectedShipment(id)} />
+                      )}
+                    </ActionCard>
+                  );
+                })()
+              ) : (
                 <ActionCard show={hovered}>
-                  {() => (
-                    <Action icon="CHECKED" onClick={() => actions.toggleSelectedShipment(id)} />
+                  {({ targeted, toggle }) => (
+                    <>
+                      <Action
+                        icon="MAGIC"
+                        targeted={targeted}
+                        toggle={toggle}
+                        onClick={() => actions.toggleHighLight('SHIPMENT', id)}
+                        tooltipMessage={
+                          <FormattedMessage
+                            id="modules.RelationMaps.highlightTooltip"
+                            defaultMessage="Highlight / Unhighlight"
+                          />
+                        }
+                      />
+                      <Action
+                        icon="DOCUMENT"
+                        targeted={targeted}
+                        toggle={toggle}
+                        onClick={() => actions.showEditForm('SHIPMENT', id)}
+                        tooltipMessage={
+                          <FormattedMessage
+                            id="modules.RelationMaps.viewFormTooltip"
+                            defaultMessage="View Form"
+                          />
+                        }
+                      />
+                      {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                        <Action
+                          icon="CHECKED"
+                          targeted={targeted}
+                          toggle={toggle}
+                          onClick={() => actions.targetShipmentEntity(id, no)}
+                          tooltipMessage={
+                            <FormattedMessage
+                              id="modules.RelationMaps.targetTooltip"
+                              defaultMessage="Target / Untarget"
+                            />
+                          }
+                        />
+                      )}
+                    </>
                   )}
                 </ActionCard>
-              );
-            })()
-          ) : (
-            <ActionCard show={hovered}>
-              {({ targeted, toggle }) => (
-                <>
-                  <Action
-                    icon="MAGIC"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.toggleHighLight('SHIPMENT', id)}
-                    tooltipMessage={
-                      <FormattedMessage
-                        id="modules.RelationMaps.highlightTooltip"
-                        defaultMessage="Highlight / Unhighlight"
-                      />
-                    }
-                  />
-                  <Action
-                    icon="DOCUMENT"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() => actions.showEditForm('SHIPMENT', id)}
-                    tooltipMessage={
-                      <FormattedMessage
-                        id="modules.RelationMaps.viewFormTooltip"
-                        defaultMessage="View Form"
-                      />
-                    }
-                  />
-                  {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                    <Action
-                      icon="CHECKED"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() => actions.targetShipmentEntity(id, no)}
-                      tooltipMessage={
-                        <FormattedMessage
-                          id="modules.RelationMaps.targetTooltip"
-                          defaultMessage="Target / Untarget"
-                        />
-                      }
-                    />
-                  )}
-                </>
               )}
-            </ActionCard>
+            </>
           )}
         </div>
       )}
