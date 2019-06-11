@@ -32,6 +32,9 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_TASK_LIST,
+  BATCH_SET_CUSTOM_FIELDS,
+  BATCH_SET_CUSTOM_FIELDS_MASK,
+  BATCH_SET_TAGS,
 } from 'modules/permission/constants/batch';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -348,7 +351,27 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                                     }
                                   }}
                                   onClone={value => {
-                                    const clonedBatch = generateCloneBatch(value);
+                                    const clonedBatch = {
+                                      ...generateCloneBatch(value),
+                                      tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS])
+                                        ? value.tags
+                                        : [],
+                                      customFields: {
+                                        ...value.customFields,
+                                        fieldValues: hasPermission([
+                                          BATCH_UPDATE,
+                                          BATCH_SET_CUSTOM_FIELDS,
+                                        ])
+                                          ? value.customFields.fieldValues
+                                          : [],
+                                        mask: hasPermission([
+                                          BATCH_UPDATE,
+                                          BATCH_SET_CUSTOM_FIELDS_MASK,
+                                        ])
+                                          ? value.customFields.mask
+                                          : null,
+                                      },
+                                    };
                                     setFieldValue('batches', [...batches, clonedBatch]);
                                   }}
                                 />
