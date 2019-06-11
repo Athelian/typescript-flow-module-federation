@@ -20,6 +20,8 @@ export const notFoundFragment = gql`
   fragment notFoundFragment on NotFound {
     reference {
       id
+      type
+      service
     }
   }
 `;
