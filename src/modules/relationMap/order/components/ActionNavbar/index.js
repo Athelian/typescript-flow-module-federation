@@ -1,5 +1,4 @@
 // @flow
-
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { intersection } from 'lodash';
@@ -12,6 +11,7 @@ import { ORDER_ITEMS_CREATE } from 'modules/permission/constants/orderItem';
 import logger from 'utils/logger';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
+import { findTotalAutoFillBatches } from 'utils/batch';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
@@ -418,7 +418,6 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                                       expiredAt: null,
                                       customFields: null,
                                       producedAt: null,
-                                      tagIds: [],
                                       batchQuantityRevisions: [],
                                     },
                                   },
@@ -499,7 +498,20 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
               {activeAction === 'autoFillBatch' && uiSelectors.isAllowToAutoFillBatch() && (
                 <SplitBalancePanel
                   onClick={async () => {
-                    const orderItemIds = uiSelectors.targetedOrderItemIds();
+                    const itemIds = uiSelectors.targetedOrderItemIds();
+                    const orderItemIds = [];
+                    itemIds.forEach(itemId => {
+                      const item = entities.orderItems[itemId];
+                      const batchesOfItem = item.batches.map(batchId => entities.batches[batchId]);
+                      const quantity = findTotalAutoFillBatches({
+                        batches: batchesOfItem,
+                        quantity: item.quantity || 0,
+                      });
+
+                      if (quantity > 0) {
+                        orderItemIds.push(itemId);
+                      }
+                    });
                     const orderIds = [];
                     (Object.entries(orders || {}): Array<any>).forEach(([orderId, order]) => {
                       if (

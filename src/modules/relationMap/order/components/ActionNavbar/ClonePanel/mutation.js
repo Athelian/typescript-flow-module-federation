@@ -12,6 +12,7 @@ import {
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
+  forbiddenFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -24,17 +25,19 @@ export const cloneBatchMutation = gql`
     batchClone(id: $id, input: $input) {
       ...batchCardRMFragment
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
 
   ${batchCardRMFragment}
   ${tagFragment}
   ${metricFragment}
-  ${badRequestFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${taskFormInSlideViewFragment}
   ${taskTemplateCardFragment}
+  ${badRequestFragment}
+  ${forbiddenFragment}
 `;
 
 export const cloneShipmentMutation = gql`

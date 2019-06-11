@@ -2,6 +2,7 @@
 import gql from 'graphql-tag';
 import {
   badRequestFragment,
+  forbiddenFragment,
   metricFragment,
   tagFragment,
   taskFormInSlideViewFragment,
@@ -20,12 +21,14 @@ export const batchBalanceSplitManyMutation = gql`
         }
       }
       ...badRequestFragment
+      ...forbiddenFragment
     }
   }
+  ${badRequestFragment}
+  ${forbiddenFragment}
   ${batchCardRMFragment}
   ${tagFragment}
   ${metricFragment}
-  ${badRequestFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${taskFormInSlideViewFragment}
