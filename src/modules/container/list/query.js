@@ -6,6 +6,7 @@ import {
   imageFragment,
   tagFragment,
   metricFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const containerListQuery = gql`
@@ -13,6 +14,7 @@ export const containerListQuery = gql`
     containers(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...containerCardWithOwnedFragment
+        ...forbiddenFragment
       }
       page
       totalPage
@@ -25,6 +27,7 @@ export const containerListQuery = gql`
   ${imageFragment}
   ${tagFragment}
   ${metricFragment}
+  ${forbiddenFragment}
 `;
 
 export default containerListQuery;

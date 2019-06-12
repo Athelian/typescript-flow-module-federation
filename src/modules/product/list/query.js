@@ -8,6 +8,7 @@ import {
   tagFragment,
   todoFragment,
   imageFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const productListQuery = gql`
@@ -20,6 +21,7 @@ export const productListQuery = gql`
     products(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...productCardWithOwnedFragment
+        ...forbiddenFragment
       }
       page
       totalPage
@@ -33,6 +35,7 @@ export const productListQuery = gql`
   ${tagFragment}
   ${todoFragment}
   ${imageFragment}
+  ${forbiddenFragment}
 `;
 
 export default productListQuery;

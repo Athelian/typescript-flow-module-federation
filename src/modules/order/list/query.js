@@ -8,6 +8,7 @@ import {
   priceFragment,
   userAvatarFragment,
   todoFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const orderListQuery = gql`
@@ -18,6 +19,7 @@ export const orderListQuery = gql`
           ...orderCardWithOwnedFragment
           batchCount
           batchShippedCount
+          ...forbiddenFragment
         }
       }
       page
@@ -32,6 +34,7 @@ export const orderListQuery = gql`
   ${priceFragment}
   ${userAvatarFragment}
   ${todoFragment}
+  ${forbiddenFragment}
 `;
 
 export default orderListQuery;
