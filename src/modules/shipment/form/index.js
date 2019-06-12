@@ -29,6 +29,7 @@ type OptionalProps = {
   isOwner: boolean,
   isClone: boolean,
   anchor: string,
+  initDataForSlideView: Object,
 };
 
 type Props = OptionalProps & {
@@ -40,6 +41,7 @@ const defaultProps = {
   isClone: false,
   isOwner: true,
   anchor: '',
+  initDataForSlideView: {},
 };
 
 class ShipmentForm extends React.Component<Props> {

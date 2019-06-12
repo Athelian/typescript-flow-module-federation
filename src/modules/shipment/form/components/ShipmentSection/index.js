@@ -97,9 +97,10 @@ type Props = {
   isNew: boolean,
   isClone: boolean,
   shipment: Object,
+  initDataForSlideView: Object,
 };
 
-const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
+const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
@@ -559,7 +560,10 @@ const ShipmentSection = ({ isNew, isClone, shipment }: Props) => {
                     input={
                       <>
                         {(isForwarder() || isExporter()) &&
+                        // Disable to changed importer if there is data send from RM
+                        // base on initDataForSlideView
                         (isNew &&
+                          Object.keys(initDataForSlideView).length === 0 &&
                           hasPermission(PARTNER_LIST) &&
                           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_IMPORTER])) ? (
                           <BooleanValue>

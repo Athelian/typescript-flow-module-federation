@@ -587,7 +587,11 @@ class ShipmentFormModule extends React.Component<Props> {
                           const isForwarder = types.includes('Forwarder');
                           return (
                             <>
-                              <ShipmentForm shipment={{}} isNew />
+                              <ShipmentForm
+                                shipment={{}}
+                                isNew
+                                initDataForSlideView={initDataForSlideView}
+                              />
                               <Subscribe
                                 to={[
                                   ShipmentInfoContainer,
