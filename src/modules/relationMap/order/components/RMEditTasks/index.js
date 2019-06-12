@@ -146,7 +146,7 @@ const EditableTaskList = (props: Props) => {
               <Query
                 query={editableTaskListQuery}
                 variables={variables}
-                fetchPolicy="no-cache"
+                fetchPolicy="network-only"
                 onCompleted={data => {
                   const tasks = getByPathWithDefault([], 'tasks.nodes', data);
                   if (
