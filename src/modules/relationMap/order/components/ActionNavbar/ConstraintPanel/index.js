@@ -62,7 +62,7 @@ const ConstraintPanel = ({ disable }: Props) => {
           <FormattedMessage {...messages.moveTo} /> <FormattedMessage {...messages.order} />{' '}
           <FormattedMessage {...messages.actionAvailable} /> <Icon icon="ORDER_ITEM" />{' '}
           <FormattedMessage {...messages.expressionAndOr} /> <Icon icon="BATCH" />{' '}
-          <FormattedMessage {...messages.shareSameExport} />
+          <FormattedMessage {...messages.needToBeSameImporterAndExporter} />
         </Label>
       )}
       {disabledMoveToShipment && (

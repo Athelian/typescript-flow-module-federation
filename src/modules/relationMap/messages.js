@@ -270,6 +270,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.action.needToBeSameImporter',
     defaultMessage: 'that share the same importer',
   },
+  needToBeSameImporterAndExporter: {
+    id: 'modules.RelationMaps.action.needToBeSameImporterAndExporter',
+    defaultMessage: 'that share the same importer and exporter',
+  },
   actionNotAvailable: {
     id: 'modules.RelationMaps.action.actionNotAvailable',
     defaultMessage: 'action is not available for a selection containing',
@@ -277,10 +281,6 @@ export default defineMessages({
   atLeast: {
     id: 'modules.RelationMaps.action.atLeast',
     defaultMessage: 'at least',
-  },
-  shareSameExport: {
-    id: 'modules.RelationMaps.action.shareSameExprot',
-    defaultMessage: 'That share the same export',
   },
   confirmMessage: {
     id: 'modules.RelationMaps.action.confirmMessage',

@@ -83,8 +83,9 @@ const isAllowToConnectOrder = (state: UIState) => {
   const orderItemIds = targetedIds(state, ORDER_ITEM);
 
   const exporterId = currentExporterId(state);
+  const importerId = currentImporterId(state);
 
-  return exporterId !== '' && (batchIds.length || orderItemIds.length);
+  return exporterId !== '' && importerId !== '' && (batchIds.length || orderItemIds.length);
 };
 
 const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) =>
