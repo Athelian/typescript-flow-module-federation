@@ -14,9 +14,6 @@ import {
   BATCH_SET_DELIVERY_DATE,
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_QUANTITY_ADJUSTMENTS,
-  BATCH_SET_CUSTOM_FIELDS,
-  BATCH_SET_CUSTOM_FIELDS_MASK,
-  BATCH_SET_TAGS,
 } from 'modules/permission/constants/batch';
 import FormattedNumber from 'components/FormattedNumber';
 import {
@@ -185,27 +182,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                                 onClone={newBatch =>
                                   setFieldValue('batches', [
                                     ...batches,
-                                    {
-                                      ...generateCloneBatch(newBatch),
-                                      tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS])
-                                        ? newBatch.tags
-                                        : [],
-                                      customFields: {
-                                        ...newBatch.customFields,
-                                        fieldValues: hasPermission([
-                                          BATCH_UPDATE,
-                                          BATCH_SET_CUSTOM_FIELDS,
-                                        ])
-                                          ? newBatch.customFields.fieldValues
-                                          : [],
-                                        mask: hasPermission([
-                                          BATCH_UPDATE,
-                                          BATCH_SET_CUSTOM_FIELDS_MASK,
-                                        ])
-                                          ? newBatch.customFields.mask
-                                          : null,
-                                      },
-                                    },
+                                    generateCloneBatch(newBatch, hasPermission),
                                   ])
                                 }
                               />

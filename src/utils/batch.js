@@ -1,5 +1,11 @@
 // @flow
 import { set, cloneDeep } from 'lodash';
+import {
+  BATCH_UPDATE,
+  BATCH_SET_CUSTOM_FIELDS,
+  BATCH_SET_CUSTOM_FIELDS_MASK,
+  BATCH_SET_TAGS,
+} from 'modules/permission/constants/batch';
 import { times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
@@ -144,16 +150,11 @@ export const calculatePackageQuantity = ({
   return 0;
 };
 
-export const generateCloneBatch = ({
-  id,
-  deliveredAt,
-  desired,
-  expiredAt,
-  producedAt,
-  no,
-  ...rest
-}: Object) =>
-  injectUid({
+export const generateCloneBatch = (
+  { id, deliveredAt, desired, expiredAt, producedAt, no, ...rest }: Object,
+  hasPermission: Function
+) => {
+  return injectUid({
     ...rest,
     isNew: true,
     no: `${no} - clone`,
@@ -161,7 +162,18 @@ export const generateCloneBatch = ({
     todo: {
       tasks: [],
     },
+    tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]) ? rest.tags : [],
+    customFields: {
+      ...rest.customFields,
+      fieldValues: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS])
+        ? rest.customFields.fieldValues
+        : [],
+      mask: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS_MASK])
+        ? rest.customFields.mask
+        : null,
+    },
   });
+};
 
 export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
   !packageVolume || !packageQuantity

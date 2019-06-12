@@ -29,9 +29,6 @@ import {
   BATCH_SET_DESIRED_DATE,
   BATCH_UPDATE,
   BATCH_TASK_LIST,
-  BATCH_SET_CUSTOM_FIELDS,
-  BATCH_SET_CUSTOM_FIELDS_MASK,
-  BATCH_SET_TAGS,
 } from 'modules/permission/constants/batch';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_LIST, ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -407,27 +404,7 @@ function BatchesArea({
                                         : () => {}
                                     }
                                     onClone={value => {
-                                      const newBatch = {
-                                        ...generateCloneBatch(value),
-                                        tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS])
-                                          ? value.tags
-                                          : [],
-                                        customFields: {
-                                          ...value.customFields,
-                                          fieldValues: hasPermission([
-                                            BATCH_UPDATE,
-                                            BATCH_SET_CUSTOM_FIELDS,
-                                          ])
-                                            ? value.customFields.fieldValues
-                                            : [],
-                                          mask: hasPermission([
-                                            BATCH_UPDATE,
-                                            BATCH_SET_CUSTOM_FIELDS_MASK,
-                                          ])
-                                            ? value.customFields.mask
-                                            : null,
-                                        },
-                                      };
+                                      const newBatch = generateCloneBatch(value, hasPermission);
 
                                       setFieldValue('batches', [...batches, newBatch]);
 
