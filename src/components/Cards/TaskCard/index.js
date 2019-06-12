@@ -7,6 +7,7 @@ import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
+import { getByPath } from 'utils/fp';
 import { FormField } from 'modules/form';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
@@ -145,7 +146,7 @@ const getParentInfo = (
       parentType: 'product',
       parentIcon: 'PRODUCT_PROVIDER',
       parentData: parent.name,
-      link: `/product/${encodeId(parent.product.id)}`,
+      link: `/product/${encodeId(getByPath('product.id', parent))}`,
     };
   }
   return {};
