@@ -73,6 +73,12 @@ export const orderCardRMFragment = gql`
         name
       }
     }
+    importer {
+      ... on Group {
+        id
+        name
+      }
+    }
     tags {
       ...tagFragment
     }

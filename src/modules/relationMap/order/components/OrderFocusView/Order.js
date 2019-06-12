@@ -35,6 +35,7 @@ export default function Order({
   id,
   orderItems,
   exporter,
+  importer,
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const { dispatch, state } = context;
@@ -61,6 +62,7 @@ export default function Order({
               archived,
               poNo,
               exporter,
+              importer,
               orderedQuantity: totalOrdered,
               batchedQuantity: totalBatched,
               shippedQuantity: totalShipped,

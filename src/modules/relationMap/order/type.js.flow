@@ -69,6 +69,9 @@ export type OrderProps = {
   exporter: {
     id: string,
   },
+  importer: {
+    id: string,
+  },
   todo: {
     completedCount: number,
     inProgressCount: number,
