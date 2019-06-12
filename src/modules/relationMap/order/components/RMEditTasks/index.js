@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Query, Mutation } from 'react-apollo';
 import { Subscribe } from 'unstated';
-import { getByPathWithDefault, isEquals } from 'utils/fp';
+import { getByPathWithDefault } from 'utils/fp';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
 import Layout from 'components/Layout';
@@ -153,15 +153,10 @@ const EditableTaskList = (props: Props) => {
                   const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
                   const hasMore = nextPage <= totalPage;
 
-                  if (!queryLoading) {
-                    const tasks = getByPathWithDefault([], 'tasks.nodes', data);
-                    if (
-                      !isEquals(tasks, rmEditTasksContainer.state.tasks) ||
-                      (rmEditTasksContainer.state.tasks.length === 0 && tasks.length > 0)
-                    ) {
-                      console.log('---render---');
-                      rmEditTasksContainer.initDetailValues(tasks);
-                    }
+                  if (!queryLoading && rmEditTasksContainer.state.tasks.length === 0) {
+                    rmEditTasksContainer.initDetailValues(
+                      getByPathWithDefault([], 'tasks.nodes', data)
+                    );
                   }
 
                   return (
