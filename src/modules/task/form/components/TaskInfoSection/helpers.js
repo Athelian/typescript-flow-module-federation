@@ -4,7 +4,7 @@ import { addWeeks, addMonths, addDays, startOfDay, format, isValid } from 'date-
 import logger from 'utils/logger';
 import { orderBinding, orderItemBinding, batchBinding, shipmentBinding } from './constants';
 
-const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssz";
+const DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssxxx";
 
 export const calculateDate = ({
   date: selectedDate,
