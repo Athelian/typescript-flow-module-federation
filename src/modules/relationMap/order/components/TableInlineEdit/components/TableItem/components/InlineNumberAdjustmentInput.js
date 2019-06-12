@@ -39,7 +39,9 @@ export default function InlineNumberAdjustmentInput({
 }: Props) {
   const hasQuantityYet = !!value;
   const { quantity, batchQuantityRevisions } = values;
-  const numOfBatchAdjustments = batchQuantityRevisions.length;
+  const numOfBatchAdjustments = Array.isArray(batchQuantityRevisions)
+    ? batchQuantityRevisions.length
+    : 0;
   const isLastAdjustment = Number(name.charAt(name.length - 1)) === numOfBatchAdjustments - 1;
 
   return hasQuantityYet ? (
