@@ -6,9 +6,12 @@ import Translator from './lib/translator';
 const MESSAGES_PATTERN = './build/messages/**/*.json';
 const LANG_DIR = './src/i18n/translations/';
 
-const japanMessages = {};
-const mixMessages = {};
+const messages = {
+  ja: {},
+  cn: {},
+};
 const originalJapanFile = JSON.parse(fs.readFileSync(`${LANG_DIR}ja.json`, 'utf8'));
+const originalChineseFile = JSON.parse(fs.readFileSync(`${LANG_DIR}cn.json`, 'utf8'));
 
 const englishMessages = globSync(MESSAGES_PATTERN)
   .map(filename => fs.readFileSync(filename, 'utf8'))
@@ -20,13 +23,15 @@ const englishMessages = globSync(MESSAGES_PATTERN)
       }
 
       if (originalJapanFile[id]) {
-        // For double check the translation is good
-        mixMessages[`${id}-english`] = defaultMessage;
-        mixMessages[id] = originalJapanFile[id];
-        japanMessages[id] = originalJapanFile[id];
+        messages.ja[id] = originalJapanFile[id];
       } else {
-        japanMessages[id] = defaultMessage;
-        mixMessages[id] = defaultMessage;
+        messages.ja[id] = defaultMessage;
+      }
+
+      if (originalChineseFile[id]) {
+        messages.cn[id] = originalChineseFile[id];
+      } else {
+        messages.cn[id] = defaultMessage;
       }
 
       collection[id] = defaultMessage;
@@ -37,6 +42,6 @@ const englishMessages = globSync(MESSAGES_PATTERN)
 
 mkdirpSync(LANG_DIR);
 
-fs.writeFileSync(LANG_DIR + 'en.json', JSON.stringify(englishMessages, null, 2));
-fs.writeFileSync(LANG_DIR + 'en-ja.json', JSON.stringify(mixMessages, null, 2));
-fs.writeFileSync(LANG_DIR + 'ja.json', JSON.stringify(japanMessages, null, 2));
+fs.writeFileSync(`${LANG_DIR}en.json`, JSON.stringify(englishMessages, null, 2));
+fs.writeFileSync(`${LANG_DIR}ja.json`, JSON.stringify(messages.ja, null, 2));
+fs.writeFileSync(`${LANG_DIR}cn.json`, JSON.stringify(messages.cn, null, 2));
