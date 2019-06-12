@@ -10,6 +10,7 @@ import {
   imageFragment,
   todoFragment,
   partnerNameFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const batchListQuery = gql`
@@ -22,6 +23,7 @@ export const batchListQuery = gql`
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...batchCardWithOwnedFragment
+        ...forbiddenFragment
       }
       page
       totalPage
@@ -36,6 +38,7 @@ export const batchListQuery = gql`
   ${priceFragment}
   ${imageFragment}
   ${todoFragment}
+  ${forbiddenFragment}
 `;
 
 export default batchListQuery;

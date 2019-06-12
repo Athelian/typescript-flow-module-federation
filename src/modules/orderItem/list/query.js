@@ -8,6 +8,7 @@ import {
   itemCardWithOwnedFragment,
   partnerNameFragment,
   ownedByFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const orderItemListQuery = gql`
@@ -15,6 +16,7 @@ export const orderItemListQuery = gql`
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...itemCardWithOwnedFragment
+        ...forbiddenFragment
       }
       page
       totalPage
@@ -29,6 +31,7 @@ export const orderItemListQuery = gql`
   ${priceFragment}
   ${imageFragment}
   ${todoFragment}
+  ${forbiddenFragment}
 `;
 
 export default orderItemListQuery;
