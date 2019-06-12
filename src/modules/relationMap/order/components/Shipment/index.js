@@ -6,7 +6,7 @@ import usePermission from 'hooks/usePermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
-import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
+import ActionCard, { Action, DisabledAction } from 'modules/relationMap/common/ActionCard';
 import type { ShipmentProps } from 'modules/relationMap/order/type.js.flow';
 import { ItemWrapperStyle } from 'modules/relationMap/order/style';
 import { ShipmentCard } from 'components/Cards';
@@ -23,7 +23,7 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, id, no, ...shipment }: Props) {
+export default function Shipment({ wrapperClassName, id, no, importer, ...shipment }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const { showTag, clone } = state;
@@ -45,7 +45,11 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
           id={`shipment-${id}`}
         >
           <ShipmentCard
-            shipment={showTag ? { ...shipment, id, no } : { ...shipment, id, no, tags: [] }}
+            shipment={
+              showTag
+                ? { ...shipment, id, no, importer }
+                : { ...shipment, id, no, importer, tags: [] }
+            }
             actions={[]}
           />
           {(isNew || showCloneBadge) && <Badge label={showCloneBadge ? 'clone' : 'new'} />}
@@ -53,6 +57,9 @@ export default function Shipment({ wrapperClassName, id, no, ...shipment }: Prop
             <>
               {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
                 (() => {
+                  if (!uiSelectors.isAllowToSelectShipment(importer.id)) {
+                    return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
+                  }
                   if (uiSelectors.selectedConnectShipment(id)) {
                     return (
                       <ActionCard show>

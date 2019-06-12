@@ -105,11 +105,13 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
       parentOrderId,
       exporterId,
       importerId,
+      partners,
     }: {
       id: string,
       parentOrderId: string,
       importerId: string,
       exporterId: string,
+      partners: Array<Object>,
     }) =>
       dispatch({
         type: 'TARGET_ORDER_ITEM_ENTITY',
@@ -118,6 +120,7 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
           exporterId,
           importerId,
           id,
+          partners,
         },
       }),
     targetBatchEntity: ({
@@ -125,11 +128,13 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
       parentOrderId,
       exporterId,
       importerId,
+      partners,
     }: {
       id: string,
       parentOrderId: string,
       importerId: string,
       exporterId: string,
+      partners: Array<Object>,
     }) =>
       dispatch({
         type: 'TARGET_BATCH_ENTITY',
@@ -138,6 +143,7 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
           exporterId,
           importerId,
           id,
+          partners,
         },
       }),
     splitBatch: ({

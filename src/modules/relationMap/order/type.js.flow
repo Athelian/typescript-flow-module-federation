@@ -7,6 +7,9 @@ export type ShipmentProps = {
     metric: string,
   },
   tags: Array<Object>,
+  importer: {
+    id: string,
+  },
 };
 
 export type BatchProps = {

@@ -266,6 +266,10 @@ export default defineMessages({
     id: 'modules.RelationMaps.action.actionAvailable',
     defaultMessage: 'action is only available for a selection of',
   },
+  needToBeSameImporter: {
+    id: 'modules.RelationMaps.action.needToBeSameImporter',
+    defaultMessage: 'that share the same importer',
+  },
   actionNotAvailable: {
     id: 'modules.RelationMaps.action.actionNotAvailable',
     defaultMessage: 'action is not available for a selection containing',

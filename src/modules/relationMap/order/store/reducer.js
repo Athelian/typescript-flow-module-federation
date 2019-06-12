@@ -68,6 +68,7 @@ export const uiInitState = (): UIState => {
     constraint: {
       importerIds: [],
       exporterIds: [],
+      partners: [],
     },
     connectOrder: {
       enableSelectMode: false,
@@ -621,10 +622,13 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         if (targets.includes(`${ORDER_ITEM}-${payload.id}`)) {
           return {
             ...state,
-            connectOrder: {
-              ...state.connectOrder,
+            constraint: {
+              partners: [...new Set([...state.constraint.partners, ...payload.partners])],
               exporterIds: (state.constraint.exporterIds.filter(
                 item => item !== payload.exporterId
+              ): Array<string>),
+              importerIds: (state.constraint.importerIds.filter(
+                item => item !== payload.importerId
               ): Array<string>),
             },
             targets: (targets.filter(
@@ -635,10 +639,13 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         return {
           ...state,
           constraint: {
-            ...state.constraint,
+            partners: [...new Set([...state.constraint.partners, ...payload.partners])],
             exporterIds: state.constraint.exporterIds.includes(payload.exporterId)
               ? state.constraint.exporterIds
               : [...state.constraint.exporterIds, payload.exporterId],
+            importerIds: state.constraint.importerIds.includes(payload.importerId)
+              ? state.constraint.importerIds
+              : [...state.constraint.importerIds, payload.importerId],
           },
           targets: [...targets, `${ORDER_ITEM}-${payload.id}`],
         };
@@ -674,9 +681,12 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             ...state,
             targets: newTargets,
             constraint: {
-              ...state.constraint,
+              partners: [...new Set([...state.constraint.partners, ...payload.partners])],
               exporterIds: (state.constraint.exporterIds.filter(
                 item => item !== payload.exporterId
+              ): Array<string>),
+              importerIds: (state.constraint.importerIds.filter(
+                item => item !== payload.importerId
               ): Array<string>),
             },
           };
@@ -685,8 +695,9 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         return {
           ...state,
           constraint: {
-            ...state.constraint,
+            partners: [...new Set([...state.constraint.partners, ...payload.partners])],
             exporterIds: [...state.constraint.exporterIds, payload.exporterId],
+            importerIds: [...state.constraint.importerIds, payload.importerId],
           },
           targets: newTargets,
         };

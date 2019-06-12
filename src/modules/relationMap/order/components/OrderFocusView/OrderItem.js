@@ -18,8 +18,8 @@ import Badge from '../Badge';
 type OptionalProps = {
   wrapperClassName?: string,
   parentOrderId: string,
-  exporterId: string,
-  importerId: string,
+  exporter: Object,
+  importer: Object,
 };
 
 type Props = OptionalProps & OrderItemProps;
@@ -62,8 +62,8 @@ export default function OrderItem({
   id,
   archived,
   parentOrderId,
-  importerId,
-  exporterId,
+  importer,
+  exporter,
   batches,
   tags,
   ...rest
@@ -127,12 +127,12 @@ export default function OrderItem({
                           {
                             id,
                             entity: ORDER_ITEM,
-                            exporterId: `${ORDER_ITEM}-${exporterId}`,
+                            exporterId: `${ORDER_ITEM}-${exporter.id}`,
                           },
                           ...batches.map(batch => ({
                             entity: BATCH,
                             id: batch.id,
-                            exporterId: `${BATCH}-${exporterId}`,
+                            exporterId: `${BATCH}-${exporter.id}`,
                           })),
                         ])
                       }
@@ -152,8 +152,9 @@ export default function OrderItem({
                         actions.targetOrderItemEntity({
                           id,
                           parentOrderId,
-                          exporterId: `${id}-${exporterId}`,
-                          importerId: `${id}-${importerId}`,
+                          exporterId: `${id}-${exporter.id}`,
+                          importerId: `${id}-${importer.id}`,
+                          partners: [importer, exporter],
                         })
                       }
                       tooltipMessage={

@@ -70,7 +70,8 @@ const ConstraintPanel = ({ disable }: Props) => {
           <FormattedMessage {...messages.moveTo} /> <FormattedMessage {...messages.shipment} />{' '}
           <FormattedMessage {...messages.actionAvailable} />{' '}
           <FormattedMessage {...messages.atLeast} /> 1 <Icon icon="BATCH" />{' '}
-          <FormattedMessage {...messages.expressionAnd} /> 0 <Icon icon="SHIPMENT" />
+          <FormattedMessage {...messages.expressionAnd} /> 0 <Icon icon="SHIPMENT" />{' '}
+          <FormattedMessage {...messages.needToBeSameImporter} />
         </Label>
       )}
     </div>

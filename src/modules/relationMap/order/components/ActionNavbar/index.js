@@ -731,7 +731,8 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         };
                       })
                       .filter(Boolean);
-                    actions.showEditForm('NEW_SHIPMENT', 'new', { batches: initBatches });
+                    const importer = uiSelectors.currentImporter();
+                    actions.showEditForm('NEW_SHIPMENT', 'new', { batches: initBatches, importer });
                     actions.moveToNewShipment(batchIds, shipmentIds);
                   }}
                 />

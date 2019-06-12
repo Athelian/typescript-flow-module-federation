@@ -16,8 +16,8 @@ import Badge from '../Badge';
 type OptionalProps = {
   wrapperClassName?: string,
   parentOrderId: string,
-  exporterId: string,
-  importerId: string,
+  exporter: Object,
+  importer: Object,
 };
 
 type Props = OptionalProps & BatchProps;
@@ -42,8 +42,8 @@ export default function Batch({
   id,
   archived,
   parentOrderId,
-  importerId,
-  exporterId,
+  importer,
+  exporter,
   tags,
   no,
   latestQuantity,
@@ -126,8 +126,9 @@ export default function Batch({
                       actions.targetBatchEntity({
                         id,
                         parentOrderId,
-                        exporterId: `${id}-${exporterId}`,
-                        importerId: `${id}-${importerId}`,
+                        exporterId: `${id}-${exporter.id}`,
+                        importerId: `${id}-${importer.id}`,
+                        partners: [importer, exporter],
                       })
                     }
                     tooltipMessage={
