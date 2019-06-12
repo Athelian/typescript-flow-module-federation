@@ -15,14 +15,9 @@ import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName?: string,
-  /**
-   * Parent Order Id for quickly find the order id to refetch data after split action
-   */
   parentOrderId: string,
-  /**
-   * Exporter Id for tracking order item is same exporter
-   */
   exporterId: string,
+  importerId: string,
 };
 
 type Props = OptionalProps & BatchProps;
@@ -47,6 +42,7 @@ export default function Batch({
   id,
   archived,
   parentOrderId,
+  importerId,
   exporterId,
   tags,
   no,
@@ -131,6 +127,7 @@ export default function Batch({
                         id,
                         parentOrderId,
                         exporterId: `${id}-${exporterId}`,
+                        importerId: `${id}-${importerId}`,
                       })
                     }
                     tooltipMessage={

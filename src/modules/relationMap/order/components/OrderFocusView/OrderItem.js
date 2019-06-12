@@ -17,10 +17,9 @@ import Badge from '../Badge';
 
 type OptionalProps = {
   wrapperClassName?: string,
-  /**
-   * Exporter Id for tracking order item is same exporter
-   */
+  parentOrderId: string,
   exporterId: string,
+  importerId: string,
 };
 
 type Props = OptionalProps & OrderItemProps;
@@ -61,6 +60,9 @@ function getQuantitySummary(item: Object) {
 export default function OrderItem({
   wrapperClassName,
   id,
+  archived,
+  parentOrderId,
+  importerId,
   exporterId,
   batches,
   tags,
@@ -146,7 +148,14 @@ export default function OrderItem({
                       icon="CHECKED"
                       targeted={targeted}
                       toggle={toggle}
-                      onClick={() => actions.targetOrderItemEntity(id, `${id}-${exporterId}`)}
+                      onClick={() =>
+                        actions.targetOrderItemEntity({
+                          id,
+                          parentOrderId,
+                          exporterId: `${id}-${exporterId}`,
+                          importerId: `${id}-${importerId}`,
+                        })
+                      }
                       tooltipMessage={
                         <FormattedMessage
                           id="modules.RelationMaps.targetTooltip"

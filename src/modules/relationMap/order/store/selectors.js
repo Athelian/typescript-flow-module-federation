@@ -27,7 +27,7 @@ const targetedIds = (state: UIState, type: BATCH | SHIPMENT | ORDER | ORDER_ITEM
 const currentExporterId = (state: UIState) => {
   const result = [];
 
-  state.connectOrder.exporterIds.forEach(item => {
+  state.constraint.exporterIds.forEach(item => {
     const [, exporterId] = item.split('-');
     if (!result.includes(exporterId)) {
       result.push(exporterId);

@@ -70,16 +70,19 @@ export type UIState = {
      */
     shipmentNo: Object,
   },
-  connectOrder: {
-    enableSelectMode: boolean,
-    status: boolean,
-    orderId: string,
+  constraint: {
     /**
      * This is using for checking those order item, batches has the same exporter
      * This is use below format
      * [entityId-exporterId]
      */
     exporterIds: Array<string>,
+    importerIds: Array<string>,
+  },
+  connectOrder: {
+    enableSelectMode: boolean,
+    status: boolean,
+    orderId: string,
     /**
      * This is a workaround for checking the target order before and after mutation
      * Then we would know which is the new order item, batch was moved

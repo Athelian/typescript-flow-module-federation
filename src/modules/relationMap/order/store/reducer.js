@@ -65,11 +65,14 @@ export const uiInitState = (): UIState => {
       shipments: {},
       shipmentNo: {},
     },
+    constraint: {
+      importerIds: [],
+      exporterIds: [],
+    },
     connectOrder: {
       enableSelectMode: false,
       orderId: '',
       status: false,
-      exporterIds: [],
       sourceOrder: {},
     },
     connectShipment: {
@@ -547,7 +550,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const {
         targets,
-        connectOrder: { exporterIds },
+        constraint: { exporterIds },
       } = state;
       let result = [...targets];
       let exporters = [...exporterIds];
@@ -573,8 +576,8 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       }
       return {
         ...state,
-        connectOrder: {
-          ...state.connectOrder,
+        constraint: {
+          ...state.constraint,
           exporterIds: exporters,
         },
         targets: result,
@@ -620,7 +623,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             ...state,
             connectOrder: {
               ...state.connectOrder,
-              exporterIds: (state.connectOrder.exporterIds.filter(
+              exporterIds: (state.constraint.exporterIds.filter(
                 item => item !== payload.exporterId
               ): Array<string>),
             },
@@ -631,11 +634,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         }
         return {
           ...state,
-          connectOrder: {
-            ...state.connectOrder,
-            exporterIds: state.connectOrder.exporterIds.includes(payload.exporterId)
-              ? state.connectOrder.exporterIds
-              : [...state.connectOrder.exporterIds, payload.exporterId],
+          constraint: {
+            ...state.constraint,
+            exporterIds: state.constraint.exporterIds.includes(payload.exporterId)
+              ? state.constraint.exporterIds
+              : [...state.constraint.exporterIds, payload.exporterId],
           },
           targets: [...targets, `${ORDER_ITEM}-${payload.id}`],
         };
@@ -670,9 +673,9 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
           return {
             ...state,
             targets: newTargets,
-            connectOrder: {
-              ...state.connectOrder,
-              exporterIds: (state.connectOrder.exporterIds.filter(
+            constraint: {
+              ...state.constraint,
+              exporterIds: (state.constraint.exporterIds.filter(
                 item => item !== payload.exporterId
               ): Array<string>),
             },
@@ -681,9 +684,9 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
         const newTargets = [...targets, `${BATCH}-${payload.id}`];
         return {
           ...state,
-          connectOrder: {
-            ...state.connectOrder,
-            exporterIds: [...state.connectOrder.exporterIds, payload.exporterId],
+          constraint: {
+            ...state.constraint,
+            exporterIds: [...state.constraint.exporterIds, payload.exporterId],
           },
           targets: newTargets,
         };

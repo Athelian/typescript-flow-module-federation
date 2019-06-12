@@ -100,11 +100,23 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
           id,
         },
       }),
-    targetOrderItemEntity: (id: string, exporterId: string) =>
+    targetOrderItemEntity: ({
+      id,
+      parentOrderId,
+      exporterId,
+      importerId,
+    }: {
+      id: string,
+      parentOrderId: string,
+      importerId: string,
+      exporterId: string,
+    }) =>
       dispatch({
         type: 'TARGET_ORDER_ITEM_ENTITY',
         payload: {
+          parentOrderId,
           exporterId,
+          importerId,
           id,
         },
       }),
@@ -112,9 +124,11 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
       id,
       parentOrderId,
       exporterId,
+      importerId,
     }: {
       id: string,
       parentOrderId: string,
+      importerId: string,
       exporterId: string,
     }) =>
       dispatch({
@@ -122,6 +136,7 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
         payload: {
           parentOrderId,
           exporterId,
+          importerId,
           id,
         },
       }),
