@@ -24,16 +24,13 @@
         }
       ],
       "rewrites": [
+        { "source": "/favicon.ico", "destination": "/favicon.ico" },
         {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     },
     {
       "target": "staging-hot",
@@ -59,16 +56,13 @@
         }
       ],
       "rewrites": [
+        { "source": "/favicon.ico", "destination": "/favicon.ico" },
         {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     },
     {
       "target": "prod",
@@ -94,16 +88,13 @@
         }
       ],
       "rewrites": [
+        { "source": "/favicon.ico", "destination": "/favicon.ico" },
         {
           "source": "**",
           "destination": "/index.html"
         }
       ],
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
     }
   ]
 }
