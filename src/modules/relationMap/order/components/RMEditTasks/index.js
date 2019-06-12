@@ -143,20 +143,7 @@ const EditableTaskList = (props: Props) => {
               }
             >
               {mutationError && <p>Error: Please try again.</p>}
-              <Query
-                query={editableTaskListQuery}
-                variables={variables}
-                fetchPolicy="network-only"
-                onCompleted={data => {
-                  const tasks = getByPathWithDefault([], 'tasks.nodes', data);
-                  if (
-                    !isEquals(tasks, rmEditTasksContainer.state.tasks) ||
-                    (rmEditTasksContainer.state.tasks.length === 0 && tasks.length > 0)
-                  ) {
-                    rmEditTasksContainer.initDetailValues(tasks);
-                  }
-                }}
-              >
+              <Query query={editableTaskListQuery} variables={variables} fetchPolicy="network-only">
                 {({ error: queryError, loading: queryLoading, data, fetchMore }) => {
                   if (queryError) {
                     return queryError.message;
@@ -166,9 +153,20 @@ const EditableTaskList = (props: Props) => {
                   const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
                   const hasMore = nextPage <= totalPage;
 
+                  if (!queryLoading) {
+                    const tasks = getByPathWithDefault([], 'tasks.nodes', data);
+                    if (
+                      !isEquals(tasks, rmEditTasksContainer.state.tasks) ||
+                      (rmEditTasksContainer.state.tasks.length === 0 && tasks.length > 0)
+                    ) {
+                      console.log('---render---');
+                      rmEditTasksContainer.initDetailValues(tasks);
+                    }
+                  }
+
                   return (
                     <TaskListInSlide
-                      tasks={rmEditTasksContainer.state.tasks}
+                      tasks={getByPathWithDefault([], 'tasks.nodes', data)}
                       onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
                       hasMore={hasMore}
                       isLoading={queryLoading}
