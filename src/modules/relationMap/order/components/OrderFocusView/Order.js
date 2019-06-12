@@ -76,7 +76,7 @@ export default function Order({
             <>
               {uiSelectors.isAllowToConnectOrder() && state.connectOrder.enableSelectMode ? (
                 (() => {
-                  if (!uiSelectors.isAllowToSelectOrder(exporter.id)) {
+                  if (!uiSelectors.isAllowToSelectOrder(exporter.id, importer.id)) {
                     return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
                   }
                   if (uiSelectors.selectedConnectOrder(id)) {

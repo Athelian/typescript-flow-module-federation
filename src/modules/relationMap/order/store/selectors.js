@@ -88,8 +88,18 @@ const isAllowToConnectOrder = (state: UIState) => {
   return exporterId !== '' && importerId !== '' && (batchIds.length || orderItemIds.length);
 };
 
-const isAllowToSelectOrder = ({ exporterId, state }: { exporterId: string, state: UIState }) =>
-  currentExporterId(state) === exporterId && state.connectOrder.enableSelectMode;
+const isAllowToSelectOrder = ({
+  exporterId,
+  importerId,
+  state,
+}: {
+  exporterId: string,
+  importerId: string,
+  state: UIState,
+}) =>
+  currentExporterId(state) === exporterId &&
+  currentImporterId(state) === importerId &&
+  state.connectOrder.enableSelectMode;
 const isAllowToSelectShipment = ({ importerId, state }: { importerId: string, state: UIState }) =>
   currentImporterId(state) === importerId && state.connectShipment.enableSelectMode;
 
@@ -154,7 +164,8 @@ function selectors(state: UIState) {
     isSelectedOrder: () => state.connectOrder.enableSelectMode && state.connectOrder.orderId !== '',
     isSelectedShipment: () =>
       state.connectShipment.enableSelectMode && state.connectShipment.shipmentId !== '',
-    isAllowToSelectOrder: (exporterId: string) => isAllowToSelectOrder({ exporterId, state }),
+    isAllowToSelectOrder: (exporterId: string, importerId: string) =>
+      isAllowToSelectOrder({ exporterId, importerId, state }),
     isAllowToSelectShipment: (importerId: string) => isAllowToSelectShipment({ importerId, state }),
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
