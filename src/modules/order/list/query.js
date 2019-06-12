@@ -19,8 +19,8 @@ export const orderListQuery = gql`
           ...orderCardWithOwnedFragment
           batchCount
           batchShippedCount
-          ...forbiddenFragment
         }
+        ...forbiddenFragment
       }
       page
       totalPage
