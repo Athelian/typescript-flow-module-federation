@@ -57,7 +57,7 @@ export const productProviderFormFragment = gql`
     }
     todo {
       tasks {
-        ...taskFormInSlideViewFragment
+        ...taskWithoutParentInfoFragment
       }
       taskTemplate {
         ...taskTemplateCardFragment

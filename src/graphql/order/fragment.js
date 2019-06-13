@@ -90,7 +90,7 @@ export const orderFormFragment = gql`
     todo {
       ...todoFragment
       tasks {
-        ...taskFormInSlideViewFragment
+        ...taskWithoutParentInfoFragment
       }
       taskTemplate {
         ...taskTemplateCardFragment

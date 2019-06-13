@@ -40,7 +40,7 @@ import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragme
 import {
   taskCardFragment,
   taskTemplateCardFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormFragment,
   taskTemplateFormFragment,
   taskFormInTemplateFragment,
@@ -99,7 +99,7 @@ export {
   staffCardFragment,
   tagFormFragment,
   tagCardFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormFragment,
   taskTemplateFormFragment,
   taskFormInTemplateFragment,

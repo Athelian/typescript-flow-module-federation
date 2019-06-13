@@ -26,7 +26,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   todoFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
@@ -112,7 +112,7 @@ export const updateShipmentMutation: Object = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${todoFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}

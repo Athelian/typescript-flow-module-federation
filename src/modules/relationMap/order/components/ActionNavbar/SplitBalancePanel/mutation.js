@@ -5,7 +5,7 @@ import {
   forbiddenFragment,
   metricFragment,
   tagFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   userAvatarFragment,
@@ -31,7 +31,7 @@ export const batchBalanceSplitManyMutation = gql`
   ${metricFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;
 

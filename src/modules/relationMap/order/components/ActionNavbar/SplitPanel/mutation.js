@@ -4,7 +4,7 @@ import {
   badRequestFragment,
   metricFragment,
   tagFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   userAvatarFragment,
@@ -28,7 +28,7 @@ export const batchSimpleSplitMutation = gql`
   ${badRequestFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;
 
@@ -49,6 +49,6 @@ export const batchEqualSplitMutation = gql`
   ${badRequestFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;

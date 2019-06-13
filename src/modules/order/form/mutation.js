@@ -23,7 +23,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   todoFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   containerCardFragment,
@@ -91,7 +91,7 @@ export const updateOrderMutation = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${todoFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${containerCardFragment}

@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 import {
   taskTemplateCardFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   todoFragment,
   userAvatarFragment,
@@ -18,7 +18,7 @@ export const orderFormTasksQuery = gql`
         todo {
           ...todoFragment
           tasks {
-            ...taskFormInSlideViewFragment
+            ...taskWithoutParentInfoFragment
             ...forbiddenFragment
           }
           taskTemplate {
@@ -32,7 +32,7 @@ export const orderFormTasksQuery = gql`
 
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${todoFragment}
   ${userAvatarFragment}
   ${tagFragment}

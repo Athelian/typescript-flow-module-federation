@@ -25,7 +25,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   todoFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
@@ -63,7 +63,7 @@ export const shipmentFormQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${todoFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}

@@ -122,8 +122,8 @@ export const taskFormInTemplateFragment = gql`
   }
 `;
 
-export const taskFormInSlideViewFragment = gql`
-  fragment taskFormInSlideViewFragment on Task {
+export const taskWithoutParentInfoFragment = gql`
+  fragment taskWithoutParentInfoFragment on Task {
     sort
     id
     approvable

@@ -8,7 +8,7 @@ import {
   customFieldsFragment,
   tagFragment,
   todoFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
@@ -47,7 +47,7 @@ export const orderFormItemsQuery = gql`
   ${customFieldsFragment}
   ${tagFragment}
   ${todoFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
   ${taskTemplateCardFragment}
   ${partnerNameFragment}

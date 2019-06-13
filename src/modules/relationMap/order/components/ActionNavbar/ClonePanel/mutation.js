@@ -8,7 +8,7 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   priceFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
@@ -34,7 +34,7 @@ export const cloneBatchMutation = gql`
   ${metricFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
@@ -108,7 +108,7 @@ export const cloneOrderItemMutation = gql`
   ${metricFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;
 
@@ -130,6 +130,6 @@ export const cloneOrderMutation = gql`
   ${metricFragment}
   ${priceFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;

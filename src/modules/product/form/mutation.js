@@ -18,7 +18,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   taskTemplateCardFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -75,7 +75,7 @@ export const updateProductMutation: Object = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskTemplateCardFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;
