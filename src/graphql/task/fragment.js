@@ -186,8 +186,8 @@ export const taskWithoutParentInfoFragment = gql`
   }
 `;
 
-export const taskFormFragment = gql`
-  fragment taskFormFragment on Task {
+export const taskWithParentInfoFragment = gql`
+  fragment taskWithParentInfoFragment on Task {
     sort
     id
     updatedAt
