@@ -7,7 +7,11 @@ import useUser from 'hooks/useUser';
 import { Subscribe } from 'unstated';
 import FormattedNumber from 'components/FormattedNumber';
 import { encodeId } from 'utils/id';
-import { WAREHOUSE_UPDATE } from 'modules/permission/constants/warehouse';
+import {
+  WAREHOUSE_UPDATE,
+  WAREHOUSE_SET_CUSTOM_FIELDS,
+  WAREHOUSE_SET_CUSTOM_FIELDS_MASK,
+} from 'modules/permission/constants/warehouse';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import usePermission from 'hooks/usePermission';
@@ -226,7 +230,10 @@ const WarehouseSection = ({ isNew }: Props) => {
                     entityType="Warehouse"
                     customFields={values.customFields}
                     setFieldValue={setFieldValue}
-                    editable={allowUpdate}
+                    editable={{
+                      values: hasPermission([WAREHOUSE_UPDATE, WAREHOUSE_SET_CUSTOM_FIELDS]),
+                      mask: hasPermission([WAREHOUSE_UPDATE, WAREHOUSE_SET_CUSTOM_FIELDS_MASK]),
+                    }}
                   />
                 </GridColumn>
                 <GridColumn>
