@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { intersection } from 'lodash';
+import { intersection, lowerFirst } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
@@ -42,18 +42,8 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                 {permissions => (
                   <TaskCard
                     groupIds={parseGroupIds(task)}
-                    task={{
-                      ...task,
-                      entity: {
-                        ...task.entity,
-                        ...task.order,
-                        ...task.orderItem,
-                        ...task.batch,
-                        ...task.product,
-                        ...task.productProvider,
-                        ...task.shipment,
-                      },
-                    }}
+                    entity={task[lowerFirst(getByPath('entity.__typename', task))]}
+                    task={task}
                     position={index + 1}
                     editable={checkEditableFromEntity(
                       getByPath('entity.__typename', task),

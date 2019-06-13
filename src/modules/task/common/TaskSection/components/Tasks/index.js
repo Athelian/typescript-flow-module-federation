@@ -62,13 +62,11 @@ const Tasks = ({
               groupIds={groupIds}
               isInTemplate={isInTemplate}
               editable={editable}
-              task={{
-                ...task,
-                entity: {
-                  ...task.entity,
-                  __typename: upperFirst(type),
-                },
+              entity={{
+                ...task.entity,
+                __typename: upperFirst(type),
               }}
+              task={task}
               position={index + 1}
               hideParentInfo
               saveOnBlur={newValue => onSave(index, newValue)}
