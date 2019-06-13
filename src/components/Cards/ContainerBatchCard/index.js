@@ -136,13 +136,13 @@ const ContainerBatchCard = ({
   const actions = selectable
     ? []
     : [
-        ...(mergedEditable.cloneBatch
-          ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />]
-          : []),
-        ...(mergedEditable.removeBatch
-          ? [<CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />]
-          : []),
-      ];
+        mergedEditable.cloneBatch ? (
+          <CardAction icon="CLONE" onClick={() => onClone(batch)} />
+        ) : null,
+        mergedEditable.removeBatch ? (
+          <CardAction icon="CLEAR" hoverColor="RED" onClick={() => onClear(batch)} />
+        ) : null,
+      ].filter(Boolean);
 
   const {
     id,

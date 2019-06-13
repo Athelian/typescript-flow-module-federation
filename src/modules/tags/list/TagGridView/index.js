@@ -25,10 +25,10 @@ const defaultRenderItem = (item: Object, allowCreate: boolean) => (
     key={item.id}
     tag={item}
     actions={[
-      ...(allowCreate
-        ? [<CardAction icon="CLONE" hoverColor="BLUE" onClick={() => onClone(item.id)} />]
-        : []),
-    ]}
+      allowCreate ? (
+        <CardAction icon="CLONE" hoverColor="BLUE" onClick={() => onClone(item.id)} />
+      ) : null,
+    ].filter(Boolean)}
     showActionsOnHover
   />
 );
