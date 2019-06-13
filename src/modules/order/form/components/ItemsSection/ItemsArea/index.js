@@ -13,7 +13,7 @@ import Icon from 'components/Icon';
 import { ItemCard, CardAction } from 'components/Cards';
 import RemoveDialog from 'components/Dialog/RemoveDialog';
 import { injectUid } from 'utils/id';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { Display } from 'components/Form';
 import { Tooltip } from 'components/Tooltip';
 import { ORDER_UPDATE } from 'modules/permission/constants/order';
@@ -440,7 +440,8 @@ function ItemsArea({
                         setFieldTouched('orderItems');
                         slideToggle(false);
                       }}
-                      exporter={(order.exporter && order.exporter.id) || ''}
+                      importerId={getByPathWithDefault('', 'importer.id', order)}
+                      exporterId={getByPathWithDefault('', 'exporter.id', order)}
                       orderCurrency={currency}
                       onCancel={() => slideToggle(false)}
                     />
