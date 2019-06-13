@@ -13,6 +13,7 @@ import {
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
+  forbiddenFragment,
 } from 'graphql';
 
 export const orderEntityFragment = gql`
@@ -243,18 +244,23 @@ export const containerEntityFragment = gql`
 export const editTableViewQuery = gql`
   query ordersAndShipments($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
     ordersByIDs(ids: $orderIds) {
+      ...forbiddenFragment
       ... on Order {
         ...orderEntityFragment
         orderItems {
+          ...forbiddenFragment
           ... on OrderItem {
             ...orderItemEntityFragment
             batches {
+              ...forbiddenFragment
               ... on Batch {
                 ...batchEntityFragment
                 container {
                   ...containerEntityFragment
+                  ...forbiddenFragment
                   ... on Container {
                     batches {
+                      ...forbiddenFragment
                       ... on Batch {
                         id
                       }
@@ -262,9 +268,11 @@ export const editTableViewQuery = gql`
                   }
                 }
                 orderItem {
+                  ...forbiddenFragment
                   ... on OrderItem {
                     id
                     order {
+                      ...forbiddenFragment
                       ... on Order {
                         id
                       }
@@ -272,6 +280,7 @@ export const editTableViewQuery = gql`
                   }
                 }
                 shipment {
+                  ...forbiddenFragment
                   ... on Shipment {
                     id
                   }
@@ -279,6 +288,7 @@ export const editTableViewQuery = gql`
               }
             }
             order {
+              ...forbiddenFragment
               ... on Order {
                 id
               }
@@ -286,17 +296,21 @@ export const editTableViewQuery = gql`
           }
         }
         shipments {
+          ...forbiddenFragment
           ...shipmentEntityFragment
         }
       }
     }
     shipmentsByIDs(ids: $shipmentIds) {
+      ...forbiddenFragment
       ... on Shipment {
         ...shipmentEntityFragment
         containers {
           ...containerEntityFragment
+          ...forbiddenFragment
           ... on Container {
             batches {
+              ...forbiddenFragment
               ... on Batch {
                 id
               }
@@ -304,18 +318,22 @@ export const editTableViewQuery = gql`
           }
         }
         batches {
+          ...forbiddenFragment
           ... on Batch {
             ...batchEntityFragment
             container {
+              ...forbiddenFragment
               ... on Container {
                 id
               }
             }
             orderItem {
+              ...forbiddenFragment
               ... on OrderItem {
                 ...orderItemEntityFragment
                 order {
                   ...orderEntityFragment
+                  ...forbiddenFragment
                 }
               }
             }
@@ -342,4 +360,5 @@ export const editTableViewQuery = gql`
   ${fieldValuesFragment}
   ${maskFragment}
   ${fieldDefinitionFragment}
+  ${forbiddenFragment}
 `;
