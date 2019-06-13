@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { intersection } from 'lodash';
+import { intersection, flatten } from 'lodash';
 import { Query } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -49,90 +49,11 @@ import EditForm from './components/EditForm';
 import ActionNavbar from './components/ActionNavbar';
 import { prepareOrderInput } from './components/ActionNavbar/helper';
 import { updateOrderMutation } from './components/ActionNavbar/MoveToOrderPanel/mutation';
+import { initOrderFilter, initShipmentFilter, manualSortByAction } from './initOrderFilter';
 
 type Props = {
   intl: IntlShape,
 };
-
-const initOrderFilter = {
-  page: 1,
-  perPage: 10,
-  filter: {
-    query: '',
-    archived: false,
-  },
-  sort: {
-    field: 'updatedAt',
-    direction: 'DESCENDING',
-  },
-};
-
-const initShipmentFilter = {
-  page: 1,
-  perPage: 10,
-  filter: {
-    query: '',
-  },
-  sort: {
-    field: 'updatedAt',
-    direction: 'DESCENDING',
-  },
-};
-
-const findRelateShipment = ({
-  shipmentId,
-  sortShipments,
-  clone,
-  shipment,
-}: {
-  shipmentId: string,
-  sortShipments: Array<Object>,
-  clone: Object,
-  shipment: Object,
-}) => {
-  if (!sortShipments.includes(shipment)) {
-    sortShipments.push(shipment);
-  }
-  if (clone.shipments[shipmentId]) {
-    (clone.shipments[shipmentId] || []).forEach(item => {
-      sortShipments.push(item);
-      if (clone.shipments[item.id]) {
-        findRelateShipment({
-          shipmentId: item.id,
-          shipment: item,
-          sortShipments,
-          clone,
-        });
-      }
-    });
-  }
-};
-
-function manualSortByAction(shipments: Object = {}, state: Object = {}) {
-  const sortShipments = [];
-  const {
-    clone,
-    new: { shipments: newShipments = [] },
-  } = state;
-
-  for (let counter = newShipments.length - 1; counter >= 0; counter -= 1) {
-    const shipmentId = newShipments[counter];
-    if (shipments[shipmentId]) {
-      sortShipments.push(shipments[shipmentId]);
-    }
-  }
-
-  (Object.entries(shipments || {}): Array<any>).forEach(([shipmentId, shipment]) => {
-    findRelateShipment({
-      shipmentId,
-      shipment,
-      clone,
-      sortShipments,
-    });
-  });
-
-  return sortShipments;
-}
 
 const Order = ({ intl }: Props) => {
   const [state, dispatch] = React.useReducer(uiReducer, uiInitState());
@@ -381,6 +302,17 @@ const Order = ({ intl }: Props) => {
             shipments,
           });
           const allowToUpdate = hasPermission(RM_ORDER_FOCUS_MANIPULATE);
+          const orderIds = getByPathWithDefault([], 'orders.nodes', data).map(order => order.id);
+          const itemIds = flatten(
+            Object.keys(orders)
+              .filter(orderId => orderIds.includes(orderId))
+              .map(orderId => orders[orderId].orderItems)
+          );
+          const batchIds = flatten(
+            Object.keys(orderItems)
+              .filter(itemId => itemIds.includes(itemId))
+              .map(itemId => orderItems[itemId].batches)
+          );
           return (
             <>
               <SortFilter
@@ -442,49 +374,40 @@ const Order = ({ intl }: Props) => {
                     <EntityHeader
                       icon="ORDER"
                       color={
-                        uiSelectors.isSelectAllEntity(ORDER, Object.keys(orders || []).length)
+                        uiSelectors.isSelectAllEntity(ORDER, orderIds.length)
                           ? 'ORDER_DARK'
                           : 'ORDER'
                       }
                       label={intl.formatMessage(messages.ordersLabel)}
-                      no={Object.keys(orders || []).length}
+                      no={orderIds.length}
                       onClick={
-                        allowToUpdate
-                          ? () => actions.toggleSelectAll(ORDER, Object.keys(orders || []))
-                          : null
+                        allowToUpdate ? () => actions.toggleSelectAll(ORDER, orderIds) : null
                       }
                     />
                     <EntityHeader
                       icon="ORDER_ITEM"
                       color={
-                        uiSelectors.isSelectAllEntity(
-                          ORDER_ITEM,
-                          Object.keys(orderItems || []).length
-                        )
+                        uiSelectors.isSelectAllEntity(ORDER_ITEM, itemIds.length)
                           ? 'ORDER_ITEM_DARK'
                           : 'ORDER_ITEM'
                       }
                       label={intl.formatMessage(messages.itemsLabel)}
-                      no={Object.keys(orderItems || []).length}
+                      no={itemIds.length}
                       onClick={
-                        allowToUpdate
-                          ? () => actions.toggleSelectAll(ORDER_ITEM, Object.keys(orderItems || []))
-                          : null
+                        allowToUpdate ? () => actions.toggleSelectAll(ORDER_ITEM, itemIds) : null
                       }
                     />
                     <EntityHeader
                       icon="BATCH"
                       color={
-                        uiSelectors.isSelectAllEntity(BATCH, Object.keys(batches || []).length)
+                        uiSelectors.isSelectAllEntity(BATCH, batchIds.length)
                           ? 'BATCH_DARK'
                           : 'BATCH'
                       }
                       label={intl.formatMessage(messages.batchesLabel)}
-                      no={Object.keys(batches || []).length}
+                      no={batchIds.length}
                       onClick={
-                        allowToUpdate
-                          ? () => actions.toggleSelectAll(BATCH, Object.keys(batches || []))
-                          : null
+                        allowToUpdate ? () => actions.toggleSelectAll(BATCH, batchIds) : null
                       }
                     />
                     <EntityHeader
