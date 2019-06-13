@@ -41,7 +41,7 @@ export const batchFormFragment = gql`
     todo {
       ...todoFragment
       tasks {
-        ...taskFormInSlideViewFragment
+        ...taskWithoutParentInfoFragment
       }
       taskTemplate {
         ...taskTemplateCardFragment

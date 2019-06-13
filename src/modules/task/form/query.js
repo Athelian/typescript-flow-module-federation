@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 import {
-  taskFormFragment,
+  taskWithParentInfoFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -25,11 +25,11 @@ import {
 export const taskFormQuery = gql`
   query taskFormQuery($id: ID!) {
     task(id: $id) {
-      ...taskFormFragment
+      ...taskWithParentInfoFragment
     }
   }
 
-  ${taskFormFragment}
+  ${taskWithParentInfoFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}

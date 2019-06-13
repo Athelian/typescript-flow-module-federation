@@ -56,6 +56,7 @@ import {
 } from './style';
 
 type OptionalProps = {
+  entity: Object,
   task: Object,
   position: number,
   hideParentInfo: boolean,
@@ -165,6 +166,7 @@ const tooltipMessage = (approvedBy: ?Object, rejectedBy: ?Object) => {
 };
 
 const TaskCard = ({
+  entity: parent,
   task,
   position,
   hideParentInfo,
@@ -178,7 +180,6 @@ const TaskCard = ({
 }: Props) => {
   const {
     id,
-    entity: parent,
     name,
     dueDate,
     startDate,

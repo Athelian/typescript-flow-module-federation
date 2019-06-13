@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  taskFormFragment,
+  taskWithParentInfoFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -30,14 +30,14 @@ const editableTaskListQuery = gql`
   ) {
     tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...taskFormFragment
+        ...taskWithParentInfoFragment
       }
       page
       totalPage
     }
   }
 
-  ${taskFormFragment}
+  ${taskWithParentInfoFragment}
   ${tagFragment}
   ${userAvatarFragment}
   ${orderCardFragment}

@@ -58,13 +58,11 @@ const Tasks = ({
             <TaskCard
               isInTemplate={isInTemplate}
               editable={editable}
-              task={{
-                ...task,
-                entity: {
-                  ...task.entity,
-                  __typename: type,
-                },
+              entity={{
+                ...task.entity,
+                __typename: type,
               }}
+              task={task}
               position={index + 1}
               hideParentInfo
               saveOnBlur={newValue => onSave(index, newValue)}

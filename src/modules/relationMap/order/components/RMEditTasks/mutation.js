@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  taskFormFragment,
+  taskWithParentInfoFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -27,11 +27,11 @@ export const taskUpdateManyMutation = gql`
   mutation taskUpdateMany($tasks: [TaskUpdateWrapperInput!]!) {
     taskUpdateMany(tasks: $tasks) {
       ... on Task {
-        ...taskFormFragment
+        ...taskWithParentInfoFragment
       }
     }
   }
-  ${taskFormFragment}
+  ${taskWithParentInfoFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}

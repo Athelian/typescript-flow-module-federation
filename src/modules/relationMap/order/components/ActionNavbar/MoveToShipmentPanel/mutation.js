@@ -4,7 +4,7 @@ import {
   badRequestFragment,
   metricFragment,
   tagFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   userAvatarFragment,
@@ -25,7 +25,7 @@ export const updateBatchMutation = gql`
   ${badRequestFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;
 

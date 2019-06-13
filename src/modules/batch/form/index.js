@@ -69,7 +69,7 @@ export default class BatchForm extends React.Component<Props> {
               getByPath('orderItem.order.exporter.id', batch),
             ].filter(Boolean)}
             entityId={batch.id}
-            type="batch"
+            type="Batch"
           />
           <ShipmentSection shipment={batch.shipment} shipmentConfig={shipmentConfig} />
           <ContainerSection container={batch.container} containerConfig={containerConfig} />
@@ -85,7 +85,7 @@ export default class BatchForm extends React.Component<Props> {
               { state }
             ) => (
               <AutoDateBinding
-                type="batch"
+                type="Batch"
                 values={state}
                 tasks={tasks}
                 setTaskValue={setFieldValue}

@@ -18,6 +18,7 @@ const defaultRenderItem = (item: Object) => (
   <TaskCard
     key={item.id}
     position={item.sort + 1}
+    entity={item.entity}
     task={item}
     onClick={() => navigate(`/task/${encodeId(item.id)}`)}
     showActionsOnHover

@@ -6,7 +6,7 @@ import {
   userAvatarFragment,
   metricFragment,
   priceFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
@@ -40,7 +40,7 @@ export const batchCardRMFragment = gql`
       inProgressCount
       remainingCount
       tasks {
-        ...taskFormInSlideViewFragment
+        ...taskWithoutParentInfoFragment
       }
       taskTemplate {
         ...taskTemplateCardFragment
@@ -93,7 +93,7 @@ export const orderCardRMFragment = gql`
           inProgressCount
           remainingCount
           tasks {
-            ...taskFormInSlideViewFragment
+            ...taskWithoutParentInfoFragment
           }
         }
         tags {
@@ -291,7 +291,7 @@ export const orderDetailQuery = gql`
   ${metricFragment}
   ${priceFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;
 
@@ -338,7 +338,7 @@ export const orderListQuery = gql`
   ${metricFragment}
   ${priceFragment}
   ${taskFormInTemplateFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
 `;
 

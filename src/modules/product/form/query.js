@@ -17,7 +17,7 @@ import {
   documentFragment,
   ownedByFragment,
   taskTemplateCardFragment,
-  taskFormInSlideViewFragment,
+  taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -46,7 +46,7 @@ export const productFormQuery = gql`
   ${documentFragment}
   ${ownedByFragment}
   ${taskTemplateCardFragment}
-  ${taskFormInSlideViewFragment}
+  ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
 `;

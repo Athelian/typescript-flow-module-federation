@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { upperFirst, omit } from 'lodash';
+import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
@@ -62,13 +62,11 @@ const Tasks = ({
               groupIds={groupIds}
               isInTemplate={isInTemplate}
               editable={editable}
-              task={{
-                ...task,
-                entity: {
-                  ...task.entity,
-                  __typename: upperFirst(type),
-                },
+              entity={{
+                ...task.entity,
+                __typename: type,
               }}
+              task={task}
               position={index + 1}
               hideParentInfo
               saveOnBlur={newValue => onSave(index, newValue)}
@@ -98,10 +96,10 @@ const Tasks = ({
                 <TaskFormInSlide
                   entity={{
                     ...task.entity,
-                    __typename: upperFirst(type),
+                    __typename: type,
                     id: entityId,
                   }}
-                  parentEntity={upperFirst(type)}
+                  parentEntity={type}
                   isInTemplate={isInTemplate}
                   editable={isEditable}
                   task={{ ...omit(task, ['entity']), sort: index }}
