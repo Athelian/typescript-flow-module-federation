@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Jun 10 2019 16:16:58 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Jun 13 2019 10:19:06 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -30687,7 +30687,7 @@ type Project implements Model & Owned & Tagged {
   name: String!
   description: String
   dueDate: DateTime
-  taskCount: Int!
+  taskCount: TaskCount!
   milestones: [MilestonePayload!]!
   timeline: Timeline!
   id: ID!
@@ -30789,6 +30789,7 @@ type Query {
   batch(id: ID!): BatchPayload!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
   batchesByIDs(ids: [ID!]!): [BatchPayload!]!
+  batchesTable(entities: [EntityInput!]!): [BatchPayload!]!
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
