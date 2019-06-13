@@ -12,6 +12,7 @@ type FormState = {
   material?: ?string,
   customFields?: Object,
   memo: string,
+  importer: Object,
 };
 
 const initValues = {
