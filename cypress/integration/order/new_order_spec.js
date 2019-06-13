@@ -35,7 +35,7 @@ describe('Order create action', () => {
         .children()
         .first()
         .click()
-        .getByTestId('saveButtonOnSelectExporters')
+        .getByTestId('btnSaveExporter')
         .click()
         .wait(1000)
         .getByTestId('saveButton')

@@ -36,7 +36,7 @@ describe('Product', () => {
           .get('[data-testid="partnerCard"]')
           .first()
           .click()
-          .getByTestId('saveButtonOnSelectExporters')
+          .getByTestId('btnSaveExporter')
           .click();
 
         cy.get('input[name="name"]')
