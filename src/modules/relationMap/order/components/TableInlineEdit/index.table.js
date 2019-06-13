@@ -76,6 +76,7 @@ import {
   LastTemplateUsedStyle,
   TableHeaderClearFixStyle,
 } from './style';
+import { keyMap, handlers } from './keyMap';
 
 type Props = {
   onCancel: () => void,
@@ -96,86 +97,6 @@ type Props = {
   orders: Array<Object>,
   shipments: Array<Object>,
   intl: IntlShape,
-};
-
-const keyMap = {
-  firstRight: ['command+right', 'ctrl+right'],
-  firstLeft: ['command+left', 'ctrl+left'],
-  firstTop: ['command+up', 'ctrl+up', 'shift+enter'],
-  firstBottom: ['command+down', 'ctrl+down', 'enter'],
-  tab: ['tab'],
-  reverseTab: ['shift+tab'],
-};
-
-const calculatePosition = (position, type) => {
-  const [row, column] = position;
-  switch (type) {
-    default:
-      return position;
-    case 'tab':
-    case 'right':
-      return [Number(row), Number(column) + 1];
-    case 'reverseTab':
-    case 'left':
-      return [Number(row), Number(column) - 1];
-    case 'top':
-      return [Number(row) - 1, column];
-    case 'bottom':
-      return [Number(row) + 1, column];
-    case 'newLine':
-      return [Number(row) + 1, 1];
-    case 'previousLine':
-      return [Number(row) - 1, 1];
-  }
-};
-
-const focusCell = (position, type) => {
-  const [row, column] = calculatePosition(position, type);
-  const cell = document.getElementById(`input-${row}-${column}`);
-  if (cell && cell.hasAttribute('disabled')) {
-    focusCell([row, column], type);
-  } else if (cell && !cell.hasAttribute('disabled')) {
-    cell.focus();
-  } else if (!cell && type === 'tab') {
-    focusCell([row, column], 'newLine');
-  } else if (!cell && type === 'reverseTab') {
-    focusCell([row, column], 'previousLine');
-  }
-};
-
-const getCellById = id => id && id.match(/\d+/g);
-
-const handlers = {
-  tab: e => {
-    e.preventDefault();
-    const position = getCellById(e.target.id);
-    focusCell(position, 'tab');
-  },
-  reverseTab: e => {
-    e.preventDefault();
-    const position = getCellById(e.target.id);
-    focusCell(position, 'reverseTab');
-  },
-  firstRight: e => {
-    e.preventDefault();
-    const position = getCellById(e.target.id);
-    focusCell(position, 'right');
-  },
-  firstLeft: e => {
-    e.preventDefault();
-    const position = getCellById(e.target.id);
-    focusCell(position, 'left');
-  },
-  firstTop: e => {
-    e.preventDefault();
-    const position = getCellById(e.target.id);
-    focusCell(position, 'top');
-  },
-  firstBottom: e => {
-    e.preventDefault();
-    const position = getCellById(e.target.id);
-    focusCell(position, 'bottom');
-  },
 };
 
 function findColumns({
@@ -804,101 +725,99 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                     {Object.keys(editData.orders || {}).length === 0 &&
                       Object.keys(editData.shipments || {}).length === 0 && <LoadingIcon />}
                     {/* Shipment has no relation rendering logic */}
-                    {(Object.entries(mappingObjects.shipmentNoRelation || {}): any).map(
-                      ([shipmentId]) => (
-                        <TableRow key={`shipment-row-${shipmentId}`}>
-                          <div>
-                            <TableEmptyItem
-                              fields={orderColumnFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'order')}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={orderCustomFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'orderCustom')}
-                              columnNo={columnOrderItemCustomNo}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={orderItemColumnFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'orderItem')}
-                              columnNo={columnOrderItemNo}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={orderItemCustomFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
-                              columnNo={columnOrderItemCustomNo}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={batchColumnFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'batch')}
-                              columnNo={columnBatchNo}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={batchCustomFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'batchCustom')}
-                              columnNo={columnBatchCustomNo}
-                            />
-                          </div>
-                          <div>
-                            {/* render the row base on container or batches of shipment */}
-                            <TableEmptyItem
-                              fields={containerColumnFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'container')}
-                              columnNo={columnBatchNo}
-                            />
-                          </div>
-                          <div>
-                            <TableItem
-                              rowNo={getRowCounter(rowCounter, 'shipment')}
-                              columnNo={columnShipmentNo}
-                              key={`shipment.${shipmentId}`}
-                              cell={`shipments.${shipmentId}`}
-                              fields={shipmentColumnFieldsFilter}
-                              values={editData.shipments[shipmentId]}
-                              editData={editData}
-                              validator={shipmentValidator}
-                            />
-                          </div>
-                          <div>
-                            <TableItemForCustomFields
-                              rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
-                              columnNo={columnShipmentCustomNo}
-                              cell={`shipments.${shipmentId}`}
-                              key={`shipments.customFields.1.${shipmentId}`}
-                              fields={shipmentCustomFieldsFilter}
-                              values={editData.shipments[shipmentId]}
-                              editData={editData}
-                              validator={shipmentValidator}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={productColumnFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'product')}
-                              columnNo={columnProductNo}
-                            />
-                          </div>
-                          <div>
-                            <TableEmptyItem
-                              fields={productCustomFieldsFilter}
-                              rowNo={getRowCounter(rowCounter, 'productCustom')}
-                              columnNo={columnProductCustomNo}
-                            />
-                          </div>
-                        </TableRow>
-                      )
-                    )}
+                    {Object.entries(mappingObjects.shipmentNoRelation || {}).map(([shipmentId]) => (
+                      <TableRow key={`shipment-row-${shipmentId}`}>
+                        <div>
+                          <TableEmptyItem
+                            fields={orderColumnFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'order')}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={orderCustomFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'orderCustom')}
+                            columnNo={columnOrderItemCustomNo}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={orderItemColumnFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'orderItem')}
+                            columnNo={columnOrderItemNo}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={orderItemCustomFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'orderItemCustom')}
+                            columnNo={columnOrderItemCustomNo}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={batchColumnFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'batch')}
+                            columnNo={columnBatchNo}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={batchCustomFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'batchCustom')}
+                            columnNo={columnBatchCustomNo}
+                          />
+                        </div>
+                        <div>
+                          {/* render the row base on container or batches of shipment */}
+                          <TableEmptyItem
+                            fields={containerColumnFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'container')}
+                            columnNo={columnBatchNo}
+                          />
+                        </div>
+                        <div>
+                          <TableItem
+                            rowNo={getRowCounter(rowCounter, 'shipment')}
+                            columnNo={columnShipmentNo}
+                            key={`shipment.${shipmentId}`}
+                            cell={`shipments.${shipmentId}`}
+                            fields={shipmentColumnFieldsFilter}
+                            values={editData.shipments[shipmentId]}
+                            editData={editData}
+                            validator={shipmentValidator}
+                          />
+                        </div>
+                        <div>
+                          <TableItemForCustomFields
+                            rowNo={getRowCounter(rowCounter, 'shipmentCustom')}
+                            columnNo={columnShipmentCustomNo}
+                            cell={`shipments.${shipmentId}`}
+                            key={`shipments.customFields.1.${shipmentId}`}
+                            fields={shipmentCustomFieldsFilter}
+                            values={editData.shipments[shipmentId]}
+                            editData={editData}
+                            validator={shipmentValidator}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={productColumnFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'product')}
+                            columnNo={columnProductNo}
+                          />
+                        </div>
+                        <div>
+                          <TableEmptyItem
+                            fields={productCustomFieldsFilter}
+                            rowNo={getRowCounter(rowCounter, 'productCustom')}
+                            columnNo={columnProductCustomNo}
+                          />
+                        </div>
+                      </TableRow>
+                    ))}
                     {/* Shipment has empty containers rendering logic */}
-                    {(Object.entries(mappingObjects.shipment || {}): any)
+                    {Object.entries(mappingObjects.shipment || {})
                       .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
                       .map(([shipmentId]) =>
                         mappingObjects.shipment[shipmentId].data.containers
@@ -1341,7 +1260,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                     if (!shipmentId || !shipment) {
                                       return (
                                         <TableEmptyItem
-                                          key={`empty-shipment-${order.id}-${batch.id}`}
+                                          key={`empty-shipment-${batch.id}`}
                                           fields={shipmentColumnFieldsFilter}
                                           rowNo={getRowCounter(rowCounter, 'shipment')}
                                           columnNo={columnShipmentNo}
@@ -1353,9 +1272,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                       <TableItem
                                         rowNo={getRowCounter(rowCounter, 'shipment')}
                                         columnNo={columnShipmentNo}
-                                        key={`shipment.${
-                                          batch.id
-                                        }.${shipmentId}-${columnShipmentNo}`}
+                                        key={`shipment.${batch.id}.${shipmentId}-${columnShipmentNo}`}
                                         cell={`shipments.${shipment.data.id}`}
                                         fields={shipmentColumnFieldsFilter}
                                         values={editData.shipments[shipment.data.id]}
@@ -1450,9 +1367,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                           fields={productColumnFieldsFilter}
                                           rowNo={getRowCounter(rowCounter, 'product')}
                                           columnNo={columnProductNo}
-                                          cell={`products.${
-                                            orderItem.data.productProvider.product
-                                          }`}
+                                          cell={`products.${orderItem.data.productProvider.product}`}
                                           values={
                                             editData.products[
                                               `${orderItem.data.productProvider.product}`
@@ -1500,9 +1415,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                                           fields={productCustomFieldsFilter}
                                           rowNo={getRowCounter(rowCounter, 'productCustom')}
                                           columnNo={columnProductCustomNo}
-                                          cell={`products.${
-                                            orderItem.data.productProvider.product
-                                          }`}
+                                          cell={`products.${orderItem.data.productProvider.product}`}
                                           values={
                                             editData.products[
                                               `${orderItem.data.productProvider.product}`
