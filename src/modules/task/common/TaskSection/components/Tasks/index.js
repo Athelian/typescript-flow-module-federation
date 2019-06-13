@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { upperFirst, omit } from 'lodash';
+import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
@@ -64,7 +64,7 @@ const Tasks = ({
               editable={editable}
               entity={{
                 ...task.entity,
-                __typename: upperFirst(type),
+                __typename: type,
               }}
               task={task}
               position={index + 1}
@@ -96,10 +96,10 @@ const Tasks = ({
                 <TaskFormInSlide
                   entity={{
                     ...task.entity,
-                    __typename: upperFirst(type),
+                    __typename: type,
                     id: entityId,
                   }}
-                  parentEntity={upperFirst(type)}
+                  parentEntity={type}
                   isInTemplate={isInTemplate}
                   editable={isEditable}
                   task={{ ...omit(task, ['entity']), sort: index }}

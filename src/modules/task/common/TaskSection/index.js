@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { upperFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
@@ -147,12 +146,12 @@ import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
 
 export type CompatibleEntityTypes =
-  | 'batch'
-  | 'order'
-  | 'orderItem'
-  | 'product'
-  | 'productProvider'
-  | 'shipment';
+  | 'Batch'
+  | 'Order'
+  | 'OrderItem'
+  | 'Product'
+  | 'ProductProvider'
+  | 'Shipment';
 
 type Props = {
   type: CompatibleEntityTypes,
@@ -175,7 +174,7 @@ const getConfig = (
   editable: TaskEditable,
 } => {
   switch (type) {
-    case 'order':
+    case 'Order':
       return {
         canViewList: hasPermission([ORDER_TASK_LIST, TASK_LIST]),
         canViewForm: hasPermission([TASK_FORM, ORDER_TASK_FORM]),
@@ -200,7 +199,7 @@ const getConfig = (
           approvers: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVERS]),
         },
       };
-    case 'orderItem':
+    case 'OrderItem':
       return {
         canViewList: hasPermission([ORDER_ITEMS_TASK_LIST, TASK_LIST]),
         canViewForm: hasPermission([ORDER_ITEMS_TASK_FORM, TASK_FORM]),
@@ -257,7 +256,7 @@ const getConfig = (
           ]),
         },
       };
-    case 'batch':
+    case 'Batch':
       return {
         canViewList: hasPermission([BATCH_TASK_LIST, TASK_LIST]),
         canViewForm: hasPermission([BATCH_TASK_FORM, TASK_FORM]),
@@ -282,7 +281,7 @@ const getConfig = (
           approvers: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVERS]),
         },
       };
-    case 'product':
+    case 'Product':
       return {
         canViewList: hasPermission([PRODUCT_TASK_LIST, TASK_LIST]),
         canViewForm: hasPermission([PRODUCT_TASK_FORM, TASK_FORM]),
@@ -311,7 +310,7 @@ const getConfig = (
           approvers: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVERS]),
         },
       };
-    case 'productProvider':
+    case 'ProductProvider':
       return {
         canViewList: hasPermission([PRODUCT_PROVIDER_TASK_LIST, TASK_LIST]),
         canViewForm: hasPermission([PRODUCT_PROVIDER_TASK_FORM, TASK_FORM]),
@@ -531,7 +530,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                       <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                         {opened && (
                           <SelectTaskTemplate
-                            entityType={upperFirst(type)}
+                            entityType={type}
                             onCancel={() => slideToggle(false)}
                             onSelect={newValue => {
                               slideToggle(false);

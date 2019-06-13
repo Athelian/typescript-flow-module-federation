@@ -48,7 +48,7 @@ class ProductForm extends React.Component<Props> {
             <AsyncProductSection isOwner={isOwner} isNew={isNewOrClone} product={product} />
           </SectionWrapper>
 
-          <AsyncTaskSection groupIds={[]} entityId={product.id} type="product" />
+          <AsyncTaskSection groupIds={[]} entityId={product.id} type="Product" />
 
           <SectionWrapper id="product_productProvidersSection">
             <SectionHeader
@@ -82,7 +82,7 @@ class ProductForm extends React.Component<Props> {
                 setFieldValue,
               }) => (
                 <AutoDateBinding
-                  type="product"
+                  type="Product"
                   values={{}}
                   tasks={tasks}
                   setTaskValue={setFieldValue}

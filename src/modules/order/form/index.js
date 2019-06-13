@@ -105,7 +105,7 @@ export default class OrderForm extends React.Component<Props> {
             { state }
           ) => (
             <AutoDateBinding
-              type="order"
+              type="Order"
               values={state}
               tasks={tasks}
               setTaskValue={setFieldValue}

@@ -27,7 +27,7 @@ export default function OrderTasksSection({ isLoading, entityId, groupIds, initV
       }}
     >
       {() => {
-        return <TaskSection groupIds={groupIds} entityId={entityId} type="order" />;
+        return <TaskSection groupIds={groupIds} entityId={entityId} type="Order" />;
       }}
     </QueryPlaceHolder>
   );

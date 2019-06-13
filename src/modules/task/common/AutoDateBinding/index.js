@@ -21,12 +21,12 @@ type Props = {
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {
   React.useEffect(() => {
     const mappingFields = {
-      order: OrderMappingField,
-      orderItem: OrderItemMappingField,
-      batch: BatchMappingField,
-      shipment: findMappingFields(values.voyages || []),
-      product: {},
-      productProvider: {},
+      Order: OrderMappingField,
+      OrderItem: OrderItemMappingField,
+      Batch: BatchMappingField,
+      Shipment: findMappingFields(values.voyages || []),
+      Product: {},
+      ProductProvider: {},
     };
     emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {

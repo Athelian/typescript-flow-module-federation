@@ -104,7 +104,7 @@ export default class ItemForm extends React.Component<Props> {
               getByPath('order.exporter.id', orderItem),
             ].filter(Boolean)}
             entityId={orderItem.id}
-            type="orderItem"
+            type="OrderItem"
           />
 
           <AsyncShipmentsSection />
@@ -117,7 +117,7 @@ export default class ItemForm extends React.Component<Props> {
               setFieldValue,
             }) => (
               <AutoDateBinding
-                type="orderItem"
+                type="OrderItem"
                 values={orderItem.order || {}}
                 tasks={tasks}
                 setTaskValue={setFieldValue}

@@ -141,7 +141,7 @@ class ShipmentForm extends React.Component<Props> {
                   Boolean
                 )}
                 entityId={shipment.id}
-                type="shipment"
+                type="Shipment"
               />
             )}
           </Subscribe>
@@ -161,7 +161,7 @@ class ShipmentForm extends React.Component<Props> {
               { state: timeline }
             ) => (
               <AutoDateBinding
-                type="shipment"
+                type="Shipment"
                 values={{ ...info, ...timeline }}
                 tasks={tasks}
                 setTaskValue={setFieldValue}

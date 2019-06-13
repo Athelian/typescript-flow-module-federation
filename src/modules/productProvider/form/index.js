@@ -118,7 +118,7 @@ class ProductProviderForm extends React.Component<Props> {
               getByPath('exporter.id', productProvider),
             ].filter(Boolean)}
             entityId={productProvider.id}
-            type="productProvider"
+            type="ProductProvider"
           />
 
           <Subscribe to={[ProductProviderTasksContainer]}>
@@ -129,7 +129,7 @@ class ProductProviderForm extends React.Component<Props> {
               setFieldValue,
             }) => (
               <AutoDateBinding
-                type="productProvider"
+                type="ProductProvider"
                 values={{}}
                 tasks={tasks}
                 setTaskValue={setFieldValue}
