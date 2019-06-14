@@ -1302,7 +1302,7 @@ const TaskInfoSection = ({
                                       <>
                                         {userChosen && userChosen.id ? (
                                           <ApproveRejectMenu
-                                            width="175px"
+                                            width="200px"
                                             onApprove={() => {
                                               setFieldValues({
                                                 approvedBy: userChosen,

@@ -37,7 +37,7 @@ export const TaskStatusWrapperStyle: string = css`
 `;
 
 export const AssignedToStyle: string = css`
-  display: flex;
+  ${layout.GRID_HORIZONTAL};
   justify-content: space-between;
 `;
 
