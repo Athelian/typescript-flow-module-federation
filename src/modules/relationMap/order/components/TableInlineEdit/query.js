@@ -242,7 +242,7 @@ export const containerEntityFragment = gql`
 `;
 
 export const editTableViewQuery = gql`
-  query ordersAndShipments($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
+  query editTableViewQuery($orderIds: [ID!]!, $shipmentIds: [ID!]!) {
     ordersByIDs(ids: $orderIds) {
       ...forbiddenFragment
       ... on Order {

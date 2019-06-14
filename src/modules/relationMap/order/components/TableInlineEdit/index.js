@@ -90,7 +90,7 @@ const TableView = (props: Props) => {
         shipmentIds: [...new Set(shipmentIdsQuery)],
         orderIds: [...new Set(orderIdsQuery)],
       }}
-      fetchPolicy="network-only"
+      fetchPolicy="cache-first"
       onCompleted={() => {
         if (!isReady) {
           setIsReady(true);

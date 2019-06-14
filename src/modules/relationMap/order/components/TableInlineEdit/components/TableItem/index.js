@@ -14,7 +14,6 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { UserContext } from 'modules/user';
 import TableDisableCell from '../TableDisableCell';
-import { WrapperStyle, ItemStyle } from './style';
 import {
   InlineTextInput,
   InlineNumberInput,
@@ -262,35 +261,29 @@ function TableItem({ cell, fields, values, editData, validator, rowNo, columnNo 
   const { user } = useContext(UserContext);
   if (!values) return null;
 
-  return (
-    <div className={WrapperStyle}>
-      {fields.map(({ name, type, meta, getFieldValue, getFieldName }, fieldCounter) => {
-        const value = getFieldValue ? getFieldValue(values, editData) : getByPath(name, values);
-        const fieldName = getFieldName ? getFieldName(values) : name;
-        const cellName = `${cell}.${fieldName}`;
-        const id = `${rowNo}-${fieldCounter + columnNo + 1}`;
-        return (
-          <div className={ItemStyle} key={name}>
-            <FormField name={cellName} initValue={value} validator={validator} values={values}>
-              {() =>
-                renderItem({
-                  id,
-                  name: cellName,
-                  type,
-                  meta,
-                  value,
-                  values,
-                  editData,
-                  hasPermission,
-                  user,
-                })
-              }
-            </FormField>
-          </div>
-        );
-      })}
-    </div>
-  );
+  return (fields.map(({ name, type, meta, getFieldValue, getFieldName }, fieldCounter) => {
+    const value = getFieldValue ? getFieldValue(values, editData) : getByPath(name, values);
+    const fieldName = getFieldName ? getFieldName(values) : name;
+    const cellName = `${cell}.${fieldName}`;
+    const id = `${rowNo}-${fieldCounter + columnNo + 1}`;
+    return (
+      <FormField key={name} name={cellName} initValue={value} validator={validator} values={values}>
+        {() =>
+          renderItem({
+            id,
+            name: cellName,
+            type,
+            meta,
+            value,
+            values,
+            editData,
+            hasPermission,
+            user,
+          })
+        }
+      </FormField>
+    );
+  }): Array<any>);
 }
 
 TableItem.defaultProps = defaultProps;

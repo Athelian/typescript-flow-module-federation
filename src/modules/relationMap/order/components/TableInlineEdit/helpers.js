@@ -977,15 +977,18 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   return rows;
 }
 
-export const setPackageBatchData = (batch: Object) => {
+export const setPackageBatchData = (batch: ?Object) => {
   return {
     ...batch,
-    packageGrossWeight: batch.packageGrossWeight || { value: 0, metric: defaultWeightMetric },
-    packageVolume: batch.packageVolume || {
+    packageGrossWeight: (batch && batch.packageGrossWeight) || {
+      value: 0,
+      metric: defaultWeightMetric,
+    },
+    packageVolume: (batch && batch.packageVolume) || {
       metric: defaultVolumeMetric,
       value: 0,
     },
-    packageSize: batch.packageSize || {
+    packageSize: (batch && batch.packageSize) || {
       width: {
         metric: defaultDistanceMetric,
         value: 0,
