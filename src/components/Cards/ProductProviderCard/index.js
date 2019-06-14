@@ -51,16 +51,10 @@ const ProductProviderCard = ({
     ? []
     : [
         <CardAction icon="CLONE" onClick={() => onClone(productProvider)} />,
-        ...(!referenced
-          ? [
-              <CardAction
-                icon="REMOVE"
-                hoverColor="RED"
-                onClick={() => onRemove(productProvider)}
-              />,
-            ]
-          : []),
-      ];
+        referenced ? null : (
+          <CardAction icon="REMOVE" hoverColor="RED" onClick={() => onRemove(productProvider)} />
+        ),
+      ].filter(Boolean);
 
   return (
     <BaseCard

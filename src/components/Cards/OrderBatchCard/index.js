@@ -91,54 +91,52 @@ const OrderBatchCard = ({
   ...rest
 }: Props) => {
   const actions = [
-    ...(editable.clone ? [<CardAction icon="CLONE" onClick={() => onClone(batch)} />] : []),
-    ...(editable.delete
-      ? [
-          <BooleanValue>
-            {({ value: isOpen, set: dialogToggle }) => (
-              <>
-                <RemoveDialog
-                  isOpen={isOpen}
-                  onRequestClose={() => dialogToggle(false)}
-                  onCancel={() => dialogToggle(false)}
-                  onRemove={() => {
-                    onRemove(batch);
-                    dialogToggle(false);
-                  }}
-                  message={
-                    <div>
-                      <div>
-                        <FormattedMessage
-                          id="components.cards.deleteBatchItem"
-                          defaultMessage="Are you sure you want to delete this Batch?"
-                        />
-                      </div>
-                      <div>
-                        <FormattedMessage
-                          id="components.cards.deleteBatchItemShipment"
-                          defaultMessage="It is being used in a Shipment"
-                        />
-                      </div>
-                    </div>
-                  }
-                />
-                <CardAction
-                  icon="REMOVE"
-                  hoverColor="RED"
-                  onClick={() => {
-                    if (batch.shipment) {
-                      dialogToggle(true);
-                    } else {
-                      onRemove(batch);
-                    }
-                  }}
-                />
-              </>
-            )}
-          </BooleanValue>,
-        ]
-      : []),
-  ];
+    editable.clone ? <CardAction icon="CLONE" onClick={() => onClone(batch)} /> : null,
+    editable.delete ? (
+      <BooleanValue>
+        {({ value: isOpen, set: dialogToggle }) => (
+          <>
+            <RemoveDialog
+              isOpen={isOpen}
+              onRequestClose={() => dialogToggle(false)}
+              onCancel={() => dialogToggle(false)}
+              onRemove={() => {
+                onRemove(batch);
+                dialogToggle(false);
+              }}
+              message={
+                <div>
+                  <div>
+                    <FormattedMessage
+                      id="components.cards.deleteBatchItem"
+                      defaultMessage="Are you sure you want to delete this Batch?"
+                    />
+                  </div>
+                  <div>
+                    <FormattedMessage
+                      id="components.cards.deleteBatchItemShipment"
+                      defaultMessage="It is being used in a Shipment"
+                    />
+                  </div>
+                </div>
+              }
+            />
+            <CardAction
+              icon="REMOVE"
+              hoverColor="RED"
+              onClick={() => {
+                if (batch.shipment) {
+                  dialogToggle(true);
+                } else {
+                  onRemove(batch);
+                }
+              }}
+            />
+          </>
+        )}
+      </BooleanValue>
+    ) : null,
+  ].filter(Boolean);
 
   const {
     id,

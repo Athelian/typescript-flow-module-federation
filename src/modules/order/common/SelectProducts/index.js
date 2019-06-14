@@ -22,7 +22,8 @@ import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
 type OptionalProps = {
-  exporter: string,
+  importerId: string,
+  exporterId: string,
   orderCurrency: string,
 };
 
@@ -33,7 +34,8 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  exporter: '',
+  importerId: '',
+  exporterId: '',
   orderCurrency: '',
 };
 
@@ -77,7 +79,14 @@ function onChangeProductQuantity({
   set(items);
 }
 
-function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: Props) {
+function SelectProducts({
+  intl,
+  onCancel,
+  onSelect,
+  importerId,
+  exporterId,
+  orderCurrency,
+}: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.nameSort), value: 'name' },
     { title: intl.formatMessage(messages.serialSort), value: 'serial' },
@@ -85,6 +94,7 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
   ];
+
   const {
     filterAndSort: filtersAndSort,
     queryVariables,
@@ -93,7 +103,8 @@ function SelectProducts({ intl, onCancel, onSelect, exporter, orderCurrency }: P
     perPage: 20,
     page: 1,
     filter: {
-      exporterId: exporter,
+      importerId,
+      exporterId,
       archived: false,
       query: '',
     },
