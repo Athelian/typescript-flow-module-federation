@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 
 type ContainersState = {
   containers: Array<Object>,
@@ -43,12 +43,17 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.originalValues = { containers };
   };
 
-  onChangePartner = (partner: Object) => {
+  onChangePartner = (partner: Object, selectedExporter: Object) => {
     const { containers } = this.state;
 
     this.setState({
       containers: containers.map(container => ({
         ...container,
+        batches: getByPathWithDefault([], 'batches', container).filter(
+          batch =>
+            getByPath('orderItem.order.export.id', batch) ===
+            getByPathWithDefault('', 'id', selectedExporter)
+        ),
         warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
           user => getByPath('group.id', user) !== partner.id
         ),

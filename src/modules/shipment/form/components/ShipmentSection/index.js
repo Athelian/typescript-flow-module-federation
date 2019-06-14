@@ -745,9 +745,15 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                         ShipmentTasksContainer,
                                         ShipmentTimelineContainer,
                                         ShipmentContainersContainer,
+                                        ShipmentBatchesContainer,
                                       ]}
                                     >
-                                      {(taskContainer, timelineContainer, containersContainer) => (
+                                      {(
+                                        taskContainer,
+                                        timelineContainer,
+                                        containersContainer,
+                                        batchesContainer
+                                      ) => (
                                         <SelectExporter
                                           selected={values.exporter}
                                           onCancel={() => exporterSelectorToggle(false)}
@@ -769,7 +775,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                               defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
                                             />
                                           }
-                                          onSelect={selectedImporter => {
+                                          onSelect={selectedExporter => {
                                             exporterSelectorToggle(false);
                                             setFieldValue(
                                               'inCharges',
@@ -779,11 +785,15 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                                   getByPath('id', exporter)
                                               )
                                             );
-                                            setFieldValue('exporter', selectedImporter);
+                                            setFieldValue('exporter', selectedExporter);
+                                            batchesContainer.changeMainExporter(selectedExporter);
                                             if (exporter) {
                                               taskContainer.onChangePartner(exporter);
                                               timelineContainer.onChangePartner(exporter);
-                                              containersContainer.onChangePartner(exporter);
+                                              containersContainer.onChangePartner(
+                                                exporter,
+                                                selectedExporter
+                                              );
                                             }
                                           }}
                                         />
