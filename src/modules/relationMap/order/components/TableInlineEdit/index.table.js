@@ -661,7 +661,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                         batchIds,
                       })}
                       rowHeight={40}
-                      columnCount={templateColumns.length}
+                      columnCount={showAll ? allColumnIds.length : templateColumns.length}
                       columnWidth={210}
                       showAllColumn={showAll}
                       customColumns={{
