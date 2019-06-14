@@ -15,6 +15,8 @@ type Props = {
   rowHeight: number,
   showAllColumn: boolean,
   customColumns: Object,
+  templateColumns: Array<string>,
+  onToggle: Function,
   lines: Object,
   itemData: Object,
 };

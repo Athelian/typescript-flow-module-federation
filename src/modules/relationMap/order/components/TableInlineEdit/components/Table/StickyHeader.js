@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import {
-  allColumnIds,
   batchColumns,
   containerColumns,
   orderColumns,
@@ -15,6 +14,8 @@ import { StickyStyle } from './style';
 
 type Props = {
   showAllColumn: boolean,
+  templateColumns: Array<string>,
+  onToggle: Function,
   customColumns: {
     orderCustomFields: Array<Object>,
     orderItemCustomFields: Array<Object>,
@@ -34,27 +35,10 @@ export const StickyHeader = ({
     shipmentCustomFields,
     productCustomFields,
   },
+  templateColumns,
+  onToggle,
   innerRef,
 }: Props) => {
-  const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
-  const [templateColumns, setTemplateColumns] = React.useState(
-    initTemplateColumn ? JSON.parse(initTemplateColumn) : [...allColumnIds]
-  );
-  const onToggle = React.useCallback(
-    selectedColumn => {
-      if (templateColumns && selectedColumn) {
-        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
-          ? templateColumns.filter(item => item !== selectedColumn)
-          : [...templateColumns, selectedColumn];
-        setTemplateColumns(filteredTemplateColumns);
-        window.localStorage.setItem(
-          'rmTemplateFilterColumns',
-          JSON.stringify(filteredTemplateColumns)
-        );
-      }
-    },
-    [templateColumns]
-  );
   return (
     <div ref={innerRef} className={StickyStyle}>
       <TableHeader

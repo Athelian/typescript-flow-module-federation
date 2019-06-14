@@ -1,5 +1,5 @@
 // @flow
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { ApolloConsumer } from 'react-apollo';
 import type { IntlShape } from 'react-intl';
@@ -169,6 +169,21 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
   const { entities } = normalize(dataSource);
   const mappingObjects = formatOrders(dataSource);
   const prevEntities = usePrevious(entities);
+  const onToggle = useCallback(
+    selectedColumn => {
+      if (templateColumns && selectedColumn) {
+        const filteredTemplateColumns = templateColumns.includes(selectedColumn)
+          ? templateColumns.filter(item => item !== selectedColumn)
+          : [...templateColumns, selectedColumn];
+        setTemplateColumns(filteredTemplateColumns);
+        window.localStorage.setItem(
+          'rmTemplateFilterColumns',
+          JSON.stringify(filteredTemplateColumns)
+        );
+      }
+    },
+    [templateColumns]
+  );
   useEffect(() => {
     if (!isEqual(prevEntities, entities) || isChangeData) {
       logger.warn('copy data');
@@ -671,6 +686,8 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                         shipmentCustomFields,
                         productCustomFields,
                       }}
+                      templateColumns={templateColumns}
+                      onToggle={onToggle}
                       lines={{
                         targetIds,
                         orderIds,
