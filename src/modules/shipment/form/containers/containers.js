@@ -62,10 +62,8 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
   };
 
   onChangePartner = (partner: Object) => {
-    const { containers } = this.state;
-
-    this.setState({
-      containers: containers.map(container => ({
+    this.setState(prevState => ({
+      containers: prevState.containers.map(container => ({
         ...container,
         warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
           user => getByPath('group.id', user) !== partner.id
@@ -101,6 +99,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
             ? null
             : container.departureDateApprovedBy,
       })),
-    });
+    }));
   };
 }
