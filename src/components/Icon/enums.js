@@ -41,6 +41,7 @@ import {
   faShieldAlt as SECURITY,
   faKey as PASSWORD,
   faRedo as FORGOT,
+  faFileImport as IMPORT,
   // Common UI
   faFolderOpen as ACTIVE,
   faArchive as ARCHIVE,
@@ -191,6 +192,7 @@ export default {
   SECURITY,
   PASSWORD,
   FORGOT,
+  IMPORT,
   TH_LIST,
   RELATION_MAP,
   MILESTONE,

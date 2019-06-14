@@ -1,8 +1,9 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors, presets } from 'styles/common';
+import { borderRadiuses, colors, fontSizes, presets, layout } from 'styles/common';
 
 export const DashedPlusButtonWrapperStyle = (width: string, height: string): string => css`
+  ${layout.VERTICAL};
   ${presets.BUTTON};
   ${borderRadiuses.MAIN};
   font-size: 30px;
@@ -19,4 +20,8 @@ export const DashedPlusButtonWrapperStyle = (width: string, height: string): str
   }
 `;
 
-export default DashedPlusButtonWrapperStyle;
+export const LabelStyle: string = css`
+  ${fontSizes.MEDIUM};
+  margin-top: 20px;
+  letter-spacing: 0.2em;
+`;

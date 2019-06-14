@@ -14,6 +14,7 @@ import { NewButton, ExportButton } from 'components/Buttons';
 import OrderList from './list';
 import messages from './messages';
 import { ordersExportQuery } from './query';
+import Import from '../import';
 
 type Props = {
   intl: IntlShape,
@@ -79,6 +80,7 @@ function OrderModule(props: Props) {
                   },
                 }}
               />
+              <Import />
             </NavBar>
           }
         >
