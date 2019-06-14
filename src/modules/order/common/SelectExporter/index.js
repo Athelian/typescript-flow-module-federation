@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { ObjectValue } from 'react-values';
 import { cleanUpData } from 'utils/data';
-import { getByPath } from 'utils/fp';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
@@ -10,6 +9,7 @@ import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
+import { isNullOrUndefined } from 'utils/fp';
 
 type OptionalProps = {
   isRequired: boolean,
@@ -17,6 +17,9 @@ type OptionalProps = {
     id: string,
     name: string,
   },
+  selectMessage?: React.Node,
+  changeMessage?: React.Node,
+  deselectMessage?: React.Node,
 };
 
 type Props = OptionalProps & {
@@ -35,7 +38,40 @@ const isEquals = (value: ?Object, selected: ?Object): boolean => {
   return newId === oldId;
 };
 
-const SelectExporter = ({ isRequired, selected, onCancel, onSelect, warningMessage }: Props) => {
+const chooseMessage = ({
+  selected,
+  value,
+  selectMessage,
+  changeMessage,
+  deselectMessage,
+  warningMessage,
+}: {
+  selected: Object,
+  value: Object,
+  selectMessage?: React.Node,
+  changeMessage?: React.Node,
+  deselectMessage?: React.Node,
+  warningMessage: React.Node,
+}) => {
+  if (selected) {
+    if (value) {
+      return changeMessage || warningMessage;
+    }
+    return deselectMessage || warningMessage;
+  }
+  return selectMessage || warningMessage;
+};
+
+const SelectExporter = ({
+  isRequired,
+  selected,
+  onCancel,
+  onSelect,
+  selectMessage,
+  changeMessage,
+  deselectMessage,
+  warningMessage,
+}: Props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
 
   return (
@@ -52,11 +88,14 @@ const SelectExporter = ({ isRequired, selected, onCancel, onSelect, warningMessa
                     data-testid="btnSaveExporter"
                     disabled={isEquals(value, selected)}
                     onClick={() => {
-                      if (selected && selected.id !== getByPath('id', value)) {
-                        setOpenConfirmDialog(true);
+                      if (isRequired) {
+                        if (!isNullOrUndefined(selected)) {
+                          setOpenConfirmDialog(true);
+                        } else {
+                          onSelect(value);
+                        }
                       } else {
-                        onSelect(value);
-                        setOpenConfirmDialog(false);
+                        setOpenConfirmDialog(true);
                       }
                     }}
                   />
@@ -68,7 +107,14 @@ const SelectExporter = ({ isRequired, selected, onCancel, onSelect, warningMessa
                       onSelect(value);
                       setOpenConfirmDialog(false);
                     }}
-                    message={warningMessage}
+                    message={chooseMessage({
+                      selected,
+                      value,
+                      selectMessage,
+                      changeMessage,
+                      deselectMessage,
+                      warningMessage,
+                    })}
                   />
                 </SlideViewNavBar>
               }

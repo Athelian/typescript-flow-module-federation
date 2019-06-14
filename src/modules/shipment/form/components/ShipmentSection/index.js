@@ -745,19 +745,37 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                         ShipmentTasksContainer,
                                         ShipmentTimelineContainer,
                                         ShipmentContainersContainer,
+                                        ShipmentBatchesContainer,
                                       ]}
                                     >
-                                      {(taskContainer, timelineContainer, containersContainer) => (
+                                      {(
+                                        taskContainer,
+                                        timelineContainer,
+                                        containersContainer,
+                                        batchesContainer
+                                      ) => (
                                         <SelectExporter
                                           selected={values.exporter}
                                           onCancel={() => exporterSelectorToggle(false)}
+                                          selectMessage={
+                                            <FormattedMessage
+                                              id="modules.Shipment.mainExporterSelectMessage"
+                                              defaultMessage="Selecting a Main Exporter will allow them access to this Shipment. However, it will mean only Batches of the Main Exporter can be used in this Shipment. All Batches that are currently in this Shipment that do not belong to this Main Exporter will be removed. Are you sure you want to select a Main Exporter?"
+                                            />
+                                          }
+                                          changeMessage={
+                                            <FormattedMessage
+                                              id="modules.Shipment.mainExporterChangeMessage"
+                                              defaultMessage="Changing the Main Exporter will remove all Batches of the current Main Exporter and all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
+                                            />
+                                          }
                                           warningMessage={
                                             <FormattedMessage
-                                              id="modules.Shipment.exporterDialogMessage"
+                                              id="modules.Shipment.mainExporterDeselectMessage"
                                               defaultMessage="Changing the Main Exporter will remove all assigned Staff of the current Main Exporter from all Tasks, In Charge, Timeline Assignments, and Container Dates Assignments. Are you sure you want to change the Main Exporter?"
                                             />
                                           }
-                                          onSelect={selectedImporter => {
+                                          onSelect={selectedExporter => {
                                             exporterSelectorToggle(false);
                                             setFieldValue(
                                               'inCharges',
@@ -767,7 +785,11 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                                   getByPath('id', exporter)
                                               )
                                             );
-                                            setFieldValue('exporter', selectedImporter);
+                                            setFieldValue('exporter', selectedExporter);
+                                            batchesContainer.changeMainExporter(selectedExporter);
+                                            containersContainer.changeMainExporter(
+                                              selectedExporter
+                                            );
                                             if (exporter) {
                                               taskContainer.onChangePartner(exporter);
                                               timelineContainer.onChangePartner(exporter);

@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 
 type ContainersState = {
   containers: Array<Object>,
@@ -43,11 +43,34 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.originalValues = { containers };
   };
 
-  onChangePartner = (partner: Object) => {
-    const { containers } = this.state;
+  changeMainExporter = (exporter: Object) => {
+    if (exporter) {
+      this.setState(prevState => {
+        return {
+          containers: prevState.containers.map(container => {
+            const { batches, representativeBatch, ...rest } = container;
+            const newBatches = batches.filter(
+              batch => getByPath('orderItem.order.exporter.id', batch) === exporter.id
+            );
+            const newRepresentativeBatch = newBatches
+              .map(batch => batch.id)
+              .includes(getByPathWithDefault('', 'id', representativeBatch))
+              ? representativeBatch
+              : newBatches[0];
+            return {
+              batches: newBatches,
+              representativeBatch: newRepresentativeBatch,
+              ...rest,
+            };
+          }),
+        };
+      });
+    }
+  };
 
-    this.setState({
-      containers: containers.map(container => ({
+  onChangePartner = (partner: Object) => {
+    this.setState(prevState => ({
+      containers: prevState.containers.map(container => ({
         ...container,
         warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
           user => getByPath('group.id', user) !== partner.id
@@ -83,6 +106,6 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
             ? null
             : container.departureDateApprovedBy,
       })),
-    });
+    }));
   };
 }

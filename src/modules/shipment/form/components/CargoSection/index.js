@@ -14,12 +14,16 @@ import BatchesArea from './BatchesArea';
 const UNSELECTED = -2;
 const POOL = -1;
 
-type Props = {
+type OptionalProps = {
+  exporterId: string,
+};
+
+type Props = OptionalProps & {
   shipmentIsArchived: boolean,
   importerId: string,
 };
 
-const CargoSection = ({ shipmentIsArchived, importerId }: Props) => {
+const CargoSection = ({ shipmentIsArchived, importerId, exporterId }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [focusedContainerIndex, setFocusedCardIndex] = React.useState(UNSELECTED);
@@ -69,6 +73,7 @@ const CargoSection = ({ shipmentIsArchived, importerId }: Props) => {
       />
       <BatchesArea
         importerId={importerId}
+        exporterId={exporterId}
         isFocusedBatchesPool={focusedContainerIndex === POOL}
         focusedContainerIndex={focusedContainerIndex}
         isSelectBatchesMode={isSelectBatchesMode}

@@ -66,7 +66,11 @@ import {
   BatchesFooterWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  exporterId: string,
+};
+
+type Props = OptionalProps & {
   isFocusedBatchesPool: boolean,
   isSelectBatchesMode: boolean,
   onChangeSelectMode: Function,
@@ -85,6 +89,7 @@ function BatchesArea({
   selectedBatches,
   onSelectBatch,
   shipmentIsArchived,
+  exporterId,
   importerId,
 }: Props) {
   const { isOwner } = usePartnerPermission();
@@ -481,6 +486,7 @@ function BatchesArea({
                               <SelectShipmentBatches
                                 filter={{
                                   importerId,
+                                  ...(exporterId ? { exporterId } : {}),
                                 }}
                                 selectedBatches={batches}
                                 onSelect={selected => {
@@ -563,6 +569,7 @@ function BatchesArea({
                               <SelectOrderItems
                                 filter={{
                                   importerId,
+                                  ...(exporterId ? { exporterId } : {}),
                                 }}
                                 onSelect={selectedOrderItems => {
                                   const createdBatches = selectedOrderItems.map(
