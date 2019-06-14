@@ -787,13 +787,13 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                             );
                                             setFieldValue('exporter', selectedExporter);
                                             batchesContainer.changeMainExporter(selectedExporter);
+                                            containersContainer.changeMainExporter(
+                                              selectedExporter
+                                            );
                                             if (exporter) {
                                               taskContainer.onChangePartner(exporter);
                                               timelineContainer.onChangePartner(exporter);
-                                              containersContainer.onChangePartner(
-                                                exporter,
-                                                selectedExporter
-                                              );
+                                              containersContainer.onChangePartner(exporter);
                                             }
                                           }}
                                         />
