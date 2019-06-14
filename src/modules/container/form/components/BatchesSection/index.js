@@ -52,13 +52,17 @@ import {
   EmptyMessageStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  exporterId: string,
+};
+
+type Props = OptionalProps & {
   containerIsArchived: boolean,
   isSlideView: boolean,
   importerId: string,
 };
 
-function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props) {
+function BatchesSection({ containerIsArchived, isSlideView, importerId, exporterId }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   if (!hasPermission(CONTAINER_BATCHES_LIST)) return null;
@@ -152,6 +156,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                             <SelectContainerBatches
                               filter={{
                                 importerId,
+                                ...(exporterId ? { exporterId } : {}),
                               }}
                               selectedBatches={batches}
                               onSelect={selected => {
@@ -220,6 +225,7 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId }: Props)
                             <SelectOrderItems
                               filter={{
                                 importerId,
+                                ...(exporterId ? { exporterId } : {}),
                               }}
                               onSelect={selectedOrderItems => {
                                 const createdBatches = selectedOrderItems.map(
