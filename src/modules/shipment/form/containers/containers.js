@@ -2,7 +2,7 @@
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 
 type ContainersState = {
   containers: Array<Object>,
@@ -48,11 +48,18 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
       this.setState(prevState => {
         return {
           containers: prevState.containers.map(container => {
-            const { batches, ...rest } = container;
+            const { batches, representativeBatch, ...rest } = container;
+            const newBatches = batches.filter(
+              batch => getByPath('orderItem.order.exporter.id', batch) === exporter.id
+            );
+            const newRepresentativeBatch = newBatches
+              .map(batch => batch.id)
+              .includes(getByPathWithDefault('', 'id', representativeBatch))
+              ? representativeBatch
+              : newBatches[0];
             return {
-              batches: batches.filter(
-                batch => getByPath('orderItem.order.exporter.id', batch) === exporter.id
-              ),
+              batches: newBatches,
+              representativeBatch: newRepresentativeBatch,
               ...rest,
             };
           }),
