@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
@@ -452,7 +453,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
         },
         { setFieldTouched }
       ) => (
-        <SectionWrapper id={`${type}_taskSection`}>
+        <SectionWrapper id={`${lowerFirst(type)}_taskSection`}>
           <SectionHeader
             icon="TASK"
             title={

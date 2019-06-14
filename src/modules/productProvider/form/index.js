@@ -6,6 +6,7 @@ import { getByPath } from 'utils/fp';
 import { SectionWrapper, SectionHeader, LastModified } from 'components/Form';
 import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
+import { ProductInfoContainer } from 'modules/product/form/containers';
 import { ProductProviderInfoContainer, ProductProviderTasksContainer } from './containers';
 import { PackagingSection, ProductProviderSection, SpecificationsSection } from './components';
 import { ProductProviderFormWrapperStyle } from './style';
@@ -112,14 +113,18 @@ class ProductProviderForm extends React.Component<Props> {
             <AsyncDocumentsSection isOwner={isOwner} />
           </SectionWrapper>
 
-          <AsyncTaskSection
-            groupIds={[
-              getByPath('product.importer.id', productProvider),
-              getByPath('exporter.id', productProvider),
-            ].filter(Boolean)}
-            entityId={productProvider.id}
-            type="ProductProvider"
-          />
+          <Subscribe to={[ProductInfoContainer]}>
+            {({ state }) => (
+              <AsyncTaskSection
+                groupIds={[
+                  getByPath('importer.id', state),
+                  getByPath('exporter.id', productProvider),
+                ].filter(Boolean)}
+                entityId={productProvider.id}
+                type="ProductProvider"
+              />
+            )}
+          </Subscribe>
 
           <Subscribe to={[ProductProviderTasksContainer]}>
             {({
