@@ -1,6 +1,6 @@
 // @flow
 import { uniqBy } from 'lodash';
-import { isNullOrUndefined } from 'utils/fp';
+import { isNullOrUndefined, getByPath } from 'utils/fp';
 import { convertVolume } from 'utils/metric';
 import { addDays } from 'date-fns';
 
@@ -18,7 +18,7 @@ type Metric = {
 };
 
 export const uniqueOrders = (batches: Array<BatchProp>): Array<Object> =>
-  uniqBy(batches.map(batch => batch.orderItem.order), 'id');
+  uniqBy(batches.map(batch => getByPath('orderItem.order', batch)).filter(Boolean), 'id');
 
 const calculateBatchTotalVolume = (batch: Object): Metric => {
   const {
