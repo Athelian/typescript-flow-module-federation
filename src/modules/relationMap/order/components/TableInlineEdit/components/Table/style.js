@@ -5,6 +5,7 @@ import { colors, shadows, layout } from 'styles/common';
 export const TableWrapperStyle: string = css`
   border: 1px solid #d9dddd;
   margin-left: 30px;
+  padding: 5px;
 `;
 
 export const RowStyle = (isEven: boolean) => css`

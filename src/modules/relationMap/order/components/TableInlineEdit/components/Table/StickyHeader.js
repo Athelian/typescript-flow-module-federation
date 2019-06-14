@@ -13,11 +13,7 @@ import TableHeader from '../TableHeader';
 import TableHeaderForCustomFields from '../TableHeaderForCustomFields';
 import { StickyStyle } from './style';
 
-const HEADER_SIZE = 50;
-
 type Props = {
-  columnCount: number,
-  columnWidth: number,
   showAllColumn: boolean,
   customColumns: {
     orderCustomFields: Array<Object>,
@@ -30,8 +26,6 @@ type Props = {
 };
 
 export const StickyHeader = ({
-  columnCount,
-  columnWidth,
   showAllColumn,
   customColumns: {
     orderCustomFields,
@@ -62,11 +56,7 @@ export const StickyHeader = ({
     [templateColumns]
   );
   return (
-    <div
-      ref={innerRef}
-      className={StickyStyle}
-      style={{ height: HEADER_SIZE, width: columnCount * columnWidth }}
-    >
+    <div ref={innerRef} className={StickyStyle}>
       <TableHeader
         entity="ORDER"
         showAll={showAllColumn}

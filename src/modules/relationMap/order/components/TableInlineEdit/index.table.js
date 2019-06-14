@@ -660,9 +660,9 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                         orderItemIds,
                         batchIds,
                       })}
-                      rowHeight={30}
+                      rowHeight={40}
                       columnCount={templateColumns.length}
-                      columnWidth={200}
+                      columnWidth={210}
                       showAllColumn={showAll}
                       customColumns={{
                         orderCustomFields,

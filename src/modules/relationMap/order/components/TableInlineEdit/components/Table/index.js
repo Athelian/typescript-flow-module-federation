@@ -71,7 +71,12 @@ export default function Table({ customColumns, showAllColumn, lines, ...renderOp
   const sidebarRef = React.useRef();
   const bodyRef = React.useRef();
 
-  const handleScroll = () => {};
+  const handleScroll = ({ scrollLeft, scrollTop }: { scrollLeft: number, scrollTop: number }) => {
+    if (bodyRef.current) {
+      if (headerRef.current) headerRef.current.scrollLeft = scrollLeft;
+      if (sidebarRef.current) sidebarRef.current.scrollTop = scrollTop;
+    }
+  };
 
   return (
     <>
@@ -87,11 +92,11 @@ export default function Table({ customColumns, showAllColumn, lines, ...renderOp
           <Grid
             {...renderOptions}
             innerRef={bodyRef}
-            onScroll={handleScroll}
             width={width - 30}
             height={height - 50}
             innerElementType={innerElementType}
             className={TableWrapperStyle}
+            onScroll={handleScroll}
           >
             {ItemWrapper}
           </Grid>
