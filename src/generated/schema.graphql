@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jun 13 2019 10:19:06 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Jun 14 2019 11:34:02 GMT+0900 (Tokyo Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28679,6 +28679,48 @@ input GroupUpdateInput {
   dummy: Boolean
 }
 
+type Import {
+  id: ID!
+}
+
+type ImportEvent {
+  lifecycle: ImportLifecycle!
+  sheet: String
+  error: String
+  violations: [Violation!]!
+}
+
+enum ImportLifecycle {
+  """Start"""
+  Start
+
+  """StartRead"""
+  StartRead
+
+  """EndRead"""
+  EndRead
+
+  """StartPrepare"""
+  StartPrepare
+
+  """EndPrepare"""
+  EndPrepare
+
+  """StartImport"""
+  StartImport
+
+  """EndImport"""
+  EndImport
+
+  """End"""
+  End
+
+  """Error"""
+  Error
+}
+
+union ImportPayload = Import | BadRequest | Forbidden | NotFound
+
 enum Incoterm {
   FAS
   FOB
@@ -29817,6 +29859,7 @@ type Mutation {
   integrationLinkReset(id: ID!): EmptyPayload
   integrationLinkExecute(id: ID!): EmptyPayload
   integrationLinkDelete(id: ID!): EmptyPayload
+  import(file: Upload!): ImportPayload!
 }
 
 type NotFound {
@@ -30601,6 +30644,7 @@ input ProductProviderFilterInput {
   productId: ID
   exporterId: ID
   supplierId: ID
+  importerId: ID
   tagIds: [ID!]
   milestoneId: ID
   milestoneRelatedId: ID
@@ -30835,6 +30879,7 @@ type Query {
   role(id: ID!): RolePayload!
   roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPagination!
   permissions: [String!]!
+  orderShipmentTable(entities: [EntityInput!]!): [EntityPayload!]!
 }
 
 type Reference {
@@ -86716,6 +86761,7 @@ type StringValue {
 
 type Subscription {
   notificationNew: Notification!
+  importEvent(id: ID!): ImportEvent!
 }
 
 interface Supervised {
@@ -87226,6 +87272,12 @@ enum TransportType {
   """Sea"""
   Sea
 }
+
+"""
+The `Upload` scalar type represents a part name of multipart request to a File.
+The Upload type is only meant to be use as an input, not as an output.
+"""
+scalar Upload
 
 type User implements Model & Tagged & Memorizable {
   email: String!
