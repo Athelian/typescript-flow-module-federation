@@ -218,6 +218,10 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
     isNew: true,
     batchQuantityRevisions: [],
     autoCalculatePackageQuantity: true,
+    customFields: {
+      mask: null,
+      fieldValues: [],
+    },
     todo: {
       tasks: [],
       taskTemplate: null,
