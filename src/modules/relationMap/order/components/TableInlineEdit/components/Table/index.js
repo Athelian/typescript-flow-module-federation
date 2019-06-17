@@ -53,7 +53,7 @@ const ItemRenderer = ({
     {!cell ? (
       <TableDisableCell id={`${position.rowIndex}-${position.columnIndex}`} />
     ) : (
-      <Cell id={`${position.rowIndex}-${position.columnIndex}`} {...cell} />
+      <Cell inputId={`${position.rowIndex}-${position.columnIndex}`} {...cell} />
     )}
   </div>
 );

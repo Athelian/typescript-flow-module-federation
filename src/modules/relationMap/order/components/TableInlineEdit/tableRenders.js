@@ -111,6 +111,7 @@ export function generateEmptyShipmentsData({
         })),
         ...columns.shipmentCustomFieldsFilter.map(field => ({
           ...field,
+          type: 'customFields',
           cell: `shipments.${shipmentId}`,
           values: editData.shipments[shipmentId],
           validator: shipmentValidator,
@@ -169,6 +170,7 @@ export function generateEmptyContainerShipmentsData({
               })),
               ...columns.shipmentCustomFieldsFilter.map(field => ({
                 ...field,
+                type: 'customFields',
                 cell: `shipments.${shipmentId}`,
                 values: editData.shipments[shipmentId],
                 validator: shipmentValidator,
@@ -192,16 +194,19 @@ function orderColumns({
   batchIds,
   orderItems,
   orderId,
+  isCustomField,
 }: {
   columns: Array<Object>,
   orderItems: Array<Object>,
   editData: Object,
   batchIds: Array<string>,
   orderId: string,
+  isCustomField: boolean,
 }) {
   return orderItems.length === 0
     ? columns.map(field => ({
         ...field,
+        type: isCustomField ? 'customFields' : field.type,
         cell: `orders.${orderId}`,
         validator: orderValidator,
         values: editData.orders[orderId],
@@ -211,6 +216,7 @@ function orderColumns({
           Object.keys(orderItem.relation.batch || {}).length === 0
             ? columns.map(field => ({
                 ...field,
+                type: isCustomField ? 'customFields' : field.type,
                 cell: `orders.${orderId}`,
                 values: editData.orders[orderId],
                 validator: orderValidator,
@@ -221,6 +227,7 @@ function orderColumns({
                 .map(() =>
                   columns.map(field => ({
                     ...field,
+                    type: isCustomField ? 'customFields' : field.type,
                     cell: `orders.${orderId}`,
                     values: editData.orders[orderId],
                     validator: orderValidator,
@@ -236,11 +243,13 @@ function orderItemColumns({
   editData,
   batchIds,
   orderItems,
+  isCustomField,
 }: {
   columns: Array<Object>,
   orderItems: Array<Object>,
   editData: Object,
   batchIds: Array<string>,
+  isCustomField: boolean,
 }) {
   return flattenDeep(
     orderItems.length === 0
@@ -249,6 +258,7 @@ function orderItemColumns({
           Object.keys(orderItem.relation.batch || {}).length === 0
             ? columns.map(field => ({
                 ...field,
+                type: isCustomField ? 'customFields' : field.type,
                 cell: `orderItems.${orderItem.data.id}`,
                 values: editData.orderItems[orderItem.data.id],
                 editData,
@@ -258,6 +268,7 @@ function orderItemColumns({
                 .map(() =>
                   columns.map(field => ({
                     ...field,
+                    type: isCustomField ? 'customFields' : field.type,
                     cell: `orderItems.${orderItem.data.id}`,
                     values: editData.orderItems[orderItem.data.id],
                     editData,
@@ -274,6 +285,7 @@ function batchColumns({
   orderItems,
   totalLines,
   batches,
+  isCustomField,
 }: {
   columns: Array<Object>,
   batches: Array<Object>,
@@ -281,6 +293,7 @@ function batchColumns({
   editData: Object,
   batchIds: Array<string>,
   totalLines: number,
+  isCustomField: boolean,
 }) {
   return flattenDeep(
     batchIds.length === 0
@@ -292,6 +305,7 @@ function batchColumns({
               .map(batch =>
                 columns.map(field => ({
                   ...field,
+                  type: isCustomField ? 'customFields' : field.type,
                   cell: `batches.${batch.id}`,
                   values: editData.batches[batch.id],
                   validator: batchValidator,
@@ -346,6 +360,7 @@ function shipmentColumns({
   orderItems,
   totalLines,
   batches,
+  isCustomField,
 }: {
   columns: Array<Object>,
   batches: Array<Object>,
@@ -354,6 +369,7 @@ function shipmentColumns({
   mappingObjects: Object,
   batchIds: Array<string>,
   totalLines: number,
+  isCustomField: boolean,
 }) {
   return flattenDeep([
     ...orderItems.map(orderItem =>
@@ -365,6 +381,7 @@ function shipmentColumns({
           if (!shipmentId || !shipment) return columns.map(() => null);
           return columns.map(field => ({
             ...field,
+            type: isCustomField ? 'customFields' : field.type,
             cell: `shipments.${shipmentId || shipment.data.id}`,
             values: editData.shipments[shipmentId || shipment.data.id],
             validator: shipmentValidator,
@@ -382,12 +399,14 @@ function productColumns({
   batchIds,
   productIds,
   orderItems,
+  isCustomField,
 }: {
   columns: Array<Object>,
   orderItems: Array<Object>,
   editData: Object,
   batchIds: Array<string>,
   productIds: Array<string>,
+  isCustomField: boolean,
 }) {
   return flattenDeep(
     productIds.length === 0
@@ -396,6 +415,7 @@ function productColumns({
           Object.keys(orderItem.relation.batch || {}).length === 0
             ? columns.map(field => ({
                 ...field,
+                type: isCustomField ? 'customFields' : field.type,
                 cell: `products.${orderItem.data.productProvider.product}`,
                 values: editData.products[orderItem.data.productProvider.product],
                 validator: productValidator,
@@ -406,6 +426,7 @@ function productColumns({
                 .map(() =>
                   columns.map(field => ({
                     ...field,
+                    type: isCustomField ? 'customFields' : field.type,
                     cell: `products.${orderItem.data.productProvider.product}`,
                     values: editData.products[orderItem.data.productProvider.product],
                     validator: productValidator,
@@ -444,6 +465,7 @@ function generateTableData({
     orderId,
     batchIds,
     orderItems,
+    isCustomField: false,
   });
 
   const customOrderRows = orderColumns({
@@ -452,6 +474,7 @@ function generateTableData({
     orderId,
     batchIds,
     orderItems,
+    isCustomField: true,
   });
 
   const itemRows = orderItemColumns({
@@ -459,6 +482,7 @@ function generateTableData({
     editData,
     batchIds,
     orderItems,
+    isCustomField: false,
   });
 
   const customItemRows = orderItemColumns({
@@ -466,6 +490,7 @@ function generateTableData({
     editData,
     batchIds,
     orderItems,
+    isCustomField: true,
   });
 
   const batchRows = batchColumns({
@@ -475,6 +500,7 @@ function generateTableData({
     orderItems,
     totalLines,
     batches,
+    isCustomField: false,
   });
 
   const customBatchRows = batchColumns({
@@ -484,6 +510,7 @@ function generateTableData({
     orderItems,
     totalLines,
     batches,
+    isCustomField: true,
   });
 
   const containerRows = containerColumns({
@@ -503,6 +530,7 @@ function generateTableData({
     orderItems,
     totalLines,
     batches,
+    isCustomField: false,
   });
 
   const customShipmentRows = shipmentColumns({
@@ -513,6 +541,7 @@ function generateTableData({
     orderItems,
     totalLines,
     batches,
+    isCustomField: true,
   });
 
   const productRows = productColumns({
@@ -522,6 +551,7 @@ function generateTableData({
     batchIds,
     productIds,
     orderItems,
+    isCustomField: false,
   });
 
   const customProductRows = productColumns({
@@ -531,6 +561,7 @@ function generateTableData({
     batchIds,
     productIds,
     orderItems,
+    isCustomField: true,
   });
 
   if (columns.orderColumnFieldsFilter.length) {

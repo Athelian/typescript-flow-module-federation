@@ -35,9 +35,10 @@ import {
   InlineToggleButton,
 } from 'modules/relationMap/order/components/TableInlineEdit/components/TableItem/components';
 import TableDisableCell from '../TableDisableCell';
+import CustomFieldCell from './CustomFieldCell';
 
 type Props = {
-  id: string,
+  inputId: string,
   cell: string,
   name: string,
   type: string,
@@ -248,22 +249,27 @@ function renderItem({
   }
 }
 
-function Cell({
-  cell,
-  id,
-  name,
-  type,
-  meta,
-  getFieldValue,
-  getFieldName,
-  values,
-  editData,
-  validator,
-}: Props) {
+function Cell(props: Props) {
+  const {
+    cell,
+    inputId,
+    name,
+    type,
+    meta,
+    getFieldValue,
+    getFieldName,
+    values,
+    editData,
+    validator,
+  } = props;
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const { user } = useContext(UserContext);
   if (!values) return null;
+
+  if (type === 'customFields') {
+    return <CustomFieldCell {...props} />;
+  }
 
   const value = getFieldValue ? getFieldValue(values, editData) : getByPath(name, values);
   const fieldName = getFieldName ? getFieldName(values) : name;
@@ -273,7 +279,7 @@ function Cell({
     <FormField key={name} name={cellName} initValue={value} validator={validator} values={values}>
       {() =>
         renderItem({
-          id,
+          id: inputId,
           name: cellName,
           type,
           meta,
