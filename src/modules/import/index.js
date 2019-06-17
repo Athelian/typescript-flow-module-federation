@@ -3,9 +3,9 @@ import * as React from 'react';
 import Dialog from 'components/Dialog';
 import { FormattedMessage, injectIntl, type InjectIntlProvidedProps } from 'react-intl';
 import { Mutation, Subscription } from 'react-apollo';
-import { ButtonStyle } from 'components/Buttons/ExportButton/style';
 import { BaseButton } from 'components/Buttons';
 import Icon from 'components/Icon';
+import { getByPathWithDefault } from 'utils/fp';
 import Progress from './Progress';
 import Errors from './Errors';
 import FileInput from './FileInput';
@@ -22,10 +22,14 @@ import {
 } from './style';
 
 // 9 sheets * 6 events
-const EventSheetProgress = 100 / (9 * 6);
+const EventIncrement = 100 / (9 * 6);
 
-const Import = ({ intl }: InjectIntlProvidedProps) => {
-  const [open, setOpen] = React.useState(false);
+type Props = {
+  open: boolean,
+  onRequestClose: () => void,
+};
+
+const Import = ({ open, onRequestClose, intl }: Props & InjectIntlProvidedProps) => {
   const [importing, setImporting] = React.useState(false);
   const [importId, setImportId] = React.useState(null);
   const [progress, setProgress] = React.useState(0);
@@ -36,28 +40,14 @@ const Import = ({ intl }: InjectIntlProvidedProps) => {
 
   return (
     <>
-      <BaseButton
-        icon="IMPORT"
-        label={<FormattedMessage {...messages.import} />}
-        textColor="GRAY_LIGHT"
-        backgroundColor="WHITE"
-        hoverBackgroundColor="GRAY_SUPER_LIGHT"
-        className={ButtonStyle}
-        onClick={() => setOpen(true)}
-      />
-
       {importId !== null && (
         <Subscription
           subscription={importEventSubscription}
           variables={{ importId }}
           fetchPolicy="no-cache"
-          onSubscriptionData={({
-            subscriptionData: {
-              data: {
-                data: { importEvent },
-              },
-            },
-          }) => {
+          onSubscriptionData={({ subscriptionData: { data } }) => {
+            const importEvent = getByPathWithDefault({}, 'data.importEvent', data);
+
             switch (importEvent.lifecycle) {
               case ImportLifecycle.END:
                 if (errors.length === 0) {
@@ -82,7 +72,7 @@ const Import = ({ intl }: InjectIntlProvidedProps) => {
               case ImportLifecycle.END_PREPARE:
               case ImportLifecycle.START_IMPORT:
               case ImportLifecycle.END_IMPORT:
-                setProgress(progress + EventSheetProgress);
+                setProgress(progress + EventIncrement);
                 setMessage(`${importEvent.lifecycle} "${importEvent.sheet}"`);
                 setErrors(
                   importEvent.violations.map(violation =>
@@ -100,7 +90,7 @@ const Import = ({ intl }: InjectIntlProvidedProps) => {
         />
       )}
 
-      <Dialog isOpen={open} width="800px" onRequestClose={() => setOpen(false)}>
+      <Dialog isOpen={open} width="800px" onRequestClose={onRequestClose}>
         <div className={ContainerStyle}>
           <header className={HeaderStyle}>
             <i className={HeaderIconStyle}>
@@ -116,7 +106,7 @@ const Import = ({ intl }: InjectIntlProvidedProps) => {
                 /* download */
               }}
             />
-            <button type="button" onClick={() => setOpen(false)} className={CancelButtonStyle}>
+            <button type="button" onClick={onRequestClose} className={CancelButtonStyle}>
               <Icon icon="CLEAR" />
             </button>
           </header>

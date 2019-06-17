@@ -12,7 +12,7 @@ export const UserMenuDropDownWrapperStyle = (isOpen: boolean): string => css`
   width: 150px;
   background: ${colors.WHITE};
   ${borderRadiuses.MAIN};
-  height: ${isOpen ? '80px' : '0px'};
+  height: ${isOpen ? '120px' : '0px'};
   ${transitions.EXPAND};
   overflow: hidden;
 `;

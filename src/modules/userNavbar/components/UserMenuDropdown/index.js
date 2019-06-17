@@ -6,10 +6,12 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import Icon from 'components/Icon';
-import { AuthenticationConsumer } from 'modules/authentication';
 import LogoutDialog from 'components/Dialog/LogoutDialog';
+import { AuthenticationConsumer } from 'modules/authentication';
 import { logOutMutation } from 'modules/userNavbar/mutation';
 import messages from 'modules/userNavbar/messages';
+import Import from 'modules/import';
+import { isAppInProduction } from 'utils/env';
 import {
   UserMenuDropDownWrapperStyle,
   UserMenuItemWrapperStyle,
@@ -22,88 +24,100 @@ type Props = {
   toggleUserMenu: Function,
 };
 
-class UserMenuDropdown extends React.Component<Props> {
-  handleLogout = (logoutDialogToggle: Function) => {
-    const { toggleUserMenu } = this.props;
-    logoutDialogToggle(true);
-    toggleUserMenu();
-  };
+const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
+  const [importOpen, setImportOpen] = React.useState(false);
 
-  handleProfile = () => {
-    const { toggleUserMenu } = this.props;
-    navigate('/profile');
-    toggleUserMenu();
-  };
+  return (
+    <div className={UserMenuDropDownWrapperStyle(isOpen)}>
+      <BooleanValue>
+        {({ value: isLogoutDialogOpen, set: logoutDialogToggle }) => (
+          <>
+            <button
+              className={UserMenuItemWrapperStyle}
+              onClick={() => {
+                navigate('/profile');
+                toggleUserMenu();
+              }}
+              type="button"
+            >
+              <div className={UserMenuItemStyle}>
+                <FormattedMessage {...messages.profile} />
+              </div>
+              <div className={UserMenuItemIconStyle}>
+                <Icon icon="PROFILE" />
+              </div>
+            </button>
 
-  render() {
-    const { isOpen } = this.props;
-
-    return (
-      <div className={UserMenuDropDownWrapperStyle(isOpen)}>
-        <BooleanValue>
-          {({ value: isLogoutDialogOpen, set: logoutDialogToggle }) => (
-            <>
+            {!isAppInProduction && (
               <button
                 className={UserMenuItemWrapperStyle}
-                onClick={() => this.handleProfile()}
+                onClick={() => {
+                  toggleUserMenu();
+                  setImportOpen(true);
+                }}
                 type="button"
               >
                 <div className={UserMenuItemStyle}>
-                  <FormattedMessage {...messages.profile} />
+                  <FormattedMessage {...messages.import} />
                 </div>
                 <div className={UserMenuItemIconStyle}>
-                  <Icon icon="PROFILE" />
+                  <Icon icon="IMPORT" />
                 </div>
               </button>
+            )}
 
-              <button
-                className={UserMenuItemWrapperStyle}
-                onClick={() => this.handleLogout(logoutDialogToggle)}
-                data-testid="logout-button"
-                type="button"
-              >
-                <div className={UserMenuItemStyle}>
-                  <FormattedMessage {...messages.logout} />
-                </div>
-                <div className={UserMenuItemIconStyle}>
-                  <Icon icon="LOGOUT" />
-                </div>
-              </button>
+            <button
+              className={UserMenuItemWrapperStyle}
+              onClick={() => {
+                logoutDialogToggle(true);
+                toggleUserMenu();
+              }}
+              data-testid="logout-button"
+              type="button"
+            >
+              <div className={UserMenuItemStyle}>
+                <FormattedMessage {...messages.logout} />
+              </div>
+              <div className={UserMenuItemIconStyle}>
+                <Icon icon="LOGOUT" />
+              </div>
+            </button>
 
-              <AuthenticationConsumer>
-                {({ setAuthenticated }) => (
-                  <Mutation
-                    mutation={logOutMutation}
-                    onCompleted={() => {
-                      setAuthenticated(false);
-                      // clear all cache after logout
-                      if (window.localStorage) {
-                        window.localStorage.clear();
-                      }
-                      // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
-                      apolloClient.resetStore();
-                    }}
-                  >
-                    {logout => (
-                      <LogoutDialog
-                        isOpen={isLogoutDialogOpen}
-                        onRequestClose={() => logoutDialogToggle(false)}
-                        onCancel={() => logoutDialogToggle(false)}
-                        onConfirm={async () => {
-                          await logout({});
-                          navigate('/login');
-                        }}
-                      />
-                    )}
-                  </Mutation>
-                )}
-              </AuthenticationConsumer>
-            </>
-          )}
-        </BooleanValue>
-      </div>
-    );
-  }
-}
+            <AuthenticationConsumer>
+              {({ setAuthenticated }) => (
+                <Mutation
+                  mutation={logOutMutation}
+                  onCompleted={() => {
+                    setAuthenticated(false);
+                    // clear all cache after logout
+                    if (window.localStorage) {
+                      window.localStorage.clear();
+                    }
+                    // refer apollo client doc https://www.apollographql.com/docs/react/recipes/authentication#login-logouts
+                    apolloClient.resetStore();
+                  }}
+                >
+                  {logout => (
+                    <LogoutDialog
+                      isOpen={isLogoutDialogOpen}
+                      onRequestClose={() => logoutDialogToggle(false)}
+                      onCancel={() => logoutDialogToggle(false)}
+                      onConfirm={async () => {
+                        await logout({});
+                        navigate('/login');
+                      }}
+                    />
+                  )}
+                </Mutation>
+              )}
+            </AuthenticationConsumer>
+          </>
+        )}
+      </BooleanValue>
+
+      <Import open={importOpen} onRequestClose={() => setImportOpen(false)} />
+    </div>
+  );
+};
 
 export default UserMenuDropdown;

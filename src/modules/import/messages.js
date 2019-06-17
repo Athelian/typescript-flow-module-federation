@@ -2,10 +2,6 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  import: {
-    id: 'modules.Import.import',
-    defaultMessage: 'IMPORT',
-  },
   header: {
     id: 'modules.Import.header',
     defaultMessage: 'IMPORT FILE IN ZENPORT TEMPLATE',
