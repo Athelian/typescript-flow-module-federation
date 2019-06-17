@@ -19,7 +19,6 @@ import Cell from './Cell';
 type Props = {
   columnCount: number,
   columnWidth: number,
-  rowCount: number,
   rowHeight: number,
   showAllColumn: boolean,
   customColumns: Object,
@@ -90,6 +89,7 @@ const createItemData = memoize((itemData: Object) => {
     .filter(rows => rows.values && rows.values.length > 0)
     .map(item => item.values)
     .reduce((result, rows) => result.concat(rows), []);
+
   return data;
 });
 
@@ -110,7 +110,9 @@ export default function Table({
       if (sidebarRef.current) sidebarRef.current.scrollTop = scrollTop;
     }
   };
-
+  console.warn({
+    renderOptions,
+  });
   const data = createItemData(itemData);
   return (
     <>
@@ -127,6 +129,7 @@ export default function Table({
           <Grid
             {...renderOptions}
             itemData={data}
+            rowCount={data.length}
             innerRef={bodyRef}
             width={width - 30}
             height={height - 50}

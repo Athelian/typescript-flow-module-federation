@@ -48,7 +48,7 @@ import normalize from './normalize';
 import { EditTableViewWrapperStyle, NavbarWrapperStyle, LastTemplateUsedStyle } from './style';
 import { keyMap, handlers } from './keyMap';
 import { Table } from './components';
-import { findColumnsForCustomFields, findColumns, totalRow } from './tableRenders';
+import { findColumnsForCustomFields, findColumns } from './tableRenders';
 
 type Props = {
   onCancel: () => void,
@@ -609,13 +609,6 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                         showAll,
                         templateColumns,
                       }}
-                      rowCount={totalRow({
-                        mappingObjects,
-                        targetIds,
-                        orderIds,
-                        orderItemIds,
-                        batchIds,
-                      })}
                       rowHeight={40}
                       columnCount={showAll ? allColumnIds.length : templateColumns.length}
                       columnWidth={210}

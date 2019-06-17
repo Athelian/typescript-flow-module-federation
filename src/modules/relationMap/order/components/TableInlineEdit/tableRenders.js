@@ -6,45 +6,6 @@ import shipmentValidator from 'modules/shipment/form/validator';
 import productValidator from 'modules/product/form/validator';
 import { totalLinePerOrder } from './helpers';
 
-export function totalRow({
-  mappingObjects,
-  targetIds,
-  orderItemIds,
-  orderIds,
-  batchIds,
-}: {
-  mappingObjects: Object,
-  targetIds: Object,
-  orderIds: Array<string>,
-  orderItemIds: Array<string>,
-  batchIds: Array<string>,
-}) {
-  let total = 0;
-  orderIds.forEach(orderId => {
-    const order = mappingObjects.order[orderId];
-    if (!order) return;
-    const orderItems = (Object.values(mappingObjects.orderItem || {}): any).filter(
-      item => order.relation.orderItem[item.data.id] && orderItemIds.includes(item.data.id)
-    );
-    total += totalLinePerOrder(orderItems, batchIds);
-  });
-  return (
-    total +
-    Object.entries(mappingObjects.shipmentNoRelation || {}).length +
-    Object.entries(mappingObjects.shipment || {})
-      .filter(
-        ([shipmentId]) =>
-          targetIds.shipmentIds.includes(shipmentId) &&
-          !mappingObjects.shipmentNoRelation[shipmentId]
-      )
-      .map(([shipmentId]) =>
-        mappingObjects.shipment[shipmentId].data.containers.filter(
-          item => item.batches.length === 0
-        )
-      ).length
-  );
-}
-
 export function findColumns({
   fields,
   templateColumns,
@@ -95,29 +56,31 @@ export function generateEmptyShipmentsData({
       type: 'shipment',
       id: shipmentId,
       values: [
-        ...columns.orderColumnFieldsFilter.map(() => null),
-        ...columns.orderCustomFieldsFilter.map(() => null),
-        ...columns.orderItemColumnFieldsFilter.map(() => null),
-        ...columns.orderItemCustomFieldsFilter.map(() => null),
-        ...columns.batchColumnFieldsFilter.map(() => null),
-        ...columns.batchCustomFieldsFilter.map(() => null),
-        ...columns.containerColumnFieldsFilter.map(() => null),
-        ...columns.shipmentColumnFieldsFilter.map(field => ({
-          ...field,
-          values: editData.shipments[shipmentId],
-          cell: `shipments.${shipmentId}`,
-          validator: shipmentValidator,
-          editData,
-        })),
-        ...columns.shipmentCustomFieldsFilter.map(field => ({
-          ...field,
-          type: 'customFields',
-          cell: `shipments.${shipmentId}`,
-          values: editData.shipments[shipmentId],
-          validator: shipmentValidator,
-          editData,
-        })),
-        ...columns.productCustomFieldsFilter.map(() => null),
+        [
+          ...columns.orderColumnFieldsFilter.map(() => null),
+          ...columns.orderCustomFieldsFilter.map(() => null),
+          ...columns.orderItemColumnFieldsFilter.map(() => null),
+          ...columns.orderItemCustomFieldsFilter.map(() => null),
+          ...columns.batchColumnFieldsFilter.map(() => null),
+          ...columns.batchCustomFieldsFilter.map(() => null),
+          ...columns.containerColumnFieldsFilter.map(() => null),
+          ...columns.shipmentColumnFieldsFilter.map(field => ({
+            ...field,
+            values: editData.shipments[shipmentId],
+            cell: `shipments.${shipmentId}`,
+            validator: shipmentValidator,
+            editData,
+          })),
+          ...columns.shipmentCustomFieldsFilter.map(field => ({
+            ...field,
+            type: 'customFields',
+            cell: `shipments.${shipmentId}`,
+            values: editData.shipments[shipmentId],
+            validator: shipmentValidator,
+            editData,
+          })),
+          ...columns.productCustomFieldsFilter.map(() => null),
+        ],
       ],
     }))
   ): Array<{
@@ -149,34 +112,36 @@ export function generateEmptyContainerShipmentsData({
             id: shipmentId,
             container,
             values: [
-              ...columns.orderColumnFieldsFilter.map(() => null),
-              ...columns.orderCustomFieldsFilter.map(() => null),
-              ...columns.orderItemColumnFieldsFilter.map(() => null),
-              ...columns.orderItemCustomFieldsFilter.map(() => null),
-              ...columns.batchColumnFieldsFilter.map(() => null),
-              ...columns.batchCustomFieldsFilter.map(() => null),
-              ...columns.containerColumnFieldsFilter.map(field => ({
-                ...field,
-                cell: `containers.${container.id}`,
-                values: editData.containers[container.id],
-                editData,
-              })),
-              ...columns.shipmentColumnFieldsFilter.map(field => ({
-                ...field,
-                cell: `shipments.${shipmentId}`,
-                values: editData.shipments[shipmentId],
-                validator: shipmentValidator,
-                editData,
-              })),
-              ...columns.shipmentCustomFieldsFilter.map(field => ({
-                ...field,
-                type: 'customFields',
-                cell: `shipments.${shipmentId}`,
-                values: editData.shipments[shipmentId],
-                validator: shipmentValidator,
-                editData,
-              })),
-              ...columns.productCustomFieldsFilter.map(() => null),
+              [
+                ...columns.orderColumnFieldsFilter.map(() => null),
+                ...columns.orderCustomFieldsFilter.map(() => null),
+                ...columns.orderItemColumnFieldsFilter.map(() => null),
+                ...columns.orderItemCustomFieldsFilter.map(() => null),
+                ...columns.batchColumnFieldsFilter.map(() => null),
+                ...columns.batchCustomFieldsFilter.map(() => null),
+                ...columns.containerColumnFieldsFilter.map(field => ({
+                  ...field,
+                  cell: `containers.${container.id}`,
+                  values: editData.containers[container.id],
+                  editData,
+                })),
+                ...columns.shipmentColumnFieldsFilter.map(field => ({
+                  ...field,
+                  cell: `shipments.${shipmentId}`,
+                  values: editData.shipments[shipmentId],
+                  validator: shipmentValidator,
+                  editData,
+                })),
+                ...columns.shipmentCustomFieldsFilter.map(field => ({
+                  ...field,
+                  type: 'customFields',
+                  cell: `shipments.${shipmentId}`,
+                  values: editData.shipments[shipmentId],
+                  validator: shipmentValidator,
+                  editData,
+                })),
+                ...columns.productCustomFieldsFilter.map(() => null),
+              ],
             ],
           }))
       )
@@ -564,111 +529,106 @@ function generateTableData({
     isCustomField: true,
   });
 
-  if (columns.orderColumnFieldsFilter.length) {
-    for (
-      let index = 0;
-      index < orderRows.length / columns.orderColumnFieldsFilter.length;
-      index += 1
-    ) {
-      const row = [];
-      const orderRow = slice(
-        orderRows,
-        index * columns.orderColumnFieldsFilter.length,
-        (index + 1) * columns.orderColumnFieldsFilter.length
+  console.warn({ totalLines });
+  for (let index = 0; index < totalLines; index += 1) {
+    const row = [];
+    const orderRow = slice(
+      orderRows,
+      index * columns.orderColumnFieldsFilter.length,
+      (index + 1) * columns.orderColumnFieldsFilter.length
+    );
+    row.push(orderRow);
+
+    if (columns.orderCustomFieldsFilter.length) {
+      const customOrderRow = slice(
+        customOrderRows,
+        index * columns.orderCustomFieldsFilter.length,
+        (index + 1) * columns.orderCustomFieldsFilter.length
       );
-      row.push(orderRow);
-
-      if (columns.orderCustomFieldsFilter.length) {
-        const customOrderRow = slice(
-          customOrderRows,
-          index * columns.orderCustomFieldsFilter.length,
-          (index + 1) * columns.orderCustomFieldsFilter.length
-        );
-        row.push(customOrderRow);
-      }
-
-      if (columns.orderItemColumnFieldsFilter.length) {
-        const itemRow = slice(
-          itemRows,
-          index * columns.orderItemColumnFieldsFilter.length,
-          (index + 1) * columns.orderItemColumnFieldsFilter.length
-        );
-        row.push(itemRow);
-      }
-
-      if (columns.orderItemCustomFieldsFilter.length) {
-        const customItemRow = slice(
-          customItemRows,
-          index * columns.orderItemCustomFieldsFilter.length,
-          (index + 1) * columns.orderItemCustomFieldsFilter.length
-        );
-        row.push(customItemRow);
-      }
-
-      if (columns.batchColumnFieldsFilter.length) {
-        const batchRow = slice(
-          batchRows,
-          index * columns.batchColumnFieldsFilter.length,
-          (index + 1) * columns.batchColumnFieldsFilter.length
-        );
-        row.push(batchRow);
-      }
-
-      if (columns.batchCustomFieldsFilter.length) {
-        const customBatchRow = slice(
-          customBatchRows,
-          index * columns.batchCustomFieldsFilter.length,
-          (index + 1) * columns.batchCustomFieldsFilter.length
-        );
-        row.push(customBatchRow);
-      }
-
-      if (columns.containerColumnFieldsFilter.length) {
-        const containerRow = slice(
-          containerRows,
-          index * columns.containerColumnFieldsFilter.length,
-          (index + 1) * columns.containerColumnFieldsFilter.length
-        );
-        row.push(containerRow);
-      }
-
-      if (columns.shipmentColumnFieldsFilter.length) {
-        const shipmentRow = slice(
-          shipmentRows,
-          index * columns.shipmentColumnFieldsFilter.length,
-          (index + 1) * columns.shipmentColumnFieldsFilter.length
-        );
-        row.push(shipmentRow);
-      }
-
-      if (columns.shipmentCustomFieldsFilter.length) {
-        const customShipmentRow = slice(
-          customShipmentRows,
-          index * columns.shipmentCustomFieldsFilter.length,
-          (index + 1) * columns.shipmentCustomFieldsFilter.length
-        );
-        row.push(customShipmentRow);
-      }
-
-      if (columns.productColumnFieldsFilter.length) {
-        const productRow = slice(
-          productRows,
-          index * columns.productColumnFieldsFilter.length,
-          (index + 1) * columns.productColumnFieldsFilter.length
-        );
-        row.push(productRow);
-      }
-
-      if (columns.productCustomFieldsFilter.length) {
-        const customProductRow = slice(
-          customProductRows,
-          index * columns.productCustomFieldsFilter.length,
-          (index + 1) * columns.productCustomFieldsFilter.length
-        );
-        row.push(customProductRow);
-      }
-      rows.push(flattenDeep(row));
+      row.push(customOrderRow);
     }
+
+    if (columns.orderItemColumnFieldsFilter.length) {
+      const itemRow = slice(
+        itemRows,
+        index * columns.orderItemColumnFieldsFilter.length,
+        (index + 1) * columns.orderItemColumnFieldsFilter.length
+      );
+      row.push(itemRow);
+    }
+
+    if (columns.orderItemCustomFieldsFilter.length) {
+      const customItemRow = slice(
+        customItemRows,
+        index * columns.orderItemCustomFieldsFilter.length,
+        (index + 1) * columns.orderItemCustomFieldsFilter.length
+      );
+      row.push(customItemRow);
+    }
+
+    if (columns.batchColumnFieldsFilter.length) {
+      const batchRow = slice(
+        batchRows,
+        index * columns.batchColumnFieldsFilter.length,
+        (index + 1) * columns.batchColumnFieldsFilter.length
+      );
+      row.push(batchRow);
+    }
+
+    if (columns.batchCustomFieldsFilter.length) {
+      const customBatchRow = slice(
+        customBatchRows,
+        index * columns.batchCustomFieldsFilter.length,
+        (index + 1) * columns.batchCustomFieldsFilter.length
+      );
+      row.push(customBatchRow);
+    }
+
+    if (columns.containerColumnFieldsFilter.length) {
+      const containerRow = slice(
+        containerRows,
+        index * columns.containerColumnFieldsFilter.length,
+        (index + 1) * columns.containerColumnFieldsFilter.length
+      );
+      row.push(containerRow);
+    }
+
+    if (columns.shipmentColumnFieldsFilter.length) {
+      const shipmentRow = slice(
+        shipmentRows,
+        index * columns.shipmentColumnFieldsFilter.length,
+        (index + 1) * columns.shipmentColumnFieldsFilter.length
+      );
+      row.push(shipmentRow);
+    }
+
+    if (columns.shipmentCustomFieldsFilter.length) {
+      const customShipmentRow = slice(
+        customShipmentRows,
+        index * columns.shipmentCustomFieldsFilter.length,
+        (index + 1) * columns.shipmentCustomFieldsFilter.length
+      );
+      row.push(customShipmentRow);
+    }
+
+    if (columns.productColumnFieldsFilter.length) {
+      const productRow = slice(
+        productRows,
+        index * columns.productColumnFieldsFilter.length,
+        (index + 1) * columns.productColumnFieldsFilter.length
+      );
+      row.push(productRow);
+    }
+
+    if (columns.productCustomFieldsFilter.length) {
+      const customProductRow = slice(
+        customProductRows,
+        index * columns.productCustomFieldsFilter.length,
+        (index + 1) * columns.productCustomFieldsFilter.length
+      );
+      row.push(customProductRow);
+    }
+    rows.push(flattenDeep(row));
   }
 
   return rows;

@@ -29,7 +29,11 @@ export const Lines = ({
       ))}
       {/* Add row for shipment has empty container */}
       {(Object.entries(mappingObjects.shipment || {}): any)
-        .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
+        .filter(
+          ([shipmentId]) =>
+            targetIds.shipmentIds.includes(shipmentId) &&
+            !mappingObjects.shipmentNoRelation[shipmentId]
+        )
         .map(([shipmentId]) =>
           mappingObjects.shipment[shipmentId].data.containers
             .filter(item => item.batches.length === 0)
