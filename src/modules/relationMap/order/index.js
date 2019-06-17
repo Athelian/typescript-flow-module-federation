@@ -304,12 +304,12 @@ const Order = ({ intl }: Props) => {
           const allowToUpdate = hasPermission(RM_ORDER_FOCUS_MANIPULATE);
           const orderIds = getByPathWithDefault([], 'orders.nodes', data).map(order => order.id);
           const itemIds = flatten(
-            Object.keys(orders)
+            Object.keys(orders || {})
               .filter(orderId => orderIds.includes(orderId))
               .map(orderId => orders[orderId].orderItems)
           );
           const batchIds = flatten(
-            Object.keys(orderItems)
+            Object.keys(orderItems || {})
               .filter(itemId => itemIds.includes(itemId))
               .map(itemId => orderItems[itemId].batches)
           );
