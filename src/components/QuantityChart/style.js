@@ -69,17 +69,3 @@ export const BadgeStyle = (positioning: 'top' | 'bottom'): string => css`
   color: ${colors.WHITE};
   padding: 0 3px;
 `;
-
-export const BatchedBadgeStyle: string = css`
-  display: inline-block;
-  position: relative;
-  top: 3px;
-  left: -6px;
-`;
-
-export const ShippedBadgeStyle: string = css`
-  display: inline-block;
-  position: relative;
-  top: -3px;
-  left: -6px;
-`;
