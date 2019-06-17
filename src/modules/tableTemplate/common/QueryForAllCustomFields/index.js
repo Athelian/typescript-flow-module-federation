@@ -16,7 +16,11 @@ type Props = OptionalProps & {
 };
 
 const QueryForAllCustomFieldDefinitions = ({ render, onCompleted }: Props) => (
-  <Query query={allCustomFieldDefinitionsQuery} fetchPolicy="cache-first" onCompleted={onCompleted}>
+  <Query
+    query={allCustomFieldDefinitionsQuery}
+    fetchPolicy="network-only"
+    onCompleted={onCompleted}
+  >
     {({ error, data, loading }) => {
       if (error) {
         if (error.message && error.message.includes('403')) {

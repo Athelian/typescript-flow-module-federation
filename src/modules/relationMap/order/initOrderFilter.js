@@ -3,7 +3,7 @@ export const initOrderFilter = {
   page: 1,
   perPage: 10,
   filter: {
-    query: 'test',
+    query: '',
     archived: false,
   },
   sort: {

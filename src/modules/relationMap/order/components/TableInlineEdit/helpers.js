@@ -977,6 +977,7 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   return rows;
 }
 
+// TODO: investigate why we need to format data on table view for those fields
 export const setPackageBatchData = (batch: ?Object) => {
   return {
     ...batch,

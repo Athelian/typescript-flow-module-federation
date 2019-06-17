@@ -40,7 +40,7 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
         updatedAt: 'DESCENDING',
       },
     }}
-    fetchPolicy="cache-first"
+    fetchPolicy="network-only"
   >
     {({ error, loading, data, fetchMore }) => {
       if (error) {
