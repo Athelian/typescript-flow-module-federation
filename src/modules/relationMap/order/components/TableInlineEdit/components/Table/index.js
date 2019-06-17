@@ -16,7 +16,6 @@ import { Lines } from './Lines';
 import TableDisableCell from '../TableDisableCell';
 import Cell from './Cell';
 
-const GUTTER_SIZE = 5;
 type Props = {
   columnCount: number,
   columnWidth: number,
@@ -32,15 +31,7 @@ type Props = {
 
 const innerElementType = React.forwardRef(
   ({ style, children, ...rest }: { style: Object, children: React.Node }, ref) => (
-    <div
-      ref={ref}
-      style={{
-        ...style,
-        paddingLeft: GUTTER_SIZE,
-        paddingTop: GUTTER_SIZE,
-      }}
-      {...rest}
-    >
+    <div ref={ref} style={{ ...style, position: 'relative' }} {...rest}>
       {children}
     </div>
   )
