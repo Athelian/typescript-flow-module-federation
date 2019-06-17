@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import memoize from 'memoize-one';
 import AutoSizer from 'react-virtualized-auto-sizer';
 // $FlowFixMe: not have flow type yet
 import { FixedSizeGrid as Grid } from 'react-window';
@@ -59,9 +60,9 @@ const ItemRenderer = ({
 }) => (
   <div className={CellStyle} style={style}>
     {!cell ? (
-      <TableDisableCell />
+      <TableDisableCell id={`${position.rowIndex}-${position.columnIndex}`} />
     ) : (
-      <Cell id={`${position.columnIndex}-${position.rowIndex}`} {...cell} />
+      <Cell id={`${position.rowIndex}-${position.columnIndex}`} {...cell} />
     )}
   </div>
 );
@@ -78,14 +79,28 @@ const ItemWrapper = ({
   rowIndex: number,
 }) => {
   const cell = getByPath(`${rowIndex}.${columnIndex}`, data);
-  console.warn({
-    data,
-    cell,
-    columnIndex,
-    rowIndex,
-  });
   return <ItemRenderer cell={cell} position={{ columnIndex, rowIndex }} style={style} />;
 };
+
+// refer this example for how to to optimize rendering with memoize https://react-window.now.sh/#/examples/list/memoized-list-items
+const createItemData = memoize((itemData: Object) => {
+  const { ids, columns, targetIds, editData, mappingObjects } = itemData;
+  const data = [
+    ...generateEmptyShipmentsData({ columns, editData, mappingObjects, targetIds, ...ids }),
+    ...generateEmptyContainerShipmentsData({
+      columns,
+      editData,
+      mappingObjects,
+      targetIds,
+      ...ids,
+    }),
+    ...generateOrdersData({ columns, editData, mappingObjects, targetIds, ...ids }),
+  ]
+    .filter(rows => rows.values && rows.values.length > 0)
+    .map(item => item.values)
+    .reduce((result, rows) => result.concat(rows), []);
+  return data;
+});
 
 export default function Table({
   customColumns,
@@ -105,22 +120,7 @@ export default function Table({
     }
   };
 
-  const { ids, columns, targetIds, editData, mappingObjects } = itemData;
-  const data = [
-    ...generateEmptyShipmentsData({ columns, editData, mappingObjects, targetIds, ...ids }),
-    ...generateEmptyContainerShipmentsData({
-      columns,
-      editData,
-      mappingObjects,
-      targetIds,
-      ...ids,
-    }),
-    ...generateOrdersData({ columns, editData, mappingObjects, targetIds, ...ids }),
-  ]
-    .filter(rows => rows.values && rows.values.length > 0)
-    .map(item => item.values)
-    .reduce((result, rows) => result.concat(rows), []);
-
+  const data = createItemData(itemData);
   return (
     <>
       <StickyHeader

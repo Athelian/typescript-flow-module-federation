@@ -1,5 +1,7 @@
 // @flow
-import React, { useContext } from 'react';
+import React, { useContext, memo } from 'react';
+// $FlowFixMe: not have flow type yet
+import { areEqual } from 'react-window';
 import { capitalize } from 'lodash';
 import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { FormField } from 'modules/form';
@@ -286,4 +288,4 @@ function Cell({
   );
 }
 
-export default Cell;
+export default memo<Props>(Cell, areEqual);
