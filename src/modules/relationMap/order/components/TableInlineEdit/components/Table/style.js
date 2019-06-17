@@ -8,13 +8,9 @@ export const TableWrapperStyle: string = css`
   padding: 5px;
 `;
 
-export const RowStyle = (isEven: boolean) => css`
+export const CellStyle = css`
   display: flex;
-  align-items: center;
-  background-color: white;
-  border-bottom: 1px solid #eee;
-  box-sizing: border-box;
-  background-color: ${isEven ? '#f8f8f0' : '#fff'};
+  padding: 5px;
 `;
 
 export const StickyStyle: string = css`

@@ -39,7 +39,6 @@ import QueryForAllCustomFields from 'modules/tableTemplate/common/QueryForAllCus
 import { formatOrders } from './formatter';
 import { entitiesUpdateManyMutation } from './mutation';
 import {
-  totalLinePerOrder,
   parseChangedData,
   getOrderItemIdsByOrderId,
   getExportColumns,
@@ -49,6 +48,7 @@ import normalize from './normalize';
 import { EditTableViewWrapperStyle, NavbarWrapperStyle, LastTemplateUsedStyle } from './style';
 import { keyMap, handlers } from './keyMap';
 import { Table } from './components';
+import { findColumnsForCustomFields, findColumns, totalRow } from './tableRenders';
 
 type Props = {
   onCancel: () => void,
@@ -70,69 +70,6 @@ type Props = {
   shipments: Array<Object>,
   intl: IntlShape,
 };
-
-function totalRow({
-  mappingObjects,
-  targetIds,
-  orderItemIds,
-  orderIds,
-  batchIds,
-}: {
-  mappingObjects: Object,
-  targetIds: Object,
-  orderIds: Array<string>,
-  orderItemIds: Array<string>,
-  batchIds: Array<string>,
-}) {
-  let total = 0;
-  orderIds.forEach(orderId => {
-    const order = mappingObjects.order[orderId];
-    if (!order) return;
-    const orderItems = (Object.values(mappingObjects.orderItem || {}): any).filter(
-      item => order.relation.orderItem[item.data.id] && orderItemIds.includes(item.data.id)
-    );
-    total += totalLinePerOrder(orderItems, batchIds);
-  });
-  return (
-    total +
-    Object.entries(mappingObjects.shipmentNoRelation || {}).length +
-    Object.entries(mappingObjects.shipment || {}).filter(([shipmentId]) =>
-      targetIds.shipmentIds.includes(shipmentId)
-    ).length
-  );
-}
-
-function findColumns({
-  fields,
-  templateColumns,
-  showAll,
-}: {
-  fields: Array<Object>,
-  templateColumns: Array<string>,
-  showAll: boolean,
-}) {
-  if (templateColumns.length) {
-    return showAll ? fields : fields.filter(item => templateColumns.includes(item.columnName));
-  }
-  return fields;
-}
-
-function findColumnsForCustomFields({
-  showAll,
-  fields: customFields,
-  templateColumns,
-}: {
-  fields: Array<Object>,
-  templateColumns: Array<string>,
-  showAll: boolean,
-}) {
-  if (templateColumns && templateColumns.length > 0) {
-    return showAll
-      ? customFields
-      : customFields.filter(field => templateColumns.includes(`customFields.${field.id}`));
-  }
-  return customFields;
-}
 
 const isModifyPort = (field: string) => {
   const ports = [
@@ -664,9 +601,13 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                     <Table
                       itemData={{
                         targetIds,
-                        data: { editData, mappingObjects },
+                        editData,
+                        mappingObjects,
                         ids: allId,
                         columns: allColumns,
+                        allColumnIds,
+                        showAll,
+                        templateColumns,
                       }}
                       rowCount={totalRow({
                         mappingObjects,

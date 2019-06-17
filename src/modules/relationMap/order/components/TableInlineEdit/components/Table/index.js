@@ -3,9 +3,17 @@ import * as React from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 // $FlowFixMe: not have flow type yet
 import { FixedSizeGrid as Grid } from 'react-window';
-import { RowStyle, TableWrapperStyle } from './style';
+import { getByPath } from 'utils/fp';
+import {
+  generateEmptyContainerShipmentsData,
+  generateEmptyShipmentsData,
+  generateOrdersData,
+} from 'modules/relationMap/order/components/TableInlineEdit/tableRenders';
+import { CellStyle, TableWrapperStyle } from './style';
 import { StickyHeader } from './StickyHeader';
 import { Lines } from './Lines';
+import TableDisableCell from '../TableDisableCell';
+import Cell from './Cell';
 
 const GUTTER_SIZE = 5;
 type Props = {
@@ -40,35 +48,52 @@ const innerElementType = React.forwardRef(
 const ItemRenderer = ({
   position,
   style,
+  cell,
 }: {
   style: Object,
+  cell: ?Object,
   position: {
     columnIndex: number,
     rowIndex: number,
   },
 }) => (
-  <div
-    id={JSON.stringify(position)}
-    className={RowStyle(position.columnIndex % 2 === 0)}
-    style={style}
-  >
-    Row [{position.rowIndex},{position.columnIndex}]
+  <div className={CellStyle} style={style}>
+    {!cell ? (
+      <TableDisableCell />
+    ) : (
+      <Cell id={`${position.columnIndex}-${position.rowIndex}`} {...cell} />
+    )}
   </div>
 );
 
 const ItemWrapper = ({
   style,
+  data,
   columnIndex,
   rowIndex,
 }: {
   style: Object,
+  data: Object,
   columnIndex: number,
   rowIndex: number,
 }) => {
-  return <ItemRenderer position={{ columnIndex, rowIndex }} style={style} />;
+  const cell = getByPath(`${rowIndex}.${columnIndex}`, data);
+  console.warn({
+    data,
+    cell,
+    columnIndex,
+    rowIndex,
+  });
+  return <ItemRenderer cell={cell} position={{ columnIndex, rowIndex }} style={style} />;
 };
 
-export default function Table({ customColumns, showAllColumn, lines, ...renderOptions }: Props) {
+export default function Table({
+  customColumns,
+  showAllColumn,
+  lines,
+  itemData,
+  ...renderOptions
+}: Props) {
   const headerRef = React.useRef();
   const sidebarRef = React.useRef();
   const bodyRef = React.useRef();
@@ -80,10 +105,27 @@ export default function Table({ customColumns, showAllColumn, lines, ...renderOp
     }
   };
 
+  const { ids, columns, targetIds, editData, mappingObjects } = itemData;
+  const data = [
+    ...generateEmptyShipmentsData({ columns, editData, mappingObjects, targetIds, ...ids }),
+    ...generateEmptyContainerShipmentsData({
+      columns,
+      editData,
+      mappingObjects,
+      targetIds,
+      ...ids,
+    }),
+    ...generateOrdersData({ columns, editData, mappingObjects, targetIds, ...ids }),
+  ]
+    .filter(rows => rows.values && rows.values.length > 0)
+    .map(item => item.values)
+    .reduce((result, rows) => result.concat(rows), []);
+
   return (
     <>
       <StickyHeader
         {...renderOptions}
+        itemData={data}
         showAllColumn={showAllColumn}
         customColumns={customColumns}
         innerRef={headerRef}
@@ -93,6 +135,7 @@ export default function Table({ customColumns, showAllColumn, lines, ...renderOp
         {({ width, height }) => (
           <Grid
             {...renderOptions}
+            itemData={data}
             innerRef={bodyRef}
             width={width - 30}
             height={height - 50}
