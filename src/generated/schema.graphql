@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Jun 14 2019 11:34:02 GMT+0900 (Tokyo Standard Time)
+# timestamp: Mon Jun 17 2019 18:33:20 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26629,11 +26629,14 @@ type BadRequest {
   violations: [Violation!]!
 }
 
-type Batch implements Model & Owned & Package & Tagged & Customizable & Memorizable {
+type Batch implements Model & Owned & Package & Tagged & Customizable & Memorizable & Sortable {
   archived: Boolean!
+  no: String!
   orderItem: OrderItemPayload!
   shipment: ShipmentPayload
-  no: String!
+  shipmentSort: Int!
+  container: ContainerPayload
+  containerSort: Int!
   quantity: Float!
   latestQuantity: Float!
   packageQuantity: Float
@@ -26644,7 +26647,6 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   desiredAt: DateTime
   totalVolume: MetricValue!
   batchQuantityRevisions: [BatchQuantityRevisionPayload!]!
-  container: ContainerPayload
   todo: Todo!
   id: ID!
   createdAt: DateTime!
@@ -26663,6 +26665,7 @@ type Batch implements Model & Owned & Package & Tagged & Customizable & Memoriza
   tags: [TagPayload!]!
   customFields: CustomFields!
   memo: String
+  sort: Int!
 }
 
 input BatchCreateInput {
@@ -86879,6 +86882,7 @@ type Task implements Model & Owned & Sortable & Memorizable & Tagged {
   approvedAt: DateTime
   skippedBy: UserPayload
   skippedAt: DateTime
+  milestoneSort: Int!
   timeline: Timeline!
   id: ID!
   createdAt: DateTime!
