@@ -3,7 +3,6 @@ import * as React from 'react';
 import { getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import InlineTextInput from 'modules/relationMap/order/components/TableInlineEdit/components/TableItem/components/InlineTextInput';
-import { WrapperStyle, ItemStyle } from './style';
 
 type OptionalProps = {
   id: string,
@@ -34,25 +33,21 @@ function CustomFieldCell({ cell, values, validator, id, inputId }: Props) {
   );
   const findPosition = fieldValues.findIndex(({ fieldDefinition }) => fieldDefinition.id === id);
   return (
-    <div className={WrapperStyle}>
-      <div className={ItemStyle} key={inputId}>
-        <FormField
-          name={`${cell}.customFields.fieldValues[${findPosition}].value.string`}
-          initValue={getByPathWithDefault('', 'value.string', fieldValue)}
-          validator={validator}
-          values={values}
-        >
-          {({ name: fieldName }) => (
-            <InlineTextInput
-              name={fieldName}
-              value={getByPathWithDefault('', 'value.string', fieldValue)}
-              disabled={mask && !fieldValue}
-              id={inputId}
-            />
-          )}
-        </FormField>
-      </div>
-    </div>
+    <FormField
+      name={`${cell}.customFields.fieldValues[${findPosition}].value.string`}
+      initValue={getByPathWithDefault('', 'value.string', fieldValue)}
+      validator={validator}
+      values={values}
+    >
+      {({ name: fieldName }) => (
+        <InlineTextInput
+          name={fieldName}
+          value={getByPathWithDefault('', 'value.string', fieldValue)}
+          disabled={mask && !fieldValue}
+          id={inputId}
+        />
+      )}
+    </FormField>
   );
 }
 

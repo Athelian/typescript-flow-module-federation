@@ -6,7 +6,6 @@ import LineNumber from '../LineNumber';
 import { SidebarWrapperStyle } from './style';
 
 type Props = {
-  targetIds: Object,
   orderIds: Array<string>,
   batchIds: Array<string>,
   orderItemIds: Array<string>,
@@ -14,24 +13,8 @@ type Props = {
   innerRef: React.Ref<any>,
 };
 
-export const Lines = ({
-  innerRef,
-  mappingObjects,
-  targetIds,
-  orderIds,
-  batchIds,
-  orderItemIds,
-}: Props) => {
-  const shipmentLines =
-    Object.entries(mappingObjects.shipmentNoRelation || {}).length +
-    (Object.entries(mappingObjects.shipment || {}): any)
-      .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
-      .map(([shipmentId]) =>
-        (mappingObjects.shipment[shipmentId].data.containers || []).filter(
-          item => item.batches.length === 0
-        )
-      )
-      .reduce((total, currentContainer) => total + currentContainer.length, 0);
+export const Lines = ({ innerRef, mappingObjects, orderIds, batchIds, orderItemIds }: Props) => {
+  const shipmentLines = Object.entries(mappingObjects.shipmentNoRelation || {}).length;
   return (
     <div className={SidebarWrapperStyle} ref={innerRef}>
       {range(0, shipmentLines).map(counter => (
