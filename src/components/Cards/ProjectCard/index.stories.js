@@ -2,11 +2,9 @@ import React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
 import { storiesOf } from '@storybook/react';
 import { IntlProvider } from 'react-intl';
-// action
-// import { action } from '@storybook/addon-actions';
 import ProjectCard from './index';
 
-storiesOf('Project Card', module).add('Card', () => (
+storiesOf('Card', module).add('Project Card', () => (
   <IntlProvider>
     <div
       style={{
