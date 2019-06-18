@@ -1,11 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, shadows, layout } from 'styles/common';
+import { colors, shadows, layout, scrollbars } from 'styles/common';
 
 export const TableWrapperStyle: string = css`
   border: 1px solid #d9dddd;
   margin-left: 30px;
-  padding: 5px;
+  padding: 5px 15px 15px 5px;
+  overflow: overlay !important;
+  ${scrollbars.MAIN}
 `;
 
 export const CellStyle = css`
@@ -20,8 +22,8 @@ export const StickyStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   height: 50px;
   width: calc(100% - 30px);
-  padding: 0 5px;
-  margin-left: 30px;
+  padding: 0 35px 0 5px;
+  margin: 0 30px;
   background: ${colors.WHITE};
   ${shadows.HEADER};
   overflow: hidden;
