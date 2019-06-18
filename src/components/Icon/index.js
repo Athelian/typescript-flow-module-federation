@@ -9,7 +9,7 @@ type Props = {
 
 function Icon({ icon }: Props) {
   if (icon === 'PROJECT') {
-    return <FontAwesomeIcon icon={IconEnums.TABLE} fixedWidth rotation={90} />;
+    return <FontAwesomeIcon icon={IconEnums.TH_LIST} fixedWidth rotation={90} />;
   }
   return <FontAwesomeIcon icon={IconEnums[icon]} fixedWidth />;
 }
