@@ -41,7 +41,7 @@ export const PropsStyle: string = css`
 
 export const NumberStyle = (color: string): string => css`
   height: 20px;
-  width: 44px;
+  width: 40px;
   ${presets.ELLIPSIS};
   text-overflow: clip;
   ${borderRadiuses.BUTTON};
