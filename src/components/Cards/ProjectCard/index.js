@@ -8,13 +8,19 @@ import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
 import Divider from 'components/Divider';
 import TaskStatusChart from 'components/TaskStatusChart';
+import withForbiddenCard from 'hoc/withForbiddenCard';
 import Tag from 'components/Tag';
-
 import BaseCard from '../BaseCard';
-import { ProjectCardStyle, ProjectNameStyle, CommonCardGridStyle, TagsWrapperStyle } from './style';
+import {
+  ProjectCardStyle,
+  ProjectNameStyle,
+  CommonCardGridStyle,
+  TaskStatusChartStyle,
+  TagsWrapperStyle,
+} from './style';
 
 type Props = {
-  data: {
+  project: {
     name: string,
     dueDate: string,
     milestones: Array<Object>,
@@ -59,8 +65,8 @@ export const deStructureMilestones = (milestones: Array<Object>) => {
   };
 };
 
-const ProjectCard = ({ data }: Props) => {
-  const { name, dueDate, milestones = [], taskCount, tags = [] } = data;
+const ProjectCard = ({ project }: Props) => {
+  const { name, dueDate, milestones = [], taskCount, tags = [] } = project;
 
   const { completed, inProgress, skipped, unCompleted, overdueTasks } = deStructureMilestones(
     milestones
@@ -105,7 +111,7 @@ const ProjectCard = ({ data }: Props) => {
           <FieldItem
             label={
               <Label>
-                <FormattedMessage id="components.cards.totalTasks" defaultMessage="TOTAL TASKS" />
+                <FormattedMessage id="components.cards.tasks" defaultMessage="TASKS" />
               </Label>
             }
             input={
@@ -118,10 +124,7 @@ const ProjectCard = ({ data }: Props) => {
           <FieldItem
             label={
               <Label>
-                <FormattedMessage
-                  id="components.cards.overdueTasks"
-                  defaultMessage="OVERDUE TASKS"
-                />
+                <FormattedMessage id="components.cards.overdueTasks" defaultMessage="OVERDUE" />
               </Label>
             }
             input={
@@ -131,25 +134,14 @@ const ProjectCard = ({ data }: Props) => {
             }
           />
 
-          <FieldItem
-            vertical
-            label={
-              <Label>
-                <FormattedMessage
-                  id="components.cards.tasksCompletion"
-                  defaultMessage="TASKS COMPLETION"
-                />
-              </Label>
-            }
-            input={
-              <TaskStatusChart
-                completed={completed}
-                inProgress={inProgress}
-                skipped={skipped}
-                unCompleted={unCompleted}
-              />
-            }
-          />
+          <div className={TaskStatusChartStyle}>
+            <TaskStatusChart
+              completed={completed}
+              inProgress={inProgress}
+              skipped={skipped}
+              unCompleted={unCompleted}
+            />
+          </div>
 
           <div className={TagsWrapperStyle}>
             {tags
@@ -164,4 +156,9 @@ const ProjectCard = ({ data }: Props) => {
   );
 };
 
-export default ProjectCard;
+export default withForbiddenCard(ProjectCard, 'project', {
+  width: '195px',
+  height: '214px',
+  entityIcon: 'PROJECT',
+  entityColor: 'PROJECT',
+});

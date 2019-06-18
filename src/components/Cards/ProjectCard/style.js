@@ -8,7 +8,7 @@ export const ProjectCardStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 242px;
+  height: 214px;
 `;
 
 export const CommonCardGridStyle: string = css`
@@ -23,9 +23,14 @@ export const ProjectNameStyle: string = css`
   padding: 0 15px 0 0;
 `;
 
+export const TaskStatusChartStyle: string = css`
+  padding: 0 5px;
+`;
+
 export const TagsWrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-gap: 5px;
   overflow: hidden;
   width: 100%;
+  padding: 0 5px;
 `;

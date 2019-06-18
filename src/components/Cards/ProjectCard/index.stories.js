@@ -16,7 +16,7 @@ storiesOf('Project Card', module).add('Card', () => (
     >
       <div>
         <ProjectCard
-          data={{
+          project={{
             name: 'PROJECT TITLE',
             dueDate: '2019-6-30',
             milestones: [
@@ -46,6 +46,9 @@ storiesOf('Project Card', module).add('Card', () => (
             tags: [
               { id: 1, name: 'tag1', color: '#123456' },
               { id: 2, name: 'tag2', color: '#FF00FF' },
+              { id: 3, name: 'tag2', color: '#FF00FF' },
+              { id: 4, name: 'tag2', color: '#FF00FF' },
+              { id: 5, name: 'tag2', color: '#FF00FF' },
             ],
           }}
         />
@@ -53,7 +56,7 @@ storiesOf('Project Card', module).add('Card', () => (
 
       <div>
         <ProjectCard
-          data={{
+          project={{
             name: 'PROJECT long long long long title',
             dueDate: '2019-6-30',
             milestones: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
