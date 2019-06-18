@@ -196,11 +196,11 @@ const TagSection = ({ isNew, tag }: Props) => {
 
                 <Subscribe to={[EntityTypeContainer]}>
                   {({
-                    originalValues: entityTypeValues,
-                    state: entityTypeState,
+                    originalValues: entityTypesOriginalValues,
+                    state: entityTypesState,
                     toggleSelectType,
                   }) => {
-                    const entityTypeValue = { ...entityTypeValues, ...entityTypeState };
+                    const entityTypeValue = { ...entityTypesOriginalValues, ...entityTypesState };
 
                     return (
                       <FormField
@@ -223,7 +223,7 @@ const TagSection = ({ isNew, tag }: Props) => {
                               <FormTooltip
                                 isNew={isNew}
                                 errorMessage={
-                                  entityTypeValues.entityTypes.sort().join(',') !==
+                                  entityTypesOriginalValues.entityTypes.sort().join(',') !==
                                     inputHandlers.value.sort().join(',') &&
                                   entityTypeValue.entityTypes.length === 0 ? (
                                     <FormattedMessage
@@ -235,8 +235,8 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   )
                                 }
                                 changedValues={{
-                                  oldValue: entityTypeValues.entityTypes.sort().join(','),
-                                  newValue: inputHandlers.value.sort().join(','),
+                                  oldValue: entityTypesOriginalValues.entityTypes.sort().join(','),
+                                  newValue: entityTypesState.entityTypes.sort().join(','),
                                 }}
                               />
                             }
@@ -378,6 +378,24 @@ const TagSection = ({ isNew, tag }: Props) => {
                                       <FormattedMessage
                                         id="modules.Tags.task"
                                         defaultMessage="TASK"
+                                      />
+                                    </Label>
+                                  </div>
+                                </RadioInput>
+
+                                <RadioInput
+                                  selected={entityTypeValue.entityTypes.includes('Project')}
+                                  onToggle={() => toggleSelectType('Project')}
+                                  editable={allowCreateOrUpdate}
+                                >
+                                  <div className={EntityTypeStyle}>
+                                    <div className={EntityIconStyle('PROJECT')}>
+                                      <Icon icon="TABLE" rotation={90} />
+                                    </div>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.Tags.project"
+                                        defaultMessage="PROJECT"
                                       />
                                     </Label>
                                   </div>

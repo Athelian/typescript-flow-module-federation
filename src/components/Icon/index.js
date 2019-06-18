@@ -7,8 +7,8 @@ type Props = {
   icon: string,
 };
 
-function Icon({ icon }: Props) {
-  return <FontAwesomeIcon icon={IconEnums[icon]} fixedWidth />;
+function Icon({ icon, ...rest }: Props) {
+  return <FontAwesomeIcon icon={IconEnums[icon]} fixedWidth {...rest} />;
 }
 
 export default Icon;
