@@ -38,6 +38,7 @@ const getEntityType = (entityType: ?string) => {
     Container: 'CONTAINER',
     Task: 'TASK',
     User: 'STAFF',
+    Project: 'PROJECT',
   };
 
   return entityType ? colorsMapping[entityType] : 'GRAY_VERY_LIGHT';
@@ -85,6 +86,8 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
           >
             <Icon icon="BATCH" />
           </div>
+        </div>
+        <div className={TagTypesWrapperStyle}>
           <div
             className={TagTypeStyle(
               getEntityType(entityTypes.find(entityType => entityType === 'Shipment'))
@@ -112,6 +115,13 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
             )}
           >
             <Icon icon="TASK" />
+          </div>
+          <div
+            className={TagTypeStyle(
+              getEntityType(entityTypes.find(entityType => entityType === 'Project'))
+            )}
+          >
+            <Icon icon="TABLE" rotation={90} />
           </div>
         </div>
       </Link>
