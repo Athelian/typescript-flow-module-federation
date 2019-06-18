@@ -8,7 +8,7 @@ import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
 import { UIConsumer } from 'modules/ui';
 import Layout from 'components/Layout';
-import { SaveButton, ResetButton } from 'components/Buttons';
+import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
@@ -20,6 +20,7 @@ import { updateContainerMutation, prepareParsedContainerInput } from './form/mut
 import { ContainerInfoContainer, ContainerBatchesContainer } from './form/containers';
 import validator from './form/validator';
 import ContainerForm from './form';
+import { containerExportQuery } from './query';
 
 type OptionalProps = {
   containerId: string,
@@ -203,55 +204,67 @@ class ContainerFormModule extends React.Component<Props> {
                         />
                       </JumpToSection>
                       <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-                        {(containerInfoContainer, containerBatchesContainer) =>
-                          (containerInfoContainer.isDirty() ||
-                            containerBatchesContainer.isDirty()) && (
-                            <>
-                              <ResetButton
-                                onClick={() =>
-                                  this.onReset(
-                                    { containerInfoContainer, containerBatchesContainer },
-                                    formContainer
-                                  )
-                                }
-                              />
-                              <SaveButton
-                                disabled={
-                                  !formContainer.isReady(
-                                    {
-                                      ...containerInfoContainer.state,
-                                      ...containerBatchesContainer.state,
-                                    },
-                                    validator
-                                  )
-                                }
-                                isLoading={loading}
-                                onClick={() =>
-                                  this.onSave(
-                                    {
-                                      ...containerInfoContainer.originalValues,
-                                      ...containerBatchesContainer.originalValues,
-                                    },
-                                    containerBatchesContainer.existingBatches,
-                                    {
-                                      ...containerInfoContainer.state,
-                                      ...containerBatchesContainer.state,
-                                    },
-                                    saveContainer,
-                                    updateContainer => {
-                                      this.initAllValues(
-                                        { containerInfoContainer, containerBatchesContainer },
-                                        updateContainer
-                                      );
-                                      formContainer.onReset();
-                                    },
-                                    formContainer.onErrors
-                                  )
-                                }
-                              />
-                            </>
-                          )
-                        }
+                        {(containerInfoContainer, containerBatchesContainer) => (
+                          <>
+                            {(containerInfoContainer.isDirty() ||
+                              containerBatchesContainer.isDirty()) && (
+                              <>
+                                <ResetButton
+                                  onClick={() =>
+                                    this.onReset(
+                                      { containerInfoContainer, containerBatchesContainer },
+                                      formContainer
+                                    )
+                                  }
+                                />
+                                <SaveButton
+                                  disabled={
+                                    !formContainer.isReady(
+                                      {
+                                        ...containerInfoContainer.state,
+                                        ...containerBatchesContainer.state,
+                                      },
+                                      validator
+                                    )
+                                  }
+                                  isLoading={loading}
+                                  onClick={() =>
+                                    this.onSave(
+                                      {
+                                        ...containerInfoContainer.originalValues,
+                                        ...containerBatchesContainer.originalValues,
+                                      },
+                                      containerBatchesContainer.existingBatches,
+                                      {
+                                        ...containerInfoContainer.state,
+                                        ...containerBatchesContainer.state,
+                                      },
+                                      saveContainer,
+                                      updateContainer => {
+                                        this.initAllValues(
+                                          { containerInfoContainer, containerBatchesContainer },
+                                          updateContainer
+                                        );
+                                        formContainer.onReset();
+                                      },
+                                      formContainer.onErrors
+                                    )
+                                  }
+                                />
+                              </>
+                            )}
+
+                            {containerId &&
+                              !containerInfoContainer.isDirty() &&
+                              !containerBatchesContainer.isDirty() && (
+                                <ExportButton
+                                  type="Container"
+                                  exportQuery={containerExportQuery}
+                                  variables={{ id: decodeId(containerId) }}
+                                />
+                              )}
+                          </>
+                        )}
                       </Subscribe>
                     </NavBar>
                   }

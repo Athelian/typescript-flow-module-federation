@@ -9,7 +9,7 @@ import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
 import Layout from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { UIConsumer } from 'modules/ui';
@@ -19,6 +19,7 @@ import { TagContainer, EntityTypeContainer } from './form/containers';
 import { tagFormQuery } from './form/query';
 import validator from './form/validator';
 import { createTagMutation, updateTagMutation, prepareParsedTagInput } from './form/mutation';
+import { tagExportQuery } from './query';
 
 type OptionalProps = {
   path: string,
@@ -134,53 +135,66 @@ export default class TagFormModule extends React.PureComponent<Props> {
                         />
                       </JumpToSection>
                       <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
-                        {(tagContainer, entityTypeContainer, form) =>
-                          (isNewOrClone ||
-                            tagContainer.isDirty() ||
-                            entityTypeContainer.isDirty()) && (
-                            <>
-                              {this.isNewOrClone() ? (
-                                <CancelButton onClick={() => this.onCancel()} />
-                              ) : (
-                                <ResetButton
-                                  onClick={() => {
-                                    this.onReset({
-                                      tagContainer,
-                                      entityTypeContainer,
-                                      form,
-                                    });
-                                  }}
+                        {(tagContainer, entityTypeContainer, form) => (
+                          <>
+                            {(isNewOrClone ||
+                              tagContainer.isDirty() ||
+                              entityTypeContainer.isDirty()) && (
+                              <>
+                                {this.isNewOrClone() ? (
+                                  <CancelButton onClick={() => this.onCancel()} />
+                                ) : (
+                                  <ResetButton
+                                    onClick={() => {
+                                      this.onReset({
+                                        tagContainer,
+                                        entityTypeContainer,
+                                        form,
+                                      });
+                                    }}
+                                  />
+                                )}
+                                <SaveButton
+                                  data-testid="saveButton"
+                                  disabled={
+                                    !form.isReady(
+                                      { ...tagContainer.state, ...entityTypeContainer.state },
+                                      validator
+                                    )
+                                  }
+                                  isLoading={isLoading}
+                                  onClick={() =>
+                                    this.onSave(
+                                      {
+                                        ...tagContainer.originalValues,
+                                        ...entityTypeContainer.originalValues,
+                                      },
+                                      { ...tagContainer.state, ...entityTypeContainer.state },
+                                      saveTag,
+                                      () => {
+                                        tagContainer.onSuccess();
+                                        entityTypeContainer.onSuccess();
+                                        form.onReset();
+                                      },
+                                      form.onErrors
+                                    )
+                                  }
+                                />
+                              </>
+                            )}
+
+                            {tagId &&
+                              !tagContainer.isDirty() &&
+                              !entityTypeContainer.isDirty() &&
+                              !isNewOrClone && (
+                                <ExportButton
+                                  type="Tag"
+                                  exportQuery={tagExportQuery}
+                                  variables={{ id: decodeId(tagId) }}
                                 />
                               )}
-                              <SaveButton
-                                data-testid="saveButton"
-                                disabled={
-                                  !form.isReady(
-                                    { ...tagContainer.state, ...entityTypeContainer.state },
-                                    validator
-                                  )
-                                }
-                                isLoading={isLoading}
-                                onClick={() =>
-                                  this.onSave(
-                                    {
-                                      ...tagContainer.originalValues,
-                                      ...entityTypeContainer.originalValues,
-                                    },
-                                    { ...tagContainer.state, ...entityTypeContainer.state },
-                                    saveTag,
-                                    () => {
-                                      tagContainer.onSuccess();
-                                      entityTypeContainer.onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
-                              />
-                            </>
-                          )
-                        }
+                          </>
+                        )}
                       </Subscribe>
                     </NavBar>
                   }
