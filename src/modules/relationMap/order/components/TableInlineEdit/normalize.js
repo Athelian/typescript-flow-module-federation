@@ -7,26 +7,19 @@ const shipment = new schema.Entity('shipments');
 const order = new schema.Entity('orders');
 const container = new schema.Entity('containers');
 
-batch.define({
-  orderItem,
-  shipment,
-  container,
-});
-
 orderItem.define({
   order,
-  batches: [batch],
   productProvider: { product },
 });
 
-order.define({
-  orderItems: [orderItem],
-  shipments: [shipment],
+batch.define({
+  orderItem,
+  container,
+  mainShipment: shipment,
 });
 
-shipment.define({
-  batches: [batch],
-  containers: [container],
+container.define({
+  shipment,
 });
 
 export default originalData =>
@@ -35,6 +28,5 @@ export default originalData =>
     shipments: [shipment],
     orderItems: [orderItem],
     batches: [batch],
-    products: [product],
     containers: [container],
   });

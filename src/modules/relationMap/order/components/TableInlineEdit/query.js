@@ -151,7 +151,7 @@ export const shipmentEntityFragment = gql`
     importer {
       ...partnerCardFragment
     }
-    exporter {
+    mainExporter: exporter {
       ...partnerCardFragment
     }
     inCharges {
@@ -239,6 +239,68 @@ export const containerEntityFragment = gql`
       }
     }
   }
+`;
+
+export const orderShipmentTableQuery = gql`
+  query orderShipmentTableQuery($entities: [EntityInput!]!) {
+    orderShipmentTable(entities: $entities) {
+      ...forbiddenFragment
+      ... on Order {
+        ...orderEntityFragment
+      }
+      ... on OrderItem {
+        ...orderItemEntityFragment
+        order {
+          ... on Order {
+            id
+          }
+        }
+      }
+      ... on Batch {
+        ...batchEntityFragment
+        orderItem {
+          ... on OrderItem {
+            id
+          }
+        }
+        mainShipment: shipment {
+          ... on Shipment {
+            id
+          }
+        }
+      }
+      ... on Shipment {
+        ...shipmentEntityFragment
+      }
+      ... on Container {
+        ...containerEntityFragment
+        shipment {
+          ... on Shipment {
+            id
+          }
+        }
+      }
+    }
+  }
+  ${orderEntityFragment}
+  ${orderItemEntityFragment}
+  ${batchEntityFragment}
+  ${shipmentEntityFragment}
+  ${containerEntityFragment}
+  ${productEntityFragment}
+  ${timelineDateFullFragment}
+  ${tagFragment}
+  ${portFragment}
+  ${userAvatarFragment}
+  ${metricFragment}
+  ${partnerCardFragment}
+  ${priceFragment}
+  ${sizeFragment}
+  ${customFieldsFragment}
+  ${fieldValuesFragment}
+  ${maskFragment}
+  ${fieldDefinitionFragment}
+  ${forbiddenFragment}
 `;
 
 export const editTableViewQuery = gql`

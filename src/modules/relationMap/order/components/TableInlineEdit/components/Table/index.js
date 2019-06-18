@@ -6,7 +6,6 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeGrid as Grid } from 'react-window';
 import { getByPath } from 'utils/fp';
 import {
-  generateEmptyContainerShipmentsData,
   generateEmptyShipmentsData,
   generateOrdersData,
 } from 'modules/relationMap/order/components/TableInlineEdit/tableRenders';
@@ -77,13 +76,6 @@ const createItemData = memoize((itemData: Object) => {
   const { ids, columns, targetIds, editData, mappingObjects } = itemData;
   const data = [
     ...generateEmptyShipmentsData({ columns, editData, mappingObjects, targetIds, ...ids }),
-    ...generateEmptyContainerShipmentsData({
-      columns,
-      editData,
-      mappingObjects,
-      targetIds,
-      ...ids,
-    }),
     ...generateOrdersData({ columns, editData, mappingObjects, targetIds, ...ids }),
   ]
     .filter(rows => rows.values && rows.values.length > 0)
@@ -110,9 +102,6 @@ export default function Table({
       if (sidebarRef.current) sidebarRef.current.scrollTop = scrollTop;
     }
   };
-  console.warn({
-    renderOptions,
-  });
   const data = createItemData(itemData);
   return (
     <>

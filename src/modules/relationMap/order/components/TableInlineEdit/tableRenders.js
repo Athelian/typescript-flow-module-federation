@@ -6,6 +6,10 @@ import shipmentValidator from 'modules/shipment/form/validator';
 import productValidator from 'modules/product/form/validator';
 import { totalLinePerOrder } from './helpers';
 
+export function totalColumn(columns: Object) {
+  return Object.keys(columns).reduce((total, group) => total + columns[group].length, 0);
+}
+
 export function findColumns({
   fields,
   templateColumns,
@@ -86,69 +90,6 @@ export function generateEmptyShipmentsData({
   ): Array<{
     type: string,
     id: string,
-    values: Array<Object>,
-  }>);
-}
-
-export function generateEmptyContainerShipmentsData({
-  mappingObjects,
-  columns,
-  editData,
-  targetIds,
-}: {
-  mappingObjects: Object,
-  columns: Object,
-  editData: Object,
-  targetIds: Object,
-}) {
-  return (flattenDeep(
-    Object.entries(mappingObjects.shipment || {})
-      .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
-      .map(([shipmentId]) =>
-        mappingObjects.shipment[shipmentId].data.containers
-          .filter(item => item.batches.length === 0)
-          .map(container => ({
-            type: 'shipment',
-            id: shipmentId,
-            container,
-            values: [
-              [
-                ...columns.orderColumnFieldsFilter.map(() => null),
-                ...columns.orderCustomFieldsFilter.map(() => null),
-                ...columns.orderItemColumnFieldsFilter.map(() => null),
-                ...columns.orderItemCustomFieldsFilter.map(() => null),
-                ...columns.batchColumnFieldsFilter.map(() => null),
-                ...columns.batchCustomFieldsFilter.map(() => null),
-                ...columns.containerColumnFieldsFilter.map(field => ({
-                  ...field,
-                  cell: `containers.${container.id}`,
-                  values: editData.containers[container.id],
-                  editData,
-                })),
-                ...columns.shipmentColumnFieldsFilter.map(field => ({
-                  ...field,
-                  cell: `shipments.${shipmentId}`,
-                  values: editData.shipments[shipmentId],
-                  validator: shipmentValidator,
-                  editData,
-                })),
-                ...columns.shipmentCustomFieldsFilter.map(field => ({
-                  ...field,
-                  type: 'customFields',
-                  cell: `shipments.${shipmentId}`,
-                  values: editData.shipments[shipmentId],
-                  validator: shipmentValidator,
-                  editData,
-                })),
-                ...columns.productCustomFieldsFilter.map(() => null),
-              ],
-            ],
-          }))
-      )
-  ): Array<{
-    type: string,
-    id: string,
-    container: Object,
     values: Array<Object>,
   }>);
 }
@@ -529,7 +470,6 @@ function generateTableData({
     isCustomField: true,
   });
 
-  console.warn({ totalLines });
   for (let index = 0; index < totalLines; index += 1) {
     const row = [];
     const orderRow = slice(

@@ -44,11 +44,10 @@ import {
   getExportColumns,
   getExportRows,
 } from './helpers';
-import normalize from './normalize';
 import { EditTableViewWrapperStyle, NavbarWrapperStyle, LastTemplateUsedStyle } from './style';
 import { keyMap, handlers } from './keyMap';
 import { Table } from './components';
-import { findColumnsForCustomFields, findColumns } from './tableRenders';
+import { findColumnsForCustomFields, findColumns, totalColumn } from './tableRenders';
 
 type Props = {
   onCancel: () => void,
@@ -68,6 +67,14 @@ type Props = {
   },
   orders: Array<Object>,
   shipments: Array<Object>,
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    products: Object,
+    shipments: Object,
+    containers: Object,
+  },
   intl: IntlShape,
 };
 
@@ -81,7 +88,7 @@ const isModifyPort = (field: string) => {
   return ports.some(port => field.includes(port));
 };
 
-const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Props) => {
+const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
   const [errors, setErrors] = useState({});
@@ -103,8 +110,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
     containers: {},
   });
   const [isChangeData, setIsChangeData] = useState(false);
-  const { entities } = normalize(dataSource);
-  const mappingObjects = formatOrders(dataSource);
+  const mappingObjects = formatOrders({ ...dataSource, entities });
   const prevEntities = usePrevious(entities);
   const onToggle = useCallback(
     selectedColumn => {
@@ -610,7 +616,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, ...dataSource }: Pr
                         templateColumns,
                       }}
                       rowHeight={40}
-                      columnCount={showAll ? allColumnIds.length : templateColumns.length}
+                      columnCount={showAll ? totalColumn(allColumns) : templateColumns.length}
                       columnWidth={210}
                       showAllColumn={showAll}
                       customColumns={{

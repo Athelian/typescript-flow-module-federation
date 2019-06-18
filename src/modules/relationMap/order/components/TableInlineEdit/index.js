@@ -7,8 +7,7 @@ import { selectors } from 'modules/relationMap/order/store';
 import { getByPathWithDefault } from 'utils/fp';
 import logger from 'utils/logger';
 import TableInlineEdit from './index.table';
-import { editTableViewQuery } from './query';
-import { findAllPossibleIds, findOrderAndShipmentIds } from './helpers';
+import { orderShipmentTableQuery } from './query';
 import normalize from './normalize';
 
 type Props = {
@@ -22,8 +21,14 @@ type Props = {
   },
 };
 
+function getEntityByType(data: Object, entity: string) {
+  return getByPathWithDefault([], 'orderShipmentTable', data).filter(
+    ({ __typename: type }) => type === entity
+  );
+}
+
 const TableView = (props: Props) => {
-  const { onCancel, entities: sourceEntities } = props;
+  const { onCancel } = props;
   const [isReady, setIsReady] = React.useState(false);
   const { state } = React.useContext(ActionDispatch);
   const uiSelectors = selectors(state);
@@ -32,63 +37,24 @@ const TableView = (props: Props) => {
   const orderItemIds = uiSelectors.targetedOrderItemIds();
   const orderIds = uiSelectors.targetedOrderIds();
 
-  const orderIdsQuery = [...orderIds];
-  const shipmentIdsQuery = [...shipmentIds];
-
-  orderIds.forEach(selectedId => {
-    const { orders, shipments } = findOrderAndShipmentIds(
-      {
-        type: 'order',
-        selectedId,
-      },
-      sourceEntities
-    );
-    orderIdsQuery.push(...orders);
-    shipmentIdsQuery.push(...shipments);
-  });
-
-  shipmentIds.forEach(selectedId => {
-    const { orders, shipments } = findOrderAndShipmentIds(
-      {
-        type: 'shipment',
-        selectedId,
-      },
-      sourceEntities
-    );
-    orderIdsQuery.push(...orders);
-    shipmentIdsQuery.push(...shipments);
-  });
-
-  orderItemIds.forEach(selectedId => {
-    const { orders, shipments } = findOrderAndShipmentIds(
-      {
-        type: 'orderItem',
-        selectedId,
-      },
-      sourceEntities
-    );
-    orderIdsQuery.push(...orders);
-    shipmentIdsQuery.push(...shipments);
-  });
-
-  batchIds.forEach(selectedId => {
-    const { orders, shipments } = findOrderAndShipmentIds(
-      {
-        type: 'batch',
-        selectedId,
-      },
-      sourceEntities
-    );
-    orderIdsQuery.push(...orders);
-    shipmentIdsQuery.push(...shipments);
-  });
-
   return (
     <Query
-      query={editTableViewQuery}
+      query={orderShipmentTableQuery}
       variables={{
-        shipmentIds: [...new Set(shipmentIdsQuery)],
-        orderIds: [...new Set(orderIdsQuery)],
+        entities: [
+          ...shipmentIds.map(shipmentId => ({
+            shipmentId,
+          })),
+          ...orderIds.map(orderId => ({
+            orderId,
+          })),
+          ...batchIds.map(batchId => ({
+            batchId,
+          })),
+          ...orderItemIds.map(orderItemId => ({
+            orderItemId,
+          })),
+        ],
       }}
       fetchPolicy="network-only"
       onCompleted={() => {
@@ -106,25 +72,33 @@ const TableView = (props: Props) => {
           return <LoadingIcon />;
         }
 
-        const orders = getByPathWithDefault([], 'ordersByIDs', data);
-        const shipments = getByPathWithDefault([], 'shipmentsByIDs', data);
+        const orders = getEntityByType(data, 'Order');
+        const shipments = getEntityByType(data, 'Shipment');
+        const orderItems = getEntityByType(data, 'OrderItem');
+        const batches = getEntityByType(data, 'Batch');
+        const containers = getEntityByType(data, 'Container');
 
-        const { entities } = normalize({ orders, shipments });
-        const allId = findAllPossibleIds(
-          {
-            shipmentIds,
-            batchIds,
-            orderItemIds,
-            orderIds,
-          },
-          entities
-        );
+        const { entities } = normalize({
+          orders,
+          shipments,
+          containers,
+          orderItems,
+          batches,
+        });
 
         return (
           <TableInlineEdit
             orders={orders}
             shipments={shipments}
-            allId={allId}
+            allId={{
+              orderIds: Object.keys(entities.orders || {}),
+              orderItemIds: Object.keys(entities.orderItems || {}),
+              batchIds: Object.keys(entities.batches || {}),
+              shipmentIds: Object.keys(entities.shipments || {}),
+              productIds: Object.keys(entities.products || {}),
+              containerIds: Object.keys(entities.containers || {}),
+            }}
+            entities={entities}
             targetIds={{
               shipmentIds,
               batchIds,

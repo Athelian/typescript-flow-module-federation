@@ -1,6 +1,6 @@
 // @flow
-import { cloneDeep, flatten, intersection } from 'lodash';
 import type { IntlShape } from 'react-intl';
+import { flatten, intersection } from 'lodash';
 // $FlowFixMe missing define for partialRight
 import { partialRight } from 'ramda';
 import { removeTypename } from 'utils/data';
@@ -64,128 +64,6 @@ const formatContainerGroups = (voyages: Array<Object>): Array<Object> =>
     warehouseArrival: !warehouseArrival ? null : formatTimeline(warehouseArrival),
     deliveryReady: !deliveryReady ? null : formatTimeline(deliveryReady),
   }));
-
-/**
- *
- * @param {*} targets selected cards
- * @param {*} entities data from API
- */
-export const findAllPossibleIds = (
-  selected: {
-    orderIds: Array<string>,
-    orderItemIds: Array<string>,
-    batchIds: Array<string>,
-    shipmentIds: Array<string>,
-  },
-  entities: {
-    orders: Object,
-    orderItems: Object,
-    batches: Object,
-    shipments: Object,
-    products: Object,
-    containers: Object,
-  }
-): {
-  orderIds: Array<Object>,
-  orderItemIds: Array<Object>,
-  batchIds: Array<Object>,
-  shipmentIds: Array<Object>,
-  productIds: Array<Object>,
-  containerIds: Array<Object>,
-} => {
-  logger.warn({
-    selected,
-    entities,
-  });
-  const { orderIds, orderItemIds, batchIds, shipmentIds } = cloneDeep(selected);
-  // If Order is selected, the entire Order tree (Order, Items, Product, and Batches)
-  // plus all related Shipments go to the Edit view
-  (Object.values(entities.orders || {}): any).forEach(order => {
-    if (selected.orderIds.includes(order.id)) {
-      if (order.orderItems) {
-        orderItemIds.push(...order.orderItems);
-        order.orderItems.forEach(orderItemId => {
-          const orderItem = entities.orderItems[orderItemId];
-          if (orderItem && orderItem.batches) {
-            batchIds.push(...orderItem.batches);
-          }
-        });
-      }
-
-      if (order.shipments) {
-        shipmentIds.push(...order.shipments);
-      }
-    }
-  });
-
-  // If Shipment is selected, the Shipment itself, all of its Batches,
-  // all of the Item parents of those Batches, all of the Product base Items
-  // and all of the Order parents of those Items go to the Edit view
-  (Object.entries(entities.shipments || {}): any).forEach((item: [string, Object]) => {
-    const [shipmentId, shipment] = item;
-    if (selected.shipmentIds.includes(shipmentId)) {
-      if (shipment.batches) {
-        batchIds.push(...shipment.batches);
-        shipment.batches.forEach(batchId => {
-          const batch = entities.batches[batchId];
-          if (batch && batch.orderItem) {
-            orderItemIds.push(batch.orderItem);
-            const orderItem = entities.orderItems[batch.orderItem];
-            if (orderItem && orderItem.order) {
-              orderIds.push(orderItem.order);
-            }
-          }
-        });
-      }
-    }
-  });
-
-  // If Item is selected, the Order parent, the Item and its Product and all of its Batches
-  // with all the related Shipments, go to the Edit view
-  (Object.entries(entities.orderItems || {}): Array<any>).forEach(([orderItemId, orderItem]) => {
-    if (selected.orderItemIds.includes(orderItemId)) {
-      orderIds.push(orderItem.order);
-      if (orderItem && orderItem.batches) {
-        batchIds.push(...orderItem.batches);
-        orderItem.batches.forEach(batchId => {
-          const batch = entities.batches[batchId];
-          const shipmentId = batch.shipment;
-          if (shipmentId && !shipmentIds.includes(shipmentId)) {
-            shipmentIds.push(shipmentId);
-          }
-        });
-      }
-    }
-  });
-
-  // If Batch is selected, the Order, Item and Product parent and the Batch itself
-  // and the related Shipment go to the Edit view
-  (Object.entries(entities.batches || {}): Array<any>).forEach(([batchId, batch]) => {
-    if (selected.batchIds.includes(batchId)) {
-      if (!orderItemIds.includes(batch.orderItem)) {
-        orderItemIds.push(batch.orderItem);
-        const orderItem = entities.orderItems[batch.orderItem];
-        if (orderItem && orderItem.order) {
-          orderIds.push(orderItem.order);
-        }
-      }
-      if (batch.shipment && !shipmentIds.includes(batch.shipment)) {
-        shipmentIds.push(batch.shipment);
-      }
-    }
-  });
-
-  const productIds = Object.keys(entities.products || {});
-  const containerIds = Object.keys(entities.containers || {});
-  return {
-    productIds,
-    orderIds: [...new Set(orderIds)],
-    orderItemIds: [...new Set(orderItemIds)],
-    batchIds: [...new Set(batchIds)],
-    shipmentIds: [...new Set(shipmentIds)],
-    containerIds,
-  };
-};
 
 export function findOrderAndShipmentIds(
   selectedItem: {

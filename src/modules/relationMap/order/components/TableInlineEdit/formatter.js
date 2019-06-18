@@ -1,42 +1,68 @@
 // @flow
-import normalize from './normalize';
-
 const array2Object = (inputArray: Array<any>): Object =>
   inputArray.reduce((result, key) => ({ ...result, [key]: true }), {});
 
 export const formatOrders = ({
   orders,
   shipments,
+  entities,
 }: {
   orders: Array<Object>,
   shipments: Array<Object>,
+  entities: {
+    orders: Object,
+    orderItems: Object,
+    batches: Object,
+    products: Object,
+    shipments: Object,
+    containers: Object,
+  },
 }) => {
-  const { entities } = normalize({ orders, orderItems: [], batches: [], shipments });
   const order = {};
   const orderItem = {};
   const batch = {};
   const shipment = {};
-  (Object.entries(entities.orders || {}): any).forEach(([orderId, orderData]) => {
+  (Object.entries(entities.orders || {}): any).forEach(([orderId]) => {
     const currentOrder = orders.find(item => item.id === orderId);
     if (currentOrder) {
+      const orderItemIds = Object.keys(entities.orderItems || {}).filter(
+        itemId => entities.orderItems[itemId].order === orderId
+      );
+      const allBatchIds = Object.keys(entities.batches || {}).filter(batchId =>
+        orderItemIds.includes(entities.batches[batchId].orderItem)
+      );
+      const shipmentIds = allBatchIds
+        .map(batchId => entities.batches[batchId] && entities.batches[batchId].mainShipment)
+        .filter(Boolean);
+
       order[orderId] = {
-        data: currentOrder,
+        data: {
+          ...currentOrder,
+          orderItems: orderItemIds.map(orderItemId => entities.orderItems[orderItemId]),
+        },
         relation: {
-          orderItem: array2Object(orderData.orderItems),
-          batch: array2Object(
-            orderData.orderItems
-              .map(orderItemId => entities.orderItems[orderItemId].batches)
-              .reduce((result, currentBatches) => result.concat(currentBatches), [])
-          ),
-          shipment: array2Object(orderData.shipments),
+          orderItem: array2Object(orderItemIds),
+          batch: array2Object(allBatchIds),
+          shipment: array2Object(shipmentIds),
         },
       };
-      orderData.shipments.forEach(shipmentId => {
+
+      shipmentIds.forEach(shipmentId => {
         const currentShipment = shipments.find(item => item.id === shipmentId);
         if (currentShipment) {
           if (!shipment[shipmentId]) {
             shipment[shipmentId] = {
-              data: currentShipment,
+              data: {
+                ...currentShipment,
+                containers: Object.keys(entities.containers || {})
+                  .filter(containerId => entities.containers[containerId].shipment === shipmentId)
+                  .map(containerId => ({
+                    ...entities.containers[containerId],
+                    batches: Object.keys(entities.batches || {})
+                      .filter(batchId => entities.batches[batchId].container === containerId)
+                      .map(batchId => entities.batches[batchId]),
+                  })),
+              },
               relation: {
                 order: {
                   [orderId]: true,
@@ -49,27 +75,32 @@ export const formatOrders = ({
         }
       });
 
-      orderData.orderItems.forEach(orderItemId => {
+      orderItemIds.forEach(orderItemId => {
         const orderItemData = entities.orderItems[orderItemId];
+        const batchIds = Object.keys(entities.batches || {}).filter(
+          batchId => entities.batches[batchId].orderItem === orderItemId
+        );
         if (orderItemData) {
           orderItem[orderItemId] = {
             data: {
               ...orderItemData,
-              batches: orderItemData.batches
+              batches: batchIds
                 .map(batchId => entities.batches[batchId])
                 .map(batchItem => ({
                   ...batchItem,
-                  shipment: batchItem.shipment ? entities.shipments[batchItem.shipment] : null,
+                  shipment: batchItem.mainShipment
+                    ? entities.shipments[batchItem.mainShipment]
+                    : null,
                 })),
             },
             relation: {
               order: {
                 [orderId]: true,
               },
-              batch: array2Object(orderItemData.batches || []),
+              batch: array2Object(batchIds),
             },
           };
-          (orderItemData.batches || []).forEach(batchId => {
+          batchIds.forEach(batchId => {
             const batchData = entities.batches[batchId];
             batch[batchId] = {
               data: batchData,
@@ -81,7 +112,7 @@ export const formatOrders = ({
                   [orderItemId]: true,
                 },
                 shipment: {
-                  ...(batchData.shipment ? { [batchData.shipment]: true } : {}),
+                  ...(batchData.mainShipment ? { [batchData.mainShipment]: true } : {}),
                 },
               },
             };

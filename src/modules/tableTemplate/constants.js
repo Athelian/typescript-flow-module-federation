@@ -693,33 +693,21 @@ export const orderItemColumnFields = [
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
       const { id: orderItemId } = values;
-      const { price, quantity } = editData.orderItems[orderItemId];
-      const [, order] =
-        (Object.entries(editData.orders || {}): Array<any>).find(
-          ([, currentOrder]) =>
-            currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
-        ) || [];
+      const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
+      const order = editData.orders[orderId];
       return `${price.amount * quantity}${order.currency}`;
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: orderItemId } = values;
-      const { price, quantity } = editData.orderItems[orderItemId];
-      const [, order] =
-        (Object.entries(editData.orders || {}): Array<any>).find(
-          ([, currentOrder]) =>
-            currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
-        ) || [];
+      const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
+      const order = editData.orders[orderId];
       return `${price.amount * quantity}${order.currency}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
         const { id: orderItemId } = values;
-        const { price, quantity } = editData.orderItems[orderItemId];
-        const [, order] =
-          (Object.entries(editData.orders || {}): Array<any>).find(
-            ([, currentOrder]) =>
-              currentOrder.orderItems && currentOrder.orderItems.includes(orderItemId)
-          ) || [];
+        const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
+        const order = editData.orders[orderId];
         return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
       },
     },
@@ -1141,14 +1129,14 @@ export const containerColumnFields = [
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((total, batch) => {
+      return (container.batches || []).reduce((total, batch) => {
         return total + getByPathWithDefault(0, `batches.${batch.id}.packageQuantity`, editData);
       }, 0);
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((total, batch) => {
+      return (container.batches || []).reduce((total, batch) => {
         return total + getByPathWithDefault(0, `batches.${batch.id}.packageQuantity`, editData);
       }, 0);
     },
@@ -1172,14 +1160,14 @@ export const containerColumnFields = [
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((total, batch) => {
+      return (container.batches || []).reduce((total, batch) => {
         return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((total, batch) => {
+      return (container.batches || []).reduce((total, batch) => {
         return total + getBatchLatestQuantity(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
@@ -1203,7 +1191,7 @@ export const containerColumnFields = [
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((orderItems, batch) => {
+      return (container.batches || []).reduce((orderItems, batch) => {
         const currentBatch = getByPath(`batches.${batch.id}`, editData);
         if (
           currentBatch &&
@@ -1219,7 +1207,7 @@ export const containerColumnFields = [
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((orderItems, batch) => {
+      return (container.batches || []).reduce((orderItems, batch) => {
         const currentBatch = getByPath(`batches.${batch.id}`, editData);
         if (
           currentBatch &&
@@ -1261,14 +1249,14 @@ export const containerColumnFields = [
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((total, batch) => {
+      return (container.batches || []).reduce((total, batch) => {
         return total + findVolume(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return `${container.batches.reduce((total, batch) => {
+      return `${(container.batches || []).reduce((total, batch) => {
         return total + findVolume(getByPath(`batches.${batch.id}`, editData));
       }, 0)}m³`;
     },
@@ -1293,14 +1281,14 @@ export const containerColumnFields = [
     getFieldValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return container.batches.reduce((total, batch) => {
+      return (container.batches || []).reduce((total, batch) => {
         return total + findWeight(getByPath(`batches.${batch.id}`, editData));
       }, 0);
     },
     getExportValue: (values: Object, editData: Object) => {
       const { id: containerId } = values;
       const container = editData.containers[containerId];
-      return `${container.batches.reduce((total, batch) => {
+      return `${(container.batches || []).reduce((total, batch) => {
         return total + findWeight(getByPath(`batches.${batch.id}`, editData));
       }, 0)}kg`;
     },
