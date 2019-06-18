@@ -22,7 +22,7 @@ export const TagDescriptionWrapperStyle: string = css`
   ${fontSizes.MAIN};
   color: ${colors.BLACK};
   padding: 0 10px;
-  height: 60px;
+  height: 35px;
   line-height: 20px;
   overflow: hidden;
 `;
