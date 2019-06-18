@@ -21,8 +21,8 @@ import {
   CancelButtonStyle,
 } from './style';
 
-// 9 sheets * 6 events
-const EventIncrement = 100 / (9 * 6);
+// 7 sheets * 6 events
+const EventIncrement = 100 / (7 * 6);
 
 type Props = {
   open: boolean,
