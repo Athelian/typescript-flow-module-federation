@@ -1,10 +1,11 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses, presets } from 'styles/common';
+import { colors, borderRadiuses, presets, fontSizes, layout } from 'styles/common';
 
 export const TaskStatusChartStyle: string = css`
-  width: min-content;
-  max-width: 100%;
+  width: 100%;
+  ${layout.GRID_VERTICAL};
+  grid-gap: 5px;
 `;
 
 export const ChartStyle: string = css`
@@ -23,7 +24,7 @@ export const ChartStyle: string = css`
 
 export const BarStyle = (color: string, percent: number): string => css`
   background-color: ${colors[color]};
-  ${color === 'WHITE' && `border: 1px solid ${colors.TEAL}`};
+  border: 1px solid ${color === 'WHITE' ? colors.TEAL : colors[color]};
   height: inherit;
   width: ${percent > 1 ? 100 : percent * 100}%;
   min-width: ${percent > 0 ? '20px' : '0px'};
@@ -33,19 +34,25 @@ export const PropsStyle: string = css`
   height: 20px;
   width: 100%;
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-auto-columns: min-content;
+  grid-auto-flow: column;
   justify-content: space-between;
 `;
 
 export const NumberStyle = (color: string): string => css`
-  height: 50px;
+  height: 20px;
+  width: 44px;
   ${presets.ELLIPSIS};
-  max-width: 50px;
-  min-width: 30px;
+  text-overflow: clip;
   ${borderRadiuses.BUTTON};
   background-color: ${colors[color]};
-  border: 1px solid ${color === 'WHITE' ? colors.TEAL : colors.WHITE};
+  border: 1px solid ${color === 'WHITE' ? colors.TEAL : colors[color]};
   color: ${color === 'WHITE' ? colors.TEAL : colors.WHITE};
-  height: inherit;
   text-align: center;
+  ${fontSizes.SMALL};
+  line-height: 18px;
+  padding: 0 2px;
+  & > svg {
+    margin: 0 2px 0 0;
+  }
 `;

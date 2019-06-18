@@ -90,6 +90,7 @@ import {
   faClock as CLOCK,
   faThList as TH_LIST,
   faSitemap as RELATED,
+  faForward as SKIPPED,
   // Shipment Timeline
   faBoxCheck as CARGO_READY,
   faAnchor as PORT,
@@ -194,6 +195,7 @@ export default {
   CONNECT,
   SPLIT,
   RELATED,
+  SKIPPED,
 
   BRANCH,
   ACTIVE,
