@@ -100,8 +100,23 @@ const isAllowToSelectOrder = ({
   currentExporterId(state) === exporterId &&
   currentImporterId(state) === importerId &&
   state.connectOrder.enableSelectMode;
-const isAllowToSelectShipment = ({ importerId, state }: { importerId: string, state: UIState }) =>
-  currentImporterId(state) === importerId && state.connectShipment.enableSelectMode;
+const isAllowToSelectShipment = ({
+  importerId,
+  exporterId,
+  state,
+}: {
+  importerId: string,
+  exporterId: ?string,
+  state: UIState,
+}) => {
+  const selectedExporterId = currentExporterId(state);
+  const selectedImporterId = currentImporterId(state);
+  return (
+    importerId === selectedImporterId &&
+    (!exporterId || selectedExporterId === exporterId) &&
+    state.connectShipment.enableSelectMode
+  );
+};
 
 const hasSelectedAllBatches = ({
   state,
@@ -166,7 +181,8 @@ function selectors(state: UIState) {
       state.connectShipment.enableSelectMode && state.connectShipment.shipmentId !== '',
     isAllowToSelectOrder: (exporterId: string, importerId: string) =>
       isAllowToSelectOrder({ exporterId, importerId, state }),
-    isAllowToSelectShipment: (importerId: string) => isAllowToSelectShipment({ importerId, state }),
+    isAllowToSelectShipment: (importerId: string, exporterId: ?string) =>
+      isAllowToSelectShipment({ importerId, exporterId, state }),
     isAllowToSplitBatch: () =>
       state.targets.length === 1 &&
       state.targets.filter(item => item.includes(`${BATCH}-`)).length === 1,

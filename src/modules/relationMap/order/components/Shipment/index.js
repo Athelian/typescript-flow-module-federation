@@ -23,7 +23,14 @@ const defaultProps = {
   wrapperClassName: ItemWrapperStyle(false),
 };
 
-export default function Shipment({ wrapperClassName, id, no, importer, ...shipment }: Props) {
+export default function Shipment({
+  wrapperClassName,
+  id,
+  no,
+  importer,
+  exporter,
+  ...shipment
+}: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
   const { showTag, clone } = state;
@@ -47,8 +54,8 @@ export default function Shipment({ wrapperClassName, id, no, importer, ...shipme
           <ShipmentCard
             shipment={
               showTag
-                ? { ...shipment, id, no, importer }
-                : { ...shipment, id, no, importer, tags: [] }
+                ? { ...shipment, id, no, importer, exporter }
+                : { ...shipment, id, no, importer, exporter, tags: [] }
             }
             actions={[]}
           />
@@ -57,7 +64,7 @@ export default function Shipment({ wrapperClassName, id, no, importer, ...shipme
             <>
               {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
                 (() => {
-                  if (!uiSelectors.isAllowToSelectShipment(importer.id)) {
+                  if (!uiSelectors.isAllowToSelectShipment(importer.id, exporter && exporter.id)) {
                     return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
                   }
                   if (uiSelectors.selectedConnectShipment(id)) {
