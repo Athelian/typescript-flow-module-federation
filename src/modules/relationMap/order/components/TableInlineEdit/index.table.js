@@ -208,7 +208,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
               // trigger auto calculate for last quantity revision
               if (
                 batch &&
-                Number(subField) &&
+                Number(subField) >= 0 &&
                 Number(value) >= 0 &&
                 Number(subField) === batch.batchQuantityRevisions.length - 1 &&
                 batch.autoCalculatePackageQuantity
