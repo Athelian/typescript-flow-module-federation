@@ -121,7 +121,7 @@ const TagCard = ({ tag, actions, ...rest }: Props) => {
               getEntityType(entityTypes.find(entityType => entityType === 'Project'))
             )}
           >
-            <Icon icon="TABLE" rotation={90} />
+            <Icon icon="PROJECT" />
           </div>
         </div>
       </Link>

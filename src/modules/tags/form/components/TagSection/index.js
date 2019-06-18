@@ -203,13 +203,15 @@ const TagSection = ({ isNew, tag }: Props) => {
                     },
                     { setFieldTouched }
                   ) => {
-                    const entityTypeValue = { ...entityTypesOriginalValues, ...entityTypesState };
+                    const { entityTypes: originalEntityTypes } = entityTypesOriginalValues;
+                    const { entityTypes = [] } = entityTypesState;
+                    const touchEntityTypes = () => setFieldTouched('entityTypes');
 
                     return (
                       <FormField
                         name="entityTypes"
-                        initValue={entityTypeValue.entityTypes}
-                        setFieldValue={(field, newValue) => toggleSelectType(newValue)}
+                        initValue={originalEntityTypes}
+                        values={entityTypes}
                       >
                         {({ name, isTouched, errorMessage, onChange, ...inputHandlers }) => (
                           <FieldItem
@@ -226,9 +228,9 @@ const TagSection = ({ isNew, tag }: Props) => {
                               <FormTooltip
                                 isNew={isNew}
                                 errorMessage={
-                                  entityTypesOriginalValues.entityTypes.sort().join(',') !==
+                                  originalEntityTypes.sort().join(',') !==
                                     inputHandlers.value.sort().join(',') &&
-                                  entityTypeValue.entityTypes.length === 0 ? (
+                                  entityTypes.length === 0 ? (
                                     <FormattedMessage
                                       id="modules.Tags.required"
                                       defaultMessage="Type is a required field"
@@ -238,8 +240,8 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   )
                                 }
                                 changedValues={{
-                                  oldValue: entityTypesOriginalValues.entityTypes.sort().join(','),
-                                  newValue: entityTypesState.entityTypes.sort().join(','),
+                                  oldValue: originalEntityTypes.sort().join(','),
+                                  newValue: entityTypes.sort().join(','),
                                 }}
                               />
                             }
@@ -247,10 +249,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                               <div className={EntityTypesWrapperStyle}>
                                 <RadioInput
                                   data-testid="orderRadio"
-                                  selected={entityTypeValue.entityTypes.includes('Order')}
+                                  selected={entityTypes.includes('Order')}
                                   onToggle={() => {
                                     toggleSelectType('Order');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -267,10 +269,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   </div>
                                 </RadioInput>
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('OrderItem')}
+                                  selected={entityTypes.includes('OrderItem')}
                                   onToggle={() => {
                                     toggleSelectType('OrderItem');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -287,10 +289,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   </div>
                                 </RadioInput>
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('Batch')}
+                                  selected={entityTypes.includes('Batch')}
                                   onToggle={() => {
                                     toggleSelectType('Batch');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -308,10 +310,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('Shipment')}
+                                  selected={entityTypes.includes('Shipment')}
                                   onToggle={() => {
                                     toggleSelectType('Shipment');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -328,10 +330,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   </div>
                                 </RadioInput>
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('Product')}
+                                  selected={entityTypes.includes('Product')}
                                   onToggle={() => {
                                     toggleSelectType('Product');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -349,10 +351,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('User')}
+                                  selected={entityTypes.includes('User')}
                                   onToggle={() => {
                                     toggleSelectType('User');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -370,10 +372,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('Container')}
+                                  selected={entityTypes.includes('Container')}
                                   onToggle={() => {
                                     toggleSelectType('Container');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -390,10 +392,10 @@ const TagSection = ({ isNew, tag }: Props) => {
                                   </div>
                                 </RadioInput>
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('Task')}
+                                  selected={entityTypes.includes('Task')}
                                   onToggle={() => {
                                     toggleSelectType('Task');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
@@ -411,16 +413,16 @@ const TagSection = ({ isNew, tag }: Props) => {
                                 </RadioInput>
 
                                 <RadioInput
-                                  selected={entityTypeValue.entityTypes.includes('Project')}
+                                  selected={entityTypes.includes('Project')}
                                   onToggle={() => {
                                     toggleSelectType('Project');
-                                    setFieldTouched('entityTypes');
+                                    touchEntityTypes();
                                   }}
                                   editable={allowCreateOrUpdate}
                                 >
                                   <div className={EntityTypeStyle}>
                                     <div className={EntityIconStyle('PROJECT')}>
-                                      <Icon icon="TABLE" rotation={90} />
+                                      <Icon icon="PROJECT" />
                                     </div>
                                     <Label>
                                       <FormattedMessage
