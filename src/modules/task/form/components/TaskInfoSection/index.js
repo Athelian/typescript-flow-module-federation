@@ -3,7 +3,6 @@ import React from 'react';
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
-import { isBefore } from 'date-fns';
 import { ObjectValue } from 'react-values';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_FORM } from 'modules/permission/constants/order';
@@ -15,7 +14,7 @@ import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
 import { spreadOrderItem } from 'utils/item';
 import { checkEditableFromEntity } from 'utils/task';
-import { formatToGraphql, startOfToday } from 'utils/date';
+import { formatToGraphql, startOfToday, isBefore } from 'utils/date';
 import {
   ShipmentCard,
   OrderCard,

@@ -1,6 +1,6 @@
 // @flow
 import { isNullOrUndefined } from 'utils/fp';
-import { isBefore, isAfter } from 'date-fns';
+import { isBefore, isAfter } from 'utils/date';
 
 export const getTimelineColoring = ({
   cargoReady,
