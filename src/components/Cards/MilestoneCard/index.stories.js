@@ -18,24 +18,13 @@ storiesOf('Card', module).add('Milestone Card', () => (
             name: 'Milestone TITLE',
             dueDate: '2019-6-30',
             completedAt: '2019-6-30',
-            tasks: [
-              {
-                completedAt: '2019-6-30',
-              },
-              {
-                completedAt: '2019-6-30',
-              },
-              {
-                inProgressAt: '2019-6-30',
-              },
-              {
-                skippedAt: '2019-6-30',
-              },
-              {
-                dueDate: '2019-1-30',
-              },
-              {},
-            ],
+            taskCount: {
+              count: 6,
+              delayed: 1,
+              completed: 2,
+              inProgress: 1,
+              remain: 1,
+            },
           }}
         />
       </div>
@@ -45,7 +34,13 @@ storiesOf('Card', module).add('Milestone Card', () => (
           milestone={{
             name: 'Milestone long long long long title',
             dueDate: '2019-6-30',
-            tasks: [],
+            taskCount: {
+              count: 0,
+              delayed: 0,
+              completed: 0,
+              inProgress: 0,
+              remain: 0,
+            },
           }}
         />
       </div>

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { isBefore, startOfToday } from 'utils/date';
 import { Display, FieldItem, Label } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
@@ -22,48 +21,20 @@ type Props = {
   milestone: {
     name: string,
     dueDate: string,
-    tasks: Array<Object>,
+    taskCount: {
+      count: number,
+      remain: number,
+      inProgress: number,
+      completed: number,
+      delayed: number,
+    },
     completedAt: string,
   },
 };
 
-export const calculateTasksCompletion = (tasks: Array<Object>) => {
-  let completed = 0;
-  let inProgress = 0;
-  let skipped = 0;
-  let unCompleted = 0;
-  let overdueTasks = 0;
-  tasks.forEach(task => {
-    const { completedAt, inProgressAt, skippedAt, dueDate } = task;
-    if (isBefore(new Date(dueDate), startOfToday())) {
-      overdueTasks += 1;
-    }
-
-    if (completedAt) {
-      completed += 1;
-    } else if (inProgressAt) {
-      inProgress += 1;
-    } else if (skippedAt) {
-      skipped += 1;
-    } else {
-      unCompleted += 1;
-    }
-  });
-  return {
-    completed,
-    inProgress,
-    skipped,
-    unCompleted,
-    overdueTasks,
-  };
-};
-
 const MilestoneCard = ({ milestone }: Props) => {
-  const { name, dueDate, tasks = [], completedAt } = milestone;
-
-  const { completed, inProgress, skipped, unCompleted, overdueTasks } = calculateTasksCompletion(
-    tasks
-  );
+  const { name, dueDate, taskCount, completedAt } = milestone;
+  const { count, remain, inProgress, completed, delayed } = taskCount;
 
   return (
     <BaseCard icon="MILESTONE" color="MILESTONE">
@@ -94,7 +65,7 @@ const MilestoneCard = ({ milestone }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={tasks.length} />
+                <FormattedNumber value={count} />
               </Display>
             }
           />
@@ -107,7 +78,7 @@ const MilestoneCard = ({ milestone }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={overdueTasks} />
+                <FormattedNumber value={delayed} />
               </Display>
             }
           />
@@ -116,20 +87,22 @@ const MilestoneCard = ({ milestone }: Props) => {
             <TaskStatusChart
               completed={completed}
               inProgress={inProgress}
-              skipped={skipped}
-              unCompleted={unCompleted}
+              // FIXME: wait for API, ref: https://zenport.slack.com/archives/C2JTDSRJ6/p1560920001006800
+              skipped={0}
+              unCompleted={remain}
             />
           </div>
 
           {completedAt ? (
-            <div className={MilestoneStatusWrapperStyle(true)}>
-              <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
-              <Icon icon="CLEAR" />
-            </div>
+            <>
+              <div className={MilestoneStatusWrapperStyle(true)}>
+                <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
+                <Icon icon="CHECKED" />
+              </div>
+            </>
           ) : (
             <div className={MilestoneStatusWrapperStyle(false)}>
               <FormattedMessage id="components.card.unCompleted" defaultMessage="UNCOMPLETED" />
-              <Icon icon="CHECKED" />
             </div>
           )}
         </div>
