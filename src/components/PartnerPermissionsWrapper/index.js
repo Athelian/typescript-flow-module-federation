@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 import { navigate } from '@reach/router';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
+import LoadingIcon from 'components/LoadingIcon';
 import PermissionContext from 'modules/permission/PermissionContext';
 import useUser from 'hooks/useUser';
 
@@ -28,7 +29,9 @@ const PartnerPermissionsWrapper = ({ data, children }: Props) => {
       variables={{ partnerId: getByPath('ownedBy.partner.id', data) }}
       fetchPolicy="cache-first"
     >
-      {({ data: permissionsData, error: permissionError }) => {
+      {({ loading, data: permissionsData, error: permissionError }) => {
+        if (loading) return <LoadingIcon />;
+
         if (permissionError) {
           if (permissionError.message && permissionError.message.includes('403')) {
             navigate('/403');
