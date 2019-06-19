@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Location } from '@reach/router';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   RM_ORDER_FOCUS_LIST,
   RM_PRODUCT_FOCUS_LIST,
@@ -154,22 +155,37 @@ const SideBar = () => {
                       />
                     )}
 
-                    {hasProjectsMenu && (
-                      <SubMenu
-                        hasActiveChild={
-                          pathnameSplit[1] === PATH_PRODUCT || pathnameSplit[1] === PATH_TASK
-                        }
-                        icon="PROJECT"
-                        label={<FormattedMessage {...messages.project} />}
-                      >
-                        {hasPermission(PROJECT_LIST) && (
-                          <MenuItem
-                            path={`/${PATH_PROJECT}`}
-                            isActive={pathnameSplit[1] === PATH_PROJECT}
+                    {isEnableBetaFeature ? (
+                      <>
+                        {hasProjectsMenu && (
+                          <SubMenu
+                            hasActiveChild={
+                              pathnameSplit[1] === PATH_PRODUCT || pathnameSplit[1] === PATH_TASK
+                            }
                             icon="PROJECT"
                             label={<FormattedMessage {...messages.project} />}
-                          />
+                          >
+                            {hasPermission(PROJECT_LIST) && (
+                              <MenuItem
+                                path={`/${PATH_PROJECT}`}
+                                isActive={pathnameSplit[1] === PATH_PROJECT}
+                                icon="PROJECT"
+                                label={<FormattedMessage {...messages.project} />}
+                              />
+                            )}
+                            {hasPermission(TASK_LIST) && (
+                              <MenuItem
+                                path={`/${PATH_TASK}`}
+                                isActive={pathnameSplit[1] === PATH_TASK}
+                                icon="TASK"
+                                label={<FormattedMessage {...messages.task} />}
+                              />
+                            )}
+                          </SubMenu>
                         )}
+                      </>
+                    ) : (
+                      <>
                         {hasPermission(TASK_LIST) && (
                           <MenuItem
                             path={`/${PATH_TASK}`}
@@ -178,7 +194,7 @@ const SideBar = () => {
                             label={<FormattedMessage {...messages.task} />}
                           />
                         )}
-                      </SubMenu>
+                      </>
                     )}
 
                     {hasNetworkMenu && (
