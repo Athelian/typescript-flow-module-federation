@@ -7,6 +7,7 @@ export const PATH_BATCH = 'batch';
 export const PATH_SHIPMENT = 'shipment';
 export const PATH_CONTAINER = 'container';
 export const PATH_PRODUCT = 'product';
+export const PATH_PROJECT = 'project';
 export const PATH_TASK = 'task';
 export const PATH_WAREHOUSE = 'warehouse';
 export const PATH_PARTNER = 'partner';
