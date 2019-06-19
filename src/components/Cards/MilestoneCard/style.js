@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { borderRadiuses, colors } from 'styles/common';
+import { borderRadiuses, colors, fontSizes } from 'styles/common';
 
 export const MilestoneCardStyle: string = css`
   display: flex;
@@ -23,7 +23,9 @@ export const MilestoneNameStyle: string = css`
 `;
 
 export const MilestoneStatusWrapperStyle = (completed: boolean) => css`
-  width: 100%;
+  position: relative;
+  width: 175px;
+  margin: 0 5px;
   height: 40px;
   ${borderRadiuses.BUTTON};
   display: flex;
@@ -31,6 +33,19 @@ export const MilestoneStatusWrapperStyle = (completed: boolean) => css`
   align-items: center;
   background-color: ${completed ? colors.TEAL : colors.GRAY_LIGHT};
   color: ${completed ? colors.WHITE : colors.GRAY_DARK};
+  ${fontSizes.SMALL};
+  letter-spacing: 2px;
+`;
+
+export const MilestoneStatusIconStyle: string = css`
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const TaskStatusChartStyle: string = css`

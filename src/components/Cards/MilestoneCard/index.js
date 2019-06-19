@@ -15,6 +15,7 @@ import {
   CommonCardGridStyle,
   TaskStatusChartStyle,
   MilestoneStatusWrapperStyle,
+  MilestoneStatusIconStyle,
 } from './style';
 
 type Props = {
@@ -97,7 +98,10 @@ const MilestoneCard = ({ milestone }: Props) => {
             <>
               <div className={MilestoneStatusWrapperStyle(true)}>
                 <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
-                <Icon icon="CHECKED" />
+
+                <div className={MilestoneStatusIconStyle}>
+                  <Icon icon="CHECKED" />
+                </div>
               </div>
             </>
           ) : (
