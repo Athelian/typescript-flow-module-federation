@@ -28,7 +28,7 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
   const [importOpen, setImportOpen] = React.useState(false);
 
   return (
-    <div className={UserMenuDropDownWrapperStyle(isOpen)}>
+    <div className={UserMenuDropDownWrapperStyle(isOpen, !isAppInProduction)}>
       <BooleanValue>
         {({ value: isLogoutDialogOpen, set: logoutDialogToggle }) => (
           <>
