@@ -2,7 +2,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { isForbidden } from 'utils/data';
-import { isBefore, startOfToday } from 'utils/date';
 import { Display, FieldItem, Label } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
@@ -24,53 +23,20 @@ type Props = {
     name: string,
     dueDate: string,
     milestones: Array<Object>,
-    taskCount: number,
+    taskCount: {
+      count: number,
+      remain: number,
+      inProgress: number,
+      completed: number,
+      delayed: number,
+    },
     tags: Array<Object>,
   },
 };
 
-export const deStructureMilestones = (milestones: Array<Object>) => {
-  let completed = 0;
-  let inProgress = 0;
-  let skipped = 0;
-  let unCompleted = 0;
-  let overdueTasks = 0;
-
-  for (let i = 0; i < milestones.length; i += 1) {
-    const { tasks = [] } = milestones[i];
-    for (let j = 0; j < tasks.length; j += 1) {
-      const { completedAt, inProgressAt, skippedAt, dueDate } = tasks[j];
-      if (isBefore(new Date(dueDate), startOfToday())) {
-        overdueTasks += 1;
-      }
-
-      if (completedAt) {
-        completed += 1;
-      } else if (inProgressAt) {
-        inProgress += 1;
-      } else if (skippedAt) {
-        skipped += 1;
-      } else {
-        unCompleted += 1;
-      }
-    }
-  }
-
-  return {
-    completed,
-    inProgress,
-    skipped,
-    unCompleted,
-    overdueTasks,
-  };
-};
-
 const ProjectCard = ({ project }: Props) => {
   const { name, dueDate, milestones = [], taskCount, tags = [] } = project;
-
-  const { completed, inProgress, skipped, unCompleted, overdueTasks } = deStructureMilestones(
-    milestones
-  );
+  const { count, remain, inProgress, completed, delayed } = taskCount;
 
   return (
     <BaseCard icon="PROJECT" color="PROJECT">
@@ -116,7 +82,7 @@ const ProjectCard = ({ project }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={taskCount} />
+                <FormattedNumber value={count} />
               </Display>
             }
           />
@@ -129,7 +95,7 @@ const ProjectCard = ({ project }: Props) => {
             }
             input={
               <Display>
-                <FormattedNumber value={overdueTasks} />
+                <FormattedNumber value={delayed} />
               </Display>
             }
           />
@@ -138,8 +104,9 @@ const ProjectCard = ({ project }: Props) => {
             <TaskStatusChart
               completed={completed}
               inProgress={inProgress}
-              skipped={skipped}
-              unCompleted={unCompleted}
+              // FIXME: wait for API, ref: https://zenport.slack.com/archives/C2JTDSRJ6/p1560920001006800
+              skipped={0}
+              unCompleted={remain}
             />
           </div>
 

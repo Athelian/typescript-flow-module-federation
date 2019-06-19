@@ -17,30 +17,15 @@ storiesOf('Card', module).add('Project Card', () => (
           project={{
             name: 'PROJECT TITLE',
             dueDate: '2019-6-30',
-            milestones: [
-              {
-                tasks: [
-                  {
-                    completedAt: '2019-6-30',
-                  },
-                  {
-                    completedAt: '2019-6-30',
-                  },
-                  {
-                    inProgressAt: '2019-6-30',
-                  },
-                  {
-                    skippedAt: '2019-6-30',
-                  },
-                  {
-                    dueDate: '2019-1-30',
-                  },
-                  {},
-                ],
-              },
-              {},
-            ],
-            taskCount: 20,
+            taskCount: {
+              count: 20,
+              remain: 1,
+              inProgress: 2,
+              completed: 2,
+              rejected: 2,
+              approved: 2,
+              delayed: 2,
+            },
             tags: [
               { id: 1, name: 'tag1', color: '#123456' },
               { id: 2, name: 'tag2', color: '#FF00FF' },
@@ -57,8 +42,15 @@ storiesOf('Card', module).add('Project Card', () => (
           project={{
             name: 'PROJECT long long long long title',
             dueDate: '2019-6-30',
-            milestones: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-            taskCount: 20,
+            taskCount: {
+              taskCount: {
+                count: 20,
+                remain: 1,
+                inProgress: 2,
+                completed: 2,
+                delayed: 2,
+              },
+            },
             tags: [],
           }}
         />
