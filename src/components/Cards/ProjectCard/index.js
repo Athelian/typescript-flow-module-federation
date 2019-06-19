@@ -18,7 +18,11 @@ import {
   TagsWrapperStyle,
 } from './style';
 
-type Props = {
+type OptionalProps = {
+  onClick: Function,
+};
+
+type Props = OptionalProps & {
   project: {
     name: string,
     dueDate: string,
@@ -34,12 +38,12 @@ type Props = {
   },
 };
 
-const ProjectCard = ({ project }: Props) => {
+const ProjectCard = ({ project, onClick }: Props) => {
   const { name, dueDate, milestones = [], taskCount, tags = [] } = project;
   const { count, remain, inProgress, completed, delayed } = taskCount;
 
   return (
-    <BaseCard icon="PROJECT" color="PROJECT">
+    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick}>
       <div className={ProjectCardStyle}>
         <div className={CommonCardGridStyle}>
           <div className={ProjectNameStyle}>

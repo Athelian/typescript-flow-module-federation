@@ -21,3 +21,27 @@ export const projectCardFragment = gql`
     }
   }
 `;
+
+export const projectFragment = gql`
+  fragment projectFragment on Project {
+    id
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    name
+    description
+    dueDate
+    milestones {
+      ... on Milestone {
+        id
+      }
+    }
+    tags {
+      ...tagFragment
+    }
+  }
+`;
