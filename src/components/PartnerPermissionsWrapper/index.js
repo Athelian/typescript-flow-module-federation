@@ -1,21 +1,25 @@
 // @flow
-import React, { useContext } from 'react';
+import * as React from 'react';
 import { Query } from 'react-apollo';
 import { navigate } from '@reach/router';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { partnerPermissionQuery } from 'components/common/QueryForm/query';
 import PermissionContext from 'modules/permission/PermissionContext';
-import LoadingIcon from 'components/LoadingIcon';
 import useUser from 'hooks/useUser';
 
-const PartnerPermissionsWrapper = ({ data, children }: { data: Object, children: Function }) => {
+type Props = {
+  data: Object,
+  children: (permissions: Array<string>, isOwner: boolean) => React$Node,
+};
+
+const PartnerPermissionsWrapper = ({ data, children }: Props) => {
   const { isOwnerBy } = useUser();
   const partnerId = getByPath('ownedBy.partner.id', data);
   const isOwner = isOwnerBy(partnerId);
-  const { permissions } = useContext(PermissionContext);
+  const { permissions } = React.useContext(PermissionContext);
 
   if (isOwner) {
-    return children(permissions);
+    return children(permissions, isOwner);
   }
 
   return (
@@ -24,8 +28,7 @@ const PartnerPermissionsWrapper = ({ data, children }: { data: Object, children:
       variables={{ partnerId: getByPath('ownedBy.partner.id', data) }}
       fetchPolicy="cache-first"
     >
-      {({ loading: isLoading, data: permissionsData, error: permissionError }) => {
-        if (isLoading) return <LoadingIcon />;
+      {({ data: permissionsData, error: permissionError }) => {
         if (permissionError) {
           if (permissionError.message && permissionError.message.includes('403')) {
             navigate('/403');
@@ -33,7 +36,10 @@ const PartnerPermissionsWrapper = ({ data, children }: { data: Object, children:
 
           return permissionError.message;
         }
-        return children(getByPathWithDefault([], 'viewer.permissionsFromPartner', permissionsData));
+        return children(
+          getByPathWithDefault([], 'viewer.permissionsFromPartner', permissionsData),
+          isOwner
+        );
       }}
     </Query>
   );

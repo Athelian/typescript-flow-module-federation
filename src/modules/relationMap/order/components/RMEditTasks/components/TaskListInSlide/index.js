@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
 import { checkEditableFromEntity, parseGroupIds } from 'utils/task';
+import QueryFormPermissionContext from 'components/common/QueryForm/context';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
@@ -36,7 +37,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
     >
       {tasks.map((task, index) => (
         <PartnerPermissionsWrapper data={task} key={task.id}>
-          {permissions => (
+          {(permissions, isOwner) => (
             <BooleanValue>
               {({ value: isOpen, set: toggleTaskForm }) => (
                 <>
@@ -59,16 +60,31 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                   />
                   <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
                     {isOpen && (
-                      <TaskFormInSlide
-                        groupIds={parseGroupIds(task)}
-                        editable
-                        entity={task.entity}
-                        task={{ ...task, sort: index }}
-                        onSave={value => {
-                          onChange(task.id, value);
-                          toggleTaskForm(false);
+                      <QueryFormPermissionContext.Provider
+                        value={{
+                          isOwner,
+                          permissions,
                         }}
-                      />
+                      >
+                        <TaskFormInSlide
+                          groupIds={parseGroupIds(task)}
+                          editable={checkEditableFromEntity(
+                            getByPath('entity.__typename', task),
+                            (checkPermission: string | Array<string>) => {
+                              if (Array.isArray(checkPermission)) {
+                                return intersection(permissions, checkPermission).length > 0;
+                              }
+                              return permissions.includes(checkPermission);
+                            }
+                          )}
+                          entity={task.entity}
+                          task={{ ...task, sort: index }}
+                          onSave={value => {
+                            onChange(task.id, value);
+                            toggleTaskForm(false);
+                          }}
+                        />
+                      </QueryFormPermissionContext.Provider>
                     )}
                   </SlideView>
                 </>
