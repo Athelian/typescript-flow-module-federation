@@ -205,6 +205,18 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
 
             if (field === 'batchQuantityRevisions') {
               const batch = getByPath(`batches.${id}`, editData);
+              // trigger auto calculate when delete quantity
+              if (batch && batch.autoCalculatePackageQuantity && Array.isArray(value)) {
+                newEditData = set(
+                  newEditData,
+                  `batches.${id}.packageQuantity`,
+                  calculatePackageQuantity({
+                    ...batch,
+                    batchQuantityRevisions: value,
+                  })
+                );
+              }
+
               // trigger auto calculate for last quantity revision
               if (
                 batch &&
