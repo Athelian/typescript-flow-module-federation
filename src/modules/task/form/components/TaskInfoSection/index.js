@@ -1083,103 +1083,95 @@ const TaskInfoSection = ({
 
                 <div className={TaskStatusWrapperStyle}>
                   <div className={AssignedToStyle}>
-                    <FieldItem
-                      vertical
-                      label={
-                        <Label height="30px">
-                          <FormattedMessage
-                            id="modules.Tasks.assignedToComplete"
-                            defaultMessage="ASSIGNED TO COMPLETE"
-                          />
-                        </Label>
-                      }
-                      input={
-                        <TaskAssignmentInput
-                          groupIds={groupIds}
-                          users={values.assignedTo}
-                          onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
-                          activeUserId={activeUser && activeUser.id}
-                          onActivateUser={
-                            isInTemplate
-                              ? null
-                              : user => {
-                                  setFieldValues({
-                                    inProgressBy: user,
-                                    inProgressAt: new Date(),
-                                  });
-                                  setFieldTouched('inProgressBy');
-                                  setFieldTouched('inProgressAt');
-                                }
-                          }
-                          onDeactivateUser={() => {
-                            if (status === COMPLETED) {
-                              setFieldValues({
-                                completedBy: null,
-                                inProgressAt: null,
-                              });
-                              setFieldTouched('completedBy');
-                              setFieldTouched('completedBy');
-                            } else if (status === IN_PROGRESS) {
-                              setFieldValues({
-                                inProgressBy: null,
-                                inProgressAt: null,
-                              });
-                              setFieldTouched('inProgressBy');
-                              setFieldTouched('inProgressAt');
-                            }
-                          }}
-                          editable={editable.assignedTo && editable.inProgress}
+                    <GridColumn gap="5px">
+                      <Label height="30px">
+                        <FormattedMessage
+                          id="modules.Tasks.assignedToComplete"
+                          defaultMessage="ASSIGNED TO COMPLETE"
                         />
-                      }
-                    />
+                      </Label>
 
-                    <FieldItem
-                      vertical
-                      label={
-                        <Label height="30px" align="right">
-                          <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
-                        </Label>
-                      }
-                      input={
-                        isInTemplate ? (
-                          <Display color="GRAY_LIGHT">
-                            <FormattedMessage
-                              id="modules.Tasks.statusDisabled"
-                              defaultMessage="Status will be displayed here"
+                      <TaskAssignmentInput
+                        groupIds={groupIds}
+                        users={values.assignedTo}
+                        onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
+                        activeUserId={activeUser && activeUser.id}
+                        onActivateUser={
+                          isInTemplate
+                            ? null
+                            : user => {
+                                setFieldValues({
+                                  inProgressBy: user,
+                                  inProgressAt: new Date(),
+                                });
+                                setFieldTouched('inProgressBy');
+                                setFieldTouched('inProgressAt');
+                              }
+                        }
+                        onDeactivateUser={() => {
+                          if (status === COMPLETED) {
+                            setFieldValues({
+                              completedBy: null,
+                              inProgressAt: null,
+                            });
+                            setFieldTouched('completedBy');
+                            setFieldTouched('completedBy');
+                          } else if (status === IN_PROGRESS) {
+                            setFieldValues({
+                              inProgressBy: null,
+                              inProgressAt: null,
+                            });
+                            setFieldTouched('inProgressBy');
+                            setFieldTouched('inProgressAt');
+                          }
+                        }}
+                        editable={editable.assignedTo && editable.inProgress}
+                      />
+                    </GridColumn>
+
+                    <GridColumn gap="5px">
+                      <Label height="30px" align="right">
+                        <FormattedMessage id="modules.Tasks.status" defaultMessage="STATUS" />
+                      </Label>
+
+                      {isInTemplate ? (
+                        <Display color="GRAY_LIGHT">
+                          <FormattedMessage
+                            id="modules.Tasks.statusDisabled"
+                            defaultMessage="Status will be displayed here"
+                          />
+                        </Display>
+                      ) : (
+                        <>
+                          {activeUser ? (
+                            <TaskStatusInput
+                              activeUser={activeUser}
+                              status={status}
+                              onClick={() => {
+                                setFieldValues({
+                                  completedBy: activeUser,
+                                  completedAt: formatToGraphql(startOfToday()),
+                                });
+                                setFieldTouched('completedBy');
+                                setFieldTouched('completedAt');
+                              }}
+                              editable={
+                                activeUser
+                                  ? editable.completed
+                                  : editable.inProgress && editable.completed
+                              }
                             />
-                          </Display>
-                        ) : (
-                          <>
-                            {activeUser ? (
-                              <TaskStatusInput
-                                activeUser={activeUser}
-                                status={status}
-                                onClick={() => {
-                                  setFieldValues({
-                                    completedBy: activeUser,
-                                    completedAt: formatToGraphql(startOfToday()),
-                                  });
-                                  setFieldTouched('completedBy');
-                                  setFieldTouched('completedAt');
-                                }}
-                                editable={
-                                  activeUser
-                                    ? editable.completed
-                                    : editable.inProgress && editable.completed
-                                }
+                          ) : (
+                            <Display color="GRAY_DARK">
+                              <FormattedMessage
+                                id="modules.Tasks.chooseUser"
+                                defaultMessage="Please choose a user to start the task"
                               />
-                            ) : (
-                              <Display color="GRAY_DARK">
-                                <FormattedMessage
-                                  id="modules.Tasks.chooseUser"
-                                  defaultMessage="Please choose a user to start the task"
-                                />
-                              </Display>
-                            )}
-                          </>
-                        )
-                      }
-                    />
+                            </Display>
+                          )}
+                        </>
+                      )}
+                    </GridColumn>
                   </div>
 
                   {status === COMPLETED && (
@@ -1238,128 +1230,119 @@ const TaskInfoSection = ({
                       <ObjectValue defaultValue={values.rejectedBy || values.approvedBy}>
                         {({ value: userChosen, set: setUserChosen }) => (
                           <div className={AssignedToStyle}>
-                            <FieldItem
-                              vertical
-                              label={
-                                <Label height="30px">
-                                  <FormattedMessage
-                                    id="modules.Tasks.assignedToApprove"
-                                    defaultMessage="ASSIGNED TO APPROVE"
-                                  />
-                                </Label>
-                              }
-                              input={
-                                <TaskAssignmentInput
-                                  groupIds={groupIds}
-                                  users={values.approvers}
-                                  onChange={newApprovers =>
-                                    setFieldValue('approvers', newApprovers)
-                                  }
-                                  activeUserId={userChosen && userChosen.id}
-                                  onActivateUser={
-                                    isInTemplate
-                                      ? null
-                                      : user => {
-                                          setUserChosen(user);
-                                        }
-                                  }
-                                  onDeactivateUser={() => {
-                                    setUserChosen(null);
-                                    setFieldValues({
-                                      approvedBy: null,
-                                      approvedAt: null,
-                                      rejectedBy: null,
-                                      rejectedAt: null,
-                                    });
-                                  }}
-                                  editable={editable.approvers}
+                            <GridColumn gap="5px">
+                              <Label height="30px">
+                                <FormattedMessage
+                                  id="modules.Tasks.assignedToApprove"
+                                  defaultMessage="ASSIGNED TO APPROVE"
                                 />
-                              }
-                            />
+                              </Label>
 
-                            <FieldItem
-                              vertical
-                              label={
-                                <Label height="30px" align="right">
+                              <TaskAssignmentInput
+                                groupIds={groupIds}
+                                users={values.approvers}
+                                onChange={newApprovers => setFieldValue('approvers', newApprovers)}
+                                activeUserId={userChosen && userChosen.id}
+                                onActivateUser={
+                                  isInTemplate
+                                    ? null
+                                    : user => {
+                                        setUserChosen(user);
+                                      }
+                                }
+                                onDeactivateUser={() => {
+                                  setUserChosen(null);
+                                  setFieldValues({
+                                    approvedBy: null,
+                                    approvedAt: null,
+                                    rejectedBy: null,
+                                    rejectedAt: null,
+                                  });
+                                }}
+                                editable={editable.approvers}
+                              />
+                            </GridColumn>
+
+                            <GridColumn gap="5px">
+                              <Label height="30px" align="right">
+                                <FormattedMessage
+                                  id="modules.Tasks.approval"
+                                  defaultMessage="APPROVAL"
+                                />
+                              </Label>
+
+                              {isInTemplate ? (
+                                <Display color="GRAY_LIGHT">
                                   <FormattedMessage
-                                    id="modules.Tasks.approval"
-                                    defaultMessage="APPROVAL"
+                                    id="modules.Tasks.approvalDisabled"
+                                    defaultMessage="Approval will be displayed here"
                                   />
-                                </Label>
-                              }
-                              input={
-                                isInTemplate ? (
-                                  <Display color="GRAY_LIGHT">
-                                    <FormattedMessage
-                                      id="modules.Tasks.approvalDisabled"
-                                      defaultMessage="Approval will be displayed here"
-                                    />
-                                  </Display>
-                                ) : (
-                                  <>
-                                    {isUnapproved ? (
-                                      <>
-                                        {userChosen && userChosen.id ? (
-                                          <ApproveRejectMenu
-                                            width="200px"
-                                            onApprove={() => {
-                                              setFieldValues({
-                                                approvedBy: userChosen,
-                                                approvedAt: formatToGraphql(startOfToday()),
-                                                rejectedBy: null,
-                                                rejectedAt: null,
-                                              });
-                                              setFieldTouched('approvedBy');
-                                              setFieldTouched('approvedAt');
-                                            }}
-                                            onReject={() => {
-                                              setFieldValues({
-                                                approvedBy: null,
-                                                approvedAt: null,
-                                                rejectedBy: userChosen,
-                                                rejectedAt: formatToGraphql(startOfToday()),
-                                              });
-                                              setFieldTouched('rejectedBy');
-                                              setFieldTouched('rejectedAt');
-                                            }}
+                                </Display>
+                              ) : (
+                                <>
+                                  {isUnapproved ? (
+                                    <>
+                                      {userChosen && userChosen.id ? (
+                                        <ApproveRejectMenu
+                                          width="200px"
+                                          onApprove={() => {
+                                            setFieldValues({
+                                              approvedBy: userChosen,
+                                              approvedAt: formatToGraphql(startOfToday()),
+                                              rejectedBy: null,
+                                              rejectedAt: null,
+                                            });
+                                            setFieldTouched('approvedBy');
+                                            setFieldTouched('approvedAt');
+                                          }}
+                                          onReject={() => {
+                                            setFieldValues({
+                                              approvedBy: null,
+                                              approvedAt: null,
+                                              rejectedBy: userChosen,
+                                              rejectedAt: formatToGraphql(startOfToday()),
+                                            });
+                                            setFieldTouched('rejectedBy');
+                                            setFieldTouched('rejectedAt');
+                                          }}
+                                        />
+                                      ) : (
+                                        <Display color="GRAY_DARK">
+                                          <FormattedMessage
+                                            id="modules.Tasks.chooseUserForApproval"
+                                            defaultMessage="Please choose a user to start the approval"
                                           />
-                                        ) : (
-                                          <Display color="GRAY_DARK">
-                                            <FormattedMessage
-                                              id="modules.Tasks.chooseUserForApproval"
-                                              defaultMessage="Please choose a user to start the approval"
-                                            />
-                                          </Display>
-                                        )}
-                                      </>
-                                    ) : (
-                                      <TaskApprovalStatusInput
-                                        editable={editable.approved && editable.rejected}
-                                        approval={
-                                          values.approvedBy && values.approvedBy.id
-                                            ? {
-                                                approvedAt: values.approvedAt,
-                                                approvedBy: values.approvedBy,
-                                              }
-                                            : null
-                                        }
-                                        rejection={
-                                          values.rejectedBy && values.rejectedBy.id
-                                            ? {
-                                                rejectedBy: values.rejectedBy,
-                                                rejectedAt: values.rejectedAt,
-                                              }
-                                            : null
-                                        }
-                                      />
-                                    )}
-                                  </>
-                                )
-                              }
-                            />
+                                        </Display>
+                                      )}
+                                    </>
+                                  ) : (
+                                    <TaskApprovalStatusInput
+                                      editable={editable.approved && editable.rejected}
+                                      approval={
+                                        values.approvedBy && values.approvedBy.id
+                                          ? {
+                                              approvedAt: values.approvedAt,
+                                              approvedBy: values.approvedBy,
+                                            }
+                                          : null
+                                      }
+                                      rejection={
+                                        values.rejectedBy && values.rejectedBy.id
+                                          ? {
+                                              rejectedBy: values.rejectedBy,
+                                              rejectedAt: values.rejectedAt,
+                                            }
+                                          : null
+                                      }
+                                    />
+                                  )}
+                                </>
+                              )}
+                            </GridColumn>
                           </div>
                         )}
                       </ObjectValue>
+
                       {values.approvedBy && values.approvedBy.id && (
                         <FormField
                           name="approvedAt"
