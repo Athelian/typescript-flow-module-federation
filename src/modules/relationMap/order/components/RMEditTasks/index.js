@@ -1,8 +1,9 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { Query, Mutation } from 'react-apollo';
+import { Mutation } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
 import ActionDispatch from 'modules/relationMap/order/provider';
@@ -12,7 +13,7 @@ import { SlideViewNavBar } from 'components/NavBar';
 import useFilter from 'hooks/useFilter';
 import { FilterToolBar } from 'components/common';
 import { ResetButton, SaveButton } from 'components/Buttons';
-import { FormContainer, resetFormState } from 'modules/form';
+import { FormContainer } from 'modules/form';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/task/messages';
 import TaskListInSlide from './components/TaskListInSlide';
@@ -61,16 +62,14 @@ const onSave = async (
   }
 };
 
-const EditableTaskList = (props: Props) => {
+const RMEditTasks = (props: Props) => {
   const { intl } = props;
   const { state } = React.useContext(ActionDispatch);
-
   const uiSelectors = selectors(state);
   const orderIds = uiSelectors.targetedOrderIds();
   const orderItemIds = uiSelectors.targetedOrderItemIds();
   const batchIds = uiSelectors.targetedBatchIds();
   const shipmentIds = uiSelectors.targetedShipmentIds();
-
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -79,19 +78,16 @@ const EditableTaskList = (props: Props) => {
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
     { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
-
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(),
     'filterRMTasks'
   );
-
   const entities = [
     ...orderIds.map(orderId => ({ orderId })),
     ...orderItemIds.map(orderItemId => ({ orderItemId })),
     ...batchIds.map(batchId => ({ batchId })),
     ...shipmentIds.map(shipmentId => ({ shipmentId })),
   ];
-
   const variables = {
     ...queryVariables,
     filterBy: {
@@ -99,12 +95,20 @@ const EditableTaskList = (props: Props) => {
       entities,
     },
   };
+  const { data, loading: queryLoading, fetchMore } = useQuery(editableTaskListQuery, {
+    variables,
+    fetchPolicy: 'network-only',
+  });
+  const nextPage = getByPathWithDefault(1, 'tasks.page', data) + 1;
+  const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
+  const hasMore = nextPage <= totalPage;
+  const tasks = getByPathWithDefault([], 'tasks.nodes', data);
 
   return (
-    <Subscribe to={[RMEditTasksContainer, FormContainer]}>
-      {(rmEditTasksContainer, formContainer) => (
-        <Mutation mutation={taskUpdateManyMutation}>
-          {(saveTasks, { loading: isLoading, error: mutationError }) => (
+    <Mutation mutation={taskUpdateManyMutation}>
+      {(saveTasks, { loading: isLoading, error: mutationError }) => (
+        <Subscribe to={[RMEditTasksContainer, FormContainer]}>
+          {(rmEditTasksContainer, formContainer) => (
             <Layout
               navBar={
                 <SlideViewNavBar>
@@ -118,7 +122,7 @@ const EditableTaskList = (props: Props) => {
                     <>
                       <ResetButton
                         onClick={() => {
-                          resetFormState(rmEditTasksContainer, 'tasks');
+                          rmEditTasksContainer.initDetailValues([]);
                           formContainer.onReset();
                         }}
                       />
@@ -143,39 +147,25 @@ const EditableTaskList = (props: Props) => {
               }
             >
               {mutationError && <p>Error: Please try again.</p>}
-              <Query query={editableTaskListQuery} variables={variables} fetchPolicy="network-only">
-                {({ error: queryError, loading: queryLoading, data, fetchMore }) => {
-                  if (queryError) {
-                    return queryError.message;
-                  }
-
-                  const nextPage = getByPathWithDefault(1, 'tasks.page', data) + 1;
-                  const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
-                  const hasMore = nextPage <= totalPage;
-
-                  if (!queryLoading && rmEditTasksContainer.state.tasks.length === 0) {
-                    rmEditTasksContainer.initDetailValues(
-                      getByPathWithDefault([], 'tasks.nodes', data)
-                    );
-                  }
-
-                  return (
-                    <TaskListInSlide
-                      tasks={getByPathWithDefault([], 'tasks.nodes', data)}
-                      onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
-                      hasMore={hasMore}
-                      isLoading={queryLoading}
-                      onChange={rmEditTasksContainer.setDeepFieldValue}
-                    />
-                  );
-                }}
-              </Query>
+              <TaskListInSlide
+                tasks={rmEditTasksContainer.selectTasks(tasks)}
+                onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
+                hasMore={hasMore}
+                isLoading={queryLoading}
+                onChange={(id, updateTask) =>
+                  rmEditTasksContainer.updateTaskById({
+                    id,
+                    updateTask,
+                    tasks,
+                  })
+                }
+              />
             </Layout>
           )}
-        </Mutation>
+        </Subscribe>
       )}
-    </Subscribe>
+    </Mutation>
   );
 };
 
-export default injectIntl(EditableTaskList);
+export default injectIntl(RMEditTasks);

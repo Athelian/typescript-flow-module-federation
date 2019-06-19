@@ -13,7 +13,7 @@ import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 
 type Props = {
   tasks: Array<Object>,
-  onChange: Function,
+  onChange: (taskId: string, value: Object) => void,
   onLoadMore: Function,
   hasMore: boolean,
   isLoading: boolean,
@@ -35,11 +35,11 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
       }
     >
       {tasks.map((task, index) => (
-        <BooleanValue key={task.id}>
-          {({ value: isOpen, set: toggleTaskForm }) => (
-            <>
-              <PartnerPermissionsWrapper data={task}>
-                {permissions => (
+        <PartnerPermissionsWrapper data={task} key={task.id}>
+          {permissions => (
+            <BooleanValue>
+              {({ value: isOpen, set: toggleTaskForm }) => (
+                <>
                   <TaskCard
                     groupIds={parseGroupIds(task)}
                     entity={task[lowerFirst(getByPath('entity.__typename', task))]}
@@ -54,31 +54,31 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                         return permissions.includes(checkPermission);
                       }
                     )}
-                    saveOnBlur={value => onChange(`tasks.${index}`, value)}
+                    saveOnBlur={value => onChange(task.id, value)}
                     onClick={() => toggleTaskForm(true)}
                   />
-                )}
-              </PartnerPermissionsWrapper>
-              <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
-                {isOpen && (
-                  <TaskFormInSlide
-                    groupIds={parseGroupIds(task)}
-                    editable
-                    entity={task.entity}
-                    task={{ ...task, sort: index }}
-                    onSave={value => {
-                      onChange(`tasks.${index}`, value);
-                      toggleTaskForm(false);
-                    }}
-                  />
-                )}
-              </SlideView>
-            </>
+                  <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
+                    {isOpen && (
+                      <TaskFormInSlide
+                        groupIds={parseGroupIds(task)}
+                        editable
+                        entity={task.entity}
+                        task={{ ...task, sort: index }}
+                        onSave={value => {
+                          onChange(task.id, value);
+                          toggleTaskForm(false);
+                        }}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
           )}
-        </BooleanValue>
+        </PartnerPermissionsWrapper>
       ))}
     </GridView>
   );
 };
 
-export default TaskListInSlide;
+export default React.memo<Props>(TaskListInSlide);

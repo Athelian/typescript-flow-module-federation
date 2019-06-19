@@ -12,6 +12,7 @@ import logger from 'utils/logger';
 import OutsideClickHandler from 'components/OutsideClickHandler';
 import { getByPathWithDefault } from 'utils/fp';
 import { findTotalAutoFillBatches } from 'utils/batch';
+import emitter from 'utils/emitter';
 import Dialog from 'components/Dialog';
 import LoadingIcon from 'components/LoadingIcon';
 import { Label } from 'components/Form';
@@ -193,7 +194,13 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                         hoverBackgroundColor="TEAL_DARK"
                         onClick={() => toggleTaskList(true)}
                       />
-                      <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskList(false)}>
+                      <SlideView
+                        isOpen={isOpen}
+                        onRequestClose={() => {
+                          emitter.emit('RESET_RM_TASKS');
+                          toggleTaskList(false);
+                        }}
+                      >
                         {isOpen && <RMEditTasks />}
                       </SlideView>
                     </>
