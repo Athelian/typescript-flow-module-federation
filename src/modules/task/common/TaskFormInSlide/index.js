@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Provider, Subscribe } from 'unstated';
+import withCache from 'hoc/withCache';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
@@ -131,4 +132,4 @@ const TaskFormInSlide = ({
 
 TaskFormInSlide.defaultProps = defaultProps;
 
-export default TaskFormInSlide;
+export default withCache(TaskFormInSlide, ['task', 'entity', 'groupIds', 'editable']);
