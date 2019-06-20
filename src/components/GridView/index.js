@@ -21,7 +21,7 @@ type Props = OptionalProps & {
   isEmpty: boolean,
   emptyMessage: any,
   itemWidth: string,
-  children: any,
+  children: React$Node,
 };
 
 const defaultProps = {

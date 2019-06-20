@@ -43,3 +43,19 @@ export const projectFragment = gql`
     }
   }
 `;
+
+export const milestoneCardFragment = gql`
+  fragment milestoneCardFragment on Milestone {
+    id
+    name
+    description
+    dueDate
+    taskCount {
+      count
+      remain
+      inProgress
+      completed
+      delayed
+    }
+  }
+`;

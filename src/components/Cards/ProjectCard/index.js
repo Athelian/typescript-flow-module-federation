@@ -38,12 +38,12 @@ type Props = OptionalProps & {
   },
 };
 
-const ProjectCard = ({ project, onClick }: Props) => {
+const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   const { name, dueDate, milestones = [], taskCount, tags = [] } = project;
   const { count, remain, inProgress, completed, delayed } = taskCount;
 
   return (
-    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick}>
+    <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick} {...rest}>
       <div className={ProjectCardStyle}>
         <div className={CommonCardGridStyle}>
           <div className={ProjectNameStyle}>

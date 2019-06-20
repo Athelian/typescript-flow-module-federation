@@ -33,12 +33,12 @@ type Props = {
   },
 };
 
-const MilestoneCard = ({ milestone }: Props) => {
+const MilestoneCard = ({ milestone, ...rest }: Props) => {
   const { name, dueDate, taskCount, completedAt } = milestone;
   const { count, remain, inProgress, completed, delayed } = taskCount;
 
   return (
-    <BaseCard icon="MILESTONE" color="MILESTONE">
+    <BaseCard icon="MILESTONE" color="MILESTONE" {...rest}>
       <div className={MilestoneCardStyle}>
         <div className={CommonCardGridStyle}>
           <div className={MilestoneNameStyle}>

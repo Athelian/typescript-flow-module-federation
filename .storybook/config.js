@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { range } from 'lodash';
-import faker from 'faker';
 import { configure, addDecorator } from '@storybook/react';
 import apolloStorybookDecorator from 'apollo-storybook-react';
 import { withInfo } from '@storybook/addon-info';
@@ -11,33 +9,7 @@ import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import StoryBookWrapper from 'components/StoryBookWrapper';
 import introspectionQueryResultData from 'generated/fragmentTypes.json';
 import typeDefs from 'generated/schema.graphql';
-
-const baseUserMock = () => {
-  return {
-    id: faker.random.uuid(),
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    email: faker.internet.email(),
-    role: 'default',
-    tags: [],
-    __typename: 'User',
-  };
-};
-
-const usersMock = range(10).map(baseUserMock);
-
-const mocks = {
-  User: () => {
-    return baseUserMock();
-  },
-  UserPayloadPagination: () => {
-    return {
-      nodes: usersMock,
-      page: 1,
-      totalPage: 1,
-    };
-  },
-};
+import mocks from './mocks';
 
 addDecorator(withInfo);
 addDecorator(withA11y);
