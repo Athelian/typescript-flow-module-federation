@@ -50,7 +50,7 @@ function getQuantitySummary(item: Object) {
 
 const ProductCard = ({ item }: Props) => {
   const { name, serial, productProviders, tags, files } = item;
-  const { supplier } = productProviders[0];
+  const { supplier = {} } = productProviders[0] || [];
   const chartDetail = getQuantitySummary(item);
   return (
     <BaseCard icon="PRODUCT" color="PRODUCT">

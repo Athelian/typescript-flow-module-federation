@@ -138,7 +138,7 @@ export default function OrderFocusView({ item, highLightEntities }: Props) {
   const { highlight } = state;
   const uiSelectors = selectors(state);
 
-  if (item.orderItems.length === 0)
+  if ((item.orderItems || []).length === 0)
     return (
       <>
         <Order
