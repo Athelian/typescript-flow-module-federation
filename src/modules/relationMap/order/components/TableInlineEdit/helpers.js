@@ -8,7 +8,6 @@ import { getByPathWithDefault, compose } from 'utils/fp';
 import { formatToDateLabel } from 'utils/date';
 import logger from 'utils/logger';
 import { prepareCustomFieldsData, list2Map } from 'utils/customFields';
-import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 const formatTimeline = (timeline: Object) => {
   if (!timeline) return null;
@@ -673,7 +672,6 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   const {
     data: { editData, mappingObjects },
     ids: { orderIds, orderItemIds, batchIds },
-    targetIds,
     columns: {
       orderColumnFieldsFilter,
       orderItemColumnFieldsFilter,
@@ -712,44 +710,6 @@ export function getExportRows(info: Object): Array<Array<?string>> {
 
     rows.push(currentRow);
   });
-  // render the empty container row
-  (Object.entries(mappingObjects.shipment || {}): any)
-    .filter(([shipmentId]) => targetIds.shipmentIds.includes(shipmentId))
-    .forEach(([shipmentId]) => {
-      mappingObjects.shipment[shipmentId].data.containers
-        .filter(item => item.batches.length === 0)
-        .forEach(container => {
-          const emptyRow = getEmptyValues([
-            ...orderColumnFieldsFilter,
-            ...orderCustomFieldsFilter,
-            ...orderItemColumnFieldsFilter,
-            ...orderItemCustomFieldsFilter,
-            ...batchColumnFieldsFilter,
-            ...batchCustomFieldsFilter,
-          ]);
-          const containerData = editData.containers[container.id];
-          const containerValues = getFieldValues(
-            containerColumnFieldsFilter,
-            containerData,
-            editData
-          );
-          const containerRow = [...containerValues];
-          const shipmentData = editData.shipments[shipmentId];
-          const shipmentValues = getFieldValues(shipmentColumnFieldsFilter, shipmentData, editData);
-          const shipmentCustomValues = getCustomFieldValues(
-            shipmentCustomFieldsFilter,
-            shipmentData
-          );
-          const shipmentRow = [...shipmentValues, ...shipmentCustomValues];
-          const emptyRowOfProduct = getEmptyValues([
-            ...productColumnFieldsFilter,
-            ...productCustomFieldsFilter,
-          ]);
-          const currentRow = [...emptyRow, ...containerRow, ...shipmentRow, ...emptyRowOfProduct];
-
-          rows.push(currentRow);
-        });
-    });
 
   // render order rows
   orderIds.forEach(orderId => {
@@ -854,32 +814,3 @@ export function getExportRows(info: Object): Array<Array<?string>> {
   });
   return rows;
 }
-
-// TODO: investigate why we need to format data on table view for those fields
-export const setPackageBatchData = (batch: ?Object) => {
-  return {
-    ...batch,
-    packageGrossWeight: (batch && batch.packageGrossWeight) || {
-      value: 0,
-      metric: defaultWeightMetric,
-    },
-    packageVolume: (batch && batch.packageVolume) || {
-      metric: defaultVolumeMetric,
-      value: 0,
-    },
-    packageSize: (batch && batch.packageSize) || {
-      width: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-      height: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-      length: {
-        metric: defaultDistanceMetric,
-        value: 0,
-      },
-    },
-  };
-};
