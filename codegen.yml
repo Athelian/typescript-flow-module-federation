@@ -1,0 +1,12 @@
+overwrite: true
+schema: 'https://graphql-staging.zenport.io/graphql'
+documents: 'src/graphql/**/*.js'
+generates:
+  src/generated/graphql.flow.js:
+    plugins:
+      - 'flow'
+      - 'flow-operations'
+      - 'fragment-matcher'
+  src/generated/graphql.schema.json:
+    plugins:
+      - 'introspection'

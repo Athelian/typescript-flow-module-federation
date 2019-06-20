@@ -5,3 +5,4 @@ build
 .build-stats
 .storybook
 src/serviceWorker.js
+src/generated/graphql.js

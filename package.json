@@ -93,17 +93,23 @@
     "translate": "cross-env NODE_ENV=production babel-node --no-babelrc --presets=@babel/preset-env scripts/translate.js",
     "check:quality": "npx jsinspect -t 50 src",
     "storybook": "start-storybook -p 6006",
-    "build:storybook": "build-storybook"
+    "build:storybook": "build-storybook",
+    "gql-gen": "graphql-codegen --config codegen.yml"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json}": [
-      "eslint --fix",
-      "prettier-eslint --write",
-      "git add"
-    ],
-    "*.md": [
-      "prettier-eslint --write",
-      "git add"
+    "linters": {
+      "src/**/*.{js,jsx,json}": [
+        "eslint --fix",
+        "prettier-eslint --write",
+        "git add"
+      ],
+      "*.md": [
+        "prettier-eslint --write",
+        "git add"
+      ]
+    },
+    "ignore": [
+      "**/generated/**/*.{js,json}"
     ]
   },
   "jest": {
@@ -158,6 +164,11 @@
     "@babel/node": "^7.4.5",
     "@commitlint/cli": "^8.0.0",
     "@commitlint/config-conventional": "^8.0.0",
+    "@graphql-codegen/cli": "^1.3.0",
+    "@graphql-codegen/flow": "1.3.0",
+    "@graphql-codegen/flow-operations": "1.3.0",
+    "@graphql-codegen/fragment-matcher": "1.3.0",
+    "@graphql-codegen/introspection": "^1.3.0",
     "@storybook/addon-a11y": "^5.1.9",
     "@storybook/addon-actions": "^5.1.9",
     "@storybook/addon-info": "^5.1.9",
