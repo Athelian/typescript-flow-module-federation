@@ -48,11 +48,7 @@ const UserProvider = ({ children }: Props) => (
               user: { language },
             },
           } = result;
-          if (['ja', 'jp'].includes(language)) {
-            setLocale('ja');
-          } else {
-            setLocale('en');
-          }
+          setLocale(language);
         }}
       >
         {({ loading, data, error }) => {

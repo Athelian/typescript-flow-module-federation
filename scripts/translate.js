@@ -11,7 +11,7 @@ const messages = {
   cn: {},
 };
 const originalJapanFile = JSON.parse(fs.readFileSync(`${LANG_DIR}ja.json`, 'utf8'));
-const originalChineseFile = JSON.parse(fs.readFileSync(`${LANG_DIR}cn.json`, 'utf8'));
+const originalChineseFile = JSON.parse(fs.readFileSync(`${LANG_DIR}zh.json`, 'utf8'));
 
 const englishMessages = globSync(MESSAGES_PATTERN)
   .map(filename => fs.readFileSync(filename, 'utf8'))
@@ -44,4 +44,4 @@ mkdirpSync(LANG_DIR);
 
 fs.writeFileSync(`${LANG_DIR}en.json`, JSON.stringify(englishMessages, null, 2));
 fs.writeFileSync(`${LANG_DIR}ja.json`, JSON.stringify(messages.ja, null, 2));
-fs.writeFileSync(`${LANG_DIR}cn.json`, JSON.stringify(messages.cn, null, 2));
+fs.writeFileSync(`${LANG_DIR}zh.json`, JSON.stringify(messages.cn, null, 2));
