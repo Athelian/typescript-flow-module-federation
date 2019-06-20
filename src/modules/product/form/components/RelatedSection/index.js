@@ -37,7 +37,12 @@ const RelatedSection = ({ intl, id }: Props) => {
         const query = getRelatedQuery(relatedType);
 
         return (
-          <Query query={query} variables={filtersAndSort} fetchPolicy="network-only">
+          <Query
+            key={JSON.stringify(filtersAndSort)}
+            query={query}
+            variables={filtersAndSort}
+            fetchPolicy="network-only"
+          >
             {({ loading, data, error, fetchMore }) => {
               if (error) {
                 return error.message;

@@ -16,8 +16,8 @@ type Props = {
 const TaskTemplateList = ({ entityType, queryVariables }: Props) => {
   return (
     <Query
-      query={taskTemplateListQuery}
       key={entityType}
+      query={taskTemplateListQuery}
       variables={queryVariables}
       fetchPolicy="network-only"
       onCompleted={logger.warn}

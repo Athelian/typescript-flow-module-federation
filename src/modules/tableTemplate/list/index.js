@@ -21,6 +21,7 @@ type Props = {
 const TableTemplateList = ({ ...filtersAndSort }: Props) => {
   return (
     <Query
+      key={JSON.stringify(filtersAndSort)}
       query={tableTemplateQuery}
       variables={{
         page: 1,

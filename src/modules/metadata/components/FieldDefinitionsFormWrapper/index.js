@@ -29,9 +29,9 @@ const FieldDefinitionsFormWrapper = ({ entityType, intl }: Props) => (
   <Subscribe to={[FieldDefinitionsContainer, FormContainer]}>
     {({ state, originalValues, initDetailValues, isDirty, onSuccess, ...fieldHelpers }, form) => (
       <Query
+        key={entityType}
         query={fieldDefinitionsQuery}
         variables={{ entityType }}
-        key={entityType}
         fetchPolicy="network-only"
         onCompleted={data => {
           if (

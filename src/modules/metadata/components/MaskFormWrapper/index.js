@@ -102,6 +102,7 @@ class MaskFormWrapper extends React.Component<Props> {
         <Subscribe to={[MaskContainer]}>
           {maskContainer => (
             <Query
+              key={entityType}
               query={fieldDefinitionsQuery}
               variables={{ entityType }}
               fetchPolicy="network-only"
@@ -192,7 +193,12 @@ class MaskFormWrapper extends React.Component<Props> {
                               }
                             />
                           ) : (
-                            <Query query={maskQuery} variables={{ id }} fetchPolicy="network-only">
+                            <Query
+                              key={id}
+                              query={maskQuery}
+                              variables={{ id }}
+                              fetchPolicy="network-only"
+                            >
                               {({ loading: maskLoading, data: maskData, error: maskError }) => {
                                 if (maskError) {
                                   if (maskError.message && maskError.message.includes('403')) {

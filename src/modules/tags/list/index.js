@@ -17,6 +17,7 @@ class TagList extends React.Component<Props> {
 
     return (
       <Query
+        key={JSON.stringify(filtersAndSort)}
         query={tagsQuery}
         variables={{
           page: 1,
