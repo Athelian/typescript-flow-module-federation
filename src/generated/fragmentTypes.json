@@ -496,6 +496,7 @@
         "kind": "INTERFACE",
         "name": "Sortable",
         "possibleTypes": [
+          { "name": "Batch" },
           { "name": "BatchQuantityRevision" },
           { "name": "Container" },
           { "name": "ContainerGroup" },

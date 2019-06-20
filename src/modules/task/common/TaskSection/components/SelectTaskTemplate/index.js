@@ -19,6 +19,7 @@ type Props = {
 
 const SelectTaskTemplate = ({ entityType, onCancel, onSelect }: Props) => (
   <Query
+    key={entityType}
     query={taskTemplateListQuery}
     variables={{
       page: 1,

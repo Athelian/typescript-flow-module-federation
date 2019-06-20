@@ -212,6 +212,7 @@
     "html-webpack-plugin": "4.0.0-beta.5",
     "husky": "^2.4.1",
     "identity-obj-proxy": "3.0.0",
+    "intl": "^1.2.5",
     "intl-messageformat-parser": "^1.6.8",
     "is-wsl": "^2.0.0",
     "jest": "24.7.1",

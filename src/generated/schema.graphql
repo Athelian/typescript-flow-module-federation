@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Jun 17 2019 18:33:20 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Jun 19 2019 11:51:20 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28484,6 +28484,24 @@ enum ExportType {
 
   """Products"""
   Products
+
+  """Container"""
+  Container
+
+  """Containers"""
+  Containers
+
+  """Task"""
+  Task
+
+  """Tasks"""
+  Tasks
+
+  """Tag"""
+  Tag
+
+  """Tags"""
+  Tags
 }
 
 type FieldDefinition implements Model & Owned & Sortable {
@@ -30846,14 +30864,23 @@ type Query {
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
   containersByIDs(ids: [ID!]!): [ContainerPayload!]!
+  containerExport(id: ID!, templateId: ID!): FilePayload!
+  containersExport(templateId: ID!, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): FilePayload!
+  containersByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
   warehouse(id: ID!): WarehousePayload!
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPagination!
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPagination!
+  tagExport(id: ID!, templateId: ID!): FilePayload!
+  tagsExport(templateId: ID!, filterBy: TagFilterInput, sortBy: TagSortInput): FilePayload!
+  tagsByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPagination!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
+  taskExport(id: ID!, templateId: ID!): FilePayload!
+  tasksExport(templateId: ID!, filterBy: TaskFilterInput, sortBy: TaskSortInput): FilePayload!
+  tasksByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
   taskTemplate(id: ID!): TaskTemplatePayload!
   taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPagination!
   taskTemplatesByIDs(ids: [ID!]!): [TaskTemplatePayload!]!
@@ -87158,6 +87185,7 @@ type Timeline {
 type TimelineDate implements Model & Owned & Memorizable {
   date: DateTime
   latestDate: DateTime
+  latestReason: TimelineDateRevisionType
   assignedTo: [UserPayload!]!
   approvedBy: UserPayload
   approvedAt: DateTime

@@ -60,6 +60,7 @@ function SelectProduct({ intl, onCancel, onSelect, exporter, selected }: Props) 
     >
       {({ value: filtersAndSort, set: onChange }) => (
         <Query
+          key={JSON.stringify(filtersAndSort)}
           query={productProvidersListQuery}
           variables={{
             page: 1,

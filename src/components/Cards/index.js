@@ -21,6 +21,7 @@ import ShipmentContainerCard from './ShipmentContainerCard';
 import ShipmentWarehouseCard from './ShipmentWarehouseCard';
 import StaffCard from './StaffCard';
 import TagCard from './TagCard';
+import ProjectCard from './ProjectCard';
 import TaskCard from './TaskCard';
 import TemplateCard from './TemplateCard';
 import WarehouseCard from './WarehouseCard';
@@ -51,6 +52,7 @@ export {
   ShipmentContainerCard,
   StaffCard,
   TagCard,
+  ProjectCard,
   TaskCard,
   TemplateCard,
   WarehouseCard,

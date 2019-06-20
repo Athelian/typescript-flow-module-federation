@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Location } from '@reach/router';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   RM_ORDER_FOCUS_LIST,
   RM_PRODUCT_FOCUS_LIST,
@@ -17,6 +18,7 @@ import { CUSTOM_FIELD_DEFINITIONS_LIST } from 'modules/permission/constants/cust
 import { TEMPLATE_LIST } from 'modules/permission/constants/template';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
+import { PROJECT_LIST } from 'modules/permission/constants/project';
 import { TASK_LIST, TASK_TEMPLATE_LIST } from 'modules/permission/constants/task';
 import usePermission from 'hooks/usePermission';
 import { FormattedMessage } from 'react-intl';
@@ -40,6 +42,7 @@ import {
   PATH_TABLE_TEMPLATE,
   PATH_TASK_TEMPLATE,
   PATH_TAG,
+  PATH_PROJECT,
 } from './constants';
 
 const SideBar = () => {
@@ -48,6 +51,8 @@ const SideBar = () => {
   const hasOrdersMenu = hasPermission([ORDER_LIST, BATCH_LIST, ORDER_ITEMS_LIST]);
 
   const hasShipmentsMenu = hasPermission([SHIPMENT_LIST, CONTAINER_LIST]);
+
+  const hasProjectsMenu = hasPermission([PROJECT_LIST, TASK_LIST]);
 
   const hasNetworkMenu = hasPermission([WAREHOUSE_LIST, PARTNER_LIST, STAFF_LIST]);
 
@@ -150,13 +155,46 @@ const SideBar = () => {
                       />
                     )}
 
-                    {hasPermission(TASK_LIST) && (
-                      <MenuItem
-                        path={`/${PATH_TASK}`}
-                        isActive={pathnameSplit[1] === PATH_TASK}
-                        icon="TASK"
-                        label={<FormattedMessage {...messages.task} />}
-                      />
+                    {isEnableBetaFeature ? (
+                      <>
+                        {hasProjectsMenu && (
+                          <SubMenu
+                            hasActiveChild={
+                              pathnameSplit[1] === PATH_PROJECT || pathnameSplit[1] === PATH_TASK
+                            }
+                            icon="PROJECT"
+                            label={<FormattedMessage {...messages.project} />}
+                          >
+                            {hasPermission(PROJECT_LIST) && (
+                              <MenuItem
+                                path={`/${PATH_PROJECT}`}
+                                isActive={pathnameSplit[1] === PATH_PROJECT}
+                                icon="PROJECT"
+                                label={<FormattedMessage {...messages.project} />}
+                              />
+                            )}
+                            {hasPermission(TASK_LIST) && (
+                              <MenuItem
+                                path={`/${PATH_TASK}`}
+                                isActive={pathnameSplit[1] === PATH_TASK}
+                                icon="TASK"
+                                label={<FormattedMessage {...messages.task} />}
+                              />
+                            )}
+                          </SubMenu>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {hasPermission(TASK_LIST) && (
+                          <MenuItem
+                            path={`/${PATH_TASK}`}
+                            isActive={pathnameSplit[1] === PATH_TASK}
+                            icon="TASK"
+                            label={<FormattedMessage {...messages.task} />}
+                          />
+                        )}
+                      </>
                     )}
 
                     {hasNetworkMenu && (

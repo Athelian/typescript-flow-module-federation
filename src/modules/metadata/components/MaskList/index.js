@@ -29,8 +29,8 @@ const MaskList = ({ entityType, queryVariables }: Props) => (
 
       return (
         <Query
-          query={masksQuery}
           key={entityType}
+          query={masksQuery}
           variables={queryVariables}
           fetchPolicy="network-only"
         >

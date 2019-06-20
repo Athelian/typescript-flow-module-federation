@@ -48,6 +48,8 @@ const AsyncTableTemplate = lazy(() => import('./modules/tableTemplate'));
 
 const AsyncTask = lazy(() => import('./modules/task'));
 
+const AsyncProject = lazy(() => import('./modules/project'));
+
 const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
 
 const AsyncProfile = lazy(() => import('./modules/profile'));
@@ -76,6 +78,7 @@ const Routes: StatelessFunctionalComponent<{}> = () => (
           <AsyncWarehouse path="warehouse/*" />
           <AsyncPartner path="partner/*" />
           <AsyncStaff path="staff/*" />
+          <AsyncProject path="project/*" />
           <AsyncTask path="task/*" />
           <AsyncRelationMap path="relation-map/*" />
           <AsyncNotifications path="notifications/*" />

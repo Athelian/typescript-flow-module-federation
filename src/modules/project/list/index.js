@@ -1,11 +1,11 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { Query } from 'react-apollo';
-import { getByPathWithDefault } from 'utils/fp';
-import loadMore from 'utils/loadMore';
 import logger from 'utils/logger';
-import TaskGridView from './TaskGridView';
-import { taskListQuery } from './query';
+import loadMore from 'utils/loadMore';
+import { getByPathWithDefault } from 'utils/fp';
+import { projectListQuery } from './query';
+import ProjectGridView from './ProjectGridView';
 
 type Props = {
   sortBy: {
@@ -14,11 +14,11 @@ type Props = {
   perPage: number,
 };
 
-const TaskList = ({ ...filtersAndSort }: Props) => {
+const ProjectList = ({ ...filtersAndSort }: Props) => {
   return (
     <Query
       key={JSON.stringify(filtersAndSort)}
-      query={taskListQuery}
+      query={projectListQuery}
       variables={{
         page: 1,
         ...filtersAndSort,
@@ -31,14 +31,14 @@ const TaskList = ({ ...filtersAndSort }: Props) => {
         if (error) {
           return error.message;
         }
-        const nextPage = getByPathWithDefault(1, 'tasks.page', data) + 1;
-        const totalPage = getByPathWithDefault(1, 'tasks.totalPage', data);
+        const nextPage = getByPathWithDefault(1, 'project.page', data) + 1;
+        const totalPage = getByPathWithDefault(1, 'projects.totalPage', data);
         const hasMore = nextPage <= totalPage;
 
         return (
-          <TaskGridView
-            items={getByPathWithDefault([], 'tasks.nodes', data)}
-            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'tasks')}
+          <ProjectGridView
+            items={getByPathWithDefault([], 'projects.nodes', data)}
+            onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'projects')}
             hasMore={hasMore}
             isLoading={loading}
           />
@@ -48,4 +48,4 @@ const TaskList = ({ ...filtersAndSort }: Props) => {
   );
 };
 
-export default TaskList;
+export default ProjectList;
