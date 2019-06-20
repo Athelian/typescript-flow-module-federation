@@ -12,7 +12,7 @@ import { showToastError } from 'utils/errors';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
 import Layout from 'components/Layout';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
@@ -35,7 +35,7 @@ import {
   updateProductMutation,
   prepareParsedProductInput,
 } from './form/mutation';
-import { productTimelineQuery } from './query';
+import { productTimelineQuery, productExportQuery } from './query';
 
 type OptionalProps = {
   path: string,
@@ -449,6 +449,20 @@ class ProductFormModule extends React.Component<Props> {
                               />
                             </>
                           )}
+
+                          {productId &&
+                            !productInfoState.isDirty() &&
+                            !productProvidersState.isDirty() &&
+                            !productTagsState.isDirty() &&
+                            !productTasksState.isDirty() &&
+                            !productFilesState.isDirty() &&
+                            !isNewOrClone && (
+                              <ExportButton
+                                type="Product"
+                                exportQuery={productExportQuery}
+                                variables={{ id: decodeId(productId) }}
+                              />
+                            )}
                         </>
                       )}
                     </Subscribe>
