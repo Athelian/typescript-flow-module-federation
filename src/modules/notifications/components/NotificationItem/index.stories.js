@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import { translationMessages } from 'i18n';
 import NotificationItem from './index';
 
-const notificatioin = {
+const notification = {
   id: 123123,
   body: 'This is a notification.',
   read: true,
@@ -15,11 +15,11 @@ const notificatioin = {
 storiesOf('NotificationItem', module)
   .add('read: true', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
-      <NotificationItem notification={notificatioin} />
+      <NotificationItem notification={notification} />
     </IntlProvider>
   ))
   .add('read: false', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
-      <NotificationItem notification={{ ...notificatioin, read: false }} />
+      <NotificationItem notification={{ ...notification, read: false }} />
     </IntlProvider>
   ));

@@ -8,7 +8,7 @@ type OptionalProps = {
   onBlur: ?Function,
   onFocus: ?Function,
   onSearch: string => void,
-  afterClearSelection: ?() => void,
+  afterClearSelection: () => void,
   id?: string,
   readOnly: boolean,
   readOnlyWidth?: string,
@@ -20,8 +20,8 @@ type OptionalProps = {
 
 export type RenderSearchSelectProps = {
   isOpen: boolean,
-  clearSelection: () => void,
-  toggle: () => void,
+  clearSelection: (cb?: Function) => mixed,
+  toggle: () => mixed,
   selectedItem: any,
   getInputProps: Function,
   value: string,
@@ -29,7 +29,7 @@ export type RenderSearchSelectProps = {
 };
 
 export type RenderOptionsProps = {
-  highlightedIndex: number,
+  highlightedIndex: ?number,
   selectedItem: any,
   getItemProps: Function,
 };

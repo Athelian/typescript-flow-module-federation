@@ -1,8 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { IntlProvider } from 'react-intl';
-import { translationMessages } from 'i18n';
 import ProductFocused from './index';
 
 storiesOf('RelationMap/ProductFocused', module).add('ProductFocusedView', () => {
@@ -32,9 +30,5 @@ storiesOf('RelationMap/ProductFocused', module).add('ProductFocusedView', () => 
     batches: [batch, batch, batch, batch, batch, batch, batch],
   };
   const items = [item, item, item];
-  return (
-    <IntlProvider locale="en" messages={translationMessages.en}>
-      <ProductFocused items={items} />
-    </IntlProvider>
-  );
+  return <ProductFocused items={items} />;
 });

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { isString } from 'lodash';
 import Downshift from 'downshift';
 import { Display } from 'components/Form';
 import { isEquals } from 'utils/fp';
@@ -79,11 +80,10 @@ class SearchSelectInput extends React.Component<Props, State> {
       </Display>
     ) : (
       <Downshift
-        initialInputValue={inputValue}
+        initialInputValue={isString(inputValue) ? inputValue : ''}
         initialSelectedItem={selectedItem}
         onChange={this.handleChange}
         itemToString={itemToString}
-        itemToValue={itemToValue}
         labelId={`${name}SearchSelectInput`}
         id={id}
       >

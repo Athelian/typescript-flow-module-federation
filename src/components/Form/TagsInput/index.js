@@ -91,13 +91,15 @@ export default class TagsInput extends React.Component<Props, State> {
     if (values) this.handleChange(values.filter(t => t.id !== tag.id));
   };
 
-  handleDownshiftChange = (selectedItem: TagType) => {
+  handleDownshiftChange = (selectedItem: ?TagType) => {
     const { values } = this.props;
 
-    if (values && values.map(t => t.id).includes(selectedItem.id)) {
-      this.handleRemove(selectedItem);
-    } else {
-      this.handleAdd(selectedItem);
+    if (selectedItem) {
+      if (values && values.map(t => t.id).includes(selectedItem.id)) {
+        this.handleRemove(selectedItem);
+      } else {
+        this.handleAdd(selectedItem);
+      }
     }
   };
 
@@ -121,8 +123,8 @@ export default class TagsInput extends React.Component<Props, State> {
     }
   };
 
-  computeFilteredTags = (tags: Array<TagType>, input: string): Array<TagType> => {
-    return matchSorter(tags, input, {
+  computeFilteredTags = (tags: Array<TagType>, input: ?string): Array<TagType> => {
+    return matchSorter(tags, input || '', {
       keys: ['name'],
     });
   };

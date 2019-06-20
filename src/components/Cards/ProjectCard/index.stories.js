@@ -1,11 +1,9 @@
-import React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
+import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { IntlProvider } from 'react-intl';
 import ProjectCard from './index';
 
 storiesOf('Card', module).add('Project Card', () => (
-  <IntlProvider>
     <div
       style={{
         display: 'grid',
@@ -56,5 +54,5 @@ storiesOf('Card', module).add('Project Card', () => (
         />
       </div>
     </div>
-  </IntlProvider>
+
 ));

@@ -21,7 +21,7 @@ class SelectInput extends React.Component<Props, State> {
     const { value, items, itemToValue } = props;
     const { selectedItem } = state;
 
-    if (!isEquals(itemToValue(selectedItem), value)) {
+    if (itemToValue && !isEquals(itemToValue(selectedItem), value)) {
       return {
         selectedItem: value ? (items || []).find(item => isEquals(itemToValue(item), value)) : null,
       };
@@ -79,7 +79,6 @@ class SelectInput extends React.Component<Props, State> {
         labelId={`${name}SelectInput`}
         onChange={this.handleChange}
         itemToString={itemToString}
-        itemToValue={itemToValue}
       >
         {({
           getInputProps,
