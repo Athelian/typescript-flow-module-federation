@@ -104,7 +104,7 @@ function SelectProjectAndMilestone({
         <Layout
           navBar={
             <SlideViewNavBar>
-              <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
+              <EntityIcon icon="PROJECT" color="PROJECT" />
               <SortInput
                 sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
                 ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
