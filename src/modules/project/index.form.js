@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-// import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import Layout from 'components/Layout';
 import { QueryForm } from 'components/common';

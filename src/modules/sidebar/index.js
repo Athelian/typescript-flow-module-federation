@@ -160,7 +160,7 @@ const SideBar = () => {
                         {hasProjectsMenu && (
                           <SubMenu
                             hasActiveChild={
-                              pathnameSplit[1] === PATH_PRODUCT || pathnameSplit[1] === PATH_TASK
+                              pathnameSplit[1] === PATH_PROJECT || pathnameSplit[1] === PATH_TASK
                             }
                             icon="PROJECT"
                             label={<FormattedMessage {...messages.project} />}

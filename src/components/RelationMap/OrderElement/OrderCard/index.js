@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-// import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import {
   ProgressIconStyle,
