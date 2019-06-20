@@ -7,7 +7,9 @@ import { withInfo } from '@storybook/addon-info';
 import { withA11y } from '@storybook/addon-a11y';
 import { Provider } from 'unstated';
 import { IntlProvider } from 'react-intl';
+import { IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
 import StoryBookWrapper from 'components/StoryBookWrapper';
+import introspectionQueryResultData from 'generated/fragmentTypes.json';
 import typeDefs from 'generated/schema.graphql';
 
 const baseUserMock = () => {
@@ -46,18 +48,10 @@ addDecorator(
     resolverValidationOptions: {
       requireResolversForResolveType: false,
     },
-    apolloClientOptions: {
-      watchQuery: {
-        fetchPolicy: 'cache-and-network',
-        errorPolicy: 'ignore',
-      },
-      query: {
-        fetchPolicy: 'cache-first',
-        errorPolicy: 'all',
-      },
-      mutate: {
-        errorPolicy: 'all',
-      },
+    cacheOptions: {
+      fragmentMatcher: new IntrospectionFragmentMatcher({
+        introspectionQueryResultData,
+      }),
     },
   })
 );
