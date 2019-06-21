@@ -13734,6 +13734,13 @@ react-clientside-effect@^1.2.0:
     "@babel/runtime" "^7.0.0"
     shallowequal "^1.1.0"
 
+react-composition-input@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-composition-input/-/react-composition-input-1.1.1.tgz#51fc711f8b1c7d11e39210639175f0b48de44aff"
+  integrity sha512-xzRAUvsrEdSjI1tQXu3ouPHkHVZnunx6OoAFsv4YxVV6fIBHc9XZuxkmJwoxSatPxJ6WN94k91PBWQTsL6h/ZA==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-content-loader@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-4.2.1.tgz#0d355134ed7d0987966abd0f784bc59e76976e91"
