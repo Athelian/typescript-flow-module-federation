@@ -12,7 +12,7 @@ import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
 import Layout from 'components/Layout';
 import SlideView from 'components/SlideView';
-import { ResetButton, SaveButton } from 'components/Buttons';
+import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
 import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -23,7 +23,7 @@ import TaskForm from './form';
 import TaskContainer from './form/container';
 import validator from './form/validator';
 import { updateTaskMutation, prepareParsedTaskInput } from './form/mutation';
-import { taskTimelineQuery } from './query';
+import { taskTimelineQuery, taskExportQuery } from './query';
 
 type OptionalProps = {
   path: string,
@@ -166,6 +166,13 @@ class TaskFormModule extends React.Component<Props> {
                                   }
                                 />
                               </>
+                            )}
+                            {taskId && !isDirty() && (
+                              <ExportButton
+                                type="Task"
+                                exportQuery={taskExportQuery}
+                                variables={{ id: decodeId(taskId) }}
+                              />
                             )}
                           </NavBar>
                         }

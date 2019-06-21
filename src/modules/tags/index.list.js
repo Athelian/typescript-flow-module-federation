@@ -8,10 +8,11 @@ import usePermission from 'hooks/usePermission';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SortInput } from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
+import { ExportButton, NewButton } from 'components/Buttons';
 import { currentSort } from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import TagsList from './list';
+import { tagsExportQuery } from './query';
 import messages from './messages';
 
 type Props = {
@@ -69,6 +70,16 @@ const TagListModule = (props: Props) => {
                   <NewButton data-testid="newButton" />
                 </Link>
               )}
+              <ExportButton
+                type="Tags"
+                exportQuery={tagsExportQuery}
+                variables={{
+                  filterBy: filterAndSort.filter,
+                  sortBy: {
+                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
+                  },
+                }}
+              />
             </NavBar>
           }
         >
