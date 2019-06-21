@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
-import TextInput from '../TextInput';
+import CInput from 'react-composition-input';
+import useDebounce from 'hooks/useDebounce';
 
 type Props = {
   className: any,
@@ -31,17 +32,22 @@ function SearchInput(props: Props) {
   } = props;
   const hasContent = !!value;
 
+  const [query, setQuery] = React.useState(value || '');
+
+  const handleOnChange = evt => {
+    setQuery(evt.target.value);
+  };
+
+  const debouncedSetQuery = useDebounce(query, 500);
+
+  React.useEffect(() => {
+    onChange(debouncedSetQuery);
+  }, [debouncedSetQuery, onChange]);
+
   return (
     <div className={className}>
       {searchIcon && searchIcon}
-      <TextInput
-        className={inputClassName}
-        type="text"
-        value={value}
-        debounceTimeout={500}
-        onChange={evt => onChange(evt.target.value.trim())}
-        {...rest}
-      />
+      <CInput className={inputClassName} value={query} onInputChange={handleOnChange} {...rest} />
       {hasContent && clearButton && clearButton({ clearQuery: onClear })}
     </div>
   );

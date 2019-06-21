@@ -1,5 +1,5 @@
-import * as React from 'react';
 /* eslint-disable import/no-extraneous-dependencies */
+import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { css } from 'react-emotion';
@@ -83,7 +83,7 @@ storiesOf('SearchInput', module)
   .add('with style', () => (
     <div>
       <SearchInput
-        style={SearchInputStyle}
+        className={SearchInputStyle}
         searchIcon={<Icon icon="SEARCH" />}
         clearButton={({ clearQuery }) => (
           <button type="button" onClick={clearQuery}>
