@@ -11,13 +11,14 @@ import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import Layout from 'components/Layout';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
+import { Display } from 'components/Form';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import { ProjectCard } from 'components/Cards';
+import BaseCard, { ProjectCard } from 'components/Cards';
 import messages from 'modules/project/messages';
 import useSortAndFilter from 'hooks/useSortAndFilter';
 import SelectMilestone from './SelectMilestone';
 import { selectProjectQuery } from './query';
-import { ItemWrapperStyle } from './style';
+import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './style';
 
 type Props = {
   onCancel: () => void,
@@ -189,7 +190,22 @@ function SelectProjectAndMilestone({
                             <>
                               {item.id === getByPathWithDefault('', 'id', selectedProject) &&
                                 selectedMilestone &&
-                                selectedMilestone.id && <h3>{selectedMilestone.name}</h3>}
+                                selectedMilestone.id && (
+                                  <div className={MilestoneWrapperStyle}>
+                                    <BaseCard
+                                      icon="MILESTONE"
+                                      color="MILESTONE"
+                                      selected
+                                      selectable
+                                      readOnly
+                                    >
+                                      <div className={MilestoneNameStyle}>
+                                        <Display align="left">{selectedMilestone.name}</Display>
+                                      </div>
+                                    </BaseCard>
+                                  </div>
+                                )}
+
                               <ProjectCard
                                 key={item.id}
                                 project={item}
@@ -203,6 +219,7 @@ function SelectProjectAndMilestone({
                                 selectable
                                 selected={selected}
                               />
+
                               {item.id ===
                                 getByPathWithDefault('', 'project.id', currentSelection) && (
                                 <SlideView
