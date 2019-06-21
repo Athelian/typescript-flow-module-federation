@@ -3,9 +3,9 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { BooleanValue, ObjectValue } from 'react-values';
 import SlideView from 'components/SlideView';
-import ProjectAndMilestone from './index';
+import SelectProjectAndMilestone from './index';
 
-storiesOf('Selector/ProjectAndMilestone', module).add('with gray card', () => (
+storiesOf('Selector/SelectProjectAndMilestone', module).add('with gray card', () => (
   <ObjectValue defaultValue={{}}>
     {({ value: { project, milestone }, set }) => (
       <BooleanValue>
@@ -29,7 +29,7 @@ storiesOf('Selector/ProjectAndMilestone', module).add('with gray card', () => (
               }}
             >
               {isOpen && (
-                <ProjectAndMilestone
+                <SelectProjectAndMilestone
                   filter={{
                     query: '',
                   }}
