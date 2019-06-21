@@ -42,13 +42,22 @@ function SearchInput(props: Props) {
 
   React.useEffect(() => {
     onChange(debouncedSetQuery);
-  }, [debouncedSetQuery, onChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSetQuery]);
 
   return (
     <div className={className}>
       {searchIcon && searchIcon}
       <CInput className={inputClassName} value={query} onInputChange={handleOnChange} {...rest} />
-      {hasContent && clearButton && clearButton({ clearQuery: onClear })}
+      {hasContent &&
+        clearButton &&
+        clearButton({
+          clearQuery: () => {
+            setQuery('');
+            onChange('');
+            onClear();
+          },
+        })}
     </div>
   );
 }
