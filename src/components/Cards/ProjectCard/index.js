@@ -31,6 +31,7 @@ type Props = OptionalProps & {
       count: number,
       remain: number,
       inProgress: number,
+      skipped: number,
       completed: number,
       delayed: number,
     },
@@ -40,7 +41,7 @@ type Props = OptionalProps & {
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
   const { name, dueDate, milestones = [], taskCount, tags = [] } = project;
-  const { count, remain, inProgress, completed, delayed } = taskCount;
+  const { count, remain, inProgress, skipped, completed, delayed } = taskCount;
 
   return (
     <BaseCard icon="PROJECT" color="PROJECT" onClick={onClick} {...rest}>
@@ -108,8 +109,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
             <TaskStatusChart
               completed={completed}
               inProgress={inProgress}
-              // FIXME: wait for API, ref: https://zenport.slack.com/archives/C2JTDSRJ6/p1560920001006800
-              skipped={0}
+              skipped={skipped}
               unCompleted={remain}
             />
           </div>

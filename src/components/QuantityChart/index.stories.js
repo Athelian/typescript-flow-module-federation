@@ -5,29 +5,29 @@ import { translationMessages } from 'i18n';
 import { storiesOf } from '@storybook/react';
 import QuantityChart from './index';
 
-storiesOf('QuantityChart', module)
-  .add('styling 1', () => (
+storiesOf('Chart/QuantityChart', module)
+  .add('en label', () => (
     <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
       <div style={{ marginTop: '50px', width: '200px' }}>
         <QuantityChart orderedQuantity={500} batchedQuantity={500} shippedQuantity={250} hasLabel />
       </div>
     </IntlProvider>
   ))
-  .add('styling 1 (orderedQuantity = 0)', () => (
-    <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
-      <div style={{ marginTop: '50px', width: '200px' }}>
-        <QuantityChart orderedQuantity={0} batchedQuantity={0} shippedQuantity={0} hasLabel />
-      </div>
-    </IntlProvider>
-  ))
-  .add('styling 1 (ja)', () => (
+  .add('ja label', () => (
     <IntlProvider locale="ja" messages={translationMessages.ja} textComponent={React.Fragment}>
       <div style={{ marginTop: '50px', width: '200px' }}>
         <QuantityChart orderedQuantity={500} batchedQuantity={300} shippedQuantity={400} hasLabel />
       </div>
     </IntlProvider>
   ))
-  .add('styling 2', () => (
+  .add('all are 0', () => (
+    <IntlProvider locale="en" messages={translationMessages.en} textComponent={React.Fragment}>
+      <div style={{ marginTop: '50px', width: '200px' }}>
+        <QuantityChart orderedQuantity={0} batchedQuantity={0} shippedQuantity={0} hasLabel />
+      </div>
+    </IntlProvider>
+  ))
+  .add('count at center', () => (
     <IntlProvider locale="ja" messages={translationMessages.ja} textComponent={React.Fragment}>
       <div style={{ marginTop: '50px', width: '200px' }}>
         <QuantityChart
