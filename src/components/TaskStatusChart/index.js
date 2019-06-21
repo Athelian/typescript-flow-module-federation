@@ -3,11 +3,20 @@ import React from 'react';
 import Icon from 'components/Icon';
 import { TaskStatusChartStyle, ChartStyle, BarStyle, PropsStyle, NumberStyle } from './style';
 
-type Props = {
+type OptionalProps = {
   completed: number,
   inProgress: number,
   skipped: number,
   unCompleted: number,
+};
+
+type Props = OptionalProps & {};
+
+const defaultProps = {
+  completed: 0,
+  inProgress: 0,
+  skipped: 0,
+  unCompleted: 0,
 };
 
 const TaskStatusChart = ({ completed, inProgress, skipped, unCompleted }: Props) => {
@@ -46,5 +55,7 @@ const TaskStatusChart = ({ completed, inProgress, skipped, unCompleted }: Props)
     </div>
   );
 };
+
+TaskStatusChart.defaultProps = defaultProps;
 
 export default TaskStatusChart;

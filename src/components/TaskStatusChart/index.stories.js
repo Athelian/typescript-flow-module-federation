@@ -3,7 +3,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import TaskStatusChart from './index';
 
-storiesOf('TaskStatusChart', module).add('9,4,5,2', () => (
+storiesOf('Chart', module).add('Task Status Chart', () => (
   <div
     style={{
       width: '195px',
@@ -20,5 +20,6 @@ storiesOf('TaskStatusChart', module).add('9,4,5,2', () => (
     <TaskStatusChart completed={0} inProgress={0} skipped={0} unCompleted={1} />
     <TaskStatusChart completed={0} inProgress={1} skipped={0} unCompleted={1} />
     <TaskStatusChart completed={4} inProgress={23} skipped={0} unCompleted={1} />
+    <TaskStatusChart />
   </div>
 ));

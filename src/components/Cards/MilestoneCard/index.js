@@ -26,6 +26,7 @@ type Props = {
       count: number,
       remain: number,
       inProgress: number,
+      skipped: number,
       completed: number,
       delayed: number,
     },
@@ -35,7 +36,7 @@ type Props = {
 
 const MilestoneCard = ({ milestone, ...rest }: Props) => {
   const { name, dueDate, taskCount, completedAt } = milestone;
-  const { count, remain, inProgress, completed, delayed } = taskCount;
+  const { count, remain, inProgress, skipped, completed, delayed } = taskCount;
 
   return (
     <BaseCard icon="MILESTONE" color="MILESTONE" {...rest}>
@@ -88,8 +89,7 @@ const MilestoneCard = ({ milestone, ...rest }: Props) => {
             <TaskStatusChart
               completed={completed}
               inProgress={inProgress}
-              // FIXME: wait for API, ref: https://zenport.slack.com/archives/C2JTDSRJ6/p1560920001006800
-              skipped={0}
+              skipped={skipped}
               unCompleted={remain}
             />
           </div>
