@@ -71,6 +71,7 @@ export const PRODUCT_TASK_SET_DUE_DATE = 'product.tasks.setDueDate';
 export const PRODUCT_TASK_SET_DUE_DATE_BINDING = 'product.tasks.setDueDateBinding';
 export const PRODUCT_TASK_SET_ENTITY = 'product.tasks.setEntity';
 export const PRODUCT_TASK_SET_IN_PROGRESS = 'product.tasks.setInProgress';
+export const PRODUCT_TASK_SET_SKIPPED = 'product.tasks.setSkipped';
 export const PRODUCT_TASK_SET_MEMO = 'product.tasks.setMemo';
 export const PRODUCT_TASK_SET_NAME = 'product.tasks.setName';
 export const PRODUCT_TASK_SET_REJECTED = 'product.tasks.setRejected';
@@ -89,6 +90,7 @@ export const PRODUCT_PROVIDER_TASK_SET_DUE_DATE_BINDING =
   'product.productProviderTasks.setDueDateBinding';
 export const PRODUCT_PROVIDER_TASK_SET_ENTITY = 'product.productProviderTasks.setEntity';
 export const PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS = 'product.productProviderTasks.setInProgress';
+export const PRODUCT_PROVIDER_TASK_SET_SKIPPED = 'product.productProviderTasks.setSkipped';
 export const PRODUCT_PROVIDER_TASK_SET_MEMO = 'product.productProviderTasks.setMemo';
 export const PRODUCT_PROVIDER_TASK_SET_NAME = 'product.productProviderTasks.setName';
 export const PRODUCT_PROVIDER_TASK_SET_REJECTED = 'product.productProviderTasks.setRejected';

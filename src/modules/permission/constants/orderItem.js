@@ -31,6 +31,7 @@ export const ORDER_ITEMS_TASK_SET_DUE_DATE = 'order.orderItemTasks.setDueDate';
 export const ORDER_ITEMS_TASK_SET_DUE_DATE_BINDING = 'order.orderItemTasks.setDueDateBinding';
 export const ORDER_ITEMS_TASK_SET_ENTITY = 'order.orderItemTasks.setEntity';
 export const ORDER_ITEMS_TASK_SET_IN_PROGRESS = 'order.orderItemTasks.setInProgress';
+export const ORDER_ITEMS_TASK_SET_SKIPPED = 'order.orderItemTasks.setSkipped';
 export const ORDER_ITEMS_TASK_SET_MEMO = 'order.orderItemTasks.setMemo';
 export const ORDER_ITEMS_TASK_SET_NAME = 'order.orderItemTasks.setName';
 export const ORDER_ITEMS_TASK_SET_REJECTED = 'order.orderItemTasks.setRejected';

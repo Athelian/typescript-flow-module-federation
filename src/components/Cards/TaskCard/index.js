@@ -15,7 +15,6 @@ import OutsideClickHandler from 'components/OutsideClickHandler';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
-// import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
@@ -477,8 +476,7 @@ const TaskCard = ({
                 <TaskStatusInputNew
                   task={task}
                   update={newTask => saveOnBlur(newTask)}
-                  // FIXME: permission
-                  editable
+                  editable={editable}
                 />
               )}
             </div>

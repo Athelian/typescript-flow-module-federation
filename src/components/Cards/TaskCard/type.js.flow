@@ -5,6 +5,7 @@ export type TaskEditable = {
   startDate: boolean,
   dueDate: boolean,
   inProgress: boolean,
+  skipped: boolean,
   completed: boolean,
   assignedTo: boolean,
   approved: boolean,

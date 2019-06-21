@@ -19,6 +19,11 @@ import {
 
 type OptionalProps = {
   update: Function,
+  editable: {
+    completed: boolean,
+    inProgress: boolean,
+    skipped: boolean,
+  },
 };
 
 type Props = OptionalProps & {
@@ -34,37 +39,50 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   update: () => {},
+  editable: {
+    completed: false,
+    inProgress: false,
+    skipped: false,
+  },
 };
 
-const TaskStatusInput = ({ task, update }: Props) => {
+const TaskStatusInput = ({ task, update, editable }: Props) => {
   const { inProgressBy, inProgressAt, skippedBy, skippedAt, completedBy, completedAt } = task;
 
   let status;
   let account;
+  let accountClickable = false;
   let label;
+  let labelClickable = false;
   let date;
   let icon;
   if (completedAt) {
     status = 'completed';
     account = completedBy;
+    accountClickable = editable.completed;
     label = <FormattedMessage id="components.form.completed" defaultMessage="COMPLETED" />;
     icon = 'CHECKED';
     date = completedAt;
   } else if (inProgressAt) {
     status = 'inProgress';
     account = inProgressBy;
+    accountClickable = editable.inProgress;
     label = <FormattedMessage id="components.form.inProgress" defaultMessage="IN PROGRESS" />;
+    labelClickable = editable.inProgress;
     icon = 'STOPWATCH';
     date = inProgressAt;
   } else if (skippedAt) {
     status = 'skipped';
     account = skippedBy;
-    label = <FormattedMessage id="components.form.completed" defaultMessage="SKIPPED" />;
+    accountClickable = editable.skipped;
+    label = <FormattedMessage id="components.form.skipped" defaultMessage="SKIPPED" />;
+    labelClickable = editable.skipped;
     icon = 'SKIPPED';
     date = skippedAt;
   } else {
     status = 'unCompleted';
-    label = <FormattedMessage id="components.form.completed" defaultMessage="UNCOMPLETED" />;
+    label = <FormattedMessage id="components.form.unCompleted" defaultMessage="UNCOMPLETED" />;
+    labelClickable = editable.completed;
   }
 
   return (
@@ -74,41 +92,49 @@ const TaskStatusInput = ({ task, update }: Props) => {
           <div className={TaskStatusInputWrapperStyle(status)}>
             <div className={UserAvatarWrapperStyle}>
               {account && (
-                <button
-                  type="button"
-                  onClick={event => {
-                    event.stopPropagation();
-                    const newTask = { ...task };
-                    switch (status) {
-                      case 'inProgress': {
-                        newTask.inProgressAt = null;
-                        newTask.inProgressBy = null;
-                        break;
-                      }
-                      case 'skipped': {
-                        newTask.skippedAt = null;
-                        newTask.skippedBy = null;
-                        break;
-                      }
-                      case 'completed': {
-                        newTask.completedAt = null;
-                        newTask.completedBy = null;
-                        break;
-                      }
-                      default: {
-                        break;
-                      }
-                    }
-                    update(newTask);
-                  }}
-                >
-                  <UserAvatar {...account} />
-                </button>
+                <>
+                  {accountClickable ? (
+                    <button
+                      type="button"
+                      onClick={event => {
+                        event.stopPropagation();
+                        const newTask = { ...task };
+                        switch (status) {
+                          case 'inProgress': {
+                            newTask.inProgressAt = null;
+                            newTask.inProgressBy = null;
+                            break;
+                          }
+                          case 'skipped': {
+                            newTask.skippedAt = null;
+                            newTask.skippedBy = null;
+                            break;
+                          }
+                          case 'completed': {
+                            newTask.completedAt = null;
+                            newTask.completedBy = null;
+
+                            break;
+                          }
+                          default: {
+                            break;
+                          }
+                        }
+                        update(newTask);
+                      }}
+                    >
+                      <UserAvatar {...account} />
+                    </button>
+                  ) : (
+                    <UserAvatar {...account} />
+                  )}
+                </>
               )}
             </div>
 
-            {status === 'unCompleted' ||
-            (status === 'inProgress' && getByPath('id', inProgressBy) === user.id) ? (
+            {labelClickable &&
+            (status === 'unCompleted' ||
+              (status === 'inProgress' && getByPath('id', inProgressBy) === user.id)) ? (
               <button
                 type="button"
                 className={TaskStatusLabelStyle(true)}
@@ -157,7 +183,7 @@ const TaskStatusInput = ({ task, update }: Props) => {
               </div>
             )}
           </div>
-          {(status === 'unCompleted' || status === 'inProgress') && (
+          {editable.skipped && (status === 'unCompleted' || status === 'inProgress') && (
             <button
               type="button"
               className={SkipButtonStyle}
