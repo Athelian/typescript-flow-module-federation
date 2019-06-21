@@ -62,7 +62,6 @@ function TaskSectionInTemplate() {
             </SectionNavBar>
             <div className={TasksSectionBodyStyle}>
               <Tasks
-                isInTemplate
                 editable={allowUpdate}
                 removable={allowUpdate}
                 viewForm={allowUpdate}

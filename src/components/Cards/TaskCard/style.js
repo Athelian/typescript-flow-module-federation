@@ -8,7 +8,7 @@ export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: ${hideParentInfo ? '159px' : '184px'};
+  height: ${hideParentInfo ? '227px' : '252px'};
   padding: 5px 0 10px 0;
 `;
 
@@ -116,7 +116,7 @@ export const DividerStyle: string = css`
 `;
 
 export const TaskStatusWrapperStyle: string = css`
-  height: 40px;
+  height: 60px;
   width: 195px;
   padding: 0 10px;
 `;
@@ -208,4 +208,46 @@ export const ApprovalButtonStyle = (
       background-color: ${colors.PURPLE_DARK};
     }
   `};
+`;
+
+export const ProjectInfoStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 160px;
+  width: 100%;
+  padding: 0 0 0 5px;
+  align-items: center;
+`;
+
+export const ProjectIconStyle = (has: boolean = false): string => css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${has ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  color: ${colors.WHITE};
+  font-size: 11px;
+  ${has &&
+    `
+      &:hover, :focus {
+        background-color: ${colors.TEAL_DARK};
+      }
+    `};
+`;
+
+export const MilestoneInfoStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 160px;
+  width: 100%;
+  padding: 0 0 0 5px;
+  align-items: center;
+`;
+
+export const MilestoneIconStyle = (has: boolean = false): string => css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${has ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  color: ${colors.WHITE};
+  font-size: 11px;
 `;

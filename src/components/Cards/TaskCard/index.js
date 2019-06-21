@@ -7,15 +7,15 @@ import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
-import OutsideClickHandler from 'components/OutsideClickHandler';
 import Icon from 'components/Icon';
 import Tag from 'components/Tag';
+import OutsideClickHandler from 'components/OutsideClickHandler';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
-import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
+// import { IN_PROGRESS, COMPLETED } from 'components/Form/TaskStatusInput/constants';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { BATCH_FORM } from 'modules/permission/constants/batch';
@@ -23,15 +23,15 @@ import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_FORM } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import { SHIPMENT_FORM } from 'modules/permission/constants/shipment';
+import { UserConsumer } from 'modules/user';
 import {
   Label,
   Display,
   TextInputFactory,
   DateInputFactory,
-  TaskAssignmentInput,
-  TaskStatusInput,
   ApproveRejectMenu,
   TaskApprovalStatusInput,
+  TaskStatusInputNew,
 } from 'components/Form';
 import type { TaskEditable } from './type.js.flow';
 import BaseCard from '../BaseCard';
@@ -53,6 +53,10 @@ import {
   ApprovalPanelWrapperStyle,
   ApprovalInputWrapperStyle,
   ApprovalButtonStyle,
+  ProjectInfoStyle,
+  ProjectIconStyle,
+  MilestoneInfoStyle,
+  MilestoneIconStyle,
 } from './style';
 
 type OptionalProps = {
@@ -183,20 +187,19 @@ const TaskCard = ({
     name,
     dueDate,
     startDate,
-    assignedTo,
-    inProgressBy,
+
     completedBy,
-    completedAt,
-    tags,
+
+    tags = [],
     taskTemplate,
     approvable,
-    approvers,
     approvedBy,
     approvedAt,
     rejectedBy,
     rejectedAt,
     startDateBinding,
     dueDateBinding,
+    milestone,
   } = task;
 
   const validation = validator({
@@ -339,59 +342,6 @@ const TaskCard = ({
             </div>
 
             <div
-              className={DateInputWrapperStyle(isEditable && !isInTemplate && !startDateBinding)}
-              onClick={evt => {
-                if (isEditable) {
-                  evt.stopPropagation();
-                }
-              }}
-              role="presentation"
-            >
-              <Label>
-                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
-              </Label>
-
-              {isInTemplate ? (
-                <Display color="GRAY_LIGHT">
-                  <FormattedMessage
-                    id="components.cards.datePlaceholder"
-                    defaultMessage="yyyy/mm/dd"
-                  />
-                </Display>
-              ) : (
-                <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
-                  {({ name: fieldName, ...inputHandlers }) => (
-                    <DateInputFactory
-                      {...inputHandlers}
-                      onBlur={evt => {
-                        inputHandlers.onBlur(evt);
-                        saveOnBlur({
-                          ...task,
-                          startDate: inputHandlers.value ? inputHandlers.value : null,
-                        });
-                        setTimeout(() => {
-                          emitter.emit('AUTO_DATE');
-                        }, 200);
-                      }}
-                      editable={editable.startDate && !startDateBinding}
-                      inputWidth="120px"
-                      inputHeight="20px"
-                      name={fieldName}
-                      isNew={false}
-                      hideTooltip
-                    />
-                  )}
-                </FormField>
-              )}
-
-              {startDateBinding && (
-                <div className={AutoDateSyncIconStyle}>
-                  <Icon icon="SYNC" />
-                </div>
-              )}
-            </div>
-
-            <div
               className={DateInputWrapperStyle(isEditable && !isInTemplate && !dueDateBinding)}
               onClick={evt => {
                 if (isEditable) {
@@ -449,62 +399,86 @@ const TaskCard = ({
               )}
             </div>
 
+            <div
+              className={DateInputWrapperStyle(isEditable && !isInTemplate && !startDateBinding)}
+              onClick={evt => {
+                if (isEditable) {
+                  evt.stopPropagation();
+                }
+              }}
+              role="presentation"
+            >
+              <Label>
+                <FormattedMessage id="components.cards.startDate" defaultMessage="START" />
+              </Label>
+
+              {isInTemplate ? (
+                <Display color="GRAY_LIGHT">
+                  <FormattedMessage
+                    id="components.cards.datePlaceholder"
+                    defaultMessage="yyyy/mm/dd"
+                  />
+                </Display>
+              ) : (
+                <FormField name={`task.${id}.startDate`} initValue={startDate} values={values}>
+                  {({ name: fieldName, ...inputHandlers }) => (
+                    <DateInputFactory
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        inputHandlers.onBlur(evt);
+                        saveOnBlur({
+                          ...task,
+                          startDate: inputHandlers.value ? inputHandlers.value : null,
+                        });
+                        setTimeout(() => {
+                          emitter.emit('AUTO_DATE');
+                        }, 200);
+                      }}
+                      editable={editable.startDate && !startDateBinding}
+                      inputWidth="120px"
+                      inputHeight="20px"
+                      name={fieldName}
+                      isNew={false}
+                      hideTooltip
+                    />
+                  )}
+                </FormField>
+              )}
+
+              {startDateBinding && (
+                <div className={AutoDateSyncIconStyle}>
+                  <Icon icon="SYNC" />
+                </div>
+              )}
+            </div>
+
+            <div className={DividerStyle} />
+
+            <div className={ProjectInfoStyle}>
+              <div className={ProjectIconStyle(getByPath('project', milestone))}>
+                <Icon icon="PROJECT" />
+              </div>
+              <Label>{getByPathWithDefault('', 'project.name', milestone)}</Label>
+            </div>
+            <div className={MilestoneInfoStyle}>
+              <div className={MilestoneIconStyle(milestone)}>
+                <Icon icon="MILESTONE" />
+              </div>
+              <Label>{getByPathWithDefault('', 'name', milestone)}</Label>
+            </div>
+
             <div className={DividerStyle} />
 
             <div className={TaskStatusWrapperStyle}>
-              {inProgressBy || completedBy ? (
-                <TaskStatusInput
-                  width="175px"
-                  activeUser={inProgressBy}
-                  showActiveUser
-                  status={completedBy ? COMPLETED : IN_PROGRESS}
-                  showCompletedDate
-                  completedDate={completedAt}
-                  editable={
-                    completedBy ? editable.completed : editable.inProgress && editable.completed
-                  }
-                  onClick={() =>
-                    saveOnBlur({
-                      ...task,
-                      completedBy: inProgressBy,
-                      completedAt: formatToGraphql(startOfToday()),
-                    })
-                  }
-                  onClickUser={() =>
-                    completedBy
-                      ? saveOnBlur({
-                          ...task,
-                          completedBy: null,
-                          completedAt: null,
-                        })
-                      : saveOnBlur({
-                          ...task,
-                          inProgressBy: null,
-                          inProgressAt: null,
-                        })
-                  }
-                />
+              {isInTemplate ? (
+                // FIXME: if it is in template, need to modify styling. told with kevin
+                <TaskStatusInputNew task={task} />
               ) : (
-                <TaskAssignmentInput
-                  groupIds={groupIds}
-                  onChange={newAssignedTo =>
-                    saveOnBlur({
-                      ...task,
-                      assignedTo: newAssignedTo,
-                    })
-                  }
-                  users={assignedTo}
-                  onActivateUser={
-                    isInTemplate
-                      ? null
-                      : user =>
-                          saveOnBlur({
-                            ...task,
-                            inProgressBy: user,
-                            inProgressAt: formatToGraphql(startOfToday()),
-                          })
-                  }
-                  editable={editable.assignedTo && editable.inProgress}
+                <TaskStatusInputNew
+                  task={task}
+                  update={newTask => saveOnBlur(newTask)}
+                  // FIXME: permission
+                  editable
                 />
               )}
             </div>
@@ -519,12 +493,11 @@ const TaskCard = ({
                   defaultValue={{
                     isExpand: false,
                     isSlideViewOpen: false,
-                    selectUser: null,
                   }}
                 >
-                  {({ value: { isExpanded, isSlideViewOpen, selectUser }, set, assign }) => (
+                  {({ value: { isExpanded, isSlideViewOpen }, set, assign }) => (
                     <>
-                      <div className={ApprovalPanelWrapperStyle(isExpanded ? '79px' : '0px')}>
+                      <div className={ApprovalPanelWrapperStyle(isExpanded ? '89px' : '0px')}>
                         <OutsideClickHandler
                           onOutsideClick={() =>
                             assign({
@@ -536,16 +509,16 @@ const TaskCard = ({
                           ignoreClick={!isExpanded || isSlideViewOpen}
                           ignoreElements={[taskEl && taskEl.current].filter(Boolean)}
                         >
-                          <div className={ApprovalInputWrapperStyle}>
-                            {isUnapproved ? (
-                              <>
-                                {selectUser && selectUser.id ? (
+                          <UserConsumer>
+                            {({ user }) => (
+                              <div className={ApprovalInputWrapperStyle}>
+                                {isUnapproved ? (
                                   <ApproveRejectMenu
                                     width="175px"
                                     onApprove={() =>
                                       saveOnBlur({
                                         ...task,
-                                        approvedBy: selectUser,
+                                        approvedBy: user,
                                         approvedAt: formatToGraphql(startOfToday()),
                                         rejectedBy: null,
                                         rejectedAt: null,
@@ -556,66 +529,47 @@ const TaskCard = ({
                                         ...task,
                                         approvedBy: null,
                                         approvedAt: null,
-                                        rejectedBy: selectUser,
+                                        rejectedBy: user,
                                         rejectedAt: formatToGraphql(startOfToday()),
                                       })
                                     }
                                   />
                                 ) : (
-                                  <TaskAssignmentInput
-                                    groupIds={groupIds}
-                                    onChange={newAssignedTo =>
+                                  <TaskApprovalStatusInput
+                                    showUser
+                                    showDate
+                                    width="175px"
+                                    editable={editable.approved && editable.rejected}
+                                    onClickUser={() => {
                                       saveOnBlur({
                                         ...task,
-                                        approvers: newAssignedTo,
-                                      })
-                                    }
-                                    users={approvers}
-                                    onActivateUser={
-                                      isInTemplate ? null : user => set('selectUser', user)
-                                    }
-                                    onToggleSlideView={isOpen => {
-                                      set('isSlideViewOpen', isOpen);
+                                        approvedBy: null,
+                                        approvedAt: null,
+                                        rejectedBy: null,
+                                        rejectedAt: null,
+                                      });
                                     }}
-                                    editable={editable.approvers}
+                                    approval={
+                                      approvedBy && approvedBy.id
+                                        ? {
+                                            approvedAt,
+                                            approvedBy,
+                                          }
+                                        : null
+                                    }
+                                    rejection={
+                                      rejectedBy && rejectedBy.id
+                                        ? {
+                                            rejectedBy,
+                                            rejectedAt,
+                                          }
+                                        : null
+                                    }
                                   />
                                 )}
-                              </>
-                            ) : (
-                              <TaskApprovalStatusInput
-                                showUser
-                                showDate
-                                width="175px"
-                                editable={editable.approved && editable.rejected}
-                                onClickUser={() => {
-                                  saveOnBlur({
-                                    ...task,
-                                    approvedBy: null,
-                                    approvedAt: null,
-                                    rejectedBy: null,
-                                    rejectedAt: null,
-                                  });
-                                  set('selectUser', null);
-                                }}
-                                approval={
-                                  approvedBy && approvedBy.id
-                                    ? {
-                                        approvedAt,
-                                        approvedBy,
-                                      }
-                                    : null
-                                }
-                                rejection={
-                                  rejectedBy && rejectedBy.id
-                                    ? {
-                                        rejectedBy,
-                                        rejectedAt,
-                                      }
-                                    : null
-                                }
-                              />
+                              </div>
                             )}
-                          </div>
+                          </UserConsumer>
                         </OutsideClickHandler>
                       </div>
 
@@ -659,7 +613,7 @@ TaskCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TaskCard, 'task', {
   width: '195px',
-  height: hideParentInfoForHoc ? '159px' : '184px',
+  height: hideParentInfoForHoc ? '227px' : '252px',
   entityIcon: 'TASK',
   entityColor: 'TASK',
 });
