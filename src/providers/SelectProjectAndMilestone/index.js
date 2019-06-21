@@ -47,26 +47,17 @@ function initFilterBy(filter: Object) {
 
 function resetSelection({
   selectedProject,
-  previousSelection,
   selectedMilestone,
   set,
 }: {
   selectedProject: ?Project,
-  previousSelection: { project: ?Project, milestone: ?Milestone },
   selectedMilestone: ?Milestone,
   set: Function,
 }) {
-  if (
-    getByPathWithDefault('', 'id', selectedProject) !==
-    getByPathWithDefault('', 'project.id', previousSelection)
-  ) {
-    set('selectedProject', previousSelection.project);
-    set('selectedMilestone', previousSelection.milestone);
-  }
-
-  if (selectedMilestone) {
-    set('selectedMilestone', previousSelection.milestone);
-  }
+  set('currentSelection', {
+    project: selectedProject,
+    milestone: selectedMilestone,
+  });
 }
 
 function SelectProjectAndMilestone({
@@ -94,13 +85,13 @@ function SelectProjectAndMilestone({
       defaultValue={{
         selectedProject: project,
         selectedMilestone: milestone,
-        previousSelection: {
+        currentSelection: {
           project,
           milestone,
         },
       }}
     >
-      {({ value: { selectedProject, selectedMilestone, previousSelection }, set }) => (
+      {({ value: { selectedProject, selectedMilestone, currentSelection }, set }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
@@ -186,6 +177,11 @@ function SelectProjectAndMilestone({
                   itemWidth="200px"
                 >
                   {projects.map(item => {
+                    const selected =
+                      item.id === getByPathWithDefault('', 'id', selectedProject) &&
+                      selectedMilestone &&
+                      selectedMilestone.id;
+
                     return (
                       <div key={item.id} className={ItemWrapperStyle}>
                         <BooleanValue>
@@ -198,30 +194,22 @@ function SelectProjectAndMilestone({
                                 key={item.id}
                                 project={item}
                                 onClick={() => {
-                                  if (selectedMilestone && selectedProject.id !== item.id) {
-                                    set('selectedMilestone', null);
-                                    set('previousSelection', {
-                                      project: selectedProject,
-                                      milestone: selectedMilestone,
-                                    });
-                                  }
-                                  set('selectedProject', item);
+                                  set('currentSelection', {
+                                    project: item,
+                                    milestone: null,
+                                  });
                                   slideToggle(true);
                                 }}
                                 selectable
-                                selected={
-                                  item.id === getByPathWithDefault('', 'id', selectedProject) &&
-                                  selectedMilestone &&
-                                  selectedMilestone.id
-                                }
+                                selected={selected}
                               />
-                              {item.id === getByPathWithDefault('', 'id', selectedProject) && (
+                              {item.id ===
+                                getByPathWithDefault('', 'project.id', currentSelection) && (
                                 <SlideView
                                   isOpen={isOpen}
                                   onRequestClose={() => {
                                     resetSelection({
                                       selectedProject,
-                                      previousSelection,
                                       selectedMilestone,
                                       set,
                                     });
@@ -235,7 +223,6 @@ function SelectProjectAndMilestone({
                                       onCancel={() => {
                                         resetSelection({
                                           selectedProject,
-                                          previousSelection,
                                           selectedMilestone,
                                           set,
                                         });
@@ -244,13 +231,18 @@ function SelectProjectAndMilestone({
                                       onSelect={newMilestone => {
                                         if (newMilestone) {
                                           set('selectedMilestone', newMilestone);
-                                          set('previousSelection', {
-                                            project: selectedProject,
+                                          set('selectedProject', currentSelection.project);
+                                          set('currentSelection', {
+                                            project: currentSelection.project,
                                             milestone: newMilestone,
                                           });
                                         } else {
                                           set('selectedProject', null);
                                           set('selectedMilestone', null);
+                                          set('currentSelection', {
+                                            project: null,
+                                            milestone: null,
+                                          });
                                         }
                                         slideToggle(false);
                                       }}
