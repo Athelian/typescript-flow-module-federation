@@ -28,27 +28,29 @@ storiesOf('Selector/ProjectAndMilestone', module).add('with gray card', () => (
                 });
               }}
             >
-              <ProjectAndMilestone
-                filter={{
-                  query: '',
-                }}
-                project={project}
-                milestone={milestone}
-                onCancel={() => {
-                  slideToggle(false);
-                  set({
-                    project,
-                    milestone,
-                  });
-                }}
-                onSelect={(selectedProject, selectedMilestone) => {
-                  slideToggle(false);
-                  set({
-                    project: selectedProject,
-                    milestone: selectedMilestone,
-                  });
-                }}
-              />
+              {isOpen && (
+                <ProjectAndMilestone
+                  filter={{
+                    query: '',
+                  }}
+                  project={project}
+                  milestone={milestone}
+                  onCancel={() => {
+                    slideToggle(false);
+                    set({
+                      project,
+                      milestone,
+                    });
+                  }}
+                  onSelect={(selectedProject, selectedMilestone) => {
+                    slideToggle(false);
+                    set({
+                      project: selectedProject,
+                      milestone: selectedMilestone,
+                    });
+                  }}
+                />
+              )}
             </SlideView>
           </>
         )}
