@@ -309,6 +309,14 @@ export const taskWithParentInfoFragment = gql`
         ...shipmentCardFragment
       }
     }
+    milestone {
+      ... on Milestone {
+        ...milestoneCardFragment
+        project {
+          ...projectCardFragment
+        }
+      }
+    }
   }
 `;
 

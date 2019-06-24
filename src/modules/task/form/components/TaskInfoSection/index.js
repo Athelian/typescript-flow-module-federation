@@ -3,7 +3,7 @@ import React from 'react';
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
-import { ObjectValue } from 'react-values';
+import { ObjectValue, BooleanValue } from 'react-values';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
@@ -22,7 +22,10 @@ import {
   BatchCard,
   ProductCard,
   OrderProductProviderCard,
+  ProjectCard,
+  MilestoneCard,
 } from 'components/Cards';
+import SlideView from 'components/SlideView';
 import {
   SectionWrapper,
   SectionHeader,
@@ -42,6 +45,7 @@ import {
   RadioInput,
   MetricInputFactory,
   SelectInputFactory,
+  DashedPlusButton,
 } from 'components/Form';
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
@@ -53,6 +57,7 @@ import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import {
   orderBinding,
   orderItemBinding,
@@ -893,9 +898,9 @@ const TaskInfoSection = ({
                     />
                   </GridColumn>
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
-                      <GridColumn>
+                  <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
                         <FieldItem
                           label={
                             <Label>
@@ -914,30 +919,28 @@ const TaskInfoSection = ({
                             />
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
-                    (() => {
-                      const { orderItem, productProvider, product, order } = spreadOrderItem(
-                        task.orderItem
-                      );
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
+                      (() => {
+                        const { orderItem, productProvider, product, order } = spreadOrderItem(
+                          task.orderItem
+                        );
 
-                      const viewable = {
-                        price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                      };
+                        const viewable = {
+                          price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                        };
 
-                      const navigable = {
-                        order: canViewOrderForm,
-                        product: canViewProductForm,
-                      };
+                        const navigable = {
+                          order: canViewOrderForm,
+                          product: canViewProductForm,
+                        };
 
-                      const config = {
-                        hideOrder: false,
-                      };
-                      return (
-                        <GridColumn>
+                        const config = {
+                          hideOrder: false,
+                        };
+                        return (
                           <FieldItem
                             label={
                               <Label>
@@ -958,13 +961,11 @@ const TaskInfoSection = ({
                               />
                             }
                           />
-                        </GridColumn>
-                      );
-                    })()}
+                        );
+                      })()}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
-                      <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
                         <FieldItem
                           label={
                             <Label>
@@ -990,12 +991,10 @@ const TaskInfoSection = ({
                             </PartnerPermissionsWrapper>
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'ProductProvider' && (
-                      <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'ProductProvider' && (
                         <FieldItem
                           label={
                             <Label>
@@ -1015,12 +1014,10 @@ const TaskInfoSection = ({
                             />
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
-                      <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
                         <FieldItem
                           label={
                             <Label>
@@ -1035,8 +1032,73 @@ const TaskInfoSection = ({
                             />
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
+
+                    <div>
+                      {/* FIXME: permission */}
+                      <BooleanValue>
+                        {({ value: opened, set: toggleSlide }) => (
+                          <>
+                            {values.milestone ? (
+                              <div role="presentation" onClick={() => toggleSlide(true)}>
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.project"
+                                    defaultMessage="PROJECT"
+                                  />
+                                </Label>
+                                <ProjectCard project={values.milestone.project} />
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.milestone"
+                                    defaultMessage="MILESTONE"
+                                  />
+                                </Label>
+                                <MilestoneCard milestone={values.milestone} />
+                              </div>
+                            ) : (
+                              <>
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.project"
+                                    defaultMessage="PROJECT"
+                                  />
+                                </Label>
+                                <DashedPlusButton
+                                  width="195px"
+                                  height="458px"
+                                  onClick={() => toggleSlide(true)}
+                                />
+                              </>
+                            )}
+                            <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
+                              {opened && (
+                                <SelectProjectAndMilestone
+                                  filter={{
+                                    query: '',
+                                  }}
+                                  project={getByPath('milestone.project', values)}
+                                  milestone={values.milestone}
+                                  onSelect={({ milestone, project }) => {
+                                    setFieldValues({
+                                      milestone: milestone
+                                        ? {
+                                            ...milestone,
+                                            project,
+                                          }
+                                        : null,
+                                    });
+                                    toggleSlide(false);
+                                  }}
+                                  onCancel={() => toggleSlide(false)}
+                                />
+                              )}
+                            </SlideView>
+                          </>
+                        )}
+                      </BooleanValue>
+                    </div>
+                  </GridColumn>
                 </div>
 
                 <div className={MemoWrapperStyle}>
