@@ -127,12 +127,16 @@ export default function OrderItem({
                           {
                             id,
                             entity: ORDER_ITEM,
-                            exporterId: `${ORDER_ITEM}-${exporter.id}`,
+                            exporterId: `${id}-${exporter.id}`,
+                            importerId: `${id}-${importer.id}`,
+                            partners: [importer, exporter],
                           },
                           ...batches.map(batch => ({
                             entity: BATCH,
                             id: batch.id,
-                            exporterId: `${BATCH}-${exporter.id}`,
+                            exporterId: `${id}-${exporter.id}`,
+                            importerId: `${id}-${importer.id}`,
+                            partners: [importer, exporter],
                           })),
                         ])
                       }

@@ -298,16 +298,99 @@ const Order = ({ intl }: Props) => {
           });
           const allowToUpdate = hasPermission(RM_ORDER_FOCUS_MANIPULATE);
           const orderIds = getByPathWithDefault([], 'orders.nodes', data).map(order => order.id);
+          const targetAllOrders = orderIds.map((id, position) => ({
+            id,
+            entity: ORDER,
+            importerId: `${id}-${getByPathWithDefault(
+              '',
+              `orders.nodes.${position}.importer.id`,
+              data
+            )}`,
+            exporterId: `${id}-${getByPathWithDefault(
+              '',
+              `orders.nodes.${position}.exporter.id`,
+              data
+            )}`,
+            partners: [
+              getByPathWithDefault('', `orders.nodes.${position}.importer`, data),
+              getByPathWithDefault('', `orders.nodes.${position}.exporter`, data),
+            ].filter(Boolean),
+          }));
           const itemIds = flatten(
             Object.keys(orders || {})
               .filter(orderId => orderIds.includes(orderId))
               .map(orderId => orders[orderId].orderItems)
           );
-          const batchIds = flatten(
-            Object.keys(orderItems || {})
-              .filter(itemId => itemIds.includes(itemId))
-              .map(itemId => orderItems[itemId].batches)
-          );
+          const targetAllOrderItems = itemIds.map(id => ({
+            id,
+            entity: ORDER_ITEM,
+            importerId: `${id}-${getByPathWithDefault(
+              '',
+              `orders.nodes.${orderIds.indexOf(orderItems[id].order)}.importer.id`,
+              data
+            )}`,
+            exporterId: `${id}-${getByPathWithDefault(
+              '',
+              `orders.nodes.${orderIds.indexOf(orderItems[id].order)}.exporter.id`,
+              data
+            )}`,
+            partners: [
+              getByPathWithDefault(
+                '',
+                `orders.nodes.${orderIds.indexOf(orderItems[id].order)}.importer`,
+                data
+              ),
+              getByPathWithDefault(
+                '',
+                `orders.nodes.${orderIds.indexOf(orderItems[id].order)}.exporter`,
+                data
+              ),
+            ].filter(Boolean),
+          }));
+          const batchIds = flatten(itemIds.map(itemId => orderItems[itemId].batches));
+          const targetAllBatches = batchIds.map(id => {
+            const orderItemId = itemIds.find(
+              itemId => orderItems[itemId].batches && orderItems[itemId].batches.includes(id)
+            );
+            return {
+              id,
+              entity: BATCH,
+              importerId: `${id}-${getByPathWithDefault(
+                '',
+                `orders.nodes.${orderIds.indexOf(orderItems[orderItemId].order)}.importer.id`,
+                data
+              )}`,
+              exporterId: `${id}-${getByPathWithDefault(
+                '',
+                `orders.nodes.${orderIds.indexOf(orderItems[orderItemId].order)}.exporter.id`,
+                data
+              )}`,
+              partners: [
+                getByPathWithDefault(
+                  '',
+                  `orders.nodes.${orderIds.indexOf(orderItems[orderItemId].order)}.importer`,
+                  data
+                ),
+                getByPathWithDefault(
+                  '',
+                  `orders.nodes.${orderIds.indexOf(orderItems[orderItemId].order)}.exporter`,
+                  data
+                ),
+              ].filter(Boolean),
+            };
+          });
+
+          const targetAllShipments = Object.keys(shipments || {}).map(id => ({
+            id,
+            entity: SHIPMENT,
+            importerId: `${id}-${getByPathWithDefault('', `${id}.importer.id`, shipments)}`,
+            exporterId: `${id}-${getByPathWithDefault('', `${id}.exporter.id`, shipments)}`,
+            partners: [
+              getByPathWithDefault('', `${id}.importer`, shipments),
+              getByPathWithDefault('', `${id}.exporter`, shipments),
+            ].filter(Boolean),
+          }));
+
           return (
             <>
               <SortFilter
@@ -376,7 +459,7 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.ordersLabel)}
                       no={orderIds.length}
                       onClick={
-                        allowToUpdate ? () => actions.toggleSelectAll(ORDER, orderIds) : null
+                        allowToUpdate ? () => actions.toggleSelectAll(ORDER, targetAllOrders) : null
                       }
                     />
                     <EntityHeader
@@ -389,7 +472,9 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.itemsLabel)}
                       no={itemIds.length}
                       onClick={
-                        allowToUpdate ? () => actions.toggleSelectAll(ORDER_ITEM, itemIds) : null
+                        allowToUpdate
+                          ? () => actions.toggleSelectAll(ORDER_ITEM, targetAllOrderItems)
+                          : null
                       }
                     />
                     <EntityHeader
@@ -402,7 +487,9 @@ const Order = ({ intl }: Props) => {
                       label={intl.formatMessage(messages.batchesLabel)}
                       no={batchIds.length}
                       onClick={
-                        allowToUpdate ? () => actions.toggleSelectAll(BATCH, batchIds) : null
+                        allowToUpdate
+                          ? () => actions.toggleSelectAll(BATCH, targetAllBatches)
+                          : null
                       }
                     />
                     <EntityHeader
@@ -420,7 +507,7 @@ const Order = ({ intl }: Props) => {
                       }
                       onClick={
                         allowToUpdate
-                          ? () => actions.toggleSelectAll(SHIPMENT, Object.keys(shipments || []))
+                          ? () => actions.toggleSelectAll(SHIPMENT, targetAllShipments)
                           : null
                       }
                     >

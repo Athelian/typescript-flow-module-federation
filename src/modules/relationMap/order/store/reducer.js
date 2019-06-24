@@ -1,5 +1,6 @@
 // @flow
 import logger from 'utils/logger';
+import { flatten } from 'lodash';
 import { SHIPMENT, BATCH, ORDER_ITEM, ORDER } from 'constants/keywords';
 import { getByPathWithDefault } from 'utils/fp';
 import type { UIState } from './type.js.flow';
@@ -458,6 +459,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       if (payload && payload.mode === 'TARGET') {
         return {
           ...state,
+          constraint: {
+            exporterIds: [],
+            importerIds: [],
+            partners: [],
+          },
           targets: [],
           connectOrder: {
             ...state.connectOrder,
@@ -488,17 +494,30 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const {
         select: { entities },
+        constraint: { exporterIds, importerIds },
         targets,
       } = state;
       let result = [...targets];
-      if (payload && payload.entity && payload.selectedIds) {
-        const { selectedIds, entity } = payload;
+      let exporters = [...exporterIds];
+      let importers = [...importerIds];
+      if (payload && payload.selectedItems && payload.entity) {
+        const { selectedItems, entity } = payload;
+        const selectedIds = selectedItems.map(item => item.id);
         if (
           state.select.entities.includes(entity) &&
           state.targets.filter(item => item.includes(`${entity}-`)).length === selectedIds.length
         ) {
+          selectedItems.forEach(selectItem => {
+            exporters = (exporterIds.filter(item => item !== selectItem.exporterId): Array<string>);
+            importers = (importerIds.filter(item => item !== selectItem.importerId): Array<string>);
+          });
           return {
             ...state,
+            constraint: {
+              ...state.constraint,
+              exporterIds: exporters,
+              importerIds: importers,
+            },
             targets: (result.filter(
               targetItem => !targetItem.includes(`${entity}-`)
             ): Array<string>),
@@ -508,12 +527,27 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
             },
           };
         }
-        selectedIds.forEach(selectItemId => {
-          if (!result.includes(`${entity}-${selectItemId}`))
-            result = [...result, `${entity}-${selectItemId}`];
+
+        selectedItems.forEach(selectItem => {
+          if (!result.includes(`${selectItem.entity}-${selectItem.id}`))
+            result = [...result, `${selectItem.entity}-${selectItem.id}`];
+          if (!exporterIds.includes(selectItem.exporterId))
+            exporters = [...exporterIds, selectItem.exporterId];
+          if (!importerIds.includes(selectItem.importerId))
+            importers = [...importerIds, selectItem.importerId];
         });
         return {
           ...state,
+          constraint: {
+            partners: [
+              ...new Set([
+                ...state.constraint.partners,
+                ...flatten(((payload && payload.selectedItems) || []).map(item => item.partners)),
+              ]),
+            ],
+            exporterIds: exporters,
+            importerIds: importers,
+          },
           targets: result,
           select: {
             mode: 'ALL',
@@ -551,10 +585,11 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
       const { payload } = action;
       const {
         targets,
-        constraint: { exporterIds },
+        constraint: { exporterIds, importerIds },
       } = state;
       let result = [...targets];
       let exporters = [...exporterIds];
+      let importers = [...importerIds];
       if (payload) {
         const { selectItems } = payload;
         if (
@@ -565,6 +600,7 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
               item => item !== `${selectItem.entity}-${selectItem.id}`
             ): Array<string>);
             exporters = (exporterIds.filter(item => item !== selectItem.exporterId): Array<string>);
+            importers = (importerIds.filter(item => item !== selectItem.importerId): Array<string>);
           });
         } else {
           selectItems.forEach(selectItem => {
@@ -572,14 +608,22 @@ export function uiReducer(state: UIState, action: { type: string, payload?: Obje
               result = [...result, `${selectItem.entity}-${selectItem.id}`];
             if (!exporterIds.includes(selectItem.exporterId))
               exporters = [...exporterIds, selectItem.exporterId];
+            if (!importerIds.includes(selectItem.importerId))
+              importers = [...importerIds, selectItem.importerId];
           });
         }
       }
       return {
         ...state,
         constraint: {
-          ...state.constraint,
+          partners: [
+            ...new Set([
+              ...state.constraint.partners,
+              ...flatten(((payload && payload.selectItems) || []).map(item => item.partners)),
+            ]),
+          ],
           exporterIds: exporters,
+          importerIds: importers,
         },
         targets: result,
       };

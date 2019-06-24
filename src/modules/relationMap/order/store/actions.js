@@ -45,12 +45,21 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
         type: 'TOGGLE_SHIPMENT_LIST',
         payload: {},
       }),
-    toggleSelectAll: (entity: string, selectedIds: Array<string>) =>
+    toggleSelectAll: (
+      entity: string,
+      selectedItems: Array<{
+        entity: string,
+        id: string,
+        exporterId: string,
+        importerId: string,
+        partners: Array<Object>,
+      }>
+    ) =>
       dispatch({
         type: 'TOGGLE_SELECT_ALL',
         payload: {
           entity,
-          selectedIds,
+          selectedItems,
         },
       }),
     countShipment: (total: number, shipments: Array<Object>) =>
@@ -70,14 +79,30 @@ function actionCreators(dispatch: (action: { type: string, payload: Object }) =>
           extra,
         },
       }),
-    selectBranch: (selectItems: Array<{ entity: string, id: string, exporterId: string }>) =>
+    selectBranch: (
+      selectItems: Array<{
+        entity: string,
+        id: string,
+        exporterId: string,
+        importerId: string,
+        partners: Array<Object>,
+      }>
+    ) =>
       dispatch({
         type: 'SELECT_BRANCH',
         payload: {
           selectItems,
         },
       }),
-    targetNewEntities: (selectItems: Array<{ entity: string, id: string, exporterId: string }>) =>
+    targetNewEntities: (
+      selectItems: Array<{
+        entity: string,
+        id: string,
+        exporterId: string,
+        importerId: string,
+        partners: Array<Object>,
+      }>
+    ) =>
       dispatch({
         type: 'TARGET_NEW_ENTITY',
         payload: {
