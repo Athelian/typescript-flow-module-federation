@@ -181,40 +181,6 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
               </FormField>
 
               <FormField
-                name="packageSize.length"
-                initValue={getByPath('packageSize.length', values)}
-                setFieldValue={(field, value) => {
-                  setFieldArrayValue('packageSize.length', value);
-                  if (
-                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_VOLUME]) &&
-                    values.autoCalculatePackageVolume
-                  ) {
-                    calculatePackageVolume();
-                  }
-                }}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <MetricInputFactory
-                    metricType="distance"
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={getByPath('packageSize.length', originalValues)}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.pkgLength"
-                        defaultMessage="PKG LENGTH"
-                      />
-                    }
-                    editable={hasPermission([
-                      PRODUCT_PROVIDER_UPDATE,
-                      PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
-                    ])}
-                  />
-                )}
-              </FormField>
-
-              <FormField
                 name="packageSize.width"
                 initValue={getByPath('packageSize.width', values)}
                 setFieldValue={(field, value) => {
@@ -273,6 +239,40 @@ const PackagingSection = ({ isNew, isOwner }: Props) => {
                       <FormattedMessage
                         id="modules.ProductProviders.pkgHeight"
                         defaultMessage="PKG HEIGHT"
+                      />
+                    }
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
+                    ])}
+                  />
+                )}
+              </FormField>
+
+              <FormField
+                name="packageSize.length"
+                initValue={getByPath('packageSize.length', values)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('packageSize.length', value);
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_VOLUME]) &&
+                    values.autoCalculatePackageVolume
+                  ) {
+                    calculatePackageVolume();
+                  }
+                }}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="distance"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('packageSize.length', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.pkgLength"
+                        defaultMessage="PKG DEPTH"
                       />
                     }
                     editable={hasPermission([

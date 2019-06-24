@@ -183,7 +183,7 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         on: (
                           <FormattedMessage
                             id="modules.ProductProviders.unitVolumeTooltipEditableOn"
-                            defaultMessage="Automatically calculate by multiplying Unit Length, Unit Width, and Unit Height. Manual input is still available, but will be overridden when Unit Length, Unit Width, or Unit Height changes."
+                            defaultMessage="Automatically calculate by multiplying Unit Width, Unit Height and Unit Depth. Manual input is still available, but will be overridden when Unit Width, Unit Height, or Unit Depth changes."
                           />
                         ),
                         off: (
@@ -197,52 +197,18 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                         on: (
                           <FormattedMessage
                             id="modules.ProductProviders.unitVolumeTooltipReadonlyOn"
-                            defaultMessage="This field is being automatically calculated by multiplying Unit Length, Unit Width, and Unit Height."
+                            defaultMessage="This field is being automatically calculated by multiplying Unit Width, Unit Height, and Unit Depth."
                           />
                         ),
                         off: (
                           <FormattedMessage
                             id="modules.ProductProviders.unitVolumeTooltipReadonlyOff"
-                            defaultMessage="This field is not being automatically calculated by multiplying Unit Length, Unit Width, and Unit Height."
+                            defaultMessage="This field is not being automatically calculated by multiplying Unit Width, Unit Height, and Unit Depth."
                           />
                         ),
                       },
                     }}
                     onToggleAutoCalculate={() => toggleAutoCalculateUnitVolume()}
-                  />
-                )}
-              </FormField>
-
-              <FormField
-                name="unitSize.length"
-                initValue={getByPath('unitSize.length', values)}
-                setFieldValue={(field, value) => {
-                  setFieldArrayValue('unitSize.length', value);
-                  if (
-                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_UNIT_VOLUME]) &&
-                    values.autoCalculateUnitVolume
-                  ) {
-                    calculateUnitVolume();
-                  }
-                }}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <MetricInputFactory
-                    metricType="distance"
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={getByPath('unitSize.length', originalValues)}
-                    label={
-                      <FormattedMessage
-                        id="modules.ProductProviders.unitLength"
-                        defaultMessage="UNIT LENGTH"
-                      />
-                    }
-                    editable={hasPermission([
-                      PRODUCT_PROVIDER_UPDATE,
-                      PRODUCT_PROVIDER_SET_UNIT_SIZE,
-                    ])}
                   />
                 )}
               </FormField>
@@ -305,6 +271,40 @@ const SpecificationsSection = ({ isNew, isOwner }: Props) => {
                       <FormattedMessage
                         id="modules.ProductProviders.unitHeight"
                         defaultMessage="UNIT HEIGHT"
+                      />
+                    }
+                    editable={hasPermission([
+                      PRODUCT_PROVIDER_UPDATE,
+                      PRODUCT_PROVIDER_SET_UNIT_SIZE,
+                    ])}
+                  />
+                )}
+              </FormField>
+
+              <FormField
+                name="unitSize.length"
+                initValue={getByPath('unitSize.length', values)}
+                setFieldValue={(field, value) => {
+                  setFieldArrayValue('unitSize.length', value);
+                  if (
+                    hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_UNIT_VOLUME]) &&
+                    values.autoCalculateUnitVolume
+                  ) {
+                    calculateUnitVolume();
+                  }
+                }}
+              >
+                {({ name, ...inputHandlers }) => (
+                  <MetricInputFactory
+                    metricType="distance"
+                    name={name}
+                    {...inputHandlers}
+                    isNew={isNew}
+                    originalValue={getByPath('unitSize.length', originalValues)}
+                    label={
+                      <FormattedMessage
+                        id="modules.ProductProviders.unitLength"
+                        defaultMessage="UNIT DEPTH"
                       />
                     }
                     editable={hasPermission([

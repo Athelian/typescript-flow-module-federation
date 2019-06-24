@@ -36,7 +36,7 @@ export default defineMessages({
   },
   length: {
     id: 'modules.ProductProviders.unitLength',
-    defaultMessage: 'UNIT LENGTH',
+    defaultMessage: 'UNIT DEPTH',
   },
   width: {
     id: 'modules.ProductProviders.unitWidth',
