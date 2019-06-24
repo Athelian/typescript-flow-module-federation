@@ -1,13 +1,18 @@
 // @flow
 import * as React from 'react';
+import Icon from 'components/Icon';
 import FormattedDate from 'components/FormattedDate';
 import {
-  WrapperStyle,
-  MilestoneNameStyle,
-  TimelinesStyle,
+  TimelineWrapperStyle,
   TimelineStyle,
+  MilestoneNameStyle,
   ProgressBarStyle,
   BarStyle,
+  MilestoneTickStyle,
+  TasksWrapperStyle,
+  CompletedTasksStyle,
+  TotalTasksStyle,
+  DueDateStyle,
 } from './style';
 
 type Props = {
@@ -31,29 +36,27 @@ const calculatePercentage = (total: number, completed: number) => {
 
 export default function MilestonesTimeline({ milestones }: Props) {
   return (
-    <div className={WrapperStyle}>
-      <div className={TimelinesStyle(milestones.length)}>
-        {milestones.map((milestone, counter) => (
-          <div className={TimelineStyle} key={JSON.stringify(milestone)}>
-            <div className={MilestoneNameStyle(milestone.isCompleted)}>{milestone.name}</div>
-            <div className={ProgressBarStyle(counter === 0, counter === milestones.length - 1)}>
-              <div
-                className={BarStyle({
-                  percent: calculatePercentage(milestone.total, milestone.completed),
-                  isFirst: counter === 0,
-                  isLast: counter === milestones.length - 1,
-                })}
-              />
-            </div>
-            <div>
-              {milestone.completed}/{milestone.total}
-            </div>
-            <div>
-              <FormattedDate value={milestone.dueDate} />
+    <div className={TimelineWrapperStyle}>
+      {milestones.map(milestone => (
+        <div className={TimelineStyle} key={JSON.stringify(milestone)}>
+          <div className={MilestoneNameStyle}>{milestone.name}</div>
+          <div className={ProgressBarStyle}>
+            <div className={BarStyle(calculatePercentage(milestone.total, milestone.completed))} />
+            <div className={MilestoneTickStyle(milestone.isCompleted)}>
+              <Icon icon="CONFIRM" />
             </div>
           </div>
-        ))}
-      </div>
+
+          <div className={TasksWrapperStyle}>
+            <div className={CompletedTasksStyle}>{milestone.completed}</div>
+            <div className={TotalTasksStyle}>{`/ ${milestone.total}`}</div>
+          </div>
+
+          <div className={DueDateStyle}>
+            <FormattedDate value={milestone.dueDate} />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
