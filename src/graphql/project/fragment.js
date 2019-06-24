@@ -1,6 +1,19 @@
 // @flow
 import gql from 'graphql-tag';
 
+export const taskCountFragment = gql`
+  fragment taskCountFragment on TaskCount {
+    count
+    remain
+    inProgress
+    completed
+    rejected
+    approved
+    skipped
+    delayed
+  }
+`;
+
 export const projectCardFragment = gql`
   fragment projectCardFragment on Project {
     id
@@ -8,35 +21,7 @@ export const projectCardFragment = gql`
     description
     dueDate
     taskCount {
-      count
-      remain
-      inProgress
-      completed
-      delayed
-    }
-    tags {
-      ...tagFragment
-    }
-  }
-`;
-
-export const projectFragment = gql`
-  fragment projectFragment on Project {
-    id
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ...ownedByFragment
-    }
-    name
-    description
-    dueDate
-    milestones {
-      ... on Milestone {
-        id
-      }
+      ...taskCountFragment
     }
     tags {
       ...tagFragment
@@ -51,11 +36,51 @@ export const milestoneCardFragment = gql`
     description
     dueDate
     taskCount {
-      count
-      remain
-      inProgress
-      completed
-      delayed
+      ...taskCountFragment
+    }
+  }
+`;
+
+export const projectFormQueryFragment = gql`
+  fragment projectFormQueryFragment on Project {
+    id
+    name
+    description
+    dueDate
+    taskCount {
+      ...taskCountFragment
+    }
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    tags {
+      ...tagFragment
+    }
+  }
+`;
+
+export const projectFormFragment = gql`
+  fragment projectFormFragment on Project {
+    id
+    name
+    description
+    dueDate
+    taskCount {
+      ...taskCountFragment
+    }
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    tags {
+      ...tagFragment
     }
   }
 `;

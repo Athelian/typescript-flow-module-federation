@@ -1,11 +1,15 @@
 // @flow
 import React from 'react';
+import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import NavBar from 'components/NavBar';
+import { NewButton } from 'components/Buttons';
+import { PROJECT_CREATE } from 'modules/permission/constants/project';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
+import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
 import ProjectList from './list';
 import messages from './messages';
@@ -31,6 +35,8 @@ const getInitFilter = () => {
 
 const ProjectListModule = (props: Props) => {
   const { intl } = props;
+  const { hasPermission } = usePermission();
+
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -56,6 +62,11 @@ const ProjectListModule = (props: Props) => {
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
               />
+              {hasPermission(PROJECT_CREATE) && (
+                <Link to="new">
+                  <NewButton />
+                </Link>
+              )}
             </NavBar>
           }
         >

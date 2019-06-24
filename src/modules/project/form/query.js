@@ -1,16 +1,22 @@
 // @flow
 import gql from 'graphql-tag';
-
-import { projectFragment, tagFragment, userAvatarFragment, ownedByFragment } from 'graphql';
+import {
+  projectFormQueryFragment,
+  taskCountFragment,
+  tagFragment,
+  userAvatarFragment,
+  ownedByFragment,
+} from 'graphql';
 
 export const projectFormQuery = gql`
   query projectFormQuery($id: ID!) {
     project(id: $id) {
-      ...projectFragment
+      ...projectFormQueryFragment
     }
   }
 
-  ${projectFragment}
+  ${projectFormQueryFragment}
+  ${taskCountFragment}
   ${tagFragment}
   ${userAvatarFragment}
   ${ownedByFragment}
