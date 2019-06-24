@@ -188,7 +188,7 @@ const FilterData = ({ onRemove, field, data, name }: Props) => {
               {...data.packageLength}
               onRemove={onRemove}
               name="packageLength"
-              label={<FormattedMessage id="packageLength" defaultMessage="PKG LENGTH" />}
+              label={<FormattedMessage id="packageLength" defaultMessage="PKG DEPTH" />}
             />
           )}
           {isValidOfMetricRangeInput(data.packageWidth) && (
