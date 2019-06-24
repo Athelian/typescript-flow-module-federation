@@ -1,16 +1,14 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import OutsideClickHandler from '../index';
 
 describe('<OutsideClickHandler />', () => {
   it('should render without crash', () => {
-    const tree = renderer
-      .create(
-        <OutsideClickHandler onOutsideClick={() => {}}>
-          Click outside of this element.
-        </OutsideClickHandler>
-      )
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const { container } = render(
+      <OutsideClickHandler onOutsideClick={() => {}}>
+        Click outside of this element.
+      </OutsideClickHandler>
+    );
+    expect(container.firstChild).toMatchSnapshot();
   });
 });
