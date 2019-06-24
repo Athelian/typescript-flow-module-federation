@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, borderRadiuses, fontSizes, colors } from 'styles/common';
+import { presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
 
 export const TaskStatusInputWrapperStyle = (status: string): string => {
   let statusStyle = '';
@@ -49,6 +49,24 @@ export const UserAvatarWrapperStyle: string = css`
   }
   & > button {
     cursor: pointer;
+  }
+`;
+
+export const DeactivateButtonStyle: string = css`
+  position: absolute;
+  top: 0;
+  ${presets.BUTTON};
+  opacity: 0;
+  ${borderRadiuses.CIRCLE};
+  background-color: ${colors.WHITE};
+  color: ${colors.GRAY_LIGHT};
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+  ${shadows.DROPDOWN};
+  &:hover,
+  :focus {
+    color: ${colors.RED};
   }
 `;
 

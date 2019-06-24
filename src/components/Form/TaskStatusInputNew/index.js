@@ -11,6 +11,7 @@ import { UserConsumer } from 'modules/user';
 import {
   TaskStatusInputWrapperStyle,
   UserAvatarWrapperStyle,
+  DeactivateButtonStyle,
   TaskStatusLabelStyle,
   TaskStatusInputLabelStyle,
   StatusLabelStyle,
@@ -93,37 +94,41 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
               {account && (
                 <>
                   {accountClickable ? (
-                    <button
-                      type="button"
-                      onClick={event => {
-                        event.stopPropagation();
-                        const newTask = { ...task };
-                        switch (status) {
-                          case 'inProgress': {
-                            newTask.inProgressAt = null;
-                            newTask.inProgressBy = null;
-                            break;
-                          }
-                          case 'skipped': {
-                            newTask.skippedAt = null;
-                            newTask.skippedBy = null;
-                            break;
-                          }
-                          case 'completed': {
-                            newTask.completedAt = null;
-                            newTask.completedBy = null;
-
-                            break;
-                          }
-                          default: {
-                            break;
-                          }
-                        }
-                        update(newTask);
-                      }}
-                    >
+                    <>
                       <UserAvatar {...account} />
-                    </button>
+                      <button
+                        type="button"
+                        className={DeactivateButtonStyle}
+                        onClick={event => {
+                          event.stopPropagation();
+                          const newTask = { ...task };
+                          switch (status) {
+                            case 'inProgress': {
+                              newTask.inProgressAt = null;
+                              newTask.inProgressBy = null;
+                              break;
+                            }
+                            case 'skipped': {
+                              newTask.skippedAt = null;
+                              newTask.skippedBy = null;
+                              break;
+                            }
+                            case 'completed': {
+                              newTask.completedAt = null;
+                              newTask.completedBy = null;
+
+                              break;
+                            }
+                            default: {
+                              break;
+                            }
+                          }
+                          update(newTask);
+                        }}
+                      >
+                        <Icon icon="CLEAR" />
+                      </button>
+                    </>
                   ) : (
                     <UserAvatar {...account} />
                   )}
