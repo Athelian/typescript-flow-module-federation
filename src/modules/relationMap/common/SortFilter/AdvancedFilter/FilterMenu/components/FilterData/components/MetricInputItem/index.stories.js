@@ -11,7 +11,7 @@ storiesOf('Metric Input Item', module)
       metric="cm"
       onRemove={action('remove')}
       name="packageLength"
-      label="PKG LENGTH"
+      label="PKG DEPTH"
     />
   ))
   .add('only max', () => (
@@ -20,7 +20,7 @@ storiesOf('Metric Input Item', module)
       metric="m"
       onRemove={action('remove')}
       name="packageLength"
-      label="PKG LENGTH"
+      label="PKG DEPTH"
     />
   ))
   .add('min, max', () => (
@@ -30,6 +30,6 @@ storiesOf('Metric Input Item', module)
       metric="cm"
       onRemove={action('remove')}
       name="packageLength"
-      label="PKG LENGTH"
+      label="PKG DEPTH"
     />
   ));

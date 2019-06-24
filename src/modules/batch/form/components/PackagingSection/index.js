@@ -297,34 +297,6 @@ const PackagingSection = () => {
                 </FormField>
 
                 <FormField
-                  name="packageSize.length"
-                  initValue={getByPath('packageSize.length', values)}
-                  setFieldValue={(field, value) => {
-                    setFieldArrayValue('packageSize.length', value);
-                    if (allowAutoCalculatePackageVolume && values.autoCalculatePackageVolume) {
-                      calculatePackageVolume();
-                    }
-                  }}
-                  values={values}
-                >
-                  {({ name, ...inputHandlers }) => (
-                    <MetricInputFactory
-                      metricType="distance"
-                      name={name}
-                      {...inputHandlers}
-                      originalValue={getByPath('packageSize.length', originalValues)}
-                      label={
-                        <FormattedMessage
-                          id="modules.ProductProviders.pkgLength"
-                          defaultMessage="PKG LENGTH"
-                        />
-                      }
-                      editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_SIZE)}
-                    />
-                  )}
-                </FormField>
-
-                <FormField
                   name="packageSize.width"
                   initValue={getByPath('packageSize.width', values)}
                   setFieldValue={(field, value) => {
@@ -373,6 +345,34 @@ const PackagingSection = () => {
                         <FormattedMessage
                           id="modules.ProductProviders.pkgHeight"
                           defaultMessage="PKG HEIGHT"
+                        />
+                      }
+                      editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_SIZE)}
+                    />
+                  )}
+                </FormField>
+
+                <FormField
+                  name="packageSize.length"
+                  initValue={getByPath('packageSize.length', values)}
+                  setFieldValue={(field, value) => {
+                    setFieldArrayValue('packageSize.length', value);
+                    if (allowAutoCalculatePackageVolume && values.autoCalculatePackageVolume) {
+                      calculatePackageVolume();
+                    }
+                  }}
+                  values={values}
+                >
+                  {({ name, ...inputHandlers }) => (
+                    <MetricInputFactory
+                      metricType="distance"
+                      name={name}
+                      {...inputHandlers}
+                      originalValue={getByPath('packageSize.length', originalValues)}
+                      label={
+                        <FormattedMessage
+                          id="modules.ProductProviders.pkgLength"
+                          defaultMessage="PKG DEPTH"
                         />
                       }
                       editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_SIZE)}

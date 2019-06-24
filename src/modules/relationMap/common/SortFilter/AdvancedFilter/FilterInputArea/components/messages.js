@@ -56,7 +56,7 @@ export default defineMessages({
   },
   packageLength: {
     id: 'modules.ProductProviders.pkgLength',
-    defaultMessage: 'PKG LENGTH',
+    defaultMessage: 'PKG DEPTH',
   },
   packageWidth: {
     id: 'modules.ProductProviders.pkgWidth',
