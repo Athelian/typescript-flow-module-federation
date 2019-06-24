@@ -2,7 +2,7 @@ overwrite: true
 schema: 'https://graphql-staging.zenport.io/graphql'
 documents: 'src/graphql/**/*.js'
 generates:
-  src/generated/graphql.flow.js:
+  src/generated/graphql.js:
     plugins:
       - 'flow'
       - 'flow-operations'

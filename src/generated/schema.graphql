@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Jun 19 2019 11:51:20 GMT+0900 (Japan Standard Time)
+# timestamp: Mon Jun 24 2019 10:43:00 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -30497,7 +30497,9 @@ input PartnerSortInput {
 
 type Port {
   seaport: Seaport
+  seaportName: String
   airport: Airport
+  airportName: String
 }
 
 input PortInput {
@@ -86931,6 +86933,7 @@ type TaskCount {
   completed: Int!
   rejected: Int!
   approved: Int!
+  skipped: Int!
   delayed: Int!
 }
 
