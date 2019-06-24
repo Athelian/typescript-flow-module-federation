@@ -68,7 +68,7 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
     account = inProgressBy;
     accountClickable = editable.inProgress;
     label = <FormattedMessage id="components.form.inProgress" defaultMessage="IN PROGRESS" />;
-    labelClickable = editable.inProgress;
+    labelClickable = editable.inProgress && editable.completed;
     icon = 'STOPWATCH';
     date = inProgressAt;
   } else if (skippedAt) {
@@ -76,13 +76,12 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
     account = skippedBy;
     accountClickable = editable.skipped;
     label = <FormattedMessage id="components.form.skipped" defaultMessage="SKIPPED" />;
-    labelClickable = editable.skipped;
     icon = 'SKIPPED';
     date = skippedAt;
   } else {
     status = 'unCompleted';
     label = <FormattedMessage id="components.form.unCompleted" defaultMessage="UNCOMPLETED" />;
-    labelClickable = editable.completed;
+    labelClickable = editable.inProgress;
   }
 
   return (
@@ -183,26 +182,27 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
               </div>
             )}
           </div>
-          {editable.skipped && (status === 'unCompleted' || status === 'inProgress') && (
-            <button
-              type="button"
-              className={SkipButtonStyle}
-              onClick={event => {
-                event.stopPropagation();
-                const newTask = { ...task };
-                if (status === 'inProgress') {
-                  newTask.inProgressAt = null;
-                  newTask.inProgressBy = null;
-                }
-                newTask.skippedAt = formatToGraphql(new Date());
-                newTask.skippedBy = user;
-                update(newTask);
-              }}
-            >
-              <FormattedMessage id="components.form.skip" defaultMessage="SKIP" />
-              <Icon icon="SKIPPED" />
-            </button>
-          )}
+          {editable.skipped &&
+            (status === 'unCompleted' || (status === 'inProgress' && editable.inProgress)) && (
+              <button
+                type="button"
+                className={SkipButtonStyle}
+                onClick={event => {
+                  event.stopPropagation();
+                  const newTask = { ...task };
+                  if (status === 'inProgress') {
+                    newTask.inProgressAt = null;
+                    newTask.inProgressBy = null;
+                  }
+                  newTask.skippedAt = formatToGraphql(new Date());
+                  newTask.skippedBy = user;
+                  update(newTask);
+                }}
+              >
+                <FormattedMessage id="components.form.skip" defaultMessage="SKIP" />
+                <Icon icon="SKIPPED" />
+              </button>
+            )}
         </>
       )}
     </UserConsumer>
