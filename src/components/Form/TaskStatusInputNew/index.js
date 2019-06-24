@@ -69,7 +69,7 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
     account = inProgressBy;
     accountClickable = editable.inProgress;
     label = <FormattedMessage id="components.form.inProgress" defaultMessage="IN PROGRESS" />;
-    labelClickable = editable.inProgress && editable.completed;
+    labelClickable = editable.completed;
     icon = 'STOPWATCH';
     date = inProgressAt;
   } else if (skippedAt) {
