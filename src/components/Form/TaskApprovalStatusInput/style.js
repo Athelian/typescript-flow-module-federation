@@ -43,7 +43,7 @@ export const DeactivateButtonStyle: string = css`
   height: 30px;
   width: 30px;
   flex-shrink: 0;
-  cursor: inherit;
+  cursor: pointer;
   ${shadows.DROPDOWN};
   &:hover,
   :focus {
