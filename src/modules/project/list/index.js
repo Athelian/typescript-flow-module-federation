@@ -17,7 +17,6 @@ type Props = {
 const ProjectList = ({ ...filtersAndSort }: Props) => {
   return (
     <Query
-      key={JSON.stringify(filtersAndSort)}
       query={projectListQuery}
       variables={{
         page: 1,

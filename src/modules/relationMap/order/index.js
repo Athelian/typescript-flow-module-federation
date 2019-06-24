@@ -125,12 +125,7 @@ const Order = ({ intl }: Props) => {
 
   return (
     <DispatchProvider value={{ dispatch, state }}>
-      <Query
-        key={JSON.stringify(queryOrderVariables)}
-        query={orderListQuery}
-        variables={queryOrderVariables}
-        fetchPolicy="network-only"
-      >
+      <Query query={orderListQuery} variables={queryOrderVariables} fetchPolicy="network-only">
         {({ loading, data, refetch, fetchMore, error, client, updateQuery }) => {
           if (error) {
             return error.message;

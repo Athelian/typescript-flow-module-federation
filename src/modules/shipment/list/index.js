@@ -28,7 +28,6 @@ const ShipmentList = ({ ...filtersAndSort }: Props) => {
 
   return (
     <Query
-      key={JSON.stringify(filtersAndSort)}
       query={shipmentListQuery}
       variables={{
         page: 1,

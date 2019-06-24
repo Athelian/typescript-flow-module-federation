@@ -30,7 +30,6 @@ function ShipmentList({ onCountShipment, highLightEntities, queryVariables }: Pr
 
   return (
     <Query
-      key={JSON.stringify(queryVariables)}
       query={shipmentListQuery}
       variables={queryVariables}
       onCompleted={result => onCountShipment(result.shipments.nodes)}

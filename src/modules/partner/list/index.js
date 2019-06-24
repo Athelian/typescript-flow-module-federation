@@ -68,7 +68,6 @@ class PartnerList extends React.Component<Props> {
     const { ...filtersAndSort } = this.props;
     return (
       <Query
-        key={JSON.stringify(filtersAndSort)}
         query={partnerListQuery}
         variables={{
           page: 1,

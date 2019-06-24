@@ -12,7 +12,6 @@ type Props = {
 
 const NotificationList = ({ ...filtersAndSort }: Props) => (
   <Query
-    key={JSON.stringify(filtersAndSort)}
     query={notificationListQuery}
     variables={{
       page: 1,

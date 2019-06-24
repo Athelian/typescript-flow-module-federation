@@ -20,12 +20,7 @@ type Props = {
 
 const BatchList = ({ ...filtersAndSort }: Props) => {
   return (
-    <Query
-      key={JSON.stringify(filtersAndSort)}
-      query={batchListQuery}
-      variables={filtersAndSort}
-      fetchPolicy="network-only"
-    >
+    <Query query={batchListQuery} variables={filtersAndSort} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;

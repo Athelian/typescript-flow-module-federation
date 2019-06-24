@@ -20,12 +20,7 @@ type Props = {
 
 const OrderItemList = ({ ...filtersAndSort }: Props) => {
   return (
-    <Query
-      key={JSON.stringify(filtersAndSort)}
-      query={orderItemListQuery}
-      variables={filtersAndSort}
-      fetchPolicy="network-only"
-    >
+    <Query query={orderItemListQuery} variables={filtersAndSort} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;

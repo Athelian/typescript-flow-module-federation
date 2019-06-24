@@ -27,12 +27,7 @@ const ProductList = ({ ...filtersAndSort }: Props) => {
   });
 
   return (
-    <Query
-      key={JSON.stringify(filtersAndSort)}
-      query={productListQuery}
-      variables={filtersAndSort}
-      fetchPolicy="network-only"
-    >
+    <Query query={productListQuery} variables={filtersAndSort} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;

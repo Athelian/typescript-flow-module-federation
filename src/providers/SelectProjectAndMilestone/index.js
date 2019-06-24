@@ -148,12 +148,7 @@ function SelectProjectAndMilestone({
             </SlideViewNavBar>
           }
         >
-          <Query
-            key={JSON.stringify(queryVariables)}
-            query={selectProjectQuery}
-            variables={queryVariables}
-            fetchPolicy="network-only"
-          >
+          <Query query={selectProjectQuery} variables={queryVariables} fetchPolicy="network-only">
             {({ loading, data, fetchMore, error }) => {
               if (error) {
                 return error.message;

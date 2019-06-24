@@ -18,7 +18,6 @@ class WarehouseList extends React.Component<Props> {
     const { ...filtersAndSort } = this.props;
     return (
       <Query
-        key={JSON.stringify(filtersAndSort)}
         query={warehouseListQuery}
         variables={{
           page: 1,
