@@ -2,32 +2,65 @@
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
 
-export const TaskStatusInputWrapperStyle = (status: string): string => {
+type TaskStatusInputWrapperStyleType = {
+  status: string,
+  editable: Object,
+  width: string,
+};
+
+export const TaskStatusInputWrapperStyle = ({
+  status,
+  editable,
+  width,
+}: TaskStatusInputWrapperStyleType): string => {
   let statusStyle = '';
   if (status === 'unCompleted') {
     statusStyle = `
-    background-color: ${colors.GRAY};
-    color: ${colors.GRAY_DARK}
+      background-color: ${colors.GRAY_SUPER_LIGHT};
+      color: ${colors.GRAY_DARK};
+      ${
+        editable.inProgress
+          ? `
+        &:hover, :focus {
+          background-color: ${colors.GRAY_VERY_LIGHT};
+        }
+      `
+          : `
+        cursor: inherit;
+      `
+      }
     `;
   }
   if (status === 'inProgress') {
     statusStyle = `
-    background-color: ${colors.WHITE};
-    color: ${colors.TEAL};
-    border: 1px solid ${colors.TEAL};
+      background-color: ${colors.WHITE};
+      color: ${colors.TEAL};
+      border-color: ${colors.TEAL};
+      ${
+        editable.completed
+          ? `
+        &:hover, :focus {
+          background-color: ${colors.GRAY_SUPER_LIGHT};
+        }
+      `
+          : `
+        cursor: inherit;
+      `
+      }
     `;
   }
   if (status === 'skipped') {
     statusStyle = `
-    background-color: ${colors.GRAY_DARK};
-    color: ${colors.WHITE};
+      background-color: ${colors.GRAY_LIGHT};
+      color: ${colors.BLACK};
+      cursor: inherit;
     `;
   }
-
   if (status === 'completed') {
     statusStyle = `
-    background-color: ${colors.TEAL};
-    color: ${colors.WHITE};
+      background-color: ${colors.TEAL};
+      color: ${colors.WHITE};
+      cursor: inherit;
     `;
   }
 
@@ -35,6 +68,8 @@ export const TaskStatusInputWrapperStyle = (status: string): string => {
     ${presets.BUTTON};
     ${borderRadiuses.BUTTON};
     height: 40px;
+    width: ${width};
+    border: 2px solid ${colors.TRANSPARENT};
     ${statusStyle}
   `;
 };
@@ -46,9 +81,6 @@ export const UserAvatarWrapperStyle: string = css`
     & > button {
       opacity: 1;
     }
-  }
-  & > button {
-    cursor: pointer;
   }
 `;
 
@@ -70,15 +102,14 @@ export const DeactivateButtonStyle: string = css`
   }
 `;
 
-export const TaskStatusLabelStyle = (clickable: boolean = false): string => css`
+export const TaskStatusButtonStyle: string = css`
   ${presets.BUTTON};
   flex: 1;
   height: 100%;
   padding: 3px 3px 3px 0;
   border-radius: 0 50% 50% 0;
   color: inherit;
-
-  cursor: ${clickable ? 'inherit' : 'default'};
+  cursor: inherit;
 `;
 
 export const TaskStatusInputLabelStyle: string = css`
@@ -97,8 +128,17 @@ export const StatusLabelStyle: string = css`
 export const SkipButtonStyle: string = css`
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
-  width: 70px;
+  width: min-content;
   height: 20px;
-  background-color: ${colors.GRAY_SUPER_LIGHT};
-  color: ${colors.GRAY};
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  color: ${colors.GRAY_DARK};
+  letter-spacing: 2px;
+  ${fontSizes.SMALL};
+  margin: 5px 0 0 0;
+  padding: 0 10px;
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_LIGHT};
+    color: ${colors.BLACK};
+  }
 `;

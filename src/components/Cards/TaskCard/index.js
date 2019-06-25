@@ -46,16 +46,18 @@ import {
   DateInputWrapperStyle,
   AutoDateSyncIconStyle,
   DividerStyle,
+  ProjectInfoStyle,
+  ProjectIconStyle,
+  MilestoneInfoStyle,
+  MilestoneIconStyle,
   TaskStatusWrapperStyle,
+  TaskStatusPlaceholderStyle,
   TaskTagsWrapperStyle,
   ApprovalWrapperStyle,
   ApprovalPanelWrapperStyle,
   ApprovalInputWrapperStyle,
   ApprovalButtonStyle,
-  ProjectInfoStyle,
-  ProjectIconStyle,
-  MilestoneInfoStyle,
-  MilestoneIconStyle,
+  ApprovalStatusPlaceholderStyle,
 } from './style';
 
 type OptionalProps = {
@@ -186,9 +188,7 @@ const TaskCard = ({
     name,
     dueDate,
     startDate,
-
     completedBy,
-
     tags = [],
     taskTemplate,
     approvable,
@@ -454,29 +454,37 @@ const TaskCard = ({
             <div className={DividerStyle} />
 
             <div className={ProjectInfoStyle}>
+              {/* TODO: Click to navigate if exists */}
               <div className={ProjectIconStyle(getByPath('project', milestone))}>
                 <Icon icon="PROJECT" />
               </div>
-              <Label>{getByPathWithDefault('', 'project.name', milestone)}</Label>
+              <Display>{getByPathWithDefault('', 'project.name', milestone)}</Display>
             </div>
+
             <div className={MilestoneInfoStyle}>
+              {/* TODO: Click to navigate if exists */}
               <div className={MilestoneIconStyle(milestone)}>
                 <Icon icon="MILESTONE" />
               </div>
-              <Label>{getByPathWithDefault('', 'name', milestone)}</Label>
+              <Display>{getByPathWithDefault('', 'name', milestone)}</Display>
             </div>
 
             <div className={DividerStyle} />
 
             <div className={TaskStatusWrapperStyle}>
               {isInTemplate ? (
-                // FIXME: if it is in template, need to modify styling. told with kevin
-                <TaskStatusInputNew task={task} />
+                <div className={TaskStatusPlaceholderStyle}>
+                  <FormattedMessage
+                    id="modules.Tasks.statusDisabled"
+                    defaultMessage="Status will be displayed here"
+                  />
+                </div>
               ) : (
                 <TaskStatusInputNew
                   task={task}
                   update={newTask => saveOnBlur(newTask)}
                   editable={editable}
+                  width="175px"
                 />
               )}
             </div>
@@ -495,7 +503,7 @@ const TaskCard = ({
                 >
                   {({ value: { isExpanded, isSlideViewOpen }, set, assign }) => (
                     <>
-                      <div className={ApprovalPanelWrapperStyle(isExpanded ? '89px' : '0px')}>
+                      <div className={ApprovalPanelWrapperStyle(isExpanded ? '104px' : '0px')}>
                         <OutsideClickHandler
                           onOutsideClick={() =>
                             assign({
@@ -510,60 +518,72 @@ const TaskCard = ({
                           <UserConsumer>
                             {({ user }) => (
                               <div className={ApprovalInputWrapperStyle}>
-                                {isUnapproved ? (
-                                  <ApproveRejectMenu
-                                    width="175px"
-                                    onApprove={() =>
-                                      saveOnBlur({
-                                        ...task,
-                                        approvedBy: user,
-                                        approvedAt: formatToGraphql(startOfToday()),
-                                        rejectedBy: null,
-                                        rejectedAt: null,
-                                      })
-                                    }
-                                    onReject={() =>
-                                      saveOnBlur({
-                                        ...task,
-                                        approvedBy: null,
-                                        approvedAt: null,
-                                        rejectedBy: user,
-                                        rejectedAt: formatToGraphql(startOfToday()),
-                                      })
-                                    }
-                                  />
+                                {isInTemplate ? (
+                                  <div className={ApprovalStatusPlaceholderStyle}>
+                                    <FormattedMessage
+                                      id="modules.Tasks.approvalDisabled"
+                                      defaultMessage="Approval will be displayed here"
+                                    />
+                                  </div>
                                 ) : (
-                                  <TaskApprovalStatusInput
-                                    showUser
-                                    showDate
-                                    width="175px"
-                                    editable={editable.approved && editable.rejected}
-                                    onClickUser={() => {
-                                      saveOnBlur({
-                                        ...task,
-                                        approvedBy: null,
-                                        approvedAt: null,
-                                        rejectedBy: null,
-                                        rejectedAt: null,
-                                      });
-                                    }}
-                                    approval={
-                                      approvedBy && approvedBy.id
-                                        ? {
-                                            approvedAt,
-                                            approvedBy,
-                                          }
-                                        : null
-                                    }
-                                    rejection={
-                                      rejectedBy && rejectedBy.id
-                                        ? {
-                                            rejectedBy,
-                                            rejectedAt,
-                                          }
-                                        : null
-                                    }
-                                  />
+                                  <>
+                                    {/* TODO: Put "Unapproved" status, onclick then show the approverejectmenu */}
+                                    {isUnapproved ? (
+                                      <ApproveRejectMenu
+                                        width="175px"
+                                        onApprove={() =>
+                                          saveOnBlur({
+                                            ...task,
+                                            approvedBy: user,
+                                            approvedAt: formatToGraphql(startOfToday()),
+                                            rejectedBy: null,
+                                            rejectedAt: null,
+                                          })
+                                        }
+                                        onReject={() =>
+                                          saveOnBlur({
+                                            ...task,
+                                            approvedBy: null,
+                                            approvedAt: null,
+                                            rejectedBy: user,
+                                            rejectedAt: formatToGraphql(startOfToday()),
+                                          })
+                                        }
+                                      />
+                                    ) : (
+                                      <TaskApprovalStatusInput
+                                        showUser
+                                        showDate
+                                        width="175px"
+                                        editable={editable.approved && editable.rejected}
+                                        onClickUser={() => {
+                                          saveOnBlur({
+                                            ...task,
+                                            approvedBy: null,
+                                            approvedAt: null,
+                                            rejectedBy: null,
+                                            rejectedAt: null,
+                                          });
+                                        }}
+                                        approval={
+                                          approvedBy && approvedBy.id
+                                            ? {
+                                                approvedAt,
+                                                approvedBy,
+                                              }
+                                            : null
+                                        }
+                                        rejection={
+                                          rejectedBy && rejectedBy.id
+                                            ? {
+                                                rejectedBy,
+                                                rejectedAt,
+                                              }
+                                            : null
+                                        }
+                                      />
+                                    )}
+                                  </>
                                 )}
                               </div>
                             )}
@@ -611,7 +631,7 @@ TaskCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TaskCard, 'task', {
   width: '195px',
-  height: hideParentInfoForHoc ? '227px' : '252px',
+  height: hideParentInfoForHoc ? '240px' : '265px',
   entityIcon: 'TASK',
   entityColor: 'TASK',
 });

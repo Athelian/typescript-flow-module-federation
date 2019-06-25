@@ -7,12 +7,11 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import { UserConsumer } from 'modules/user';
-
 import {
   TaskStatusInputWrapperStyle,
   UserAvatarWrapperStyle,
   DeactivateButtonStyle,
-  TaskStatusLabelStyle,
+  TaskStatusButtonStyle,
   TaskStatusInputLabelStyle,
   StatusLabelStyle,
   SkipButtonStyle,
@@ -25,6 +24,7 @@ type OptionalProps = {
     inProgress: boolean,
     skipped: boolean,
   },
+  width: string,
 };
 
 type Props = OptionalProps & {
@@ -45,9 +45,10 @@ const defaultProps = {
     inProgress: false,
     skipped: false,
   },
+  width: '200px',
 };
 
-const TaskStatusInput = ({ task, update, editable }: Props) => {
+const TaskStatusInput = ({ task, update, editable, width }: Props) => {
   const { inProgressBy, inProgressAt, skippedBy, skippedAt, completedBy, completedAt } = task;
 
   let status;
@@ -89,60 +90,58 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
     <UserConsumer>
       {({ user }) => (
         <>
-          <div className={TaskStatusInputWrapperStyle(status)}>
+          <div className={TaskStatusInputWrapperStyle({ status, editable, width })}>
             <div className={UserAvatarWrapperStyle}>
               {account && (
                 <>
-                  {accountClickable ? (
-                    <>
-                      <UserAvatar {...account} />
-                      <button
-                        type="button"
-                        className={DeactivateButtonStyle}
-                        onClick={event => {
-                          event.stopPropagation();
-                          const newTask = { ...task };
-                          switch (status) {
-                            case 'inProgress': {
-                              newTask.inProgressAt = null;
-                              newTask.inProgressBy = null;
-                              break;
-                            }
-                            case 'skipped': {
-                              newTask.skippedAt = null;
-                              newTask.skippedBy = null;
-                              break;
-                            }
-                            case 'completed': {
-                              newTask.completedAt = null;
-                              newTask.completedBy = null;
-
-                              break;
-                            }
-                            default: {
-                              break;
-                            }
+                  <UserAvatar {...account} />
+                  {accountClickable && (
+                    <button
+                      type="button"
+                      className={DeactivateButtonStyle}
+                      onClick={event => {
+                        event.stopPropagation();
+                        const newTask = { ...task };
+                        switch (status) {
+                          case 'inProgress': {
+                            newTask.inProgressAt = null;
+                            newTask.inProgressBy = null;
+                            break;
                           }
-                          update(newTask);
-                        }}
-                      >
-                        <Icon icon="CLEAR" />
-                      </button>
-                    </>
-                  ) : (
-                    <UserAvatar {...account} />
+                          case 'skipped': {
+                            newTask.skippedAt = null;
+                            newTask.skippedBy = null;
+                            break;
+                          }
+                          case 'completed': {
+                            newTask.completedAt = null;
+                            newTask.completedBy = null;
+
+                            break;
+                          }
+                          default: {
+                            break;
+                          }
+                        }
+                        update(newTask);
+                      }}
+                    >
+                      <Icon icon="CLEAR" />
+                    </button>
                   )}
                 </>
               )}
             </div>
 
-            {labelClickable &&
-            (status === 'unCompleted' ||
-              (status === 'inProgress' && getByPath('id', inProgressBy) === user.id)) ? (
-              <button
-                type="button"
-                className={TaskStatusLabelStyle(true)}
-                onClick={event => {
+            <button
+              type="button"
+              className={TaskStatusButtonStyle}
+              onClick={event => {
+                if (
+                  labelClickable &&
+                  (status === 'unCompleted' ||
+                    (status === 'inProgress' && getByPath('id', inProgressBy) === user.id))
+                ) {
                   event.stopPropagation();
                   const newTask = { ...task };
                   switch (status) {
@@ -161,32 +160,23 @@ const TaskStatusInput = ({ task, update, editable }: Props) => {
                     }
                   }
                   update(newTask);
-                }}
-              >
-                <div className={TaskStatusInputLabelStyle}>
-                  <div className={StatusLabelStyle}>{label}</div>
-                  {date && (
-                    <div className={StatusLabelStyle}>
-                      <FormattedDate value={date} />
-                    </div>
-                  )}
-                </div>
-                {icon && <Icon icon={icon} />}
-              </button>
-            ) : (
-              <div className={TaskStatusLabelStyle(false)}>
-                <div className={TaskStatusInputLabelStyle}>
-                  <div className={StatusLabelStyle}>{label}</div>
-                  {date && (
-                    <div className={StatusLabelStyle}>
-                      <FormattedDate value={date} />
-                    </div>
-                  )}
-                </div>
-                {icon && <Icon icon={icon} />}
+                }
+              }}
+            >
+              <div className={TaskStatusInputLabelStyle}>
+                <div className={StatusLabelStyle}>{label}</div>
+
+                {date && (
+                  <div className={StatusLabelStyle}>
+                    <FormattedDate value={date} />
+                  </div>
+                )}
               </div>
-            )}
+
+              {icon && <Icon icon={icon} />}
+            </button>
           </div>
+
           {editable.skipped &&
             (status === 'unCompleted' || (status === 'inProgress' && editable.inProgress)) && (
               <button
