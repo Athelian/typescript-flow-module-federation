@@ -25,6 +25,7 @@ type OptionalProps = {
     skipped: boolean,
   },
   width: string,
+  showDate: boolean,
 };
 
 type Props = OptionalProps & {
@@ -46,9 +47,10 @@ const defaultProps = {
     skipped: false,
   },
   width: '200px',
+  showDate: false,
 };
 
-const TaskStatusInput = ({ task, update, editable, width }: Props) => {
+const TaskStatusInput = ({ task, update, editable, width, showDate }: Props) => {
   const { inProgressBy, inProgressAt, skippedBy, skippedAt, completedBy, completedAt } = task;
 
   let status;
@@ -175,7 +177,7 @@ const TaskStatusInput = ({ task, update, editable, width }: Props) => {
               <div className={TaskStatusInputLabelStyle}>
                 <div className={StatusLabelStyle}>{label}</div>
 
-                {date && (
+                {showDate && date && (
                   <div className={StatusLabelStyle}>
                     <FormattedDate value={date} />
                   </div>

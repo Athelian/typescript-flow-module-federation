@@ -15,7 +15,7 @@ import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
 import { spreadOrderItem } from 'utils/item';
 import { checkEditableFromEntity } from 'utils/task';
-import { formatToGraphql, startOfToday, isBefore } from 'utils/date';
+import { formatToGraphql, isBefore } from 'utils/date';
 import {
   ShipmentCard,
   OrderCard,
@@ -38,9 +38,8 @@ import {
   FieldItem,
   Label,
   TagsInput,
-  TaskAssignmentInput,
   Display,
-  TaskStatusInput,
+  TaskStatusInputNew,
   ToggleInput,
   ApproveRejectMenu,
   TaskApprovalStatusInput,
@@ -54,7 +53,6 @@ import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import FormattedNumber from 'components/FormattedNumber';
-import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
 import { FormField, FormContainer } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
@@ -105,31 +103,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   isInTemplate: false,
   hideParentInfo: false,
-};
-
-const getStatusState = ({
-  inProgressBy,
-  completedBy,
-}: {
-  inProgressAt: string,
-  completedAt: string,
-  inProgressBy: Object,
-  completedBy: Object,
-}) => {
-  if (completedBy)
-    return {
-      status: COMPLETED,
-      activeUser: completedBy,
-    };
-  if (inProgressBy)
-    return {
-      status: IN_PROGRESS,
-      activeUser: inProgressBy,
-    };
-  return {
-    status: '',
-    activeUser: null,
-  };
 };
 
 const TaskInfoSection = ({
@@ -280,7 +253,7 @@ const TaskInfoSection = ({
         <Subscribe to={[TaskContainer, FormContainer]}>
           {({ originalValues, state, setFieldValue, setFieldValues }, { setFieldTouched }) => {
             const values = { ...originalValues, ...state };
-            const { status, activeUser } = getStatusState(values);
+            const isCompleted = !!values.completedBy;
             const isUnapproved = !(
               (values.approvedBy && values.approvedBy.id) ||
               (values.rejectedBy && values.rejectedBy.id)
@@ -422,7 +395,7 @@ const TaskInfoSection = ({
                                   inputColor={
                                     values.dueDate &&
                                     isBefore(new Date(values.dueDate), new Date()) &&
-                                    status !== COMPLETED
+                                    isCompleted
                                       ? 'RED'
                                       : 'BLACK'
                                   }
@@ -1187,48 +1160,18 @@ const TaskInfoSection = ({
                 <div className={TaskStatusWrapperStyle}>
                   <div className={AssignedToStyle}>
                     <GridColumn gap="5px">
-                      <Label height="30px">
-                        <FormattedMessage
-                          id="modules.Tasks.assignedToComplete"
-                          defaultMessage="ASSIGNED TO COMPLETE"
-                        />
-                      </Label>
-
-                      <TaskAssignmentInput
-                        groupIds={groupIds}
-                        users={values.assignedTo}
-                        onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
-                        activeUserId={activeUser && activeUser.id}
-                        onActivateUser={
-                          isInTemplate
-                            ? null
-                            : user => {
-                                setFieldValues({
-                                  inProgressBy: user,
-                                  inProgressAt: new Date(),
-                                });
-                                setFieldTouched('inProgressBy');
-                                setFieldTouched('inProgressAt');
-                              }
+                      <UserAssignmentInputFactory
+                        name="assignedTo"
+                        label={
+                          <FormattedMessage
+                            id="modules.Tasks.assignedToComplete"
+                            defaultMessage="ASSIGNED TO COMPLETE"
+                          />
                         }
-                        onDeactivateUser={() => {
-                          if (status === COMPLETED) {
-                            setFieldValues({
-                              completedBy: null,
-                              inProgressAt: null,
-                            });
-                            setFieldTouched('completedBy');
-                            setFieldTouched('completedBy');
-                          } else if (status === IN_PROGRESS) {
-                            setFieldValues({
-                              inProgressBy: null,
-                              inProgressAt: null,
-                            });
-                            setFieldTouched('inProgressBy');
-                            setFieldTouched('inProgressAt');
-                          }
-                        }}
-                        editable={editable.inProgress}
+                        groupIds={groupIds}
+                        values={values.assignedTo}
+                        onChange={setFieldValue}
+                        editable={editable.assignedTo}
                       />
                     </GridColumn>
 
@@ -1245,62 +1188,99 @@ const TaskInfoSection = ({
                           />
                         </Display>
                       ) : (
-                        <>
-                          {activeUser ? (
-                            <TaskStatusInput
-                              activeUser={activeUser}
-                              status={status}
-                              onClick={() => {
-                                setFieldValues({
-                                  completedBy: activeUser,
-                                  completedAt: formatToGraphql(startOfToday()),
-                                });
-                                setFieldTouched('completedBy');
-                                setFieldTouched('completedAt');
-                              }}
-                              editable={
-                                activeUser
-                                  ? editable.completed
-                                  : editable.inProgress && editable.completed
-                              }
-                            />
-                          ) : (
-                            <Display color="GRAY_DARK">
-                              <FormattedMessage
-                                id="modules.Tasks.chooseUser"
-                                defaultMessage="Please choose a user to start the task"
-                              />
-                            </Display>
-                          )}
-                        </>
+                        <TaskStatusInputNew
+                          task={values}
+                          update={newTask => setFieldValues(newTask)}
+                          editable={editable}
+                        />
                       )}
                     </GridColumn>
                   </div>
 
-                  {status === COMPLETED && (
-                    <FormField
-                      name="completedAt"
-                      initValue={values.completedAt}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={originalValues[name]}
-                          label={
-                            <FormattedMessage
-                              id="modules.Tasks.completedAt"
-                              defaultMessage="DATE COMPLETED"
+                  {(() => {
+                    if (values.completedAt) {
+                      return (
+                        <FormField
+                          name="completedAt"
+                          initValue={values.completedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              required
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.completedAt"
+                                  defaultMessage="DATE COMPLETED"
+                                />
+                              }
+                              editable={editable.completed}
                             />
-                          }
-                          editable={editable.completed}
-                        />
-                      )}
-                    </FormField>
-                  )}
+                          )}
+                        </FormField>
+                      );
+                    }
+                    if (values.skippedAt) {
+                      return (
+                        <FormField
+                          name="skippedAt"
+                          initValue={values.skippedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              required
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.skippedAt"
+                                  defaultMessage="DATE SKIPPED"
+                                />
+                              }
+                              editable={editable.skipped}
+                            />
+                          )}
+                        </FormField>
+                      );
+                    }
+                    if (values.inProgressAt) {
+                      return (
+                        <FormField
+                          name="inProgressAt"
+                          initValue={values.inProgressAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              required
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.inProgressAt"
+                                  defaultMessage="DATE INPROGRESS"
+                                />
+                              }
+                              editable={editable.inProgress}
+                            />
+                          )}
+                        </FormField>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   <Divider />
 
@@ -1342,6 +1322,7 @@ const TaskInfoSection = ({
                                     defaultMessage="ASSIGNED TO APPROVE"
                                   />
                                 }
+                                groupIds={groupIds}
                                 values={values.approvers}
                                 onChange={setFieldValue}
                                 editable={editable.approvers}

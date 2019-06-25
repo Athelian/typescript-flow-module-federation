@@ -519,6 +519,7 @@ const TaskCard = ({
                   update={newTask => saveOnBlur(newTask)}
                   editable={editable}
                   width="175px"
+                  showDate
                 />
               )}
             </div>

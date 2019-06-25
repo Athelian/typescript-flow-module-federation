@@ -23,6 +23,7 @@ storiesOf('Form/Inputs/Task Status Input', module).add('Task Status Input', () =
       return (
         <>
           <TaskStatusInput
+            showDate
             {...value}
             onClick={() => (status === IN_PROGRESS ? set('status', COMPLETED) : {})}
             onClickUser={() => (status === COMPLETED ? set('status', IN_PROGRESS) : {})}
