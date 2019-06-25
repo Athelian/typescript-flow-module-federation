@@ -265,3 +265,18 @@ export const ApprovalStatusPlaceholderStyle: string = css`
   color: ${colors.WHITE};
   white-space: wrap;
 `;
+
+export const UnapprovedButtonStyle: string = css`
+  ${presets.BUTTON};
+  height: 40px;
+  width: 175px;
+  ${borderRadiuses.BUTTON};
+  ${fontSizes.SMALL};
+  letter-spacing: 2px;
+  color: ${colors.GRAY_DARK};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_VERY_LIGHT};
+  }
+`;
