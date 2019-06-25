@@ -1,16 +1,26 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, layout } from 'styles/common';
+import { layout, presets, colors } from 'styles/common';
 
 export const ProjectSectionWrapperStyle: string = css`
-  ${presets.BOX};
-  width: 880px;
-  padding: 40px 100px;
   ${layout.GRID_VERTICAL};
-  grid-gap: 20px;
+  align-items: top;
+  width: 100%;
+  grid-gap: 5px;
+  grid-template-columns: auto 160px 105px;
 `;
 
 export const MainFieldsWrapperStyle: string = css`
-  ${layout.GRID_HORIZONTAL};
+  ${layout.LAYOUT};
+  ${presets.BOX};
   justify-content: space-between;
+`;
+
+export const BoxWrapperStyle: string = css`
+  ${layout.GRID_VERTICAL};
+  ${presets.BOX};
+`;
+
+export const WarningColorStyle = (diffDay: number) => css`
+  color: ${diffDay < 0 ? colors.RED : colors.GRAY_DARK};
 `;

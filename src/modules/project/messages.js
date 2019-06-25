@@ -18,6 +18,10 @@ export default defineMessages({
     id: 'modules.Projects.dueDate',
     defaultMessage: 'Due Date',
   },
+  lastMilestoneDueDate: {
+    id: 'modules.Projects.lastMilestoneDueDate',
+    defaultMessage: 'Last Milestone Due Date',
+  },
   tags: {
     id: 'modules.Projects.tags',
     defaultMessage: 'Tags',
@@ -25,5 +29,9 @@ export default defineMessages({
   description: {
     id: 'modules.Projects.description',
     defaultMessage: 'Description',
+  },
+  diffBetweenLastMilestoneAndProjectDueDate: {
+    id: 'modules.Projects.diffBetweenLastMilestoneAndProjectDueDate',
+    defaultMessage: ' days difference between Last Milestone Due Date and Project Due Date',
   },
 });
