@@ -160,6 +160,10 @@ export const taskWithoutParentInfoFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
+    skippedAt
+    skippedBy {
+      ...userAvatarFragment
+    }
     rejectedAt
     rejectedBy {
       ...userAvatarFragment
@@ -170,6 +174,18 @@ export const taskWithoutParentInfoFragment = gql`
     }
     assignedTo {
       ...userAvatarFragment
+    }
+    milestone {
+      ... on Milestone {
+        id
+        name
+        project {
+          ... on Project {
+            id
+            name
+          }
+        }
+      }
     }
     approvers {
       ...userAvatarFragment

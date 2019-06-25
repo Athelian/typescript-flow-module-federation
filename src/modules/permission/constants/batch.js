@@ -41,6 +41,7 @@ export const BATCH_TASK_SET_DUE_DATE = 'batch.tasks.setDueDate';
 export const BATCH_TASK_SET_DUE_DATE_BINDING = 'batch.tasks.setDueDateBinding';
 export const BATCH_TASK_SET_ENTITY = 'batch.tasks.setEntity';
 export const BATCH_TASK_SET_IN_PROGRESS = 'batch.tasks.setInProgress';
+export const BATCH_TASK_SET_SKIPPED = 'batch.tasks.setSkipped';
 export const BATCH_TASK_SET_MEMO = 'batch.tasks.setMemo';
 export const BATCH_TASK_SET_NAME = 'batch.tasks.setName';
 export const BATCH_TASK_SET_REJECTED = 'batch.tasks.setRejected';

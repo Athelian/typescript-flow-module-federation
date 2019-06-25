@@ -47,6 +47,7 @@ import SectionWrapper from './SectionWrapper';
 import NumberRangeInput from './NumberRangeInput';
 import TaskApprovalStatusInput from './TaskApprovalStatusInput';
 import TaskStatusInput from './TaskStatusInput';
+import TaskStatusInputNew from './TaskStatusInputNew';
 import ToggleInput from './ToggleInput';
 import UserAssignmentInput from './UserAssignmentInput';
 import TaskAssignmentInput from './UserAssignmentInput/TaskAssignmentInput';
@@ -115,6 +116,7 @@ export {
   NumberRangeInput,
   TaskApprovalStatusInput,
   TaskStatusInput,
+  TaskStatusInputNew,
   ToggleInput,
   UserAssignmentInput,
   TaskAssignmentInput,

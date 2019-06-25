@@ -7,6 +7,7 @@ import { getByPath } from 'utils/fp';
 import { checkEditableFromEntity, parseGroupIds } from 'utils/task';
 import QueryFormPermissionContext from 'components/common/QueryForm/context';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TaskCard } from 'components/Cards';
@@ -55,6 +56,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                         return permissions.includes(checkPermission);
                       }
                     )}
+                    navigable={{ project: permissions.includes(PROJECT_FORM) }}
                     saveOnBlur={value => onChange(task.id, value)}
                     onClick={() => toggleTaskForm(true)}
                   />

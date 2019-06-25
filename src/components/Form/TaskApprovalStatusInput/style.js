@@ -11,16 +11,14 @@ export const TaskApprovalStatusInputWrapperStyle = (
   height: 40px;
   width: ${width};
   cursor: inherit;
-  padding: 3px;
+  padding: 5px;
   ${isApproved
     ? `
     background-color: ${colors.BLUE};
-    border: 2px solid ${colors.WHITE};
     color: ${colors.WHITE};
   `
     : `
     background-color: ${colors.RED};
-    border: 2px solid ${colors.RED};
     color: ${colors.WHITE};
   `};
 `;

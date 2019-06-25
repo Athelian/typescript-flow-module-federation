@@ -22,6 +22,7 @@ import {
   TASK_DELETE,
   TASK_LIST,
 } from 'modules/permission/constants/task';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 import {
   ORDER_UPDATE,
   ORDER_TASK_CREATE,
@@ -35,6 +36,7 @@ import {
   ORDER_TASK_SET_DUE_DATE,
   ORDER_TASK_SET_START_DATE,
   ORDER_TASK_SET_IN_PROGRESS,
+  ORDER_TASK_SET_SKIPPED,
   ORDER_TASK_SET_COMPLETED,
   ORDER_TASK_SET_ASSIGNEES,
   ORDER_TASK_SET_APPROVED,
@@ -54,6 +56,7 @@ import {
   ORDER_ITEMS_TASK_SET_DUE_DATE,
   ORDER_ITEMS_TASK_SET_START_DATE,
   ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+  ORDER_ITEMS_TASK_SET_SKIPPED,
   ORDER_ITEMS_TASK_SET_COMPLETED,
   ORDER_ITEMS_TASK_SET_ASSIGNEES,
   ORDER_ITEMS_TASK_SET_APPROVED,
@@ -73,6 +76,7 @@ import {
   BATCH_TASK_SET_DUE_DATE,
   BATCH_TASK_SET_START_DATE,
   BATCH_TASK_SET_IN_PROGRESS,
+  BATCH_TASK_SET_SKIPPED,
   BATCH_TASK_SET_COMPLETED,
   BATCH_TASK_SET_ASSIGNEES,
   BATCH_TASK_SET_APPROVED,
@@ -92,6 +96,7 @@ import {
   PRODUCT_TASK_SET_DUE_DATE,
   PRODUCT_TASK_SET_START_DATE,
   PRODUCT_TASK_SET_IN_PROGRESS,
+  PRODUCT_TASK_SET_SKIPPED,
   PRODUCT_TASK_SET_COMPLETED,
   PRODUCT_TASK_SET_ASSIGNEES,
   PRODUCT_TASK_SET_APPROVED,
@@ -109,6 +114,7 @@ import {
   PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
   PRODUCT_PROVIDER_TASK_SET_START_DATE,
   PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+  PRODUCT_PROVIDER_TASK_SET_SKIPPED,
   PRODUCT_PROVIDER_TASK_SET_COMPLETED,
   PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
   PRODUCT_PROVIDER_TASK_SET_APPROVED,
@@ -128,6 +134,7 @@ import {
   SHIPMENT_TASK_SET_DUE_DATE,
   SHIPMENT_TASK_SET_START_DATE,
   SHIPMENT_TASK_SET_IN_PROGRESS,
+  SHIPMENT_TASK_SET_SKIPPED,
   SHIPMENT_TASK_SET_COMPLETED,
   SHIPMENT_TASK_SET_ASSIGNEES,
   SHIPMENT_TASK_SET_APPROVED,
@@ -193,6 +200,7 @@ const getConfig = (
           startDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_START_DATE]),
           dueDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DUE_DATE]),
           inProgress: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_IN_PROGRESS]),
+          skipped: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_COMPLETED]),
           assignedTo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVED]),
@@ -229,6 +237,11 @@ const getConfig = (
             TASK_UPDATE,
             ORDER_ITEMS_TASK_UPDATE,
             ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+          ]),
+          skipped: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_SKIPPED,
           ]),
           completed: hasPermission([
             TASK_UPDATE,
@@ -275,6 +288,7 @@ const getConfig = (
           startDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_START_DATE]),
           dueDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DUE_DATE]),
           inProgress: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_IN_PROGRESS]),
+          skipped: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_COMPLETED]),
           assignedTo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVED]),
@@ -304,6 +318,7 @@ const getConfig = (
             PRODUCT_TASK_UPDATE,
             PRODUCT_TASK_SET_IN_PROGRESS,
           ]),
+          skipped: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_COMPLETED]),
           assignedTo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVED]),
@@ -348,6 +363,11 @@ const getConfig = (
             TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+          ]),
+          skipped: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_SKIPPED,
           ]),
           completed: hasPermission([
             TASK_UPDATE,
@@ -402,6 +422,7 @@ const getConfig = (
             SHIPMENT_TASK_UPDATE,
             SHIPMENT_TASK_SET_IN_PROGRESS,
           ]),
+          skipped: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_SKIPPED]),
           completed: hasPermission([
             TASK_UPDATE,
             SHIPMENT_TASK_UPDATE,
@@ -427,6 +448,8 @@ const getConfig = (
 function TaskSection({ type, entityId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+
+  const canViewProjectForm = hasPermission(PROJECT_FORM);
 
   const {
     canViewList,
@@ -493,7 +516,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                   {({ value: opened, set: slideToggle }) => (
                     <>
                       <div className={TemplateItemStyle}>
-                        <Label height="24px">
+                        <Label height="30px">
                           {' '}
                           <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
                         </Label>
@@ -549,6 +572,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                 entityId={entityId}
                 type={type}
                 editable={editable}
+                navigable={{ project: canViewProjectForm }}
                 sortable={canOrderingTasks}
                 viewForm={canViewForm}
                 removable={canDeleteTasks}

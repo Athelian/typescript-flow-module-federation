@@ -58,6 +58,7 @@ export const SHIPMENT_TASK_SET_DUE_DATE = 'shipment.tasks.setDueDate';
 export const SHIPMENT_TASK_SET_DUE_DATE_BINDING = 'shipment.tasks.setDueDateBinding';
 export const SHIPMENT_TASK_SET_ENTITY = 'shipment.tasks.setEntity';
 export const SHIPMENT_TASK_SET_IN_PROGRESS = 'shipment.tasks.setInProgress';
+export const SHIPMENT_TASK_SET_SKIPPED = 'shipment.tasks.setSkipped';
 export const SHIPMENT_TASK_SET_MEMO = 'shipment.tasks.setMemo';
 export const SHIPMENT_TASK_SET_NAME = 'shipment.tasks.setName';
 export const SHIPMENT_TASK_SET_REJECTED = 'shipment.tasks.setRejected';

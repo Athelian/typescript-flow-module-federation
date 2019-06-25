@@ -412,6 +412,16 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'completedAt', originalTask),
       newTask.completedAt
     ),
+    ...parseParentIdField(
+      'skippedById',
+      getByPathWithDefault(null, 'skippedBy', originalTask),
+      newTask.skippedBy
+    ),
+    ...parseDateField(
+      'skippedAt',
+      getByPathWithDefault(null, 'skippedAt', originalTask),
+      newTask.skippedAt
+    ),
     ...parseGenericField(
       'approvable',
       getByPathWithDefault(null, 'approvable', originalTask),

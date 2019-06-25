@@ -12,10 +12,7 @@ import { TaskCard, CardAction } from 'components/Cards';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { ItemStyle, EmptyMessageStyle } from './style';
 
-type OptionalProps = {
-  isInTemplate: boolean,
-};
-type Props = OptionalProps & {
+type Props = {
   tasks: Array<Object>,
   onSwap: Function,
   onRemove: Function,
@@ -26,29 +23,16 @@ type Props = OptionalProps & {
   type: string,
 };
 
-const defaultProps = {
-  isInTemplate: false,
-};
-
-const Tasks = ({
-  tasks,
-  onSwap,
-  onRemove,
-  onSave,
-  editable,
-  viewForm,
-  removable,
-  type,
-  isInTemplate,
-}: Props) => {
+const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  if (tasks.length === 0 && isInTemplate)
+  if (tasks.length === 0) {
     return (
       <div className={EmptyMessageStyle}>
         <FormattedMessage id="modules.Tasks.form.noTasks" defaultMessage="No tasks" />
       </div>
     );
+  }
 
   return (tasks.map((task, index) => (
     <div id={`task_${task.id}`} className={ItemStyle} key={task.id}>
@@ -56,7 +40,7 @@ const Tasks = ({
         {({ value: opened, set: selectTaskSlideToggle }) => (
           <>
             <TaskCard
-              isInTemplate={isInTemplate}
+              isInTemplate
               editable={editable}
               entity={{
                 ...task.entity,
@@ -95,7 +79,7 @@ const Tasks = ({
                     ...task.entity,
                     __typename: type,
                   }}
-                  isInTemplate={isInTemplate}
+                  isInTemplate
                   parentEntity={type}
                   editable={hasPermission(TASK_UPDATE)}
                   task={{ ...omit(task, ['entity']), sort: index }}
@@ -113,5 +97,4 @@ const Tasks = ({
   )): Array<any>);
 };
 
-Tasks.defaultProps = defaultProps;
 export default Tasks;
