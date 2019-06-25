@@ -567,7 +567,9 @@ const TaskCard = ({
                                                 set('showApproveRejectMenu', true);
                                               }
                                             }}
-                                            className={UnapprovedButtonStyle}
+                                            className={UnapprovedButtonStyle(
+                                              editable.approved && editable.rejected
+                                            )}
                                           >
                                             <FormattedMessage
                                               id="modules.Tasks.unapproved"

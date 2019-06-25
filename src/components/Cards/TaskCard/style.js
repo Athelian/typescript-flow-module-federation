@@ -266,7 +266,7 @@ export const ApprovalStatusPlaceholderStyle: string = css`
   white-space: wrap;
 `;
 
-export const UnapprovedButtonStyle: string = css`
+export const UnapprovedButtonStyle = (editable: boolean): string => css`
   ${presets.BUTTON};
   height: 40px;
   width: 175px;
@@ -275,8 +275,14 @@ export const UnapprovedButtonStyle: string = css`
   letter-spacing: 2px;
   color: ${colors.GRAY_DARK};
   background-color: ${colors.GRAY_SUPER_LIGHT};
-  &:hover,
-  :focus {
-    background-color: ${colors.GRAY_VERY_LIGHT};
-  }
+  ${editable
+    ? `
+    &:hover,
+    :focus {
+      background-color: ${colors.GRAY_VERY_LIGHT};
+    }
+  `
+    : `
+    cursor: inherit;
+  `}
 `;
