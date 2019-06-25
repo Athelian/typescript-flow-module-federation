@@ -27,10 +27,10 @@ export const TasksSectionBodyStyle: string = css`
 export const TemplateItemStyle: string = css`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   margin: 5px 0;
   background: ${colors.GRAY_VERY_LIGHT};
   ${borderRadiuses.MAIN};
   padding: 5px 10px 10px 10px;
-  height: 179px;
+  height: 260px;
 `;

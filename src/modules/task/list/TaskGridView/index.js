@@ -23,7 +23,7 @@ const defaultRenderItem = (item: Object) => (
         position={item.sort + 1}
         entity={item.entity}
         task={item}
-        viewable={{ project: permissions.includes(PROJECT_FORM) }}
+        navigable={{ project: permissions.includes(PROJECT_FORM) }}
         onClick={() => navigate(`/task/${encodeId(item.id)}`)}
         showActionsOnHover
       />

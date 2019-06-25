@@ -90,7 +90,16 @@ const TaskStatusInput = ({ task, update, editable, width }: Props) => {
     <UserConsumer>
       {({ user }) => (
         <>
-          <div className={TaskStatusInputWrapperStyle({ status, editable, width })}>
+          <div
+            className={TaskStatusInputWrapperStyle({
+              status,
+              editable: {
+                ...editable,
+                completed: editable.completed && getByPath('id', inProgressBy) === user.id,
+              },
+              width,
+            })}
+          >
             <div className={UserAvatarWrapperStyle}>
               {account && (
                 <>

@@ -1125,7 +1125,7 @@ const TaskInfoSection = ({
                             setFieldTouched('inProgressAt');
                           }
                         }}
-                        editable={editable.assignedTo && editable.inProgress}
+                        editable={editable.inProgress}
                       />
                     </GridColumn>
 
@@ -1259,7 +1259,6 @@ const TaskInfoSection = ({
                                     rejectedAt: null,
                                   });
                                 }}
-                                editable={editable.approvers}
                               />
                             </GridColumn>
 

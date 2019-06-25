@@ -7,8 +7,6 @@ export type TaskEditable = {
   inProgress: boolean,
   skipped: boolean,
   completed: boolean,
-  assignedTo: boolean,
   approved: boolean,
   rejected: boolean,
-  approvers: boolean,
 };

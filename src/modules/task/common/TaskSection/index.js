@@ -516,7 +516,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                   {({ value: opened, set: slideToggle }) => (
                     <>
                       <div className={TemplateItemStyle}>
-                        <Label height="24px">
+                        <Label height="30px">
                           {' '}
                           <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
                         </Label>
@@ -572,7 +572,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                 entityId={entityId}
                 type={type}
                 editable={editable}
-                viewable={{ project: canViewProjectForm }}
+                navigable={{ project: canViewProjectForm }}
                 sortable={canOrderingTasks}
                 viewForm={canViewForm}
                 removable={canDeleteTasks}

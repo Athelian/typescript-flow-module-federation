@@ -56,7 +56,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                         return permissions.includes(checkPermission);
                       }
                     )}
-                    viewable={{ project: permissions.includes(PROJECT_FORM) }}
+                    navigable={{ project: permissions.includes(PROJECT_FORM) }}
                     saveOnBlur={value => onChange(task.id, value)}
                     onClick={() => toggleTaskForm(true)}
                   />

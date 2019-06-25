@@ -69,7 +69,7 @@ type OptionalProps = {
   onClick: Function,
   saveOnBlur: Function,
   editable: TaskEditable,
-  viewable: {
+  navigable: {
     project: boolean,
   },
   actions: Array<React.Node>,
@@ -85,11 +85,14 @@ const defaultEditable = {
   startDate: false,
   dueDate: false,
   inProgress: false,
+  skipped: false,
   completed: false,
-  assignedTo: false,
   approved: false,
   rejected: false,
-  approvers: false,
+};
+
+const defaultNavigable = {
+  project: false,
 };
 
 const defaultProps = {
@@ -99,9 +102,6 @@ const defaultProps = {
   saveOnBlur: () => {},
   actions: [],
   isInTemplate: false,
-  viewable: {
-    project: false,
-  },
 };
 
 const getParentInfo = (
@@ -185,7 +185,7 @@ const TaskCard = ({
   onClick,
   saveOnBlur,
   editable: originalEditable,
-  viewable,
+  navigable: originalNavigable,
   isInTemplate,
   actions,
   groupIds,
@@ -221,6 +221,7 @@ const TaskCard = ({
   };
 
   const editable = { ...defaultEditable, ...originalEditable };
+  const navigable = { ...defaultNavigable, ...originalNavigable };
 
   const { parentType, parentIcon, parentData, link } = getParentInfo(parent);
 
@@ -466,7 +467,7 @@ const TaskCard = ({
                 <Link
                   className={ProjectIconStyle(true)}
                   to={
-                    viewable.project
+                    navigable.project
                       ? `/project/${encodeId(getByPath('project.id', milestone))}`
                       : ''
                   }
@@ -486,7 +487,7 @@ const TaskCard = ({
                 <Link
                   className={MilestoneIconStyle(true)}
                   to={
-                    viewable.project
+                    navigable.project
                       ? `/project/${encodeId(getByPath('project.id', milestone))}`
                       : ''
                   }
