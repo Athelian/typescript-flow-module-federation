@@ -30,7 +30,7 @@ import {
   DateInputFactory,
   ApproveRejectMenu,
   TaskApprovalStatusInput,
-  TaskStatusInputNew,
+  TaskStatusInput,
 } from 'components/Form';
 import type { TaskEditable } from './type.js.flow';
 import BaseCard from '../BaseCard';
@@ -514,7 +514,7 @@ const TaskCard = ({
                   />
                 </div>
               ) : (
-                <TaskStatusInputNew
+                <TaskStatusInput
                   task={task}
                   update={newTask => saveOnBlur(newTask)}
                   editable={editable}

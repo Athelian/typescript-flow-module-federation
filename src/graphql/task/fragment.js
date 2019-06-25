@@ -234,6 +234,10 @@ export const taskWithParentInfoFragment = gql`
     inProgressBy {
       ...userAvatarFragment
     }
+    skippedAt
+    skippedBy {
+      ...userAvatarFragment
+    }
     completedAt
     completedBy {
       ...userAvatarFragment

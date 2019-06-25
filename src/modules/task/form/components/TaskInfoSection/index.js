@@ -39,7 +39,7 @@ import {
   Label,
   TagsInput,
   Display,
-  TaskStatusInputNew,
+  TaskStatusInput,
   ToggleInput,
   ApproveRejectMenu,
   TaskApprovalStatusInput,
@@ -1188,7 +1188,7 @@ const TaskInfoSection = ({
                           />
                         </Display>
                       ) : (
-                        <TaskStatusInputNew
+                        <TaskStatusInput
                           task={values}
                           update={newTask => setFieldValues(newTask)}
                           editable={editable}
