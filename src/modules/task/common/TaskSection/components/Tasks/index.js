@@ -20,6 +20,9 @@ type Props = OptionalProps & {
   onRemove: Function,
   onSave: Function,
   editable: TaskEditable,
+  viewable: {
+    project: boolean,
+  },
   removable: boolean,
   sortable: boolean,
   viewForm: boolean,
@@ -38,6 +41,7 @@ const Tasks = ({
   onRemove,
   onSave,
   editable,
+  viewable,
   viewForm,
   removable,
   sortable,
@@ -62,6 +66,7 @@ const Tasks = ({
               groupIds={groupIds}
               isInTemplate={isInTemplate}
               editable={editable}
+              viewable={viewable}
               entity={{
                 ...task.entity,
                 __typename: type,

@@ -69,6 +69,9 @@ type OptionalProps = {
   onClick: Function,
   saveOnBlur: Function,
   editable: TaskEditable,
+  viewable: {
+    project: boolean,
+  },
   actions: Array<React.Node>,
   isInTemplate: boolean,
 };
@@ -96,6 +99,9 @@ const defaultProps = {
   saveOnBlur: () => {},
   actions: [],
   isInTemplate: false,
+  viewable: {
+    project: false,
+  },
 };
 
 const getParentInfo = (
@@ -179,6 +185,7 @@ const TaskCard = ({
   onClick,
   saveOnBlur,
   editable: originalEditable,
+  viewable,
   isInTemplate,
   actions,
   groupIds,
@@ -455,18 +462,43 @@ const TaskCard = ({
             <div className={DividerStyle} />
 
             <div className={ProjectInfoStyle}>
-              {/* TODO: Click to navigate if exists */}
-              <div className={ProjectIconStyle(getByPath('project', milestone))}>
-                <Icon icon="PROJECT" />
-              </div>
+              {getByPath('project', milestone) ? (
+                <Link
+                  className={ProjectIconStyle(true)}
+                  to={
+                    viewable.project
+                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                      : ''
+                  }
+                >
+                  <Icon icon="PROJECT" />
+                </Link>
+              ) : (
+                <div className={ProjectIconStyle(false)}>
+                  <Icon icon="PROJECT" />
+                </div>
+              )}
               <Display>{getByPathWithDefault('', 'project.name', milestone)}</Display>
             </div>
 
             <div className={MilestoneInfoStyle}>
-              {/* TODO: Click to navigate if exists */}
-              <div className={MilestoneIconStyle(milestone)}>
-                <Icon icon="MILESTONE" />
-              </div>
+              {milestone ? (
+                <Link
+                  className={MilestoneIconStyle(true)}
+                  to={
+                    viewable.project
+                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                      : ''
+                  }
+                >
+                  <Icon icon="MILESTONE" />
+                </Link>
+              ) : (
+                <div className={MilestoneIconStyle(false)}>
+                  <Icon icon="MILESTONE" />
+                </div>
+              )}
+
               <Display>{getByPathWithDefault('', 'name', milestone)}</Display>
             </div>
 

@@ -9,6 +9,11 @@ storiesOf('Card', module)
   .add('Task Card', () => (
     <ObjectValue
       defaultValue={{
+        entity: {
+          id: '2',
+          __typename: 'Order',
+          poNo: 'ABC',
+        },
         task: {
           id: '1',
           entity: {
@@ -21,6 +26,14 @@ storiesOf('Card', module)
           startDate: null,
           assignedTo: [],
           approvers: [],
+          milestone: {
+            id: 'milestone id',
+            name: 'milestone name',
+            project: {
+              id: 'project id',
+              name: 'project name',
+            },
+          },
           tags: [
             {
               id: 'bicsesovsbnbasgumrk0',
@@ -47,17 +60,18 @@ storiesOf('Card', module)
         },
       }}
     >
-      {({ value: { task }, assign }) => (
+      {({ value: { task, entity }, assign }) => (
         <>
           <Label>EDITABLE DEFAULT</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable
             position={1}
             saveOnBlur={newTask => assign({ task: newTask })}
           />
           <Label>READ ONLY</Label>
-          <TaskCard task={task} editable={false} position={1} />
+          <TaskCard entity={entity} task={task} editable={false} position={1} />
         </>
       )}
     </ObjectValue>
@@ -65,6 +79,11 @@ storiesOf('Card', module)
   .add('Task Card for template', () => (
     <ObjectValue
       defaultValue={{
+        entity: {
+          id: '2',
+          __typename: 'Order',
+          poNo: 'ABC',
+        },
         task: {
           id: '1',
           entity: {
@@ -103,10 +122,11 @@ storiesOf('Card', module)
         },
       }}
     >
-      {({ value: { task }, assign }) => (
+      {({ value: { entity, task }, assign }) => (
         <>
           <Label>EDITABLE DEFAULT</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable
             position={1}
@@ -115,6 +135,7 @@ storiesOf('Card', module)
           />
           <Label>READ ONLY</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable={false}
             position={1}
@@ -128,6 +149,11 @@ storiesOf('Card', module)
   .add('Task Card with Approval', () => (
     <ObjectValue
       defaultValue={{
+        entity: {
+          id: '2',
+          __typename: 'Order',
+          poNo: 'ABC',
+        },
         task: {
           id: '1',
           approvable: true,
@@ -167,17 +193,18 @@ storiesOf('Card', module)
         },
       }}
     >
-      {({ value: { task }, assign }) => (
+      {({ value: { entity, task }, assign }) => (
         <>
           <Label>EDITABLE DEFAULT</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable
             position={1}
             saveOnBlur={newTask => assign({ task: newTask })}
           />
           <Label>READ ONLY</Label>
-          <TaskCard task={task} editable={false} position={1} />
+          <TaskCard entity={entity} task={task} editable={false} position={1} />
         </>
       )}
     </ObjectValue>
@@ -185,6 +212,11 @@ storiesOf('Card', module)
   .add('Task Card with Approved', () => (
     <ObjectValue
       defaultValue={{
+        entity: {
+          id: '2',
+          __typename: 'Order',
+          poNo: 'ABC',
+        },
         task: {
           id: '1',
           approvable: true,
@@ -227,17 +259,18 @@ storiesOf('Card', module)
         },
       }}
     >
-      {({ value: { task }, assign }) => (
+      {({ value: { entity, task }, assign }) => (
         <>
           <Label>EDITABLE DEFAULT</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable
             position={1}
             saveOnBlur={newTask => assign({ task: newTask })}
           />
           <Label>READ ONLY</Label>
-          <TaskCard task={task} editable={false} position={1} />
+          <TaskCard entity={entity} task={task} editable={false} position={1} />
         </>
       )}
     </ObjectValue>
@@ -245,6 +278,11 @@ storiesOf('Card', module)
   .add('Task Card with Rejected', () => (
     <ObjectValue
       defaultValue={{
+        entity: {
+          id: '2',
+          __typename: 'Order',
+          poNo: 'ABC',
+        },
         task: {
           id: '1',
           approvable: true,
@@ -287,17 +325,18 @@ storiesOf('Card', module)
         },
       }}
     >
-      {({ value: { task }, assign }) => (
+      {({ value: { entity, task }, assign }) => (
         <>
           <Label>EDITABLE DEFAULT</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable
             position={1}
             saveOnBlur={newTask => assign({ task: newTask })}
           />
           <Label>READ ONLY</Label>
-          <TaskCard task={task} editable={false} position={1} />
+          <TaskCard entity={entity} task={task} editable={false} position={1} />
         </>
       )}
     </ObjectValue>
@@ -305,6 +344,11 @@ storiesOf('Card', module)
   .add('Task Card for Template with Approval', () => (
     <ObjectValue
       defaultValue={{
+        entity: {
+          id: '2',
+          __typename: 'Order',
+          poNo: 'ABC',
+        },
         task: {
           id: '1',
           approvable: true,
@@ -344,10 +388,11 @@ storiesOf('Card', module)
         },
       }}
     >
-      {({ value: { task }, assign }) => (
+      {({ value: { entity, task }, assign }) => (
         <>
           <Label>EDITABLE DEFAULT</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable
             position={1}
@@ -356,6 +401,7 @@ storiesOf('Card', module)
           />
           <Label>READ ONLY</Label>
           <TaskCard
+            entity={entity}
             task={task}
             editable={false}
             position={1}

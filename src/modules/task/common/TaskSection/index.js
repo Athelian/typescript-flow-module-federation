@@ -22,6 +22,7 @@ import {
   TASK_DELETE,
   TASK_LIST,
 } from 'modules/permission/constants/task';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 import {
   ORDER_UPDATE,
   ORDER_TASK_CREATE,
@@ -448,6 +449,8 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
+  const canViewProjectForm = hasPermission(PROJECT_FORM);
+
   const {
     canViewList,
     canViewForm,
@@ -569,6 +572,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                 entityId={entityId}
                 type={type}
                 editable={editable}
+                viewable={{ project: canViewProjectForm }}
                 sortable={canOrderingTasks}
                 viewForm={canViewForm}
                 removable={canDeleteTasks}
