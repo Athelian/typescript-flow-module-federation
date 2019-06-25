@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`milestones container should calculate related entities base on tasks 1`] = `
+Object {
+  "batches": 3,
+  "containers": 3,
+  "orderItems": 3,
+  "orders": 3,
+  "productProviders": 3,
+  "products": 3,
+  "shipments": 3,
+}
+`;
+
+exports[`milestones container should calculate related entities base on tasks 2`] = `
+Object {
+  "batches": 0,
+  "containers": 0,
+  "orderItems": 0,
+  "orders": 30,
+  "productProviders": 0,
+  "products": 0,
+  "shipments": 0,
+}
+`;

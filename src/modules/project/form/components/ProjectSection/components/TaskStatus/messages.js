@@ -34,4 +34,8 @@ export default defineMessages({
     id: 'modules.Projects.approved',
     defaultMessage: 'Approved',
   },
+  unapproved: {
+    id: 'modules.Projects.unapproved',
+    defaultMessage: 'Unapproved',
+  },
 });

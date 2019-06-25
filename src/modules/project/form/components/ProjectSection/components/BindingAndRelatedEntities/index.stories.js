@@ -4,7 +4,7 @@ import faker from 'faker';
 import { storiesOf } from '@storybook/react';
 import BindingAndRelatedEntities from './index';
 
-storiesOf('Project/BindingAndRelatedEntities', module).add('with default props', () => (
+storiesOf('Project/BindingAndRelatedEntities', module).add('with props', () => (
   <BindingAndRelatedEntities
     binding={{
       products: faker.random.number(),

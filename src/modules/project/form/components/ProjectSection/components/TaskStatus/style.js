@@ -5,9 +5,9 @@ import { layout, fontSizes, colors } from 'styles/common';
 export const WrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
   ${fontSizes.SMALL};
-  width: 245px;
-  grid-gap: 20px;
-  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  grid-gap: 10px;
+  grid-template-columns: 120px 30px;
 `;
 
 export const TitleStyle = (iconColor: string): string => css`
