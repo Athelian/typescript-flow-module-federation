@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedDate } from 'react-intl';
+import { getByPath } from 'utils/fp';
 import { ValueStyle } from './style';
 
 type WrapperProps = {
@@ -12,10 +13,7 @@ export const ValueWrapper = ({ children }: WrapperProps) => (
 );
 
 type Props = {
-  value: {
-    [val: string]: any,
-    __typename: string,
-  },
+  value: any,
 };
 
 const FormattedValue = ({ value }: Props) => {
@@ -23,8 +21,7 @@ const FormattedValue = ({ value }: Props) => {
     return null;
   }
 
-  // eslint-disable-next-line
-  switch (value.__typename) {
+  switch (getByPath('__typename', value)) {
     case 'StringValue':
       return value.string;
     case 'IntValue':
@@ -38,12 +35,11 @@ const FormattedValue = ({ value }: Props) => {
     case 'MetricValueValue':
       return `${value.metricValue.value} ${value.metricValue.metric}`;
     case 'SizeValue':
-      return `(${value.size.length.value} ${value.size.length.metric} x ${value.size.width.value} ${
-        value.size.width.metric
-      } x ${value.size.height.value} ${value.size.height.metric})`;
+      return `(${value.size.length.value} ${value.size.length.metric} x ${value.size.width.value} ${value.size.width.metric} x ${value.size.height.value} ${value.size.height.metric})`;
     case 'Values':
-      // eslint-disable-next-line
-      return value.values.map((v, i) => <FormattedValue key={i} value={v} />).join(', ');
+      return value.values
+        .map((v, i) => <FormattedValue key={JSON.stringify({ i, v })} value={v} />)
+        .join(', ');
     default:
       return null;
   }
