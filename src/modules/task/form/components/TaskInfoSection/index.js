@@ -87,6 +87,7 @@ import {
   AutoDateWrapperStyle,
   AutoDateOffsetWrapperStyle,
   AutoDateSyncIconStyle,
+  UnapprovedButtonStyle,
 } from './style';
 
 type OptionalProps = {
@@ -1365,29 +1366,53 @@ const TaskInfoSection = ({
                               ) : (
                                 <>
                                   {isUnapproved ? (
-                                    <ApproveRejectMenu
-                                      width="200px"
-                                      onApprove={() => {
-                                        setFieldValues({
-                                          approvedBy: user,
-                                          approvedAt: formatToGraphql(new Date()),
-                                          rejectedBy: null,
-                                          rejectedAt: null,
-                                        });
-                                        setFieldTouched('approvedBy');
-                                        setFieldTouched('approvedAt');
-                                      }}
-                                      onReject={() => {
-                                        setFieldValues({
-                                          approvedBy: null,
-                                          approvedAt: null,
-                                          rejectedBy: user,
-                                          rejectedAt: formatToGraphql(new Date()),
-                                        });
-                                        setFieldTouched('rejectedBy');
-                                        setFieldTouched('rejectedAt');
-                                      }}
-                                    />
+                                    <BooleanValue defaultValue={false}>
+                                      {({ value: showMenu, set: toggleShowMenu }) =>
+                                        showMenu ? (
+                                          <ApproveRejectMenu
+                                            width="200px"
+                                            onApprove={() => {
+                                              setFieldValues({
+                                                approvedBy: user,
+                                                approvedAt: formatToGraphql(new Date()),
+                                                rejectedBy: null,
+                                                rejectedAt: null,
+                                              });
+                                              setFieldTouched('approvedBy');
+                                              setFieldTouched('approvedAt');
+                                            }}
+                                            onReject={() => {
+                                              setFieldValues({
+                                                approvedBy: null,
+                                                approvedAt: null,
+                                                rejectedBy: user,
+                                                rejectedAt: formatToGraphql(new Date()),
+                                              });
+                                              setFieldTouched('rejectedBy');
+                                              setFieldTouched('rejectedAt');
+                                            }}
+                                          />
+                                        ) : (
+                                          <button
+                                            type="button"
+                                            onClick={evt => {
+                                              if (editable.approved && editable.rejected) {
+                                                evt.stopPropagation();
+                                                toggleShowMenu(true);
+                                              }
+                                            }}
+                                            className={UnapprovedButtonStyle(
+                                              editable.approved && editable.rejected
+                                            )}
+                                          >
+                                            <FormattedMessage
+                                              id="modules.Tasks.unapproved"
+                                              defaultMessage="UNAPPROVED"
+                                            />
+                                          </button>
+                                        )
+                                      }
+                                    </BooleanValue>
                                   ) : (
                                     <TaskApprovalStatusInput
                                       showUser
