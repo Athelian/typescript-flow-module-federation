@@ -66,3 +66,4 @@ export const SHIPMENT_TASK_SET_START_DATE = 'shipment.tasks.setStartDate';
 export const SHIPMENT_TASK_SET_START_DATE_BINDING = 'shipment.tasks.setStartDateBinding';
 export const SHIPMENT_TASK_SET_TAGS = 'shipment.tasks.setTags';
 export const SHIPMENT_TASK_SET_TEMPLATE = 'shipment.tasks.setTaskTemplate';
+export const SHIPMENT_TASK_SET_MILESTONE = 'shipment.tasks.setMilestone';

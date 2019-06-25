@@ -20,6 +20,7 @@ import {
   ORDER_TASK_SET_DESCRIPTION,
   ORDER_TASK_SET_MEMO,
   ORDER_TASK_SET_TAGS,
+  ORDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_TASK_UPDATE,
@@ -39,6 +40,7 @@ import {
   ORDER_ITEMS_TASK_SET_DESCRIPTION,
   ORDER_ITEMS_TASK_SET_MEMO,
   ORDER_ITEMS_TASK_SET_TAGS,
+  ORDER_ITEMS_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_TASK_UPDATE,
@@ -58,6 +60,7 @@ import {
   BATCH_TASK_SET_DESCRIPTION,
   BATCH_TASK_SET_MEMO,
   BATCH_TASK_SET_TAGS,
+  BATCH_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/batch';
 import {
   PRODUCT_TASK_UPDATE,
@@ -77,6 +80,7 @@ import {
   PRODUCT_TASK_SET_APPROVABLE,
   PRODUCT_TASK_SET_MEMO,
   PRODUCT_TASK_SET_TAGS,
+  PRODUCT_TASK_SET_MILESTONE,
   PRODUCT_PROVIDER_TASK_UPDATE,
   PRODUCT_PROVIDER_TASK_SET_NAME,
   PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
@@ -94,6 +98,7 @@ import {
   PRODUCT_PROVIDER_TASK_SET_DESCRIPTION,
   PRODUCT_PROVIDER_TASK_SET_MEMO,
   PRODUCT_PROVIDER_TASK_SET_TAGS,
+  PRODUCT_PROVIDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/product';
 import {
   SHIPMENT_TASK_UPDATE,
@@ -113,6 +118,7 @@ import {
   SHIPMENT_TASK_SET_DESCRIPTION,
   SHIPMENT_TASK_SET_MEMO,
   SHIPMENT_TASK_SET_TAGS,
+  SHIPMENT_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/shipment';
 
 export const parseGroupIds = (task: Object) => {
@@ -163,6 +169,7 @@ export const checkEditableFromEntity = (
   description: boolean,
   memo: boolean,
   tags: boolean,
+  milestone: boolean,
 } => {
   switch (type) {
     case 'Order':
@@ -191,6 +198,7 @@ export const checkEditableFromEntity = (
         description: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DESCRIPTION]),
         memo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_MILESTONE]),
       };
     case 'OrderItem':
       return {
@@ -262,6 +270,11 @@ export const checkEditableFromEntity = (
         ]),
         memo: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_TAGS]),
+        milestone: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_MILESTONE,
+        ]),
       };
     case 'Batch':
       return {
@@ -289,6 +302,7 @@ export const checkEditableFromEntity = (
         description: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DESCRIPTION]),
         memo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_MILESTONE]),
       };
     case 'Product':
       return {
@@ -320,6 +334,7 @@ export const checkEditableFromEntity = (
         ]),
         memo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_MILESTONE]),
       };
     case 'ProductProvider':
       return {
@@ -403,6 +418,11 @@ export const checkEditableFromEntity = (
           PRODUCT_PROVIDER_TASK_UPDATE,
           PRODUCT_PROVIDER_TASK_SET_TAGS,
         ]),
+        milestone: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_MILESTONE,
+        ]),
       };
     default:
       return {
@@ -442,6 +462,7 @@ export const checkEditableFromEntity = (
         ]),
         memo: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_MILESTONE]),
       };
   }
 };

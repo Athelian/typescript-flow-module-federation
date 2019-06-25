@@ -27,3 +27,4 @@ export const TASK_SET_START_DATE = 'task.tasks.setStartDate';
 export const TASK_SET_START_DATE_BINDING = 'task.tasks.setStartDateBinding';
 export const TASK_SET_TAGS = 'task.tasks.setTags';
 export const TASK_SET_TEMPLATE = 'task.tasks.setTaskTemplate';
+export const TASK_SET_MILESTONE = 'task.tasks.setMilestone';

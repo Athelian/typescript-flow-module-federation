@@ -25,6 +25,7 @@ import {
   OrderProductProviderCard,
   ProjectCard,
   MilestoneCard,
+  GrayCard,
 } from 'components/Cards';
 import SlideView from 'components/SlideView';
 import {
@@ -1036,13 +1037,77 @@ const TaskInfoSection = ({
                         />
                       )}
 
-                    <div>
-                      {/* FIXME: permission */}
-                      <BooleanValue>
-                        {({ value: opened, set: toggleSlide }) => (
+                    {!isInTemplate && (
+                      <div>
+                        {editable.milestone ? (
+                          <BooleanValue>
+                            {({ value: opened, set: toggleSlide }) => (
+                              <>
+                                {values.milestone ? (
+                                  <div role="presentation" onClick={() => toggleSlide(true)}>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                    <ProjectCard project={values.milestone.project} />
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.milestone"
+                                        defaultMessage="MILESTONE"
+                                      />
+                                    </Label>
+                                    <MilestoneCard milestone={values.milestone} />
+                                  </div>
+                                ) : (
+                                  <>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                    <DashedPlusButton
+                                      width="195px"
+                                      height="458px"
+                                      onClick={() => toggleSlide(true)}
+                                    />
+                                  </>
+                                )}
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => toggleSlide(false)}
+                                >
+                                  {opened && (
+                                    <SelectProjectAndMilestone
+                                      filter={{
+                                        query: '',
+                                      }}
+                                      project={getByPath('milestone.project', values)}
+                                      milestone={values.milestone}
+                                      onSelect={({ milestone, project }) => {
+                                        setFieldValues({
+                                          milestone: milestone
+                                            ? {
+                                                ...milestone,
+                                                project,
+                                              }
+                                            : null,
+                                        });
+                                        toggleSlide(false);
+                                      }}
+                                      onCancel={() => toggleSlide(false)}
+                                    />
+                                  )}
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+                        ) : (
                           <>
                             {values.milestone ? (
-                              <div role="presentation" onClick={() => toggleSlide(true)}>
+                              <>
                                 <Label>
                                   <FormattedMessage
                                     id="modules.task.project"
@@ -1057,7 +1122,7 @@ const TaskInfoSection = ({
                                   />
                                 </Label>
                                 <MilestoneCard milestone={values.milestone} />
-                              </div>
+                              </>
                             ) : (
                               <>
                                 <Label>
@@ -1066,40 +1131,13 @@ const TaskInfoSection = ({
                                     defaultMessage="PROJECT"
                                   />
                                 </Label>
-                                <DashedPlusButton
-                                  width="195px"
-                                  height="458px"
-                                  onClick={() => toggleSlide(true)}
-                                />
+                                <GrayCard width="195px" height="458px" />
                               </>
                             )}
-                            <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
-                              {opened && (
-                                <SelectProjectAndMilestone
-                                  filter={{
-                                    query: '',
-                                  }}
-                                  project={getByPath('milestone.project', values)}
-                                  milestone={values.milestone}
-                                  onSelect={({ milestone, project }) => {
-                                    setFieldValues({
-                                      milestone: milestone
-                                        ? {
-                                            ...milestone,
-                                            project,
-                                          }
-                                        : null,
-                                    });
-                                    toggleSlide(false);
-                                  }}
-                                  onCancel={() => toggleSlide(false)}
-                                />
-                              )}
-                            </SlideView>
                           </>
                         )}
-                      </BooleanValue>
-                    </div>
+                      </div>
+                    )}
                   </GridColumn>
                 </div>
 
