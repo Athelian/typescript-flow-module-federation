@@ -10,7 +10,7 @@ import {
   MessageStyle,
   TitleStyle,
 } from './style';
-import messages from '../messages';
+import messages from '../../messages';
 
 type Props = {
   errors: string[],

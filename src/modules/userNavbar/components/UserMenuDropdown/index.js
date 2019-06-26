@@ -11,7 +11,7 @@ import { AuthenticationConsumer } from 'modules/authentication';
 import { logOutMutation } from 'modules/userNavbar/mutation';
 import messages from 'modules/userNavbar/messages';
 import Import from 'modules/import';
-import { isAppInProduction } from 'utils/env';
+import { isEnableBetaFeature } from 'utils/env';
 import {
   UserMenuDropDownWrapperStyle,
   UserMenuItemWrapperStyle,
@@ -28,7 +28,7 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
   const [importOpen, setImportOpen] = React.useState(false);
 
   return (
-    <div className={UserMenuDropDownWrapperStyle(isOpen, !isAppInProduction)}>
+    <div className={UserMenuDropDownWrapperStyle(isOpen, isEnableBetaFeature)}>
       <BooleanValue>
         {({ value: isLogoutDialogOpen, set: logoutDialogToggle }) => (
           <>
@@ -48,7 +48,7 @@ const UserMenuDropdown = ({ isOpen, toggleUserMenu }: Props) => {
               </div>
             </button>
 
-            {!isAppInProduction && (
+            {isEnableBetaFeature && (
               <button
                 className={UserMenuItemWrapperStyle}
                 onClick={() => {

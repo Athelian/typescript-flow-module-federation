@@ -5,7 +5,7 @@ import Dropzone from 'react-dropzone';
 import Icon from 'components/Icon';
 import DashedPlusButton from 'components/Form/DashedPlusButton';
 import { ContainerStyle, FilePreviewStyle, FileIconStyle, FileNameStyle } from './style';
-import messages from '../messages';
+import messages from '../../messages';
 
 type Props = {
   value: File | null,

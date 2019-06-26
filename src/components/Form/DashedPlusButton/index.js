@@ -3,10 +3,13 @@ import React from 'react';
 import Icon from 'components/Icon';
 import { DashedPlusButtonWrapperStyle, LabelStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  label: *,
+};
+
+type Props = OptionalProps & {
   width: string,
   height: string,
-  label: * | null,
   onClick: Function,
 };
 

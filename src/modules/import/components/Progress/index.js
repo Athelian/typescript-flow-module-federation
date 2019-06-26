@@ -9,7 +9,7 @@ import {
   MessageStyle,
   ProgressValueStyle,
 } from './style';
-import messages from '../messages';
+import messages from '../../messages';
 
 type Props = {
   status: string,
