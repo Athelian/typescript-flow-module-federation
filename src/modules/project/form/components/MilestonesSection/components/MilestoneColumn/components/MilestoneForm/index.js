@@ -110,6 +110,9 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   </div>
                 </div>
               )}
+
+              <div>Total tasks: {(values.tasks || []).length}</div>
+
               <NewButton
                 label={
                   <FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />
