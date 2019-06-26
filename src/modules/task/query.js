@@ -29,8 +29,8 @@ export const taskTimelineQuery = gql`
 export const taskExportQuery = gql`
   query taskExport($id: ID!, $templateId: ID!) {
     taskExport(id: $id, templateId: $templateId) {
-      ... on File {
-        path
+      ... on Export {
+        id
       }
     }
   }
@@ -39,8 +39,8 @@ export const taskExportQuery = gql`
 export const tasksExportQuery = gql`
   query tasksExport($filterBy: TaskFilterInput, $sortBy: TaskSortInput, $templateId: ID!) {
     tasksExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId) {
-      ... on File {
-        path
+      ... on Export {
+        id
       }
     }
   }
