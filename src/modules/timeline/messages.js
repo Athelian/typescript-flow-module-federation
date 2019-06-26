@@ -160,4 +160,8 @@ export default defineMessages({
     id: 'modules.timeline.task',
     defaultMessage: 'task',
   },
+  project: {
+    id: 'modules.timeline.project',
+    defaultMessage: 'project',
+  },
 });
