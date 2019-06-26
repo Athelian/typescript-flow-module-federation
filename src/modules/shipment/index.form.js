@@ -18,7 +18,7 @@ import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavB
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { encodeId, decodeId } from 'utils/id';
+import { encodeId, decodeId, uuid } from 'utils/id';
 import Timeline from 'modules/timeline/components/Timeline';
 import { shipmentExportQuery, shipmentTimelineQuery } from './query';
 import {
@@ -626,7 +626,7 @@ class ShipmentFormModule extends React.Component<Props> {
                                       shipmentTasksContainer,
                                     },
                                     {
-                                      id: Date.now(),
+                                      id: uuid(),
                                       importer: isImporter ? group : null,
                                       exporter: isExporter ? group : null,
                                       forwarders: isForwarder ? [group] : [],

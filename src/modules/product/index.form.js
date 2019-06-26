@@ -18,7 +18,7 @@ import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import Timeline from 'modules/timeline/components/Timeline';
-import { encodeId, decodeId } from 'utils/id';
+import { encodeId, decodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import {
   ProductInfoContainer,
@@ -504,7 +504,7 @@ class ProductFormModule extends React.Component<Props> {
                                   productTasksState,
                                 },
                                 {
-                                  id: Date.now(),
+                                  id: uuid(),
                                   importer: isImporter ? group : {},
                                   tags: [],
                                   todo: {

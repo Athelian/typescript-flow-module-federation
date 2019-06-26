@@ -97,4 +97,103 @@ describe('milestones container', () => {
       containers: 0,
     });
   });
+
+  it('should add new milestone', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    await container.newMilestone();
+    expect(container.state.milestones.length).toEqual(1);
+  });
+
+  it('should change ordering of milestones', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: 1,
+        tasks: [],
+      },
+      {
+        id: 2,
+        tasks: [],
+      },
+      {
+        id: 3,
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    expect(container.state).toEqual({ milestones });
+    await container.changeMilestoneOrdering([2, 3, 1]);
+    expect(container.state).toEqual({
+      milestones: [
+        {
+          id: 2,
+          tasks: [],
+        },
+        {
+          id: 3,
+          tasks: [],
+        },
+        {
+          id: 1,
+          tasks: [],
+        },
+      ],
+    });
+  });
+
+  it('should change ordering of tasks under milestone', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+      {
+        id: '2',
+        tasks: [],
+      },
+      {
+        id: '3',
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    expect(container.state).toEqual({ milestones });
+    await container.changeMilestones({
+      1: [],
+      2: [],
+      3: [
+        {
+          id: 4,
+        },
+      ],
+    });
+    expect(container.state).toEqual({
+      milestones: [
+        {
+          id: '1',
+          tasks: [],
+        },
+        {
+          id: '2',
+          tasks: [],
+        },
+        {
+          id: '3',
+          tasks: [
+            {
+              id: 4,
+            },
+          ],
+        },
+      ],
+    });
+  });
 });

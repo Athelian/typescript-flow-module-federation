@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
-import type { ProjectPayload, Project } from 'generated/graphql';
+import type { ProjectPayload, Project, Tag, Milestone } from 'generated/graphql';
 import Layout from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import logger from 'utils/logger';
@@ -19,7 +19,7 @@ import QueryForm from 'components/common/QueryForm';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import { decodeId } from 'utils/id';
+import { decodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { projectTimelineQuery } from './query';
 import ProjectForm from './form';
@@ -131,11 +131,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
   initAllValues = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
-    project: Project
+    project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> }
   ) => {
-    const {
-      tags = [],
-      milestones = [
+    const { tags, milestones, ...info } = project;
+    projectInfoState.initDetailValues(info);
+    projectTagsState.initDetailValues(tags || []);
+    projectMilestonesState.initDetailValues(
+      milestones || [
         {
           total: 0,
           completed: 0,
@@ -143,18 +145,14 @@ class ProjectFormModule extends React.PureComponent<Props> {
           isCompleted: false,
           name: '',
         },
-      ],
-      ...info
-    } = project;
-    projectInfoState.initDetailValues(info);
-    projectTagsState.initDetailValues(tags);
-    projectMilestonesState.initDetailValues(milestones);
+      ]
+    );
     return null;
   };
 
   onFormReady = (
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
-    project: Project
+    project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> }
   ) => {
     const hasInitialStateYet = projectInfoState.state.id || Object.keys(project).length === 0;
     if (hasInitialStateYet) return null;
@@ -339,7 +337,29 @@ class ProjectFormModule extends React.PureComponent<Props> {
                 >
                   {apiError && <p>Error: Please try again.</p>}
                   {this.isNew() || !projectId ? (
-                    <ProjectForm isNew />
+                    <>
+                      <ProjectForm isNew />
+                      <Subscribe
+                        to={[
+                          ProjectInfoContainer,
+                          ProjectTagsContainer,
+                          ProjectMilestonesContainer,
+                        ]}
+                      >
+                        {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                          this.onFormReady(
+                            {
+                              projectInfoState,
+                              projectTagsState,
+                              projectMilestonesState,
+                            },
+                            {
+                              id: uuid(),
+                            }
+                          )
+                        }
+                      </Subscribe>
+                    </>
                   ) : (
                     <QueryForm
                       query={projectFormQuery}

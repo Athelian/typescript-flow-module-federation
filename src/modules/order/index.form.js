@@ -18,7 +18,7 @@ import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavB
 import SlideView from 'components/SlideView';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { decodeId, encodeId } from 'utils/id';
+import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { orderExportQuery, orderTimelineQuery } from './query';
 import OrderForm from './form';
@@ -537,7 +537,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                     orderTasksState,
                                   },
                                   {
-                                    id: Date.now(),
+                                    id: uuid(),
                                     inCharges: [],
                                     currency: 'USD',
                                     customFields: {

@@ -5,6 +5,7 @@ import pluralize from 'pluralize';
 import { camelCase } from 'lodash/fp';
 import type { Milestone } from 'generated/graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { uuid } from 'utils/id';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -34,6 +35,37 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   initDetailValues = (milestones: Array<Milestone>) => {
     this.setState({ milestones });
     this.originalValues = { milestones };
+  };
+
+  newMilestone = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      milestones: [
+        ...prevState.milestones,
+        {
+          id: uuid(),
+          name: `Milestone - ${prevState.milestones.length + 1}`,
+          dueDate: null,
+          tasks: [],
+        },
+      ],
+    }));
+  };
+
+  changeMilestoneOrdering = (ordering: Array<string>) => {
+    this.setState(prevState => ({
+      milestones: ordering.map(id => prevState.milestones.find(item => item.id === id)),
+    }));
+  };
+
+  changeMilestones = (columns: Object) => {
+    const ordering = Object.keys(columns);
+    this.setState(prevState => ({
+      milestones: ordering.map(id => ({
+        ...prevState.milestones.find(item => item.id === id),
+        tasks: columns[id],
+      })),
+    }));
   };
 
   countBindingEntities = () => {

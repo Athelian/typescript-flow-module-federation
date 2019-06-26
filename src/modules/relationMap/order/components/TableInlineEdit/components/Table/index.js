@@ -2,7 +2,6 @@
 import * as React from 'react';
 import memoize from 'memoize-one';
 import AutoSizer from 'react-virtualized-auto-sizer';
-// $FlowFixMe: not have flow type yet
 import { FixedSizeGrid as Grid } from 'react-window';
 import { getByPath } from 'utils/fp';
 import {

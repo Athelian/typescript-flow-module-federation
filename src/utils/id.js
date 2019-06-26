@@ -28,6 +28,6 @@ export function injectUid(obj: Object) {
   return { id, ...obj };
 }
 
-export function uuid() {
+export function uuid(): string {
   return `${s4() + s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 }
