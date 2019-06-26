@@ -52,6 +52,24 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     }));
   };
 
+  milestoneStatus = () => {
+    return (this.state.milestones.map(milestone => ({
+      name: milestone.name,
+      dueDate: milestone.dueDate,
+      isCompleted: !!milestone.completedBy,
+      total: (milestone.tasks || []).length,
+      completed: (milestone.tasks || []).filter(
+        task => !!getByPathWithDefault('', 'completedBy', task)
+      ).length,
+    })): Array<{
+      name: string,
+      dueDate: ?Date,
+      isCompleted: boolean,
+      total: number,
+      completed: number,
+    }>);
+  };
+
   changeMilestoneOrdering = (ordering: Array<string>) => {
     this.setState(prevState => ({
       milestones: ordering.map(id => prevState.milestones.find(item => item.id === id)),

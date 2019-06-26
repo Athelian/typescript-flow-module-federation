@@ -196,4 +196,60 @@ describe('milestones container', () => {
       ],
     });
   });
+
+  it('should return milestone status', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+      {
+        id: '2',
+        name: 'b',
+        dueDate: null,
+        tasks: [],
+      },
+      {
+        id: '3',
+        name: 'c',
+        dueDate: null,
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    const result = await container.milestoneStatus();
+
+    expect(result).toMatchSnapshot();
+    expect(result).toEqual([
+      {
+        completed: 0,
+        dueDate: null,
+        isCompleted: false,
+        name: 'a',
+        total: 1,
+      },
+      {
+        completed: 0,
+        dueDate: null,
+        isCompleted: false,
+        name: 'b',
+        total: 0,
+      },
+      {
+        completed: 0,
+        dueDate: null,
+        isCompleted: false,
+        name: 'c',
+        total: 0,
+      },
+    ]);
+  });
 });

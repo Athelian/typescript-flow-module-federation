@@ -81,13 +81,10 @@ export default function TaskList(props: Props) {
         <div
           className={WrapperStyle({
             isDraggingOver: dropSnapshot.isDraggingOver,
-            isDraggingFrom: dropSnapshot.isDraggingFrom,
+            isDraggingFrom: Boolean(dropSnapshot.draggingFromThisWith),
             isDropDisabled: Boolean(isDropDisabled),
           })}
           style={style}
-          isDraggingOver={dropSnapshot.isDraggingOver}
-          isDropDisabled={isDropDisabled}
-          isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
           {...dropProvided.droppableProps}
         >
           {internalScroll ? (

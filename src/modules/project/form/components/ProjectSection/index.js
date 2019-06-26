@@ -202,8 +202,8 @@ const ProjectSection = ({ isNew }: Props) => {
 
                   <div className={MilestonesTimelineWrapperStyle}>
                     <Subscribe to={[ProjectMilestonesContainer]}>
-                      {({ state: { milestones } }) => (
-                        <MilestonesTimeline milestones={milestones} />
+                      {({ milestoneStatus }) => (
+                        <MilestonesTimeline milestones={milestoneStatus()} />
                       )}
                     </Subscribe>
                   </div>
