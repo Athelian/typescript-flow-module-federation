@@ -26,7 +26,6 @@ type Props = OptionalProps & {
   task: Object,
   entity: Object,
   groupIds: Array<string>,
-  editable: boolean,
   onSave: Function,
 };
 
@@ -36,15 +35,7 @@ const defaultProps = {
 
 const formContainer = new FormContainer();
 
-const TaskFormInSlide = ({
-  groupIds,
-  editable,
-  onSave,
-  task,
-  parentEntity,
-  entity,
-  isInTemplate,
-}: Props) => {
+const TaskFormInSlide = ({ groupIds, onSave, task, parentEntity, entity, isInTemplate }: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -97,7 +88,7 @@ const TaskFormInSlide = ({
                   </BooleanValue>
                 )}
 
-                {editable && taskContainer.isDirty() && (
+                {taskContainer.isDirty() && (
                   <>
                     <ResetButton
                       onClick={() => {
@@ -132,4 +123,4 @@ const TaskFormInSlide = ({
 
 TaskFormInSlide.defaultProps = defaultProps;
 
-export default withCache(TaskFormInSlide, ['task', 'entity', 'groupIds', 'editable']);
+export default withCache(TaskFormInSlide, ['task', 'entity', 'groupIds']);

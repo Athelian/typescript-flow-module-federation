@@ -2,6 +2,8 @@
 import gql from 'graphql-tag';
 import {
   taskWithParentInfoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -38,6 +40,8 @@ const editableTaskListQuery = gql`
   }
 
   ${taskWithParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${tagFragment}
   ${userAvatarFragment}
   ${orderCardFragment}

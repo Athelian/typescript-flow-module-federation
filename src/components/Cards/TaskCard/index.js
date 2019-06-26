@@ -30,9 +30,9 @@ import {
   DateInputFactory,
   ApproveRejectMenu,
   TaskApprovalStatusInput,
-  TaskStatusInputNew,
+  TaskStatusInput,
 } from 'components/Form';
-import type { TaskEditable } from './type.js.flow';
+import type { TaskCardEditableProps } from './type.js.flow';
 import BaseCard from '../BaseCard';
 import validator from './validator';
 import {
@@ -68,7 +68,7 @@ type OptionalProps = {
   hideParentInfo: boolean,
   onClick: Function,
   saveOnBlur: Function,
-  editable: TaskEditable,
+  editable: TaskCardEditableProps,
   navigable: {
     project: boolean,
   },
@@ -514,11 +514,12 @@ const TaskCard = ({
                   />
                 </div>
               ) : (
-                <TaskStatusInputNew
+                <TaskStatusInput
                   task={task}
                   update={newTask => saveOnBlur(newTask)}
                   editable={editable}
                   width="175px"
+                  showDate
                 />
               )}
             </div>

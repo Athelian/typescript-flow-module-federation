@@ -70,15 +70,6 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                       >
                         <TaskFormInSlide
                           groupIds={parseGroupIds(task)}
-                          editable={checkEditableFromEntity(
-                            getByPath('entity.__typename', task),
-                            (checkPermission: string | Array<string>) => {
-                              if (Array.isArray(checkPermission)) {
-                                return intersection(permissions, checkPermission).length > 0;
-                              }
-                              return permissions.includes(checkPermission);
-                            }
-                          )}
                           entity={task.entity}
                           task={{ ...task, sort: index }}
                           onSave={value => {

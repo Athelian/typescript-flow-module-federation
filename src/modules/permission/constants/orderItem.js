@@ -39,3 +39,4 @@ export const ORDER_ITEMS_TASK_SET_START_DATE = 'order.orderItemTasks.setStartDat
 export const ORDER_ITEMS_TASK_SET_START_DATE_BINDING = 'order.orderItemTasks.setStartDateBinding';
 export const ORDER_ITEMS_TASK_SET_TAGS = 'order.orderItemTasks.setTags';
 export const ORDER_ITEMS_TASK_SET_TEMPLATE = 'order.orderItemTasks.setTaskTemplate';
+export const ORDER_ITEMS_TASK_SET_MILESTONE = 'order.orderItemTasks.setMilestone';

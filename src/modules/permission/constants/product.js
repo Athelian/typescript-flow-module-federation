@@ -79,6 +79,7 @@ export const PRODUCT_TASK_SET_START_DATE = 'product.tasks.setStartDate';
 export const PRODUCT_TASK_SET_START_DATE_BINDING = 'product.tasks.setStartDateBinding';
 export const PRODUCT_TASK_SET_TAGS = 'product.tasks.setTags';
 export const PRODUCT_TASK_SET_TEMPLATE = 'product.tasks.setTaskTemplate';
+export const PRODUCT_TASK_SET_MILESTONE = 'product.tasks.setMilestone';
 export const PRODUCT_PROVIDER_TASK_SET_APPROVABLE = 'product.productProviderTasks.setApprovable';
 export const PRODUCT_PROVIDER_TASK_SET_APPROVED = 'product.productProviderTasks.setApproved';
 export const PRODUCT_PROVIDER_TASK_SET_APPROVERS = 'product.productProviderTasks.setApprovers';
@@ -99,3 +100,4 @@ export const PRODUCT_PROVIDER_TASK_SET_START_DATE_BINDING =
   'product.productProviderTasks.setStartDateBinding';
 export const PRODUCT_PROVIDER_TASK_SET_TAGS = 'product.productProviderTasks.setTags';
 export const PRODUCT_PROVIDER_TASK_SET_TEMPLATE = 'product.productProviderTasks.setTaskTemplate';
+export const PRODUCT_PROVIDER_TASK_SET_MILESTONE = 'product.productProviderTasks.setMilestone';

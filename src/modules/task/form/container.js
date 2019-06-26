@@ -17,6 +17,8 @@ type FormState = {
   assignedTo?: Array<Object>,
   inProgressBy?: ?Object,
   inProgressAt?: ?string,
+  skippedBy?: ?Object,
+  skippedAt?: ?string,
   completedBy?: ?Object,
   completedAt?: ?string,
   approvers?: Array<Object>,

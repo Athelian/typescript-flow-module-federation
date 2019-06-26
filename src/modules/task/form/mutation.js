@@ -1,7 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 import { badRequestFragment, forbiddenFragment } from 'graphql';
-import { parseTaskField } from 'utils/data';
+import { parseTaskField, parseParentIdField } from 'utils/data';
+import { getByPathWithDefault } from 'utils/fp';
 
 export const createTaskMutation = gql`
   mutation taskCreate($input: TaskCreateInput!) {
@@ -33,4 +34,9 @@ export const updateTaskMutation = gql`
 
 export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
   ...parseTaskField(originalValues, values),
+  ...parseParentIdField(
+    'milestoneId',
+    getByPathWithDefault(null, 'milestone', originalValues),
+    values.milestone
+  ),
 });

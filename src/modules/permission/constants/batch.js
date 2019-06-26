@@ -49,3 +49,4 @@ export const BATCH_TASK_SET_START_DATE = 'batch.tasks.setStartDate';
 export const BATCH_TASK_SET_START_DATE_BINDING = 'batch.tasks.setStartDateBinding';
 export const BATCH_TASK_SET_TAGS = 'batch.tasks.setTags';
 export const BATCH_TASK_SET_TEMPLATE = 'batch.tasks.setTaskTemplate';
+export const BATCH_TASK_SET_MILESTONE = 'batch.tasks.setMilestone';

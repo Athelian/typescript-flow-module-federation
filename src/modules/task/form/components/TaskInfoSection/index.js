@@ -3,18 +3,19 @@ import React from 'react';
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
-import { ObjectValue } from 'react-values';
+import { ObjectValue, BooleanValue } from 'react-values';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import { ORDER_FORM } from 'modules/permission/constants/order';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
+import { UserConsumer } from 'modules/user';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
 import { spreadOrderItem } from 'utils/item';
 import { checkEditableFromEntity } from 'utils/task';
-import { formatToGraphql, startOfToday, isBefore } from 'utils/date';
+import { formatToGraphql, isBefore } from 'utils/date';
 import {
   ShipmentCard,
   OrderCard,
@@ -22,7 +23,11 @@ import {
   BatchCard,
   ProductCard,
   OrderProductProviderCard,
+  ProjectCard,
+  MilestoneCard,
+  GrayCard,
 } from 'components/Cards';
+import SlideView from 'components/SlideView';
 import {
   SectionWrapper,
   SectionHeader,
@@ -33,7 +38,6 @@ import {
   FieldItem,
   Label,
   TagsInput,
-  TaskAssignmentInput,
   Display,
   TaskStatusInput,
   ToggleInput,
@@ -42,17 +46,19 @@ import {
   RadioInput,
   MetricInputFactory,
   SelectInputFactory,
+  UserAssignmentInputFactory,
+  DashedPlusButton,
 } from 'components/Form';
 import Divider from 'components/Divider';
 import Icon from 'components/Icon';
 import GridColumn from 'components/GridColumn';
 import FormattedNumber from 'components/FormattedNumber';
-import { COMPLETED, IN_PROGRESS } from 'components/Form/TaskStatusInput/constants';
 import { FormField, FormContainer } from 'modules/form';
 import TaskContainer from 'modules/task/form/container';
 import validator from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import {
   orderBinding,
   orderItemBinding,
@@ -79,6 +85,7 @@ import {
   AutoDateWrapperStyle,
   AutoDateOffsetWrapperStyle,
   AutoDateSyncIconStyle,
+  UnapprovedButtonStyle,
 } from './style';
 
 type OptionalProps = {
@@ -96,31 +103,6 @@ type Props = OptionalProps & {
 const defaultProps = {
   isInTemplate: false,
   hideParentInfo: false,
-};
-
-const getStatusState = ({
-  inProgressBy,
-  completedBy,
-}: {
-  inProgressAt: string,
-  completedAt: string,
-  inProgressBy: Object,
-  completedBy: Object,
-}) => {
-  if (completedBy)
-    return {
-      status: COMPLETED,
-      activeUser: completedBy,
-    };
-  if (inProgressBy)
-    return {
-      status: IN_PROGRESS,
-      activeUser: inProgressBy,
-    };
-  return {
-    status: '',
-    activeUser: null,
-  };
 };
 
 const TaskInfoSection = ({
@@ -271,7 +253,7 @@ const TaskInfoSection = ({
         <Subscribe to={[TaskContainer, FormContainer]}>
           {({ originalValues, state, setFieldValue, setFieldValues }, { setFieldTouched }) => {
             const values = { ...originalValues, ...state };
-            const { status, activeUser } = getStatusState(values);
+            const isCompleted = !!values.completedBy;
             const isUnapproved = !(
               (values.approvedBy && values.approvedBy.id) ||
               (values.rejectedBy && values.rejectedBy.id)
@@ -338,6 +320,252 @@ const TaskInfoSection = ({
                         />
                       )}
                     </FormField>
+
+                    <FieldItem
+                      label={
+                        <Label height="30px">
+                          <FormattedMessage id="modules.Tasks.dueDate" defaultMessage="DUE DATE" />
+                        </Label>
+                      }
+                      input={
+                        <GridColumn gap="10px">
+                          <div
+                            className={AutoDateBackgroundStyle(
+                              manualSettings.dueDate ? 'top' : 'bottom'
+                            )}
+                          />
+
+                          <div className={RadioWrapperStyle('top')}>
+                            <RadioInput
+                              align="right"
+                              selected={manualSettings.dueDate}
+                              onToggle={() =>
+                                !manualSettings.dueDate
+                                  ? onChangeBinding({
+                                      type: entity,
+                                      field: 'dueDate',
+                                      isManual: true,
+                                      onChange: setFieldValues,
+                                    })
+                                  : () => {}
+                              }
+                              editable={editable.dueDate}
+                            />
+                          </div>
+
+                          <div className={RadioWrapperStyle('bottom')}>
+                            <RadioInput
+                              align="right"
+                              selected={!manualSettings.dueDate}
+                              onToggle={() =>
+                                manualSettings.dueDate
+                                  ? onChangeBinding({
+                                      type: entity,
+                                      field: 'dueDate',
+                                      isManual: false,
+                                      onChange: setFieldValues,
+                                    })
+                                  : () => {}
+                              }
+                              editable={editable.dueDate}
+                            />
+                          </div>
+
+                          {isInTemplate ? (
+                            <Display
+                              color={manualSettings.dueDate ? 'GRAY' : 'GRAY_LIGHT'}
+                              height="30px"
+                            >
+                              <FormattedMessage
+                                id="modules.Tasks.datePlaceholder"
+                                defaultMessage="yyyy/mm/dd"
+                              />
+                            </Display>
+                          ) : (
+                            <FormField
+                              name="dueDate"
+                              initValue={values.dueDate}
+                              values={values}
+                              validator={validator}
+                              setFieldValue={setFieldValue}
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <DateInputFactory
+                                  name={name}
+                                  inputColor={
+                                    values.dueDate &&
+                                    isBefore(new Date(values.dueDate), new Date()) &&
+                                    isCompleted
+                                      ? 'RED'
+                                      : 'BLACK'
+                                  }
+                                  {...inputHandlers}
+                                  originalValue={originalValues[name]}
+                                  editable={editable.dueDate && manualSettings.dueDate}
+                                  hideTooltip={!manualSettings.dueDate}
+                                />
+                              )}
+                            </FormField>
+                          )}
+
+                          {!manualSettings.dueDate ? (
+                            <ObjectValue
+                              value={{
+                                autoDateField: values.dueDateBinding,
+                                ...convertBindingToSelection(values.dueDateInterval),
+                              }}
+                              onChange={({ autoDateOffset, autoDateDuration }) => {
+                                const newDate = calculateDate({
+                                  date:
+                                    values.dueDateBinding === START_DATE
+                                      ? values.startDate
+                                      : parentValues.current &&
+                                        parentValues.current[values.dueDateBinding],
+                                  duration: autoDateDuration.metric,
+                                  offset:
+                                    autoDateOffset === 'after'
+                                      ? Math.abs(autoDateDuration.value)
+                                      : -Math.abs(autoDateDuration.value),
+                                });
+                                setFieldValue('dueDate', newDate);
+                                setFieldValue('dueDateInterval', {
+                                  [autoDateDuration.metric]:
+                                    autoDateOffset === 'after'
+                                      ? autoDateDuration.value
+                                      : -autoDateDuration.value,
+                                });
+                              }}
+                            >
+                              {({
+                                value: { autoDateDuration, autoDateOffset, autoDateField },
+                                set,
+                              }) => (
+                                <div className={AutoDateWrapperStyle}>
+                                  <div className={AutoDateSyncIconStyle}>
+                                    <Icon icon="SYNC" />
+                                  </div>
+
+                                  <div className={AutoDateOffsetWrapperStyle}>
+                                    <FormField
+                                      name="autoDueDateDuration"
+                                      initValue={{
+                                        ...autoDateDuration,
+                                        value: Math.abs(autoDateDuration.value),
+                                      }}
+                                      setFieldValue={(field, value) =>
+                                        set('autoDateDuration', value)
+                                      }
+                                    >
+                                      {({ name, ...inputHandlers }) => (
+                                        <MetricInputFactory
+                                          name={name}
+                                          metricType="duration"
+                                          metricSelectWidth="60px"
+                                          metricOptionWidth="65px"
+                                          inputWidth="135px"
+                                          {...inputHandlers}
+                                          editable={editable.dueDateBinding}
+                                          hideTooltip
+                                        />
+                                      )}
+                                    </FormField>
+
+                                    <FormField
+                                      name="autoDateOffset"
+                                      initValue={autoDateOffset}
+                                      setFieldValue={set}
+                                      saveOnChange
+                                    >
+                                      {({ ...inputHandlers }) => (
+                                        <SelectInputFactory
+                                          items={[
+                                            {
+                                              label: 'Before',
+                                              value: 'before',
+                                            },
+                                            { label: 'After', value: 'after' },
+                                          ]}
+                                          inputWidth="55px"
+                                          {...inputHandlers}
+                                          editable={editable.dueDateBinding}
+                                          required
+                                          hideDropdownArrow
+                                          hideTooltip
+                                        />
+                                      )}
+                                    </FormField>
+                                  </div>
+
+                                  <FormField
+                                    name="autoDateField"
+                                    initValue={autoDateField}
+                                    setFieldValue={(field, value) => {
+                                      if (values.dueDateBinding !== value) {
+                                        set(field, value);
+                                        setFieldValue('dueDateBinding', value);
+                                        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                          field: value,
+                                          entityId: getByPath('entity.id', task),
+                                          selectedField: 'dueDate',
+                                          autoDateDuration,
+                                          autoDateOffset,
+                                        });
+                                      }
+                                    }}
+                                    saveOnChange
+                                  >
+                                    {({ ...inputHandlers }) => (
+                                      <SelectInputFactory
+                                        {...inputHandlers}
+                                        items={
+                                          startDateSyncUnavailable
+                                            ? [
+                                                {
+                                                  value: START_DATE,
+                                                  label: intl.formatMessage({
+                                                    id: 'modules.Tasks.startDate',
+                                                    defaultMessage: 'START DATE',
+                                                  }),
+                                                },
+                                              ]
+                                            : [
+                                                {
+                                                  value: START_DATE,
+                                                  label: intl.formatMessage({
+                                                    id: 'modules.Tasks.startDate',
+                                                    defaultMessage: 'START DATE',
+                                                  }),
+                                                },
+                                                ...getFieldsByEntity(entity, intl),
+                                              ]
+                                        }
+                                        editable={editable.dueDateBinding}
+                                        required
+                                        hideTooltip
+                                      />
+                                    )}
+                                  </FormField>
+                                </div>
+                              )}
+                            </ObjectValue>
+                          ) : (
+                            <Display color="GRAY_LIGHT" width="200px" height="30px">
+                              {editable.dueDateBinding ? (
+                                <FormattedMessage
+                                  id="modules.Tasks.chooseDataBinding"
+                                  defaultMessage="Choose data to sync from"
+                                />
+                              ) : (
+                                <FormattedMessage
+                                  id="modules.Tasks.noEventBindingChosen"
+                                  defaultMessage="No event binding chosen"
+                                />
+                              )}
+                            </Display>
+                          )}
+                        </GridColumn>
+                      }
+                    />
 
                     <FieldItem
                       label={
@@ -595,252 +823,6 @@ const TaskInfoSection = ({
                       }
                     />
 
-                    <FieldItem
-                      label={
-                        <Label height="30px">
-                          <FormattedMessage id="modules.Tasks.dueDate" defaultMessage="DUE DATE" />
-                        </Label>
-                      }
-                      input={
-                        <GridColumn gap="10px">
-                          <div
-                            className={AutoDateBackgroundStyle(
-                              manualSettings.dueDate ? 'top' : 'bottom'
-                            )}
-                          />
-
-                          <div className={RadioWrapperStyle('top')}>
-                            <RadioInput
-                              align="right"
-                              selected={manualSettings.dueDate}
-                              onToggle={() =>
-                                !manualSettings.dueDate
-                                  ? onChangeBinding({
-                                      type: entity,
-                                      field: 'dueDate',
-                                      isManual: true,
-                                      onChange: setFieldValues,
-                                    })
-                                  : () => {}
-                              }
-                              editable={editable.dueDate}
-                            />
-                          </div>
-
-                          <div className={RadioWrapperStyle('bottom')}>
-                            <RadioInput
-                              align="right"
-                              selected={!manualSettings.dueDate}
-                              onToggle={() =>
-                                manualSettings.dueDate
-                                  ? onChangeBinding({
-                                      type: entity,
-                                      field: 'dueDate',
-                                      isManual: false,
-                                      onChange: setFieldValues,
-                                    })
-                                  : () => {}
-                              }
-                              editable={editable.dueDate}
-                            />
-                          </div>
-
-                          {isInTemplate ? (
-                            <Display
-                              color={manualSettings.dueDate ? 'GRAY' : 'GRAY_LIGHT'}
-                              height="30px"
-                            >
-                              <FormattedMessage
-                                id="modules.Tasks.datePlaceholder"
-                                defaultMessage="yyyy/mm/dd"
-                              />
-                            </Display>
-                          ) : (
-                            <FormField
-                              name="dueDate"
-                              initValue={values.dueDate}
-                              values={values}
-                              validator={validator}
-                              setFieldValue={setFieldValue}
-                            >
-                              {({ name, ...inputHandlers }) => (
-                                <DateInputFactory
-                                  name={name}
-                                  inputColor={
-                                    values.dueDate &&
-                                    isBefore(new Date(values.dueDate), new Date()) &&
-                                    status !== COMPLETED
-                                      ? 'RED'
-                                      : 'BLACK'
-                                  }
-                                  {...inputHandlers}
-                                  originalValue={originalValues[name]}
-                                  editable={editable.dueDate && manualSettings.dueDate}
-                                  hideTooltip={!manualSettings.dueDate}
-                                />
-                              )}
-                            </FormField>
-                          )}
-
-                          {!manualSettings.dueDate ? (
-                            <ObjectValue
-                              value={{
-                                autoDateField: values.dueDateBinding,
-                                ...convertBindingToSelection(values.dueDateInterval),
-                              }}
-                              onChange={({ autoDateOffset, autoDateDuration }) => {
-                                const newDate = calculateDate({
-                                  date:
-                                    values.dueDateBinding === START_DATE
-                                      ? values.startDate
-                                      : parentValues.current &&
-                                        parentValues.current[values.dueDateBinding],
-                                  duration: autoDateDuration.metric,
-                                  offset:
-                                    autoDateOffset === 'after'
-                                      ? Math.abs(autoDateDuration.value)
-                                      : -Math.abs(autoDateDuration.value),
-                                });
-                                setFieldValue('dueDate', newDate);
-                                setFieldValue('dueDateInterval', {
-                                  [autoDateDuration.metric]:
-                                    autoDateOffset === 'after'
-                                      ? autoDateDuration.value
-                                      : -autoDateDuration.value,
-                                });
-                              }}
-                            >
-                              {({
-                                value: { autoDateDuration, autoDateOffset, autoDateField },
-                                set,
-                              }) => (
-                                <div className={AutoDateWrapperStyle}>
-                                  <div className={AutoDateSyncIconStyle}>
-                                    <Icon icon="SYNC" />
-                                  </div>
-
-                                  <div className={AutoDateOffsetWrapperStyle}>
-                                    <FormField
-                                      name="autoDueDateDuration"
-                                      initValue={{
-                                        ...autoDateDuration,
-                                        value: Math.abs(autoDateDuration.value),
-                                      }}
-                                      setFieldValue={(field, value) =>
-                                        set('autoDateDuration', value)
-                                      }
-                                    >
-                                      {({ name, ...inputHandlers }) => (
-                                        <MetricInputFactory
-                                          name={name}
-                                          metricType="duration"
-                                          metricSelectWidth="60px"
-                                          metricOptionWidth="65px"
-                                          inputWidth="135px"
-                                          {...inputHandlers}
-                                          editable={editable.dueDateBinding}
-                                          hideTooltip
-                                        />
-                                      )}
-                                    </FormField>
-
-                                    <FormField
-                                      name="autoDateOffset"
-                                      initValue={autoDateOffset}
-                                      setFieldValue={set}
-                                      saveOnChange
-                                    >
-                                      {({ ...inputHandlers }) => (
-                                        <SelectInputFactory
-                                          items={[
-                                            {
-                                              label: 'Before',
-                                              value: 'before',
-                                            },
-                                            { label: 'After', value: 'after' },
-                                          ]}
-                                          inputWidth="55px"
-                                          {...inputHandlers}
-                                          editable={editable.dueDateBinding}
-                                          required
-                                          hideDropdownArrow
-                                          hideTooltip
-                                        />
-                                      )}
-                                    </FormField>
-                                  </div>
-
-                                  <FormField
-                                    name="autoDateField"
-                                    initValue={autoDateField}
-                                    setFieldValue={(field, value) => {
-                                      if (values.dueDateBinding !== value) {
-                                        set(field, value);
-                                        setFieldValue('dueDateBinding', value);
-                                        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                          field: value,
-                                          entityId: getByPath('entity.id', task),
-                                          selectedField: 'dueDate',
-                                          autoDateDuration,
-                                          autoDateOffset,
-                                        });
-                                      }
-                                    }}
-                                    saveOnChange
-                                  >
-                                    {({ ...inputHandlers }) => (
-                                      <SelectInputFactory
-                                        {...inputHandlers}
-                                        items={
-                                          startDateSyncUnavailable
-                                            ? [
-                                                {
-                                                  value: START_DATE,
-                                                  label: intl.formatMessage({
-                                                    id: 'modules.Tasks.startDate',
-                                                    defaultMessage: 'START DATE',
-                                                  }),
-                                                },
-                                              ]
-                                            : [
-                                                {
-                                                  value: START_DATE,
-                                                  label: intl.formatMessage({
-                                                    id: 'modules.Tasks.startDate',
-                                                    defaultMessage: 'START DATE',
-                                                  }),
-                                                },
-                                                ...getFieldsByEntity(entity, intl),
-                                              ]
-                                        }
-                                        editable={editable.dueDateBinding}
-                                        required
-                                        hideTooltip
-                                      />
-                                    )}
-                                  </FormField>
-                                </div>
-                              )}
-                            </ObjectValue>
-                          ) : (
-                            <Display color="GRAY_LIGHT" width="200px" height="30px">
-                              {editable.dueDateBinding ? (
-                                <FormattedMessage
-                                  id="modules.Tasks.chooseDataBinding"
-                                  defaultMessage="Choose data to sync from"
-                                />
-                              ) : (
-                                <FormattedMessage
-                                  id="modules.Tasks.noEventBindingChosen"
-                                  defaultMessage="No event binding chosen"
-                                />
-                              )}
-                            </Display>
-                          )}
-                        </GridColumn>
-                      }
-                    />
-
                     <FormField
                       name="description"
                       initValue={values.description}
@@ -893,9 +875,9 @@ const TaskInfoSection = ({
                     />
                   </GridColumn>
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
-                      <GridColumn>
+                  <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Order' && (
                         <FieldItem
                           label={
                             <Label>
@@ -914,30 +896,28 @@ const TaskInfoSection = ({
                             />
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
-                    (() => {
-                      const { orderItem, productProvider, product, order } = spreadOrderItem(
-                        task.orderItem
-                      );
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'OrderItem' &&
+                      (() => {
+                        const { orderItem, productProvider, product, order } = spreadOrderItem(
+                          task.orderItem
+                        );
 
-                      const viewable = {
-                        price: hasPermission(ORDER_ITEMS_GET_PRICE),
-                      };
+                        const viewable = {
+                          price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                        };
 
-                      const navigable = {
-                        order: canViewOrderForm,
-                        product: canViewProductForm,
-                      };
+                        const navigable = {
+                          order: canViewOrderForm,
+                          product: canViewProductForm,
+                        };
 
-                      const config = {
-                        hideOrder: false,
-                      };
-                      return (
-                        <GridColumn>
+                        const config = {
+                          hideOrder: false,
+                        };
+                        return (
                           <FieldItem
                             label={
                               <Label>
@@ -958,13 +938,11 @@ const TaskInfoSection = ({
                               />
                             }
                           />
-                        </GridColumn>
-                      );
-                    })()}
+                        );
+                      })()}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
-                      <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Product' && (
                         <FieldItem
                           label={
                             <Label>
@@ -990,12 +968,10 @@ const TaskInfoSection = ({
                             </PartnerPermissionsWrapper>
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'ProductProvider' && (
-                      <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'ProductProvider' && (
                         <FieldItem
                           label={
                             <Label>
@@ -1015,12 +991,10 @@ const TaskInfoSection = ({
                             />
                           }
                         />
-                      </GridColumn>
-                    )}
+                      )}
 
-                  {!hideParentInfo &&
-                    getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
-                      <GridColumn>
+                    {!hideParentInfo &&
+                      getByPathWithDefault('', 'entity.__typename', task) === 'Batch' && (
                         <FieldItem
                           label={
                             <Label>
@@ -1035,8 +1009,110 @@ const TaskInfoSection = ({
                             />
                           }
                         />
-                      </GridColumn>
+                      )}
+
+                    {!isInTemplate && (
+                      <div>
+                        {editable.milestone ? (
+                          <BooleanValue>
+                            {({ value: opened, set: toggleSlide }) => (
+                              <>
+                                {values.milestone ? (
+                                  <div role="presentation" onClick={() => toggleSlide(true)}>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                    <ProjectCard project={values.milestone.project} />
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.milestone"
+                                        defaultMessage="MILESTONE"
+                                      />
+                                    </Label>
+                                    <MilestoneCard milestone={values.milestone} />
+                                  </div>
+                                ) : (
+                                  <>
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                    <DashedPlusButton
+                                      width="195px"
+                                      height="458px"
+                                      onClick={() => toggleSlide(true)}
+                                    />
+                                  </>
+                                )}
+                                <SlideView
+                                  isOpen={opened}
+                                  onRequestClose={() => toggleSlide(false)}
+                                >
+                                  {opened && (
+                                    <SelectProjectAndMilestone
+                                      filter={{
+                                        query: '',
+                                      }}
+                                      project={getByPath('milestone.project', values)}
+                                      milestone={values.milestone}
+                                      onSelect={({ milestone, project }) => {
+                                        setFieldValues({
+                                          milestone: milestone
+                                            ? {
+                                                ...milestone,
+                                                project,
+                                              }
+                                            : null,
+                                        });
+                                        toggleSlide(false);
+                                      }}
+                                      onCancel={() => toggleSlide(false)}
+                                    />
+                                  )}
+                                </SlideView>
+                              </>
+                            )}
+                          </BooleanValue>
+                        ) : (
+                          <>
+                            {values.milestone ? (
+                              <>
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.project"
+                                    defaultMessage="PROJECT"
+                                  />
+                                </Label>
+                                <ProjectCard project={values.milestone.project} />
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.milestone"
+                                    defaultMessage="MILESTONE"
+                                  />
+                                </Label>
+                                <MilestoneCard milestone={values.milestone} />
+                              </>
+                            ) : (
+                              <>
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.project"
+                                    defaultMessage="PROJECT"
+                                  />
+                                </Label>
+                                <GrayCard width="195px" height="458px" />
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
                     )}
+                  </GridColumn>
                 </div>
 
                 <div className={MemoWrapperStyle}>
@@ -1084,48 +1160,18 @@ const TaskInfoSection = ({
                 <div className={TaskStatusWrapperStyle}>
                   <div className={AssignedToStyle}>
                     <GridColumn gap="5px">
-                      <Label height="30px">
-                        <FormattedMessage
-                          id="modules.Tasks.assignedToComplete"
-                          defaultMessage="ASSIGNED TO COMPLETE"
-                        />
-                      </Label>
-
-                      <TaskAssignmentInput
-                        groupIds={groupIds}
-                        users={values.assignedTo}
-                        onChange={newAssignedTo => setFieldValue('assignedTo', newAssignedTo)}
-                        activeUserId={activeUser && activeUser.id}
-                        onActivateUser={
-                          isInTemplate
-                            ? null
-                            : user => {
-                                setFieldValues({
-                                  inProgressBy: user,
-                                  inProgressAt: new Date(),
-                                });
-                                setFieldTouched('inProgressBy');
-                                setFieldTouched('inProgressAt');
-                              }
+                      <UserAssignmentInputFactory
+                        name="assignedTo"
+                        label={
+                          <FormattedMessage
+                            id="modules.Tasks.assignedToComplete"
+                            defaultMessage="ASSIGNED TO COMPLETE"
+                          />
                         }
-                        onDeactivateUser={() => {
-                          if (status === COMPLETED) {
-                            setFieldValues({
-                              completedBy: null,
-                              inProgressAt: null,
-                            });
-                            setFieldTouched('completedBy');
-                            setFieldTouched('completedBy');
-                          } else if (status === IN_PROGRESS) {
-                            setFieldValues({
-                              inProgressBy: null,
-                              inProgressAt: null,
-                            });
-                            setFieldTouched('inProgressBy');
-                            setFieldTouched('inProgressAt');
-                          }
-                        }}
-                        editable={editable.inProgress}
+                        groupIds={groupIds}
+                        values={values.assignedTo}
+                        onChange={setFieldValue}
+                        editable={editable.assignedTo}
                       />
                     </GridColumn>
 
@@ -1142,62 +1188,99 @@ const TaskInfoSection = ({
                           />
                         </Display>
                       ) : (
-                        <>
-                          {activeUser ? (
-                            <TaskStatusInput
-                              activeUser={activeUser}
-                              status={status}
-                              onClick={() => {
-                                setFieldValues({
-                                  completedBy: activeUser,
-                                  completedAt: formatToGraphql(startOfToday()),
-                                });
-                                setFieldTouched('completedBy');
-                                setFieldTouched('completedAt');
-                              }}
-                              editable={
-                                activeUser
-                                  ? editable.completed
-                                  : editable.inProgress && editable.completed
-                              }
-                            />
-                          ) : (
-                            <Display color="GRAY_DARK">
-                              <FormattedMessage
-                                id="modules.Tasks.chooseUser"
-                                defaultMessage="Please choose a user to start the task"
-                              />
-                            </Display>
-                          )}
-                        </>
+                        <TaskStatusInput
+                          task={values}
+                          update={newTask => setFieldValues(newTask)}
+                          editable={editable}
+                        />
                       )}
                     </GridColumn>
                   </div>
 
-                  {status === COMPLETED && (
-                    <FormField
-                      name="completedAt"
-                      initValue={values.completedAt}
-                      values={values}
-                      validator={validator}
-                      setFieldValue={setFieldValue}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={originalValues[name]}
-                          label={
-                            <FormattedMessage
-                              id="modules.Tasks.completedAt"
-                              defaultMessage="DATE COMPLETED"
+                  {(() => {
+                    if (values.completedAt) {
+                      return (
+                        <FormField
+                          name="completedAt"
+                          initValue={values.completedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              required
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.completedAt"
+                                  defaultMessage="DATE COMPLETED"
+                                />
+                              }
+                              editable={editable.completed}
                             />
-                          }
-                          editable={editable.completed}
-                        />
-                      )}
-                    </FormField>
-                  )}
+                          )}
+                        </FormField>
+                      );
+                    }
+                    if (values.skippedAt) {
+                      return (
+                        <FormField
+                          name="skippedAt"
+                          initValue={values.skippedAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              required
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.skippedAt"
+                                  defaultMessage="DATE SKIPPED"
+                                />
+                              }
+                              editable={editable.skipped}
+                            />
+                          )}
+                        </FormField>
+                      );
+                    }
+                    if (values.inProgressAt) {
+                      return (
+                        <FormField
+                          name="inProgressAt"
+                          initValue={values.inProgressAt}
+                          values={values}
+                          validator={validator}
+                          setFieldValue={setFieldValue}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              required
+                              originalValue={originalValues[name]}
+                              label={
+                                <FormattedMessage
+                                  id="modules.Tasks.inProgressAt"
+                                  defaultMessage="DATE INPROGRESS"
+                                />
+                              }
+                              editable={editable.inProgress}
+                            />
+                          )}
+                        </FormField>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   <Divider />
 
@@ -1226,39 +1309,23 @@ const TaskInfoSection = ({
                   </div>
 
                   {values.approvable && (
-                    <>
-                      <ObjectValue defaultValue={values.rejectedBy || values.approvedBy}>
-                        {({ value: userChosen, set: setUserChosen }) => (
+                    <UserConsumer>
+                      {({ user }) => (
+                        <>
                           <div className={AssignedToStyle}>
                             <GridColumn gap="5px">
-                              <Label height="30px">
-                                <FormattedMessage
-                                  id="modules.Tasks.assignedToApprove"
-                                  defaultMessage="ASSIGNED TO APPROVE"
-                                />
-                              </Label>
-
-                              <TaskAssignmentInput
-                                groupIds={groupIds}
-                                users={values.approvers}
-                                onChange={newApprovers => setFieldValue('approvers', newApprovers)}
-                                activeUserId={userChosen && userChosen.id}
-                                onActivateUser={
-                                  isInTemplate
-                                    ? null
-                                    : user => {
-                                        setUserChosen(user);
-                                      }
+                              <UserAssignmentInputFactory
+                                name="approvers"
+                                label={
+                                  <FormattedMessage
+                                    id="modules.Tasks.assignedToApprove"
+                                    defaultMessage="ASSIGNED TO APPROVE"
+                                  />
                                 }
-                                onDeactivateUser={() => {
-                                  setUserChosen(null);
-                                  setFieldValues({
-                                    approvedBy: null,
-                                    approvedAt: null,
-                                    rejectedBy: null,
-                                    rejectedAt: null,
-                                  });
-                                }}
+                                groupIds={groupIds}
+                                values={values.approvers}
+                                onChange={setFieldValue}
+                                editable={editable.approvers}
                               />
                             </GridColumn>
 
@@ -1280,43 +1347,65 @@ const TaskInfoSection = ({
                               ) : (
                                 <>
                                   {isUnapproved ? (
-                                    <>
-                                      {userChosen && userChosen.id ? (
-                                        <ApproveRejectMenu
-                                          width="200px"
-                                          onApprove={() => {
-                                            setFieldValues({
-                                              approvedBy: userChosen,
-                                              approvedAt: formatToGraphql(startOfToday()),
-                                              rejectedBy: null,
-                                              rejectedAt: null,
-                                            });
-                                            setFieldTouched('approvedBy');
-                                            setFieldTouched('approvedAt');
-                                          }}
-                                          onReject={() => {
-                                            setFieldValues({
-                                              approvedBy: null,
-                                              approvedAt: null,
-                                              rejectedBy: userChosen,
-                                              rejectedAt: formatToGraphql(startOfToday()),
-                                            });
-                                            setFieldTouched('rejectedBy');
-                                            setFieldTouched('rejectedAt');
-                                          }}
-                                        />
-                                      ) : (
-                                        <Display color="GRAY_DARK">
-                                          <FormattedMessage
-                                            id="modules.Tasks.chooseUserForApproval"
-                                            defaultMessage="Please choose a user to start the approval"
+                                    <BooleanValue defaultValue={false}>
+                                      {({ value: showMenu, set: toggleShowMenu }) =>
+                                        showMenu ? (
+                                          <ApproveRejectMenu
+                                            width="200px"
+                                            onApprove={() => {
+                                              setFieldValues({
+                                                approvedBy: user,
+                                                approvedAt: formatToGraphql(new Date()),
+                                                rejectedBy: null,
+                                                rejectedAt: null,
+                                              });
+                                              setFieldTouched('approvedBy');
+                                              setFieldTouched('approvedAt');
+                                            }}
+                                            onReject={() => {
+                                              setFieldValues({
+                                                approvedBy: null,
+                                                approvedAt: null,
+                                                rejectedBy: user,
+                                                rejectedAt: formatToGraphql(new Date()),
+                                              });
+                                              setFieldTouched('rejectedBy');
+                                              setFieldTouched('rejectedAt');
+                                            }}
                                           />
-                                        </Display>
-                                      )}
-                                    </>
+                                        ) : (
+                                          <button
+                                            type="button"
+                                            onClick={evt => {
+                                              if (editable.approved && editable.rejected) {
+                                                evt.stopPropagation();
+                                                toggleShowMenu(true);
+                                              }
+                                            }}
+                                            className={UnapprovedButtonStyle(
+                                              editable.approved && editable.rejected
+                                            )}
+                                          >
+                                            <FormattedMessage
+                                              id="modules.Tasks.unapproved"
+                                              defaultMessage="UNAPPROVED"
+                                            />
+                                          </button>
+                                        )
+                                      }
+                                    </BooleanValue>
                                   ) : (
                                     <TaskApprovalStatusInput
+                                      showUser
                                       editable={editable.approved && editable.rejected}
+                                      onClickUser={() => {
+                                        setFieldValues({
+                                          approvedBy: null,
+                                          approvedAt: null,
+                                          rejectedBy: null,
+                                          rejectedAt: null,
+                                        });
+                                      }}
                                       approval={
                                         values.approvedBy && values.approvedBy.id
                                           ? {
@@ -1339,58 +1428,60 @@ const TaskInfoSection = ({
                               )}
                             </GridColumn>
                           </div>
-                        )}
-                      </ObjectValue>
 
-                      {values.approvedBy && values.approvedBy.id && (
-                        <FormField
-                          name="approvedAt"
-                          initValue={values.approvedAt}
-                          values={values}
-                          validator={validator}
-                          setFieldValue={setFieldValue}
-                        >
-                          {({ name, ...inputHandlers }) => (
-                            <DateInputFactory
-                              name={name}
-                              {...inputHandlers}
-                              originalValue={originalValues[name]}
-                              label={
-                                <FormattedMessage
-                                  id="modules.Tasks.approvedDate"
-                                  defaultMessage="APPROVED DATE"
+                          {values.approvedBy && values.approvedBy.id && (
+                            <FormField
+                              name="approvedAt"
+                              initValue={values.approvedAt}
+                              values={values}
+                              validator={validator}
+                              setFieldValue={setFieldValue}
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <DateInputFactory
+                                  name={name}
+                                  required
+                                  {...inputHandlers}
+                                  originalValue={originalValues[name]}
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.Tasks.approvedDate"
+                                      defaultMessage="APPROVED DATE"
+                                    />
+                                  }
+                                  editable={editable.approved}
                                 />
-                              }
-                              editable={editable.approved}
-                            />
+                              )}
+                            </FormField>
                           )}
-                        </FormField>
-                      )}
-                      {values.rejectedBy && values.rejectedBy.id && (
-                        <FormField
-                          name="rejectedAt"
-                          initValue={values.rejectedAt}
-                          values={values}
-                          validator={validator}
-                          setFieldValue={setFieldValue}
-                        >
-                          {({ name, ...inputHandlers }) => (
-                            <DateInputFactory
-                              name={name}
-                              {...inputHandlers}
-                              originalValue={originalValues[name]}
-                              label={
-                                <FormattedMessage
-                                  id="modules.Tasks.rejectedDate"
-                                  defaultMessage="REJECTED DATE"
+                          {values.rejectedBy && values.rejectedBy.id && (
+                            <FormField
+                              name="rejectedAt"
+                              initValue={values.rejectedAt}
+                              values={values}
+                              validator={validator}
+                              setFieldValue={setFieldValue}
+                            >
+                              {({ name, ...inputHandlers }) => (
+                                <DateInputFactory
+                                  name={name}
+                                  required
+                                  {...inputHandlers}
+                                  originalValue={originalValues[name]}
+                                  label={
+                                    <FormattedMessage
+                                      id="modules.Tasks.rejectedDate"
+                                      defaultMessage="REJECTED DATE"
+                                    />
+                                  }
+                                  editable={editable.rejected}
                                 />
-                              }
-                              editable={editable.rejected}
-                            />
+                              )}
+                            </FormField>
                           )}
-                        </FormField>
+                        </>
                       )}
-                    </>
+                    </UserConsumer>
                   )}
                 </div>
               </div>

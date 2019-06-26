@@ -3,6 +3,8 @@ import gql from 'graphql-tag';
 
 import {
   taskWithParentInfoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -30,6 +32,8 @@ export const taskFormQuery = gql`
   }
 
   ${taskWithParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
