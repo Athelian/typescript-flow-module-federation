@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import messages from 'modules/import/messages';
 import {
   ContainerStyle,
   ErrorsStyle,
@@ -10,7 +11,6 @@ import {
   MessageStyle,
   TitleStyle,
 } from './style';
-import messages from '../../messages';
 
 type Props = {
   errors: string[],

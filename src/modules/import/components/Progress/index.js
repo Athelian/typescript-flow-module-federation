@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import messages from 'modules/import/messages';
 import {
   ContainerStyle,
   ProgressContainerStyle,
@@ -9,7 +10,6 @@ import {
   MessageStyle,
   ProgressValueStyle,
 } from './style';
-import messages from '../../messages';
 
 type Props = {
   status: string,
