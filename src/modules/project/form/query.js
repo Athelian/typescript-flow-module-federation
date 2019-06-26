@@ -2,6 +2,8 @@
 import gql from 'graphql-tag';
 import {
   projectFormQueryFragment,
+  milestoneCardFragment,
+  taskCardFragment,
   taskCountFragment,
   tagFragment,
   userAvatarFragment,
@@ -16,6 +18,8 @@ export const projectFormQuery = gql`
   }
 
   ${projectFormQueryFragment}
+  ${milestoneCardFragment}
+  ${taskCardFragment}
   ${taskCountFragment}
   ${tagFragment}
   ${userAvatarFragment}

@@ -60,6 +60,115 @@ export const projectFormQueryFragment = gql`
     tags {
       ...tagFragment
     }
+    milestones {
+      ... on Milestone {
+        ...milestoneCardFragment
+        tasks {
+          ...taskCardFragment
+          ... on Task {
+            entity {
+              ... on Order {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on Product {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on OrderItem {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on Batch {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on Shipment {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        entitiesCount {
+          ... on MilestoneEntitiesCount {
+            products
+            productProviders
+            orders
+            orderItems
+            batches
+            shipments
+            containers
+          }
+        }
+        entitiesRelatedCount {
+          ... on MilestoneEntitiesCount {
+            products
+            productProviders
+            orders
+            orderItems
+            batches
+            shipments
+            containers
+          }
+        }
+      }
+    }
   }
 `;
 
