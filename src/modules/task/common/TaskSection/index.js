@@ -38,10 +38,8 @@ import {
   ORDER_TASK_SET_IN_PROGRESS,
   ORDER_TASK_SET_SKIPPED,
   ORDER_TASK_SET_COMPLETED,
-  ORDER_TASK_SET_ASSIGNEES,
   ORDER_TASK_SET_APPROVED,
   ORDER_TASK_SET_REJECTED,
-  ORDER_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_UPDATE,
@@ -58,10 +56,8 @@ import {
   ORDER_ITEMS_TASK_SET_IN_PROGRESS,
   ORDER_ITEMS_TASK_SET_SKIPPED,
   ORDER_ITEMS_TASK_SET_COMPLETED,
-  ORDER_ITEMS_TASK_SET_ASSIGNEES,
   ORDER_ITEMS_TASK_SET_APPROVED,
   ORDER_ITEMS_TASK_SET_REJECTED,
-  ORDER_ITEMS_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_UPDATE,
@@ -78,10 +74,8 @@ import {
   BATCH_TASK_SET_IN_PROGRESS,
   BATCH_TASK_SET_SKIPPED,
   BATCH_TASK_SET_COMPLETED,
-  BATCH_TASK_SET_ASSIGNEES,
   BATCH_TASK_SET_APPROVED,
   BATCH_TASK_SET_REJECTED,
-  BATCH_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/batch';
 import {
   PRODUCT_UPDATE,
@@ -98,10 +92,8 @@ import {
   PRODUCT_TASK_SET_IN_PROGRESS,
   PRODUCT_TASK_SET_SKIPPED,
   PRODUCT_TASK_SET_COMPLETED,
-  PRODUCT_TASK_SET_ASSIGNEES,
   PRODUCT_TASK_SET_APPROVED,
   PRODUCT_TASK_SET_REJECTED,
-  PRODUCT_TASK_SET_APPROVERS,
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_TASK_CREATE,
   PRODUCT_PROVIDER_TASK_DELETE,
@@ -116,10 +108,8 @@ import {
   PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
   PRODUCT_PROVIDER_TASK_SET_SKIPPED,
   PRODUCT_PROVIDER_TASK_SET_COMPLETED,
-  PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
   PRODUCT_PROVIDER_TASK_SET_APPROVED,
   PRODUCT_PROVIDER_TASK_SET_REJECTED,
-  PRODUCT_PROVIDER_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/product';
 import {
   SHIPMENT_UPDATE,
@@ -136,10 +126,8 @@ import {
   SHIPMENT_TASK_SET_IN_PROGRESS,
   SHIPMENT_TASK_SET_SKIPPED,
   SHIPMENT_TASK_SET_COMPLETED,
-  SHIPMENT_TASK_SET_ASSIGNEES,
   SHIPMENT_TASK_SET_APPROVED,
   SHIPMENT_TASK_SET_REJECTED,
-  SHIPMENT_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/shipment';
 import { ProductTasksContainer } from 'modules/product/form/containers';
 import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
@@ -202,10 +190,8 @@ const getConfig = (
           inProgress: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_IN_PROGRESS]),
           skipped: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_COMPLETED]),
-          assignedTo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_REJECTED]),
-          approvers: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVERS]),
         },
       };
     case 'OrderItem':
@@ -248,11 +234,6 @@ const getConfig = (
             ORDER_ITEMS_TASK_UPDATE,
             ORDER_ITEMS_TASK_SET_COMPLETED,
           ]),
-          assignedTo: hasPermission([
-            TASK_UPDATE,
-            ORDER_ITEMS_TASK_UPDATE,
-            ORDER_ITEMS_TASK_SET_ASSIGNEES,
-          ]),
           approved: hasPermission([
             TASK_UPDATE,
             ORDER_ITEMS_TASK_UPDATE,
@@ -262,11 +243,6 @@ const getConfig = (
             TASK_UPDATE,
             ORDER_ITEMS_TASK_UPDATE,
             ORDER_ITEMS_TASK_SET_REJECTED,
-          ]),
-          approvers: hasPermission([
-            TASK_UPDATE,
-            ORDER_ITEMS_TASK_UPDATE,
-            ORDER_ITEMS_TASK_SET_APPROVERS,
           ]),
         },
       };
@@ -290,10 +266,8 @@ const getConfig = (
           inProgress: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_IN_PROGRESS]),
           skipped: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_COMPLETED]),
-          assignedTo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_REJECTED]),
-          approvers: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVERS]),
         },
       };
     case 'Product':
@@ -320,10 +294,8 @@ const getConfig = (
           ]),
           skipped: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_COMPLETED]),
-          assignedTo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_REJECTED]),
-          approvers: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVERS]),
         },
       };
     case 'ProductProvider':
@@ -374,11 +346,6 @@ const getConfig = (
             PRODUCT_PROVIDER_TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_SET_COMPLETED,
           ]),
-          assignedTo: hasPermission([
-            TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
-          ]),
           approved: hasPermission([
             TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_UPDATE,
@@ -388,11 +355,6 @@ const getConfig = (
             TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_SET_REJECTED,
-          ]),
-          approvers: hasPermission([
-            TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_SET_APPROVERS,
           ]),
         },
       };
@@ -428,18 +390,8 @@ const getConfig = (
             SHIPMENT_TASK_UPDATE,
             SHIPMENT_TASK_SET_COMPLETED,
           ]),
-          assignedTo: hasPermission([
-            TASK_UPDATE,
-            SHIPMENT_TASK_UPDATE,
-            SHIPMENT_TASK_SET_ASSIGNEES,
-          ]),
           approved: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_REJECTED]),
-          approvers: hasPermission([
-            TASK_UPDATE,
-            SHIPMENT_TASK_UPDATE,
-            SHIPMENT_TASK_SET_APPROVERS,
-          ]),
         },
       };
   }
@@ -499,8 +451,8 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                       injectUid({
                         isNew: true,
                         name: `task - ${tasks.length + 1}`,
-                        assignedTo: [],
                         tags: [],
+                        assignedTo: [],
                         approvers: [],
                         approvable: false,
                       }),
