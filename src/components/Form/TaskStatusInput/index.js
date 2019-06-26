@@ -39,19 +39,25 @@ type Props = OptionalProps & {
   },
 };
 
+const defaultEditable = {
+  completed: false,
+  inProgress: false,
+  skipped: false,
+};
+
 const defaultProps = {
   update: () => {},
-  editable: {
-    completed: false,
-    inProgress: false,
-    skipped: false,
-  },
   width: '200px',
   showDate: false,
 };
 
-const TaskStatusInput = ({ task, update, editable, width, showDate }: Props) => {
+const TaskStatusInput = ({ task, update, editable: editableFromProps, width, showDate }: Props) => {
   const { inProgressBy, inProgressAt, skippedBy, skippedAt, completedBy, completedAt } = task;
+
+  const editable = {
+    ...defaultEditable,
+    ...editableFromProps,
+  };
 
   let status;
   let account;
