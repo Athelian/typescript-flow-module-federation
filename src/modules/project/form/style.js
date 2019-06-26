@@ -1,10 +1,9 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
 
 export const ProjectFormWrapperStyle: string = css`
-  ${layout.LAYOUT};
-  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 `;
 

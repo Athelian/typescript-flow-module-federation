@@ -3,7 +3,9 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
-import { WrapperStyle, IconStyle } from './style';
+import GridColumn from 'components/GridColumn';
+import { Display, Label } from 'components/Form';
+import { BindedAndRelatedStyle, IconStyle } from './style';
 
 type Props = {
   binding: {
@@ -28,68 +30,100 @@ type Props = {
 
 export default function BindingAndRelatedEntities({ binding, related }: Props) {
   return (
-    <div className={WrapperStyle}>
-      <div>
-        <Icon icon="INFO" />
-      </div>
-      <div>
+    <GridColumn gap="10px">
+      <div className={BindedAndRelatedStyle}>
+        <div />
+
         <Tooltip
           message={
             <FormattedMessage
               id="modules.Project.bindingEntities"
-              defaultMessage="Binded Entities - Based on Entities binded to this Projec"
+              defaultMessage="Binded Entities - Based on Entities binded to this Project"
             />
           }
         >
           <div>
-            <Icon icon="CONNECT" />
+            <Label align="center">
+              <Icon icon="BINDED" />
+            </Label>
           </div>
         </Tooltip>
-      </div>
-      <div>
+
         <Tooltip
           message={
             <FormattedMessage
               id="modules.Project.relatedEntities"
-              defaultMessage="Related Entities - Based on Tasks in this Project"
+              defaultMessage="Unbinded Entities - Based on Entities of Tasks in this Project that are not binded to this Project"
             />
           }
         >
           <div>
-            <Icon icon="UNLINK" />
+            <Label align="center">
+              <Icon icon="UNBINDED" />
+            </Label>
           </div>
         </Tooltip>
       </div>
-      <div className={IconStyle('ORDER')}>
-        <Icon icon="ORDER" />
+
+      <div className={BindedAndRelatedStyle}>
+        <div className={IconStyle('ORDER')}>
+          <Icon icon="ORDER" />
+        </div>
+
+        <Display align="center">{binding.orders}</Display>
+
+        <Display align="center">{related.orders}</Display>
       </div>
-      <div>{binding.orders}</div>
-      <div>{related.orders}</div>
-      <div className={IconStyle('ORDER')}>
-        <Icon icon="ORDER_ITEM" />
+
+      <div className={BindedAndRelatedStyle}>
+        <div className={IconStyle('ORDER_ITEM')}>
+          <Icon icon="ORDER_ITEM" />
+        </div>
+
+        <Display align="center">{binding.orderItems}</Display>
+
+        <Display align="center">{related.orderItems}</Display>
       </div>
-      <div>{binding.orderItems}</div>
-      <div>{related.orderItems}</div>
-      <div className={IconStyle('BATCH')}>
-        <Icon icon="BATCH" />
+
+      <div className={BindedAndRelatedStyle}>
+        <div className={IconStyle('BATCH')}>
+          <Icon icon="BATCH" />
+        </div>
+
+        <Display align="center">{binding.batches}</Display>
+
+        <Display align="center">{related.batches}</Display>
       </div>
-      <div>{binding.batches}</div>
-      <div>{related.batches}</div>
-      <div className={IconStyle('SHIPMENT')}>
-        <Icon icon="SHIPMENT" />
+
+      <div className={BindedAndRelatedStyle}>
+        <div className={IconStyle('SHIPMENT')}>
+          <Icon icon="SHIPMENT" />
+        </div>
+
+        <Display align="center">{binding.shipments}</Display>
+
+        <Display align="center">{related.shipments}</Display>
       </div>
-      <div>{binding.shipments}</div>
-      <div>{related.shipments}</div>
-      <div className={IconStyle('PRODUCT')}>
-        <Icon icon="PRODUCT" />
+
+      <div className={BindedAndRelatedStyle}>
+        <div className={IconStyle('PRODUCT')}>
+          <Icon icon="PRODUCT" />
+        </div>
+
+        <Display align="center">{binding.products}</Display>
+
+        <Display align="center">{related.products}</Display>
       </div>
-      <div>{binding.products}</div>
-      <div>{related.products}</div>
-      <div className={IconStyle('PRODUCT_PROVIDER')}>
-        <Icon icon="PRODUCT_PROVIDER" />
+
+      <div className={BindedAndRelatedStyle}>
+        <div className={IconStyle('PRODUCT_PROVIDER')}>
+          <Icon icon="PRODUCT_PROVIDER" />
+        </div>
+
+        <Display align="center">{binding.productProviders}</Display>
+
+        <Display align="center">{related.productProviders}</Display>
       </div>
-      <div>{binding.productProviders}</div>
-      <div>{related.productProviders}</div>
-    </div>
+    </GridColumn>
   );
 }

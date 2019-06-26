@@ -1,19 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, fontSizes, colors } from 'styles/common';
+import { colors, fontSizes } from 'styles/common';
 
-export const WrapperStyle: string = css`
-  ${layout.GRID_VERTICAL};
-  ${fontSizes.SMALL};
-  width: 100%;
-  grid-gap: 10px;
-  grid-template-columns: 120px 30px;
+export const TaskInfoStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 1fr 50px;
 `;
 
-export const TitleStyle = (iconColor: string): string => css`
-  text-transform: uppercase;
-  & svg {
-    color: ${colors[iconColor]};
-    margin-right: 5px;
-  }
+export const IconStyle = (color: string): string => css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: ${colors[color]};
+  ${fontSizes.SMALL};
 `;

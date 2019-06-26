@@ -13,7 +13,8 @@ import {
 import validator from 'modules/project/form/validator';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
-import GridColumn from 'components/GridColumn';
+// import GridColumn from 'components/GridColumn';
+import GridRow from 'components/GridRow';
 import MilestonesTimeline from 'components/MilestonesTimeline';
 import {
   FieldItem,
@@ -22,14 +23,21 @@ import {
   TextInputFactory,
   TextAreaInputFactory,
   DateInputFactory,
+  Display,
 } from 'components/Form';
+import FormattedDate from 'components/FormattedDate';
 import { PROJECT_UPDATE } from 'modules/permission/constants/project';
+import { TAG_LIST } from 'modules/permission/constants/tag';
 import messages from 'modules/project/messages';
 import {
   ProjectSectionWrapperStyle,
-  MainFieldsWrapperStyle,
-  BoxWrapperStyle,
+  MainSectionWrapperStyle,
+  ProjectInfoWrapperStyle,
+  DescriptionTagsWrapperStyle,
+  MilestonesTimelineWrapperStyle,
   WarningColorStyle,
+  TasksInfoWrapperStyle,
+  BindedAndRelatedWrapperStyle,
   ExpandWrapperStyle,
 } from './style';
 import TaskStatus from './components/TaskStatus';
@@ -42,19 +50,21 @@ type Props = {
 const ProjectSection = ({ isNew }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  // TODO: Add field level permissions
   const editable = hasPermission([PROJECT_UPDATE]);
-  const [isExpand, setIsExpand] = React.useState(true);
+  const [isExpanded, setIsExpanded] = React.useState(true);
+
   return (
     <>
-      <div className={ProjectSectionWrapperStyle(isExpand)}>
+      <div className={ProjectSectionWrapperStyle(isExpanded)}>
         <Subscribe to={[ProjectInfoContainer]}>
           {({ originalValues: initialValues, state, setFieldValue }) => {
             const values = { ...initialValues, ...state };
             return (
               <>
-                <GridColumn>
-                  <div className={MainFieldsWrapperStyle}>
-                    <GridColumn>
+                <div className={MainSectionWrapperStyle}>
+                  <div className={ProjectInfoWrapperStyle}>
+                    <GridRow>
                       <FormField
                         name="name"
                         initValue={values.name}
@@ -71,9 +81,68 @@ const ProjectSection = ({ isNew }: Props) => {
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.name} />}
                             editable={editable}
+                            vertical
+                            inputAlign="left"
                           />
                         )}
                       </FormField>
+
+                      <FormField
+                        name="dueDate"
+                        initValue={values.dueDate}
+                        values={values}
+                        validator={validator}
+                        setFieldValue={setFieldValue}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            name={name}
+                            {...inputHandlers}
+                            isNew={isNew}
+                            originalValue={initialValues[name]}
+                            label={<FormattedMessage {...messages.dueDate} />}
+                            editable={editable}
+                            vertical
+                            inputAlign="left"
+                          />
+                        )}
+                      </FormField>
+
+                      <Subscribe to={[ProjectMilestonesContainer]}>
+                        {({ lastMilestoneDueDate }) => (
+                          <>
+                            <FieldItem
+                              vertical
+                              label={
+                                <Label height="30px">
+                                  <FormattedMessage {...messages.lastMilestoneDueDate} />
+                                </Label>
+                              }
+                              input={
+                                <Display height="30px" align="left" width="200px">
+                                  <FormattedDate value={lastMilestoneDueDate()} />
+                                </Display>
+                              }
+                            />
+
+                            {lastMilestoneDueDate() && values.dueDate && (
+                              <div
+                                className={WarningColorStyle(
+                                  differenceInCalendarDays(lastMilestoneDueDate(), values.dueDate)
+                                )}
+                              >
+                                {differenceInCalendarDays(lastMilestoneDueDate(), values.dueDate)}
+                                <FormattedMessage
+                                  {...messages.diffBetweenLastMilestoneAndProjectDueDate}
+                                />
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </Subscribe>
+                    </GridRow>
+
+                    <div className={DescriptionTagsWrapperStyle}>
                       <FormField
                         name="description"
                         initValue={values.description}
@@ -90,11 +159,12 @@ const ProjectSection = ({ isNew }: Props) => {
                             label={<FormattedMessage {...messages.description} />}
                             editable={editable}
                             vertical
-                            inputWidth="400px"
-                            inputHeight="115px"
+                            inputWidth="420px"
+                            inputHeight="80px"
                           />
                         )}
                       </FormField>
+
                       <Subscribe to={[ProjectTagsContainer]}>
                         {({ state: { tags }, setFieldValue: changeTags }) => (
                           <FieldItem
@@ -113,82 +183,32 @@ const ProjectSection = ({ isNew }: Props) => {
                                 onChange={(field, value) => {
                                   changeTags(field, value);
                                 }}
-                                editable={editable}
+                                editable={{
+                                  set: editable && hasPermission(TAG_LIST),
+                                  remove: editable,
+                                }}
                               />
                             }
                           />
                         )}
                       </Subscribe>
-                    </GridColumn>
-                    <GridColumn>
-                      <FormField
-                        name="dueDate"
-                        initValue={values.dueDate}
-                        values={values}
-                        validator={validator}
-                        setFieldValue={setFieldValue}
-                      >
-                        {({ name, ...inputHandlers }) => (
-                          <DateInputFactory
-                            name={name}
-                            {...inputHandlers}
-                            isNew={isNew}
-                            originalValue={initialValues[name]}
-                            label={<FormattedMessage {...messages.dueDate} />}
-                            editable={editable}
-                          />
-                        )}
-                      </FormField>
-                      <Subscribe to={[ProjectMilestonesContainer]}>
-                        {({ lastMilestoneDueDate }) => (
-                          <>
-                            <FormField
-                              name="lastMilestoneDueDate"
-                              initValue={lastMilestoneDueDate()}
-                              values={values}
-                              validator={validator}
-                              setFieldValue={setFieldValue}
-                            >
-                              {({ name, ...inputHandlers }) => (
-                                <DateInputFactory
-                                  name={name}
-                                  {...inputHandlers}
-                                  isNew={isNew}
-                                  originalValue={lastMilestoneDueDate()}
-                                  label={<FormattedMessage {...messages.lastMilestoneDueDate} />}
-                                  editable={false}
-                                />
-                              )}
-                            </FormField>
-                            {lastMilestoneDueDate() && values.dueDate && (
-                              <p
-                                className={WarningColorStyle(
-                                  differenceInCalendarDays(lastMilestoneDueDate(), values.dueDate)
-                                )}
-                              >
-                                {differenceInCalendarDays(lastMilestoneDueDate(), values.dueDate)}
-                                <FormattedMessage
-                                  {...messages.diffBetweenLastMilestoneAndProjectDueDate}
-                                />
-                              </p>
-                            )}
-                          </>
-                        )}
-                      </Subscribe>
-                    </GridColumn>
+                    </div>
                   </div>
-                  <div className={BoxWrapperStyle}>
+
+                  <div className={MilestonesTimelineWrapperStyle}>
                     <Subscribe to={[ProjectMilestonesContainer]}>
                       {({ state: { milestones } }) => (
                         <MilestonesTimeline milestones={milestones} />
                       )}
                     </Subscribe>
                   </div>
-                </GridColumn>
-                <div className={BoxWrapperStyle}>
+                </div>
+
+                <div className={TasksInfoWrapperStyle}>
                   <TaskStatus {...values.taskCount} />
                 </div>
-                <div className={BoxWrapperStyle}>
+
+                <div className={BindedAndRelatedWrapperStyle}>
                   <Subscribe to={[ProjectMilestonesContainer]}>
                     {({ countBindingEntities, countRelatedEntities }) => (
                       <BindingAndRelatedEntities
@@ -203,12 +223,13 @@ const ProjectSection = ({ isNew }: Props) => {
           }}
         </Subscribe>
       </div>
+
       <div
         className={ExpandWrapperStyle}
-        onClick={() => setIsExpand(!isExpand)}
+        onClick={() => setIsExpanded(!isExpanded)}
         role="presentation"
       >
-        <Icon icon={isExpand ? 'CHEVRON_DOUBLE_DOWN' : 'CHEVRON_DOUBLE_UP'} />
+        <Icon icon={isExpanded ? 'CHEVRON_DOUBLE_UP' : 'CHEVRON_DOUBLE_DOWN'} />
       </div>
     </>
   );

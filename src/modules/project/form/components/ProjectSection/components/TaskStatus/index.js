@@ -2,8 +2,10 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'components/Icon';
+import GridColumn from 'components/GridColumn';
+import { Label, Display } from 'components/Form';
 import messages from './messages';
-import { WrapperStyle, TitleStyle } from './style';
+import { TaskInfoStyle, IconStyle } from './style';
 
 type Props = {
   count: number,
@@ -27,51 +29,112 @@ export default function TaskStatus({
   approved,
 }: Props) {
   return (
-    <div className={WrapperStyle}>
-      <div className={TitleStyle('BLACK')}>
-        <FormattedMessage {...messages.totalTasks} />
+    <GridColumn gap="10px">
+      <div className={TaskInfoStyle}>
+        <div />
+
+        <Label>
+          <FormattedMessage {...messages.totalTasks} />
+        </Label>
+
+        <Display>{count}</Display>
       </div>
-      <div>{count}</div>
-      <div className={TitleStyle('TEAL')}>
-        <Icon icon="CHECKED" />
-        <FormattedMessage {...messages.completed} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('TEAL')}>
+          <Icon icon="CHECKED" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.completed} />
+        </Label>
+
+        <Display>{completed}</Display>
       </div>
-      <div>{completed}</div>
-      <div className={TitleStyle('GRAY_LIGHT')}>
-        <Icon icon="CANCEL" />
-        <FormattedMessage {...messages.uncompleted} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('TEAL')}>
+          <Icon icon="CLOCK" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.inProgress} />
+        </Label>
+
+        <Display>{inProgress}</Display>
       </div>
-      <div>{remain}</div>
-      <div className={TitleStyle('TEAL')}>
-        <Icon icon="CLOCK" />
-        <FormattedMessage {...messages.inProgress} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('RED')}>
+          <Icon icon="STOPWATCH" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.overdue} />
+        </Label>
+
+        <Display>{delayed}</Display>
       </div>
-      <div>{inProgress}</div>
-      <div className={TitleStyle('ORDER')}>
-        <Icon icon="STOPWATCH" />
-        <FormattedMessage {...messages.overdue} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('GRAY_SUPER_LIGHT')}>
+          <Icon icon="CHECKED" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.uncompleted} />
+        </Label>
+
+        <Display>{remain}</Display>
       </div>
-      <div>{delayed}</div>
-      <div className={TitleStyle('GRAY_DARK')}>
-        <Icon icon="SKIPPED" />
-        <FormattedMessage {...messages.skipped} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('GRAY_DARK')}>
+          <Icon icon="SKIPPED" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.skipped} />
+        </Label>
+
+        <Display>{skipped}</Display>
       </div>
-      <div>{skipped}</div>
-      <div className={TitleStyle('PRODUCT')}>
-        <Icon icon="CANCEL" />
-        <FormattedMessage {...messages.rejected} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('BLUE')}>
+          <Icon icon="CHECKED" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.approved} />
+        </Label>
+
+        <Display>{approved}</Display>
       </div>
-      <div>{rejected}</div>
-      <div className={TitleStyle('ENTITY')}>
-        <Icon icon="CHECKED" />
-        <FormattedMessage {...messages.approved} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('RED')}>
+          <Icon icon="CANCEL" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.rejected} />
+        </Label>
+
+        <Display>{rejected}</Display>
       </div>
-      <div>{approved}</div>
-      <div className={TitleStyle('PRODUCT')}>
-        <Icon icon="CANCEL" />
-        <FormattedMessage {...messages.unapproved} />
+
+      <div className={TaskInfoStyle}>
+        <div className={IconStyle('GRAY_SUPER_LIGHT')}>
+          <Icon icon="CHECKED" />
+        </div>
+
+        <Label>
+          <FormattedMessage {...messages.unapproved} />
+        </Label>
+
+        <Display>{count - (rejected + approved)}</Display>
       </div>
-      <div>{count - (rejected + approved)}</div>
-    </div>
+    </GridColumn>
   );
 }
