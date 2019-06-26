@@ -1,5 +1,6 @@
 // @flow
 import { flatten } from 'lodash';
+import update from 'immutability-helper';
 import { Container } from 'unstated';
 import pluralize from 'pluralize';
 import { camelCase } from 'lodash/fp';
@@ -35,6 +36,19 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   initDetailValues = (milestones: Array<Milestone>) => {
     this.setState({ milestones });
     this.originalValues = { milestones };
+  };
+
+  setMilestoneValue = (id: string, value: Object) => {
+    const index = this.state.milestones.findIndex(milestone => milestone.id === id);
+    this.setState(prevState =>
+      update(prevState, {
+        milestones: {
+          [index]: {
+            $merge: value,
+          },
+        },
+      })
+    );
   };
 
   newMilestone = () => {

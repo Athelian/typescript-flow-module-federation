@@ -24,6 +24,33 @@ Object {
 }
 `;
 
+exports[`milestones container should change the milestone name 1`] = `
+Array [
+  Object {
+    "dueDate": "2019-06-26T10:57:34.256Z",
+    "id": "1",
+    "name": "a",
+    "tasks": Array [
+      Object {
+        "id": 4,
+      },
+    ],
+  },
+  Object {
+    "dueDate": null,
+    "id": "2",
+    "name": "b",
+    "tasks": Array [],
+  },
+  Object {
+    "dueDate": null,
+    "id": "3",
+    "name": "c",
+    "tasks": Array [],
+  },
+]
+`;
+
 exports[`milestones container should return milestone status 1`] = `
 Array [
   Object {

@@ -252,4 +252,64 @@ describe('milestones container', () => {
       },
     ]);
   });
+
+  it('should change the milestone name', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+      {
+        id: '2',
+        name: 'b',
+        dueDate: null,
+        tasks: [],
+      },
+      {
+        id: '3',
+        name: 'c',
+        dueDate: null,
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    const updateValue = {
+      dueDate: '2019-06-26T10:57:34.256Z',
+    };
+    await container.setMilestoneValue('1', updateValue);
+    expect(container.state.milestones).toMatchSnapshot();
+    expect(container.state.milestones[0]).toEqual({
+      id: '1',
+      name: 'a',
+      tasks: [
+        {
+          id: 4,
+        },
+      ],
+      ...updateValue,
+    });
+
+    await container.setMilestoneValue('1', {
+      name: 'abc',
+    });
+
+    expect(container.state.milestones[0]).toEqual({
+      id: '1',
+      name: 'abc',
+      tasks: [
+        {
+          id: 4,
+        },
+      ],
+      ...updateValue,
+    });
+  });
 });
