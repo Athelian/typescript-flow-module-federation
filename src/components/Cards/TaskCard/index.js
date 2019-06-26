@@ -32,7 +32,7 @@ import {
   TaskApprovalStatusInput,
   TaskStatusInput,
 } from 'components/Form';
-import type { TaskEditable } from './type.js.flow';
+import type { TaskCardEditableProps } from './type.js.flow';
 import BaseCard from '../BaseCard';
 import validator from './validator';
 import {
@@ -68,7 +68,7 @@ type OptionalProps = {
   hideParentInfo: boolean,
   onClick: Function,
   saveOnBlur: Function,
-  editable: TaskEditable,
+  editable: TaskCardEditableProps,
   navigable: {
     project: boolean,
   },

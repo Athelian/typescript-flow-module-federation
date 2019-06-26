@@ -11,7 +11,7 @@ import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
 import { TemplateCard, GrayCard } from 'components/Cards';
-import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
+import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -179,7 +179,7 @@ const getConfig = (
   canOrderingTasks: boolean,
   canUpdateTaskTemplate: boolean,
   tasksContainer: Object,
-  editable: TaskEditable,
+  editable: TaskCardEditableProps,
 } => {
   switch (type) {
     case 'Order':
@@ -457,9 +457,9 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
     canAddTasks,
     canDeleteTasks,
     canOrderingTasks,
-    editable,
     canUpdateTaskTemplate,
     tasksContainer,
+    editable,
   } = getConfig(type, hasPermission);
 
   if (!canViewList) return null;

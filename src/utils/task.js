@@ -1,5 +1,4 @@
 // @flow
-import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
 import { getByPath } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import {
@@ -121,6 +120,19 @@ import {
   SHIPMENT_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/shipment';
 
+export type TaskEditableProps = {
+  name: boolean,
+  startDate: boolean,
+  dueDate: boolean,
+  inProgress: boolean,
+  skipped: boolean,
+  completed: boolean,
+  approved: boolean,
+  rejected: boolean,
+  assignedTo: boolean,
+  approvers: boolean,
+};
+
 export const parseGroupIds = (task: Object) => {
   const entity = getByPath('entity.__typename', task);
 
@@ -162,7 +174,7 @@ export const parseGroupIds = (task: Object) => {
 export const checkEditableFromEntity = (
   type: string,
   hasPermission: Function
-): TaskEditable & {
+): TaskEditableProps & {
   startDateBinding: boolean,
   dueDateBinding: boolean,
   approvable: boolean,

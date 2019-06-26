@@ -1,15 +1,12 @@
 // @flow
-import * as React from 'react';
+import React from 'react';
 import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { parseGroupIds } from 'utils/task';
 import SlideView from 'components/SlideView';
-import usePartnerPermission from 'hooks/usePartnerPermission';
-import usePermission from 'hooks/usePermission';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 import { TaskCard, CardAction } from 'components/Cards';
-import { TASK_UPDATE } from 'modules/permission/constants/task';
 import { ItemStyle, EmptyMessageStyle } from './style';
 
 type Props = {
@@ -24,8 +21,6 @@ type Props = {
 };
 
 const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable, type }: Props) => {
-  const { isOwner } = usePartnerPermission();
-  const { hasPermission } = usePermission(isOwner);
   if (tasks.length === 0) {
     return (
       <div className={EmptyMessageStyle}>
@@ -81,7 +76,6 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
                   }}
                   isInTemplate
                   parentEntity={type}
-                  editable={hasPermission(TASK_UPDATE)}
                   task={{ ...omit(task, ['entity']), sort: index }}
                   onSave={value => {
                     selectTaskSlideToggle(false);

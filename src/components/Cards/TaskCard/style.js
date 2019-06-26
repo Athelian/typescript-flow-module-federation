@@ -159,7 +159,7 @@ export const MilestoneIconStyle = (has: boolean = false): string => css`
 
 export const TaskStatusWrapperStyle: string = css`
   height: 65px;
-  width: 200px;
+  width: 195px;
   padding: 0 10px;
 `;
 
