@@ -6,26 +6,24 @@ import { getOperationAST } from 'graphql/utilities/getOperationAST';
 import { print } from 'graphql/language/printer';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory';
-import { ApolloLink, Observable, type Operation } from 'apollo-link';
-import { createHttpLink } from 'apollo-link-http';
+import { ApolloLink, NextLink, Observable, type Operation } from 'apollo-link';
+import { createUploadLink } from 'apollo-upload-client';
 import { onError } from 'apollo-link-error';
 import { isDevEnvironment } from './utils/env';
 import introspectionQueryResultData from './generated/fragmentTypes.json';
 import logger from './utils/logger';
 
 class SubscriptionSSE {
-  // $FlowFixMe missing EventSource https://github.com/facebook/flow/issues/6493
-  source: ?EventSource;
+  source: EventSource | null = null;
 
-  subscribe(operation, handler) {
+  subscribe(operation: Operation, handler: (data: any) => void) {
     const { query, variables, operationName } = operation;
 
     this.source = new EventSource(
       encodeURI(
-        `${process.env.ZENPORT_SERVER_URL ||
-          ''}/graphql?query=${query}&operationName=${operationName}&variables=${JSON.stringify(
-          variables
-        )}`
+        `${process.env.ZENPORT_SERVER_URL || ''}/graphql?query=${print(
+          query
+        )}&operationName=${operationName}&variables=${JSON.stringify(variables)}`
       ),
       { withCredentials: true }
     );
@@ -54,23 +52,22 @@ class SubscriptionSSE {
   unsubscribe() {
     if (this.source) {
       this.source.close();
+      this.source = null;
     }
   }
 }
 
-const SSELink = new ApolloLink((operation: Operation, forward) => {
+const SSELink = new ApolloLink((operation: Operation, forward?: NextLink) => {
   const operationAST = getOperationAST(operation.query, operation.operationName);
 
-  if (!operationAST || operationAST.operation !== 'subscription') {
+  if (forward && (!operationAST || operationAST.operation !== 'subscription')) {
     return forward(operation);
   }
 
   return new Observable(observer => {
     const subscription = new SubscriptionSSE();
 
-    subscription.subscribe(Object.assign(operation, { query: print(operation.query) }), data =>
-      observer.next({ data })
-    );
+    subscription.subscribe(operation, data => observer.next({ data }));
 
     return () => subscription.unsubscribe();
   });
@@ -103,7 +100,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-const httpLink = createHttpLink({
+const httpWithUploadLink = createUploadLink({
   uri: `${process.env.ZENPORT_SERVER_URL || ''}/graphql`,
   credentials: 'include',
 });
@@ -129,7 +126,7 @@ const defaultOptions = {
 };
 
 const client: Object = new ApolloClient({
-  link: ApolloLink.from([errorLink, SSELink, httpLink]),
+  link: ApolloLink.from([errorLink, SSELink, httpWithUploadLink]),
   cache,
   defaultOptions,
 });

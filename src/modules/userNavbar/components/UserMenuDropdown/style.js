@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { fontSizes, presets, colors, shadows, borderRadiuses, transitions } from 'styles/common';
 
-export const UserMenuDropDownWrapperStyle = (isOpen: boolean): string => css`
+export const UserMenuDropDownWrapperStyle = (isOpen: boolean, isShowImport: boolean): string => css`
   position: absolute;
   top: 55px;
   right: 0;
@@ -12,7 +12,7 @@ export const UserMenuDropDownWrapperStyle = (isOpen: boolean): string => css`
   width: 150px;
   background: ${colors.WHITE};
   ${borderRadiuses.MAIN};
-  height: ${isOpen ? '80px' : '0px'};
+  height: ${isOpen ? (isShowImport ? '120px' : '80px') : '0px'};
   ${transitions.EXPAND};
   overflow: hidden;
 `;
