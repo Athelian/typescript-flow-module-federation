@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 // @flow
 import { css } from 'react-emotion';
 import { fontSizes, presets, colors, shadows, borderRadiuses, transitions } from 'styles/common';

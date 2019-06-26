@@ -1,3 +1,4 @@
+/* eslint-disable graphql/template-strings */
 // @flow
 import gql from 'graphql-tag';
 import { commentFragment, eventFragment } from '../timeline/query';
