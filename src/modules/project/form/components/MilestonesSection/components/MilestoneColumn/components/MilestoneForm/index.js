@@ -6,7 +6,13 @@ import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import Icon from 'components/Icon';
+import {
+  MilestoneStatusWrapperStyle,
+  MilestoneStatusIconStyle,
+} from 'components/Cards/MilestoneCard/style';
 import GridColumn from 'components/GridColumn';
+import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { TextInputFactory, DateInputFactory } from 'components/Form';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
@@ -67,7 +73,6 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   />
                 )}
               </FormField>
-
               <FormField
                 name="dueDate"
                 initValue={values.dueDate}
@@ -88,6 +93,28 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   />
                 )}
               </FormField>
+              {values.completedAt ? (
+                <>
+                  <div className={MilestoneStatusWrapperStyle(true)}>
+                    <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
+                    <div className={MilestoneStatusIconStyle}>
+                      <Icon icon="CHECKED" />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className={MilestoneStatusWrapperStyle(false)}>
+                  <FormattedMessage id="components.card.unCompleted" defaultMessage="UNCOMPLETED" />
+                  <div className={MilestoneStatusIconStyle}>
+                    <Icon icon="CANCEL" />
+                  </div>
+                </div>
+              )}
+              <NewButton
+                label={
+                  <FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />
+                }
+              />
             </GridColumn>
           </div>
         );
