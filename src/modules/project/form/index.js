@@ -4,6 +4,7 @@ import * as React from 'react';
 import { isEquals } from 'utils/fp';
 import { SectionWrapper } from 'components/Form';
 import ProjectSection from './components/ProjectSection';
+import MilestonesSection from './components/MilestonesSection';
 import { ProjectFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -39,6 +40,9 @@ export default class ProjectForm extends React.Component<Props> {
       <div className={ProjectFormWrapperStyle}>
         <SectionWrapper id="project_projectSection">
           <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
+        </SectionWrapper>
+        <SectionWrapper id="project_milestonesSection">
+          <MilestonesSection />
         </SectionWrapper>
       </div>
     );

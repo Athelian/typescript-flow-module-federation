@@ -19,6 +19,9 @@ type Props = {|
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
   onChangeColumns: MilestoneMap => void,
+  editable: {
+    createMilestone: boolean,
+  },
 |};
 
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -123,7 +126,7 @@ export default class Board extends Component<Props> {
   };
 
   render() {
-    const { columns, ordered, withScrollableColumns } = this.props;
+    const { columns, ordered, withScrollableColumns, editable } = this.props;
 
     const board = (
       <Droppable
@@ -144,11 +147,13 @@ export default class Board extends Component<Props> {
               />
             ))}
             {provided.placeholder}
-            <Subscribe to={[ProjectMilestonesContainer]}>
-              {({ newMilestone }) => {
-                return <NewButtonColumn onCreate={newMilestone} />;
-              }}
-            </Subscribe>
+            {editable.createMilestone && (
+              <Subscribe to={[ProjectMilestonesContainer]}>
+                {({ newMilestone }) => {
+                  return <NewButtonColumn onCreate={newMilestone} />;
+                }}
+              </Subscribe>
+            )}
           </div>
         )}
       </Droppable>
