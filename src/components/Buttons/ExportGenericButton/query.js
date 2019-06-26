@@ -14,8 +14,8 @@ export const exportExtensionsQuery = gql`
 export const genericExportQuery = gql`
   query genericExport($extension: String!, $columns: [String!]!, $rows: [[String]!]!) {
     genericExport(extension: $extension, columns: $columns, rows: $rows) {
-      ... on File {
-        path
+      ... on Export {
+        id
       }
     }
   }
