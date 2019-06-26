@@ -13,7 +13,6 @@ import {
 import validator from 'modules/project/form/validator';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
-// import GridColumn from 'components/GridColumn';
 import GridRow from 'components/GridRow';
 import MilestonesTimeline from 'components/MilestonesTimeline';
 import {
@@ -26,7 +25,13 @@ import {
   Display,
 } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
-import { PROJECT_UPDATE } from 'modules/permission/constants/project';
+import {
+  PROJECT_UPDATE,
+  PROJECT_SET_NAME,
+  PROJECT_SET_DESCRIPTION,
+  PROJECT_SET_DUE_DATE,
+  PROJECT_SET_TAGS,
+} from 'modules/permission/constants/project';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import messages from 'modules/project/messages';
 import {
@@ -50,8 +55,6 @@ type Props = {
 const ProjectSection = ({ isNew }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
-  // TODO: Add field level permissions
-  const editable = hasPermission([PROJECT_UPDATE]);
   const [isExpanded, setIsExpanded] = React.useState(true);
 
   return (
@@ -80,7 +83,7 @@ const ProjectSection = ({ isNew }: Props) => {
                             required
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.name} />}
-                            editable={editable}
+                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_NAME])}
                             vertical
                             inputAlign="left"
                           />
@@ -101,7 +104,7 @@ const ProjectSection = ({ isNew }: Props) => {
                             isNew={isNew}
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.dueDate} />}
-                            editable={editable}
+                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DUE_DATE])}
                             vertical
                             inputAlign="left"
                           />
@@ -157,7 +160,7 @@ const ProjectSection = ({ isNew }: Props) => {
                             isNew={isNew}
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.description} />}
-                            editable={editable}
+                            editable={hasPermission([PROJECT_UPDATE, PROJECT_SET_DESCRIPTION])}
                             vertical
                             inputWidth="420px"
                             inputHeight="80px"
@@ -184,8 +187,10 @@ const ProjectSection = ({ isNew }: Props) => {
                                   changeTags(field, value);
                                 }}
                                 editable={{
-                                  set: editable && hasPermission(TAG_LIST),
-                                  remove: editable,
+                                  set:
+                                    hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]) &&
+                                    hasPermission(TAG_LIST),
+                                  remove: hasPermission([PROJECT_UPDATE, PROJECT_SET_TAGS]),
                                 }}
                               />
                             }
