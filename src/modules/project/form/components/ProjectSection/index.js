@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { differenceInCalendarDays } from 'date-fns';
+import { parseISO, differenceInCalendarDays } from 'date-fns';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -131,10 +131,16 @@ const ProjectSection = ({ isNew }: Props) => {
                             {lastMilestoneDueDate() && values.dueDate && (
                               <div
                                 className={WarningColorStyle(
-                                  differenceInCalendarDays(lastMilestoneDueDate(), values.dueDate)
+                                  differenceInCalendarDays(
+                                    parseISO(lastMilestoneDueDate()),
+                                    parseISO(values.dueDate)
+                                  )
                                 )}
                               >
-                                {differenceInCalendarDays(lastMilestoneDueDate(), values.dueDate)}
+                                {differenceInCalendarDays(
+                                  parseISO(lastMilestoneDueDate()),
+                                  parseISO(values.dueDate)
+                                )}{' '}
                                 <FormattedMessage
                                   {...messages.diffBetweenLastMilestoneAndProjectDueDate}
                                 />

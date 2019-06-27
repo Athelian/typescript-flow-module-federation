@@ -142,7 +142,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
           completed: 0,
           dueDate: null,
           isCompleted: false,
-          name: 'Milestone 1',
+          name: 'Milestone - 1',
           tasks: [],
         },
       ]
