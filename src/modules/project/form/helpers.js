@@ -1,7 +1,7 @@
 // @flow
 import type { Task } from 'generated/graphql';
 import memoize from 'memoize-one';
-import { comparator, sort, reverse } from 'ramda';
+import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
 
 type SortField =
@@ -48,46 +48,65 @@ function sortBy(
     case 'startDate':
     case 'dueDate': {
       compareBy = comparator((firstItem, secondItem) =>
-        compareByNumber(
-          getByPathWithDefault(0, field, firstItem),
-          getByPathWithDefault(0, field, secondItem)
-        )
+        direction === 'desc'
+          ? !compareByNumber(
+              getByPathWithDefault(0, field, firstItem),
+              getByPathWithDefault(0, field, secondItem)
+            )
+          : compareByNumber(
+              getByPathWithDefault(0, field, firstItem),
+              getByPathWithDefault(0, field, secondItem)
+            )
       );
       break;
     }
 
     case 'name': {
       compareBy = comparator((firstItem, secondItem) =>
-        compareByName(
-          getByPathWithDefault('', field, firstItem),
-          getByPathWithDefault('', field, secondItem)
-        )
+        direction === 'desc'
+          ? !compareByName(
+              getByPathWithDefault('', field, firstItem),
+              getByPathWithDefault('', field, secondItem)
+            )
+          : compareByName(
+              getByPathWithDefault('', field, firstItem),
+              getByPathWithDefault('', field, secondItem)
+            )
       );
       break;
     }
 
     case 'entity': {
       compareBy = comparator((firstItem, secondItem) =>
-        compareByEntity(
-          getByPathWithDefault('', 'entity.__typename', firstItem),
-          getByPathWithDefault('', 'entity.__typename', secondItem)
-        )
+        direction === 'desc'
+          ? !compareByEntity(
+              getByPathWithDefault('', 'entity.__typename', firstItem),
+              getByPathWithDefault('', 'entity.__typename', secondItem)
+            )
+          : compareByEntity(
+              getByPathWithDefault('', 'entity.__typename', firstItem),
+              getByPathWithDefault('', 'entity.__typename', secondItem)
+            )
       );
       break;
     }
 
     default: {
       compareBy = comparator((firstItem, secondItem) =>
-        compareByNumber(
-          getByPathWithDefault(0, 'milestoneSort', firstItem),
-          getByPathWithDefault(0, 'milestoneSort', secondItem)
-        )
+        direction === 'desc'
+          ? !compareByNumber(
+              getByPathWithDefault(0, 'milestoneSort', firstItem),
+              getByPathWithDefault(0, 'milestoneSort', secondItem)
+            )
+          : compareByNumber(
+              getByPathWithDefault(0, 'milestoneSort', firstItem),
+              getByPathWithDefault(0, 'milestoneSort', secondItem)
+            )
       );
     }
   }
 
   const result = sort(compareBy, tasks);
-  if (direction === 'desc') return reverse(result);
 
   return result;
 }
