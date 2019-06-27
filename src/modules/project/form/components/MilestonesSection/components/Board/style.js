@@ -1,17 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
+import { scrollbars } from 'styles/common';
 
-export const ParentContainerStyle = css`
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+export const MilestonesSectionWrapperStyle: string = css`
+  display: flex;
+  flex: 1;
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: overlay;
+  ${scrollbars.MAIN};
 `;
 
-export const ContainerStyle: string = css`
-  min-height: 100vh;
-  /* like display:flex but will allow bleeding over the window width */
-  min-width: 100vw;
-  display: inline-flex;
-`;
-
-export default ParentContainerStyle;
+export default MilestonesSectionWrapperStyle;

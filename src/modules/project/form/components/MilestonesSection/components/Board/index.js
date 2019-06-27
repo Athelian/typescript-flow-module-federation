@@ -7,14 +7,13 @@ import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import MilestoneColumn from '../MilestoneColumn';
 import NewButtonColumn from '../NewButtonColumn';
-import { ContainerStyle, ParentContainerStyle } from './style';
+import { MilestonesSectionWrapperStyle } from './style';
 
 type MilestoneMap = {
   [id: string]: Array<Task>,
 };
 
-type Props = {|
-  withScrollableColumns?: boolean,
+type Props = {
   columns: Object,
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
@@ -22,7 +21,7 @@ type Props = {|
   editable: {
     createMilestone: boolean,
   },
-|};
+};
 
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
   const result = Array.from(list);
@@ -126,25 +125,18 @@ export default class Board extends Component<Props> {
   };
 
   render() {
-    const { columns, ordered, withScrollableColumns, editable } = this.props;
+    const { columns, ordered, editable } = this.props;
 
     const board = (
-      <Droppable
-        droppableId="board"
-        type="COLUMN"
-        direction="horizontal"
-        ignoreContainerClipping={withScrollableColumns}
-      >
+      <Droppable droppableId="board" type="COLUMN" direction="horizontal" ignoreContainerClipping>
         {(provided: DroppableProvided) => (
-          <div className={ContainerStyle} ref={provided.innerRef} {...provided.droppableProps}>
+          <div
+            className={MilestonesSectionWrapperStyle}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
             {ordered.map((key: string, index: number) => (
-              <MilestoneColumn
-                key={key}
-                index={index}
-                id={key}
-                tasks={columns[key]}
-                isScrollable={withScrollableColumns}
-              />
+              <MilestoneColumn key={key} index={index} id={key} tasks={columns[key]} />
             ))}
             {provided.placeholder}
             {editable.createMilestone && (
@@ -159,10 +151,6 @@ export default class Board extends Component<Props> {
       </Droppable>
     );
 
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        {withScrollableColumns ? <div className={ParentContainerStyle}>{board}</div> : board}
-      </DragDropContext>
-    );
+    return <DragDropContext onDragEnd={this.onDragEnd}>{board}</DragDropContext>;
   }
 }

@@ -11,7 +11,6 @@ import {
   MilestoneStatusWrapperStyle,
   MilestoneStatusIconStyle,
 } from 'components/Cards/MilestoneCard/style';
-import GridColumn from 'components/GridColumn';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { TextInputFactory, DateInputFactory } from 'components/Form';
@@ -23,7 +22,7 @@ import {
 } from 'modules/permission/constants/milestone';
 import validator from './validator';
 import messages from './messages';
-import { WrapperStyle } from './style';
+import { MilestoneHeaderWrapperStyle } from './style';
 
 type Props = {
   provided: DraggableProvided,
@@ -50,75 +49,73 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
           });
         };
         return (
-          <div className={WrapperStyle(isDragging)} {...provided.dragHandleProps}>
-            <GridColumn>
-              <FormField
-                name="name"
-                initValue={values.name}
-                values={values}
-                validator={validator}
-                setFieldValue={onChangeValue}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <TextInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    required
-                    originalValue={initialValues[name]}
-                    label={<FormattedMessage {...messages.name} />}
-                    editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
-                    vertical
-                    inputAlign="left"
-                  />
-                )}
-              </FormField>
-              <FormField
-                name="dueDate"
-                initValue={values.dueDate}
-                values={values}
-                validator={validator}
-                setFieldValue={onChangeValue}
-              >
-                {({ name, ...inputHandlers }) => (
-                  <DateInputFactory
-                    name={name}
-                    {...inputHandlers}
-                    isNew={isNew}
-                    originalValue={initialValues[name]}
-                    label={<FormattedMessage {...messages.dueDate} />}
-                    editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
-                    vertical
-                    inputAlign="left"
-                  />
-                )}
-              </FormField>
-              {values.completedAt ? (
-                <>
-                  <div className={MilestoneStatusWrapperStyle(true)}>
-                    <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
-                    <div className={MilestoneStatusIconStyle}>
-                      <Icon icon="CHECKED" />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className={MilestoneStatusWrapperStyle(false)}>
-                  <FormattedMessage id="components.card.unCompleted" defaultMessage="UNCOMPLETED" />
-                  <div className={MilestoneStatusIconStyle}>
-                    <Icon icon="CANCEL" />
-                  </div>
-                </div>
+          <div className={MilestoneHeaderWrapperStyle(isDragging)} {...provided.dragHandleProps}>
+            <FormField
+              name="name"
+              initValue={values.name}
+              values={values}
+              validator={validator}
+              setFieldValue={onChangeValue}
+            >
+              {({ name, ...inputHandlers }) => (
+                <TextInputFactory
+                  name={name}
+                  {...inputHandlers}
+                  isNew={isNew}
+                  required
+                  originalValue={initialValues[name]}
+                  editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
+                  vertical
+                  inputAlign="left"
+                  inputWidth="205px"
+                />
               )}
+            </FormField>
 
-              <div>Total tasks: {(values.tasks || []).length}</div>
+            <FormField
+              name="dueDate"
+              initValue={values.dueDate}
+              values={values}
+              validator={validator}
+              setFieldValue={onChangeValue}
+            >
+              {({ name, ...inputHandlers }) => (
+                <DateInputFactory
+                  name={name}
+                  {...inputHandlers}
+                  isNew={isNew}
+                  originalValue={initialValues[name]}
+                  label={<FormattedMessage {...messages.dueDate} />}
+                  editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
+                  inputAlign="left"
+                  labelWidth="80px"
+                  inputWidth="125px"
+                />
+              )}
+            </FormField>
 
-              <NewButton
-                label={
-                  <FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />
-                }
-              />
-            </GridColumn>
+            {/* TODO: Make status clickable w/ dialog */}
+            {values.completedAt ? (
+              <div className={MilestoneStatusWrapperStyle(true)}>
+                <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
+                <div className={MilestoneStatusIconStyle}>
+                  <Icon icon="CHECKED" />
+                </div>
+              </div>
+            ) : (
+              <div className={MilestoneStatusWrapperStyle(false)}>
+                <FormattedMessage id="components.card.unCompleted" defaultMessage="UNCOMPLETED" />
+                <div className={MilestoneStatusIconStyle}>
+                  <Icon icon="CANCEL" />
+                </div>
+              </div>
+            )}
+
+            {/* TODO: Add Task Ring UI */}
+
+            <NewButton
+              label={<FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />}
+            />
           </div>
         );
       }}

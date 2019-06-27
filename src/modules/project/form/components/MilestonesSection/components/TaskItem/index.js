@@ -3,7 +3,7 @@ import React from 'react';
 import type { DraggableProvided } from 'react-beautiful-dnd';
 import type { Task } from 'generated/graphql';
 import { TaskCard } from 'components/Cards';
-import { ContainerStyle } from './style';
+import { TaskItemWrapperStyle } from './style';
 
 type Props = {
   task: Task,
@@ -13,10 +13,10 @@ type Props = {
   position: number,
 };
 
-function TaskItem({ task, position, isDragging, isGroupedOver, provided }: Props) {
+function TaskItem({ task, position, isDragging, provided }: Props) {
   return (
     <div
-      className={ContainerStyle(isDragging, Boolean(isGroupedOver))}
+      className={TaskItemWrapperStyle(isDragging)}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}

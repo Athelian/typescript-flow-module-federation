@@ -1,11 +1,13 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
+import { shadows } from 'styles/common';
 
-export const ContainerStyle: string = css`
-  ${layout.VERTICAL};
-  align-items: center;
+export const MilestoneColumnWrapperStyle: string = css`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   width: 235px;
+  ${shadows.HEADER};
 `;
 
-export default ContainerStyle;
+export default MilestoneColumnWrapperStyle;

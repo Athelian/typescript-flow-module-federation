@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
-import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
+import { injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
@@ -12,8 +12,6 @@ import { UIConsumer } from 'modules/ui';
 import logger from 'utils/logger';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
-import JumpToSection from 'components/JumpToSection';
-import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryForm from 'components/common/QueryForm';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
@@ -199,18 +197,6 @@ class ProjectFormModule extends React.PureComponent<Props> {
                   navBar={
                     <CurrentNavBar>
                       <EntityIcon icon="PROJECT" color="PROJECT" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="project_projectSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Projects.project"
-                              defaultMessage="PROJECT"
-                            />
-                          }
-                          icon="PROJECT"
-                        />
-                      </JumpToSection>
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) =>
                           !isNewOrClone && (

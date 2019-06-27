@@ -1,11 +1,23 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors } from 'styles/common';
+import { layout, shadows, colors, transitions, borderRadiuses } from 'styles/common';
 
-export const WrapperStyle = (isDragging: boolean) => css`
-  display: flex;
-  transition: background-color 0.2s ease;
-  ${isDragging && `background: ${colors.WHITE}`};
+export const MilestoneHeaderWrapperStyle = (isDragging: boolean) => css`
+  ${layout.GRID_VERTICAL};
+  grid-gap: 10px;
+  justify-content: center;
+  justify-items: center;
+  ${transitions.MAIN};
+  background-color: ${colors.WHITE};
+  ${shadows.HEADER};
+  padding: 10px 0;
+  position: relative;
+  ${isDragging &&
+    `
+    ${borderRadiuses.MAIN};
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  `}
 `;
 
-export default WrapperStyle;
+export default MilestoneHeaderWrapperStyle;

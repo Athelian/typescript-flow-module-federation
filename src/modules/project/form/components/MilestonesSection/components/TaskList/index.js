@@ -3,20 +3,17 @@ import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import type {
   DroppableProvided,
-  DroppableStateSnapshot,
   DraggableProvided,
   DraggableStateSnapshot,
 } from 'react-beautiful-dnd';
 import type { Task } from 'generated/graphql';
-import { DropZoneStyle, WrapperStyle, ScrollContainerStyle } from './style';
+import { MilestoneTaskListBodyStyle } from './style';
 import TaskItem from '../TaskItem';
 
 type Props = {|
   listId?: string,
   listType?: string,
   tasks: Task[],
-  internalScroll?: boolean,
-  scrollContainerStyle?: Object,
   isDropDisabled?: boolean,
   style?: Object,
   ignoreContainerClipping?: boolean,
@@ -43,26 +40,9 @@ const InnerTaskList = React.memo(function InnerTaskList({ tasks }: TaskListProps
   ));
 });
 
-type InnerListProps = {|
-  dropProvided: DroppableProvided,
-  tasks: Task[],
-|};
-
-function InnerList(props: InnerListProps) {
-  const { tasks, dropProvided } = props;
-  return (
-    <div className={DropZoneStyle} ref={dropProvided.innerRef}>
-      <InnerTaskList tasks={tasks} />
-      {dropProvided.placeholder}
-    </div>
-  );
-}
-
 export default function TaskList(props: Props) {
   const {
     ignoreContainerClipping,
-    internalScroll,
-    scrollContainerStyle,
     isDropDisabled,
     listId = 'LIST',
     listType,
@@ -77,23 +57,17 @@ export default function TaskList(props: Props) {
       ignoreContainerClipping={ignoreContainerClipping}
       isDropDisabled={isDropDisabled}
     >
-      {(dropProvided: DroppableProvided, dropSnapshot: DroppableStateSnapshot) => (
+      {(dropProvided: DroppableProvided) => (
         <div
-          className={WrapperStyle({
-            isDraggingOver: dropSnapshot.isDraggingOver,
-            isDraggingFrom: Boolean(dropSnapshot.draggingFromThisWith),
+          className={MilestoneTaskListBodyStyle({
             isDropDisabled: Boolean(isDropDisabled),
           })}
           style={style}
           {...dropProvided.droppableProps}
+          ref={dropProvided.innerRef}
         >
-          {internalScroll ? (
-            <div className={ScrollContainerStyle} style={scrollContainerStyle}>
-              <InnerList tasks={tasks} dropProvided={dropProvided} />
-            </div>
-          ) : (
-            <InnerList tasks={tasks} dropProvided={dropProvided} />
-          )}
+          <InnerTaskList tasks={tasks} />
+          {dropProvided.placeholder}
         </div>
       )}
     </Droppable>

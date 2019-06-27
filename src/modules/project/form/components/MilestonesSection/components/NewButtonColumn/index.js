@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { DashedPlusButton } from 'components/Form';
-import { ContainerStyle } from './style';
+import { AddMilestoneButtonWrapperStyle } from './style';
 
 type Props = {|
   onCreate: () => void,
@@ -9,8 +9,8 @@ type Props = {|
 
 export default function NewButtonColumn({ onCreate }: Props) {
   return (
-    <div className={ContainerStyle}>
-      <DashedPlusButton width="195px" height="215px" onClick={onCreate} />
+    <div className={AddMilestoneButtonWrapperStyle}>
+      <DashedPlusButton width="195px" height="140px" onClick={onCreate} />
     </div>
   );
 }

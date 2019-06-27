@@ -4,7 +4,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import type { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import type { Task } from 'generated/graphql';
 import { colors } from 'styles/common';
-import { ContainerStyle } from './style';
+import { MilestoneColumnWrapperStyle } from './style';
 import MilestoneForm from './components/MilestoneForm';
 import TaskList from '../TaskList';
 
@@ -12,14 +12,17 @@ type Props = {|
   id: string,
   tasks: Array<Task>,
   index: number,
-  isScrollable?: boolean,
 |};
 
-export default function MilestoneColumn({ id, index, tasks, isScrollable }: Props) {
+export default function MilestoneColumn({ id, index, tasks }: Props) {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-        <div className={ContainerStyle} ref={provided.innerRef} {...provided.draggableProps}>
+        <div
+          className={MilestoneColumnWrapperStyle}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
           <MilestoneForm milestoneId={id} isDragging={snapshot.isDragging} provided={provided} />
           <TaskList
             listId={id}
@@ -28,7 +31,6 @@ export default function MilestoneColumn({ id, index, tasks, isScrollable }: Prop
               backgroundColor: snapshot.isDragging ? colors.TEAL : null,
             }}
             tasks={tasks}
-            internalScroll={isScrollable}
           />
         </div>
       )}

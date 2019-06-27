@@ -1,11 +1,10 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout } from 'styles/common';
 
-export const ContainerStyle: string = css`
-  ${layout.VERTICAL};
-  align-items: center;
+export const AddMilestoneButtonWrapperStyle: string = css`
   width: 235px;
+  display: flex;
+  padding: 20px;
 `;
 
-export default ContainerStyle;
+export default AddMilestoneButtonWrapperStyle;

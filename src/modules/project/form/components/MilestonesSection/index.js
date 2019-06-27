@@ -35,7 +35,6 @@ export default function MilestonesSection() {
           <Board
             columns={initial}
             ordered={Object.keys(initial)}
-            withScrollableColumns
             onChangeOrdering={changeMilestoneOrdering}
             onChangeColumns={changeMilestones}
             editable={{
