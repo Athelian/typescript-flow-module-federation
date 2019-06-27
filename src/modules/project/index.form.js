@@ -137,11 +137,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
     projectMilestonesState.initDetailValues(
       milestones || [
         {
+          id: uuid(),
           total: 0,
           completed: 0,
           dueDate: null,
           isCompleted: false,
-          name: '',
+          name: 'Milestone 1',
+          tasks: [],
         },
       ]
     );

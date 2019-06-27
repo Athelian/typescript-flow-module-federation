@@ -3,9 +3,12 @@
 import * as React from 'react';
 import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
+import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import SelectTasks from 'providers/SelectTasks';
+import SlideView from 'components/SlideView';
 import Icon from 'components/Icon';
 import {
   MilestoneStatusWrapperStyle,
@@ -44,14 +47,17 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
           (originalValues.milestones || []).find(milestone => milestone.id === milestoneId) || {};
 
         const onChangeValue = (field, value) => {
-          setMilestoneValue(milestoneId, {
-            [field]: value,
-          });
+          const [id, fieldName] = field.split('.') || [];
+          if (id) {
+            setMilestoneValue(id, {
+              [fieldName]: value,
+            });
+          }
         };
         return (
           <div className={MilestoneHeaderWrapperStyle(isDragging)} {...provided.dragHandleProps}>
             <FormField
-              name="name"
+              name={`${milestoneId}.name`}
               initValue={values.name}
               values={values}
               validator={validator}
@@ -73,7 +79,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
             </FormField>
 
             <FormField
-              name="dueDate"
+              name={`${milestoneId}.dueDate`}
               initValue={values.dueDate}
               values={values}
               validator={validator}
@@ -113,9 +119,37 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
 
             {/* TODO: Add Task Ring UI */}
 
-            <NewButton
-              label={<FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />}
-            />
+            <BooleanValue>
+              {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
+                <>
+                  <NewButton
+                    label={
+                      <FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />
+                    }
+                    onClick={() => selectTasksSlideToggle(true)}
+                  />
+                  <SlideView
+                    isOpen={selectTasksIsOpen}
+                    onRequestClose={() => selectTasksSlideToggle(false)}
+                  >
+                    {selectTasksIsOpen && (
+                      <SelectTasks
+                        filter={{}}
+                        selectedTasks={values.tasks || []}
+                        onSelect={selected => {
+                          selectTasksSlideToggle(false);
+                          onChangeValue(`${milestoneId}.tasks`, [
+                            ...(values.tasks || []),
+                            ...selected,
+                          ]);
+                        }}
+                        onCancel={() => selectTasksSlideToggle(false)}
+                      />
+                    )}
+                  </SlideView>
+                </>
+              )}
+            </BooleanValue>
           </div>
         );
       }}
