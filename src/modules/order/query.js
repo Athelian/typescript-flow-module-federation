@@ -29,8 +29,8 @@ export const orderTimelineQuery = gql`
 export const orderExportQuery = gql`
   query orderExport($id: ID!, $templateId: ID!) {
     orderExport(id: $id, templateId: $templateId) {
-      ... on File {
-        path
+      ... on Export {
+        id
       }
     }
   }
@@ -39,8 +39,8 @@ export const orderExportQuery = gql`
 export const ordersExportQuery = gql`
   query ordersExport($filterBy: OrderFilterInput, $sortBy: OrderSortInput, $templateId: ID!) {
     ordersExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId) {
-      ... on File {
-        path
+      ... on Export {
+        id
       }
     }
   }
