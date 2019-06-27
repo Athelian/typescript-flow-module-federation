@@ -30,14 +30,10 @@ function compareByNumber(firstNumber: number, secondNumber: number) {
 }
 
 function compareByName(firstString: string, secondString: string) {
-  if (firstString.toLowerCase() < secondString.toLowerCase()) {
-    return true;
-  }
-
-  return false;
+  return firstString.toLowerCase() < secondString.toLowerCase();
 }
 
-function compareByEntity(firstEntity: number, secondEntity: number) {
+function compareByEntity(firstEntity: string, secondEntity: string) {
   return ENTITIES.indexOf(firstEntity) > ENTITIES.indexOf(secondEntity);
 }
 
