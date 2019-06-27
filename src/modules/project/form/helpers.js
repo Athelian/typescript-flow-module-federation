@@ -78,9 +78,9 @@ function sortBy(
 
     default: {
       compareBy = comparator((firstItem, secondItem) =>
-        compareByEntity(
-          getByPathWithDefault('', 'milestoneSort', firstItem),
-          getByPathWithDefault('', 'milestoneSort', secondItem)
+        compareByNumber(
+          getByPathWithDefault(0, 'milestoneSort', firstItem),
+          getByPathWithDefault(0, 'milestoneSort', secondItem)
         )
       );
     }
