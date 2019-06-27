@@ -7,6 +7,7 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import useHover from 'hooks/useHover';
 import SelectTasks from 'providers/SelectTasks';
 import SlideView from 'components/SlideView';
 import TaskRing from 'components/TaskRing';
@@ -26,7 +27,7 @@ import {
 } from 'modules/permission/constants/milestone';
 import validator from './validator';
 import messages from './messages';
-import { MilestoneHeaderWrapperStyle } from './style';
+import { MilestoneHeaderWrapperStyle, TrashIconStyle, RingIconStyle } from './style';
 
 type Props = {
   provided: DraggableProvided,
@@ -37,6 +38,7 @@ type Props = {
 export default function MilestoneForm({ provided, milestoneId, isDragging }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const [hoverRef, isHovered] = useHover();
   // uuid will return '-' so that is the way to detect the milestone is new or from API
   const isNew = milestoneId.includes('-');
   return (
@@ -56,7 +58,18 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
           }
         };
         return (
-          <div className={MilestoneHeaderWrapperStyle(isDragging)} {...provided.dragHandleProps}>
+          <div
+            ref={hoverRef}
+            className={MilestoneHeaderWrapperStyle(isDragging)}
+            {...provided.dragHandleProps}
+          >
+            <div
+              className={TrashIconStyle(Boolean(isHovered))}
+              role="presentation"
+              onClick={console.warn}
+            >
+              <Icon icon="REMOVE" />
+            </div>
             <FormField
               name={`${milestoneId}.name`}
               initValue={values.name}
@@ -118,7 +131,9 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               </div>
             )}
 
-            <TaskRing tasks={values.tasks || []} />
+            <div className={RingIconStyle}>
+              <TaskRing tasks={values.tasks || []} />
+            </div>
 
             <BooleanValue>
               {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
