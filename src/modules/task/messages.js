@@ -2,6 +2,10 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
+  default: {
+    id: 'modules.Tasks.default',
+    defaultMessage: 'Default',
+  },
   createdAt: {
     id: 'modules.Tasks.createdAt',
     defaultMessage: 'Date Created',

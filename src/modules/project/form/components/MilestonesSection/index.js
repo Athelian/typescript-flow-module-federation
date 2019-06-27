@@ -53,6 +53,7 @@ function MilestonesSection({ intl }: Props) {
   const { hasPermission } = usePermission(isOwner);
 
   const sortFields = [
+    { title: intl.formatMessage(messages.default), value: 'default' },
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.name), value: 'name' },
