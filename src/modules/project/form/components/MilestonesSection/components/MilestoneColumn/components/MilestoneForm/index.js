@@ -9,6 +9,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SelectTasks from 'providers/SelectTasks';
 import SlideView from 'components/SlideView';
+import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
 import {
   MilestoneStatusWrapperStyle,
@@ -117,7 +118,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               </div>
             )}
 
-            {/* TODO: Add Task Ring UI */}
+            <TaskRing tasks={values.tasks || []} />
 
             <BooleanValue>
               {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
