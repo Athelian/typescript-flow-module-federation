@@ -86,7 +86,7 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
 
   return (
     <ArrayValue>
-      {({ value: selected, push: onPush }) => (
+      {({ value: selected, push: onPush, set: onSet }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
@@ -175,7 +175,11 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
                 selectable
                 task={item}
                 selected={selected.includes(item)}
-                onSelect={() => onPush(item)}
+                onSelect={() =>
+                  selected.includes(item)
+                    ? onSet(selected.filter(selectedItem => selectedItem.id !== item.id))
+                    : onPush(item)
+                }
               />
             )}
           />
