@@ -5,6 +5,7 @@ import { EntityIcon, SortInput, SearchInput, StatusToggleTabs } from 'components
 type OptionalProps = {
   icon?: string,
   renderIcon: Function,
+  searchable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -22,6 +23,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  searchable: true,
   renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
 
@@ -43,6 +45,7 @@ export default function FilterToolBar({
   sortFields,
   filtersAndSort,
   onChange,
+  searchable,
 }: Props) {
   return (
     <>
@@ -69,22 +72,25 @@ export default function FilterToolBar({
           })
         }
       />
-      <SearchInput
-        value={filtersAndSort.filter.query}
-        name="search"
-        onClear={() =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, query: '' },
-          })
-        }
-        onChange={newQuery =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, query: newQuery },
-          })
-        }
-      />
+
+      {searchable && (
+        <SearchInput
+          value={filtersAndSort.filter.query}
+          name="search"
+          onClear={() =>
+            onChange({
+              ...filtersAndSort,
+              filter: { ...filtersAndSort.filter, query: '' },
+            })
+          }
+          onChange={newQuery =>
+            onChange({
+              ...filtersAndSort,
+              filter: { ...filtersAndSort.filter, query: newQuery },
+            })
+          }
+        />
+      )}
     </>
   );
 }
