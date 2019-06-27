@@ -1,14 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
+.emotion-1 {
+  position: relative;
+}
+
+.emotion-1:hover > button {
+  opacity: 1;
+}
+
+.emotion-4 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.emotion-2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  border-radius: 999px;
+  height: 40px;
+  width: 200px;
+  cursor: inherit;
+  padding: 5px;
+  background-color: #0b6ede;
+  color: #ffffff;
+}
+
+.emotion-5:focus {
+  outline: 0;
+}
+
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 14px;
+  background-color: #ccc;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 <div
-  class="css-rfzx9k"
+  class="emotion-5"
 >
   <div
-    class="css-1j4c87r"
+    class="emotion-1"
   >
     <div
-      class="css-1go8iek"
+      class="emotion-0"
       tabindex="-1"
     >
       <span>
@@ -17,17 +111,17 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
     </div>
   </div>
   <div
-    class="css-yp9swi"
+    class="emotion-4"
   >
     <div
-      class="css-1n122ji"
+      class="emotion-2"
     >
       <span>
         APPROVED
       </span>
     </div>
     <div
-      class="css-1n122ji"
+      class="emotion-2"
     >
       <span>
         4/24/2019
@@ -52,89 +146,72 @@ exports[`TaskApprovalStatusInput approved, showUser, showDate 1`] = `
 </div>
 `;
 
-exports[`TaskApprovalStatusInput editable 1`] = `
-<div>
-  <div
-    class="css-rfzx9k"
-  >
-    <div
-      class="css-1j4c87r"
-    >
-      <div
-        class="css-1go8iek"
-        tabindex="-1"
-      >
-        <span>
-          T
-        </span>
-      </div>
-      <button
-        class="css-1269jga"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          class="svg-inline--fa fa-times fa-w-11 fa-fw "
-          data-icon="times"
-          data-prefix="fas"
-          focusable="false"
-          role="img"
-          viewBox="0 0 352 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
-            fill="currentColor"
-          />
-        </svg>
-      </button>
-    </div>
-    <div
-      class="css-yp9swi"
-    >
-      <div
-        class="css-1n122ji"
-      >
-        <span>
-          APPROVED
-        </span>
-      </div>
-      <div
-        class="css-1n122ji"
-      >
-        <span>
-          4/24/2019
-        </span>
-      </div>
-    </div>
-    <svg
-      aria-hidden="true"
-      class="svg-inline--fa fa-check-circle fa-w-16 fa-fw "
-      data-icon="check-circle"
-      data-prefix="fas"
-      focusable="false"
-      role="img"
-      viewBox="0 0 512 512"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
-        fill="currentColor"
-      />
-    </svg>
-  </div>
-</div>
-`;
-
 exports[`TaskApprovalStatusInput rejected 1`] = `
+.emotion-1 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.emotion-0 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  border-radius: 999px;
+  height: 40px;
+  width: 200px;
+  cursor: inherit;
+  padding: 5px;
+  background-color: #ef4848;
+  color: #ffffff;
+}
+
+.emotion-2:focus {
+  outline: 0;
+}
+
 <div
-  class="css-8ryxmz"
+  class="emotion-2"
 >
   <div
-    class="css-yp9swi"
+    class="emotion-1"
   >
     <div
-      class="css-1n122ji"
+      class="emotion-0"
     >
       <span>
         REJECTED

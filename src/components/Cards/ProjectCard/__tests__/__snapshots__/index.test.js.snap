@@ -1,12 +1,465 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Cards render ProjectCard 1`] = `
+.emotion-33 {
+  display: grid;
+  grid-template-columns: 185px;
+  grid-gap: 5px;
+  padding: 5px 5px 10px 5px;
+}
+
+.emotion-25 {
+  width: 100%;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 5px;
+}
+
+.emotion-19 {
+  height: 20px;
+  width: 100%;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.emotion-19 > :first-child {
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+}
+
+.emotion-19 > :last-child {
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
+}
+
+.emotion-24 {
+  height: 20px;
+  width: 100%;
+  display: grid;
+  grid-auto-columns: min-content;
+  grid-auto-flow: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.emotion-2 {
+  width: 100%;
+  padding: 0 15px 0 0;
+}
+
+.emotion-26 {
+  padding: 0 5px;
+}
+
+.emotion-34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 195px;
+  height: 214px;
+}
+
+.emotion-32 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+  grid-gap: 5px;
+  overflow: hidden;
+  width: 100%;
+  padding: 0 5px;
+}
+
+.emotion-35 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  position: relative;
+  cursor: pointer;
+}
+
+.emotion-35:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  color: #fff;
+  background: #802FD9;
+  cursor: pointer;
+  z-index: 1;
+  box-shadow: -1px 1px 5px rgba(0,0,0,0.15);
+  border-radius: 0 5px 0 5px;
+}
+
+.emotion-0:focus {
+  outline: 0;
+}
+
+.emotion-0:hover,
+.emotion-0:focus {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.emotion-0:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 0 5px 0 0;
+  box-shadow: 5px 0 0 0 #802FD9;
+  z-index: -1;
+}
+
+.emotion-0:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 0 5px 0 0;
+  box-shadow: 0 -5px 0 0 #802FD9;
+  z-index: -1;
+}
+
+.emotion-1 {
+  position: relative;
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+  text-align: left;
+  min-width: 0;
+  width: 100%;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  padding: 0 5px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.emotion-5 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.emotion-3 {
+  width: 100%;
+  height: 20px;
+  max-height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #aaa;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 5px;
+  text-align: left;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+.emotion-4 {
+  position: relative;
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+  text-align: right;
+  min-width: 0;
+  width: 100%;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  padding: 0 5px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.emotion-9 {
+  height: 1px;
+  background-color: #ddd;
+  width: 100%;
+}
+
+.emotion-16 {
+  background-color: #11d1a6;
+  border: 1px solid #11d1a6;
+  height: inherit;
+  width: 40%;
+  min-width: 20px;
+}
+
+.emotion-17 {
+  background-color: #ffffff;
+  border: 1px solid #11d1a6;
+  height: inherit;
+  width: 40%;
+  min-width: 20px;
+}
+
+.emotion-18 {
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  height: inherit;
+  width: 20%;
+  min-width: 20px;
+}
+
+.emotion-20 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #11d1a6;
+  border: 1px solid #11d1a6;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-20 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-21 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 1px solid #11d1a6;
+  color: #11d1a6;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-21 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-22 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  color: #555555;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-22 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-23 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  color: #aaa;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-23 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-27 {
+  border-radius: 5px;
+  font-size: 12px;
+  min-height: 18px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  background-color: #123456;
+  padding: 0 5px;
+  font-weight: bold;
+  color: #ffffff;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.emotion-28 {
+  border-radius: 5px;
+  font-size: 12px;
+  min-height: 18px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  background-color: #FF00FF;
+  padding: 0 5px;
+  font-weight: bold;
+  color: #ffffff;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 <div
-  class="css-16dyits"
+  class="emotion-35"
   id=""
 >
   <button
-    class="css-1tmldnl"
+    class="emotion-0"
     type="button"
   >
     <svg
@@ -26,32 +479,32 @@ exports[`Cards render ProjectCard 1`] = `
     </svg>
   </button>
   <div
-    class="css-1wsm69r"
+    class="emotion-34"
   >
     <div
-      class="css-5vwma5"
+      class="emotion-33"
     >
       <div
-        class="css-1ymjl0v"
+        class="emotion-2"
       >
         <div
-          class="css-19flw6m"
+          class="emotion-1"
         >
           PROJECT TITLE
         </div>
       </div>
       <div
-        class="css-19wgwnm"
+        class="emotion-5"
       >
         <div
-          class="css-12hroh9"
+          class="emotion-3"
         >
           <span>
             DUE DATE
           </span>
         </div>
         <div
-          class="css-b6ifgt"
+          class="emotion-4"
         >
           <span>
             6/30/2019
@@ -59,17 +512,17 @@ exports[`Cards render ProjectCard 1`] = `
         </div>
       </div>
       <div
-        class="css-19wgwnm"
+        class="emotion-5"
       >
         <div
-          class="css-12hroh9"
+          class="emotion-3"
         >
           <span>
             MILESTONES
           </span>
         </div>
         <div
-          class="css-b6ifgt"
+          class="emotion-4"
         >
           
           <span>
@@ -79,20 +532,20 @@ exports[`Cards render ProjectCard 1`] = `
         </div>
       </div>
       <div
-        class="css-ar71m2"
+        class="emotion-9"
       />
       <div
-        class="css-19wgwnm"
+        class="emotion-5"
       >
         <div
-          class="css-12hroh9"
+          class="emotion-3"
         >
           <span>
             TASKS
           </span>
         </div>
         <div
-          class="css-b6ifgt"
+          class="emotion-4"
         >
           
           <span>
@@ -102,17 +555,17 @@ exports[`Cards render ProjectCard 1`] = `
         </div>
       </div>
       <div
-        class="css-19wgwnm"
+        class="emotion-5"
       >
         <div
-          class="css-12hroh9"
+          class="emotion-3"
         >
           <span>
             OVERDUE
           </span>
         </div>
         <div
-          class="css-b6ifgt"
+          class="emotion-4"
         >
           
           <span>
@@ -122,29 +575,29 @@ exports[`Cards render ProjectCard 1`] = `
         </div>
       </div>
       <div
-        class="css-ar7jq1"
+        class="emotion-26"
       >
         <div
-          class="css-10q8dqb"
+          class="emotion-25"
         >
           <div
-            class="css-toukby"
+            class="emotion-19"
           >
             <div
-              class="css-yedefi"
+              class="emotion-16"
             />
             <div
-              class="css-15i5amq"
+              class="emotion-17"
             />
             <div
-              class="css-14pjm7c"
+              class="emotion-18"
             />
           </div>
           <div
-            class="css-1lwluhx"
+            class="emotion-24"
           >
             <div
-              class="css-7d1hvd"
+              class="emotion-20"
             >
               <svg
                 aria-hidden="true"
@@ -164,7 +617,7 @@ exports[`Cards render ProjectCard 1`] = `
               2
             </div>
             <div
-              class="css-29mzby"
+              class="emotion-21"
             >
               <svg
                 aria-hidden="true"
@@ -184,7 +637,7 @@ exports[`Cards render ProjectCard 1`] = `
               2
             </div>
             <div
-              class="css-ricg38"
+              class="emotion-22"
             >
               <svg
                 aria-hidden="true"
@@ -204,7 +657,7 @@ exports[`Cards render ProjectCard 1`] = `
               0
             </div>
             <div
-              class="css-72tgzx"
+              class="emotion-23"
             >
               1
             </div>
@@ -212,30 +665,30 @@ exports[`Cards render ProjectCard 1`] = `
         </div>
       </div>
       <div
-        class="css-udh7f1"
+        class="emotion-32"
       >
         <div
-          class="css-1gjilff"
+          class="emotion-27"
         >
           tag1
         </div>
         <div
-          class="css-1sdky1k"
+          class="emotion-28"
         >
           tag2
         </div>
         <div
-          class="css-1sdky1k"
+          class="emotion-28"
         >
           tag2
         </div>
         <div
-          class="css-1sdky1k"
+          class="emotion-28"
         >
           tag2
         </div>
         <div
-          class="css-1sdky1k"
+          class="emotion-28"
         >
           tag2
         </div>
@@ -247,12 +700,465 @@ exports[`Cards render ProjectCard 1`] = `
 
 exports[`Cards render ProjectCard 2`] = `
 <DocumentFragment>
-  <div
-    class="css-16dyits"
+  .emotion-33 {
+  display: grid;
+  grid-template-columns: 185px;
+  grid-gap: 5px;
+  padding: 5px 5px 10px 5px;
+}
+
+.emotion-25 {
+  width: 100%;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 5px;
+}
+
+.emotion-19 {
+  height: 20px;
+  width: 100%;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.emotion-19 > :first-child {
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+}
+
+.emotion-19 > :last-child {
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
+}
+
+.emotion-24 {
+  height: 20px;
+  width: 100%;
+  display: grid;
+  grid-auto-columns: min-content;
+  grid-auto-flow: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.emotion-2 {
+  width: 100%;
+  padding: 0 15px 0 0;
+}
+
+.emotion-26 {
+  padding: 0 5px;
+}
+
+.emotion-34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 195px;
+  height: 214px;
+}
+
+.emotion-32 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min-content;
+  grid-gap: 5px;
+  overflow: hidden;
+  width: 100%;
+  padding: 0 5px;
+}
+
+.emotion-35 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+  position: relative;
+  cursor: pointer;
+}
+
+.emotion-35:hover {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  color: #fff;
+  background: #802FD9;
+  cursor: pointer;
+  z-index: 1;
+  box-shadow: -1px 1px 5px rgba(0,0,0,0.15);
+  border-radius: 0 5px 0 5px;
+}
+
+.emotion-0:focus {
+  outline: 0;
+}
+
+.emotion-0:hover,
+.emotion-0:focus {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.emotion-0:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 0 5px 0 0;
+  box-shadow: 5px 0 0 0 #802FD9;
+  z-index: -1;
+}
+
+.emotion-0:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 0 5px 0 0;
+  box-shadow: 0 -5px 0 0 #802FD9;
+  z-index: -1;
+}
+
+.emotion-1 {
+  position: relative;
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+  text-align: left;
+  min-width: 0;
+  width: 100%;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  padding: 0 5px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.emotion-5 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.emotion-3 {
+  width: 100%;
+  height: 20px;
+  max-height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #aaa;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 5px;
+  text-align: left;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+.emotion-4 {
+  position: relative;
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+  text-align: right;
+  min-width: 0;
+  width: 100%;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  padding: 0 5px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.emotion-9 {
+  height: 1px;
+  background-color: #ddd;
+  width: 100%;
+}
+
+.emotion-16 {
+  background-color: #11d1a6;
+  border: 1px solid #11d1a6;
+  height: inherit;
+  width: 40%;
+  min-width: 20px;
+}
+
+.emotion-17 {
+  background-color: #ffffff;
+  border: 1px solid #11d1a6;
+  height: inherit;
+  width: 40%;
+  min-width: 20px;
+}
+
+.emotion-18 {
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  height: inherit;
+  width: 20%;
+  min-width: 20px;
+}
+
+.emotion-20 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #11d1a6;
+  border: 1px solid #11d1a6;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-20 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-21 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #ffffff;
+  border: 1px solid #11d1a6;
+  color: #11d1a6;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-21 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-22 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #ccc;
+  border: 1px solid #ccc;
+  color: #555555;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-22 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-23 {
+  height: 20px;
+  width: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-overflow: clip;
+  border-radius: 999px;
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  color: #aaa;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  padding: 0 2px;
+}
+
+.emotion-23 > svg {
+  margin: 0 2px 0 0;
+}
+
+.emotion-27 {
+  border-radius: 5px;
+  font-size: 12px;
+  min-height: 18px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  background-color: #123456;
+  padding: 0 5px;
+  font-weight: bold;
+  color: #ffffff;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.emotion-28 {
+  border-radius: 5px;
+  font-size: 12px;
+  min-height: 18px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  background-color: #FF00FF;
+  padding: 0 5px;
+  font-weight: bold;
+  color: #ffffff;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+<div
+    class="emotion-35"
     id=""
   >
     <button
-      class="css-1tmldnl"
+      class="emotion-0"
       type="button"
     >
       <svg
@@ -272,32 +1178,32 @@ exports[`Cards render ProjectCard 2`] = `
       </svg>
     </button>
     <div
-      class="css-1wsm69r"
+      class="emotion-34"
     >
       <div
-        class="css-5vwma5"
+        class="emotion-33"
       >
         <div
-          class="css-1ymjl0v"
+          class="emotion-2"
         >
           <div
-            class="css-19flw6m"
+            class="emotion-1"
           >
             PROJECT TITLE
           </div>
         </div>
         <div
-          class="css-19wgwnm"
+          class="emotion-5"
         >
           <div
-            class="css-12hroh9"
+            class="emotion-3"
           >
             <span>
               DUE DATE
             </span>
           </div>
           <div
-            class="css-b6ifgt"
+            class="emotion-4"
           >
             <span>
               6/30/2019
@@ -305,17 +1211,17 @@ exports[`Cards render ProjectCard 2`] = `
           </div>
         </div>
         <div
-          class="css-19wgwnm"
+          class="emotion-5"
         >
           <div
-            class="css-12hroh9"
+            class="emotion-3"
           >
             <span>
               MILESTONES
             </span>
           </div>
           <div
-            class="css-b6ifgt"
+            class="emotion-4"
           >
             <span>
               0
@@ -323,20 +1229,20 @@ exports[`Cards render ProjectCard 2`] = `
           </div>
         </div>
         <div
-          class="css-ar71m2"
+          class="emotion-9"
         />
         <div
-          class="css-19wgwnm"
+          class="emotion-5"
         >
           <div
-            class="css-12hroh9"
+            class="emotion-3"
           >
             <span>
               TASKS
             </span>
           </div>
           <div
-            class="css-b6ifgt"
+            class="emotion-4"
           >
             <span>
               20
@@ -344,17 +1250,17 @@ exports[`Cards render ProjectCard 2`] = `
           </div>
         </div>
         <div
-          class="css-19wgwnm"
+          class="emotion-5"
         >
           <div
-            class="css-12hroh9"
+            class="emotion-3"
           >
             <span>
               OVERDUE
             </span>
           </div>
           <div
-            class="css-b6ifgt"
+            class="emotion-4"
           >
             <span>
               2
@@ -362,29 +1268,29 @@ exports[`Cards render ProjectCard 2`] = `
           </div>
         </div>
         <div
-          class="css-ar7jq1"
+          class="emotion-26"
         >
           <div
-            class="css-10q8dqb"
+            class="emotion-25"
           >
             <div
-              class="css-toukby"
+              class="emotion-19"
             >
               <div
-                class="css-yedefi"
+                class="emotion-16"
               />
               <div
-                class="css-15i5amq"
+                class="emotion-17"
               />
               <div
-                class="css-14pjm7c"
+                class="emotion-18"
               />
             </div>
             <div
-              class="css-1lwluhx"
+              class="emotion-24"
             >
               <div
-                class="css-7d1hvd"
+                class="emotion-20"
               >
                 <svg
                   aria-hidden="true"
@@ -404,7 +1310,7 @@ exports[`Cards render ProjectCard 2`] = `
                 2
               </div>
               <div
-                class="css-29mzby"
+                class="emotion-21"
               >
                 <svg
                   aria-hidden="true"
@@ -424,7 +1330,7 @@ exports[`Cards render ProjectCard 2`] = `
                 2
               </div>
               <div
-                class="css-ricg38"
+                class="emotion-22"
               >
                 <svg
                   aria-hidden="true"
@@ -444,7 +1350,7 @@ exports[`Cards render ProjectCard 2`] = `
                 0
               </div>
               <div
-                class="css-72tgzx"
+                class="emotion-23"
               >
                 1
               </div>
@@ -452,30 +1358,30 @@ exports[`Cards render ProjectCard 2`] = `
           </div>
         </div>
         <div
-          class="css-udh7f1"
+          class="emotion-32"
         >
           <div
-            class="css-1gjilff"
+            class="emotion-27"
           >
             tag1
           </div>
           <div
-            class="css-1sdky1k"
+            class="emotion-28"
           >
             tag2
           </div>
           <div
-            class="css-1sdky1k"
+            class="emotion-28"
           >
             tag2
           </div>
           <div
-            class="css-1sdky1k"
+            class="emotion-28"
           >
             tag2
           </div>
           <div
-            class="css-1sdky1k"
+            class="emotion-28"
           >
             tag2
           </div>

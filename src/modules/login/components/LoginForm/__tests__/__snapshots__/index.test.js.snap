@@ -1,33 +1,278 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<LoginForm /> should allow to click on submit button on valid data 1`] = `
+.emotion-16 {
+  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 20px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-gap: 40px;
+  justify-items: center;
+}
+
+.emotion-15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-14 {
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  color: #11d1a6;
+  margin-top: 20px;
+}
+
+.emotion-13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  color: #aaa;
+  background-color: #ccc;
+  border-radius: 999px;
+  height: 30px;
+  padding: 0 10px;
+  cursor: default;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  min-width: 75px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-13:focus {
+  outline: 0;
+}
+
+.emotion-11 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.emotion-12 {
+  margin: 0 0 0 5px;
+  font-size: 12px;
+}
+
+.emotion-2 {
+  position: relative;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+}
+
+.emotion-0 {
+  position: absolute;
+  left: -20px;
+  height: 100%;
+  width: 20px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.emotion-10 {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 20px;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 5px;
+  width: 100%;
+}
+
+.emotion-1 {
+  width: 100%;
+  height: 20px;
+  max-height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #aaa;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 5px;
+  text-align: left;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+.emotion-3 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #ffffff;
+  height: 30px;
+  width: 200px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 200px;
+  cursor: text;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.emotion-3:focus {
+  border-color: #11d1a6;
+}
+
+.emotion-3 > button {
+  opacity: 1;
+}
+
+.emotion-3 > input {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.emotion-3 > input,
+.emotion-3 > textarea {
+  border: none;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 20px;
+  padding: 0 4px;
+  background: none;
+  border-radius: 5px;
+  color: #555555;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.emotion-3 > input:focus,
+.emotion-3 > textarea:focus {
+  outline: none;
+  border-color: #11d1a6;
+}
+
+.emotion-3 > input::-webkit-input-placeholder,
+.emotion-3 > textarea::-webkit-input-placeholder {
+  color: #ccc;
+}
+
+.emotion-3 > input::-moz-placeholder,
+.emotion-3 > textarea::-moz-placeholder {
+  color: #ccc;
+}
+
+.emotion-3 > input:-ms-input-placeholder,
+.emotion-3 > textarea:-ms-input-placeholder {
+  color: #ccc;
+}
+
+.emotion-3 > input::placeholder,
+.emotion-3 > textarea::placeholder {
+  color: #ccc;
+}
+
 <div>
   <form
     data-testid="loginForm"
   >
     <div
-      class="css-13fmzcs"
+      class="emotion-16"
     >
       <div
-        class="css-1xa9w2h"
+        class="emotion-10"
       >
         <div
-          class="css-ldwt5s"
+          class="emotion-4"
         >
           <div
-            class="css-1tsdwfr"
+            class="emotion-2"
           >
             <div
-              class="css-1i7oahi"
+              class="emotion-0"
             />
             <div
-              class="css-12hroh9"
+              class="emotion-1"
             >
               EMAIL
             </div>
           </div>
           <div
-            class="css-bnsvj3"
+            class="emotion-3"
           >
             <input
               data-testid="email"
@@ -40,22 +285,22 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           </div>
         </div>
         <div
-          class="css-ldwt5s"
+          class="emotion-4"
         >
           <div
-            class="css-1tsdwfr"
+            class="emotion-2"
           >
             <div
-              class="css-1i7oahi"
+              class="emotion-0"
             />
             <div
-              class="css-12hroh9"
+              class="emotion-1"
             >
               PASSWORD
             </div>
           </div>
           <div
-            class="css-bnsvj3"
+            class="emotion-3"
           >
             <input
               data-testid="password"
@@ -69,21 +314,21 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
         </div>
       </div>
       <div
-        class="css-1q3ffjc"
+        class="emotion-15"
       >
         <button
-          class="css-1obbnpt"
+          class="emotion-13"
           data-testid="submitButton"
           disabled=""
           type="submit"
         >
           <div
-            class="css-6tmki"
+            class="emotion-11"
           >
             LOGIN
           </div>
           <div
-            class="css-x1sjjo"
+            class="emotion-12"
           >
             <svg
               aria-hidden="true"
@@ -103,7 +348,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 1`] 
           </div>
         </button>
         <a
-          class="css-1055wl4"
+          class="emotion-14"
           href="/forgot-password"
         >
           forgot password
@@ -135,7 +380,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
               class="css-1i7oahi"
             />
             <div
-              class="css-12hroh9"
+              class="css-1ylc0ub"
             >
               EMAIL
             </div>
@@ -163,7 +408,7 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
               class="css-1i7oahi"
             />
             <div
-              class="css-12hroh9"
+              class="css-1ylc0ub"
             >
               PASSWORD
             </div>
@@ -229,33 +474,278 @@ exports[`<LoginForm /> should allow to click on submit button on valid data 2`] 
 `;
 
 exports[`<LoginForm /> should render without crash 1`] = `
+.emotion-16 {
+  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.1);
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 20px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-gap: 40px;
+  justify-items: center;
+}
+
+.emotion-15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-14 {
+  font-size: 14px;
+  min-height: 20px;
+  line-height: 20px;
+  color: #11d1a6;
+  margin-top: 20px;
+}
+
+.emotion-13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 0;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  color: #aaa;
+  background-color: #ccc;
+  border-radius: 999px;
+  height: 30px;
+  padding: 0 10px;
+  cursor: default;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  min-width: 75px;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.emotion-13:focus {
+  outline: 0;
+}
+
+.emotion-11 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+
+.emotion-12 {
+  margin: 0 0 0 5px;
+  font-size: 12px;
+}
+
+.emotion-2 {
+  position: relative;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+}
+
+.emotion-0 {
+  position: absolute;
+  left: -20px;
+  height: 100%;
+  width: 20px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.emotion-10 {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 20px;
+}
+
+.emotion-4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-rows: min-content;
+  grid-gap: 5px;
+  width: 100%;
+}
+
+.emotion-1 {
+  width: 100%;
+  height: 20px;
+  max-height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #aaa;
+  -webkit-letter-spacing: 2px;
+  -moz-letter-spacing: 2px;
+  -ms-letter-spacing: 2px;
+  letter-spacing: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 5px;
+  text-align: left;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 100%;
+  text-transform: uppercase;
+}
+
+.emotion-3 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background-color: #ffffff;
+  height: 30px;
+  width: 200px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 200px;
+  cursor: text;
+  -webkit-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.emotion-3:focus {
+  border-color: #11d1a6;
+}
+
+.emotion-3 > button {
+  opacity: 1;
+}
+
+.emotion-3 > input {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.emotion-3 > input,
+.emotion-3 > textarea {
+  border: none;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 20px;
+  padding: 0 4px;
+  background: none;
+  border-radius: 5px;
+  color: #555555;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.emotion-3 > input:focus,
+.emotion-3 > textarea:focus {
+  outline: none;
+  border-color: #11d1a6;
+}
+
+.emotion-3 > input::-webkit-input-placeholder,
+.emotion-3 > textarea::-webkit-input-placeholder {
+  color: #ccc;
+}
+
+.emotion-3 > input::-moz-placeholder,
+.emotion-3 > textarea::-moz-placeholder {
+  color: #ccc;
+}
+
+.emotion-3 > input:-ms-input-placeholder,
+.emotion-3 > textarea:-ms-input-placeholder {
+  color: #ccc;
+}
+
+.emotion-3 > input::placeholder,
+.emotion-3 > textarea::placeholder {
+  color: #ccc;
+}
+
 <div>
   <form
     data-testid="loginForm"
   >
     <div
-      class="css-13fmzcs"
+      class="emotion-16"
     >
       <div
-        class="css-1xa9w2h"
+        class="emotion-10"
       >
         <div
-          class="css-ldwt5s"
+          class="emotion-4"
         >
           <div
-            class="css-1tsdwfr"
+            class="emotion-2"
           >
             <div
-              class="css-1i7oahi"
+              class="emotion-0"
             />
             <div
-              class="css-12hroh9"
+              class="emotion-1"
             >
               EMAIL
             </div>
           </div>
           <div
-            class="css-bnsvj3"
+            class="emotion-3"
           >
             <input
               data-testid="email"
@@ -268,22 +758,22 @@ exports[`<LoginForm /> should render without crash 1`] = `
           </div>
         </div>
         <div
-          class="css-ldwt5s"
+          class="emotion-4"
         >
           <div
-            class="css-1tsdwfr"
+            class="emotion-2"
           >
             <div
-              class="css-1i7oahi"
+              class="emotion-0"
             />
             <div
-              class="css-12hroh9"
+              class="emotion-1"
             >
               PASSWORD
             </div>
           </div>
           <div
-            class="css-bnsvj3"
+            class="emotion-3"
           >
             <input
               data-testid="password"
@@ -297,21 +787,21 @@ exports[`<LoginForm /> should render without crash 1`] = `
         </div>
       </div>
       <div
-        class="css-1q3ffjc"
+        class="emotion-15"
       >
         <button
-          class="css-1obbnpt"
+          class="emotion-13"
           data-testid="submitButton"
           disabled=""
           type="submit"
         >
           <div
-            class="css-6tmki"
+            class="emotion-11"
           >
             LOGIN
           </div>
           <div
-            class="css-x1sjjo"
+            class="emotion-12"
           >
             <svg
               aria-hidden="true"
@@ -331,7 +821,7 @@ exports[`<LoginForm /> should render without crash 1`] = `
           </div>
         </button>
         <a
-          class="css-1055wl4"
+          class="emotion-14"
           href="/forgot-password"
         >
           forgot password
