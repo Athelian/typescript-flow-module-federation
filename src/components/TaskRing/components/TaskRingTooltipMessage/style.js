@@ -8,10 +8,15 @@ export const TaskRingTooltipWrapperStyle: string = css`
 `;
 
 export const TaskRingTooltipHeaderStyle: string = css`
-  border-bottom: 1px solid ${colors.WHITE};
   ${fontSizes.SMALL};
-  padding: 0 0 5px 0;
   letter-spacing: 2px;
+`;
+
+export const TaskRingBodyStyle: string = css`
+  background-color: ${colors.WHITE};
+  ${borderRadiuses.MAIN};
+  padding: 5px;
+  margin: 0 0 5px 0;
 `;
 
 export const TaskRingTooltipInfoStyle: string = css`
@@ -19,13 +24,14 @@ export const TaskRingTooltipInfoStyle: string = css`
   align-items: center;
 `;
 
-export const TaskRingTooltipIconStyle: string = css`
+export const TaskRingTooltipIconStyle = (color: string): string => css`
   display: flex;
   align-items: center;
   ${fontSizes.SMALL};
   width: 20px;
   height: 20px;
   flex-shrink: 0;
+  color: ${colors[color]};
 `;
 
 export const TaskRingTooltipLabelStyle: string = css`
@@ -33,17 +39,15 @@ export const TaskRingTooltipLabelStyle: string = css`
   flex: 1;
   text-align: left;
   letter-spacing: 2px;
-  padding: 0 5px 0 0;
+  padding: 0 5px;
+  color: ${colors.GRAY_DARK};
 `;
 
-export const TaskRingTooltipCountStyle = (color: string, backgroundColor: string): string => css`
-  background-color: ${colors[backgroundColor]};
-  color: ${colors[color]};
+export const TaskRingTooltipCountStyle: string = css`
+  color: ${colors.BLACK};
   ${fontSizes.MAIN};
   font-weight: bold;
   width: 40px;
   ${presets.ELLIPSIS};
-  text-align: center;
-  ${borderRadiuses.BUTTON};
-  padding: 0 5px;
+  text-align: right;
 `;

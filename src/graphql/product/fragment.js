@@ -72,7 +72,9 @@ export const productCardFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     files {
       ...imageFragment

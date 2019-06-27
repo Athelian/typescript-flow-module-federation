@@ -23,7 +23,7 @@ import {
   badRequestFragment,
   ownedByFragment,
   taskWithoutParentInfoFragment,
-  todoFragment,
+  taskCountFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
@@ -73,7 +73,7 @@ export const updateContainerMutation = gql`
   ${badRequestFragment}
   ${ownedByFragment}
   ${taskWithoutParentInfoFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}

@@ -32,9 +32,12 @@ type Props = {
     shipment: ?Object,
     container: ?Object,
     todo: {
-      completedCount: number,
-      inProgressCount: number,
-      remainingCount: number,
+      taskCount: {
+        completed: number,
+        inProgress: number,
+        remain: number,
+        skipped: number,
+      },
     },
   },
 };

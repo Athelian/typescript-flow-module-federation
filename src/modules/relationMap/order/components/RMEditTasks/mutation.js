@@ -18,7 +18,7 @@ import {
   imageFragment,
   timelineDateMinimalFragment,
   portFragment,
-  todoFragment,
+  taskCountFragment,
   sizeFragment,
   ownedByFragment,
 } from 'graphql';
@@ -51,7 +51,7 @@ export const taskUpdateManyMutation = gql`
   ${imageFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${sizeFragment}
 `;
 

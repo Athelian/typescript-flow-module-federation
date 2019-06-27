@@ -10,6 +10,7 @@ import {
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
+  taskCountFragment,
 } from 'graphql';
 
 export const batchCardRMFragment = gql`
@@ -36,9 +37,9 @@ export const batchCardRMFragment = gql`
       }
     }
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      taskCount {
+        ...taskCountFragment
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
@@ -63,9 +64,9 @@ export const orderCardRMFragment = gql`
     batchShippedCount
     shipmentCount
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      taskCount {
+        ...taskCountFragment
+      }
     }
     exporter {
       ... on Group {
@@ -89,9 +90,9 @@ export const orderCardRMFragment = gql`
         no
         quantity
         todo {
-          completedCount
-          inProgressCount
-          remainingCount
+          taskCount {
+            ...taskCountFragment
+          }
           tasks {
             ...taskWithoutParentInfoFragment
           }
@@ -193,9 +194,9 @@ export const shipmentCardRMFragment = gql`
       ...userAvatarFragment
     }
     todo {
-      completedCount
-      inProgressCount
-      remainingCount
+      taskCount {
+        ...taskCountFragment
+      }
     }
     voyages {
       ... on Voyage {
@@ -293,6 +294,7 @@ export const orderDetailQuery = gql`
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
+  ${taskCountFragment}
 `;
 
 export const shipmentDetailQuery = gql`
@@ -309,6 +311,7 @@ export const shipmentDetailQuery = gql`
   ${tagFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
+  ${taskCountFragment}
 `;
 
 export const orderListQuery = gql`
@@ -340,6 +343,7 @@ export const orderListQuery = gql`
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
+  ${taskCountFragment}
 `;
 
 export const shipmentListQuery = gql`
@@ -388,4 +392,5 @@ export const shipmentListQuery = gql`
   ${portFragment}
   ${userAvatarFragment}
   ${metricFragment}
+  ${taskCountFragment}
 `;

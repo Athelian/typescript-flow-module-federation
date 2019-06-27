@@ -1,7 +1,8 @@
 // @flow
 
 export type TaskRingDataProps = {
-  completedCount: number,
-  inProgressCount: number,
-  remainingCount: number,
+  completed: number,
+  inProgress: number,
+  remain: number,
+  skipped: number,
 };
