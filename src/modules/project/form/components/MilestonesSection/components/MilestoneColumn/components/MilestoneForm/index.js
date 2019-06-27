@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
+import DeleteDialog from 'components/Dialog/DeleteDialog';
 import SelectTasks from 'providers/SelectTasks';
 import SlideView from 'components/SlideView';
 import TaskRing from 'components/TaskRing';
@@ -43,7 +44,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
   const isNew = milestoneId.includes('-');
   return (
     <Subscribe to={[ProjectMilestonesContainer]}>
-      {({ originalValues, state, setMilestoneValue, excludeTaskIds }) => {
+      {({ originalValues, state, setMilestoneValue, excludeTaskIds, removeMilestone }) => {
         const { milestones = [] } = { ...originalValues, ...state };
         const values = milestones.find(milestone => milestone.id === milestoneId) || {};
         const initialValues =
@@ -63,13 +64,41 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
             className={MilestoneHeaderWrapperStyle(isDragging)}
             {...provided.dragHandleProps}
           >
-            <div
-              className={TrashIconStyle(Boolean(isHovered))}
-              role="presentation"
-              onClick={console.warn}
-            >
-              <Icon icon="REMOVE" />
-            </div>
+            <BooleanValue>
+              {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
+                <>
+                  <div
+                    className={TrashIconStyle(Boolean(isHovered))}
+                    role="presentation"
+                    onClick={() =>
+                      (values.tasks || []).length > 0
+                        ? dialogToggle(true)
+                        : removeMilestone(milestoneId)
+                    }
+                  >
+                    <Icon icon="REMOVE" />
+                  </div>
+                  {/* TODO: confirm with Kenvin about this idea a bit */}
+                  <DeleteDialog
+                    isOpen={deleteDialogIsOpen}
+                    onRequestClose={() => dialogToggle(false)}
+                    onRemove={() => dialogToggle(false)}
+                    onRemoveAll={() => dialogToggle(false)}
+                    onCancel={() => dialogToggle(false)}
+                    onConfirm={() => {
+                      dialogToggle(false);
+                    }}
+                    message={
+                      <FormattedMessage
+                        id="modules.Projects.removeMilestoneWarningMessage"
+                        defaultMessage="There are some Tasks in this Milestone. Would you like to remove them from the Project (and not delete them) or completely delete them along with this Milestone?"
+                      />
+                    }
+                  />
+                </>
+              )}
+            </BooleanValue>
+
             <FormField
               name={`${milestoneId}.name`}
               initValue={values.name}
