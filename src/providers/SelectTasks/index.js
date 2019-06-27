@@ -12,7 +12,6 @@ import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
-import { removeTypename } from 'utils/data';
 import messages from 'modules/task/messages';
 import useSortAndFilter from 'hooks/useSortAndFilter';
 import { TaskCard } from 'components/Cards';
@@ -148,7 +147,7 @@ function SelectTasks({ intl, onCancel, onSelect, selectedTasks, filter }: Props)
                 data-testid="btnSaveSelectTasks"
                 disabled={selected.length === 0}
                 onClick={() => {
-                  onSelect(removeTypename(selected));
+                  onSelect(selected);
                 }}
               />
             </SlideViewNavBar>
