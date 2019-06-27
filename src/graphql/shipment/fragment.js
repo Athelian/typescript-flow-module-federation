@@ -144,7 +144,9 @@ export const shipmentCardFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     inCharges {
       ...userAvatarFragment

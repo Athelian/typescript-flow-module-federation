@@ -4,7 +4,7 @@ import {
   taskTemplateCardFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
-  todoFragment,
+  taskCountFragment,
   userAvatarFragment,
   tagFragment,
   forbiddenFragment,
@@ -16,7 +16,9 @@ export const orderFormTasksQuery = gql`
       ... on Order {
         id
         todo {
-          ...todoFragment
+          taskCount {
+            ...taskCountFragment
+          }
           tasks {
             ...taskWithoutParentInfoFragment
             ...forbiddenFragment
@@ -33,7 +35,7 @@ export const orderFormTasksQuery = gql`
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${forbiddenFragment}

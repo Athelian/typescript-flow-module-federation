@@ -340,10 +340,15 @@ export const taskTemplateFormFragment = gql`
   }
 `;
 
-export const todoFragment = gql`
-  fragment todoFragment on Todo {
-    completedCount
-    inProgressCount
-    remainingCount
+export const taskCountFragment = gql`
+  fragment taskCountFragment on TaskCount {
+    count
+    remain
+    inProgress
+    completed
+    rejected
+    approved
+    skipped
+    delayed
   }
 `;

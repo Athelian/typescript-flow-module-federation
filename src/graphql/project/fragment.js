@@ -1,19 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const taskCountFragment = gql`
-  fragment taskCountFragment on TaskCount {
-    count
-    remain
-    inProgress
-    completed
-    rejected
-    approved
-    skipped
-    delayed
-  }
-`;
-
 export const projectCardFragment = gql`
   fragment projectCardFragment on Project {
     id

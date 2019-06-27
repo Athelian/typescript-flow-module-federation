@@ -18,7 +18,7 @@ import {
   imageFragment,
   timelineDateMinimalFragment,
   portFragment,
-  todoFragment,
+  taskCountFragment,
   productProviderCardFragment,
   sizeFragment,
   ownedByFragment,
@@ -48,7 +48,7 @@ export const taskFormQuery = gql`
   ${imageFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${sizeFragment}
   ${ownedByFragment}
 `;

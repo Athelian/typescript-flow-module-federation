@@ -39,7 +39,9 @@ export const batchFormFragment = gql`
       ...metricFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
@@ -150,7 +152,9 @@ export const batchCardFragment = gql`
     deliveredAt
     desiredAt
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     packageVolume {
       ...metricFragment

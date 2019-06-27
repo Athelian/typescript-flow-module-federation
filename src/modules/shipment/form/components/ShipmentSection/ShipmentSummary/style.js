@@ -19,7 +19,6 @@ export const ContainerTypesWrapperStyle: string = css`
 
 export const TasksWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
-  background-color: ${colors.GRAY_SUPER_LIGHT};
   ${layout.GRID_VERTICAL};
   grid-gap: 5px;
   margin: 5px 0 0 0;
@@ -34,5 +33,4 @@ export const TaskIconStyle = (color: string): string => css`
   width: 20px;
   align-items: center;
   justify-content: center;
-  margin: 0 0 0 5px;
 `;

@@ -33,9 +33,12 @@ export type BatchProps = {
     id: string,
   },
   todo: {
-    completedCount: number,
-    inProgressCount: number,
-    remainingCount: number,
+    taskCount: {
+      completed: number,
+      inProgress: number,
+      remain: number,
+      skipped: number,
+    },
   },
 };
 
@@ -79,8 +82,11 @@ export type OrderProps = {
     id: string,
   },
   todo: {
-    completedCount: number,
-    inProgressCount: number,
-    remainingCount: number,
+    taskCount: {
+      completed: number,
+      inProgress: number,
+      remain: number,
+      skipped: number,
+    },
   },
 };

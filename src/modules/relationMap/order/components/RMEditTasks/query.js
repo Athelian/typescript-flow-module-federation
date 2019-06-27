@@ -17,7 +17,7 @@ import {
   imageFragment,
   timelineDateMinimalFragment,
   portFragment,
-  todoFragment,
+  taskCountFragment,
   productProviderCardFragment,
   sizeFragment,
   ownedByFragment,
@@ -56,7 +56,7 @@ const editableTaskListQuery = gql`
   ${imageFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${sizeFragment}
   ${ownedByFragment}
 `;

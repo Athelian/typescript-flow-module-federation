@@ -6,7 +6,7 @@ import {
   ownedByFragment,
   partnerNameFragment,
   tagFragment,
-  todoFragment,
+  taskCountFragment,
   imageFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -33,7 +33,7 @@ export const productListQuery = gql`
   ${ownedByFragment}
   ${partnerNameFragment}
   ${tagFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${imageFragment}
   ${forbiddenFragment}
 `;

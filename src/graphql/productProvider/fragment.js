@@ -108,7 +108,9 @@ export const productProviderCardFragment = gql`
       ...priceFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
   }
 `;

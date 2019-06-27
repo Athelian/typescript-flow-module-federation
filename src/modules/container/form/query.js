@@ -22,7 +22,7 @@ import {
   fieldDefinitionFragment,
   ownedByFragment,
   taskWithoutParentInfoFragment,
-  todoFragment,
+  taskCountFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
@@ -55,7 +55,7 @@ export const containerFormQuery = gql`
   ${fieldDefinitionFragment}
   ${ownedByFragment}
   ${taskWithoutParentInfoFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}

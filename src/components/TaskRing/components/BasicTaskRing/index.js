@@ -7,41 +7,33 @@ import type { TaskRingDataProps } from 'components/TaskRing/type.js.flow';
 import TaskRingTooltipMessage from '../TaskRingTooltipMessage';
 import { TaskRingStyle, NumberStyle, TooltipStyle } from './style';
 
-type Props = TaskRingDataProps & {
+type Props = {
+  taskCount: TaskRingDataProps,
   size: number,
 };
 
-const percent = ({ completedCount, inProgressCount, remainingCount }: TaskRingDataProps) => {
-  const total = completedCount + inProgressCount + remainingCount;
+const percent = ({ completed, inProgress, remain, skipped }: TaskRingDataProps) => {
+  const total = completed + inProgress + remain + skipped;
 
   if (total > 0) {
-    return (completedCount * 100) / total;
+    return (completed * 100) / total;
   }
   return 0;
 };
 
-const BasicTaskRing = ({ completedCount, inProgressCount, remainingCount, size }: Props) => (
-  <Tooltip
-    className={TooltipStyle}
-    message={
-      <TaskRingTooltipMessage
-        completedCount={completedCount}
-        inProgressCount={inProgressCount}
-        remainingCount={remainingCount}
-      />
-    }
-  >
-    <div className={TaskRingStyle(size)}>
-      <Ring
-        percent={percent({ completedCount, inProgressCount, remainingCount })}
-        size={size}
-        color="TEAL"
-      />
-      <div className={NumberStyle(size - 4)}>
-        <FormattedNumber value={completedCount + inProgressCount + remainingCount} />
+const BasicTaskRing = ({ taskCount, size }: Props) => {
+  const { completed, inProgress, remain, skipped } = taskCount;
+
+  return (
+    <Tooltip className={TooltipStyle} message={<TaskRingTooltipMessage {...taskCount} />}>
+      <div className={TaskRingStyle(size)}>
+        <Ring percent={percent(taskCount)} size={size} color="TEAL" />
+        <div className={NumberStyle(size - 4)}>
+          <FormattedNumber value={completed + inProgress + remain + skipped} />
+        </div>
       </div>
-    </div>
-  </Tooltip>
-);
+    </Tooltip>
+  );
+};
 
 export default BasicTaskRing;

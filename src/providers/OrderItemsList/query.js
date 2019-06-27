@@ -4,7 +4,7 @@ import {
   itemInSelectorFragment,
   priceFragment,
   tagFragment,
-  todoFragment,
+  taskCountFragment,
   metricFragment,
   sizeFragment,
   imageFragment,
@@ -34,7 +34,7 @@ export const orderItemsListQuery = gql`
   ${itemInSelectorFragment}
   ${priceFragment}
   ${tagFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${metricFragment}
   ${sizeFragment}
   ${imageFragment}

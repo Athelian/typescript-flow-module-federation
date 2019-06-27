@@ -3,7 +3,7 @@ import {
   tagFragment,
   priceFragment,
   imageFragment,
-  todoFragment,
+  taskCountFragment,
   itemCardFragment,
   itemCardWithOwnedFragment,
   partnerNameFragment,
@@ -30,7 +30,7 @@ export const orderItemListQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${forbiddenFragment}
 `;
 

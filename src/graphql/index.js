@@ -42,7 +42,6 @@ import {
   milestoneCardFragment,
   projectFormQueryFragment,
   projectFormFragment,
-  taskCountFragment,
 } from './project/fragment';
 import {
   taskCardFragment,
@@ -51,7 +50,7 @@ import {
   taskWithParentInfoFragment,
   taskTemplateFormFragment,
   taskFormInTemplateFragment,
-  todoFragment,
+  taskCountFragment,
 } from './task/fragment';
 import { tableTemplateCardFragment } from './tableTemplate/fragment';
 import { badRequestFragment, notFoundFragment, forbiddenFragment } from './errors/fragment';
@@ -132,12 +131,11 @@ export {
   notFoundFragment,
   forbiddenFragment,
   ownedByFragment,
-  taskCountFragment,
   projectCardFragment,
   milestoneCardFragment,
   projectFormQueryFragment,
   projectFormFragment,
   taskCardFragment,
   taskTemplateCardFragment,
-  todoFragment,
+  taskCountFragment,
 };

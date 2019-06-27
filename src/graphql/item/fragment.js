@@ -14,7 +14,9 @@ export const itemCardFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     order {
       ... on Order {
@@ -88,7 +90,9 @@ export const itemFormFragment = gql`
     }
     memo
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
@@ -127,7 +131,9 @@ export const itemInSelectorFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     order {
       ...orderCardFragment
@@ -189,7 +195,9 @@ export const itemInOrderFormFragment = gql`
     }
     memo
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
@@ -258,7 +266,9 @@ export const itemInBatchFormFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     order {
       ...orderCardFragment

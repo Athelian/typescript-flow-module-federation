@@ -8,7 +8,7 @@ import {
   partnerNameFragment,
   metricFragment,
   sizeFragment,
-  todoFragment,
+  taskCountFragment,
 } from 'graphql';
 
 export const productProvidersListQuery = gql`
@@ -34,7 +34,7 @@ export const productProvidersListQuery = gql`
   ${priceFragment}
   ${metricFragment}
   ${sizeFragment}
-  ${todoFragment}
+  ${taskCountFragment}
 `;
 
 export default productProvidersListQuery;
