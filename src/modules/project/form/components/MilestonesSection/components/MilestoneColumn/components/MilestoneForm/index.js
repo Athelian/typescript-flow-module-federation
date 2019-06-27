@@ -40,7 +40,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
   const isNew = milestoneId.includes('-');
   return (
     <Subscribe to={[ProjectMilestonesContainer]}>
-      {({ originalValues, state, setMilestoneValue }) => {
+      {({ originalValues, state, setMilestoneValue, excludeTaskIds }) => {
         const { milestones = [] } = { ...originalValues, ...state };
         const values = milestones.find(milestone => milestone.id === milestoneId) || {};
         const initialValues =
@@ -134,7 +134,9 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   >
                     {selectTasksIsOpen && (
                       <SelectTasks
-                        filter={{}}
+                        filter={{
+                          excludeIds: excludeTaskIds(),
+                        }}
                         selectedTasks={values.tasks || []}
                         onSelect={selected => {
                           selectTasksSlideToggle(false);

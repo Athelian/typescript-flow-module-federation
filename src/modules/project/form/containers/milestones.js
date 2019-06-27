@@ -100,6 +100,11 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     }));
   };
 
+  excludeTaskIds = () => {
+    const tasks = flatten(this.state.milestones.map(item => item.tasks));
+    return (tasks.map(task => getByPathWithDefault('', 'id', task)): Array<string>);
+  };
+
   countBindingEntities = () => {
     return this.state.milestones.reduce(
       (total, item) => {

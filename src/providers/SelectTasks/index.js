@@ -22,7 +22,6 @@ type Props = {
   onSelect: Function,
   intl: IntlShape,
   filter: Object,
-  selectedTasks: Array<Object>,
 };
 
 const getInitFilter = (filter: Object) => ({
@@ -36,26 +35,7 @@ const getInitFilter = (filter: Object) => ({
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
 
-function onSelectTask({
-  selected,
-  item,
-  onPush,
-  onSet,
-}: {
-  selected: Array<Object>,
-  item: Object,
-  onPush: Function,
-  onSet: Function,
-}) {
-  if (!selected.includes(item)) {
-    onPush(item);
-  } else {
-    onSet(selected.filter((taskItem: Object) => taskItem.id !== item.id));
-  }
-}
-
-function SelectTasks({ intl, onCancel, onSelect, selectedTasks, filter }: Props) {
-  const excludeIds = selectedTasks.map(task => task.id);
+function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
   const fields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -70,7 +50,6 @@ function SelectTasks({ intl, onCancel, onSelect, selectedTasks, filter }: Props)
     onChangeFilter: onChange,
   } = useSortAndFilter(
     getInitFilter({
-      excludeIds,
       ...filter,
     })
   );
@@ -107,7 +86,7 @@ function SelectTasks({ intl, onCancel, onSelect, selectedTasks, filter }: Props)
 
   return (
     <ArrayValue>
-      {({ value: selected, push: onPush, set: onSet }) => (
+      {({ value: selected, push: onPush }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
@@ -196,7 +175,7 @@ function SelectTasks({ intl, onCancel, onSelect, selectedTasks, filter }: Props)
                 selectable
                 task={item}
                 selected={selected.includes(item)}
-                onSelect={() => onSelectTask({ selected, item, onPush, onSet })}
+                onSelect={() => onPush(item)}
               />
             )}
           />

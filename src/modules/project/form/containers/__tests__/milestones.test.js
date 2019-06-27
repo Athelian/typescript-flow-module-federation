@@ -312,4 +312,41 @@ describe('milestones container', () => {
       ...updateValue,
     });
   });
+
+  it('should return ignore task ids', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+      {
+        id: '2',
+        name: 'b',
+        dueDate: null,
+        tasks: [
+          {
+            id: 5,
+          },
+        ],
+      },
+      {
+        id: '3',
+        name: 'c',
+        dueDate: null,
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    const ignoreIds = container.excludeTaskIds();
+
+    expect(ignoreIds).toEqual([4, 5]);
+  });
 });
