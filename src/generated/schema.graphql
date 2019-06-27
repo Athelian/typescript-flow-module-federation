@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Mon Jun 24 2019 10:43:00 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Jun 27 2019 21:16:26 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26706,6 +26706,7 @@ union BatchesPayload = Batches | BadRequest | Forbidden | NotFound
 
 input BatchFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -26967,6 +26968,7 @@ input ContainerCreateInput {
 
 input ContainerFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -28438,11 +28440,17 @@ type Event implements Model & Owned {
   ownedBy: GroupPayload!
 }
 
+type Export {
+  id: ID!
+}
+
 type ExportExtension {
   extension: String!
 }
 
 union ExportExtensionPayload = ExportExtension | BadRequest | Forbidden | NotFound
+
+union ExportPayload = Export | BadRequest | Forbidden | NotFound
 
 type ExportTemplate implements Model {
   name: String!
@@ -28795,6 +28803,7 @@ input IntegrationConfigurationCreateInput {
 
 input IntegrationConfigurationFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   groupId: ID
@@ -28826,6 +28835,7 @@ input IntegrationConfigurationUpdateInput {
 
 input IntegrationFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   groupId: ID
@@ -28861,6 +28871,7 @@ input IntegrationLinkCreateInput {
 
 input IntegrationLinkFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   configurationId: ID
@@ -29573,6 +29584,7 @@ input MaskEditCreateInput {
 
 input MaskEditFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   type: MaskEditType
@@ -30132,6 +30144,7 @@ input OrderCreateInput {
 
 input OrderFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -30271,6 +30284,7 @@ input OrderItemCreateInput {
 
 input OrderItemFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -30437,6 +30451,7 @@ type Partner implements Model {
 
 input PartnerFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   types: [GroupType!]
@@ -30570,6 +30585,7 @@ input ProductCreateInput {
 
 input ProductFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -30661,6 +30677,7 @@ input ProductProviderCreateInput {
 
 input ProductProviderFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -30778,6 +30795,7 @@ input ProjectCreateInput {
 
 input ProjectFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   dueDate: DateRangeInput
@@ -30838,18 +30856,18 @@ type Query {
   product(id: ID!): ProductPayload!
   products(page: Int! = 1, perPage: Int! = 10, filterBy: ProductFilterInput, sortBy: ProductSortInput): ProductPayloadPagination!
   productsByIDs(ids: [ID!]!): [ProductPayload!]!
-  productExport(id: ID!, templateId: ID!): FilePayload!
-  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput): FilePayload!
-  productsByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
+  productExport(id: ID!, templateId: ID!): ExportPayload!
+  productsExport(templateId: ID!, filterBy: ProductFilterInput, sortBy: ProductSortInput): ExportPayload!
+  productsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   productProvider(id: ID!): ProductProviderPayload!
   productProviders(page: Int! = 1, perPage: Int! = 10, filterBy: ProductProviderFilterInput, sortBy: ProductProviderSortInput): ProductProviderPayloadPagination!
   productProvidersByIDs(ids: [ID!]!): [ProductProviderPayload!]!
   order(id: ID!): OrderPayload!
   orders(page: Int! = 1, perPage: Int! = 10, filterBy: OrderFilterInput, sortBy: OrderSortInput): OrderPayloadPagination!
   ordersByIDs(ids: [ID!]!): [OrderPayload!]!
-  orderExport(id: ID!, templateId: ID!): FilePayload!
-  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput): FilePayload!
-  ordersByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
+  orderExport(id: ID!, templateId: ID!): ExportPayload!
+  ordersExport(templateId: ID!, filterBy: OrderFilterInput, sortBy: OrderSortInput): ExportPayload!
+  ordersByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   orderItem(id: ID!): OrderItemPayload!
   orderItems(page: Int! = 1, perPage: Int! = 10, filterBy: OrderItemFilterInput, sortBy: OrderItemSortInput): OrderItemPayloadPagination!
   orderItemsByIDs(ids: [ID!]!): [OrderItemPayload!]!
@@ -30860,29 +30878,29 @@ type Query {
   shipment(id: ID!): ShipmentPayload!
   shipments(page: Int! = 1, perPage: Int! = 10, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ShipmentPayloadPagination!
   shipmentsByIDs(ids: [ID!]!): [ShipmentPayload!]!
-  shipmentExport(id: ID!, templateId: ID!): FilePayload!
-  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): FilePayload!
-  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
+  shipmentExport(id: ID!, templateId: ID!): ExportPayload!
+  shipmentsExport(templateId: ID!, filterBy: ShipmentFilterInput, sortBy: ShipmentSortInput): ExportPayload!
+  shipmentsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   container(id: ID!): ContainerPayload!
   containers(page: Int! = 1, perPage: Int! = 10, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ContainerPayloadPagination!
   containersByIDs(ids: [ID!]!): [ContainerPayload!]!
-  containerExport(id: ID!, templateId: ID!): FilePayload!
-  containersExport(templateId: ID!, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): FilePayload!
-  containersByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
+  containerExport(id: ID!, templateId: ID!): ExportPayload!
+  containersExport(templateId: ID!, filterBy: ContainerFilterInput, sortBy: ContainerSortInput): ExportPayload!
+  containersByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   warehouse(id: ID!): WarehousePayload!
   warehouses(page: Int! = 1, perPage: Int! = 10, filterBy: WarehouseFilterInput, sortBy: WarehouseSortInput): WarehousePayloadPagination!
   warehousesByIDs(ids: [ID!]!): [WarehousePayload!]!
   tag(id: ID!): TagPayload!
   tags(page: Int! = 1, perPage: Int! = 10, filterBy: TagFilterInput, sortBy: TagSortInput): TagPayloadPagination!
-  tagExport(id: ID!, templateId: ID!): FilePayload!
-  tagsExport(templateId: ID!, filterBy: TagFilterInput, sortBy: TagSortInput): FilePayload!
-  tagsByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
+  tagExport(id: ID!, templateId: ID!): ExportPayload!
+  tagsExport(templateId: ID!, filterBy: TagFilterInput, sortBy: TagSortInput): ExportPayload!
+  tagsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   task(id: ID!): TaskPayload!
   tasks(page: Int! = 1, perPage: Int! = 10, filterBy: TaskFilterInput, sortBy: TaskSortInput): TaskPayloadPagination!
   tasksByIDs(ids: [ID!]!): [TaskPayload!]!
-  taskExport(id: ID!, templateId: ID!): FilePayload!
-  tasksExport(templateId: ID!, filterBy: TaskFilterInput, sortBy: TaskSortInput): FilePayload!
-  tasksByIDsExport(ids: [ID!]!, templateId: ID!): FilePayload!
+  taskExport(id: ID!, templateId: ID!): ExportPayload!
+  tasksExport(templateId: ID!, filterBy: TaskFilterInput, sortBy: TaskSortInput): ExportPayload!
+  tasksByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   taskTemplate(id: ID!): TaskTemplatePayload!
   taskTemplates(page: Int! = 1, perPage: Int! = 10, filterBy: TaskTemplateFilterInput, sortBy: TaskTemplateSortInput): TaskTemplatePayloadPagination!
   taskTemplatesByIDs(ids: [ID!]!): [TaskTemplatePayload!]!
@@ -30907,7 +30925,7 @@ type Query {
   integrationLinks(page: Int! = 1, perPage: Int! = 10, filterBy: IntegrationLinkFilterInput, sortBy: IntegrationLinkSortInput): IntegrationLinkPayloadPagination!
   exportTemplates(filterBy: ExportTemplateFilterInput): [ExportTemplatePayload!]!
   exportExtensions: [ExportExtensionPayload!]!
-  genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): FilePayload!
+  genericExport(extension: String!, columns: [String!]!, rows: [[String]!]!): ExportPayload!
   role(id: ID!): RolePayload!
   roles(page: Int! = 1, perPage: Int! = 10): RolePayloadPagination!
   permissions: [String!]!
@@ -86671,6 +86689,7 @@ input ShipmentCreateInput {
 
 input ShipmentFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean
@@ -86794,6 +86813,7 @@ type StringValue {
 type Subscription {
   notificationNew: Notification!
   importEvent(id: ID!): ImportEvent!
+  exportReady(id: ID!): File!
 }
 
 interface Supervised {
@@ -86853,6 +86873,7 @@ enum TagEntityType {
 
 input TagFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   entityTypes: [TagEntityType!]
@@ -86986,15 +87007,19 @@ enum TaskDateBinding {
   ShipmentWarehouseArrival
   ShipmentDeliveryReady
   TaskStartDate
+  TaskDueDate
 }
 
 input TaskFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   startDate: DateRangeInput
   dueDate: DateRangeInput
   entities: [EntityInput!]
+  milestoneId: ID
+  hasMilestone: Boolean
 }
 
 union TaskPayload = Task | BadRequest | Forbidden | NotFound
@@ -87064,6 +87089,7 @@ enum TaskTemplateEntityType {
 
 input TaskTemplateFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   entityTypes: [TaskTemplateEntityType!]
@@ -87340,6 +87366,7 @@ type User implements Model & Tagged & Memorizable {
 
 input UserFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   role: String
@@ -87500,6 +87527,7 @@ input WarehouseCreateInput {
 
 input WarehouseFilterInput {
   query: String
+  excludeIds: [ID!]
   createdAt: DateRangeInput
   updatedAt: DateRangeInput
   archived: Boolean

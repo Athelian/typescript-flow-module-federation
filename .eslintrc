@@ -25,7 +25,7 @@
   ],
   "rules": {
     "graphql/template-strings": [
-      "error",
+      "warn",
       {
         "env": "apollo"
       }
