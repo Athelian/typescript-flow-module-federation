@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Jun 28 2019 10:49:38 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Jun 28 2019 18:05:37 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -29713,7 +29713,7 @@ input MilestoneCreateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskCreateInput!]
+  tasks: [MilestoneTaskInput!]
   projectId: ID!
 }
 
@@ -29729,33 +29729,7 @@ type MilestoneEntitiesCount {
 
 union MilestonePayload = Milestone | BadRequest | Forbidden | NotFound
 
-input MilestoneTaskCreateInput {
-  name: String!
-  approvable: Boolean
-  startDate: DateTime
-  startDateInterval: IntervalInput
-  startDateBinding: TaskDateBinding
-  dueDate: DateTime
-  dueDateInterval: IntervalInput
-  dueDateBinding: TaskDateBinding
-  assignedToIds: [ID!]
-  approverIds: [ID!]
-  inProgressById: ID
-  inProgressAt: DateTime
-  completedById: ID
-  completedAt: DateTime
-  rejectedById: ID
-  rejectedAt: DateTime
-  approvedById: ID
-  approvedAt: DateTime
-  skippedById: ID
-  skippedAt: DateTime
-  memo: String
-  description: String
-  tagIds: [ID!]
-}
-
-input MilestoneTaskUpdateInput {
+input MilestoneTaskInput {
   name: String
   approvable: Boolean
   startDate: DateTime
@@ -29780,6 +29754,7 @@ input MilestoneTaskUpdateInput {
   description: String
   tagIds: [ID!]
   id: ID
+  entity: EntityInput
 }
 
 input MilestoneUpdateInput {
@@ -29788,7 +29763,7 @@ input MilestoneUpdateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskUpdateInput!]
+  tasks: [MilestoneTaskInput!]
   id: ID
   projectId: ID
 }
@@ -30807,7 +30782,7 @@ input ProjectMilestoneCreateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskCreateInput!]
+  tasks: [MilestoneTaskInput!]
 }
 
 input ProjectMilestoneUpdateInput {
@@ -30816,7 +30791,7 @@ input ProjectMilestoneUpdateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskUpdateInput!]
+  tasks: [MilestoneTaskInput!]
   id: ID
 }
 
@@ -87020,6 +86995,7 @@ input TaskFilterInput {
   entities: [EntityInput!]
   milestoneId: ID
   hasMilestone: Boolean
+  hasMilestoneExceptIds: [ID!]
 }
 
 union TaskPayload = Task | BadRequest | Forbidden | NotFound

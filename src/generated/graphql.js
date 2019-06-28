@@ -20438,7 +20438,7 @@ export type MilestoneCreateInput = {
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  tasks?: ?Array<MilestoneTaskCreateInput>,
+  tasks?: ?Array<MilestoneTaskInput>,
   projectId: $ElementType<Scalars, 'ID'>,
 };
 
@@ -20455,33 +20455,7 @@ export type MilestoneEntitiesCount = {
 
 export type MilestonePayload = Milestone | BadRequest | Forbidden | NotFound;
 
-export type MilestoneTaskCreateInput = {
-  name: $ElementType<Scalars, 'String'>,
-  approvable?: ?$ElementType<Scalars, 'Boolean'>,
-  startDate?: ?$ElementType<Scalars, 'DateTime'>,
-  startDateInterval?: ?IntervalInput,
-  startDateBinding?: ?TaskDateBinding,
-  dueDate?: ?$ElementType<Scalars, 'DateTime'>,
-  dueDateInterval?: ?IntervalInput,
-  dueDateBinding?: ?TaskDateBinding,
-  assignedToIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  approverIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-  inProgressById?: ?$ElementType<Scalars, 'ID'>,
-  inProgressAt?: ?$ElementType<Scalars, 'DateTime'>,
-  completedById?: ?$ElementType<Scalars, 'ID'>,
-  completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  rejectedById?: ?$ElementType<Scalars, 'ID'>,
-  rejectedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  approvedById?: ?$ElementType<Scalars, 'ID'>,
-  approvedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  skippedById?: ?$ElementType<Scalars, 'ID'>,
-  skippedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  memo?: ?$ElementType<Scalars, 'String'>,
-  description?: ?$ElementType<Scalars, 'String'>,
-  tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
-};
-
-export type MilestoneTaskUpdateInput = {
+export type MilestoneTaskInput = {
   name?: ?$ElementType<Scalars, 'String'>,
   approvable?: ?$ElementType<Scalars, 'Boolean'>,
   startDate?: ?$ElementType<Scalars, 'DateTime'>,
@@ -20506,6 +20480,7 @@ export type MilestoneTaskUpdateInput = {
   description?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   id?: ?$ElementType<Scalars, 'ID'>,
+  entity?: ?EntityInput,
 };
 
 export type MilestoneUpdateInput = {
@@ -20514,7 +20489,7 @@ export type MilestoneUpdateInput = {
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  tasks?: ?Array<MilestoneTaskUpdateInput>,
+  tasks?: ?Array<MilestoneTaskInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
   projectId?: ?$ElementType<Scalars, 'ID'>,
 };
@@ -22012,7 +21987,7 @@ export type ProjectMilestoneCreateInput = {
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  tasks?: ?Array<MilestoneTaskCreateInput>,
+  tasks?: ?Array<MilestoneTaskInput>,
 };
 
 export type ProjectMilestoneUpdateInput = {
@@ -22021,7 +21996,7 @@ export type ProjectMilestoneUpdateInput = {
   dueDate?: ?$ElementType<Scalars, 'DateTime'>,
   completedById?: ?$ElementType<Scalars, 'ID'>,
   completedAt?: ?$ElementType<Scalars, 'DateTime'>,
-  tasks?: ?Array<MilestoneTaskUpdateInput>,
+  tasks?: ?Array<MilestoneTaskInput>,
   id?: ?$ElementType<Scalars, 'ID'>,
 };
 
@@ -60225,6 +60200,7 @@ export type TaskFilterInput = {
   entities?: ?Array<EntityInput>,
   milestoneId?: ?$ElementType<Scalars, 'ID'>,
   hasMilestone?: ?$ElementType<Scalars, 'Boolean'>,
+  hasMilestoneExceptIds?: ?Array<$ElementType<Scalars, 'ID'>>,
 };
 
 export type TaskPayload = Task | BadRequest | Forbidden | NotFound;
@@ -60895,7 +60871,7 @@ export type ProjectCardFragmentFragment = ({ __typename?: 'Project' } & $Pick<Pr
 
 export type MilestoneCardFragmentFragment = ({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: *, description: *, dueDate: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) });
 
-export type ProjectFormQueryFragmentFragment = ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, tags: Array<TagFragmentFragment>, milestones: Array<({ __typename?: 'Milestone' } & { tasks: Array<(TaskCardFragmentFragment & ({ __typename?: 'Task' } & { entity: ?(({ __typename?: 'Order' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Product' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'OrderItem' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Batch' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Shipment' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) })) }))>, entitiesCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)), entitiesRelatedCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)) } & MilestoneCardFragmentFragment)> });
+export type ProjectFormQueryFragmentFragment = ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, tags: Array<TagFragmentFragment>, milestones: Array<({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }> & { completedBy: ?UserAvatarFragmentFragment, taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<(TaskCardFragmentFragment & ({ __typename?: 'Task' } & $Pick<Task, { milestoneSort: *, approvable: * }> & { entity: ?(({ __typename?: 'Order' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Product' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'OrderItem' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Batch' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Shipment' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) })) }))>, entitiesCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)), entitiesRelatedCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)) })> });
 
 export type ProjectFormFragmentFragment = ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, tags: Array<TagFragmentFragment> });
 
@@ -60915,7 +60891,7 @@ export type TagFormFragmentFragment = ({ __typename?: 'Tag' } & $Pick<Tag, { id:
 
 export type TagCardFragmentFragment = ({ __typename?: 'Tag' } & $Pick<Tag, { id: *, name: *, description: *, color: *, entityTypes: * }>);
 
-export type TaskCardFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, name: *, approvable: *, sort: *, startDate: *, dueDate: *, inProgressAt: *, completedAt: *, rejectedAt: *, approvedAt: * }> & { entity: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & (({ __typename?: 'Order' } & $Pick<Order, { poNo: * }>) | ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { no: * }>) | ({ __typename?: 'Shipment' } & $Pick<Shipment, { no: * }>) | ({ __typename?: 'Batch' } & $Pick<Batch, { no: * }>) | ({ __typename?: 'Product' } & $Pick<Product, { name: * }>) | ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { name: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: * }>) }))), assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, inProgressBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, tags: Array<TagFragmentFragment> });
+export type TaskCardFragmentFragment = ({ __typename?: 'Task' } & $Pick<Task, { id: *, name: *, approvable: *, sort: *, startDate: *, dueDate: *, inProgressAt: *, skippedAt: *, completedAt: *, rejectedAt: *, approvedAt: * }> & { entity: ?(({ __typename?: 'User' | 'Tag' | 'Group' | 'File' | 'Product' | 'Mask' | 'FieldDefinition' | 'ProductProvider' | 'Event' | 'Comment' | 'Task' | 'TaskTemplate' | 'Milestone' | 'Project' | 'Order' | 'OrderItem' | 'Batch' | 'Shipment' | 'TimelineDate' | 'TimelineDateRevision' | 'Voyage' | 'ContainerGroup' | 'Warehouse' | 'IntegrationLink' | 'IntegrationConfiguration' | 'Integration' | 'Container' | 'BatchQuantityRevision' | 'Partnership' | 'Role' | 'Partner' | 'MaskEdit' | 'ExportTemplate' } & $Pick<Model, { id: * }>) & (({ __typename?: 'Order' } & $Pick<Order, { poNo: * }>) | ({ __typename?: 'OrderItem' } & $Pick<OrderItem, { no: * }>) | ({ __typename?: 'Shipment' } & $Pick<Shipment, { no: * }>) | ({ __typename?: 'Batch' } & $Pick<Batch, { no: * }>) | ({ __typename?: 'Product' } & $Pick<Product, { name: * }>) | ({ __typename?: 'ProductProvider' } & $Pick<ProductProvider, { name: * }> & { product: ({ __typename?: 'Product' } & $Pick<Product, { id: *, name: * }>) }))), assignedTo: Array<UserAvatarFragmentFragment>, approvers: Array<UserAvatarFragmentFragment>, inProgressBy: ?UserAvatarFragmentFragment, skippedBy: ?UserAvatarFragmentFragment, completedBy: ?UserAvatarFragmentFragment, rejectedBy: ?UserAvatarFragmentFragment, approvedBy: ?UserAvatarFragmentFragment, tags: Array<TagFragmentFragment> });
 
 export type TaskTemplateCardFragmentFragment = ({ __typename?: 'TaskTemplate' } & $Pick<TaskTemplate, { id: *, updatedAt: *, name: *, description: *, entityType: * }> & { updatedBy: ?UserAvatarFragmentFragment, tasks: Array<TaskFormInTemplateFragmentFragment> });
 
