@@ -93,15 +93,10 @@ function sortBy(
 
     default: {
       compareBy = comparator((firstItem, secondItem) =>
-        direction === 'DESCENDING'
-          ? !compareByNumber(
-              getByPathWithDefault(0, 'milestoneSort', firstItem),
-              getByPathWithDefault(0, 'milestoneSort', secondItem)
-            )
-          : compareByNumber(
-              getByPathWithDefault(0, 'milestoneSort', firstItem),
-              getByPathWithDefault(0, 'milestoneSort', secondItem)
-            )
+        compareByNumber(
+          getByPathWithDefault(0, 'milestoneSort', firstItem),
+          getByPathWithDefault(0, 'milestoneSort', secondItem)
+        )
       );
     }
   }
