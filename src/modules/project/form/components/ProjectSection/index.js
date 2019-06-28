@@ -216,7 +216,9 @@ const ProjectSection = ({ isNew }: Props) => {
                 </div>
 
                 <div className={TasksInfoWrapperStyle}>
-                  <TaskStatus {...values.taskCount} />
+                  <Subscribe to={[ProjectMilestonesContainer]}>
+                    {({ taskCount }) => <TaskStatus {...taskCount()} />}
+                  </Subscribe>
                 </div>
 
                 <div className={BindedAndRelatedWrapperStyle}>

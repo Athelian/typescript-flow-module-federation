@@ -1,7 +1,8 @@
 // @flow
-import { flatten } from 'lodash';
-import update from 'immutability-helper';
+import { flatten, sumBy } from 'lodash';
 import { Container } from 'unstated';
+import update from 'immutability-helper';
+import { isBefore } from 'date-fns';
 import pluralize from 'pluralize';
 import { camelCase } from 'lodash/fp';
 import type { Milestone } from 'generated/graphql';
@@ -36,6 +37,55 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   initDetailValues = (milestones: Array<Milestone>) => {
     this.setState({ milestones });
     this.originalValues = { milestones };
+  };
+
+  taskCount = (): {
+    count: number,
+    remain: number,
+    inProgress: number,
+    completed: number,
+    rejected: number,
+    approved: number,
+    skipped: number,
+    delayed: number,
+    unapproved: number,
+  } => {
+    const tasks = flatten(this.state.milestones.map(item => item.tasks));
+    return {
+      count: tasks.length,
+      completed: sumBy(tasks, task => (getByPathWithDefault('', 'completedAt', task) ? 1 : 0)),
+      rejected: sumBy(tasks, task => (getByPathWithDefault('', 'rejectedAt', task) ? 1 : 0)),
+      approved: sumBy(tasks, task => (getByPathWithDefault('', 'approvedAt', task) ? 1 : 0)),
+      delayed: sumBy(tasks, task =>
+        !getByPathWithDefault('', 'completedAt', task) &&
+        !getByPathWithDefault('', 'skippedAt', task) &&
+        getByPathWithDefault('', 'dueDate', task) &&
+        isBefore(new Date(getByPathWithDefault('', 'dueDate', task)), new Date())
+          ? 1
+          : 0
+      ),
+      unapproved: sumBy(tasks, task =>
+        getByPathWithDefault('', 'approvable', task) &&
+        !getByPathWithDefault('', 'rejectedAt', task) &&
+        !getByPathWithDefault('', 'approvedAt', task)
+          ? 1
+          : 0
+      ),
+      inProgress: sumBy(tasks, task =>
+        !getByPathWithDefault('', 'completedAt', task) &&
+        getByPathWithDefault('', 'inProgressAt', task)
+          ? 1
+          : 0
+      ),
+      remain: sumBy(tasks, task =>
+        !getByPathWithDefault('', 'completedAt', task) &&
+        !getByPathWithDefault('', 'inProgressAt', task) &&
+        !getByPathWithDefault('', 'skippedAt', task)
+          ? 1
+          : 0
+      ),
+      skipped: sumBy(tasks, task => (getByPathWithDefault('', 'skippedAt', task) ? 1 : 0)),
+    };
   };
 
   setMilestoneValue = (id: string, value: Object) => {

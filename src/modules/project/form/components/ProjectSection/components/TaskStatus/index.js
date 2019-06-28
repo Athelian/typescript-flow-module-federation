@@ -7,7 +7,7 @@ import { Label, Display } from 'components/Form';
 import messages from './messages';
 import { TaskInfoStyle, IconStyle } from './style';
 
-type Props = {
+type Props = {|
   count: number,
   remain: number,
   inProgress: number,
@@ -16,7 +16,8 @@ type Props = {
   approved: number,
   skipped: number,
   delayed: number,
-};
+  unapproved: number,
+|};
 
 export default function TaskStatus({
   count,
@@ -27,6 +28,7 @@ export default function TaskStatus({
   skipped,
   rejected,
   approved,
+  unapproved,
 }: Props) {
   return (
     <GridColumn gap="10px">
@@ -133,7 +135,7 @@ export default function TaskStatus({
           <FormattedMessage {...messages.unapproved} />
         </Label>
 
-        <Display>{count - (rejected + approved)}</Display>
+        <Display>{unapproved}</Display>
       </div>
     </GridColumn>
   );

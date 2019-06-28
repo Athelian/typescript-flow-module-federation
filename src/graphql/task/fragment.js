@@ -48,6 +48,10 @@ export const taskCardFragment = gql`
       ...userAvatarFragment
     }
     inProgressAt
+    skippedBy {
+      ...userAvatarFragment
+    }
+    skippedAt
     completedBy {
       ...userAvatarFragment
     }

@@ -90,7 +90,7 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
         <Layout
           navBar={
             <SlideViewNavBar>
-              <EntityIcon icon="BATCH" color="BATCH" />
+              <EntityIcon icon="TASK" color="TASK" />
               <SortInput
                 sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
                 ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
