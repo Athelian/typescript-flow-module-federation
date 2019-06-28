@@ -38,7 +38,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
 
   initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
     this.setState({ milestones, ignoreTaskIds });
-    this.originalValues = { milestones };
+    this.originalValues = { milestones, ignoreTaskIds };
   };
 
   taskCount = (): {
@@ -187,6 +187,13 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     return (originalTasks
       .filter(task => !taskIds.includes(getByPathWithDefault('', 'id', task)))
       .map(task => getByPathWithDefault('', 'id', task)): Array<string>);
+  };
+
+  excludeIds = () => {
+    const taskIds = flatten(this.state.milestones.map(item => item.tasks))
+      .map(task => getByPathWithDefault('', 'id', task))
+      .filter(Boolean);
+    return [...taskIds, ...this.state.ignoreTaskIds];
   };
 
   countBindingEntities = () => {

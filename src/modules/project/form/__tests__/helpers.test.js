@@ -3,22 +3,6 @@ import faker from 'faker';
 import sortBy, { ENTITIES } from '../helpers';
 
 describe('Milestone - manual sort', () => {
-  it('should sort by default with milestoneSort desc', () => {
-    const tasks = range(faker.random.number({ min: 5, max: 10 })).map((_, milestoneSort) => ({
-      milestoneSort,
-      id: faker.random.uuid(),
-      name: faker.name.findName(),
-      startDate: faker.date.future(),
-      dueDate: faker.date.future(),
-      createdAt: faker.date.future(),
-      updatedAt: faker.date.future(),
-      entity: {
-        __typename: ENTITIES[faker.random.number({ min: 0, max: ENTITIES.length - 1 })],
-      },
-    }));
-    expect(sortBy(tasks, { field: 'default', direction: 'DESCENDING' })).toEqual(tasks.reverse());
-  });
-
   it('should sort by default with milestoneSort asc', () => {
     const tasks = range(faker.random.number({ min: 5, max: 10 })).map((_, milestoneSort) => ({
       milestoneSort,

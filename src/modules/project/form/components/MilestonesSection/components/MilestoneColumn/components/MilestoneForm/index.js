@@ -45,8 +45,15 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
   const isNew = milestoneId.includes('-');
   return (
     <Subscribe to={[ProjectMilestonesContainer]}>
-      {({ originalValues, state, setMilestoneValue, excludeTaskIds, removeMilestone }) => {
-        const { milestones = [], ignoreTaskIds = [] } = { ...originalValues, ...state };
+      {({
+        originalValues,
+        state,
+        setMilestoneValue,
+        excludeTaskIds,
+        excludeIds,
+        removeMilestone,
+      }) => {
+        const { milestones = [] } = { ...originalValues, ...state };
         const values = milestones.find(milestone => milestone.id === milestoneId) || {};
         const initialValues =
           (originalValues.milestones || []).find(milestone => milestone.id === milestoneId) || {};
@@ -182,7 +189,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                     {selectTasksIsOpen && (
                       <SelectTasks
                         filter={{
-                          excludeIds: ignoreTaskIds,
+                          excludeIds: excludeIds(),
                           hasMilestoneExceptIds: excludeTaskIds(),
                         }}
                         selectedTasks={values.tasks || []}
