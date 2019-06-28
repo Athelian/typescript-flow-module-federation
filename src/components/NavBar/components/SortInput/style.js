@@ -28,14 +28,14 @@ export const WrapperStyle = (borderRound: boolean) => css`
   ${fontSizes.MAIN};
 `;
 
-export const InputStyle: string = css`
+export const InputStyle = (sortable: boolean): string => css`
   ${fontSizes.MAIN};
   font-weight: bold;
   flex: 1;
   height: 20px;
   border: none;
   outline: none;
-  border-right: 1px solid ${colors.GRAY_VERY_LIGHT};
+  ${sortable && `border-right: 1px solid ${colors.GRAY_VERY_LIGHT}`};
   padding: 0 5px 0 0;
   ${presets.ELLIPSIS};
   color: ${colors.BLACK};

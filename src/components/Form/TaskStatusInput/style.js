@@ -16,7 +16,7 @@ export const TaskStatusInputWrapperStyle = ({
   let statusStyle = '';
   if (status === 'unCompleted') {
     statusStyle = `
-      background-color: ${colors.GRAY_LIGHT};
+      background-color: ${colors.GRAY_SUPER_LIGHT};
       color: ${colors.GRAY_DARK};
       ${
         editable.inProgress

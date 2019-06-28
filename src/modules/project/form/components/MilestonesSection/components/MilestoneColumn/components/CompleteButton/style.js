@@ -1,53 +1,91 @@
 // @flow
 import { css } from 'react-emotion';
-import { presets, borderRadiuses, fontSizes, colors } from 'styles/common';
+import { presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
 
-export const CompletedByWrapperStyle: string = css`
-  display: flex;
-  flex-direction: column;
-`;
+type TaskStatusInputWrapperStyleType = {
+  isCompleted: boolean,
+  editable: boolean,
+};
 
-export const CompletedByStyle: string = css`
-  ${fontSizes.SMALL};
-  min-height: 12px;
-  max-height: 12px;
-  line-height: 12px;
-  ${presets.ELLIPSIS};
-  text-align: right;
-`;
-
-export const CompletedAtStyle: string = css`
-  ${fontSizes.MAIN};
-  min-height: 18px;
-  max-height: 18px;
-  line-height: 18px;
-  ${presets.ELLIPSIS};
-  font-weight: bold;
-  text-align: right;
-`;
-
-export const StatusWrapperStyle = (completed: boolean) => css`
-  position: relative;
-  width: 175px;
-  margin: 0 5px;
-  height: 40px;
+export const TaskStatusInputWrapperStyle = ({
+  isCompleted,
+  editable,
+}: TaskStatusInputWrapperStyleType): string => css`
+  ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${completed ? colors.TEAL : colors.GRAY_LIGHT};
-  color: ${completed ? colors.WHITE : colors.GRAY_DARK};
+  height: 40px;
+  width: 200px;
+  border: 2px solid ${colors.TRANSPARENT};
+  ${isCompleted
+    ? `
+      background-color: ${colors.TEAL};
+      color: ${colors.WHITE};
+      cursor: inherit;
+    `
+    : `
+      background-color: ${colors.GRAY_SUPER_LIGHT};
+      color: ${colors.GRAY_DARK};
+      ${
+        editable
+          ? `
+        &:hover, :focus {
+          background-color: ${colors.GRAY_VERY_LIGHT};
+        }
+      `
+          : `
+        cursor: inherit;
+      `
+      }
+    `};
+`;
+
+export const UserAvatarWrapperStyle: string = css`
+  position: relative;
+  margin: 3px 0 3px 3px;
+  &:hover {
+    & > button {
+      opacity: 1;
+    }
+  }
+`;
+
+export const DeactivateButtonStyle: string = css`
+  position: absolute;
+  top: 0;
+  ${presets.BUTTON};
+  opacity: 0;
+  ${borderRadiuses.CIRCLE};
+  background-color: ${colors.WHITE};
+  color: ${colors.GRAY_LIGHT};
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+  ${shadows.DROPDOWN};
+  &:hover,
+  :focus {
+    color: ${colors.RED};
+  }
+`;
+
+export const TaskStatusButtonStyle: string = css`
+  ${presets.BUTTON};
+  flex: 1;
+  height: 100%;
+  padding: 3px 3px 3px 0;
+  border-radius: 0 50% 50% 0;
+  color: inherit;
+  cursor: inherit;
+`;
+
+export const TaskStatusInputLabelStyle: string = css`
+  flex: 1;
+`;
+
+export const StatusLabelStyle: string = css`
+  ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
   letter-spacing: 2px;
-`;
-
-export const StatusIconStyle: string = css`
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 40px;
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  user-select: none;
+  text-transform: uppercase;
+  text-align: center;
 `;

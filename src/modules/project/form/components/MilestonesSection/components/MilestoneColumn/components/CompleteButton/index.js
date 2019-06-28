@@ -6,16 +6,17 @@ import UserAvatar from 'components/UserAvatar';
 import FormattedDate from 'components/FormattedDate';
 import { type UserAvatarType } from 'types';
 import {
-  CompletedByWrapperStyle,
-  CompletedByStyle,
-  CompletedAtStyle,
-  StatusWrapperStyle,
-  StatusIconStyle,
+  TaskStatusInputWrapperStyle,
+  UserAvatarWrapperStyle,
+  DeactivateButtonStyle,
+  TaskStatusButtonStyle,
+  TaskStatusInputLabelStyle,
+  StatusLabelStyle,
 } from './style';
 
 type OptionalProps = {
-  completeAt: ?(string | Date),
-  completeBy: ?UserAvatarType,
+  completedAt: ?(string | Date),
+  completedBy: ?UserAvatarType,
   onComplete: Object => void,
   onUncomplete: () => void,
 };
@@ -23,37 +24,63 @@ type OptionalProps = {
 type Props = OptionalProps;
 
 const defaultProps = {
-  completeAt: null,
-  completeBy: null,
+  completedAt: null,
+  completedBy: null,
   onComplete: () => {},
   onUncomplete: () => {},
 };
 
-const CompleteButton = ({ completeAt, completeBy, onComplete, onUncomplete }: Props) => {
-  return completeAt && completeBy ? (
-    <div className={StatusWrapperStyle(true)} onClick={onUncomplete} role="presentation">
-      <UserAvatar firstName={completeBy.firstName} lastName={completeBy.lastName} />
-      <div className={CompletedByWrapperStyle}>
-        <div className={CompletedByStyle}>
-          <FormattedMessage id="components.card.Completed" defaultMessage="COMPLETED" />
-        </div>
-        <div className={CompletedAtStyle}>
-          <FormattedDate value={completeAt} />
-        </div>
-      </div>
-      <div className={StatusIconStyle}>
-        <Icon icon="CHECKED" />
-      </div>
+const CompleteButton = ({ completedAt, completedBy, onComplete, onUncomplete }: Props) => (
+  <div
+    className={TaskStatusInputWrapperStyle({
+      isCompleted: !!completedAt,
+      // TODO: Add permissions
+      editable: true,
+    })}
+  >
+    <div className={UserAvatarWrapperStyle}>
+      {completedAt && (
+        <>
+          <UserAvatar {...completedBy} />
+
+          {/* TODO: Add permissions: if dont have permission then dont render this ui */}
+          <button type="button" className={DeactivateButtonStyle} onClick={onUncomplete}>
+            <Icon icon="CLEAR" />
+          </button>
+        </>
+      )}
     </div>
-  ) : (
-    <div className={StatusWrapperStyle(false)} onClick={onComplete} role="presentation">
-      <FormattedMessage id="components.card.unCompleted" defaultMessage="UNCOMPLETED" />
-      <div className={StatusIconStyle}>
-        <Icon icon="CANCEL" />
+
+    <button
+      type="button"
+      className={TaskStatusButtonStyle}
+      onClick={() => {
+        if (!completedAt) {
+          // TODO: Add permissions
+          onComplete();
+        }
+      }}
+    >
+      <div className={TaskStatusInputLabelStyle}>
+        <div className={StatusLabelStyle}>
+          {completedAt ? (
+            <FormattedMessage id="components.form.completed" defaultMessage="COMPLETED" />
+          ) : (
+            <FormattedMessage id="components.form.unCompleted" defaultMessage="UNCOMPLETED" />
+          )}
+        </div>
+
+        {completedAt && (
+          <div className={StatusLabelStyle}>
+            <FormattedDate value={completedAt} />
+          </div>
+        )}
       </div>
-    </div>
-  );
-};
+
+      {completedAt && <Icon icon="CHECKED" />}
+    </button>
+  </div>
+);
 
 CompleteButton.defaultProps = defaultProps;
 

@@ -65,7 +65,7 @@ class SortInput extends React.Component<Props> {
             <input
               readOnly
               spellCheck={false}
-              className={InputStyle}
+              className={InputStyle(sortable)}
               onClick={toggle}
               {...getInputProps({
                 value: itemToString(selectedItem),

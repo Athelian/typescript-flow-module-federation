@@ -1,34 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, shadows, colors, transitions, borderRadiuses } from 'styles/common';
-
-export const TrashIconStyle = (isHover: boolean) => css`
-  ${isHover
-    ? `
-    opacity: 1;
-    height: 20px;
-  `
-    : `
-    opacity: 0;
-    height: 0px;
-  `};
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: fit-content;
-  cursor: pointer;
-  z-index: 4;
-`;
-
-export const RingIconStyle = css`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: fit-content;
-  height: fit-content;
-  cursor: pointer;
-  z-index: 4;
-`;
+import {
+  layout,
+  shadows,
+  colors,
+  transitions,
+  borderRadiuses,
+  presets,
+  fontSizes,
+} from 'styles/common';
 
 export const MilestoneHeaderWrapperStyle = (isDragging: boolean) => css`
   ${layout.GRID_VERTICAL};
@@ -48,4 +28,25 @@ export const MilestoneHeaderWrapperStyle = (isDragging: boolean) => css`
   `}
 `;
 
-export default MilestoneHeaderWrapperStyle;
+export const DeleteButtonStyle = (isHovered: boolean) => css`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  ${presets.BUTTON};
+  opacity: ${isHovered ? 1 : 0};
+  height: 20px;
+  width: 20px;
+  ${borderRadiuses.CIRCLE};
+  color: ${colors.GRAY_LIGHT};
+  ${fontSizes.MAIN};
+  &:hover,
+  :focus {
+    color: ${colors.RED};
+  }
+`;
+
+export const TaskRingWrapperStyle = css`
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+`;

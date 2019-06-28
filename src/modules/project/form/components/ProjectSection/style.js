@@ -1,6 +1,14 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, presets, colors, transitions, shadows, fontSizes } from 'styles/common';
+import {
+  layout,
+  presets,
+  colors,
+  transitions,
+  shadows,
+  fontSizes,
+  scrollbars,
+} from 'styles/common';
 
 export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
   display: grid;
@@ -12,7 +20,7 @@ export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
 `;
 
 export const MainSectionWrapperStyle: string = css`
-  display: flex:
+  display: flex;
   flex-direction: column;
 `;
 
@@ -24,6 +32,10 @@ export const ProjectInfoWrapperStyle: string = css`
   ${shadows.HEADER};
   padding: 20px;
   min-width: 680px;
+  height: 240px;
+  overflow-x: hidden;
+  overflow-y: overlay;
+  ${scrollbars.SMALL};
 `;
 
 export const DescriptionTagsWrapperStyle: string = css`
@@ -57,6 +69,7 @@ export const BindedAndRelatedWrapperStyle: string = css`
 `;
 
 export const ExpandWrapperStyle = css`
+  position: relative;
   ${presets.BUTTON};
   background-color: ${colors.GRAY};
   color: ${colors.WHITE};
@@ -64,6 +77,7 @@ export const ExpandWrapperStyle = css`
   width: 100%;
   ${shadows.HEADER};
   ${fontSizes.SMALL};
+  z-index: 3;
   &:hover,
   :focus {
     background-color: ${colors.GRAY_DARK};

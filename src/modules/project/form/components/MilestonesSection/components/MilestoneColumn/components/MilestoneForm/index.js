@@ -27,7 +27,7 @@ import {
 } from 'modules/permission/constants/milestone';
 import validator from './validator';
 import messages from './messages';
-import { MilestoneHeaderWrapperStyle, TrashIconStyle, RingIconStyle } from './style';
+import { MilestoneHeaderWrapperStyle, DeleteButtonStyle, TaskRingWrapperStyle } from './style';
 import CompleteButton from '../CompleteButton';
 
 type Props = {|
@@ -68,10 +68,11 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
             <BooleanValue>
               {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
                 <>
+                  {/* TODO: Add Permissions */}
                   {milestones.length > 1 && (
-                    <div
-                      className={TrashIconStyle(Boolean(isHovered))}
-                      role="presentation"
+                    <button
+                      className={DeleteButtonStyle(isHovered)}
+                      type="button"
                       onClick={() =>
                         getByPathWithDefault([], 'tasks', values).length > 0
                           ? dialogToggle(true)
@@ -79,7 +80,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                       }
                     >
                       <Icon icon="REMOVE" />
-                    </div>
+                    </button>
                   )}
                   <DeleteDialog
                     isOpen={deleteDialogIsOpen}
@@ -160,14 +161,11 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                 onChangeValue(`${milestoneId}.completedAt`, null);
                 onChangeValue(`${milestoneId}.completedBy`, null);
               }}
-              completeAt={values.completedAt}
-              completeBy={values.completedBy}
+              completedAt={values.completedAt}
+              completedBy={values.completedBy}
             />
 
-            <div className={RingIconStyle}>
-              <TaskRing tasks={values.tasks || []} />
-            </div>
-
+            {/* TODO: Add Permissions */}
             <BooleanValue>
               {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
                 <>
@@ -205,6 +203,10 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                 </>
               )}
             </BooleanValue>
+
+            <div className={TaskRingWrapperStyle}>
+              <TaskRing tasks={values.tasks || []} />
+            </div>
           </div>
         );
       }}
