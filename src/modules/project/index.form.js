@@ -17,7 +17,7 @@ import QueryForm from 'components/common/QueryForm';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
-import { decodeId, uuid } from 'utils/id';
+import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { projectTimelineQuery } from './query';
 import ProjectForm from './form';
@@ -133,20 +133,12 @@ class ProjectFormModule extends React.PureComponent<Props> {
   ) => {
     const { tags, milestones, ...info } = project;
     projectInfoState.initDetailValues(info);
-    projectTagsState.initDetailValues(tags || []);
-    projectMilestonesState.initDetailValues(
-      milestones || [
-        {
-          id: uuid(),
-          total: 0,
-          completed: 0,
-          dueDate: null,
-          isCompleted: false,
-          name: 'Milestone - 1',
-          tasks: [],
-        },
-      ]
-    );
+    if (tags && Array.isArray(tags) && tags.length) {
+      projectTagsState.initDetailValues(tags);
+    }
+    if (milestones && Array.isArray(milestones) && milestones.length) {
+      projectMilestonesState.initDetailValues(milestones);
+    }
     return null;
   };
 
@@ -172,7 +164,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
   ) => {
     const { intl } = this.props;
 
-    showToastError({ intl, result, entity: 'project' });
+    if (showToastError({ intl, result, entity: 'project' })) {
+      return;
+    }
+
+    if (getByPath('projectCreate.id', result)) {
+      navigate(`/project/${encodeId(getByPath('projectCreate.id', result))}`);
+    }
   };
 
   render() {

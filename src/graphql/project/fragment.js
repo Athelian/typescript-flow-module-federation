@@ -49,7 +49,12 @@ export const projectFormQueryFragment = gql`
     }
     milestones {
       ... on Milestone {
-        ...milestoneCardFragment
+        id
+        name
+        dueDate
+        taskCount {
+          ...taskCountFragment
+        }
         tasks {
           ...taskCardFragment
           ... on Task {

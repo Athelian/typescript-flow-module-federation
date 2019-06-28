@@ -1,36 +1,23 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  projectFormFragment,
-  userAvatarFragment,
-  tagFragment,
-  partnerCardFragment,
-  documentFragment,
-  shipmentCardFragment,
-  priceFragment,
-  imageFragment,
-  partnerNameFragment,
-  timelineDateMinimalFragment,
-  portFragment,
-  batchFormFragment,
-  metricFragment,
-  sizeFragment,
-  projectCardFragment,
-  customFieldsFragment,
-  maskFragment,
-  fieldValuesFragment,
-  fieldDefinitionFragment,
-  badRequestFragment,
-  ownedByFragment,
+  projectFormQueryFragment,
+  taskCardFragment,
   taskCountFragment,
-  taskWithoutParentInfoFragment,
-  taskTemplateCardFragment,
-  taskFormInTemplateFragment,
-  containerCardFragment,
+  tagFragment,
+  userAvatarFragment,
+  ownedByFragment,
+  badRequestFragment,
   forbiddenFragment,
 } from 'graphql';
 import type { ProjectCreateInput } from 'generated/graphql';
-import { parseGenericField, parseDateField, parseArrayOfIdsField } from 'utils/data';
+import {
+  parseArrayOfChildrenField,
+  parseGenericField,
+  parseDateField,
+  parseArrayOfIdsField,
+} from 'utils/data';
+import { prepareParsedTaskInput } from 'modules/task/form/mutation';
 import { getByPathWithDefault } from 'utils/fp';
 
 export const createProjectMutation = gql`
@@ -47,41 +34,38 @@ export const createProjectMutation = gql`
   ${forbiddenFragment}
 `;
 
+const prepareParseMilestone = (originalValues: Object, newValues: Object): Object => ({
+  ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
+  ...parseDateField(
+    'dueDate',
+    getByPathWithDefault(null, 'dueDate', originalValues),
+    newValues.dueDate
+  ),
+  ...parseArrayOfChildrenField(
+    'tasks',
+    getByPathWithDefault([], 'tasks', originalValues),
+    newValues.tasks,
+    (task: ?Object, newTask: Object) => ({
+      ...(!task ? {} : { id: task.id }),
+      ...prepareParsedTaskInput(task, newTask),
+    })
+  ),
+});
 export const updateProjectMutation = gql`
   mutation projectUpdate($id: ID!, $input: ProjectUpdateInput!) {
     projectUpdate(id: $id, input: $input) {
-      ...projectFormFragment
+      ...projectFormQueryFragment
       ...badRequestFragment
       ...forbiddenFragment
     }
   }
-
-  ${projectFormFragment}
-  ${userAvatarFragment}
-  ${tagFragment}
-  ${documentFragment}
-  ${shipmentCardFragment}
-  ${priceFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
-  ${batchFormFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${projectCardFragment}
-  ${badRequestFragment}
-  ${customFieldsFragment}
-  ${maskFragment}
-  ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
+  ${projectFormQueryFragment}
+  ${taskCardFragment}
   ${taskCountFragment}
-  ${taskWithoutParentInfoFragment}
-  ${taskTemplateCardFragment}
-  ${taskFormInTemplateFragment}
-  ${containerCardFragment}
-  ${partnerCardFragment}
+  ${tagFragment}
+  ${userAvatarFragment}
+  ${ownedByFragment}
+  ${badRequestFragment}
   ${forbiddenFragment}
 `;
 
@@ -104,5 +88,14 @@ export const prepareParsedProjectInput = (
     'tagIds',
     getByPathWithDefault([], 'tags', originalValues),
     newValues.tags
+  ),
+  ...parseArrayOfChildrenField(
+    'milestones',
+    getByPathWithDefault([], 'milestones', originalValues),
+    newValues.milestones,
+    (milestone: ?Object, newMilestone: Object) => ({
+      ...(!milestone ? {} : { id: milestone.id }),
+      ...prepareParseMilestone(milestone, newMilestone),
+    })
   ),
 });

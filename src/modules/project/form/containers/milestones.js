@@ -9,11 +9,21 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { uuid } from 'utils/id';
 
 type FormState = {
-  milestones: Array<Milestone>,
+  milestones: Array<Object>,
 };
 
 export const initValues: FormState = {
-  milestones: [],
+  milestones: [
+    {
+      id: uuid(),
+      total: 0,
+      completed: 0,
+      dueDate: null,
+      isCompleted: false,
+      name: 'Milestone - 1',
+      tasks: [],
+    },
+  ],
 };
 
 export default class ProjectMilestonesContainer extends Container<FormState> {
