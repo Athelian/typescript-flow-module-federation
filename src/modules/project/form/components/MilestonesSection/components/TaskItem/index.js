@@ -5,15 +5,14 @@ import type { Task } from 'generated/graphql';
 import { TaskCard } from 'components/Cards';
 import { TaskItemWrapperStyle } from './style';
 
-type Props = {
+type Props = {|
   task: Task,
   isDragging: boolean,
   provided: DraggableProvided,
   isGroupedOver?: boolean,
-  position: number,
-};
+|};
 
-function TaskItem({ task, position, isDragging, provided }: Props) {
+function TaskItem({ task, isDragging, provided }: Props) {
   return (
     <div
       className={TaskItemWrapperStyle(isDragging)}
@@ -21,7 +20,7 @@ function TaskItem({ task, position, isDragging, provided }: Props) {
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
-      <TaskCard position={position} entity={task.entity} task={task} key={task.id} />
+      <TaskCard position={task.milestoneSort + 1} entity={task.entity} task={task} key={task.id} />
     </div>
   );
 }

@@ -56,12 +56,13 @@ export const projectFormQueryFragment = gql`
         completedBy {
           ...userAvatarFragment
         }
-        taskCount
+        taskCount {
           ...taskCountFragment
         }
         tasks {
           ...taskCardFragment
           ... on Task {
+            milestoneSort
             entity {
               ... on Order {
                 todo {

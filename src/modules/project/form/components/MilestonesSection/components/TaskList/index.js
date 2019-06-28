@@ -32,7 +32,6 @@ const InnerTaskList = React.memo(function InnerTaskList({ tasks, isDragDisabled 
         <TaskItem
           task={task}
           key={task.id}
-          position={index}
           isDragging={dragSnapshot.isDragging}
           isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
           provided={dragProvided}

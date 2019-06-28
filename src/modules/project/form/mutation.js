@@ -17,8 +17,8 @@ import {
   parseDateField,
   parseArrayOfIdsField,
   parseParentIdField,
+  parseTaskField,
 } from 'utils/data';
-import { prepareParsedTaskInput } from 'modules/task/form/mutation';
 import { getByPathWithDefault } from 'utils/fp';
 
 export const createProjectMutation = gql`
@@ -34,6 +34,11 @@ export const createProjectMutation = gql`
   ${badRequestFragment}
   ${forbiddenFragment}
 `;
+
+export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
+  ...(!values ? {} : { id: values.id }),
+  ...parseTaskField(originalValues, values),
+});
 
 const prepareParseMilestone = (originalValues: Object, newValues: Object): Object => ({
   ...parseGenericField('name', getByPathWithDefault(null, 'name', originalValues), newValues.name),
