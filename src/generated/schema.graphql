@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jun 27 2019 15:17:37 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Jun 28 2019 10:49:38 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -87007,6 +87007,7 @@ enum TaskDateBinding {
   ShipmentWarehouseArrival
   ShipmentDeliveryReady
   TaskStartDate
+  TaskDueDate
 }
 
 input TaskFilterInput {
