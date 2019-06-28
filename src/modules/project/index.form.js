@@ -131,7 +131,21 @@ class ProjectFormModule extends React.PureComponent<Props> {
     { projectInfoState, projectTagsState, projectMilestonesState }: Object,
     project: Project | { id: string, tags?: Array<Tag>, milestones?: Array<Milestone> }
   ) => {
-    const { tags, milestones, ...info } = project;
+    const {
+      tags = [],
+      milestones = [
+        {
+          id: uuid(),
+          total: 0,
+          completed: 0,
+          dueDate: null,
+          isCompleted: false,
+          name: 'Milestone - 1',
+          tasks: [],
+        },
+      ],
+      ...info
+    } = project;
     projectInfoState.initDetailValues(info);
     if (tags && Array.isArray(tags) && tags.length) {
       projectTagsState.initDetailValues(tags);

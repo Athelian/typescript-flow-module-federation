@@ -9,15 +9,12 @@ import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
+import useUser from 'hooks/useUser';
 import DeleteDialog from 'components/Dialog/DeleteDialog';
 import SelectTasks from 'providers/SelectTasks';
 import SlideView from 'components/SlideView';
 import TaskRing from 'components/TaskRing';
 import Icon from 'components/Icon';
-import {
-  MilestoneStatusWrapperStyle,
-  MilestoneStatusIconStyle,
-} from 'components/Cards/MilestoneCard/style';
 import { NewButton } from 'components/Buttons';
 import { FormField } from 'modules/form';
 import { TextInputFactory, DateInputFactory } from 'components/Form';
@@ -30,6 +27,7 @@ import {
 import validator from './validator';
 import messages from './messages';
 import { MilestoneHeaderWrapperStyle, TrashIconStyle, RingIconStyle } from './style';
+import CompleteButton from '../CompleteButton';
 
 type Props = {|
   provided: DraggableProvided,
@@ -40,6 +38,7 @@ type Props = {|
 export default function MilestoneForm({ provided, milestoneId, isDragging }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const { user } = useUser();
   const [hoverRef, isHovered] = useHover();
   // uuid will return '-' so that is the way to detect the milestone is new or from API
   const isNew = milestoneId.includes('-');
@@ -145,22 +144,18 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               )}
             </FormField>
 
-            {/* TODO: Make status clickable w/ dialog */}
-            {values.completedAt ? (
-              <div className={MilestoneStatusWrapperStyle(true)}>
-                <FormattedMessage id="components.cards.completed" defaultMessage="COMPLETED" />
-                <div className={MilestoneStatusIconStyle}>
-                  <Icon icon="CHECKED" />
-                </div>
-              </div>
-            ) : (
-              <div className={MilestoneStatusWrapperStyle(false)}>
-                <FormattedMessage id="components.card.unCompleted" defaultMessage="UNCOMPLETED" />
-                <div className={MilestoneStatusIconStyle}>
-                  <Icon icon="CANCEL" />
-                </div>
-              </div>
-            )}
+            <CompleteButton
+              onComplete={() => {
+                onChangeValue(`${milestoneId}.completedAt`, new Date());
+                onChangeValue(`${milestoneId}.completedBy`, user);
+              }}
+              onUncomplete={() => {
+                onChangeValue(`${milestoneId}.completedAt`, null);
+                onChangeValue(`${milestoneId}.completedBy`, null);
+              }}
+              completeAt={values.completedAt}
+              completeBy={values.completedBy}
+            />
 
             <div className={RingIconStyle}>
               <TaskRing tasks={values.tasks || []} />
