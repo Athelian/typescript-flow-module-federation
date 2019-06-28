@@ -53,6 +53,7 @@ Array [
 
 exports[`milestones container should delete milestone by id 1`] = `
 Object {
+  "ignoreTaskIds": Array [],
   "milestones": Array [
     Object {
       "dueDate": null,

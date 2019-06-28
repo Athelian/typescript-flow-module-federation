@@ -74,7 +74,7 @@ describe('milestones container', () => {
     expect(container.state).toEqual(initValues);
     const milestones = range(3).map(mileStoneGenerator);
     await container.initDetailValues(milestones);
-    expect(container.state).toEqual({ milestones });
+    expect(container.state.milestones).toEqual(milestones);
 
     expect(container.countBindingEntities()).toMatchSnapshot();
     expect(container.countBindingEntities()).toEqual({
@@ -123,24 +123,22 @@ describe('milestones container', () => {
       },
     ];
     await container.initDetailValues(milestones);
-    expect(container.state).toEqual({ milestones });
+    expect(container.state.milestones).toEqual(milestones);
     await container.changeMilestoneOrdering([2, 3, 1]);
-    expect(container.state).toEqual({
-      milestones: [
-        {
-          id: 2,
-          tasks: [],
-        },
-        {
-          id: 3,
-          tasks: [],
-        },
-        {
-          id: 1,
-          tasks: [],
-        },
-      ],
-    });
+    expect(container.state.milestones).toEqual([
+      {
+        id: 2,
+        tasks: [],
+      },
+      {
+        id: 3,
+        tasks: [],
+      },
+      {
+        id: 1,
+        tasks: [],
+      },
+    ]);
   });
 
   it('should change ordering of tasks under milestone', async () => {
@@ -165,7 +163,7 @@ describe('milestones container', () => {
       },
     ];
     await container.initDetailValues(milestones);
-    expect(container.state).toEqual({ milestones });
+    expect(container.state.milestones).toEqual(milestones);
     await container.changeMilestones({
       1: [],
       2: [],
@@ -175,26 +173,24 @@ describe('milestones container', () => {
         },
       ],
     });
-    expect(container.state).toEqual({
-      milestones: [
-        {
-          id: '1',
-          tasks: [],
-        },
-        {
-          id: '2',
-          tasks: [],
-        },
-        {
-          id: '3',
-          tasks: [
-            {
-              id: 4,
-            },
-          ],
-        },
-      ],
-    });
+    expect(container.state.milestones).toEqual([
+      {
+        id: '1',
+        tasks: [],
+      },
+      {
+        id: '2',
+        tasks: [],
+      },
+      {
+        id: '3',
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+    ]);
   });
 
   it('should return milestone status', async () => {
@@ -345,9 +341,10 @@ describe('milestones container', () => {
       },
     ];
     await container.initDetailValues(milestones);
-    const ignoreIds = container.excludeTaskIds();
 
-    expect(ignoreIds).toEqual([4, 5]);
+    expect(container.excludeTaskIds()).toEqual([]);
+    await container.removeMilestone('1');
+    expect(container.excludeTaskIds()).toEqual([4]);
   });
 
   it('should delete milestone by id', async () => {
@@ -385,25 +382,26 @@ describe('milestones container', () => {
     await container.removeMilestone('2');
 
     expect(container.state).toMatchSnapshot();
-    expect(container.state).toEqual({
-      milestones: [
-        {
-          id: '1',
-          name: 'a',
-          dueDate: null,
-          tasks: [
-            {
-              id: 4,
-            },
-          ],
-        },
-        {
-          id: '3',
-          name: 'c',
-          dueDate: null,
-          tasks: [],
-        },
-      ],
-    });
+    expect(container.state.milestones).toEqual([
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+      {
+        id: '3',
+        name: 'c',
+        dueDate: null,
+        tasks: [],
+      },
+    ]);
+
+    await container.removeMilestone('1', true);
+    expect(container.state.ignoreTaskIds).toEqual([4]);
   });
 });

@@ -11,10 +11,12 @@ import { uuid } from 'utils/id';
 
 type FormState = {
   milestones: Array<Milestone>,
+  ignoreTaskIds: [],
 };
 
 export const initValues: FormState = {
   milestones: [],
+  ignoreTaskIds: [],
 };
 
 export default class ProjectMilestonesContainer extends Container<FormState> {
@@ -34,8 +36,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (milestones: Array<Milestone>) => {
-    this.setState({ milestones });
+  initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
+    this.setState({ milestones, ignoreTaskIds });
     this.originalValues = { milestones };
   };
 
@@ -103,17 +105,29 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
 
   removeMilestone = (id: string, removeOnTasks: boolean = false) => {
     const index = this.state.milestones.findIndex(milestone => milestone.id === id);
-    // TODO: remove tasks related with milesetone
-    console.warn({
-      removeOnTasks,
-    });
-    this.setState(prevState =>
-      update(prevState, {
-        milestones: {
-          $splice: [[index, 1]],
-        },
-      })
-    );
+    const taskIds = this.state.milestones[index].tasks
+      .map(task => getByPathWithDefault('', 'id', task))
+      .filter(Boolean);
+    if (removeOnTasks) {
+      this.setState(prevState =>
+        update(prevState, {
+          milestones: {
+            $splice: [[index, 1]],
+          },
+          ignoreTaskIds: {
+            $push: taskIds,
+          },
+        })
+      );
+    } else {
+      this.setState(prevState =>
+        update(prevState, {
+          milestones: {
+            $splice: [[index, 1]],
+          },
+        })
+      );
+    }
   };
 
   newMilestone = () => {
@@ -166,8 +180,13 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   };
 
   excludeTaskIds = () => {
-    const tasks = flatten(this.state.milestones.map(item => item.tasks));
-    return (tasks.map(task => getByPathWithDefault('', 'id', task)): Array<string>);
+    const taskIds = flatten(this.state.milestones.map(item => item.tasks))
+      .map(task => getByPathWithDefault('', 'id', task))
+      .filter(Boolean);
+    const originalTasks = flatten(this.originalValues.milestones.map(item => item.tasks));
+    return (originalTasks
+      .filter(task => !taskIds.includes(getByPathWithDefault('', 'id', task)))
+      .map(task => getByPathWithDefault('', 'id', task)): Array<string>);
   };
 
   countBindingEntities = () => {
