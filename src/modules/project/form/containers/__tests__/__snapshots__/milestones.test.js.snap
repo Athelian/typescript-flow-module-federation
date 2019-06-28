@@ -51,6 +51,29 @@ Array [
 ]
 `;
 
+exports[`milestones container should delete milestone by id 1`] = `
+Object {
+  "milestones": Array [
+    Object {
+      "dueDate": null,
+      "id": "1",
+      "name": "a",
+      "tasks": Array [
+        Object {
+          "id": 4,
+        },
+      ],
+    },
+    Object {
+      "dueDate": null,
+      "id": "3",
+      "name": "c",
+      "tasks": Array [],
+    },
+  ],
+}
+`;
+
 exports[`milestones container should return milestone status 1`] = `
 Array [
   Object {

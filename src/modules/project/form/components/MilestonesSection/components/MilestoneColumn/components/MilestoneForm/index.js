@@ -84,8 +84,14 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   <DeleteDialog
                     isOpen={deleteDialogIsOpen}
                     onRequestClose={() => dialogToggle(false)}
-                    onRemove={() => dialogToggle(false)}
-                    onRemoveAll={() => dialogToggle(false)}
+                    onRemove={() => {
+                      removeMilestone(milestoneId);
+                      dialogToggle(false);
+                    }}
+                    onRemoveAll={() => {
+                      removeMilestone(milestoneId, true);
+                      dialogToggle(false);
+                    }}
                     onCancel={() => dialogToggle(false)}
                     onConfirm={() => {
                       dialogToggle(false);

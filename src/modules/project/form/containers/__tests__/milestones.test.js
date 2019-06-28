@@ -349,4 +349,61 @@ describe('milestones container', () => {
 
     expect(ignoreIds).toEqual([4, 5]);
   });
+
+  it('should delete milestone by id', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+          },
+        ],
+      },
+      {
+        id: '2',
+        name: 'b',
+        dueDate: null,
+        tasks: [
+          {
+            id: 5,
+          },
+        ],
+      },
+      {
+        id: '3',
+        name: 'c',
+        dueDate: null,
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    await container.removeMilestone('2');
+
+    expect(container.state).toMatchSnapshot();
+    expect(container.state).toEqual({
+      milestones: [
+        {
+          id: '1',
+          name: 'a',
+          dueDate: null,
+          tasks: [
+            {
+              id: 4,
+            },
+          ],
+        },
+        {
+          id: '3',
+          name: 'c',
+          dueDate: null,
+          tasks: [],
+        },
+      ],
+    });
+  });
 });

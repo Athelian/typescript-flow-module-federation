@@ -51,6 +51,21 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     );
   };
 
+  removeMilestone = (id: string, removeOnTasks: boolean = false) => {
+    const index = this.state.milestones.findIndex(milestone => milestone.id === id);
+    // TODO: remove tasks related with milesetone
+    console.warn({
+      removeOnTasks,
+    });
+    this.setState(prevState =>
+      update(prevState, {
+        milestones: {
+          $splice: [[index, 1]],
+        },
+      })
+    );
+  };
+
   newMilestone = () => {
     this.setState(prevState => ({
       ...prevState,
