@@ -16,6 +16,7 @@ import {
   parseGenericField,
   parseDateField,
   parseArrayOfIdsField,
+  parseParentIdField,
 } from 'utils/data';
 import { prepareParsedTaskInput } from 'modules/task/form/mutation';
 import { getByPathWithDefault } from 'utils/fp';
@@ -40,6 +41,16 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     'dueDate',
     getByPathWithDefault(null, 'dueDate', originalValues),
     newValues.dueDate
+  ),
+  ...parseParentIdField(
+    'completedById',
+    getByPathWithDefault(null, 'completedBy', originalValues),
+    newValues.completedBy
+  ),
+  ...parseDateField(
+    'completedAt',
+    getByPathWithDefault(null, 'completedAt', originalValues),
+    newValues.completedAt
   ),
   ...parseArrayOfChildrenField(
     'tasks',

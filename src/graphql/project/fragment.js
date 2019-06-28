@@ -52,7 +52,11 @@ export const projectFormQueryFragment = gql`
         id
         name
         dueDate
-        taskCount {
+        completedAt
+        completedBy {
+          ...userAvatarFragment
+        }
+        taskCount
           ...taskCountFragment
         }
         tasks {

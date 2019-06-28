@@ -5,6 +5,7 @@ import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { formatToGraphql, startOfToday } from 'utils/date';
 import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -146,7 +147,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
 
             <CompleteButton
               onComplete={() => {
-                onChangeValue(`${milestoneId}.completedAt`, new Date());
+                onChangeValue(`${milestoneId}.completedAt`, formatToGraphql(startOfToday()));
                 onChangeValue(`${milestoneId}.completedBy`, user);
               }}
               onUncomplete={() => {
