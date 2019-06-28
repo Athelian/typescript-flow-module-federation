@@ -114,7 +114,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   {...inputHandlers}
                   isNew={isNew}
                   required
-                  originalValue={initialValues[name]}
+                  originalValue={initialValues.name}
                   editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_NAME])}
                   vertical
                   inputAlign="left"
@@ -135,7 +135,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                   name={name}
                   {...inputHandlers}
                   isNew={isNew}
-                  originalValue={initialValues[name]}
+                  originalValue={initialValues.dueDate}
                   label={<FormattedMessage {...messages.dueDate} />}
                   editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_DUE_DATE])}
                   inputAlign="left"
@@ -188,7 +188,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                             ...getByPathWithDefault([], 'tasks', values),
                             ...selected.map((task, index) => ({
                               ...task,
-                              milestoneSort: counter + index + 1,
+                              milestoneSort: counter + index,
                             })),
                           ]);
                         }}
