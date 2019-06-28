@@ -187,9 +187,13 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                         selectedTasks={values.tasks || []}
                         onSelect={selected => {
                           selectTasksSlideToggle(false);
+                          const counter = getByPathWithDefault([], 'tasks', values).length;
                           onChangeValue(`${milestoneId}.tasks`, [
                             ...getByPathWithDefault([], 'tasks', values),
-                            ...selected,
+                            ...selected.map((task, index) => ({
+                              ...task,
+                              milestoneSort: counter + index + 1,
+                            })),
                           ]);
                         }}
                         onCancel={() => selectTasksSlideToggle(false)}
