@@ -5,6 +5,7 @@ import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
@@ -67,18 +68,19 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
             <BooleanValue>
               {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
                 <>
-                  <div
-                    className={TrashIconStyle(Boolean(isHovered))}
-                    role="presentation"
-                    onClick={() =>
-                      (values.tasks || []).length > 0
-                        ? dialogToggle(true)
-                        : removeMilestone(milestoneId)
-                    }
-                  >
-                    <Icon icon="REMOVE" />
-                  </div>
-                  {/* TODO: confirm with Kenvin about this idea a bit */}
+                  {milestones.length > 1 && (
+                    <div
+                      className={TrashIconStyle(Boolean(isHovered))}
+                      role="presentation"
+                      onClick={() =>
+                        getByPathWithDefault([], 'tasks', values).length > 0
+                          ? dialogToggle(true)
+                          : removeMilestone(milestoneId)
+                      }
+                    >
+                      <Icon icon="REMOVE" />
+                    </div>
+                  )}
                   <DeleteDialog
                     isOpen={deleteDialogIsOpen}
                     onRequestClose={() => dialogToggle(false)}
@@ -186,7 +188,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                         onSelect={selected => {
                           selectTasksSlideToggle(false);
                           onChangeValue(`${milestoneId}.tasks`, [
-                            ...(values.tasks || []),
+                            ...getByPathWithDefault([], 'tasks', values),
                             ...selected,
                           ]);
                         }}
