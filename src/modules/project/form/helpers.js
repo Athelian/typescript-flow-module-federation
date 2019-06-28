@@ -4,7 +4,7 @@ import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
 
-type SortField =
+export type SortField =
   | 'default'
   | 'updatedAt'
   | 'createdAt'
@@ -13,7 +13,7 @@ type SortField =
   | 'dueDate'
   | 'entity';
 
-type SortDirection = 'asc' | 'desc';
+export type SortDirection = 'ASCENDING' | 'DESCENDING';
 
 export const ENTITIES = [
   'Order',
@@ -48,7 +48,7 @@ function sortBy(
     case 'startDate':
     case 'dueDate': {
       compareBy = comparator((firstItem, secondItem) =>
-        direction === 'desc'
+        direction === 'DESCENDING'
           ? !compareByNumber(
               getByPathWithDefault(0, field, firstItem),
               getByPathWithDefault(0, field, secondItem)
@@ -63,7 +63,7 @@ function sortBy(
 
     case 'name': {
       compareBy = comparator((firstItem, secondItem) =>
-        direction === 'desc'
+        direction === 'DESCENDING'
           ? !compareByName(
               getByPathWithDefault('', field, firstItem),
               getByPathWithDefault('', field, secondItem)
@@ -78,7 +78,7 @@ function sortBy(
 
     case 'entity': {
       compareBy = comparator((firstItem, secondItem) =>
-        direction === 'desc'
+        direction === 'DESCENDING'
           ? !compareByEntity(
               getByPathWithDefault('', 'entity.__typename', firstItem),
               getByPathWithDefault('', 'entity.__typename', secondItem)
@@ -93,7 +93,7 @@ function sortBy(
 
     default: {
       compareBy = comparator((firstItem, secondItem) =>
-        direction === 'desc'
+        direction === 'DESCENDING'
           ? !compareByNumber(
               getByPathWithDefault(0, 'milestoneSort', firstItem),
               getByPathWithDefault(0, 'milestoneSort', secondItem)

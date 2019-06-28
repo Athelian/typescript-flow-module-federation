@@ -16,7 +16,7 @@ describe('Milestone - manual sort', () => {
         __typename: ENTITIES[faker.random.number({ min: 0, max: ENTITIES.length - 1 })],
       },
     }));
-    expect(sortBy(tasks, { field: 'default', direction: 'desc' })).toEqual(tasks.reverse());
+    expect(sortBy(tasks, { field: 'default', direction: 'DESCENDING' })).toEqual(tasks.reverse());
   });
 
   it('should sort by default with milestoneSort asc', () => {
@@ -32,7 +32,7 @@ describe('Milestone - manual sort', () => {
         __typename: ENTITIES[faker.random.number({ min: 0, max: ENTITIES.length - 1 })],
       },
     }));
-    expect(sortBy(tasks, { field: 'default', direction: 'asc' })).toEqual(tasks);
+    expect(sortBy(tasks, { field: 'default', direction: 'ASCENDING' })).toEqual(tasks);
   });
 
   it('should sort by name desc', () => {
@@ -61,7 +61,7 @@ describe('Milestone - manual sort', () => {
         name: 'b',
       },
     ];
-    expect(sortBy(tasks, { field: 'name', direction: 'desc' })).toEqual([
+    expect(sortBy(tasks, { field: 'name', direction: 'DESCENDING' })).toEqual([
       {
         ...baseTask,
         name: 'c',
@@ -102,7 +102,7 @@ describe('Milestone - manual sort', () => {
         name: 'b',
       },
     ];
-    expect(sortBy(tasks, { field: 'name', direction: 'asc' })).toEqual([
+    expect(sortBy(tasks, { field: 'name', direction: 'ASCENDING' })).toEqual([
       {
         ...baseTask,
         name: 'a',
@@ -146,7 +146,7 @@ describe('Milestone - manual sort', () => {
         startDate: now,
       },
     ];
-    expect(sortBy(tasks, { field: 'startDate', direction: 'desc' })).toEqual([
+    expect(sortBy(tasks, { field: 'startDate', direction: 'DESCENDING' })).toEqual([
       {
         ...baseTask,
         startDate: date,
@@ -194,7 +194,7 @@ describe('Milestone - manual sort', () => {
         startDate: now,
       },
     ];
-    expect(sortBy(tasks, { field: 'startDate', direction: 'asc' })).toEqual([
+    expect(sortBy(tasks, { field: 'startDate', direction: 'ASCENDING' })).toEqual([
       {
         ...baseTask,
         startDate: '',
@@ -244,7 +244,7 @@ describe('Milestone - manual sort', () => {
         },
       },
     ];
-    expect(sortBy(tasks, { field: 'entity', direction: 'desc' })).toEqual([
+    expect(sortBy(tasks, { field: 'entity', direction: 'DESCENDING' })).toEqual([
       {
         ...baseTask,
         entity: {
@@ -296,7 +296,7 @@ describe('Milestone - manual sort', () => {
         },
       },
     ];
-    expect(sortBy(tasks, { field: 'entity', direction: 'asc' })).toEqual([
+    expect(sortBy(tasks, { field: 'entity', direction: 'ASCENDING' })).toEqual([
       {
         ...baseTask,
         entity: {

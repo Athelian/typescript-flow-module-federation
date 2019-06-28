@@ -4,6 +4,8 @@ import { Draggable } from 'react-beautiful-dnd';
 import type { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import type { Task } from 'generated/graphql';
 import { colors } from 'styles/common';
+import sortBy from 'modules/project/form/helpers';
+import type { SortField, SortDirection } from 'modules/project/form/helpers';
 import { MilestoneColumnWrapperStyle } from './style';
 import MilestoneForm from './components/MilestoneForm';
 import TaskList from '../TaskList';
@@ -14,6 +16,10 @@ type Props = {|
   index: number,
   isDragDisabled: boolean,
   isDropDisabled: boolean,
+  manualSort: {
+    field: SortField,
+    direction: SortDirection,
+  },
 |};
 
 export default function MilestoneColumn({
@@ -22,6 +28,7 @@ export default function MilestoneColumn({
   tasks,
   isDragDisabled,
   isDropDisabled,
+  manualSort,
 }: Props) {
   return (
     <Draggable draggableId={id} index={index}>
@@ -40,7 +47,7 @@ export default function MilestoneColumn({
             style={{
               backgroundColor: snapshot.isDragging ? colors.TEAL : null,
             }}
-            tasks={tasks}
+            tasks={sortBy(tasks, manualSort)}
           />
         </div>
       )}

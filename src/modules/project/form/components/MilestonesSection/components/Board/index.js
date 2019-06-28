@@ -13,7 +13,7 @@ type MilestoneMap = {
   [id: string]: Array<Task>,
 };
 
-type Props = {
+type Props = {|
   columns: Object,
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
@@ -22,7 +22,8 @@ type Props = {
     createMilestone: boolean,
   },
   allowDragAndDrop: boolean,
-};
+  manualSort: Object,
+|};
 
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
   const result = Array.from(list);
@@ -126,7 +127,7 @@ export default class Board extends Component<Props> {
   };
 
   render() {
-    const { columns, ordered, editable, allowDragAndDrop } = this.props;
+    const { columns, ordered, editable, allowDragAndDrop, manualSort } = this.props;
 
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal" ignoreContainerClipping>
@@ -144,6 +145,7 @@ export default class Board extends Component<Props> {
                 index={index}
                 id={key}
                 tasks={columns[key]}
+                manualSort={manualSort}
               />
             ))}
             {provided.placeholder}

@@ -80,6 +80,7 @@ function MilestonesSection({ intl }: Props) {
           return (
             <Board
               allowDragAndDrop={filterAndSort.sort.field === 'default'}
+              manualSort={filterAndSort.sort}
               columns={initial}
               ordered={Object.keys(initial)}
               onChangeOrdering={changeMilestoneOrdering}
