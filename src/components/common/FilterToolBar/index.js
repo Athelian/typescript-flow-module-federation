@@ -6,6 +6,7 @@ type OptionalProps = {
   icon?: string,
   renderIcon: Function,
   searchable: boolean,
+  sortable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -24,6 +25,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   searchable: true,
+  sortable: true,
   renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
 
@@ -46,6 +48,7 @@ export default function FilterToolBar({
   filtersAndSort,
   onChange,
   searchable,
+  sortable,
 }: Props) {
   return (
     <>
@@ -61,6 +64,7 @@ export default function FilterToolBar({
       <SortInput
         sort={currentSort(sortFields, filtersAndSort.sort)}
         ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+        sortable={sortable}
         fields={sortFields}
         onChange={({ field: { value }, ascending }) =>
           onChange({
