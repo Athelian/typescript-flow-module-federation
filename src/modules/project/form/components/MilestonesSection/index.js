@@ -79,6 +79,7 @@ function MilestonesSection({ intl }: Props) {
           const initial = createMilestoneColumnsData(milestones);
           return (
             <Board
+              allowDragAndDrop={filterAndSort.sort.field === 'default'}
               columns={initial}
               ordered={Object.keys(initial)}
               onChangeOrdering={changeMilestoneOrdering}

@@ -30,11 +30,11 @@ import validator from './validator';
 import messages from './messages';
 import { MilestoneHeaderWrapperStyle, TrashIconStyle, RingIconStyle } from './style';
 
-type Props = {
+type Props = {|
   provided: DraggableProvided,
   milestoneId: string,
   isDragging: boolean,
-};
+|};
 
 export default function MilestoneForm({ provided, milestoneId, isDragging }: Props) {
   const { isOwner } = usePartnerPermission();

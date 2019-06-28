@@ -21,6 +21,7 @@ type Props = {
   editable: {
     createMilestone: boolean,
   },
+  allowDragAndDrop: boolean,
 };
 
 const reorder = (list: any[], startIndex: number, endIndex: number): any[] => {
@@ -125,7 +126,7 @@ export default class Board extends Component<Props> {
   };
 
   render() {
-    const { columns, ordered, editable } = this.props;
+    const { columns, ordered, editable, allowDragAndDrop } = this.props;
 
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal" ignoreContainerClipping>
@@ -136,7 +137,14 @@ export default class Board extends Component<Props> {
             {...provided.droppableProps}
           >
             {ordered.map((key: string, index: number) => (
-              <MilestoneColumn key={key} index={index} id={key} tasks={columns[key]} />
+              <MilestoneColumn
+                isDragDisabled={!allowDragAndDrop}
+                isDropDisabled={!allowDragAndDrop}
+                key={key}
+                index={index}
+                id={key}
+                tasks={columns[key]}
+              />
             ))}
             {provided.placeholder}
             {editable.createMilestone && (

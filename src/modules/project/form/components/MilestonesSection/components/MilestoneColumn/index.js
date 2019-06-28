@@ -12,9 +12,17 @@ type Props = {|
   id: string,
   tasks: Array<Task>,
   index: number,
+  isDragDisabled: boolean,
+  isDropDisabled: boolean,
 |};
 
-export default function MilestoneColumn({ id, index, tasks }: Props) {
+export default function MilestoneColumn({
+  id,
+  index,
+  tasks,
+  isDragDisabled,
+  isDropDisabled,
+}: Props) {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -26,6 +34,8 @@ export default function MilestoneColumn({ id, index, tasks }: Props) {
           <MilestoneForm milestoneId={id} isDragging={snapshot.isDragging} provided={provided} />
           <TaskList
             listId={id}
+            isDropDisabled={isDropDisabled}
+            isDragDisabled={isDragDisabled}
             listType="TASK"
             style={{
               backgroundColor: snapshot.isDragging ? colors.TEAL : null,

@@ -15,17 +15,19 @@ type Props = {|
   listType?: string,
   tasks: Task[],
   isDropDisabled?: boolean,
+  isDragDisabled?: boolean,
   style?: Object,
   ignoreContainerClipping?: boolean,
 |};
 
 type TaskListProps = {|
   tasks: Task[],
+  isDragDisabled: boolean,
 |};
 
-const InnerTaskList = React.memo(function InnerTaskList({ tasks }: TaskListProps) {
+const InnerTaskList = React.memo(function InnerTaskList({ tasks, isDragDisabled }: TaskListProps) {
   return tasks.map((task: Task, index: number) => (
-    <Draggable key={task.id} draggableId={task.id} index={index}>
+    <Draggable key={task.id} draggableId={task.id} index={index} isDragDisabled={isDragDisabled}>
       {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
         <TaskItem
           task={task}
@@ -44,6 +46,7 @@ export default function TaskList(props: Props) {
   const {
     ignoreContainerClipping,
     isDropDisabled,
+    isDragDisabled,
     listId = 'LIST',
     listType,
     style,
@@ -59,14 +62,12 @@ export default function TaskList(props: Props) {
     >
       {(dropProvided: DroppableProvided) => (
         <div
-          className={MilestoneTaskListBodyStyle({
-            isDropDisabled: Boolean(isDropDisabled),
-          })}
+          className={MilestoneTaskListBodyStyle}
           style={style}
           {...dropProvided.droppableProps}
           ref={dropProvided.innerRef}
         >
-          <InnerTaskList tasks={tasks} />
+          <InnerTaskList tasks={tasks} isDragDisabled={Boolean(isDragDisabled)} />
           {dropProvided.placeholder}
         </div>
       )}

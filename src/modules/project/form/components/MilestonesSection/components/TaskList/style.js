@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { colors, layout, scrollbars } from 'styles/common';
 
-export const MilestoneTaskListBodyStyle = ({ isDropDisabled }: { isDropDisabled: boolean }) => css`
+export const MilestoneTaskListBodyStyle = css`
   ${layout.GRID_VERTICAL};
   grid-gap: 30px;
   width: 235px;
@@ -13,8 +13,6 @@ export const MilestoneTaskListBodyStyle = ({ isDropDisabled }: { isDropDisabled:
   justify-content: center;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   padding: 30px 0;
-
-  opacity: ${isDropDisabled ? 0.5 : 'inherit'};
 `;
 
 export default MilestoneTaskListBodyStyle;
