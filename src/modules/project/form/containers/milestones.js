@@ -79,7 +79,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     return calculateTasks(tasks);
   };
 
-  completedMilestone = ({
+  completedMilestone = async ({
     id,
     completedBy,
     completedAt,
@@ -98,27 +98,39 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     const index = this.state.milestones.findIndex(milestone => milestone.id === id);
     switch (action) {
       case 'setToSkip': {
-        this.setState(prevState =>
+        await this.setState(prevState =>
           update(prevState, {
             milestones: {
               [index]: {
-                $set: tasks.map(task => setToSkipTask(task, { completedAt, completedBy })),
+                tasks: {
+                  $set: tasks.map(task => setToSkipTask(task, { completedAt, completedBy })),
+                },
               },
             },
           })
         );
+        this.setMilestoneValue(id, {
+          completedAt,
+          completedBy,
+        });
         break;
       }
       case 'setToComplete': {
-        this.setState(prevState =>
+        await this.setState(prevState =>
           update(prevState, {
             milestones: {
               [index]: {
-                $set: tasks.map(task => setToComplete(task, { completedAt, completedBy })),
+                tasks: {
+                  $set: tasks.map(task => setToComplete(task, { completedAt, completedBy })),
+                },
               },
             },
           })
         );
+        this.setMilestoneValue(id, {
+          completedAt,
+          completedBy,
+        });
         break;
       }
 
