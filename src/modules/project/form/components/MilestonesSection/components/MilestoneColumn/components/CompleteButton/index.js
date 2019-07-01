@@ -14,22 +14,13 @@ import {
   StatusLabelStyle,
 } from './style';
 
-type OptionalProps = {|
+type Props = {|
   completedAt: ?(string | Date),
   completedBy: ?UserAvatarType,
   onComplete: Object => void,
   onUnComplete: () => void,
   editable: boolean,
 |};
-
-type Props = OptionalProps;
-
-const defaultProps = {
-  completedAt: null,
-  completedBy: null,
-  onComplete: () => {},
-  onUnComplete: () => {},
-};
 
 const CompleteButton = ({
   editable,
@@ -86,7 +77,5 @@ const CompleteButton = ({
     </button>
   </div>
 );
-
-CompleteButton.defaultProps = defaultProps;
 
 export default CompleteButton;

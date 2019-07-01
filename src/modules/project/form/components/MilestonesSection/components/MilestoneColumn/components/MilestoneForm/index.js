@@ -174,13 +174,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               {({ value: isDialogOpen, set: dialogToggle }) => (
                 <>
                   <CompleteButton
-                    editable={
-                      hasPermission(MILESTONE_SET_COMPLETED) &&
-                      (hasPermission(TASK_UPDATE) ||
-                        (hasPermission(TASK_SET_COMPLETED) &&
-                          hasPermission(TASK_SET_IN_PROGRESS) &&
-                          hasPermission(TASK_SET_SKIPPED)))
-                    }
+                    editable={hasPermission(MILESTONE_SET_COMPLETED)}
                     onComplete={() => {
                       const { remain, inProgress } = taskCountByMilestone(milestoneId);
                       if (remain + inProgress > 0) {
@@ -206,6 +200,14 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                     completedBy={values.completedBy}
                   />
                   <CompleteDialog
+                    editable={{
+                      skip:
+                        hasPermission(TASK_UPDATE) ||
+                        (hasPermission(TASK_SET_IN_PROGRESS) && hasPermission(TASK_SET_SKIPPED)),
+                      complete:
+                        hasPermission(TASK_UPDATE) ||
+                        (hasPermission(TASK_SET_COMPLETED) && hasPermission(TASK_SET_IN_PROGRESS)),
+                    }}
                     isOpen={isDialogOpen}
                     onRequestClose={() => dialogToggle(false)}
                     onSkip={() => {

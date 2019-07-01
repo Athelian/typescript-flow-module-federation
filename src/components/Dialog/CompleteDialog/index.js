@@ -14,18 +14,28 @@ function CompleteDialog({
   onComplete,
   onUnChange,
   message,
-}: CompleteDialogProps) {
+  editable,
+}: CompleteDialogProps & {
+  editable: {
+    skip: boolean,
+    complete: boolean,
+  },
+}) {
   return (
     <Dialog isOpen={isOpen} onRequestClose={onRequestClose} width="400px">
       <div className={DialogStyle}>
         <div className={UnCompleteMessageStyle}>{message}</div>
         <div className={ButtonsStyle}>
-          <button onClick={onSkip} type="button">
-            <FormattedMessage {...messages.skip} />
-          </button>
-          <button onClick={onComplete} type="button">
-            <FormattedMessage {...messages.complete} />
-          </button>
+          {editable.skip && (
+            <button onClick={onSkip} type="button">
+              <FormattedMessage {...messages.skip} />
+            </button>
+          )}
+          {editable.complete && (
+            <button onClick={onComplete} type="button">
+              <FormattedMessage {...messages.complete} />
+            </button>
+          )}
           <button onClick={onUnChange} type="button">
             <FormattedMessage {...messages.unChange} />
           </button>
