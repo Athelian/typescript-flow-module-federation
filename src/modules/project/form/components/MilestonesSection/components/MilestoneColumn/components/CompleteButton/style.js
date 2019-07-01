@@ -14,7 +14,7 @@ export const TaskStatusInputWrapperStyle = ({
   ${presets.BUTTON};
   ${borderRadiuses.BUTTON};
   height: 40px;
-  width: 200px;
+  width: 160px;
   border: 2px solid ${colors.TRANSPARENT};
   ${isCompleted
     ? `
