@@ -180,6 +180,7 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
                     ? onSet(selected.filter(selectedItem => selectedItem.id !== item.id))
                     : onPush(item)
                 }
+                hideProjectInfo
               />
             )}
           />

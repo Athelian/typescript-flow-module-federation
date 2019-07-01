@@ -2,13 +2,13 @@
 import { css } from 'react-emotion';
 import { layout, colors, presets, borderRadiuses, fontSizes, transitions } from 'styles/common';
 
-export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
+export const TaskCardWrapperStyle = (cardHeight: string): string => css`
   position: relative;
   ${layout.GRID_VERTICAL};
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: ${hideParentInfo ? '240px' : '265px'};
+  height: ${cardHeight};
   padding: 5px 0 10px 0;
 `;
 

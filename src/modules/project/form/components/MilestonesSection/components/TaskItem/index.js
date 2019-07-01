@@ -20,7 +20,13 @@ function TaskItem({ task, isDragging, provided }: Props) {
       {...provided.draggableProps}
       {...provided.dragHandleProps}
     >
-      <TaskCard position={task.milestoneSort + 1} entity={task.entity} task={task} key={task.id} />
+      <TaskCard
+        position={task.milestoneSort + 1}
+        entity={task.entity}
+        task={task}
+        key={task.id}
+        hideProjectInfo
+      />
     </div>
   );
 }

@@ -66,6 +66,7 @@ type OptionalProps = {
   task: Object,
   position: number,
   hideParentInfo: boolean,
+  hideProjectInfo: boolean,
   onClick: Function,
   onSelect: Function,
   saveOnBlur: Function,
@@ -99,6 +100,7 @@ const defaultNavigable = {
 const defaultProps = {
   position: 0,
   hideParentInfo: false,
+  hideProjectInfo: false,
   onClick: null,
   onSelect: null,
   saveOnBlur: () => {},
@@ -167,7 +169,7 @@ const getParentInfo = (
   return {};
 };
 
-let hideParentInfoForHoc = false;
+let cardHeight = 265;
 
 const tooltipMessage = (approvedBy: ?Object, rejectedBy: ?Object) => {
   if (approvedBy && approvedBy.id)
@@ -184,6 +186,7 @@ const TaskCard = ({
   task,
   position,
   hideParentInfo,
+  hideProjectInfo,
   onClick,
   onSelect,
   saveOnBlur,
@@ -239,13 +242,15 @@ const TaskCard = ({
     product: hasPermission(PRODUCT_FORM),
   };
 
-  hideParentInfoForHoc = hideParentInfo || isInTemplate;
-
   const isFromTemplate = !!taskTemplate;
 
   let nameWidth = '160px';
   if (isFromTemplate || isInTemplate) nameWidth = '120px';
   else if (hideParentInfo) nameWidth = '140px';
+
+  cardHeight = 265;
+  if (hideParentInfo || isInTemplate) cardHeight -= 25;
+  if (hideProjectInfo) cardHeight -= 56;
 
   const IS_DND_DEVELOPED = false;
 
@@ -268,7 +273,7 @@ const TaskCard = ({
         {({ value: isHovered, set: changeHoverState }) => (
           <div
             ref={taskEl}
-            className={TaskCardWrapperStyle(hideParentInfo || isInTemplate)}
+            className={TaskCardWrapperStyle(`${cardHeight}px`)}
             onClick={onClick}
             onMouseEnter={() => {
               if (isEditable) {
@@ -464,48 +469,52 @@ const TaskCard = ({
               )}
             </div>
 
-            <div className={DividerStyle} />
+            {!(hideProjectInfo || isInTemplate) && (
+              <>
+                <div className={DividerStyle} />
 
-            <div className={ProjectInfoStyle}>
-              {getByPath('project', milestone) ? (
-                <Link
-                  className={ProjectIconStyle(true)}
-                  to={
-                    navigable.project
-                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                      : ''
-                  }
-                >
-                  <Icon icon="PROJECT" />
-                </Link>
-              ) : (
-                <div className={ProjectIconStyle(false)}>
-                  <Icon icon="PROJECT" />
+                <div className={ProjectInfoStyle}>
+                  {getByPath('project', milestone) ? (
+                    <Link
+                      className={ProjectIconStyle(true)}
+                      to={
+                        navigable.project
+                          ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                          : ''
+                      }
+                    >
+                      <Icon icon="PROJECT" />
+                    </Link>
+                  ) : (
+                    <div className={ProjectIconStyle(false)}>
+                      <Icon icon="PROJECT" />
+                    </div>
+                  )}
+                  <Display>{getByPathWithDefault('', 'project.name', milestone)}</Display>
                 </div>
-              )}
-              <Display>{getByPathWithDefault('', 'project.name', milestone)}</Display>
-            </div>
 
-            <div className={MilestoneInfoStyle}>
-              {milestone ? (
-                <Link
-                  className={MilestoneIconStyle(true)}
-                  to={
-                    navigable.project
-                      ? `/project/${encodeId(getByPath('project.id', milestone))}`
-                      : ''
-                  }
-                >
-                  <Icon icon="MILESTONE" />
-                </Link>
-              ) : (
-                <div className={MilestoneIconStyle(false)}>
-                  <Icon icon="MILESTONE" />
+                <div className={MilestoneInfoStyle}>
+                  {milestone ? (
+                    <Link
+                      className={MilestoneIconStyle(true)}
+                      to={
+                        navigable.project
+                          ? `/project/${encodeId(getByPath('project.id', milestone))}`
+                          : ''
+                      }
+                    >
+                      <Icon icon="MILESTONE" />
+                    </Link>
+                  ) : (
+                    <div className={MilestoneIconStyle(false)}>
+                      <Icon icon="MILESTONE" />
+                    </div>
+                  )}
+
+                  <Display>{getByPathWithDefault('', 'name', milestone)}</Display>
                 </div>
-              )}
-
-              <Display>{getByPathWithDefault('', 'name', milestone)}</Display>
-            </div>
+              </>
+            )}
 
             <div className={DividerStyle} />
 
@@ -698,7 +707,7 @@ TaskCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(TaskCard, 'task', {
   width: '195px',
-  height: hideParentInfoForHoc ? '240px' : '265px',
+  height: `${cardHeight}px`,
   entityIcon: 'TASK',
   entityColor: 'TASK',
 });
