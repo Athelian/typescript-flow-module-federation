@@ -37,7 +37,15 @@ function TaskItem({ task, isDragging, provided, onChange }: Props) {
                 <TaskCard
                   hideProjectInfo
                   groupIds={parseGroupIds(task)}
-                  entity={task.entity}
+                  entity={{
+                    ...task.entity,
+                    ...getByPath('order', task),
+                    ...getByPath('orderItem', task),
+                    ...getByPath('batch', task),
+                    ...getByPath('product', task),
+                    ...getByPath('productProvider', task),
+                    ...getByPath('shipment', task),
+                  }}
                   task={task}
                   position={task.milestoneSort + 1}
                   editable={checkEditableFromEntity(
