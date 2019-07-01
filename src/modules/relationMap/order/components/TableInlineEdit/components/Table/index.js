@@ -89,6 +89,8 @@ export default function Table({
   showAllColumn,
   lines,
   itemData,
+  onToggle,
+  templateColumns,
   ...renderOptions
 }: Props) {
   const headerRef = React.useRef();
@@ -106,6 +108,8 @@ export default function Table({
     <>
       <StickyHeader
         {...renderOptions}
+        onToggle={onToggle}
+        templateColumns={templateColumns}
         itemData={data}
         showAllColumn={showAllColumn}
         customColumns={customColumns}
