@@ -404,4 +404,110 @@ describe('milestones container', () => {
     await container.removeMilestone('1', true);
     expect(container.state.ignoreTaskIds).toEqual([4]);
   });
+
+  it('should count task by milestone id', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+            completedAt: new Date(),
+          },
+        ],
+      },
+      {
+        id: '2',
+        name: 'b',
+        dueDate: null,
+        tasks: [
+          {
+            id: 5,
+          },
+        ],
+      },
+      {
+        id: '3',
+        name: 'c',
+        dueDate: null,
+        tasks: [],
+      },
+    ];
+    await container.initDetailValues(milestones);
+
+    expect(container.taskCountByMilestone('1')).toMatchSnapshot();
+    expect(container.taskCountByMilestone('1')).toEqual({
+      approved: 0,
+      completed: 1,
+      count: 1,
+      delayed: 0,
+      inProgress: 0,
+      rejected: 0,
+      remain: 0,
+      skipped: 0,
+      unapproved: 0,
+    });
+    expect(container.taskCountByMilestone('3')).toMatchSnapshot();
+    expect(container.taskCountByMilestone('3')).toEqual({
+      approved: 0,
+      completed: 0,
+      count: 0,
+      delayed: 0,
+      inProgress: 0,
+      rejected: 0,
+      remain: 0,
+      skipped: 0,
+      unapproved: 0,
+    });
+  });
+
+  it('should change task status base on milestone', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const date = new Date();
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+            inProgressAt: date,
+          },
+        ],
+      },
+    ];
+    await container.initDetailValues(milestones);
+    const completedBy = {
+      id: faker.random.uuid(),
+      name: faker.name.findName(),
+    };
+    const completedAt = faker.date.future();
+    await container.completedMilestone({
+      id: '1',
+      completedBy,
+      completedAt,
+      action: 'leaveUnChange',
+    });
+    expect(container.state.milestones).toEqual([
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        completedBy,
+        completedAt,
+        tasks: [
+          {
+            id: 4,
+            inProgressAt: date,
+          },
+        ],
+      },
+    ]);
+  });
 });

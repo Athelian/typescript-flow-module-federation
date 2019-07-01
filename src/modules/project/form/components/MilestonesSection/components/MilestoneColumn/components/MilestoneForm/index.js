@@ -12,6 +12,7 @@ import usePermission from 'hooks/usePermission';
 import useHover from 'hooks/useHover';
 import useUser from 'hooks/useUser';
 import DeleteDialog from 'components/Dialog/DeleteDialog';
+import CompleteDialog from 'components/Dialog/CompleteDialog';
 import SelectTasks from 'providers/SelectTasks';
 import SlideView from 'components/SlideView';
 import TaskRing from 'components/TaskRing';
@@ -52,6 +53,8 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
         excludeTaskIds,
         excludeIds,
         removeMilestone,
+        taskCountByMilestone,
+        completedMilestone,
       }) => {
         const { milestones = [] } = { ...originalValues, ...state };
         const values = milestones.find(milestone => milestone.id === milestoneId) || {};
@@ -159,19 +162,82 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               )}
             </FormField>
 
-            <CompleteButton
-              onComplete={() => {
-                onChangeValue(`${milestoneId}.completedAt`, formatToGraphql(startOfToday()));
-                onChangeValue(`${milestoneId}.completedBy`, user);
-              }}
-              onUncomplete={() => {
-                onChangeValue(`${milestoneId}.completedAt`, null);
-                onChangeValue(`${milestoneId}.completedBy`, null);
-              }}
-              completedAt={values.completedAt}
-              completedBy={values.completedBy}
-            />
-
+            <BooleanValue>
+              {({ value: isDialogOpen, set: dialogToggle }) => (
+                <>
+                  <CompleteButton
+                    onComplete={() => {
+                      const { remain, inProgress } = taskCountByMilestone(milestoneId);
+                      if (remain + inProgress > 0) {
+                        dialogToggle(true);
+                      } else {
+                        completedMilestone({
+                          id: milestoneId,
+                          completedBy: user,
+                          completedAt: formatToGraphql(startOfToday()),
+                          action: 'leaveUnChange',
+                        });
+                      }
+                    }}
+                    onUnComplete={() => {
+                      completedMilestone({
+                        id: milestoneId,
+                        completedBy: null,
+                        completedAt: null,
+                        action: 'leaveUnChange',
+                      });
+                    }}
+                    completedAt={values.completedAt}
+                    completedBy={values.completedBy}
+                  />
+                  <CompleteDialog
+                    isOpen={isDialogOpen}
+                    onRequestClose={() => dialogToggle(false)}
+                    onSkip={() => {
+                      dialogToggle(false);
+                      completedMilestone({
+                        id: milestoneId,
+                        completedBy: user,
+                        completedAt: formatToGraphql(startOfToday()),
+                        action: 'setToSkip',
+                      });
+                    }}
+                    onComplete={() => {
+                      dialogToggle(false);
+                      completedMilestone({
+                        id: milestoneId,
+                        completedBy: user,
+                        completedAt: formatToGraphql(startOfToday()),
+                        action: 'setToComplete',
+                      });
+                    }}
+                    onCancel={() => dialogToggle(false)}
+                    onUnChange={() => {
+                      dialogToggle(false);
+                      completedMilestone({
+                        id: milestoneId,
+                        completedBy: user,
+                        completedAt: formatToGraphql(startOfToday()),
+                        action: 'leaveUnChange',
+                      });
+                    }}
+                    message={(() => {
+                      const { count, remain, inProgress } = taskCountByMilestone(milestoneId);
+                      return (
+                        <FormattedMessage
+                          id="modules.Projects.completeMilestoneWarningMessage"
+                          defaultMessage="There are {numOfTasksUncompletedOrInProgress}/{numOfTotalTasks} that are still Uncompleted or In Progress. Would you like to change their statuses?"
+                          values={{
+                            numOfTasksUncompletedOrInProgress: remain + inProgress,
+                            numOfTotalTasks: count,
+                          }}
+                        />
+                      );
+                    })()}
+                  />
+                </>
+              )}
+            </BooleanValue>
             {/* TODO: Add Permissions */}
             <BooleanValue>
               {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (

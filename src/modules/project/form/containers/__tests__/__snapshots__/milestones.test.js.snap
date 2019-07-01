@@ -51,6 +51,34 @@ Array [
 ]
 `;
 
+exports[`milestones container should count task by milestone id 1`] = `
+Object {
+  "approved": 0,
+  "completed": 1,
+  "count": 1,
+  "delayed": 0,
+  "inProgress": 0,
+  "rejected": 0,
+  "remain": 0,
+  "skipped": 0,
+  "unapproved": 0,
+}
+`;
+
+exports[`milestones container should count task by milestone id 2`] = `
+Object {
+  "approved": 0,
+  "completed": 0,
+  "count": 0,
+  "delayed": 0,
+  "inProgress": 0,
+  "rejected": 0,
+  "remain": 0,
+  "skipped": 0,
+  "unapproved": 0,
+}
+`;
+
 exports[`milestones container should delete milestone by id 1`] = `
 Object {
   "ignoreTaskIds": Array [],

@@ -24,3 +24,13 @@ export type DeleteDialogProps = {
   onRemoveAll: () => Promise<any> | void,
   message: React.Node,
 };
+
+export type CompleteDialogProps = {
+  isOpen: boolean,
+  onRequestClose: () => void,
+  onCancel: () => void,
+  onSkip: () => void,
+  onComplete: () => void,
+  onUnChange: () => void,
+  message: React.Node,
+};

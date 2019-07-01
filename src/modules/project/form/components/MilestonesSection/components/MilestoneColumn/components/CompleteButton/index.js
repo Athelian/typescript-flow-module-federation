@@ -14,12 +14,12 @@ import {
   StatusLabelStyle,
 } from './style';
 
-type OptionalProps = {
+type OptionalProps = {|
   completedAt: ?(string | Date),
   completedBy: ?UserAvatarType,
   onComplete: Object => void,
-  onUncomplete: () => void,
-};
+  onUnComplete: () => void,
+|};
 
 type Props = OptionalProps;
 
@@ -27,10 +27,10 @@ const defaultProps = {
   completedAt: null,
   completedBy: null,
   onComplete: () => {},
-  onUncomplete: () => {},
+  onUnComplete: () => {},
 };
 
-const CompleteButton = ({ completedAt, completedBy, onComplete, onUncomplete }: Props) => (
+const CompleteButton = ({ completedAt, completedBy, onComplete, onUnComplete }: Props) => (
   <div
     className={TaskStatusInputWrapperStyle({
       isCompleted: !!completedAt,
@@ -44,7 +44,7 @@ const CompleteButton = ({ completedAt, completedBy, onComplete, onUncomplete }: 
           <UserAvatar {...completedBy} />
 
           {/* TODO: Add permissions: if dont have permission then dont render this ui */}
-          <button type="button" className={DeactivateButtonStyle} onClick={onUncomplete}>
+          <button type="button" className={DeactivateButtonStyle} onClick={onUnComplete}>
             <Icon icon="CLEAR" />
           </button>
         </>

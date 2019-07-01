@@ -1,13 +1,13 @@
 // @flow
-import { flatten, sumBy } from 'lodash';
+import { flatten } from 'lodash';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
-import { isBefore } from 'date-fns';
 import pluralize from 'pluralize';
 import { camelCase } from 'lodash/fp';
-import type { Milestone } from 'generated/graphql';
+import type { User, Milestone, Task } from 'generated/graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { uuid } from 'utils/id';
+import { calculateTasks, setToSkipTask, setToComplete } from './helpers';
 
 type FormState = {
   milestones: Array<Milestone>,
@@ -41,6 +41,27 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.originalValues = { milestones, ignoreTaskIds };
   };
 
+  taskCountByMilestone = (
+    id: string
+  ): {
+    count: number,
+    remain: number,
+    inProgress: number,
+    completed: number,
+    rejected: number,
+    approved: number,
+    skipped: number,
+    delayed: number,
+    unapproved: number,
+  } => {
+    const tasks: Array<Task> = getByPathWithDefault(
+      [],
+      'tasks',
+      this.state.milestones.find(milestone => milestone.id === id)
+    );
+    return calculateTasks(tasks);
+  };
+
   taskCount = (): {
     count: number,
     remain: number,
@@ -52,42 +73,62 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     delayed: number,
     unapproved: number,
   } => {
-    const tasks = flatten(this.state.milestones.map(item => item.tasks));
-    return {
-      count: tasks.length,
-      completed: sumBy(tasks, task => (getByPathWithDefault('', 'completedAt', task) ? 1 : 0)),
-      rejected: sumBy(tasks, task => (getByPathWithDefault('', 'rejectedAt', task) ? 1 : 0)),
-      approved: sumBy(tasks, task => (getByPathWithDefault('', 'approvedAt', task) ? 1 : 0)),
-      delayed: sumBy(tasks, task =>
-        !getByPathWithDefault('', 'completedAt', task) &&
-        !getByPathWithDefault('', 'skippedAt', task) &&
-        getByPathWithDefault('', 'dueDate', task) &&
-        isBefore(new Date(getByPathWithDefault('', 'dueDate', task)), new Date())
-          ? 1
-          : 0
-      ),
-      unapproved: sumBy(tasks, task =>
-        getByPathWithDefault('', 'approvable', task) &&
-        !getByPathWithDefault('', 'rejectedAt', task) &&
-        !getByPathWithDefault('', 'approvedAt', task)
-          ? 1
-          : 0
-      ),
-      inProgress: sumBy(tasks, task =>
-        !getByPathWithDefault('', 'completedAt', task) &&
-        getByPathWithDefault('', 'inProgressAt', task)
-          ? 1
-          : 0
-      ),
-      remain: sumBy(tasks, task =>
-        !getByPathWithDefault('', 'completedAt', task) &&
-        !getByPathWithDefault('', 'inProgressAt', task) &&
-        !getByPathWithDefault('', 'skippedAt', task)
-          ? 1
-          : 0
-      ),
-      skipped: sumBy(tasks, task => (getByPathWithDefault('', 'skippedAt', task) ? 1 : 0)),
-    };
+    const tasks: Array<Task> = flatten(
+      this.state.milestones.map(item => getByPathWithDefault([], 'tasks', item))
+    );
+    return calculateTasks(tasks);
+  };
+
+  completedMilestone = ({
+    id,
+    completedBy,
+    completedAt,
+    action,
+  }: {
+    id: string,
+    completedBy: ?User,
+    completedAt: ?Date,
+    action: 'setToSkip' | 'setToComplete' | 'leaveUnChange',
+  }) => {
+    const tasks: Array<Task> = getByPathWithDefault(
+      [],
+      'tasks',
+      this.state.milestones.find(milestone => milestone.id === id)
+    );
+    const index = this.state.milestones.findIndex(milestone => milestone.id === id);
+    switch (action) {
+      case 'setToSkip': {
+        this.setState(prevState =>
+          update(prevState, {
+            milestones: {
+              [index]: {
+                $set: tasks.map(task => setToSkipTask(task, { completedAt, completedBy })),
+              },
+            },
+          })
+        );
+        break;
+      }
+      case 'setToComplete': {
+        this.setState(prevState =>
+          update(prevState, {
+            milestones: {
+              [index]: {
+                $set: tasks.map(task => setToComplete(task, { completedAt, completedBy })),
+              },
+            },
+          })
+        );
+        break;
+      }
+
+      default:
+        this.setMilestoneValue(id, {
+          completedAt,
+          completedBy,
+        });
+        break;
+    }
   };
 
   setMilestoneValue = (id: string, value: Object) => {
