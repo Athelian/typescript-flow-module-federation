@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import { parseISO, differenceInCalendarDays } from 'date-fns';
 import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -40,7 +39,6 @@ import {
   ProjectInfoWrapperStyle,
   DescriptionTagsWrapperStyle,
   MilestonesTimelineWrapperStyle,
-  WarningColorStyle,
   TasksInfoWrapperStyle,
   BindedAndRelatedWrapperStyle,
   ExpandWrapperStyle,
@@ -113,40 +111,19 @@ const ProjectSection = ({ isNew }: Props) => {
 
                       <Subscribe to={[ProjectMilestonesContainer]}>
                         {({ lastMilestoneDueDate }) => (
-                          <>
-                            <FieldItem
-                              vertical
-                              label={
-                                <Label height="30px">
-                                  <FormattedMessage {...messages.lastMilestoneDueDate} />
-                                </Label>
-                              }
-                              input={
-                                <Display height="30px" align="left" width="200px">
-                                  <FormattedDate value={lastMilestoneDueDate()} />
-                                </Display>
-                              }
-                            />
-
-                            {lastMilestoneDueDate() && values.dueDate && (
-                              <div
-                                className={WarningColorStyle(
-                                  differenceInCalendarDays(
-                                    parseISO(lastMilestoneDueDate()),
-                                    parseISO(values.dueDate)
-                                  )
-                                )}
-                              >
-                                {differenceInCalendarDays(
-                                  parseISO(lastMilestoneDueDate()),
-                                  parseISO(values.dueDate)
-                                )}{' '}
-                                <FormattedMessage
-                                  {...messages.diffBetweenLastMilestoneAndProjectDueDate}
-                                />
-                              </div>
-                            )}
-                          </>
+                          <FieldItem
+                            vertical
+                            label={
+                              <Label height="30px">
+                                <FormattedMessage {...messages.lastMilestoneDueDate} />
+                              </Label>
+                            }
+                            input={
+                              <Display height="30px" align="left" width="200px">
+                                <FormattedDate value={lastMilestoneDueDate()} />
+                              </Display>
+                            }
+                          />
                         )}
                       </Subscribe>
                     </GridRow>

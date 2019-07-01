@@ -11,17 +11,18 @@ import {
 } from 'styles/common';
 
 export const ProjectSectionWrapperStyle = (isExpanded: boolean) => css`
-  display: grid;
-  grid-template-columns: 1fr 220px 180px;
-  height: ${isExpanded ? '360px' : '0px'};
+  display: flex;
+  height: ${isExpanded ? '355px' : '0px'};
   overflow: hidden;
   width: 100%;
+  max-width: 100%;
   ${transitions.EXPAND};
 `;
 
 export const MainSectionWrapperStyle: string = css`
   display: flex;
   flex-direction: column;
+  width: calc(100% - 400px);
 `;
 
 export const ProjectInfoWrapperStyle: string = css`
@@ -47,11 +48,6 @@ export const DescriptionTagsWrapperStyle: string = css`
 
 export const MilestonesTimelineWrapperStyle: string = css`
   background-color: ${colors.WHITE};
-  padding: 20px;
-`;
-
-export const WarningColorStyle = (diffDay: number) => css`
-  color: ${diffDay < 0 ? colors.RED : colors.GRAY_DARK};
 `;
 
 export const TasksInfoWrapperStyle: string = css`
@@ -59,6 +55,8 @@ export const TasksInfoWrapperStyle: string = css`
   background-color: ${colors.WHITE};
   ${shadows.HEADER_LEFT};
   padding: 25px 15px 20px 20px;
+  width: 220px;
+  flex-shrink: 0;
 `;
 
 export const BindedAndRelatedWrapperStyle: string = css`
@@ -66,6 +64,8 @@ export const BindedAndRelatedWrapperStyle: string = css`
   background-color: ${colors.WHITE};
   ${shadows.HEADER_LEFT};
   padding: 25px 15px 20px 20px;
+  width: 180px;
+  flex-shrink: 0;
 `;
 
 export const ExpandWrapperStyle = css`

@@ -11,7 +11,7 @@ export const TimelineWrapperStyle: string = css`
   height: 100%;
   overflow-y: hidden;
   overflow-x: overlay;
-  padding: 0 7px 10px 0;
+  padding: 20px 27px 20px 20px;
   ${fontSizes.SMALL};
   ${scrollbars.SMALL};
 `;
