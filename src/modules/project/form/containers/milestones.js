@@ -215,7 +215,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.setState(prevState => ({
       milestones: ordering.map(id => ({
         ...prevState.milestones.find(item => item.id === id),
-        tasks: columns[id],
+        tasks: columns[id].map((task, milestoneSort) => ({ ...task, milestoneSort })),
       })),
     }));
   };
