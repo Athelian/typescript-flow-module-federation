@@ -6,6 +6,8 @@ import type { IntlShape } from 'react-intl';
 import memoize from 'memoize-one';
 import type { Milestone } from 'generated/graphql';
 import { PROJECT_UPDATE, PROJECT_SET_MILESTONES } from 'modules/permission/constants/project';
+import { MILESTONE_SET_TASKS } from 'modules/permission/constants/milestone';
+import { TASK_SET_MILESTONE } from 'modules/permission/constants/task';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useSortAndFilter from 'hooks/useSortAndFilter';
@@ -88,7 +90,10 @@ function MilestonesSection({ intl }: Props) {
               onChangeColumns={changeMilestones}
               onChangeTask={updateTask}
               editable={{
-                createMilestone: hasPermission([PROJECT_UPDATE, PROJECT_SET_MILESTONES]),
+                milestoneColumnEditable: hasPermission([PROJECT_UPDATE, PROJECT_SET_MILESTONES]),
+                milestoneRowEditable:
+                  hasPermission(PROJECT_UPDATE) ||
+                  (hasPermission(MILESTONE_SET_TASKS) && hasPermission(TASK_SET_MILESTONE)),
               }}
             />
           );

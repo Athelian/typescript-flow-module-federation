@@ -16,6 +16,8 @@ type Props = {|
   index: number,
   isDragDisabled: boolean,
   isDropDisabled: boolean,
+  allowDragColumns: boolean,
+  allowDragRows: boolean,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
   manualSort: {
     field: SortField,
@@ -27,13 +29,15 @@ export default function MilestoneColumn({
   id,
   index,
   tasks,
+  allowDragColumns,
+  allowDragRows,
   isDragDisabled,
   isDropDisabled,
   manualSort,
   onChangeTask,
 }: Props) {
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={id} index={index} isDragDisabled={!allowDragColumns}>
       {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
         <div
           className={MilestoneColumnWrapperStyle}
@@ -45,7 +49,7 @@ export default function MilestoneColumn({
             listId={id}
             onChangeTask={onChangeTask}
             isDropDisabled={isDropDisabled}
-            isDragDisabled={isDragDisabled}
+            isDragDisabled={isDragDisabled || !allowDragRows}
             listType="TASK"
             style={{
               backgroundColor: snapshot.isDragging ? colors.TEAL : null,

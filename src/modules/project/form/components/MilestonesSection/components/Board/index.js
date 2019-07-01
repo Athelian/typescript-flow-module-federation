@@ -20,7 +20,8 @@ type Props = {|
   onChangeColumns: MilestoneMap => void,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
   editable: {
-    createMilestone: boolean,
+    milestoneColumnEditable: boolean,
+    milestoneRowEditable: boolean,
   },
   allowDragAndDrop: boolean,
   manualSort: Object,
@@ -131,7 +132,13 @@ export default class Board extends Component<Props> {
     const { columns, ordered, editable, allowDragAndDrop, manualSort, onChangeTask } = this.props;
 
     const board = (
-      <Droppable droppableId="board" type="COLUMN" direction="horizontal" ignoreContainerClipping>
+      <Droppable
+        isDropDisabled={!editable.milestoneColumnEditable}
+        droppableId="board"
+        type="COLUMN"
+        direction="horizontal"
+        ignoreContainerClipping
+      >
         {(provided: DroppableProvided) => (
           <div
             className={MilestonesSectionWrapperStyle}
@@ -140,6 +147,8 @@ export default class Board extends Component<Props> {
           >
             {ordered.map((key: string, index: number) => (
               <MilestoneColumn
+                allowDragColumns={editable.milestoneColumnEditable}
+                allowDragRows={editable.milestoneRowEditable}
                 isDragDisabled={!allowDragAndDrop}
                 isDropDisabled={!allowDragAndDrop}
                 key={key}
@@ -151,7 +160,7 @@ export default class Board extends Component<Props> {
               />
             ))}
             {provided.placeholder}
-            {editable.createMilestone && (
+            {editable.milestoneColumnEditable && (
               <Subscribe to={[ProjectMilestonesContainer]}>
                 {({ newMilestone }) => {
                   return <NewButtonColumn onCreate={newMilestone} />;
