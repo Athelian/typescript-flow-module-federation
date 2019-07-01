@@ -25,7 +25,16 @@ import {
   MILESTONE_UPDATE,
   MILESTONE_SET_NAME,
   MILESTONE_SET_DUE_DATE,
+  MILESTONE_SET_COMPLETED,
+  MILESTONE_SET_TASKS,
+  MILESTONE_DELETE,
 } from 'modules/permission/constants/milestone';
+import {
+  TASK_UPDATE,
+  TASK_SET_COMPLETED,
+  TASK_SET_IN_PROGRESS,
+  TASK_SET_SKIPPED,
+} from 'modules/permission/constants/task';
 import validator from './validator';
 import messages from './messages';
 import { MilestoneHeaderWrapperStyle, DeleteButtonStyle, TaskRingWrapperStyle } from './style';
@@ -78,8 +87,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
             <BooleanValue>
               {({ value: deleteDialogIsOpen, set: dialogToggle }) => (
                 <>
-                  {/* TODO: Add Permissions */}
-                  {milestones.length > 1 && (
+                  {hasPermission([MILESTONE_DELETE]) && milestones.length > 1 && (
                     <button
                       className={DeleteButtonStyle(isHovered)}
                       type="button"
@@ -166,6 +174,13 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               {({ value: isDialogOpen, set: dialogToggle }) => (
                 <>
                   <CompleteButton
+                    editable={
+                      hasPermission(MILESTONE_SET_COMPLETED) &&
+                      (hasPermission(TASK_UPDATE) ||
+                        (hasPermission(TASK_SET_COMPLETED) &&
+                          hasPermission(TASK_SET_IN_PROGRESS) &&
+                          hasPermission(TASK_SET_SKIPPED)))
+                    }
                     onComplete={() => {
                       const { remain, inProgress } = taskCountByMilestone(milestoneId);
                       if (remain + inProgress > 0) {
@@ -238,16 +253,20 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                 </>
               )}
             </BooleanValue>
-            {/* TODO: Add Permissions */}
             <BooleanValue>
               {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
                 <>
-                  <NewButton
-                    label={
-                      <FormattedMessage id="modules.Milestones.addTask" defaultMessage="ADD TASK" />
-                    }
-                    onClick={() => selectTasksSlideToggle(true)}
-                  />
+                  {hasPermission([MILESTONE_SET_TASKS]) && (
+                    <NewButton
+                      label={
+                        <FormattedMessage
+                          id="modules.Milestones.addTask"
+                          defaultMessage="ADD TASK"
+                        />
+                      }
+                      onClick={() => selectTasksSlideToggle(true)}
+                    />
+                  )}
                   <SlideView
                     isOpen={selectTasksIsOpen}
                     onRequestClose={() => selectTasksSlideToggle(false)}

@@ -15,6 +15,7 @@ export const TASK_SET_APPROVED = 'task.tasks.setApproved';
 export const TASK_SET_APPROVERS = 'task.tasks.setApprovers';
 export const TASK_SET_ASSIGNEES = 'task.tasks.setAssignees';
 export const TASK_SET_COMPLETED = 'task.tasks.setCompleted';
+export const TASK_SET_SKIPPED = 'task.tasks.setSkipped';
 export const TASK_SET_DESCRIPTION = 'task.tasks.setDescription';
 export const TASK_SET_DUE_DATE = 'task.tasks.setDueDate';
 export const TASK_SET_DUE_DATE_BINDING = 'task.tasks.setDueDateBinding';

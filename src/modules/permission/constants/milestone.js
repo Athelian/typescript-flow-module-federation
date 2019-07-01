@@ -11,3 +11,4 @@ export const MILESTONE_SET_TASKS = 'task.milestones.setTasks';
 export const MILESTONE_SET_PROJECT = 'task.milestones.setProject';
 export const MILESTONE_SET_TAGS = 'task.milestones.setTags';
 export const MILESTONE_SET_MILESTONES = 'task.milestones.setMilestones';
+export const MILESTONE_SET_COMPLETED = 'task.milestones.setCompleted';

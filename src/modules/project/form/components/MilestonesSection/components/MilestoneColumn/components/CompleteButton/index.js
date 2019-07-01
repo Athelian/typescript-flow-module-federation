@@ -19,6 +19,7 @@ type OptionalProps = {|
   completedBy: ?UserAvatarType,
   onComplete: Object => void,
   onUnComplete: () => void,
+  editable: boolean,
 |};
 
 type Props = OptionalProps;
@@ -30,23 +31,28 @@ const defaultProps = {
   onUnComplete: () => {},
 };
 
-const CompleteButton = ({ completedAt, completedBy, onComplete, onUnComplete }: Props) => (
+const CompleteButton = ({
+  editable,
+  completedAt,
+  completedBy,
+  onComplete,
+  onUnComplete,
+}: Props) => (
   <div
     className={TaskStatusInputWrapperStyle({
       isCompleted: !!completedAt,
-      // TODO: Add permissions
-      editable: true,
+      editable,
     })}
   >
     <div className={UserAvatarWrapperStyle}>
       {completedAt && (
         <>
           <UserAvatar {...completedBy} />
-
-          {/* TODO: Add permissions: if dont have permission then dont render this ui */}
-          <button type="button" className={DeactivateButtonStyle} onClick={onUnComplete}>
-            <Icon icon="CLEAR" />
-          </button>
+          {editable && (
+            <button type="button" className={DeactivateButtonStyle} onClick={onUnComplete}>
+              <Icon icon="CLEAR" />
+            </button>
+          )}
         </>
       )}
     </div>
@@ -55,8 +61,7 @@ const CompleteButton = ({ completedAt, completedBy, onComplete, onUnComplete }: 
       type="button"
       className={TaskStatusButtonStyle}
       onClick={() => {
-        if (!completedAt) {
-          // TODO: Add permissions
+        if (!completedAt && editable) {
           onComplete();
         }
       }}
