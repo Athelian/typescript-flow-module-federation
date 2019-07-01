@@ -167,10 +167,10 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
             }}
             hasMore={hasMore}
             isLoading={isLoading && tasks.length === 0}
-            renderItem={item => (
+            renderItem={(item, position) => (
               <TaskCard
                 entity={item.entity}
-                position={item.sort}
+                position={position + 1}
                 key={item.id}
                 selectable
                 task={item}

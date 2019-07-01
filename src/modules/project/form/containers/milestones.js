@@ -198,6 +198,34 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     }));
   };
 
+  updateTask = ({
+    milestoneId,
+    taskId,
+    task,
+  }: {
+    milestoneId: string,
+    taskId: string,
+    task: Task,
+  }) => {
+    const index = this.state.milestones.findIndex(milestone => milestone.id === milestoneId);
+    const taskIndex = this.state.milestones[index].tasks.findIndex(
+      item => getByPathWithDefault('', 'id', item) === taskId
+    );
+    this.setState(prevState =>
+      update(prevState, {
+        milestones: {
+          [index]: {
+            tasks: {
+              [taskIndex]: {
+                $merge: task,
+              },
+            },
+          },
+        },
+      })
+    );
+  };
+
   milestoneStatus = () => {
     return (this.state.milestones.map(milestone => ({
       name: milestone.name,

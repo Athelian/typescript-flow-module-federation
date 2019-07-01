@@ -187,6 +187,7 @@ describe('milestones container', () => {
         tasks: [
           {
             id: 4,
+            milestoneSort: 0,
           },
         ],
       },
@@ -505,6 +506,74 @@ describe('milestones container', () => {
           {
             id: 4,
             inProgressAt: date,
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('should update task for milestone with id', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const dueDate = faker.date.future();
+    const name = faker.name.findName();
+    const milestones = [
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+            name: 'a',
+            dueDate: null,
+          },
+        ],
+      },
+    ];
+    await container.initDetailValues(milestones);
+
+    await container.updateTask({
+      milestoneId: '1',
+      taskId: 4,
+      task: {
+        name,
+      },
+    });
+
+    expect(container.state.milestones).toEqual([
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+            name,
+            dueDate: null,
+          },
+        ],
+      },
+    ]);
+
+    await container.updateTask({
+      milestoneId: '1',
+      taskId: 4,
+      task: {
+        dueDate,
+      },
+    });
+
+    expect(container.state.milestones).toEqual([
+      {
+        id: '1',
+        name: 'a',
+        dueDate: null,
+        tasks: [
+          {
+            id: 4,
+            name,
+            dueDate,
           },
         ],
       },

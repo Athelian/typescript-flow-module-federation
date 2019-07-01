@@ -16,6 +16,7 @@ type Props = {|
   index: number,
   isDragDisabled: boolean,
   isDropDisabled: boolean,
+  onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
   manualSort: {
     field: SortField,
     direction: SortDirection,
@@ -29,6 +30,7 @@ export default function MilestoneColumn({
   isDragDisabled,
   isDropDisabled,
   manualSort,
+  onChangeTask,
 }: Props) {
   return (
     <Draggable draggableId={id} index={index}>
@@ -41,6 +43,7 @@ export default function MilestoneColumn({
           <MilestoneForm milestoneId={id} isDragging={snapshot.isDragging} provided={provided} />
           <TaskList
             listId={id}
+            onChangeTask={onChangeTask}
             isDropDisabled={isDropDisabled}
             isDragDisabled={isDragDisabled}
             listType="TASK"

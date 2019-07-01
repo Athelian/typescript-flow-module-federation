@@ -11,25 +11,32 @@ import { MilestoneTaskListBodyStyle } from './style';
 import TaskItem from '../TaskItem';
 
 type Props = {|
-  listId?: string,
+  listId: string,
   listType?: string,
   tasks: Task[],
   isDropDisabled?: boolean,
   isDragDisabled?: boolean,
   style?: Object,
   ignoreContainerClipping?: boolean,
+  onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
 |};
 
 type TaskListProps = {|
   tasks: Task[],
   isDragDisabled: boolean,
+  onChange: (taskId: string, task: Task) => void,
 |};
 
-const InnerTaskList = React.memo(function InnerTaskList({ tasks, isDragDisabled }: TaskListProps) {
+const InnerTaskList = React.memo(function InnerTaskList({
+  tasks,
+  onChange,
+  isDragDisabled,
+}: TaskListProps) {
   return tasks.map((task: Task, index: number) => (
     <Draggable key={task.id} draggableId={task.id} index={index} isDragDisabled={isDragDisabled}>
       {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
         <TaskItem
+          onChange={onChange}
           task={task}
           key={task.id}
           isDragging={dragSnapshot.isDragging}
@@ -50,6 +57,7 @@ export default function TaskList(props: Props) {
     listType,
     style,
     tasks,
+    onChangeTask,
   } = props;
 
   return (
@@ -66,7 +74,13 @@ export default function TaskList(props: Props) {
           {...dropProvided.droppableProps}
           ref={dropProvided.innerRef}
         >
-          <InnerTaskList tasks={tasks} isDragDisabled={Boolean(isDragDisabled)} />
+          <InnerTaskList
+            onChange={(taskId, updateTask) =>
+              onChangeTask({ milestoneId: listId, taskId, task: updateTask })
+            }
+            tasks={tasks}
+            isDragDisabled={Boolean(isDragDisabled)}
+          />
           {dropProvided.placeholder}
         </div>
       )}

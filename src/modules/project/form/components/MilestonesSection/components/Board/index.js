@@ -18,6 +18,7 @@ type Props = {|
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
   onChangeColumns: MilestoneMap => void,
+  onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
   editable: {
     createMilestone: boolean,
   },
@@ -127,7 +128,7 @@ export default class Board extends Component<Props> {
   };
 
   render() {
-    const { columns, ordered, editable, allowDragAndDrop, manualSort } = this.props;
+    const { columns, ordered, editable, allowDragAndDrop, manualSort, onChangeTask } = this.props;
 
     const board = (
       <Droppable droppableId="board" type="COLUMN" direction="horizontal" ignoreContainerClipping>
@@ -146,6 +147,7 @@ export default class Board extends Component<Props> {
                 id={key}
                 tasks={columns[key]}
                 manualSort={manualSort}
+                onChangeTask={onChangeTask}
               />
             ))}
             {provided.placeholder}

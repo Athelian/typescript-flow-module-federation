@@ -1,9 +1,26 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  taskCardFragment,
+  taskWithParentInfoFragment,
   userAvatarFragment,
   tagFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  productCardFragment,
+  productProviderCardFragment,
+  orderCardFragment,
+  itemCardFragment,
+  batchCardFragment,
+  shipmentCardFragment,
+  partnerNameFragment,
+  priceFragment,
+  metricFragment,
+  imageFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  taskCountFragment,
+  sizeFragment,
+  ownedByFragment,
   notFoundFragment,
   badRequestFragment,
   forbiddenFragment,
@@ -18,7 +35,7 @@ export const selectTaskListQuery = gql`
   ) {
     tasks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
-        ...taskCardFragment
+        ...taskWithParentInfoFragment
         ...notFoundFragment
         ...badRequestFragment
         ...forbiddenFragment
@@ -31,9 +48,28 @@ export const selectTaskListQuery = gql`
   ${notFoundFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
-  ${taskCardFragment}
+  ${taskWithParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${userAvatarFragment}
   ${tagFragment}
+  ${userAvatarFragment}
+  ${ownedByFragment}
+  ${taskWithParentInfoFragment}
+  ${orderCardFragment}
+  ${productCardFragment}
+  ${productProviderCardFragment}
+  ${batchCardFragment}
+  ${shipmentCardFragment}
+  ${itemCardFragment}
+  ${partnerNameFragment}
+  ${priceFragment}
+  ${metricFragment}
+  ${imageFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${taskCountFragment}
+  ${sizeFragment}
 `;
 
 export default selectTaskListQuery;

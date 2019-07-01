@@ -11,6 +11,7 @@ type OptionalProps = {
   parentEntity?: string,
   hideParentInfo?: boolean,
   isInTemplate: boolean,
+  isInProject: boolean,
 };
 
 type Props = OptionalProps & {
@@ -21,6 +22,7 @@ const defaultProps = {
   task: {},
   onFormReady: () => {},
   isInTemplate: false,
+  isInProject: false,
 };
 
 export default class TaskForm extends React.Component<Props> {
@@ -39,7 +41,15 @@ export default class TaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { task, groupIds, entity, parentEntity, hideParentInfo, isInTemplate } = this.props;
+    const {
+      task,
+      groupIds,
+      entity,
+      parentEntity,
+      hideParentInfo,
+      isInTemplate,
+      isInProject,
+    } = this.props;
     return (
       <>
         <TaskInfoSection
@@ -47,6 +57,7 @@ export default class TaskForm extends React.Component<Props> {
           parentEntity={parentEntity}
           task={task}
           isInTemplate={isInTemplate}
+          isInProject={isInProject}
         />
         <ParentEntity inForm={!!hideParentInfo} entity={entity} />
       </>

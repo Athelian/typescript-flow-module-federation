@@ -90,6 +90,7 @@ import {
 
 type OptionalProps = {
   isInTemplate: boolean,
+  isInProject: boolean,
   hideParentInfo: boolean,
   parentEntity?: string,
 };
@@ -102,6 +103,7 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isInTemplate: false,
+  isInProject: false,
   hideParentInfo: false,
 };
 
@@ -110,6 +112,7 @@ const TaskInfoSection = ({
   groupIds,
   task,
   isInTemplate,
+  isInProject,
   hideParentInfo,
   parentEntity,
 }: Props) => {
@@ -1011,7 +1014,7 @@ const TaskInfoSection = ({
                         />
                       )}
 
-                    {!isInTemplate && (
+                    {!isInTemplate && !isInProject && (
                       <div>
                         {editable.milestone ? (
                           <BooleanValue>

@@ -76,7 +76,7 @@ function MilestonesSection({ intl }: Props) {
       </div>
 
       <Subscribe to={[ProjectMilestonesContainer]}>
-        {({ state: { milestones }, changeMilestoneOrdering, changeMilestones }) => {
+        {({ state: { milestones }, changeMilestoneOrdering, changeMilestones, updateTask }) => {
           const initial = createMilestoneColumnsData(milestones);
           return (
             <Board
@@ -86,6 +86,7 @@ function MilestonesSection({ intl }: Props) {
               ordered={Object.keys(initial)}
               onChangeOrdering={changeMilestoneOrdering}
               onChangeColumns={changeMilestones}
+              onChangeTask={updateTask}
               editable={{
                 createMilestone: hasPermission([PROJECT_UPDATE, PROJECT_SET_MILESTONES]),
               }}

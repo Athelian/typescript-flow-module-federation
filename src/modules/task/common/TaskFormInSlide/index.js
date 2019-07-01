@@ -19,6 +19,7 @@ import { taskTimelineQuery } from 'modules/task/query';
 
 type OptionalProps = {
   isInTemplate: boolean,
+  isInProject: boolean,
   parentEntity?: string,
 };
 
@@ -31,11 +32,20 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   isInTemplate: false,
+  isInProject: false,
 };
 
 const formContainer = new FormContainer();
 
-const TaskFormInSlide = ({ groupIds, onSave, task, parentEntity, entity, isInTemplate }: Props) => {
+const TaskFormInSlide = ({
+  groupIds,
+  onSave,
+  task,
+  parentEntity,
+  entity,
+  isInTemplate,
+  isInProject,
+}: Props) => {
   useEffect(() => {
     return () => formContainer.onReset();
   });
@@ -112,6 +122,7 @@ const TaskFormInSlide = ({ groupIds, onSave, task, parentEntity, entity, isInTem
               hideParentInfo
               parentEntity={parentEntity}
               isInTemplate={isInTemplate}
+              isInProject={isInProject}
               onFormReady={() => taskContainer.initDetailValues(task)}
             />
           </Layout>

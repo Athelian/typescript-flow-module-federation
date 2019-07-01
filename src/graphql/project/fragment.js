@@ -60,10 +60,9 @@ export const projectFormQueryFragment = gql`
           ...taskCountFragment
         }
         tasks {
-          ...taskCardFragment
+          ...taskWithParentInfoFragment
           ... on Task {
             milestoneSort
-            approvable
             entity {
               ... on Order {
                 todo {
