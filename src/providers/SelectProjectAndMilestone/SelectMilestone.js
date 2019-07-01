@@ -53,7 +53,7 @@ function SelectMilestone({ onCancel, onSelect, milestones, milestone }: Props) {
                 defaultMessage="No milestone found"
               />
             }
-            itemWidth="200px"
+            itemWidth="195px"
           >
             {milestones.map(item => {
               return (

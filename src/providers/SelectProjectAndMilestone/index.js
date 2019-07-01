@@ -178,7 +178,7 @@ function SelectProjectAndMilestone({
                       defaultMessage="No projects found"
                     />
                   }
-                  itemWidth="200px"
+                  itemWidth="195px"
                 >
                   {projects.map(item => {
                     const selected =

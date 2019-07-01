@@ -28,7 +28,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
       hasMore={hasMore}
       isLoading={isLoading}
       isEmpty={tasks.length === 0}
-      itemWidth="200px"
+      itemWidth="195px"
       emptyMessage={
         <FormattedMessage
           id="modules.RelationalMaps.noTasksFound"

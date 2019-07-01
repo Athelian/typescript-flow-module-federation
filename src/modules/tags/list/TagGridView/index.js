@@ -51,7 +51,7 @@ const TagGridView = ({
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="200px"
+      itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={<FormattedMessage id="modules.Tags.noItem" defaultMessage="No tags found" />}
     >

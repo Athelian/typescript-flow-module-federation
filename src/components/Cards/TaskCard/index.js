@@ -67,6 +67,7 @@ type OptionalProps = {
   position: number,
   hideParentInfo: boolean,
   onClick: Function,
+  onSelect: Function,
   saveOnBlur: Function,
   editable: TaskCardEditableProps,
   navigable: {
@@ -99,6 +100,7 @@ const defaultProps = {
   position: 0,
   hideParentInfo: false,
   onClick: null,
+  onSelect: null,
   saveOnBlur: () => {},
   actions: [],
   isInTemplate: false,
@@ -183,6 +185,7 @@ const TaskCard = ({
   position,
   hideParentInfo,
   onClick,
+  onSelect,
   saveOnBlur,
   editable: originalEditable,
   navigable: originalNavigable,
@@ -257,7 +260,8 @@ const TaskCard = ({
       color="TASK"
       showActionsOnHover
       actions={actions}
-      readOnly={!isEditable && !onClick}
+      readOnly={!isEditable && !onClick && !onSelect}
+      onSelect={onSelect}
       {...rest}
     >
       <BooleanValue>
