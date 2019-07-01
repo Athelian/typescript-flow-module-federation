@@ -8,7 +8,7 @@ import type { Milestone } from 'generated/graphql';
 import { PROJECT_UPDATE, PROJECT_SET_MILESTONES } from 'modules/permission/constants/project';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import useFilter from 'hooks/useFilter';
+import useSortAndFilter from 'hooks/useSortAndFilter';
 import messages from 'modules/task/messages';
 import { ProjectMilestonesContainer } from 'modules/project/form/containers';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -39,7 +39,7 @@ const getInitFilter = () => {
       query: '',
     },
     sort: {
-      field: 'updatedAt',
+      field: 'default',
       direction: 'DESCENDING',
     },
     perPage: 10,
@@ -61,7 +61,7 @@ function MilestonesSection({ intl }: Props) {
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
     { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
-  const { filterAndSort, onChangeFilter } = useFilter(getInitFilter(), 'filterMilestone');
+  const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
   return (
     <>
       <div className={NavbarStyle}>
