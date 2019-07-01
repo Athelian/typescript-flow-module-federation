@@ -169,7 +169,15 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
             isLoading={isLoading && tasks.length === 0}
             renderItem={(item, position) => (
               <TaskCard
-                entity={item.entity}
+                entity={{
+                  ...item.entity,
+                  ...getByPathWithDefault({}, 'order', item),
+                  ...getByPathWithDefault({}, 'orderItem', item),
+                  ...getByPathWithDefault({}, 'batch', item),
+                  ...getByPathWithDefault({}, 'product', item),
+                  ...getByPathWithDefault({}, 'productProvider', item),
+                  ...getByPathWithDefault({}, 'shipment', item),
+                }}
                 position={position + 1}
                 key={item.id}
                 selectable
