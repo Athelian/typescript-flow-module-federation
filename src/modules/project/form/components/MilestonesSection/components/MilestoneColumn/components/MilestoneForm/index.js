@@ -174,7 +174,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
               {({ value: isDialogOpen, set: dialogToggle }) => (
                 <>
                   <CompleteButton
-                    editable={hasPermission(MILESTONE_SET_COMPLETED)}
+                    editable={hasPermission([MILESTONE_UPDATE, MILESTONE_SET_COMPLETED])}
                     onComplete={() => {
                       const { remain, inProgress } = taskCountByMilestone(milestoneId);
                       if (remain + inProgress > 0) {
@@ -258,7 +258,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
             <BooleanValue>
               {({ value: selectTasksIsOpen, set: selectTasksSlideToggle }) => (
                 <>
-                  {hasPermission([MILESTONE_SET_TASKS]) && (
+                  {hasPermission([MILESTONE_UPDATE, MILESTONE_SET_TASKS]) && (
                     <NewButton
                       label={
                         <FormattedMessage
