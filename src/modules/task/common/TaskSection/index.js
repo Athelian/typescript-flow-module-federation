@@ -6,11 +6,12 @@ import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
+import { getByPath } from 'utils/fp';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { NewButton } from 'components/Buttons';
 import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
-import { TemplateCard, GrayCard } from 'components/Cards';
+import { TemplateCard, GrayCard, ProjectCard, MilestoneCard } from 'components/Cards';
 import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -136,6 +137,7 @@ import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import messages from 'modules/task/messages';
 import {
   TasksSectionWrapperStyle,
@@ -428,7 +430,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
       {(
         {
           state: {
-            todo: { tasks, taskTemplate },
+            todo: { tasks, taskTemplate, milestone },
           },
           setFieldValue,
           applyTemplate,
@@ -471,7 +473,67 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
             </SectionNavBar>
 
             <div className={TasksSectionStyle}>
-              <div className={TasksSectionProjectAreaStyle}>project</div>
+              <div className={TasksSectionProjectAreaStyle}>
+                <BooleanValue>
+                  {({ value: opened, set: toggleSlide }) => (
+                    <>
+                      {milestone ? (
+                        <div role="presentation" onClick={() => toggleSlide(true)}>
+                          <Label>
+                            <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
+                          </Label>
+                          <ProjectCard project={milestone.project} />
+                          <Label>
+                            <FormattedMessage
+                              id="modules.task.milestone"
+                              defaultMessage="MILESTONE"
+                            />
+                          </Label>
+                          <MilestoneCard milestone={milestone} />
+                        </div>
+                      ) : (
+                        <>
+                          <Label>
+                            <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
+                          </Label>
+                          <DashedPlusButton
+                            width="195px"
+                            height="458px"
+                            onClick={() => toggleSlide(true)}
+                          />
+                        </>
+                      )}
+                      <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
+                        {opened && (
+                          <SelectProjectAndMilestone
+                            filter={{
+                              query: '',
+                            }}
+                            project={getByPath('project', milestone)}
+                            milestone={milestone}
+                            onSelect={({
+                              milestone: selectedMilestone,
+                              project: selectedProject,
+                            }) => {
+                              setFieldValue(
+                                'todo.milestone',
+                                selectedMilestone
+                                  ? {
+                                      ...selectedMilestone,
+                                      project: selectedProject,
+                                    }
+                                  : null
+                              );
+                              toggleSlide(false);
+                            }}
+                            onCancel={() => toggleSlide(false)}
+                          />
+                        )}
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              </div>
               <div className={TasksSectionTasksAreaStyle}>
                 <div className={TasksSectionBodyStyle}>
                   {

@@ -496,6 +496,11 @@ export const parseTodoField = (
         getByPathWithDefault(null, 'taskTemplate', originalTodo),
         newTodo.taskTemplate
       ),
+      ...parseParentIdField(
+        'milestoneId',
+        getByPathWithDefault(null, 'milestone', originalTodo),
+        newTodo.milestone
+      ),
     },
   };
 };

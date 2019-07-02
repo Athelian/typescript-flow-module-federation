@@ -26,6 +26,14 @@ export const shipmentFormFragment = gql`
       ...ownedByFragment
     }
     todo {
+      milestone {
+        ... on Milestone {
+          ...milestoneCardFragment
+          project {
+            ...projectCardFragment
+          }
+        }
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }

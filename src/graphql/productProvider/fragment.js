@@ -56,6 +56,14 @@ export const productProviderFormFragment = gql`
       ...documentFragment
     }
     todo {
+      milestone {
+        ... on Milestone {
+          ...milestoneCardFragment
+          project {
+            ...projectCardFragment
+          }
+        }
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
