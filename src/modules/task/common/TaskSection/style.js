@@ -9,6 +9,26 @@ export const TasksSectionWrapperStyle: string = css`
   height: min-content;
 `;
 
+export const TasksSectionStyle: string = css`
+  display: flex;
+`;
+
+export const TasksSectionProjectAreaStyle: string = css`
+  ${borderRadiuses.MAIN};
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  position: relative;
+  width: 235px;
+`;
+
+export const TasksSectionTasksAreaStyle: string = css`
+  ${borderRadiuses.MAIN};
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  position: relative;
+  width: 645px;
+`;
+
 export const TasksSectionBodyStyle: string = css`
   ${borderRadiuses.MAIN};
   border-top-left-radius: 0;
