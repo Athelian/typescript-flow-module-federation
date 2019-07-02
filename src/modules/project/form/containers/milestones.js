@@ -24,6 +24,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
 
   originalValues = initValues;
 
+  originalTasks = [];
+
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
@@ -39,6 +41,9 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
   initDetailValues = (milestones: Array<Milestone>, ignoreTaskIds: Array<string> = []) => {
     this.setState({ milestones, ignoreTaskIds });
     this.originalValues = { milestones, ignoreTaskIds };
+    this.originalTasks = (flatten(
+      milestones.map(item => getByPathWithDefault([], 'tasks', item))
+    ): Array<Task>);
   };
 
   taskCountByMilestone = (
@@ -264,8 +269,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     const taskIds = flatten(this.state.milestones.map(item => item.tasks))
       .map(task => getByPathWithDefault('', 'id', task))
       .filter(Boolean);
-    const originalTasks = flatten(this.originalValues.milestones.map(item => item.tasks));
-    return (originalTasks
+    const tasks = flatten(this.originalValues.milestones.map(item => item.tasks));
+    return (tasks
       .filter(task => !taskIds.includes(getByPathWithDefault('', 'id', task)))
       .map(task => getByPathWithDefault('', 'id', task)): Array<string>);
   };

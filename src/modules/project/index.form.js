@@ -70,13 +70,6 @@ class ProjectFormModule extends React.PureComponent<Props> {
     return path.startsWith('new');
   };
 
-  isClone = () => {
-    const { path } = this.props;
-    return path.startsWith('clone');
-  };
-
-  isNewOrClone = () => this.isNew() || this.isClone();
-
   onCancel = () => navigate('/project');
 
   onSave = async (
@@ -87,14 +80,14 @@ class ProjectFormModule extends React.PureComponent<Props> {
     onErrors: Function = () => {}
   ) => {
     const { projectId, onSuccessCallback } = this.props;
+    const isNew = this.isNew();
 
-    const isNewOrClone = this.isNewOrClone();
     const input = prepareParsedProjectInput(
-      isNewOrClone ? null : removeTypename(originalValues),
+      isNew ? { originalTasks: originalValues.originalTasks } : removeTypename(originalValues),
       removeTypename(formData)
     );
 
-    if (isNewOrClone) {
+    if (this.isNew()) {
       const { data } = await saveProject({ variables: { input } });
       if (!data) return;
 
@@ -189,9 +182,9 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
   render() {
     const { projectId, isSlideView, onCancel } = this.props;
-    const isNewOrClone = this.isNewOrClone();
+    const isNew = this.isNew();
     let mutationKey = {};
-    if (projectId && !isNewOrClone) {
+    if (projectId && !isNew) {
       mutationKey = { key: decodeId(projectId) };
     }
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
@@ -201,7 +194,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
         {uiState => (
           <Provider inject={[formContainer]}>
             <Mutation
-              mutation={isNewOrClone ? createProjectMutation : updateProjectMutation}
+              mutation={isNew ? createProjectMutation : updateProjectMutation}
               onCompleted={this.onMutationCompleted}
               {...mutationKey}
             >
@@ -213,7 +206,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                       <EntityIcon icon="PROJECT" color="PROJECT" />
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) =>
-                          !isNewOrClone && (
+                          !isNew && (
                             <>
                               <LogsButton onClick={() => slideToggle(true)} />
                               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
@@ -258,7 +251,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
 
                           return (
                             <>
-                              {isNewOrClone ? (
+                              {isNew ? (
                                 <CancelButton
                                   onClick={() => (onCancel ? onCancel() : this.onCancel())}
                                 />
@@ -286,7 +279,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                 </>
                               )}
 
-                              {(isNewOrClone || isDirty) && (
+                              {(isNew || isDirty) && (
                                 <SaveButton
                                   disabled={
                                     !form.isReady(
@@ -305,6 +298,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                         ...projectInfoState.originalValues,
                                         ...projectTagsState.originalValues,
                                         ...projectMilestonesState.originalValues,
+                                        originalTasks: projectMilestonesState.originalTasks,
                                       },
                                       {
                                         ...projectInfoState.state,
@@ -368,11 +362,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                       onCompleted={logger.warn}
                       render={(project, isOwner) => (
                         <>
-                          <ProjectForm
-                            project={project}
-                            isOwner={isOwner}
-                            isClone={this.isClone()}
-                          />
+                          <ProjectForm project={project} isOwner={isOwner} />
                           <Subscribe
                             to={[
                               ProjectInfoContainer,

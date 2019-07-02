@@ -57,6 +57,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
     <Subscribe to={[ProjectMilestonesContainer]}>
       {({
         originalValues,
+        originalTasks,
         state,
         setMilestoneValue,
         excludeTaskIds,
@@ -283,6 +284,7 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                         onSelect={selected => {
                           selectTasksSlideToggle(false);
                           const counter = getByPathWithDefault([], 'tasks', values).length;
+                          originalTasks.push(...selected);
                           onChangeValue(`${milestoneId}.tasks`, [
                             ...getByPathWithDefault([], 'tasks', values),
                             ...selected.map((task, index) => ({

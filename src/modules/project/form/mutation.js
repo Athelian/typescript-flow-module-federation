@@ -78,7 +78,10 @@ const prepareParseMilestone = (originalValues: Object, newValues: Object): Objec
     newValues.tasks,
     (task: ?Object, newTask: Object) => ({
       ...(!task ? {} : { id: task.id }),
-      ...prepareParsedTaskInput(task, newTask),
+      ...prepareParsedTaskInput(
+        !task ? originalValues.originalTasks.find(item => item.id === newTask.id) : task,
+        newTask
+      ),
     })
   ),
 });
@@ -147,7 +150,10 @@ export const prepareParsedProjectInput = (
     newValues.milestones,
     (milestone: ?Object, newMilestone: Object) => ({
       ...(!milestone ? {} : { id: milestone.id }),
-      ...prepareParseMilestone(milestone, newMilestone),
+      ...prepareParseMilestone(
+        { ...milestone, originalTasks: (originalValues && originalValues.originalTasks) || [] },
+        newMilestone
+      ),
     })
   ),
 });
