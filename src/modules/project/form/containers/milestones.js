@@ -26,6 +26,8 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
 
   originalTasks = [];
 
+  deleteTasks = [];
+
   isDirty = () => !isEquals(this.state, this.originalValues);
 
   onSuccess = () => {
@@ -44,6 +46,7 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     this.originalTasks = (flatten(
       milestones.map(item => getByPathWithDefault([], 'tasks', item))
     ): Array<Task>);
+    this.deleteTasks = [];
   };
 
   taskCountByMilestone = (
@@ -224,6 +227,35 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
               [taskIndex]: {
                 $merge: task,
               },
+            },
+          },
+        },
+      })
+    );
+  };
+
+  removeTask = ({
+    milestoneId,
+    taskId,
+    isDelete,
+  }: {
+    milestoneId: string,
+    taskId: string,
+    isDelete: boolean,
+  }) => {
+    const index = this.state.milestones.findIndex(milestone => milestone.id === milestoneId);
+    const taskIndex = this.state.milestones[index].tasks.findIndex(
+      item => getByPathWithDefault('', 'id', item) === taskId
+    );
+    if (isDelete) {
+      this.deleteTasks.push(taskId);
+    }
+    this.setState(prevState =>
+      update(prevState, {
+        milestones: {
+          [index]: {
+            tasks: {
+              $splice: [[taskIndex, 1]],
             },
           },
         },

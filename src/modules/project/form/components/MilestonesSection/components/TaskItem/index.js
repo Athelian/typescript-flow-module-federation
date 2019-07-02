@@ -6,11 +6,14 @@ import QueryFormPermissionContext from 'components/common/QueryForm/context';
 import { intersection } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
-import { TaskCard } from 'components/Cards';
+import { TaskCard, CardAction } from 'components/Cards';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import SlideView from 'components/SlideView';
 import { checkEditableFromEntity, parseGroupIds } from 'utils/task';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
+import { TASK_SET_MILESTONE, TASK_DELETE } from 'modules/permission/constants/task';
+import { MILESTONE_UPDATE } from 'modules/permission/constants/milestone';
+import { PROJECT_UPDATE } from 'modules/permission/constants/project';
 import { TaskItemWrapperStyle } from './style';
 
 type Props = {|
@@ -19,9 +22,10 @@ type Props = {|
   provided: DraggableProvided,
   isGroupedOver?: boolean,
   onChange: (taskId: string, task: Task) => void,
+  onRemove: (taskId: string, isDelete: boolean) => void,
 |};
 
-function TaskItem({ task, isDragging, provided, onChange }: Props) {
+function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
   return (
     <div
       className={TaskItemWrapperStyle(isDragging)}
@@ -47,6 +51,24 @@ function TaskItem({ task, isDragging, provided, onChange }: Props) {
                     ...getByPath('shipment', task),
                   }}
                   task={task}
+                  actions={[
+                    (permissions.includes(TASK_SET_MILESTONE) ||
+                      permissions.includes(PROJECT_UPDATE) ||
+                      permissions.includes(MILESTONE_UPDATE)) && (
+                      <CardAction
+                        icon="CLEAR"
+                        hoverColor="RED"
+                        onClick={() => onRemove(task.id, false)}
+                      />
+                    ),
+                    permissions.includes(TASK_DELETE) && (
+                      <CardAction
+                        icon="REMOVE"
+                        hoverColor="RED"
+                        onClick={() => onRemove(task.id, true)}
+                      />
+                    ),
+                  ].filter(Boolean)}
                   position={task.milestoneSort + 1}
                   editable={checkEditableFromEntity(
                     getByPath('entity.__typename', task),

@@ -19,17 +19,20 @@ type Props = {|
   style?: Object,
   ignoreContainerClipping?: boolean,
   onChangeTask: ({ milestoneId: string, taskId: string, task: Task }) => void,
+  onRemoveTask: ({ milestoneId: string, taskId: string, isDelete: boolean }) => void,
 |};
 
 type TaskListProps = {|
   tasks: Task[],
   isDragDisabled: boolean,
   onChange: (taskId: string, task: Task) => void,
+  onRemove: (taskId: string, isDelete: boolean) => void,
 |};
 
 const InnerTaskList = React.memo(function InnerTaskList({
   tasks,
   onChange,
+  onRemove,
   isDragDisabled,
 }: TaskListProps) {
   return tasks.map((task: Task, index: number) => (
@@ -37,6 +40,7 @@ const InnerTaskList = React.memo(function InnerTaskList({
       {(dragProvided: DraggableProvided, dragSnapshot: DraggableStateSnapshot) => (
         <TaskItem
           onChange={onChange}
+          onRemove={onRemove}
           task={task}
           key={task.id}
           isDragging={dragSnapshot.isDragging}
@@ -58,6 +62,7 @@ export default function TaskList(props: Props) {
     style,
     tasks,
     onChangeTask,
+    onRemoveTask,
   } = props;
 
   return (
@@ -78,6 +83,7 @@ export default function TaskList(props: Props) {
             onChange={(taskId, updateTask) =>
               onChangeTask({ milestoneId: listId, taskId, task: updateTask })
             }
+            onRemove={(taskId, isDelete) => onRemoveTask({ milestoneId: listId, taskId, isDelete })}
             tasks={tasks}
             isDragDisabled={Boolean(isDragDisabled)}
           />
