@@ -81,7 +81,11 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                   )}
                   navigable={{ project: false }}
                   saveOnBlur={value => onChange(task.id, value)}
-                  onClick={() => toggleTaskForm(true)}
+                  onClick={() => {
+                    // This is using for fixing a edge case when on blur doesn't fire on inline edit for task card
+                    if (document.activeElement) document.activeElement.blur();
+                    setTimeout(() => toggleTaskForm(true), 200);
+                  }}
                 />
                 <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskForm(false)}>
                   {isOpen && (
