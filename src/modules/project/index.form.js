@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { Mutation } from 'react-apollo';
+import apolloClient from 'apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
@@ -32,6 +33,7 @@ import {
   createProjectMutation,
   updateProjectMutation,
   prepareParsedProjectInput,
+  deleteTaskMutation,
 } from './form/mutation';
 
 type OptionalProps = {
@@ -71,6 +73,19 @@ class ProjectFormModule extends React.PureComponent<Props> {
   };
 
   onCancel = () => navigate('/project');
+
+  onDeleteTask = async (taskIds: Array<string>) => {
+    await Promise.all(
+      taskIds.map(id =>
+        apolloClient.mutate({
+          mutation: deleteTaskMutation,
+          variables: {
+            id,
+          },
+        })
+      )
+    ).then(logger.warn);
+  };
 
   onSave = async (
     originalValues: Object,
@@ -292,7 +307,7 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                     )
                                   }
                                   isLoading={isLoading}
-                                  onClick={() =>
+                                  onClick={() => {
                                     this.onSave(
                                       {
                                         ...projectInfoState.originalValues,
@@ -318,8 +333,9 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                         form.onReset();
                                       },
                                       form.onErrors
-                                    )
-                                  }
+                                    );
+                                    this.onDeleteTask(projectMilestonesState.deleteTasks);
+                                  }}
                                 />
                               )}
                             </>

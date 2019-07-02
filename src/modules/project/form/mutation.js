@@ -50,6 +50,17 @@ export const createProjectMutation = gql`
   ${forbiddenFragment}
 `;
 
+export const deleteTaskMutation = gql`
+  mutation taskDelete($id: ID!) {
+    taskDelete(id: $id) {
+      ...badRequestFragment
+      ...forbiddenFragment
+    }
+  }
+  ${badRequestFragment}
+  ${forbiddenFragment}
+`;
+
 export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
   ...(!values ? {} : { id: values.id }),
   ...parseTaskField(originalValues, values),
