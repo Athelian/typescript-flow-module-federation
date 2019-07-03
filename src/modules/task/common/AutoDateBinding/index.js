@@ -19,6 +19,8 @@ type Props = {
   setTaskValue: Function,
 };
 
+// The binding date would come from 2 sources: parent entity or in task itself
+// depend on the place, we will get data from *EntityContainer* or we need to query
 const mappingDate = ({
   field,
   mappingFields,

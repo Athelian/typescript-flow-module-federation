@@ -49,17 +49,19 @@ export default function OrderItemValueSpy({ entity, values, task, location, setT
         autoDateOffset?: Object,
       }) => {
         const { pathname } = location;
-        const isUnderRelationMap = pathname.includes('/relation-map');
+        const isUnderRelationMapOrProject =
+          pathname.includes('/relation-map') || pathname.includes('/project');
         const [, activeType, orderItemId] = pathname.split('/') || [];
         logger.warn({
           field,
           selectedField,
           orderItemId,
           location,
+          entity,
         });
         // We will query the order data if open a task on relation map or from order item detail
-        if (isUnderRelationMap || (orderItemId && activeType === 'order-item')) {
-          const entityId = isUnderRelationMap ? entity.id : decodeId(orderItemId);
+        if (isUnderRelationMapOrProject || (orderItemId && activeType === 'order-item')) {
+          const entityId = isUnderRelationMapOrProject ? entity.id : decodeId(orderItemId);
           logger.warn('query order data for id', client, entityId);
           // TODO: This flag will be used for showing loading on UI
           emitter.emit('LIVE_VALUE_PROCESS', true);
