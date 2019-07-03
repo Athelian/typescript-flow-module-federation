@@ -24,7 +24,6 @@ import {
   TASK_DELETE,
   TASK_LIST,
 } from 'modules/permission/constants/task';
-import { PROJECT_FORM } from 'modules/permission/constants/project';
 import {
   ORDER_UPDATE,
   ORDER_TASK_CREATE,
@@ -33,6 +32,7 @@ import {
   ORDER_TASK_FORM,
   ORDER_TASK_LIST,
   ORDER_SET_TASKS,
+  ORDER_SET_MILESTONE,
   ORDER_SET_TASK_TEMPLATE,
   ORDER_TASK_SET_NAME,
   ORDER_TASK_SET_DUE_DATE,
@@ -51,6 +51,7 @@ import {
   ORDER_ITEMS_TASK_FORM,
   ORDER_ITEMS_TASK_LIST,
   ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_SET_MILESTONE,
   ORDER_ITEMS_SET_TASK_TEMPLATE,
   ORDER_ITEMS_TASK_SET_NAME,
   ORDER_ITEMS_TASK_SET_DUE_DATE,
@@ -69,6 +70,7 @@ import {
   BATCH_TASK_FORM,
   BATCH_TASK_LIST,
   BATCH_SET_TASKS,
+  BATCH_SET_MILESTONE,
   BATCH_SET_TASK_TEMPLATE,
   BATCH_TASK_SET_NAME,
   BATCH_TASK_SET_DUE_DATE,
@@ -87,6 +89,7 @@ import {
   PRODUCT_TASK_FORM,
   PRODUCT_TASK_LIST,
   PRODUCT_SET_TASKS,
+  PRODUCT_SET_MILESTONE,
   PRODUCT_SET_TASK_TEMPLATE,
   PRODUCT_TASK_SET_NAME,
   PRODUCT_TASK_SET_DUE_DATE,
@@ -103,6 +106,7 @@ import {
   PRODUCT_PROVIDER_TASK_FORM,
   PRODUCT_PROVIDER_TASK_LIST,
   PRODUCT_PROVIDER_SET_TASKS,
+  PRODUCT_PROVIDER_SET_MILESTONE,
   PRODUCT_PROVIDER_SET_TASK_TEMPLATE,
   PRODUCT_PROVIDER_TASK_SET_NAME,
   PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
@@ -121,6 +125,7 @@ import {
   SHIPMENT_TASK_FORM,
   SHIPMENT_TASK_LIST,
   SHIPMENT_SET_TASKS,
+  SHIPMENT_SET_MILESTONE,
   SHIPMENT_SET_TASK_TEMPLATE,
   SHIPMENT_TASK_SET_NAME,
   SHIPMENT_TASK_SET_DUE_DATE,
@@ -131,6 +136,8 @@ import {
   SHIPMENT_TASK_SET_APPROVED,
   SHIPMENT_TASK_SET_REJECTED,
 } from 'modules/permission/constants/shipment';
+import { PROJECT_FORM, PROJECT_LIST } from 'modules/permission/constants/project';
+import { MILESTONE_LIST } from 'modules/permission/constants/milestone';
 import { ProductTasksContainer } from 'modules/product/form/containers';
 import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
 import { OrderTasksContainer } from 'modules/order/form/containers';
@@ -175,6 +182,7 @@ const getConfig = (
   canAddTasks: boolean,
   canDeleteTasks: boolean,
   canOrderingTasks: boolean,
+  canUpdateMilestone: boolean,
   canUpdateTaskTemplate: boolean,
   tasksContainer: Object,
   editable: TaskCardEditableProps,
@@ -187,6 +195,12 @@ const getConfig = (
         canAddTasks: hasPermission([ORDER_TASK_CREATE, ORDER_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(ORDER_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(ORDER_UPDATE) ||
+          (hasPermission(PROJECT_LIST) &&
+            hasPermission(MILESTONE_LIST) &&
+            hasPermission(ORDER_SET_MILESTONE) &&
+            hasPermission(ORDER_SET_TASKS)),
         canUpdateTaskTemplate:
           hasPermission([ORDER_UPDATE, ORDER_SET_TASK_TEMPLATE]) &&
           hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]) &&
@@ -211,6 +225,12 @@ const getConfig = (
         canAddTasks: hasPermission([ORDER_ITEMS_TASK_CREATE, ORDER_ITEMS_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(ORDER_ITEMS_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(ORDER_ITEMS_UPDATE) ||
+          (hasPermission(PROJECT_LIST) &&
+            hasPermission(MILESTONE_LIST) &&
+            hasPermission(ORDER_ITEMS_SET_MILESTONE) &&
+            hasPermission(ORDER_ITEMS_SET_TASKS)),
         canUpdateTaskTemplate:
           hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASK_TEMPLATE]) &&
           hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]) &&
@@ -263,6 +283,12 @@ const getConfig = (
         canAddTasks: hasPermission([BATCH_TASK_CREATE, BATCH_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(BATCH_SET_TASKS),
         canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(BATCH_UPDATE) ||
+          (hasPermission(PROJECT_LIST) &&
+            hasPermission(MILESTONE_LIST) &&
+            hasPermission(BATCH_SET_MILESTONE) &&
+            hasPermission(BATCH_SET_TASKS)),
         canUpdateTaskTemplate:
           hasPermission([BATCH_UPDATE, BATCH_SET_TASK_TEMPLATE]) &&
           hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]) &&
@@ -287,6 +313,12 @@ const getConfig = (
         canAddTasks: hasPermission([PRODUCT_TASK_CREATE, PRODUCT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(PRODUCT_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PRODUCT_UPDATE) ||
+          (hasPermission(PROJECT_LIST) &&
+            hasPermission(MILESTONE_LIST) &&
+            hasPermission(PRODUCT_SET_MILESTONE) &&
+            hasPermission(PRODUCT_SET_TASKS)),
         canUpdateTaskTemplate:
           hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASK_TEMPLATE]) &&
           hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]) &&
@@ -319,6 +351,12 @@ const getConfig = (
         ]),
         canOrderingTasks: hasPermission(PRODUCT_PROVIDER_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+          (hasPermission(PROJECT_LIST) &&
+            hasPermission(MILESTONE_LIST) &&
+            hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
+            hasPermission(PRODUCT_PROVIDER_SET_TASKS)),
         canUpdateTaskTemplate:
           hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASK_TEMPLATE]) &&
           hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]) &&
@@ -375,6 +413,12 @@ const getConfig = (
         canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(SHIPMENT_SET_TASKS),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(SHIPMENT_UPDATE) ||
+          (hasPermission(PROJECT_LIST) &&
+            hasPermission(MILESTONE_LIST) &&
+            hasPermission(SHIPMENT_SET_MILESTONE) &&
+            hasPermission(SHIPMENT_SET_TASKS)),
         canUpdateTaskTemplate:
           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASK_TEMPLATE]) &&
           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]) &&
@@ -419,6 +463,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
     canAddTasks,
     canDeleteTasks,
     canOrderingTasks,
+    canUpdateMilestone,
     canUpdateTaskTemplate,
     tasksContainer,
     editable,
@@ -489,7 +534,12 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                   }) => (
                     <div>
                       {milestone ? (
-                        <div role="presentation" onClick={() => set('isOpenOfSelector', true)}>
+                        <div
+                          role="presentation"
+                          onClick={() =>
+                            canUpdateMilestone ? set('isOpenOfSelector', true) : null
+                          }
+                        >
                           <GridColumn>
                             <FieldItem
                               label={
@@ -529,11 +579,17 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                             </Label>
                           }
                           input={
-                            <DashedPlusButton
-                              width="195px"
-                              height="463px"
-                              onClick={() => set('isOpenOfSelector', true)}
-                            />
+                            <>
+                              {canUpdateMilestone ? (
+                                <DashedPlusButton
+                                  width="195px"
+                                  height="463px"
+                                  onClick={() => set('isOpenOfSelector', true)}
+                                />
+                              ) : (
+                                <GrayCard width="195px" height="463px" />
+                              )}
+                            </>
                           }
                           vertical
                         />
