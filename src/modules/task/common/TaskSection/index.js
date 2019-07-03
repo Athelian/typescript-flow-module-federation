@@ -7,6 +7,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
+import { isNotFound } from 'utils/data';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
@@ -533,7 +534,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                     set,
                   }) => (
                     <div>
-                      {milestone ? (
+                      {milestone && !isNotFound(milestone) ? (
                         <div
                           role="presentation"
                           onClick={() =>
