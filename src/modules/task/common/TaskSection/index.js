@@ -527,16 +527,16 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                             project={getByPath('project', milestone)}
                             milestone={milestone}
                             onSelect={({ milestone: newMilestone, project: newProject }) => {
-                              set(
-                                'selectedMilestone',
-                                newMilestone
-                                  ? {
-                                      ...newMilestone,
-                                      project: newProject,
-                                    }
-                                  : null
-                              );
-                              set('isOpenOfConfirmDialog', true);
+                              if (newMilestone) {
+                                set('selectedMilestone', {
+                                  ...newMilestone,
+                                  project: newProject,
+                                });
+                                set('isOpenOfConfirmDialog', true);
+                              } else {
+                                setFieldValue('todo.milestone', null);
+                                set('isOpenOfSelector', false);
+                              }
                             }}
                             onCancel={() => set('isOpenOfSelector', false)}
                           />
