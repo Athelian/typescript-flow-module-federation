@@ -108,14 +108,16 @@ export const getFieldsByEntity = (type: string, intl: IntlShape) => {
           label,
         })
       );
-
-    default:
+    case 'Order':
       return (Object.values(orderBinding(intl)): any).map(
         ({ field: value, description: label }) => ({
           value,
           label,
         })
       );
+
+    default:
+      return [];
   }
 };
 

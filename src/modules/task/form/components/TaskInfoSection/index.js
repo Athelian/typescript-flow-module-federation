@@ -174,7 +174,7 @@ const TaskInfoSection = ({
               [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },
             });
-            emitter.emit('FIND_SHIPMENT_VALUE', {
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
               field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
@@ -186,7 +186,7 @@ const TaskInfoSection = ({
               [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },
             });
-            emitter.emit('FIND_BATCH_VALUE', {
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
               field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
@@ -206,6 +206,30 @@ const TaskInfoSection = ({
             break;
           }
           case 'OrderItem': {
+            onChange({
+              [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
+              [`${field}Interval`]: { days: 0 },
+            });
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
+              field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
+            });
+            break;
+          }
+          case 'Product': {
+            onChange({
+              [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
+              [`${field}Interval`]: { days: 0 },
+            });
+            emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
+              field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
+              entityId: getByPath('entity.id', task),
+              selectedField: field,
+            });
+            break;
+          }
+          case 'ProductProvider': {
             onChange({
               [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },

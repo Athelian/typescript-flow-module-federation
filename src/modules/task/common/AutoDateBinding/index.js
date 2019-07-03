@@ -38,6 +38,11 @@ const mappingDate = ({
   return getValueBy(path, values);
 };
 
+const defaultMappingFields = {
+  ProjectDueDate: 'milestone.project.dueDate',
+  MilestoneDueDate: 'milestone.dueDate',
+};
+
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {
   React.useEffect(() => {
     const mappingFields = {
@@ -45,9 +50,8 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
       OrderItem: OrderItemMappingField,
       Batch: BatchMappingField,
       Shipment: findMappingFields(values.voyages || []),
-      Product: {},
-      ProductProvider: {},
-      Project: {},
+      Product: defaultMappingFields,
+      ProductProvider: defaultMappingFields,
     };
     emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {
