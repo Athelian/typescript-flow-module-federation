@@ -158,8 +158,8 @@ class TaskFormModule extends React.Component<Props> {
                                     this.onSave(
                                       { originalValues, state },
                                       saveTask,
-                                      responseDate => {
-                                        initDetailValues(responseDate);
+                                      responseData => {
+                                        initDetailValues(responseData);
                                         form.onReset();
                                       },
                                       form.onErrors
