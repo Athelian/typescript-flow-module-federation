@@ -15,6 +15,13 @@ type MilestoneMap = {
 
 type Props = {|
   columns: Object,
+  projectInfo: {
+    dueDate: ?Date,
+    milestones: Array<{
+      id: string,
+      dueDate: ?Date,
+    }>,
+  },
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
   onChangeColumns: MilestoneMap => void,

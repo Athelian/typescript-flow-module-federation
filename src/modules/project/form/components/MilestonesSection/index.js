@@ -12,7 +12,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import useSortAndFilter from 'hooks/useSortAndFilter';
 import messages from 'modules/task/messages';
-import { ProjectMilestonesContainer } from 'modules/project/form/containers';
+import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import FilterToolBar from 'components/common/FilterToolBar';
 import Board from './components/Board';
 import { NavbarStyle } from './style';
@@ -77,17 +77,24 @@ function MilestonesSection({ intl }: Props) {
         />
       </div>
 
-      <Subscribe to={[ProjectMilestonesContainer]}>
-        {({
-          state: { milestones },
-          changeMilestoneOrdering,
-          changeMilestones,
-          updateTask,
-          removeTask,
-        }) => {
+      <Subscribe to={[ProjectMilestonesContainer, ProjectInfoContainer]}>
+        {(
+          {
+            state: { milestones },
+            changeMilestoneOrdering,
+            changeMilestones,
+            updateTask,
+            removeTask,
+          },
+          { state: { dueDate } }
+        ) => {
           const initial = createMilestoneColumnsData(milestones);
           return (
             <Board
+              projectInfo={{
+                dueDate,
+                milestones: milestones.map(item => ({ id: item.id, dueDate: item.dueDate })),
+              }}
               allowDragAndDrop={filterAndSort.sort.field === 'default'}
               manualSort={filterAndSort.sort}
               columns={initial}
