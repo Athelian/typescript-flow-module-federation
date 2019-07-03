@@ -464,6 +464,11 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'taskTemplate', originalTask),
       newTask.taskTemplate
     ),
+    ...parseParentIdField(
+      'milestoneId',
+      getByPathWithDefault(null, 'milestone', originalTask),
+      newTask.milestone
+    ),
   };
 };
 
@@ -472,10 +477,12 @@ export const parseTodoField = (
   originalTodo: ?{
     tasks: Array<TaskType>,
     taskTemplate: ?{ id: string },
+    milestone?: { id: string },
   },
   newTodo: {
     tasks: Array<TaskType>,
     taskTemplate: ?{ id: string },
+    milestone?: { id: string },
   }
 ): Object => {
   if (isEquals(originalTodo, newTodo)) return {};

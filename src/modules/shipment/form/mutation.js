@@ -436,7 +436,11 @@ export const prepareParsedShipmentInput = ({
     ),
     ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
     ...parseTodoField(
-      getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+      getByPathWithDefault(
+        { tasks: [], taskTemplate: null, milestone: null },
+        'todo',
+        originalValues
+      ),
       newValues.todo
     ),
   };

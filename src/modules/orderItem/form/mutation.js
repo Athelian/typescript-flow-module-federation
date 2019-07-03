@@ -119,7 +119,11 @@ export const prepareParseOrderItem = (originalValues: Object, newValues: Object)
     newValues.customFields
   ),
   ...parseTodoField(
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    getByPathWithDefault(
+      { tasks: [], taskTemplate: null, milestone: null },
+      'todo',
+      originalValues
+    ),
     newValues.todo
   ),
 });

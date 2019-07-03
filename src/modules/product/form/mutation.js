@@ -120,7 +120,11 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
   ),
   ...parseMemoField('memo', getByPathWithDefault(null, 'memo', originalValues), newValues.memo),
   ...parseTodoField(
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    getByPathWithDefault(
+      { tasks: [], taskTemplate: null, milestone: null },
+      'todo',
+      originalValues
+    ),
     newValues.todo
   ),
   ...parseArrayOfChildrenField(
@@ -235,8 +239,16 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault([], 'files', newProductProvider)
       ),
       ...parseTodoField(
-        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', oldProductProvider),
-        getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', newProductProvider)
+        getByPathWithDefault(
+          { tasks: [], taskTemplate: null, milestone: null },
+          'todo',
+          oldProductProvider
+        ),
+        getByPathWithDefault(
+          { tasks: [], taskTemplate: null, milestone: null },
+          'todo',
+          newProductProvider
+        )
       ),
     })
   ),
