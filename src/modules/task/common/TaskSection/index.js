@@ -465,6 +465,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                         assignedTo: [],
                         approvers: [],
                         approvable: false,
+                        milestone,
                       }),
                     ]);
                     setFieldTouched('tasks');
