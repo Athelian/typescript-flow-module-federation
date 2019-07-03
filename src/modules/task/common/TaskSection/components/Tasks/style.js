@@ -4,7 +4,7 @@ import { presets, colors, fontSizes } from 'styles/common';
 
 export const ItemStyle: string = css`
   display: flex;
-  margin: 15px 10px;
+  margin: 15px 5px;
 `;
 
 export const TitleWrapperStyle: string = css`

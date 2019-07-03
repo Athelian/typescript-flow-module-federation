@@ -19,6 +19,8 @@ export const TasksSectionProjectAreaStyle: string = css`
   border-bottom-right-radius: 0;
   position: relative;
   width: 235px;
+  display: flex;
+  justify-content: center;
 `;
 
 export const TasksSectionTasksAreaStyle: string = css`
@@ -35,7 +37,7 @@ export const TasksSectionBodyStyle: string = css`
   border-top-right-radius: 0;
   background-color: ${colors.GRAY_SUPER_LIGHT};
   max-height: 672px;
-  min-height: 219px;
+  min-height: 500px;
   overflow-x: hidden;
   overflow-y: auto;
   ${scrollbars.SMALL};
@@ -51,6 +53,6 @@ export const TemplateItemStyle: string = css`
   margin: 5px 0;
   background: ${colors.GRAY_VERY_LIGHT};
   ${borderRadiuses.MAIN};
-  padding: 5px 10px 10px 10px;
+  padding: 5px 5px 10px 5px;
   height: 260px;
 `;

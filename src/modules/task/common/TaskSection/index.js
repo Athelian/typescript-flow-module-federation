@@ -487,7 +487,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                     value: { selectedMilestone, isOpenOfSelector, isOpenOfConfirmDialog },
                     set,
                   }) => (
-                    <>
+                    <div>
                       {milestone ? (
                         <div role="presentation" onClick={() => set('isOpenOfSelector', true)}>
                           <Label>
@@ -579,7 +579,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                           set('isOpenOfSelector', false);
                         }}
                       />
-                    </>
+                    </div>
                   )}
                 </ObjectValue>
               </div>
