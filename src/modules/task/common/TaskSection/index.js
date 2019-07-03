@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
@@ -149,6 +149,7 @@ import {
 } from './style';
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
+import ConfirmDialog from './components/ConfirmDialog';
 
 export type CompatibleEntityTypes =
   | 'Batch'
@@ -474,11 +475,20 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
 
             <div className={TasksSectionStyle}>
               <div className={TasksSectionProjectAreaStyle}>
-                <BooleanValue>
-                  {({ value: opened, set: toggleSlide }) => (
+                <ObjectValue
+                  defaultValue={{
+                    selectedMilestone: milestone,
+                    isOpenOfSelector: false,
+                    isOpenOfConfirmDialog: false,
+                  }}
+                >
+                  {({
+                    value: { selectedMilestone, isOpenOfSelector, isOpenOfConfirmDialog },
+                    set,
+                  }) => (
                     <>
                       {milestone ? (
-                        <div role="presentation" onClick={() => toggleSlide(true)}>
+                        <div role="presentation" onClick={() => set('isOpenOfSelector', true)}>
                           <Label>
                             <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
                           </Label>
@@ -499,40 +509,78 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                           <DashedPlusButton
                             width="195px"
                             height="458px"
-                            onClick={() => toggleSlide(true)}
+                            onClick={() => set('isOpenOfSelector', true)}
                           />
                         </>
                       )}
-                      <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
-                        {opened && (
+
+                      <SlideView
+                        isOpen={isOpenOfSelector}
+                        onRequestClose={() => set('isOpenOfSelector', false)}
+                      >
+                        {isOpenOfSelector && (
                           <SelectProjectAndMilestone
                             filter={{
                               query: '',
                             }}
                             project={getByPath('project', milestone)}
                             milestone={milestone}
-                            onSelect={({
-                              milestone: selectedMilestone,
-                              project: selectedProject,
-                            }) => {
-                              setFieldValue(
-                                'todo.milestone',
-                                selectedMilestone
+                            onSelect={({ milestone: newMilestone, project: newProject }) => {
+                              set(
+                                'selectedMilestone',
+                                newMilestone
                                   ? {
-                                      ...selectedMilestone,
-                                      project: selectedProject,
+                                      ...newMilestone,
+                                      project: newProject,
                                     }
                                   : null
                               );
-                              toggleSlide(false);
+                              set('isOpenOfConfirmDialog', true);
                             }}
-                            onCancel={() => toggleSlide(false)}
+                            onCancel={() => set('isOpenOfSelector', false)}
                           />
                         )}
                       </SlideView>
+                      <ConfirmDialog
+                        isOpen={isOpenOfConfirmDialog}
+                        message={
+                          <>
+                            <FormattedMessage
+                              id="modules.task.setProjectWarningMessage"
+                              defaultMessage="Binding this {entityType} to this Project will automatically place any new Tasks into the same Project & Milestone."
+                              values={{
+                                entityType: type,
+                              }}
+                            />
+                            <br />
+                            <FormattedMessage
+                              id="modules.task.setProjectConfirmMessage"
+                              defaultMessage="Would you like to add all current Tasks to the selected Project & Milestone?"
+                            />
+                          </>
+                        }
+                        onRequestClose={() => {}}
+                        onCancel={() => {
+                          set('isOpenOfConfirmDialog', false);
+                        }}
+                        onAddNone={() => {
+                          setFieldValue('todo.milestone', selectedMilestone);
+                          set('isOpenOfConfirmDialog', false);
+                          set('isOpenOfSelector', false);
+                        }}
+                        onAddAllTasks={() => {
+                          setFieldValue('todo.milestone', selectedMilestone);
+                          setFieldValue(
+                            'todo.tasks',
+                            tasks.map(task => ({ ...task, milestone: selectedMilestone }))
+                          );
+                          set('isOpenOfConfirmDialog', false);
+                          set('isOpenOfSelector', false);
+                        }}
+                      />
                     </>
                   )}
-                </BooleanValue>
+                </ObjectValue>
               </div>
               <div className={TasksSectionTasksAreaStyle}>
                 <div className={TasksSectionBodyStyle}>
