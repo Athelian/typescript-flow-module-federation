@@ -20,6 +20,8 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   taskCountFragment,
   taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
@@ -66,6 +68,8 @@ export const updateBatchMutation = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskCountFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
@@ -219,7 +223,11 @@ export const prepareParsedBatchInput = (
       newValues.autoCalculatePackageVolume
     ),
     ...parseTodoField(
-      getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+      getByPathWithDefault(
+        { tasks: [], taskTemplate: null, milestone: null },
+        'todo',
+        originalValues
+      ),
       newValues.todo
     ),
   };

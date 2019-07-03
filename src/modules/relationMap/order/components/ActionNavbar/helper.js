@@ -60,8 +60,12 @@ export const prepareOrderItem = (originalValues: Object, newValues: Object): Obj
     getByPathWithDefault(null, 'customFields', newValues)
   ),
   ...parseTodoField(
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', newValues)
+    getByPathWithDefault(
+      { tasks: [], taskTemplate: null, milestone: null },
+      'todo',
+      originalValues
+    ),
+    getByPathWithDefault({ tasks: [], taskTemplate: null, milestone: null }, 'todo', newValues)
   ),
 });
 

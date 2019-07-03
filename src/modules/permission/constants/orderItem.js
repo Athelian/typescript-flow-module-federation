@@ -20,6 +20,7 @@ export const ORDER_ITEMS_SET_TAGS = 'order.orderItems.setTags';
 export const ORDER_ITEMS_SET_MEMO = 'order.orderItems.setMemo';
 export const ORDER_ITEMS_SET_TASKS = 'order.orderItems.setTasks';
 export const ORDER_ITEMS_SET_TASK_TEMPLATE = 'order.orderItems.setTaskTemplate';
+export const ORDER_ITEMS_SET_MILESTONE = 'order.orderItems.setMilestone';
 export const ORDER_ITEMS_SET_DOCUMENTS = 'order.orderItems.setDocuments';
 export const ORDER_ITEMS_TASK_SET_APPROVABLE = 'order.orderItemTasks.setApprovable';
 export const ORDER_ITEMS_TASK_SET_APPROVED = 'order.orderItemTasks.setApproved';

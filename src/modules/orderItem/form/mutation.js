@@ -5,6 +5,8 @@ import {
   itemFormFragment,
   priceFragment,
   tagFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   taskCountFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
@@ -55,6 +57,8 @@ export const updateOrderItemMutation = gql`
   ${itemFormFragment}
   ${priceFragment}
   ${tagFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskCountFragment}
   ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
@@ -115,7 +119,11 @@ export const prepareParseOrderItem = (originalValues: Object, newValues: Object)
     newValues.customFields
   ),
   ...parseTodoField(
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    getByPathWithDefault(
+      { tasks: [], taskTemplate: null, milestone: null },
+      'todo',
+      originalValues
+    ),
     newValues.todo
   ),
 });

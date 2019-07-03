@@ -6,6 +6,7 @@ import emitter from 'utils/emitter';
 
 type FormState = {
   todo: {
+    milestone: Object,
     tasks?: Array<Object>,
     taskTemplate?: ?Object,
   },
@@ -13,6 +14,7 @@ type FormState = {
 
 export const initValues = {
   todo: {
+    milestone: null,
     tasks: [],
     taskTemplate: null,
   },
@@ -35,10 +37,14 @@ export default class BatchTasksContainer extends Container<FormState> {
   };
 
   applyTemplate = (template: Object) => {
+    const {
+      todo: { milestone },
+    } = this.state;
     const nonTemplateTasks = this.state.todo.tasks.filter(task => !task.taskTemplate);
-    const newTaskList = [...nonTemplateTasks, ...template.tasks];
+    const templateTasks = template.tasks.map(task => ({ ...task, milestone }));
+    const newTaskList = [...nonTemplateTasks, ...templateTasks];
 
-    this.setState({ todo: { tasks: newTaskList, taskTemplate: template } });
+    this.setState({ todo: { tasks: newTaskList, taskTemplate: template, milestone } });
     setTimeout(() => {
       emitter.emit('AUTO_DATE');
     }, 200);

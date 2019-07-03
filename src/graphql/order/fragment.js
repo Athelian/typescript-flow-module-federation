@@ -88,6 +88,14 @@ export const orderFormFragment = gql`
       ...tagFragment
     }
     todo {
+      milestone {
+        ... on Milestone {
+          ...milestoneCardFragment
+          project {
+            ...projectCardFragment
+          }
+        }
+      }
       taskCount {
         ...taskCountFragment
       }
