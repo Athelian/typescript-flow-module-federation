@@ -197,11 +197,10 @@ const getConfig = (
         canOrderingTasks: hasPermission(ORDER_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(ORDER_UPDATE) ||
-          (hasPermission(PROJECT_LIST) &&
-            hasPermission(MILESTONE_LIST) &&
-            hasPermission(ORDER_SET_MILESTONE) &&
-            hasPermission(ORDER_SET_TASKS)),
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(ORDER_UPDATE) ||
+            (hasPermission(ORDER_SET_MILESTONE) && hasPermission(ORDER_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([ORDER_UPDATE, ORDER_SET_TASK_TEMPLATE]) &&
           hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]) &&
@@ -227,11 +226,10 @@ const getConfig = (
         canOrderingTasks: hasPermission(ORDER_ITEMS_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(ORDER_ITEMS_UPDATE) ||
-          (hasPermission(PROJECT_LIST) &&
-            hasPermission(MILESTONE_LIST) &&
-            hasPermission(ORDER_ITEMS_SET_MILESTONE) &&
-            hasPermission(ORDER_ITEMS_SET_TASKS)),
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(ORDER_ITEMS_UPDATE) ||
+            (hasPermission(ORDER_ITEMS_SET_MILESTONE) && hasPermission(ORDER_ITEMS_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASK_TEMPLATE]) &&
           hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]) &&
@@ -285,11 +283,10 @@ const getConfig = (
         canOrderingTasks: hasPermission(BATCH_SET_TASKS),
         canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(BATCH_UPDATE) ||
-          (hasPermission(PROJECT_LIST) &&
-            hasPermission(MILESTONE_LIST) &&
-            hasPermission(BATCH_SET_MILESTONE) &&
-            hasPermission(BATCH_SET_TASKS)),
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(BATCH_UPDATE) ||
+            (hasPermission(BATCH_SET_MILESTONE) && hasPermission(BATCH_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([BATCH_UPDATE, BATCH_SET_TASK_TEMPLATE]) &&
           hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]) &&
@@ -315,11 +312,10 @@ const getConfig = (
         canOrderingTasks: hasPermission(PRODUCT_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PRODUCT_UPDATE) ||
-          (hasPermission(PROJECT_LIST) &&
-            hasPermission(MILESTONE_LIST) &&
-            hasPermission(PRODUCT_SET_MILESTONE) &&
-            hasPermission(PRODUCT_SET_TASKS)),
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(PRODUCT_UPDATE) ||
+            (hasPermission(PRODUCT_SET_MILESTONE) && hasPermission(PRODUCT_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASK_TEMPLATE]) &&
           hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]) &&
@@ -353,11 +349,11 @@ const getConfig = (
         canOrderingTasks: hasPermission(PRODUCT_PROVIDER_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(PRODUCT_PROVIDER_UPDATE) ||
-          (hasPermission(PROJECT_LIST) &&
-            hasPermission(MILESTONE_LIST) &&
-            hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
-            hasPermission(PRODUCT_PROVIDER_SET_TASKS)),
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+            (hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
+              hasPermission(PRODUCT_PROVIDER_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASK_TEMPLATE]) &&
           hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]) &&
@@ -415,11 +411,10 @@ const getConfig = (
         canOrderingTasks: hasPermission(SHIPMENT_SET_TASKS),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
         canUpdateMilestone:
-          hasPermission(SHIPMENT_UPDATE) ||
-          (hasPermission(PROJECT_LIST) &&
-            hasPermission(MILESTONE_LIST) &&
-            hasPermission(SHIPMENT_SET_MILESTONE) &&
-            hasPermission(SHIPMENT_SET_TASKS)),
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(SHIPMENT_UPDATE) ||
+            (hasPermission(SHIPMENT_SET_MILESTONE) && hasPermission(SHIPMENT_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASK_TEMPLATE]) &&
           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]) &&
