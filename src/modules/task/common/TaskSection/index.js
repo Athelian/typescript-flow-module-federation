@@ -9,8 +9,9 @@ import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
+import GridColumn from 'components/GridColumn';
 import { NewButton } from 'components/Buttons';
-import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
+import { SectionWrapper, SectionHeader, DashedPlusButton, Label, FieldItem } from 'components/Form';
 import { TemplateCard, GrayCard, ProjectCard, MilestoneCard } from 'components/Cards';
 import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import FormattedNumber from 'components/FormattedNumber';
@@ -141,7 +142,6 @@ import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import messages from 'modules/task/messages';
 import {
   TasksSectionWrapperStyle,
-  TasksSectionBodyStyle,
   TasksSectionStyle,
   TemplateItemStyle,
   TasksSectionProjectAreaStyle,
@@ -490,29 +490,53 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                     <div>
                       {milestone ? (
                         <div role="presentation" onClick={() => set('isOpenOfSelector', true)}>
-                          <Label>
-                            <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
-                          </Label>
-                          <ProjectCard project={milestone.project} />
-                          <Label>
-                            <FormattedMessage
-                              id="modules.task.milestone"
-                              defaultMessage="MILESTONE"
+                          <GridColumn>
+                            <FieldItem
+                              label={
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.project"
+                                    defaultMessage="PROJECT"
+                                  />
+                                </Label>
+                              }
+                              input={<ProjectCard project={milestone.project} />}
+                              vertical
                             />
-                          </Label>
-                          <MilestoneCard milestone={milestone} />
+
+                            <FieldItem
+                              label={
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.task.milestone"
+                                    defaultMessage="MILESTONE"
+                                  />
+                                </Label>
+                              }
+                              input={<MilestoneCard milestone={milestone} />}
+                              vertical
+                            />
+                          </GridColumn>
                         </div>
                       ) : (
-                        <>
-                          <Label>
-                            <FormattedMessage id="modules.task.project" defaultMessage="PROJECT" />
-                          </Label>
-                          <DashedPlusButton
-                            width="195px"
-                            height="458px"
-                            onClick={() => set('isOpenOfSelector', true)}
-                          />
-                        </>
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage
+                                id="modules.task.project"
+                                defaultMessage="PROJECT"
+                              />
+                            </Label>
+                          }
+                          input={
+                            <DashedPlusButton
+                              width="195px"
+                              height="463px"
+                              onClick={() => set('isOpenOfSelector', true)}
+                            />
+                          }
+                          vertical
+                        />
                       )}
 
                       <SlideView
@@ -583,98 +607,97 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                   )}
                 </ObjectValue>
               </div>
+
               <div className={TasksSectionTasksAreaStyle}>
-                <div className={TasksSectionBodyStyle}>
-                  {
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) => (
-                        <>
-                          <div className={TemplateItemStyle}>
-                            <Label height="30px">
-                              {' '}
-                              <FormattedMessage
-                                id="modules.Tasks.template"
-                                defaultMessage="TEMPLATE"
-                              />
-                            </Label>
-                            {taskTemplate ? (
-                              <TemplateCard
-                                type="TASK"
-                                template={{
-                                  id: taskTemplate.id,
-                                  title: taskTemplate.name,
-                                  description: taskTemplate.description,
-                                  count: taskTemplate.tasks && taskTemplate.tasks.length,
-                                }}
-                                onClick={() => {
-                                  if (canUpdateTaskTemplate) {
-                                    slideToggle(true);
-                                  }
-                                }}
-                                readOnly={!canUpdateTaskTemplate}
-                              />
-                            ) : (
-                              <>
-                                {canUpdateTaskTemplate ? (
-                                  <DashedPlusButton
-                                    width="195px"
-                                    height="125px"
-                                    onClick={() => slideToggle(true)}
-                                  />
-                                ) : (
-                                  <GrayCard width="195px" height="125px" />
-                                )}
-                              </>
-                            )}
-                          </div>
+                {
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) => (
+                      <>
+                        <div className={TemplateItemStyle}>
+                          <Label height="30px">
+                            {' '}
+                            <FormattedMessage
+                              id="modules.Tasks.template"
+                              defaultMessage="TEMPLATE"
+                            />
+                          </Label>
+                          {taskTemplate ? (
+                            <TemplateCard
+                              type="TASK"
+                              template={{
+                                id: taskTemplate.id,
+                                title: taskTemplate.name,
+                                description: taskTemplate.description,
+                                count: taskTemplate.tasks && taskTemplate.tasks.length,
+                              }}
+                              onClick={() => {
+                                if (canUpdateTaskTemplate) {
+                                  slideToggle(true);
+                                }
+                              }}
+                              readOnly={!canUpdateTaskTemplate}
+                            />
+                          ) : (
+                            <>
+                              {canUpdateTaskTemplate ? (
+                                <DashedPlusButton
+                                  width="195px"
+                                  height="125px"
+                                  onClick={() => slideToggle(true)}
+                                />
+                              ) : (
+                                <GrayCard width="195px" height="125px" />
+                              )}
+                            </>
+                          )}
+                        </div>
 
-                          <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                            {opened && (
-                              <SelectTaskTemplate
-                                entityType={type}
-                                onCancel={() => slideToggle(false)}
-                                onSelect={newValue => {
-                                  slideToggle(false);
-                                  applyTemplate(newValue);
-                                }}
-                              />
-                            )}
-                          </SlideView>
-                        </>
-                      )}
-                    </BooleanValue>
-                  }
-                  <Tasks
-                    groupIds={groupIds}
-                    entityId={entityId}
-                    type={type}
-                    editable={editable}
-                    navigable={{ project: canViewProjectForm }}
-                    sortable={canOrderingTasks}
-                    viewForm={canViewForm}
-                    removable={canDeleteTasks}
-                    tasks={tasks}
-                    onSwap={(index: number, direction: 'left' | 'right') => {
-                      const nextIndex = direction === 'left' ? index - 1 : index + 1;
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          {opened && (
+                            <SelectTaskTemplate
+                              entityType={type}
+                              onCancel={() => slideToggle(false)}
+                              onSelect={newValue => {
+                                slideToggle(false);
+                                applyTemplate(newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                }
+                <Tasks
+                  groupIds={groupIds}
+                  entityId={entityId}
+                  type={type}
+                  editable={editable}
+                  navigable={{ project: canViewProjectForm }}
+                  sortable={canOrderingTasks}
+                  viewForm={canViewForm}
+                  removable={canDeleteTasks}
+                  tasks={tasks}
+                  onSwap={(index: number, direction: 'left' | 'right') => {
+                    const nextIndex = direction === 'left' ? index - 1 : index + 1;
 
-                      if (nextIndex > -1 && nextIndex < tasks.length) {
-                        const clonedTasks = [...tasks];
-                        clonedTasks[nextIndex] = { ...tasks[index] };
-                        clonedTasks[index] = { ...tasks[nextIndex] };
-                        setFieldValue('todo.tasks', clonedTasks);
-                        setFieldTouched(`tasks.${index}`);
-                        setFieldTouched(`tasks.${nextIndex}`);
-                      }
-                    }}
-                    onRemove={({ id }) => {
-                      setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
-                      setFieldTouched(`tasks.${id}`);
-                    }}
-                    onSave={(index, newValue) => {
-                      setFieldValue(`todo.tasks.${index}`, newValue);
-                    }}
-                  />
-                </div>
+                    if (nextIndex > -1 && nextIndex < tasks.length) {
+                      const clonedTasks = [...tasks];
+                      clonedTasks[nextIndex] = { ...tasks[index] };
+                      clonedTasks[index] = { ...tasks[nextIndex] };
+                      setFieldValue('todo.tasks', clonedTasks);
+                      setFieldTouched(`tasks.${index}`);
+                      setFieldTouched(`tasks.${nextIndex}`);
+                    }
+                  }}
+                  onRemove={({ id }) => {
+                    setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
+                    setFieldTouched(`tasks.${id}`);
+                  }}
+                  onSave={(index, newValue) => {
+                    setFieldValue(`todo.tasks.${index}`, newValue);
+                  }}
+                />
               </div>
             </div>
           </div>
