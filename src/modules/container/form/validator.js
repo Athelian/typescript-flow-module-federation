@@ -1,7 +1,7 @@
 // @flow
 import * as Yup from 'yup';
 
-export default Yup.object().shape({
+export default (Yup.object().shape({
   no: Yup.string().required(),
   batches: Yup.array().of(
     Yup.object().shape({
@@ -9,4 +9,4 @@ export default Yup.object().shape({
       quantity: Yup.number(),
     })
   ),
-});
+}): Object);

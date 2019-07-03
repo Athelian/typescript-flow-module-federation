@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Yup from 'yup';
 import { FormattedMessage } from 'react-intl';
 
-export default Yup.object().shape({
+export default (Yup.object().shape({
   name: Yup.string().required(),
   importer: Yup.object()
     .shape({
@@ -14,10 +14,12 @@ export default Yup.object().shape({
   janCode: Yup.string()
     .test(
       'janCode',
-      <FormattedMessage
-        id="modules.Products.janCodeValidation"
-        defaultMessage="JAN Code must be exactly 13 characters"
-      />,
+      ((
+        <FormattedMessage
+          id="modules.Products.janCodeValidation"
+          defaultMessage="JAN Code must be exactly 13 characters"
+        />
+      ): any),
       value => {
         if (!value || (value && value.length === 13)) return true;
         return false;
@@ -27,10 +29,12 @@ export default Yup.object().shape({
   hsCode: Yup.string()
     .test(
       'hsCode',
-      <FormattedMessage
-        id="modules.Products.hsCodeValidation"
-        defaultMessage="HS Code must be exactly 10 characters"
-      />,
+      ((
+        <FormattedMessage
+          id="modules.Products.hsCodeValidation"
+          defaultMessage="HS Code must be exactly 10 characters"
+        />
+      ): any),
       value => {
         if (!value || (value && value.length === 10)) return true;
         return false;
@@ -47,4 +51,4 @@ export default Yup.object().shape({
       })
     ),
   }),
-});
+}): Object);

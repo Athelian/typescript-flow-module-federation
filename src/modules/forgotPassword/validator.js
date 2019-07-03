@@ -1,7 +1,7 @@
 // @flow
 import * as Yup from 'yup';
 
-const validator = Yup.object().shape({
+const validator: Object = Yup.object().shape({
   email: Yup.string()
     .email()
     .required(),

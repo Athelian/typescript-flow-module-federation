@@ -739,19 +739,21 @@ export const productColumnFields = [
     name: 'janCode',
     type: 'text',
     meta: {
-      validator: Yup.string()
+      validator: (Yup.string()
         .test(
           'janCode',
-          <FormattedMessage
-            id="modules.Products.janCodeValidation"
-            defaultMessage="JAN Code must be exactly 13 characters"
-          />,
+          ((
+            <FormattedMessage
+              id="modules.Products.janCodeValidation"
+              defaultMessage="JAN Code must be exactly 13 characters"
+            />
+          ): any),
           value => {
             if (!value || (value && value.length === 13)) return true;
             return false;
           }
         )
-        .nullable(),
+        .nullable(): Object),
     },
   },
   {
@@ -760,19 +762,21 @@ export const productColumnFields = [
     columnName: 'product.hsCode',
     type: 'text',
     meta: {
-      validator: Yup.string()
+      validator: (Yup.string()
         .test(
           'hsCode',
-          <FormattedMessage
-            id="modules.Products.hsCodeValidation"
-            defaultMessage="HS Code must be exactly 10 characters"
-          />,
+          ((
+            <FormattedMessage
+              id="modules.Products.hsCodeValidation"
+              defaultMessage="HS Code must be exactly 10 characters"
+            />
+          ): any),
           value => {
             if (!value || (value && value.length === 10)) return true;
             return false;
           }
         )
-        .nullable(),
+        .nullable(): Object),
     },
   },
   {
