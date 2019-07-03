@@ -72,7 +72,7 @@ export default function BindingAndRelatedEntities({ binding, related }: Props) {
 
         <Display align="center">{binding.orders}</Display>
 
-        <Display align="center">{related.orders}</Display>
+        <Display align="center">{related.orders - binding.orders}</Display>
       </div>
 
       <div className={BindedAndRelatedStyle}>
@@ -82,7 +82,7 @@ export default function BindingAndRelatedEntities({ binding, related }: Props) {
 
         <Display align="center">{binding.orderItems}</Display>
 
-        <Display align="center">{related.orderItems}</Display>
+        <Display align="center">{related.orderItems - binding.orderItems}</Display>
       </div>
 
       <div className={BindedAndRelatedStyle}>
@@ -92,7 +92,7 @@ export default function BindingAndRelatedEntities({ binding, related }: Props) {
 
         <Display align="center">{binding.batches}</Display>
 
-        <Display align="center">{related.batches}</Display>
+        <Display align="center">{related.batches - binding.batches}</Display>
       </div>
 
       <div className={BindedAndRelatedStyle}>
@@ -102,7 +102,7 @@ export default function BindingAndRelatedEntities({ binding, related }: Props) {
 
         <Display align="center">{binding.shipments}</Display>
 
-        <Display align="center">{related.shipments}</Display>
+        <Display align="center">{related.shipments - binding.shipments}</Display>
       </div>
 
       <div className={BindedAndRelatedStyle}>
@@ -112,7 +112,7 @@ export default function BindingAndRelatedEntities({ binding, related }: Props) {
 
         <Display align="center">{binding.products}</Display>
 
-        <Display align="center">{related.products}</Display>
+        <Display align="center">{related.products - binding.products}</Display>
       </div>
 
       <div className={BindedAndRelatedStyle}>
@@ -122,7 +122,7 @@ export default function BindingAndRelatedEntities({ binding, related }: Props) {
 
         <Display align="center">{binding.productProviders}</Display>
 
-        <Display align="center">{related.productProviders}</Display>
+        <Display align="center">{related.productProviders - binding.productProviders}</Display>
       </div>
     </GridColumn>
   );
