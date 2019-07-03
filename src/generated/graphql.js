@@ -18047,13 +18047,10 @@ export type Container = Model & Owned & Tagged & Sortable & Memorizable & {
   totalVolume: MetricValue,
   totalWeight: MetricValue,
   totalPrice?: ?Price,
-  totalBatched: $ElementType<Scalars, 'Float'>,
-  totalBatchedPackage: $ElementType<Scalars, 'Int'>,
+  totalQuantity: $ElementType<Scalars, 'Float'>,
+  totalPackageQuantity: $ElementType<Scalars, 'Int'>,
   orderItemCount: $ElementType<Scalars, 'Int'>,
   batchCount: $ElementType<Scalars, 'Int'>,
-  totalBatchQuantity: $ElementType<Scalars, 'Float'>,
-  totalBatchPackages: $ElementType<Scalars, 'Int'>,
-  totalNumberOfUniqueOrderItems: $ElementType<Scalars, 'Int'>,
   batches: Array<BatchPayload>,
   todo: Todo,
   id: $ElementType<Scalars, 'ID'>,
@@ -19161,6 +19158,8 @@ export type EntityInput = {
   batchId?: ?$ElementType<Scalars, 'ID'>,
   shipmentId?: ?$ElementType<Scalars, 'ID'>,
   containerId?: ?$ElementType<Scalars, 'ID'>,
+  projectId?: ?$ElementType<Scalars, 'ID'>,
+  milestoneId?: ?$ElementType<Scalars, 'ID'>,
   taskId?: ?$ElementType<Scalars, 'ID'>,
 };
 
@@ -21216,6 +21215,7 @@ export type Order = Model & Owned & Tagged & Supervised & Documented & Customiza
   piNo?: ?$ElementType<Scalars, 'String'>,
   incoterm?: ?Incoterm,
   deliveryPlace?: ?$ElementType<Scalars, 'String'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   timeline: Timeline,
   todo: Todo,
   totalPrice: Price,
@@ -21253,6 +21253,7 @@ export type OrderCreateInput = {
   currency: Currency,
   incoterm?: ?Incoterm,
   deliveryPlace?: ?$ElementType<Scalars, 'String'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -21523,6 +21524,7 @@ export type OrderUpdateInput = {
   currency?: ?Currency,
   incoterm?: ?Incoterm,
   deliveryPlace?: ?$ElementType<Scalars, 'String'>,
+  deliveryDate?: ?$ElementType<Scalars, 'DateTime'>,
   memo?: ?$ElementType<Scalars, 'String'>,
   tagIds?: ?Array<$ElementType<Scalars, 'ID'>>,
   inChargeIds?: ?Array<$ElementType<Scalars, 'ID'>>,
@@ -59715,6 +59717,7 @@ export type Shipment = Model & Owned & Tagged & Supervised & Documented & Custom
   containerGroups: Array<ContainerGroupPayload>,
   forwarders: Array<GroupPayload>,
   totalVolume: MetricValue,
+  totalPackageQuantity: $ElementType<Scalars, 'Float'>,
   orderCount: $ElementType<Scalars, 'Int'>,
   orderItemCount: $ElementType<Scalars, 'Int'>,
   batchCount: $ElementType<Scalars, 'Int'>,
@@ -60166,6 +60169,7 @@ export type TaskCreateInput = {
 
 export const TaskDateBindingValues = Object.freeze({
   OrderIssuedAt: 'OrderIssuedAt',
+  OrderDeliveryDate: 'OrderDeliveryDate',
   OrderItemOrderIssuedAt: 'OrderItemOrderIssuedAt',
   BatchDeliveredAt: 'BatchDeliveredAt',
   BatchDesiredAt: 'BatchDesiredAt',
@@ -60183,6 +60187,8 @@ export const TaskDateBindingValues = Object.freeze({
   ShipmentCustomClearance: 'ShipmentCustomClearance',
   ShipmentWarehouseArrival: 'ShipmentWarehouseArrival',
   ShipmentDeliveryReady: 'ShipmentDeliveryReady',
+  ProjectDueDate: 'ProjectDueDate',
+  MilestoneDueDate: 'MilestoneDueDate',
   TaskStartDate: 'TaskStartDate',
   TaskDueDate: 'TaskDueDate'
 });
@@ -60813,7 +60819,7 @@ export type CustomFieldsFragmentFragment = ({ __typename?: 'CustomFields' } & { 
 
 export type MaskFragmentFragment = ({ __typename?: 'Mask' } & $Pick<Mask, { id: *, name: *, memo: *, entityType: * }> & { fieldDefinitions: Array<FieldDefinitionFragmentFragment> });
 
-export type FieldValuesFragmentFragment = ({ __typename?: 'FieldValue' } & { value: ({ __typename?: 'StringValue' } & $Pick<StringValue, { string: * }>), fieldDefinition: FieldDefinitionFragmentFragment, entity:  * });
+export type FieldValuesFragmentFragment = ({ __typename?: 'FieldValue' } & { value: ({ __typename?: 'StringValue' } & $Pick<StringValue, { string: * }>), fieldDefinition: FieldDefinitionFragmentFragment, entity: * });
 
 export type FieldDefinitionFragmentFragment = ({ __typename?: 'FieldDefinition' } & $Pick<FieldDefinition, { id: *, name: *, entityType: *, sort: * }>);
 
@@ -60871,7 +60877,7 @@ export type ProjectCardFragmentFragment = ({ __typename?: 'Project' } & $Pick<Pr
 
 export type MilestoneCardFragmentFragment = ({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: *, description: *, dueDate: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment) });
 
-export type ProjectFormQueryFragmentFragment = ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, tags: Array<TagFragmentFragment>, milestones: Array<({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }> & { completedBy: ?UserAvatarFragmentFragment, taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<(TaskCardFragmentFragment & ({ __typename?: 'Task' } & $Pick<Task, { milestoneSort: *, approvable: * }> & { entity: ?(({ __typename?: 'Order' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Product' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'OrderItem' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Batch' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Shipment' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) })) }))>, entitiesCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)), entitiesRelatedCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)) })> });
+export type ProjectFormQueryFragmentFragment = ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, tags: Array<TagFragmentFragment>, milestones: Array<({ __typename?: 'Milestone' } & $Pick<Milestone, { id: *, name: *, dueDate: *, completedAt: * }> & { completedBy: ?UserAvatarFragmentFragment, taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), tasks: Array<(TaskWithParentInfoFragmentFragment & ({ __typename?: 'Task' } & $Pick<Task, { milestoneSort: * }> & { entity: ?(({ __typename?: 'Order' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Product' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'OrderItem' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Batch' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) }) | ({ __typename?: 'Shipment' } & { todo: ({ __typename?: 'Todo' } & ({ __typename?: 'Todo' } & { milestone: ?({ __typename?: 'Milestone' } & { project: ({ __typename?: 'Project' } & $Pick<Project, { id: * }>) }) })) })) }))>, entitiesCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)), entitiesRelatedCount: ({ __typename?: 'MilestoneEntitiesCount' } & ({ __typename?: 'MilestoneEntitiesCount' } & $Pick<MilestoneEntitiesCount, { products: *, productProviders: *, orders: *, orderItems: *, batches: *, shipments: *, containers: * }>)) })> });
 
 export type ProjectFormFragmentFragment = ({ __typename?: 'Project' } & $Pick<Project, { id: *, name: *, description: *, dueDate: *, updatedAt: * }> & { taskCount: ({ __typename?: 'TaskCount' } & TaskCountFragmentFragment), updatedBy: ?UserAvatarFragmentFragment, ownedBy: OwnedByFragmentFragment, tags: Array<TagFragmentFragment> });
 

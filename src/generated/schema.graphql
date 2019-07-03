@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Fri Jun 28 2019 18:05:37 GMT+0900 (Japan Standard Time)
+# timestamp: Wed Jul 03 2019 10:25:58 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26893,13 +26893,10 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   totalVolume: MetricValue!
   totalWeight: MetricValue!
   totalPrice: Price
-  totalBatched: Float!
-  totalBatchedPackage: Int!
+  totalQuantity: Float!
+  totalPackageQuantity: Int!
   orderItemCount: Int!
   batchCount: Int!
-  totalBatchQuantity: Float! @deprecated(reason: "Use `totalBatched` instead")
-  totalBatchPackages: Int! @deprecated(reason: "Use `totalBatchedPackage` instead")
-  totalNumberOfUniqueOrderItems: Int! @deprecated(reason: "Use `orderItemCount` instead")
   batches: [BatchPayload!]!
   todo: Todo!
   id: ID!
@@ -28407,6 +28404,8 @@ input EntityInput {
   batchId: ID
   shipmentId: ID
   containerId: ID
+  projectId: ID
+  milestoneId: ID
   taskId: ID
 }
 
@@ -30071,6 +30070,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   piNo: String
   incoterm: Incoterm
   deliveryPlace: String
+  deliveryDate: DateTime
   timeline: Timeline!
   todo: Todo!
   totalPrice: Price!
@@ -30108,6 +30108,7 @@ input OrderCreateInput {
   currency: Currency!
   incoterm: Incoterm
   deliveryPlace: String
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
@@ -30375,6 +30376,7 @@ input OrderUpdateInput {
   currency: Currency
   incoterm: Incoterm
   deliveryPlace: String
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
@@ -86530,6 +86532,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   containerGroups: [ContainerGroupPayload!]!
   forwarders: [GroupPayload!]!
   totalVolume: MetricValue!
+  totalPackageQuantity: Float!
   orderCount: Int!
   orderItemCount: Int!
   batchCount: Int!
@@ -86964,6 +86967,7 @@ input TaskCreateInput {
 
 enum TaskDateBinding {
   OrderIssuedAt
+  OrderDeliveryDate
   OrderItemOrderIssuedAt
   BatchDeliveredAt
   BatchDesiredAt
@@ -86981,6 +86985,8 @@ enum TaskDateBinding {
   ShipmentCustomClearance
   ShipmentWarehouseArrival
   ShipmentDeliveryReady
+  ProjectDueDate
+  MilestoneDueDate
   TaskStartDate
   TaskDueDate
 }
