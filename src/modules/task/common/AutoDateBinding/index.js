@@ -27,13 +27,14 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
       Shipment: findMappingFields(values.voyages || []),
       Product: {},
       ProductProvider: {},
+      Project: {},
     };
     emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
       const latestValues = {
         ...values,
         ...(field ? { [field]: value } : {}),
       };
-      logger.warn('auto calculate binding data');
+      logger.warn('auto calculate binding data', type, field, latestValues);
       setTaskValue(
         'todo.tasks',
         tasks.map(task => {
@@ -51,6 +52,11 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
 
           if (startDateBinding) {
             const { months, weeks, days } = startDateInterval || {};
+            if (!mappingFields[type][startDateBinding]) {
+              logger.warn('not found', type, startDateBinding);
+              // TODO: handle for missing binding
+              return task;
+            }
             newStartDate = calculateDate({
               date: getValueBy(mappingFields[type][startDateBinding], latestValues),
               duration: findDuration({ months, weeks }),
@@ -60,6 +66,11 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
 
           if (dueDateBinding) {
             const { months, weeks, days } = dueDateInterval || {};
+            if (!mappingFields[type][dueDateBinding]) {
+              logger.warn('not found', type, dueDateBinding);
+              // TODO: handle for missing binding
+              return task;
+            }
             newDueDate = calculateDate({
               date:
                 dueDateBinding !== START_DATE

@@ -165,7 +165,8 @@ export type CompatibleEntityTypes =
   | 'OrderItem'
   | 'Product'
   | 'ProductProvider'
-  | 'Shipment';
+  | 'Shipment'
+  | 'Project';
 
 type Props = {
   type: CompatibleEntityTypes,

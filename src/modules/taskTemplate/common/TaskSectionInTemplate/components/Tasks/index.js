@@ -74,6 +74,7 @@ const Tasks = ({ tasks, onSwap, onRemove, onSave, editable, viewForm, removable,
                     ...task.entity,
                     __typename: type,
                   }}
+                  inParentEntityForm
                   isInTemplate
                   parentEntity={type}
                   task={{ ...omit(task, ['entity']), sort: index }}

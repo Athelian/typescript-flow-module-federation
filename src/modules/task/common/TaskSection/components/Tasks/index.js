@@ -104,7 +104,7 @@ const Tasks = ({
                     id: entityId,
                   }}
                   parentEntity={type}
-                  isInTemplate={isInTemplate}
+                  inParentEntityForm
                   task={{ ...omit(task, ['entity']), sort: index }}
                   onSave={value => {
                     selectTaskSlideToggle(false);

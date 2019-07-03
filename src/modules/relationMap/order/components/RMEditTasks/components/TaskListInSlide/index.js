@@ -69,7 +69,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                         }}
                       >
                         <TaskFormInSlide
-                          isInRM
+                          inParentEntityForm={false}
                           groupIds={parseGroupIds(task)}
                           entity={task.entity}
                           task={{ ...task, sort: index }}

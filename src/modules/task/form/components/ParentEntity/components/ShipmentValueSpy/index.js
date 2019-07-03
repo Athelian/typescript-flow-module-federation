@@ -10,7 +10,7 @@ import { getValueBy } from './helper';
 
 type Props = {
   values: Object,
-  inForm: boolean,
+  inParentEntityForm: boolean,
   task: Object,
   setTaskValue: Function,
 };
@@ -32,7 +32,12 @@ export const findMappingFields = (voyages: Array<Object>) => ({
   ShipmentDeliveryReady: 'containerGroups.0.deliveryReady',
 });
 
-export default function ShipmentValueSpy({ values, task, inForm, setTaskValue }: Props) {
+export default function ShipmentValueSpy({
+  values,
+  task,
+  inParentEntityForm,
+  setTaskValue,
+}: Props) {
   React.useEffect(() => {
     emitter.addListener(
       'FIND_SHIPMENT_VALUE',
@@ -56,7 +61,7 @@ export default function ShipmentValueSpy({ values, task, inForm, setTaskValue }:
         });
 
         const mappingFields = findMappingFields(values.voyages || []);
-        if (inForm) {
+        if (inParentEntityForm) {
           let date = getValueBy(mappingFields[field] || 'N/A', values);
           if (autoDateDuration) {
             date = calculateDate({

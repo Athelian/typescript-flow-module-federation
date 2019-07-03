@@ -10,7 +10,7 @@ import { batchAutoDateQuery } from './query';
 
 type Props = {
   values: Object,
-  inForm: boolean,
+  inParentEntityForm: boolean,
   task: Object,
   setTaskValue: Function,
 };
@@ -22,7 +22,7 @@ export const MappingFields = {
   BatchExpiredAt: 'expiredAt',
 };
 
-export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Props) {
+export default function BatchValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
       'FIND_BATCH_VALUE',
@@ -45,7 +45,7 @@ export default function BatchValueSpy({ values, task, inForm, setTaskValue }: Pr
           selectedField,
         });
 
-        if (inForm) {
+        if (inParentEntityForm) {
           let date = getByPath(MappingFields[field] || 'N/A', values);
           if (autoDateDuration) {
             date = calculateDate({

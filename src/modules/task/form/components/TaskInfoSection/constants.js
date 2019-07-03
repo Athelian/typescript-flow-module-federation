@@ -5,6 +5,8 @@ import batchMessages from 'modules/batch/messages';
 import shipmentMessages from 'modules/shipment/messages';
 
 export const START_DATE = 'TaskStartDate';
+export const PROJECT_DUE_DATE = 'ProjectDueDate';
+export const MILESTONE_DUE_DATE = 'MilestoneDueDate';
 const ORDER_ISSUED_AT = 'OrderIssuedAt';
 const ORDER_ITEM_ISSUED_AT = 'OrderItemOrderIssuedAt';
 const BATCH_DELIVERED_AT = 'BatchDeliveredAt';

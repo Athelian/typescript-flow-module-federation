@@ -185,7 +185,7 @@ class TaskFormModule extends React.Component<Props> {
                           entityType="task"
                           render={task => (
                             <TaskForm
-                              isInTask
+                              inParentEntityForm={false}
                               groupIds={parseGroupIds(task)}
                               task={task}
                               onFormReady={() => initDetailValues(task)}

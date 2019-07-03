@@ -65,6 +65,8 @@ import {
   batchBinding,
   shipmentBinding,
   START_DATE,
+  PROJECT_DUE_DATE,
+  MILESTONE_DUE_DATE,
 } from './constants';
 import {
   convertBindingToSelection,
@@ -88,24 +90,41 @@ import {
   UnapprovedButtonStyle,
 } from './style';
 
-type OptionalProps = {
-  isInTemplate: boolean,
-  isInProject: boolean,
-  hideParentInfo: boolean,
-  parentEntity?: string,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   task: Object,
   groupIds: Array<string>,
   intl: IntlShape,
-};
+  isInTemplate?: boolean,
+  isInProject?: boolean,
+  hideParentInfo?: boolean,
+  parentEntity?: string,
+|};
 
-const defaultProps = {
-  isInTemplate: false,
-  isInProject: false,
-  hideParentInfo: false,
-};
+function defaultBindingOptions(intl: IntlShape) {
+  return [
+    {
+      value: START_DATE,
+      label: intl.formatMessage({
+        id: 'modules.Tasks.startDate',
+        defaultMessage: 'START DATE',
+      }),
+    },
+    {
+      value: PROJECT_DUE_DATE,
+      label: intl.formatMessage({
+        id: 'modules.Tasks.projectDueDate',
+        defaultMessage: 'PROJECT DUE DATE',
+      }),
+    },
+    {
+      value: MILESTONE_DUE_DATE,
+      label: intl.formatMessage({
+        id: 'modules.Tasks.milestoneDueDate',
+        defaultMessage: 'MILESTONE DUE DATE',
+      }),
+    },
+  ];
+}
 
 const TaskInfoSection = ({
   intl,
@@ -522,23 +541,9 @@ const TaskInfoSection = ({
                                         {...inputHandlers}
                                         items={
                                           startDateSyncUnavailable
-                                            ? [
-                                                {
-                                                  value: START_DATE,
-                                                  label: intl.formatMessage({
-                                                    id: 'modules.Tasks.startDate',
-                                                    defaultMessage: 'START DATE',
-                                                  }),
-                                                },
-                                              ]
+                                            ? defaultBindingOptions(intl)
                                             : [
-                                                {
-                                                  value: START_DATE,
-                                                  label: intl.formatMessage({
-                                                    id: 'modules.Tasks.startDate',
-                                                    defaultMessage: 'START DATE',
-                                                  }),
-                                                },
+                                                ...defaultBindingOptions(intl),
                                                 ...getFieldsByEntity(entity, intl),
                                               ]
                                         }
@@ -786,7 +791,10 @@ const TaskInfoSection = ({
                                     {({ ...inputHandlers }) => (
                                       <SelectInputFactory
                                         {...inputHandlers}
-                                        items={getFieldsByEntity(entity, intl)}
+                                        items={[
+                                          ...defaultBindingOptions(intl),
+                                          ...getFieldsByEntity(entity, intl),
+                                        ]}
                                         editable={editable.startDate}
                                         required
                                         hideTooltip
@@ -1495,7 +1503,5 @@ const TaskInfoSection = ({
     </div>
   );
 };
-
-TaskInfoSection.defaultProps = defaultProps;
 
 export default injectIntl(TaskInfoSection);

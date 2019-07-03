@@ -10,7 +10,7 @@ import { orderAutoDateQuery } from './query';
 
 type Props = {
   values: Object,
-  inForm: boolean,
+  inParentEntityForm: boolean,
   task: Object,
   setTaskValue: Function,
 };
@@ -19,7 +19,7 @@ export const MappingFields = {
   OrderIssuedAt: 'issuedAt',
 };
 
-export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Props) {
+export default function OrderValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener(
       'FIND_ORDER_VALUE',
@@ -40,10 +40,10 @@ export default function OrderValueSpy({ values, task, inForm, setTaskValue }: Pr
           field,
           entityId,
           selectedField,
-          inForm,
+          inParentEntityForm,
         });
 
-        if (inForm) {
+        if (inParentEntityForm) {
           let date = getByPath(MappingFields[field] || 'N/A', values);
           if (autoDateDuration) {
             date = calculateDate({

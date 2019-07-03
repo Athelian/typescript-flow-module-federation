@@ -97,6 +97,7 @@ function TaskItem({ task, isDragging, provided, onChange, onRemove }: Props) {
                       }}
                     >
                       <TaskFormInSlide
+                        inParentEntityForm={false}
                         isInProject
                         groupIds={parseGroupIds(task)}
                         entity={task.entity}
