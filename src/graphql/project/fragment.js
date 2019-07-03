@@ -74,6 +74,7 @@ export const projectFormQueryFragment = gql`
                   ... on Todo {
                     milestone {
                       ... on Milestone {
+                        id
                         project {
                           ... on Project {
                             id
@@ -89,6 +90,7 @@ export const projectFormQueryFragment = gql`
                   ... on Todo {
                     milestone {
                       ... on Milestone {
+                        id
                         project {
                           ... on Project {
                             id
@@ -104,6 +106,7 @@ export const projectFormQueryFragment = gql`
                   ... on Todo {
                     milestone {
                       ... on Milestone {
+                        id
                         project {
                           ... on Project {
                             id
@@ -119,6 +122,7 @@ export const projectFormQueryFragment = gql`
                   ... on Todo {
                     milestone {
                       ... on Milestone {
+                        id
                         project {
                           ... on Project {
                             id
@@ -134,6 +138,7 @@ export const projectFormQueryFragment = gql`
                   ... on Todo {
                     milestone {
                       ... on Milestone {
+                        id
                         project {
                           ... on Project {
                             id
