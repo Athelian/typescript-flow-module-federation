@@ -13,15 +13,17 @@ type MilestoneMap = {
   [id: string]: Array<Task>,
 };
 
+type ProjectInfo = {
+  dueDate: ?Date,
+  milestones: Array<{
+    id: string,
+    dueDate: ?Date,
+  }>,
+};
+
 type Props = {|
   columns: Object,
-  projectInfo: {
-    dueDate: ?Date,
-    milestones: Array<{
-      id: string,
-      dueDate: ?Date,
-    }>,
-  },
+  projectInfo: ProjectInfo,
   ordered: Object,
   onChangeOrdering: (Array<string>) => void,
   onChangeColumns: MilestoneMap => void,
@@ -74,6 +76,27 @@ const reorderMilestoneMap = ({ milestoneMap, source, destination }: Object): Obj
   return {
     milestoneMap: result,
   };
+};
+
+const injectProjectAndMilestoneDueDate = ({
+  tasks,
+  milestoneId,
+  projectInfo,
+}: {
+  tasks: Array<Task>,
+  milestoneId: string,
+  projectInfo: ProjectInfo,
+}) => {
+  const milestone = projectInfo.milestones.find(item => item.id === milestoneId);
+  return tasks.map(task => ({
+    ...task,
+    milestone: {
+      ...milestone,
+      project: {
+        dueDate: projectInfo.dueDate,
+      },
+    },
+  }));
 };
 
 export default class Board extends Component<Props> {
@@ -145,6 +168,7 @@ export default class Board extends Component<Props> {
       manualSort,
       onChangeTask,
       onRemoveTask,
+      projectInfo,
     } = this.props;
 
     const board = (
@@ -170,7 +194,11 @@ export default class Board extends Component<Props> {
                 key={key}
                 index={index}
                 id={key}
-                tasks={columns[key]}
+                tasks={injectProjectAndMilestoneDueDate({
+                  projectInfo,
+                  milestoneId: key,
+                  tasks: columns[key],
+                })}
                 manualSort={manualSort}
                 onChangeTask={onChangeTask}
                 onRemoveTask={onRemoveTask}

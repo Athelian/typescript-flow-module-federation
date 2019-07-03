@@ -11,6 +11,8 @@ import OrderValueSpy from './components/OrderValueSpy';
 import OrderItemValueSpy from './components/OrderItemValueSpy';
 import BatchValueSpy from './components/BatchValueSpy';
 import ShipmentValueSpy from './components/ShipmentValueSpy';
+import ProductValueSpy from './components/ProductValueSpy';
+import ProductProviderValueSpy from './components/ProductProviderSpy';
 
 type Props = {|
   entity: Object,
@@ -61,6 +63,26 @@ export default function ParentEntity({ entity, inParentEntityForm }: Props) {
                   setTaskValue={setFieldValue}
                   task={task}
                   values={{ ...info, ...timeline }}
+                />
+              )}
+            </Subscribe>
+            <Subscribe to={[TaskContainer]}>
+              {({ state: task, setFieldValue }) => (
+                <ProductValueSpy
+                  inParentEntityForm={inParentEntityForm}
+                  setTaskValue={setFieldValue}
+                  task={task}
+                  values={{}}
+                />
+              )}
+            </Subscribe>
+            <Subscribe to={[TaskContainer]}>
+              {({ state: task, setFieldValue }) => (
+                <ProductProviderValueSpy
+                  inParentEntityForm={inParentEntityForm}
+                  setTaskValue={setFieldValue}
+                  task={task}
+                  values={{}}
                 />
               )}
             </Subscribe>

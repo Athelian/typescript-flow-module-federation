@@ -2,7 +2,7 @@
 import gql from 'graphql-tag';
 
 export const batchAutoDateQuery = gql`
-  query($id: ID!) {
+  query batchAutoDateQuery($id: ID!) {
     batch(id: $id) {
       ... on Batch {
         id
