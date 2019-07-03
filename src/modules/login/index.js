@@ -39,8 +39,8 @@ const Login = ({ redirectUrl = '/' }: Props) => (
         <GradientContainer className={LoginContainerStyle}>
           <Mutation
             mutation={loginMutation}
-            onCompleted={({ login }) => {
-              if (!login.violations) {
+            onCompleted={result => {
+              if (result && result.login && !result.login.violations) {
                 setAuthenticated(true);
               }
             }}
