@@ -88,8 +88,8 @@ function SelectProducts({
   orderCurrency,
 }: Props) {
   const sortFields = [
-    { title: intl.formatMessage(messages.nameSort), value: 'name' },
-    { title: intl.formatMessage(messages.serialSort), value: 'serial' },
+    { title: intl.formatMessage(messages.nameSort), value: 'productName' },
+    { title: intl.formatMessage(messages.serialSort), value: 'productSerial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
     { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
