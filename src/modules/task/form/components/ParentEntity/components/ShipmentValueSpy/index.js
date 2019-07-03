@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Shipment, Task } from 'generated/graphql';
 import client from 'apollo';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
@@ -30,7 +31,28 @@ export const findMappingFields = (voyages: Array<Object>) => ({
   ShipmentCustomClearance: 'containerGroups.0.customClearance',
   ShipmentWarehouseArrival: 'containerGroups.0.warehouseArrival',
   ShipmentDeliveryReady: 'containerGroups.0.deliveryReady',
+  ProjectDueDate: 'milestone.project.dueDate',
+  MilestoneDueDate: 'milestone.dueDate',
 });
+
+const mappingDate = ({
+  field,
+  task,
+  values,
+  mappingFields,
+}: {
+  field: string,
+  task: Task,
+  values: Shipment,
+  mappingFields: Object,
+}) => {
+  const path = mappingFields[field] || 'N/A';
+  if (path.includes('milestone')) {
+    return getValueBy(path, task);
+  }
+
+  return getValueBy(path, values);
+};
 
 export default function ShipmentValueSpy({
   values,
@@ -62,7 +84,7 @@ export default function ShipmentValueSpy({
 
         const mappingFields = findMappingFields(values.voyages || []);
         if (inParentEntityForm) {
-          let date = getValueBy(mappingFields[field] || 'N/A', values);
+          let date = mappingDate({ mappingFields, field, task, values });
           if (autoDateDuration) {
             date = calculateDate({
               date,
@@ -112,7 +134,7 @@ export default function ShipmentValueSpy({
           });
           emitter.emit('LIVE_VALUE_PROCESS', false);
 
-          let date = getValueBy(mappingFields[field] || 'N/A', data.shipment);
+          let date = mappingDate({ mappingFields, field, task, values: data.shipment });
           if (autoDateDuration) {
             date = calculateDate({
               date,

@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Batch, Task } from 'generated/graphql';
 import client from 'apollo';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
@@ -20,6 +21,17 @@ export const MappingFields = {
   BatchDesiredAt: 'desiredAt',
   BatchProducedAt: 'producedAt',
   BatchExpiredAt: 'expiredAt',
+  ProjectDueDate: 'milestone.project.dueDate',
+  MilestoneDueDate: 'milestone.dueDate',
+};
+
+const mappingDate = ({ field, task, values }: { field: string, task: Task, values: Batch }) => {
+  const path = MappingFields[field] || 'N/A';
+  if (path.includes('milestone')) {
+    return getByPath(path, task);
+  }
+
+  return getByPath(path, values);
 };
 
 export default function BatchValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
@@ -46,7 +58,8 @@ export default function BatchValueSpy({ values, task, inParentEntityForm, setTas
         });
 
         if (inParentEntityForm) {
-          let date = getByPath(MappingFields[field] || 'N/A', values);
+          let date = mappingDate({ field, task, values });
+
           if (autoDateDuration) {
             date = calculateDate({
               date,
@@ -96,7 +109,7 @@ export default function BatchValueSpy({ values, task, inParentEntityForm, setTas
           });
           emitter.emit('LIVE_VALUE_PROCESS', false);
 
-          let date = getByPath(MappingFields[field] || 'N/A', data.batch);
+          let date = mappingDate({ field, task, values: data.batch });
           if (autoDateDuration) {
             date = calculateDate({
               date,

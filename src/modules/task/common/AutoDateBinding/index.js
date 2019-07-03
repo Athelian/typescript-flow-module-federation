@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Order, OrderItem, Shipment, Batch, Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
@@ -16,6 +17,25 @@ type Props = {
   values: Object,
   tasks: Array<Object>,
   setTaskValue: Function,
+};
+
+const mappingDate = ({
+  field,
+  mappingFields,
+  task,
+  values,
+}: {
+  mappingFields: Object,
+  field: string,
+  task: Task,
+  values: Order | Shipment | OrderItem | Batch,
+}) => {
+  const path = mappingFields[field] || 'N/A';
+  if (path.includes('milestone')) {
+    return getValueBy(path, task);
+  }
+
+  return getValueBy(path, values);
 };
 
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {
@@ -52,13 +72,14 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
 
           if (startDateBinding) {
             const { months, weeks, days } = startDateInterval || {};
-            if (!mappingFields[type][startDateBinding]) {
-              logger.warn('not found', type, startDateBinding);
-              // TODO: handle for missing binding
-              return task;
-            }
+
             newStartDate = calculateDate({
-              date: getValueBy(mappingFields[type][startDateBinding], latestValues),
+              date: mappingDate({
+                field: startDateBinding,
+                mappingFields: mappingFields[type],
+                values: latestValues,
+                task,
+              }),
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,
             });
@@ -66,15 +87,16 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
 
           if (dueDateBinding) {
             const { months, weeks, days } = dueDateInterval || {};
-            if (!mappingFields[type][dueDateBinding]) {
-              logger.warn('not found', type, dueDateBinding);
-              // TODO: handle for missing binding
-              return task;
-            }
+
             newDueDate = calculateDate({
               date:
                 dueDateBinding !== START_DATE
-                  ? getValueBy(mappingFields[type][dueDateBinding], latestValues)
+                  ? mappingDate({
+                      field: dueDateBinding,
+                      mappingFields: mappingFields[type],
+                      values: latestValues,
+                      task,
+                    })
                   : newStartDate,
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,

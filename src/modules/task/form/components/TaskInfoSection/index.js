@@ -59,15 +59,7 @@ import validator from 'modules/task/form/validator';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
-import {
-  orderBinding,
-  orderItemBinding,
-  batchBinding,
-  shipmentBinding,
-  START_DATE,
-  PROJECT_DUE_DATE,
-  MILESTONE_DUE_DATE,
-} from './constants';
+import { START_DATE, PROJECT_DUE_DATE, MILESTONE_DUE_DATE } from './constants';
 import {
   convertBindingToSelection,
   getFieldsByEntity,
@@ -100,9 +92,10 @@ type Props = {|
   parentEntity?: string,
 |};
 
-function defaultBindingOptions(intl: IntlShape) {
+function defaultBindingOptions(intl: IntlShape, isStartDate: boolean) {
+  // TODO: modify this options when do the circle binding between due date and start date
   return [
-    {
+    !isStartDate && {
       value: START_DATE,
       label: intl.formatMessage({
         id: 'modules.Tasks.startDate',
@@ -123,7 +116,7 @@ function defaultBindingOptions(intl: IntlShape) {
         defaultMessage: 'MILESTONE DUE DATE',
       }),
     },
-  ];
+  ].filter(Boolean);
 }
 
 const TaskInfoSection = ({
@@ -178,12 +171,11 @@ const TaskInfoSection = ({
         switch (type) {
           case 'Shipment': {
             onChange({
-              [`${field}Binding`]:
-                field === 'dueDate' ? START_DATE : shipmentBinding(intl).blDate.field,
+              [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },
             });
             emitter.emit('FIND_SHIPMENT_VALUE', {
-              field: field === 'dueDate' ? START_DATE : shipmentBinding(intl).blDate.field,
+              field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
             });
@@ -191,12 +183,11 @@ const TaskInfoSection = ({
           }
           case 'Batch': {
             onChange({
-              [`${field}Binding`]:
-                field === 'dueDate' ? START_DATE : batchBinding(intl).deliveredAt.field,
+              [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },
             });
             emitter.emit('FIND_BATCH_VALUE', {
-              field: field === 'dueDate' ? START_DATE : batchBinding(intl).deliveredAt.field,
+              field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
             });
@@ -204,12 +195,11 @@ const TaskInfoSection = ({
           }
           case 'Order': {
             onChange({
-              [`${field}Binding`]:
-                field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
+              [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },
             });
             emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
-              field: field === 'dueDate' ? START_DATE : orderBinding(intl).issuedAt.field,
+              field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
             });
@@ -217,12 +207,11 @@ const TaskInfoSection = ({
           }
           case 'OrderItem': {
             onChange({
-              [`${field}Binding`]:
-                field === 'dueDate' ? START_DATE : orderItemBinding(intl).issuedAt.field,
+              [`${field}Binding`]: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               [`${field}Interval`]: { days: 0 },
             });
             emitter.emit(`FIND_${type.toUpperCase()}_VALUE`, {
-              field: field === 'dueDate' ? START_DATE : orderItemBinding(intl).issuedAt.field,
+              field: field === 'dueDate' ? START_DATE : PROJECT_DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
             });
@@ -248,7 +237,7 @@ const TaskInfoSection = ({
         });
       }
     },
-    [intl, task]
+    [task]
   );
 
   React.useEffect(() => {
@@ -287,8 +276,6 @@ const TaskInfoSection = ({
 
             const entity = getByPathWithDefault(parentEntity, 'entity.__typename', task);
             const editable = checkEditableFromEntity(entity, hasPermission);
-            const startDateSyncUnavailable = ['Product', 'ProductProvider'].includes(entity);
-
             return (
               <div className={TaskSectionWrapperStyle}>
                 {!hideParentInfo &&
@@ -539,14 +526,10 @@ const TaskInfoSection = ({
                                     {({ ...inputHandlers }) => (
                                       <SelectInputFactory
                                         {...inputHandlers}
-                                        items={
-                                          startDateSyncUnavailable
-                                            ? defaultBindingOptions(intl)
-                                            : [
-                                                ...defaultBindingOptions(intl),
-                                                ...getFieldsByEntity(entity, intl),
-                                              ]
-                                        }
+                                        items={[
+                                          ...defaultBindingOptions(intl, false),
+                                          ...getFieldsByEntity(entity, intl),
+                                        ]}
                                         editable={editable.dueDateBinding}
                                         required
                                         hideTooltip
@@ -610,25 +593,23 @@ const TaskInfoSection = ({
                             />
                           </div>
 
-                          {!startDateSyncUnavailable && (
-                            <div className={RadioWrapperStyle('bottom')}>
-                              <RadioInput
-                                align="right"
-                                selected={!manualSettings.startDate}
-                                onToggle={() =>
-                                  manualSettings.startDate
-                                    ? onChangeBinding({
-                                        type: entity,
-                                        field: 'startDate',
-                                        isManual: false,
-                                        onChange: setFieldValues,
-                                      })
-                                    : () => {}
-                                }
-                                editable={editable.startDate}
-                              />
-                            </div>
-                          )}
+                          <div className={RadioWrapperStyle('bottom')}>
+                            <RadioInput
+                              align="right"
+                              selected={!manualSettings.startDate}
+                              onToggle={() =>
+                                manualSettings.startDate
+                                  ? onChangeBinding({
+                                      type: entity,
+                                      field: 'startDate',
+                                      isManual: false,
+                                      onChange: setFieldValues,
+                                    })
+                                  : () => {}
+                              }
+                              editable={editable.startDate}
+                            />
+                          </div>
 
                           {isInTemplate ? (
                             <Display
@@ -792,7 +773,7 @@ const TaskInfoSection = ({
                                       <SelectInputFactory
                                         {...inputHandlers}
                                         items={[
-                                          ...defaultBindingOptions(intl),
+                                          ...defaultBindingOptions(intl, true),
                                           ...getFieldsByEntity(entity, intl),
                                         ]}
                                         editable={editable.startDate}
@@ -806,28 +787,17 @@ const TaskInfoSection = ({
                             </ObjectValue>
                           ) : (
                             <Display color="GRAY_LIGHT" width="200px" height="30px">
-                              {(() => {
-                                if (startDateSyncUnavailable) {
-                                  return (
-                                    <FormattedMessage
-                                      id="modules.Tasks.dataSyncingUnavailable"
-                                      defaultMessage="Data syncing unavailable"
-                                    />
-                                  );
-                                }
-
-                                return editable.startDateBinding ? (
-                                  <FormattedMessage
-                                    id="modules.Tasks.chooseDataBinding"
-                                    defaultMessage="Choose data to sync from"
-                                  />
-                                ) : (
-                                  <FormattedMessage
-                                    id="modules.Tasks.noEventBindingChosen"
-                                    defaultMessage="No event binding chosen"
-                                  />
-                                );
-                              })()}
+                              {editable.startDateBinding ? (
+                                <FormattedMessage
+                                  id="modules.Tasks.chooseDataBinding"
+                                  defaultMessage="Choose data to sync from"
+                                />
+                              ) : (
+                                <FormattedMessage
+                                  id="modules.Tasks.noEventBindingChosen"
+                                  defaultMessage="No event binding chosen"
+                                />
+                              )}
                             </Display>
                           )}
                         </GridColumn>

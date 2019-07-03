@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Order, Task } from 'generated/graphql';
 import client from 'apollo';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
@@ -17,6 +18,17 @@ type Props = {
 
 export const MappingFields = {
   OrderIssuedAt: 'issuedAt',
+  ProjectDueDate: 'milestone.project.dueDate',
+  MilestoneDueDate: 'milestone.dueDate',
+};
+
+const mappingDate = ({ field, task, values }: { field: string, task: Task, values: Order }) => {
+  const path = MappingFields[field] || 'N/A';
+  if (path.includes('milestone')) {
+    return getByPath(path, task);
+  }
+
+  return getByPath(path, values);
 };
 
 export default function OrderValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
@@ -44,7 +56,7 @@ export default function OrderValueSpy({ values, task, inParentEntityForm, setTas
         });
 
         if (inParentEntityForm) {
-          let date = getByPath(MappingFields[field] || 'N/A', values);
+          let date = mappingDate({ field, task, values });
           if (autoDateDuration) {
             date = calculateDate({
               date,
@@ -94,7 +106,7 @@ export default function OrderValueSpy({ values, task, inParentEntityForm, setTas
           });
           emitter.emit('LIVE_VALUE_PROCESS', false);
 
-          let date = getByPath(MappingFields[field] || 'N/A', data.order);
+          let date = mappingDate({ field, task, values: data.order });
           if (autoDateDuration) {
             date = calculateDate({
               date,
