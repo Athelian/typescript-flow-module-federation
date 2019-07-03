@@ -7,6 +7,11 @@ export const projectCardFragment = gql`
     name
     description
     dueDate
+    milestones {
+      ... on Milestone {
+        id
+      }
+    }
     taskCount {
       ...taskCountFragment
     }
