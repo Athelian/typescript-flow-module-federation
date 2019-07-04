@@ -511,10 +511,6 @@ const TaskInfoSection = ({
                                       name="autoDueDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={(field, value) => {
-                                        console.warn({
-                                          field,
-                                          value,
-                                        });
                                         set('autoDateOffset', value);
                                       }}
                                       saveOnChange
@@ -776,10 +772,6 @@ const TaskInfoSection = ({
                                       name="autoStateDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={(field, value) => {
-                                        console.warn({
-                                          field,
-                                          value,
-                                        });
                                         set('autoDateOffset', value);
                                       }}
                                       saveOnChange
