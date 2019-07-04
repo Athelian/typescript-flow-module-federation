@@ -374,6 +374,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
     templateColumns,
     fields: orderItemColumnFields,
   });
+  console.debug(batchColumnFields);
   const batchColumnFieldsFilter = findColumns({
     showAll,
     templateColumns,

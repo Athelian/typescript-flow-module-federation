@@ -920,6 +920,50 @@ export const batchColumnFields = [
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
   },
   {
+    messageId: batchMessages.totalPrice.id,
+    name: 'batchTotalPrice',
+    columnName: 'batch.totalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      // TODO: refactor
+      const { id: batchId } = values;
+      const { quantity, batchQuantityRevisions, orderItem: orderItemId } = editData.batches[
+        batchId
+      ];
+      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+      const { price: orderItemPrice } = editData.orderItems[orderItemId];
+
+      return `${orderItemPrice.amount * latestQuantity}${orderItemPrice.currency}`;
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { id: batchId } = values;
+      const { quantity, batchQuantityRevisions, orderItem: orderItemId } = editData.batches[
+        batchId
+      ];
+      const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+      const { price: orderItemPrice } = editData.orderItems[orderItemId];
+
+      return `${orderItemPrice.amount * latestQuantity}${orderItemPrice.currency}`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { id: batchId } = values;
+        const { quantity, batchQuantityRevisions, orderItem: orderItemId } = editData.batches[
+          batchId
+        ];
+        const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+        const { price: orderItemPrice } = editData.orderItems[orderItemId];
+
+        return (
+          <FormattedNumber
+            value={orderItemPrice.amount * latestQuantity}
+            suffix={orderItemPrice.currency}
+          />
+        );
+      },
+    },
+  },
+  {
     messageId: batchMessages.packageName.id,
     name: 'packageName',
     columnName: 'batch.packageName',
