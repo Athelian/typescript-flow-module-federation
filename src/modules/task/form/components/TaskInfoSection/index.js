@@ -467,8 +467,8 @@ const TaskInfoSection = ({
                                 setFieldValue('dueDateInterval', {
                                   [autoDateDuration.metric]:
                                     autoDateOffset === 'after'
-                                      ? autoDateDuration.value
-                                      : -autoDateDuration.value,
+                                      ? Math.abs(autoDateDuration.value)
+                                      : -Math.abs(autoDateDuration.value),
                                 });
                               }}
                             >
@@ -491,6 +491,7 @@ const TaskInfoSection = ({
                                       setFieldValue={(field, value) =>
                                         set('autoDateDuration', value)
                                       }
+                                      values={{ autoDateDuration, autoDateOffset, autoDateField }}
                                     >
                                       {({ name, ...inputHandlers }) => (
                                         <MetricInputFactory
@@ -507,10 +508,17 @@ const TaskInfoSection = ({
                                     </FormField>
 
                                     <FormField
-                                      name="autoDateOffset"
+                                      name="autoDueDateOffset"
                                       initValue={autoDateOffset}
-                                      setFieldValue={set}
+                                      setFieldValue={(field, value) => {
+                                        console.warn({
+                                          field,
+                                          value,
+                                        });
+                                        set('autoDateOffset', value);
+                                      }}
                                       saveOnChange
+                                      values={{ autoDateDuration, autoDateOffset, autoDateField }}
                                     >
                                       {({ ...inputHandlers }) => (
                                         <SelectInputFactory
@@ -549,6 +557,7 @@ const TaskInfoSection = ({
                                       }
                                     }}
                                     saveOnChange
+                                    values={{ autoDateDuration, autoDateOffset, autoDateField }}
                                   >
                                     {({ ...inputHandlers }) => (
                                       <SelectInputFactory
@@ -747,6 +756,7 @@ const TaskInfoSection = ({
                                       setFieldValue={(field, value) =>
                                         set('autoDateDuration', value)
                                       }
+                                      values={{ autoDateDuration, autoDateOffset, autoDateField }}
                                     >
                                       {({ name, ...inputHandlers }) => (
                                         <MetricInputFactory
@@ -763,10 +773,17 @@ const TaskInfoSection = ({
                                     </FormField>
 
                                     <FormField
-                                      name="autoDateOffset"
+                                      name="autoStateDateOffset"
                                       initValue={autoDateOffset}
-                                      setFieldValue={set}
+                                      setFieldValue={(field, value) => {
+                                        console.warn({
+                                          field,
+                                          value,
+                                        });
+                                        set('autoDateOffset', value);
+                                      }}
                                       saveOnChange
+                                      values={{ autoDateDuration, autoDateOffset, autoDateField }}
                                     >
                                       {({ ...inputHandlers }) => (
                                         <SelectInputFactory
@@ -804,6 +821,7 @@ const TaskInfoSection = ({
                                         });
                                       }
                                     }}
+                                    values={{ autoDateDuration, autoDateOffset, autoDateField }}
                                     saveOnChange
                                   >
                                     {({ ...inputHandlers }) => (
