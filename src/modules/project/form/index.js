@@ -64,7 +64,7 @@ export default class ProjectForm extends React.Component<Props> {
           {({ state: info }, { state: { milestones }, updateTasks }) => (
             <ProjectAutoDateBinding
               tasks={generateTasks(milestones, info)}
-              setTaskValue={tasks => updateTasks(tasks)}
+              setTaskValue={updateTasks}
             />
           )}
         </Subscribe>
