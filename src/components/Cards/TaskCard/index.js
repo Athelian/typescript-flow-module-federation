@@ -7,6 +7,7 @@ import { isBefore } from 'date-fns';
 import emitter from 'utils/emitter';
 import { encodeId } from 'utils/id';
 import { formatToGraphql, startOfToday } from 'utils/date';
+import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import Icon from 'components/Icon';
@@ -212,8 +213,21 @@ const TaskCard = ({
     rejectedAt,
     startDateBinding,
     dueDateBinding,
-    milestone,
   } = task;
+
+  let milestone;
+  if (isNotFound(task.milestone)) {
+    milestone = null;
+  } else if (isForbidden(task.milestone)) {
+    milestone = {
+      __typename: 'Forbidden',
+      project: {
+        __typename: 'Forbidden',
+      },
+    };
+  } else {
+    milestone = getByPath('milestone', task);
+  }
 
   const validation = validator({
     name: `task.${id}.name`,
@@ -482,6 +496,9 @@ const TaskCard = ({
                           ? `/project/${encodeId(getByPath('project.id', milestone))}`
                           : ''
                       }
+                      onClick={evt => {
+                        evt.stopPropagation();
+                      }}
                     >
                       <Icon icon="PROJECT" />
                     </Link>
@@ -490,7 +507,9 @@ const TaskCard = ({
                       <Icon icon="PROJECT" />
                     </div>
                   )}
-                  <Display>{getByPathWithDefault('', 'project.name', milestone)}</Display>
+                  <Display align="left" blackout={isForbidden(getByPath('project', milestone))}>
+                    {getByPathWithDefault('', 'project.name', milestone)}
+                  </Display>
                 </div>
 
                 <div className={MilestoneInfoStyle}>
@@ -502,6 +521,9 @@ const TaskCard = ({
                           ? `/project/${encodeId(getByPath('project.id', milestone))}`
                           : ''
                       }
+                      onClick={evt => {
+                        evt.stopPropagation();
+                      }}
                     >
                       <Icon icon="MILESTONE" />
                     </Link>
@@ -511,7 +533,9 @@ const TaskCard = ({
                     </div>
                   )}
 
-                  <Display>{getByPathWithDefault('', 'name', milestone)}</Display>
+                  <Display align="left" blackout={isForbidden(milestone)}>
+                    {getByPathWithDefault('', 'name', milestone)}
+                  </Display>
                 </div>
               </>
             )}

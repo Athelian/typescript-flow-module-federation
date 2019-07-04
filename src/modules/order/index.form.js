@@ -436,6 +436,7 @@ class OrderFormModule extends React.PureComponent<Props> {
 
                               {(isNewOrClone || isDirty) && (
                                 <SaveButton
+                                  data-testid="btnSaveOrder"
                                   disabled={
                                     !form.isReady(
                                       {

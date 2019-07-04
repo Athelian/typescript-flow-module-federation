@@ -138,6 +138,7 @@ function SelectProjectAndMilestone({
                 }}
               />
               <SaveButton
+                data-testid="btnSaveSelectProjectAndMilestone"
                 disabled={
                   !(
                     getByPathWithDefault('', 'id', selectedProject) !==
