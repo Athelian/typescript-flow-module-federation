@@ -136,227 +136,226 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
   }, [prevEntities, entities, isChangeData]);
   useEffect(() => {
     if (dataSource.orders.length || dataSource.shipments.length) {
-      const listener = emitter.once(
-        'INLINE_CHANGE',
-        (newData: { name: string, value: any, hasError: boolean }) => {
-          logger.warn({ newData });
-          setErrorMessage('');
-          const { name, value, hasError } = newData;
-          let newEditData = cloneDeep(editData);
-          const [entityType, id, ...fields] = name.split('.');
-          const [field, subField] = fields || [];
-          // init empty values for custom field in case there is empty from api
-          if (field === 'customFields') {
-            if (
-              getByPathWithDefault([], `${entityType}.${id}.customFields.fieldValues`, newEditData)
-                .length === 0
-            ) {
-              const fieldDefinitions = getByPathWithDefault(
-                [],
-                `${entityType}.${id}.customFields.fieldDefinitions`,
-                newEditData
-              );
-              newEditData = set(
-                newEditData,
-                `${entityType}.${id}.customFields.fieldValues`,
-                fieldDefinitions.map(fieldDefinition => ({
-                  fieldDefinition,
-                  value: {
-                    string: '',
-                  },
-                }))
-              );
-            }
+      const listener = emitter.once('INLINE_CHANGE', (newData: mixed) => {
+        logger.warn({ newData });
+        setErrorMessage('');
+        const name = getByPathWithDefault('', 'name', newData);
+        const value = getByPathWithDefault(null, 'value', newData);
+        const hasError = getByPathWithDefault(false, 'hasError', newData);
+        let newEditData = cloneDeep(editData);
+        const [entityType, id, ...fields] = name.split('.');
+        const [field, subField] = fields || [];
+        // init empty values for custom field in case there is empty from api
+        if (field === 'customFields') {
+          if (
+            getByPathWithDefault([], `${entityType}.${id}.customFields.fieldValues`, newEditData)
+              .length === 0
+          ) {
+            const fieldDefinitions = getByPathWithDefault(
+              [],
+              `${entityType}.${id}.customFields.fieldDefinitions`,
+              newEditData
+            );
+            newEditData = set(
+              newEditData,
+              `${entityType}.${id}.customFields.fieldValues`,
+              fieldDefinitions.map(fieldDefinition => ({
+                fieldDefinition,
+                value: {
+                  string: '',
+                },
+              }))
+            );
           }
-
-          if (entityType === 'orders' && field === 'currency') {
-            logger.warn({ field });
-            const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
-            orderItemIds.forEach(orderItemId => {
-              newEditData = set(newEditData, `orderItems.${orderItemId}.price.currency`, value);
-            });
-          }
-
-          if (entityType === 'batches') {
-            if (field === 'autoCalculatePackageQuantity' && !!value) {
-              const batch = getByPath(`batches.${id}`, editData);
-              if (batch) {
-                newEditData = set(
-                  newEditData,
-                  `batches.${id}.packageQuantity`,
-                  calculatePackageQuantity(batch)
-                );
-              }
-            }
-
-            if (field === 'quantity' || field === 'packageCapacity') {
-              const batch = getByPath(`batches.${id}`, editData);
-              if (batch && batch.autoCalculatePackageQuantity) {
-                newEditData = set(
-                  newEditData,
-                  `batches.${id}.packageQuantity`,
-                  calculatePackageQuantity({
-                    ...batch,
-                    ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
-                  })
-                );
-              }
-            }
-
-            if (field === 'batchQuantityRevisions') {
-              const batch = getByPath(`batches.${id}`, editData);
-              // trigger auto calculate when delete quantity
-              if (batch && batch.autoCalculatePackageQuantity && Array.isArray(value)) {
-                newEditData = set(
-                  newEditData,
-                  `batches.${id}.packageQuantity`,
-                  calculatePackageQuantity({
-                    ...batch,
-                    batchQuantityRevisions: value,
-                  })
-                );
-              }
-
-              // trigger auto calculate for last quantity revision
-              if (
-                batch &&
-                Number(subField) >= 0 &&
-                Number(value) >= 0 &&
-                Number(subField) === batch.batchQuantityRevisions.length - 1 &&
-                batch.autoCalculatePackageQuantity
-              ) {
-                newEditData = set(
-                  newEditData,
-                  `batches.${id}.packageQuantity`,
-                  calculatePackageQuantity({
-                    ...batch,
-                    batchQuantityRevisions: [
-                      {
-                        quantity: value,
-                      },
-                    ],
-                  })
-                );
-              }
-            }
-
-            if (field === 'batchQuantityRevisionsHeader') {
-              if (subField === 'create') {
-                const { batches } = newEditData;
-                const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
-                  const [batchId, batch] = entries;
-                  const { quantity, batchQuantityRevisions } = batch;
-                  const lastQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
-                  for (let i = 0; i < Number(value); i += 1) {
-                    if (!batchQuantityRevisions[i]) {
-                      batchQuantityRevisions[i] = {
-                        type: 'Other',
-                        quantity: lastQuantity,
-                      };
-                    }
-                  }
-                  return [
-                    batchId,
-                    {
-                      ...batch,
-                      batchQuantityRevisions,
-                    },
-                  ];
-                });
-                const newBatches = Object.fromEntries(newBatchEntries);
-                set(newEditData, `batches`, newBatches);
-              }
-
-              if (subField === 'apply') {
-                const { batches } = newEditData;
-                const { index, type } = value;
-                const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
-                  const [batchId, batch] = entries;
-                  const { batchQuantityRevisions } = batch;
-                  if (batchQuantityRevisions.length >= index) {
-                    set(batch, `batchQuantityRevisions[${index - 1}].type`, type);
-                  }
-                  return [batchId, batch];
-                });
-                const newBatches = Object.fromEntries(newBatchEntries);
-                set(newEditData, `batches`, newBatches);
-              }
-            }
-          }
-
-          if (entityType === 'shipments' && field === 'transportType') {
-            const currentShipment = newEditData.shipments[id];
-            logger.warn({ currentShipment, field });
-            currentShipment.voyages.forEach((voyage, counter) => {
-              newEditData = set(newEditData, `shipments.${id}.voyages.${counter}.arrivalPort`, {
-                airport: null,
-                seaport: null,
-                __typename: 'Port',
-              });
-              newEditData = set(newEditData, `shipments.${id}.voyages.${counter}.departurePort`, {
-                airport: null,
-                seaport: null,
-                __typename: 'Port',
-              });
-            });
-          }
-          const editField = fields.join('.');
-          if (entityType === 'shipments' && isModifyPort(editField)) {
-            const currentShipment = newEditData.shipments[id];
-            logger.warn({ field: fields.join('.'), currentShipment });
-            if (
-              currentShipment.voyages.length > 1 &&
-              ['voyages.0.arrivalPort', 'voyages.1.departurePort'].some(port =>
-                editField.includes(port)
-              )
-            ) {
-              newEditData = set(
-                newEditData,
-                `shipments.${id}.voyages.0.arrivalPort.${fields[fields.length - 1]}`,
-                value
-              );
-              newEditData = set(
-                newEditData,
-                `shipments.${id}.voyages.1.departurePort.${fields[fields.length - 1]}`,
-                value
-              );
-            }
-            if (
-              currentShipment.voyages.length > 2 &&
-              ['voyages.1.arrivalPort', 'voyages.2.departurePort'].some(port =>
-                editField.includes(port)
-              )
-            ) {
-              newEditData = set(
-                newEditData,
-                `shipments.${id}.voyages.1.arrivalPort.${fields[fields.length - 1]}`,
-                value
-              );
-              newEditData = set(
-                newEditData,
-                `shipments.${id}.voyages.2.departurePort.${fields[fields.length - 1]}`,
-                value
-              );
-            }
-          }
-          if (field !== 'batchQuantityRevisionsHeader') {
-            newEditData = set(newEditData, name, value);
-            if (!touched[name]) {
-              setTouched({
-                ...touched,
-                [name]: true,
-              });
-            }
-            if (hasError) {
-              setErrors({ ...errors, [name]: true });
-            } else {
-              delete errors[name];
-              setErrors(errors);
-            }
-          }
-          setEditData(newEditData);
         }
-      );
+
+        if (entityType === 'orders' && field === 'currency') {
+          logger.warn({ field });
+          const orderItemIds = getOrderItemIdsByOrderId(id, mappingObjects);
+          orderItemIds.forEach(orderItemId => {
+            newEditData = set(newEditData, `orderItems.${orderItemId}.price.currency`, value);
+          });
+        }
+
+        if (entityType === 'batches') {
+          if (field === 'autoCalculatePackageQuantity' && !!value) {
+            const batch = getByPath(`batches.${id}`, editData);
+            if (batch) {
+              newEditData = set(
+                newEditData,
+                `batches.${id}.packageQuantity`,
+                calculatePackageQuantity(batch)
+              );
+            }
+          }
+
+          if (field === 'quantity' || field === 'packageCapacity') {
+            const batch = getByPath(`batches.${id}`, editData);
+            if (batch && batch.autoCalculatePackageQuantity) {
+              newEditData = set(
+                newEditData,
+                `batches.${id}.packageQuantity`,
+                calculatePackageQuantity({
+                  ...batch,
+                  ...(field === 'quantity' ? { quantity: value } : { packageCapacity: value }),
+                })
+              );
+            }
+          }
+
+          if (field === 'batchQuantityRevisions') {
+            const batch = getByPath(`batches.${id}`, editData);
+            // trigger auto calculate when delete quantity
+            if (batch && batch.autoCalculatePackageQuantity && Array.isArray(value)) {
+              newEditData = set(
+                newEditData,
+                `batches.${id}.packageQuantity`,
+                calculatePackageQuantity({
+                  ...batch,
+                  batchQuantityRevisions: value,
+                })
+              );
+            }
+
+            // trigger auto calculate for last quantity revision
+            if (
+              batch &&
+              Number(subField) >= 0 &&
+              Number(value) >= 0 &&
+              Number(subField) === batch.batchQuantityRevisions.length - 1 &&
+              batch.autoCalculatePackageQuantity
+            ) {
+              newEditData = set(
+                newEditData,
+                `batches.${id}.packageQuantity`,
+                calculatePackageQuantity({
+                  ...batch,
+                  batchQuantityRevisions: [
+                    {
+                      quantity: value,
+                    },
+                  ],
+                })
+              );
+            }
+          }
+
+          if (field === 'batchQuantityRevisionsHeader') {
+            if (subField === 'create') {
+              const { batches } = newEditData;
+              const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
+                const [batchId, batch] = entries;
+                const { quantity, batchQuantityRevisions } = batch;
+                const lastQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+                for (let i = 0; i < Number(value); i += 1) {
+                  if (!batchQuantityRevisions[i]) {
+                    batchQuantityRevisions[i] = {
+                      type: 'Other',
+                      quantity: lastQuantity,
+                    };
+                  }
+                }
+                return [
+                  batchId,
+                  {
+                    ...batch,
+                    batchQuantityRevisions,
+                  },
+                ];
+              });
+              const newBatches = Object.fromEntries(newBatchEntries);
+              set(newEditData, `batches`, newBatches);
+            }
+
+            if (subField === 'apply') {
+              const { batches } = newEditData;
+              const { index, type } = value;
+              const newBatchEntries = (Object.entries(batches || {}): Array<any>).map(entries => {
+                const [batchId, batch] = entries;
+                const { batchQuantityRevisions } = batch;
+                if (batchQuantityRevisions.length >= index) {
+                  set(batch, `batchQuantityRevisions[${index - 1}].type`, type);
+                }
+                return [batchId, batch];
+              });
+              const newBatches = Object.fromEntries(newBatchEntries);
+              set(newEditData, `batches`, newBatches);
+            }
+          }
+        }
+
+        if (entityType === 'shipments' && field === 'transportType') {
+          const currentShipment = newEditData.shipments[id];
+          logger.warn({ currentShipment, field });
+          currentShipment.voyages.forEach((voyage, counter) => {
+            newEditData = set(newEditData, `shipments.${id}.voyages.${counter}.arrivalPort`, {
+              airport: null,
+              seaport: null,
+              __typename: 'Port',
+            });
+            newEditData = set(newEditData, `shipments.${id}.voyages.${counter}.departurePort`, {
+              airport: null,
+              seaport: null,
+              __typename: 'Port',
+            });
+          });
+        }
+        const editField = fields.join('.');
+        if (entityType === 'shipments' && isModifyPort(editField)) {
+          const currentShipment = newEditData.shipments[id];
+          logger.warn({ field: fields.join('.'), currentShipment });
+          if (
+            currentShipment.voyages.length > 1 &&
+            ['voyages.0.arrivalPort', 'voyages.1.departurePort'].some(port =>
+              editField.includes(port)
+            )
+          ) {
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.0.arrivalPort.${fields[fields.length - 1]}`,
+              value
+            );
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.1.departurePort.${fields[fields.length - 1]}`,
+              value
+            );
+          }
+          if (
+            currentShipment.voyages.length > 2 &&
+            ['voyages.1.arrivalPort', 'voyages.2.departurePort'].some(port =>
+              editField.includes(port)
+            )
+          ) {
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.1.arrivalPort.${fields[fields.length - 1]}`,
+              value
+            );
+            newEditData = set(
+              newEditData,
+              `shipments.${id}.voyages.2.departurePort.${fields[fields.length - 1]}`,
+              value
+            );
+          }
+        }
+        if (field !== 'batchQuantityRevisionsHeader') {
+          newEditData = set(newEditData, name, value);
+          if (!touched[name]) {
+            setTouched({
+              ...touched,
+              [name]: true,
+            });
+          }
+          if (hasError) {
+            setErrors({ ...errors, [name]: true });
+          } else {
+            delete errors[name];
+            setErrors(errors);
+          }
+        }
+        setEditData(newEditData);
+      });
       return () => {
         listener.remove();
       };

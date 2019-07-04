@@ -265,9 +265,9 @@ const TaskInfoSection = ({
   );
 
   React.useEffect(() => {
-    emitter.addListener('LIVE_VALUE', (field: string, value: ?Date) => {
+    emitter.addListener('LIVE_VALUE', (field: mixed, value: mixed) => {
       if (value && parentValues.current) {
-        parentValues.current[field] = value;
+        parentValues.current[String(field)] = value;
       }
     });
 

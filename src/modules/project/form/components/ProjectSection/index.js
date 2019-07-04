@@ -4,6 +4,7 @@ import { Subscribe } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import emitter from 'utils/emitter';
 import {
   ProjectInfoContainer,
   ProjectTagsContainer,
@@ -99,6 +100,12 @@ const ProjectSection = ({ isNew }: Props) => {
                           <DateInputFactory
                             name={name}
                             {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              setTimeout(() => {
+                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              }, 200);
+                            }}
                             isNew={isNew}
                             originalValue={initialValues[name]}
                             label={<FormattedMessage {...messages.dueDate} />}

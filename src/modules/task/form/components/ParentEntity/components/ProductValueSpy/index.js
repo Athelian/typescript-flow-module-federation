@@ -7,7 +7,6 @@ import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
-import { productAutoDateQuery } from './query';
 
 type Props = {
   values: Object,
@@ -32,122 +31,63 @@ const mappingDate = ({ field, task, values }: { field: string, task: Task, value
 
 export default function ProductValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
   React.useEffect(() => {
-    emitter.addListener(
-      'FIND_PRODUCT_VALUE',
-      async ({
+    emitter.addListener('FIND_PRODUCT_VALUE', (bindingData: mixed) => {
+      const field = getByPath('field', bindingData);
+      const entityId = getByPath('entityId', bindingData);
+      const selectedField = getByPath('selectedField', bindingData);
+      const autoDateDuration = getByPath('autoDateDuration', bindingData);
+      const autoDateOffset = getByPath('autoDateOffset', bindingData);
+      logger.warn({
         field,
         entityId,
         selectedField,
-        autoDateDuration,
-        autoDateOffset,
-      }: {
-        field: string,
-        entityId: string,
-        selectedField: string,
-        autoDateDuration?: Object,
-        autoDateOffset?: Object,
-      }) => {
-        logger.warn({
-          field,
-          entityId,
-          selectedField,
-          inParentEntityForm,
-        });
+        inParentEntityForm,
+      });
 
-        if (inParentEntityForm) {
-          let date = mappingDate({ field, task, values });
-          if (autoDateDuration) {
-            date = calculateDate({
-              date,
-              duration: autoDateDuration.metric,
-              offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-            });
-          }
-          if (field !== START_DATE) {
-            setTaskValue(selectedField, date);
-            emitter.emit('LIVE_VALUE', field, date);
-          } else {
-            setTaskValue(
-              selectedField,
-              autoDateDuration
-                ? calculateDate({
-                    date: task.startDate,
-                    duration: autoDateDuration.metric,
-                    offset:
-                      autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-                  })
-                : task.startDate
-            );
-          }
-
-          // we need to set the due date if those field are binding together
-          if (selectedField === 'startDate') {
-            if (task.dueDateBinding === START_DATE) {
-              const { weeks, months, days } = task.dueDateInterval || {};
-              setTaskValue(
-                'dueDate',
-                calculateDate({
-                  date,
-                  duration: findDuration({ weeks, months }),
-                  offset: weeks || months || days,
-                })
-              );
-            }
-          }
-        } else {
-          logger.warn('query product data for id', client);
-          // TODO: This flag will be used for showing loading on UI
-          emitter.emit('LIVE_VALUE_PROCESS', true);
-          const { data } = await client.query({
-            query: productAutoDateQuery,
-            variables: { id: entityId },
-            fetchPolicy: 'cache-first',
+      if (inParentEntityForm) {
+        let date = mappingDate({ field, task, values });
+        if (autoDateDuration) {
+          date = calculateDate({
+            date,
+            duration: autoDateDuration.metric,
+            offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
           });
-          emitter.emit('LIVE_VALUE_PROCESS', false);
-
-          let date = mappingDate({ field, task, values: data.product });
-          if (autoDateDuration) {
-            date = calculateDate({
-              date,
-              duration: autoDateDuration.metric,
-              offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-            });
-          }
-
-          if (field !== START_DATE) {
-            setTaskValue(selectedField, date);
-            emitter.emit('LIVE_VALUE', field, date);
-          } else {
-            setTaskValue(
-              selectedField,
-              autoDateDuration
-                ? calculateDate({
-                    date: task.startDate,
-                    duration: autoDateDuration.metric,
-                    offset:
-                      autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-                  })
-                : task.startDate
-            );
-          }
-
-          // we need to set the due date if those field are binding together
-          if (selectedField === 'startDate') {
-            if (task.dueDateBinding === START_DATE) {
-              const { weeks, months, days } = task.dueDateInterval || {};
-              setTaskValue(
-                'dueDate',
-                calculateDate({
-                  date,
-                  duration: findDuration({ weeks, months }),
-                  offset: weeks || months || days,
+        }
+        if (field !== START_DATE) {
+          setTaskValue(selectedField, date);
+          emitter.emit('LIVE_VALUE', field, date);
+        } else {
+          setTaskValue(
+            selectedField,
+            autoDateDuration
+              ? calculateDate({
+                  date: task.startDate,
+                  duration: autoDateDuration.metric,
+                  offset:
+                    autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
                 })
-              );
-            }
+              : task.startDate
+          );
+        }
+
+        // we need to set the due date if those field are binding together
+        if (selectedField === 'startDate') {
+          if (task.dueDateBinding === START_DATE) {
+            const { weeks, months, days } = task.dueDateInterval || {};
+            setTaskValue(
+              'dueDate',
+              calculateDate({
+                date,
+                duration: findDuration({ weeks, months }),
+                offset: weeks || months || days,
+              })
+            );
           }
         }
+      } else {
+        logger.warn('query product data for id', client);
       }
-    );
+    });
 
     return () => {
       emitter.removeAllListeners('FIND_PRODUCT_VALUE');

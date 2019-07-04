@@ -2,6 +2,7 @@
 import * as React from 'react';
 import type { Shipment, Task } from 'generated/graphql';
 import client from 'apollo';
+import { getByPath } from 'utils/fp';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
@@ -61,122 +62,118 @@ export default function ShipmentValueSpy({
   setTaskValue,
 }: Props) {
   React.useEffect(() => {
-    emitter.addListener(
-      'FIND_SHIPMENT_VALUE',
-      async ({
+    emitter.addListener('FIND_SHIPMENT_VALUE', (bindingData: mixed) => {
+      const field = getByPath('field', bindingData);
+      const entityId = getByPath('entityId', bindingData);
+      const selectedField = getByPath('selectedField', bindingData);
+      const autoDateDuration = getByPath('autoDateDuration', bindingData);
+      const autoDateOffset = getByPath('autoDateOffset', bindingData);
+      logger.warn({
         field,
         entityId,
         selectedField,
-        autoDateDuration,
-        autoDateOffset,
-      }: {
-        field: string,
-        entityId: string,
-        selectedField: string,
-        autoDateDuration?: Object,
-        autoDateOffset?: Object,
-      }) => {
-        logger.warn({
-          field,
-          entityId,
-          selectedField,
-        });
+      });
 
-        const mappingFields = findMappingFields(values.voyages || []);
-        if (inParentEntityForm) {
-          let date = mappingDate({ mappingFields, field, task, values });
-          if (autoDateDuration) {
-            date = calculateDate({
-              date,
-              duration: autoDateDuration.metric,
-              offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-            });
-          }
-          if (field !== START_DATE) {
-            setTaskValue(selectedField, date);
-            emitter.emit('LIVE_VALUE', field, date);
-          } else {
+      const mappingFields = findMappingFields(values.voyages || []);
+      if (inParentEntityForm) {
+        let date = mappingDate({ mappingFields, field, task, values });
+        if (autoDateDuration) {
+          date = calculateDate({
+            date,
+            duration: autoDateDuration.metric,
+            offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
+          });
+        }
+        if (field !== START_DATE) {
+          setTaskValue(selectedField, date);
+          emitter.emit('LIVE_VALUE', field, date);
+        } else {
+          setTaskValue(
+            selectedField,
+            autoDateDuration
+              ? calculateDate({
+                  date: task.startDate,
+                  duration: autoDateDuration.metric,
+                  offset:
+                    autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
+                })
+              : task.startDate
+          );
+        }
+
+        // we need to set the due date if those field are binding together
+        if (selectedField === 'startDate') {
+          if (task.dueDateBinding === START_DATE) {
+            const { weeks, months, days } = task.dueDateInterval || {};
             setTaskValue(
-              selectedField,
-              autoDateDuration
-                ? calculateDate({
-                    date: task.startDate,
-                    duration: autoDateDuration.metric,
-                    offset:
-                      autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-                  })
-                : task.startDate
+              'dueDate',
+              calculateDate({
+                date,
+                duration: findDuration({ weeks, months }),
+                offset: weeks || months || days,
+              })
             );
           }
-
-          // we need to set the due date if those field are binding together
-          if (selectedField === 'startDate') {
-            if (task.dueDateBinding === START_DATE) {
-              const { weeks, months, days } = task.dueDateInterval || {};
-              setTaskValue(
-                'dueDate',
-                calculateDate({
-                  date,
-                  duration: findDuration({ weeks, months }),
-                  offset: weeks || months || days,
-                })
-              );
-            }
-          }
-        } else {
-          logger.warn('query shipment data for id', client);
-          // TODO: This flag will be used for showing loading on UI
-          emitter.emit('LIVE_VALUE_PROCESS', true);
-          const { data } = await client.query({
+        }
+      } else {
+        logger.warn('query shipment data for id', client);
+        // TODO: This flag will be used for showing loading on UI
+        emitter.emit('LIVE_VALUE_PROCESS', true);
+        client
+          .query({
             query: shipmentAutoDateQuery,
             variables: { id: entityId },
             fetchPolicy: 'cache-first',
-          });
-          emitter.emit('LIVE_VALUE_PROCESS', false);
+          })
+          .then(({ data }) => {
+            emitter.emit('LIVE_VALUE_PROCESS', false);
 
-          let date = mappingDate({ mappingFields, field, task, values: data.shipment });
-          if (autoDateDuration) {
-            date = calculateDate({
-              date,
-              duration: autoDateDuration.metric,
-              offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-            });
-          }
+            let date = mappingDate({ mappingFields, field, task, values: data.shipment });
+            if (autoDateDuration) {
+              date = calculateDate({
+                date,
+                duration: autoDateDuration.metric,
+                offset:
+                  autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
+              });
+            }
 
-          if (field !== START_DATE) {
-            setTaskValue(selectedField, date);
-            emitter.emit('LIVE_VALUE', field, date);
-          } else {
-            setTaskValue(
-              selectedField,
-              autoDateDuration
-                ? calculateDate({
-                    date: task.startDate,
-                    duration: autoDateDuration.metric,
-                    offset:
-                      autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-                  })
-                : task.startDate
-            );
-          }
-
-          // we need to set the due date if those field are binding together
-          if (selectedField === 'startDate') {
-            if (task.dueDateBinding === START_DATE) {
-              const { weeks, months, days } = task.dueDateInterval || {};
+            if (field !== START_DATE) {
+              setTaskValue(selectedField, date);
+              emitter.emit('LIVE_VALUE', field, date);
+            } else {
               setTaskValue(
-                'dueDate',
-                calculateDate({
-                  date,
-                  duration: findDuration({ weeks, months }),
-                  offset: weeks || months || days,
-                })
+                selectedField,
+                autoDateDuration
+                  ? calculateDate({
+                      date: task.startDate,
+                      duration: autoDateDuration.metric,
+                      offset:
+                        autoDateOffset === 'after'
+                          ? autoDateDuration.value
+                          : -autoDateDuration.value,
+                    })
+                  : task.startDate
               );
             }
-          }
-        }
+
+            // we need to set the due date if those field are binding together
+            if (selectedField === 'startDate') {
+              if (task.dueDateBinding === START_DATE) {
+                const { weeks, months, days } = task.dueDateInterval || {};
+                setTaskValue(
+                  'dueDate',
+                  calculateDate({
+                    date,
+                    duration: findDuration({ weeks, months }),
+                    offset: weeks || months || days,
+                  })
+                );
+              }
+            }
+          });
       }
-    );
+    });
 
     return () => {
       emitter.removeAllListeners('FIND_SHIPMENT_VALUE');

@@ -1,10 +1,16 @@
 // @flow
-
 import * as React from 'react';
-import { isEquals } from 'utils/fp';
+import type { Milestone } from 'generated/graphql';
+import memoize from 'memoize-one';
+import { flattenDeep } from 'lodash';
+import { Subscribe } from 'unstated';
+import { isEquals, getByPathWithDefault } from 'utils/fp';
+import ProjectAutoDateBinding from 'modules/task/common/ProjectAutoDateBinding';
+import { ProjectInfoContainer, ProjectMilestonesContainer } from 'modules/project/form/containers';
 import ProjectSection from './components/ProjectSection';
 import MilestonesSection from './components/MilestonesSection';
 import { ProjectFormWrapperStyle } from './style';
+import { injectProjectAndMilestoneDueDate } from './components/MilestonesSection/components/Board';
 
 type OptionalProps = {
   isNew: boolean,
@@ -24,6 +30,21 @@ const defaultProps = {
   project: {},
 };
 
+const generateTasks = memoize((milestones: Array<Milestone>, info: Object) => {
+  return flattenDeep(
+    milestones.map(milestone =>
+      injectProjectAndMilestoneDueDate({
+        milestoneId: milestone.id,
+        tasks: getByPathWithDefault([], 'tasks', milestone),
+        projectInfo: {
+          ...info,
+          milestones: milestones.map(item => ({ id: item.id, dueDate: item.dueDate })),
+        },
+      })
+    )
+  );
+});
+
 export default class ProjectForm extends React.Component<Props> {
   static defaultProps = defaultProps;
 
@@ -39,6 +60,14 @@ export default class ProjectForm extends React.Component<Props> {
       <div className={ProjectFormWrapperStyle}>
         <ProjectSection project={project} isNew={isNew} isClone={isClone} isLoading={loading} />
         <MilestonesSection />
+        <Subscribe to={[ProjectInfoContainer, ProjectMilestonesContainer]}>
+          {({ state: info }, { state: { milestones }, updateTasks }) => (
+            <ProjectAutoDateBinding
+              tasks={generateTasks(milestones, info)}
+              setTaskValue={tasks => updateTasks(tasks)}
+            />
+          )}
+        </Subscribe>
       </div>
     );
   }

@@ -5,6 +5,7 @@ import type { DraggableProvided } from 'react-beautiful-dnd';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
+import emitter from 'utils/emitter';
 import { formatToGraphql, startOfToday } from 'utils/date';
 import { getByPathWithDefault } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -160,6 +161,12 @@ export default function MilestoneForm({ provided, milestoneId, isDragging }: Pro
                 <DateInputFactory
                   name={name}
                   {...inputHandlers}
+                  onBlur={evt => {
+                    inputHandlers.onBlur(evt);
+                    setTimeout(() => {
+                      emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                    }, 200);
+                  }}
                   isNew={isNew}
                   originalValue={initialValues.dueDate}
                   label={<FormattedMessage {...messages.dueDate} />}

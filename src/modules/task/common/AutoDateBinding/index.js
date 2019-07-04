@@ -55,10 +55,10 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
       Product: defaultMappingFields,
       ProductProvider: defaultMappingFields,
     };
-    emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
+    emitter.addListener('AUTO_DATE', (field: mixed, value: mixed) => {
       const latestValues = {
         ...values,
-        ...(field ? { [field]: value } : {}),
+        ...(field ? { [String(field)]: value } : {}),
       };
       logger.warn('auto calculate binding data', type, field, latestValues);
       setTaskValue(

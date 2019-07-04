@@ -78,7 +78,7 @@ const reorderMilestoneMap = ({ milestoneMap, source, destination }: Object): Obj
   };
 };
 
-const injectProjectAndMilestoneDueDate = ({
+export const injectProjectAndMilestoneDueDate = ({
   tasks,
   milestoneId,
   projectInfo,
@@ -86,7 +86,7 @@ const injectProjectAndMilestoneDueDate = ({
   tasks: Array<Task>,
   milestoneId: string,
   projectInfo: ProjectInfo,
-}) => {
+}): Array<Task> => {
   const milestone = projectInfo.milestones.find(item => item.id === milestoneId);
   return tasks.map(task => ({
     ...task,

@@ -206,6 +206,18 @@ export default class ProjectMilestonesContainer extends Container<FormState> {
     }));
   };
 
+  updateTasks = (tasks: Array<Task>) => {
+    this.setState(prevState => ({
+      milestones: prevState.milestones.map(milestone => ({
+        ...milestone,
+        tasks: milestone.tasks.map(task => ({
+          ...task,
+          ...tasks.find(item => item.id === task.id),
+        })),
+      })),
+    }));
+  };
+
   updateTask = ({
     milestoneId,
     taskId,

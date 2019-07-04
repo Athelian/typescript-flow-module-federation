@@ -611,4 +611,65 @@ describe('milestones container', () => {
     ]);
     expect(container.deleteTasks).toEqual([4]);
   });
+
+  it('should update tasks of all milestones', async () => {
+    const container = new ProjectMilestonesContainer();
+    expect(container.state).toEqual(initValues);
+    const milestones = [
+      {
+        id: '1',
+        tasks: [
+          {
+            id: 4,
+            name: 'a',
+            dueDate: null,
+          },
+        ],
+      },
+      {
+        id: '2',
+        tasks: [
+          {
+            id: 3,
+            name: 'b',
+          },
+        ],
+      },
+    ];
+    await container.initDetailValues(milestones);
+
+    await container.updateTasks([
+      {
+        id: 3,
+        name: 'bc',
+      },
+      {
+        id: 4,
+        name: '1a',
+        dueDate: null,
+      },
+    ]);
+
+    expect(container.state.milestones).toEqual([
+      {
+        id: '1',
+        tasks: [
+          {
+            id: 4,
+            name: '1a',
+            dueDate: null,
+          },
+        ],
+      },
+      {
+        id: '2',
+        tasks: [
+          {
+            id: 3,
+            name: 'bc',
+          },
+        ],
+      },
+    ]);
+  });
 });
