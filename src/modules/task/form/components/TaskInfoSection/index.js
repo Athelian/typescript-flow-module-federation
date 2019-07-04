@@ -286,8 +286,10 @@ const TaskInfoSection = ({
           {task.updatedAt && <LastModified updatedAt={task.updatedAt} updatedBy={task.updatedBy} />}
         </SectionHeader>
         <Subscribe to={[TaskContainer, FormContainer]}>
-          {({ originalValues, state, setFieldValue, setFieldValues }, { setFieldTouched }) => {
-            const values = { ...originalValues, ...state };
+          {(
+            { originalValues, state: values, setFieldValue, setFieldValues },
+            { setFieldTouched }
+          ) => {
             const isCompleted = !!values.completedBy;
             const isUnapproved = !(
               (values.approvedBy && values.approvedBy.id) ||
@@ -653,7 +655,10 @@ const TaskInfoSection = ({
                               validator={validator}
                               setFieldValue={(field, value) => {
                                 setFieldValue(field, value);
-                                if (values.dueDateBinding === START_DATE) {
+                                if (
+                                  !manualSettings.dueDate &&
+                                  values.dueDateBinding === START_DATE
+                                ) {
                                   const { weeks, months, days } = values.dueDateInterval || {};
                                   setFieldValue(
                                     'dueDate',
@@ -683,8 +688,15 @@ const TaskInfoSection = ({
                               value={{
                                 autoDateField: values.startDateBinding,
                                 ...convertBindingToSelection(values.startDateInterval),
+                                dueDateBinding: values.dueDateBinding,
+                                dueDateInterval: values.dueDateInterval,
                               }}
-                              onChange={({ autoDateOffset, autoDateDuration }) => {
+                              onChange={({
+                                dueDateBinding,
+                                dueDateInterval,
+                                autoDateOffset,
+                                autoDateDuration,
+                              }) => {
                                 const newDate = calculateDate({
                                   date:
                                     parentValues.current &&
@@ -696,8 +708,8 @@ const TaskInfoSection = ({
                                       : -Math.abs(autoDateDuration.value),
                                 });
                                 setFieldValue('startDate', newDate);
-                                if (values.dueDateBinding === START_DATE) {
-                                  const { weeks, months, days } = values.dueDateInterval || {};
+                                if (!manualSettings.dueDate && dueDateBinding === START_DATE) {
+                                  const { weeks, months, days } = dueDateInterval || {};
                                   setFieldValue(
                                     'dueDate',
                                     calculateDate({
