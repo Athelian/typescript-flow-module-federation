@@ -769,7 +769,7 @@ const TaskInfoSection = ({
                                     </FormField>
 
                                     <FormField
-                                      name="autoStateDateOffset"
+                                      name="autoStartDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={(field, value) => {
                                         set('autoDateOffset', value);
