@@ -13,7 +13,7 @@ type Props = {
 };
 
 const updateDateInput = ({ field, value, task }: { field: string, value: mixed, task: Task }) => {
-  const [milestoneId, fieldName] = field.split(',') || [];
+  const [milestoneId, fieldName] = field.split('.') || [];
   logger.warn({
     milestoneId,
     fieldName,
@@ -21,13 +21,18 @@ const updateDateInput = ({ field, value, task }: { field: string, value: mixed, 
     value,
     task,
   });
-  if (milestoneId) {
+
+  // if file name exist which means that is come from milestone due date
+  if (fieldName) {
     if (getByPath('milestone.id', task) === milestoneId) {
       return setIn(`milestone.${fieldName}`, value, task);
     }
     return task;
   }
-  return setIn(`milestone.project.${field}`, value, task);
+
+  if (['dueDate'].includes(field)) return setIn(`milestone.project.${field}`, value, task);
+
+  return task;
 };
 
 // Project is the special case which is use only for project form
@@ -85,7 +90,7 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
 
           if (dueDateBinding) {
             const { months, weeks, days } = dueDateInterval || {};
-            const path = mappingFields[startDateBinding];
+            const path = mappingFields[dueDateBinding];
             if (path) {
               newDueDate = calculateDate({
                 date: dueDateBinding !== START_DATE ? getByPath(path, latestValues) : newStartDate,
