@@ -43,6 +43,8 @@ export default function OrderValueSpy({ values, task, inParentEntityForm, setTas
         field,
         entityId,
         selectedField,
+        autoDateDuration,
+        autoDateOffset,
         inParentEntityForm,
       });
 

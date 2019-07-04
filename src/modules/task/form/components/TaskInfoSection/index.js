@@ -1075,6 +1075,44 @@ const TaskInfoSection = ({
                                             : null,
                                         });
                                         toggleSlide(false);
+                                        if (!manualSettings.dueDate || !manualSettings.startDate) {
+                                          setTimeout(() => {
+                                            if (!manualSettings.dueDate) {
+                                              const { months = 0, weeks = 0, days = 0 } =
+                                                values.dueDateInterval || {};
+                                              emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                                selectedField: 'dueDate',
+                                                field: values.dueDateBinding,
+                                                entityId: getByPath('entity.id', task),
+                                                autoDateDuration: {
+                                                  metric: findDuration({ months, weeks }),
+                                                  value: months || weeks || days,
+                                                },
+                                                autoDateOffset:
+                                                  -(months || weeks || days) > 0
+                                                    ? 'before'
+                                                    : 'after',
+                                              });
+                                            }
+                                            if (!manualSettings.startDate) {
+                                              const { months = 0, weeks = 0, days = 0 } =
+                                                values.startDateInterval || {};
+                                              emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                                selectedField: 'startDate',
+                                                field: values.startDateBinding,
+                                                entityId: getByPath('entity.id', task),
+                                                autoDateDuration: {
+                                                  metric: findDuration({ months, weeks }),
+                                                  value: months || weeks || days,
+                                                },
+                                                autoDateOffset:
+                                                  -(months || weeks || days) > 0
+                                                    ? 'before'
+                                                    : 'after',
+                                              });
+                                            }
+                                          }, 200);
+                                        }
                                       }}
                                       onCancel={() => toggleSlide(false)}
                                     />

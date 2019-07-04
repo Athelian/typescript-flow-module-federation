@@ -5,6 +5,7 @@ import { BooleanValue, ObjectValue } from 'react-values';
 import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import emitter from 'utils/emitter';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { isNotFound } from 'utils/data';
@@ -653,6 +654,9 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                           );
                           set('isOpenOfConfirmDialog', false);
                           set('isOpenOfSelector', false);
+                          setTimeout(() => {
+                            emitter.emit('AUTO_DATE');
+                          }, 200);
                         }}
                       />
                     </div>
