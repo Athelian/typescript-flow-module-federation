@@ -2515,10 +2515,10 @@
     "@svgr/plugin-svgo" "^4.2.0"
     loader-utils "^1.2.3"
 
-"@tanem/svg-injector@^8.0.14":
-  version "8.0.15"
-  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-8.0.15.tgz#4eda3f6ece11ea4c87532d6219b0db9743320085"
-  integrity sha512-guGxW4Xb+JpkMLArqcmSB4WCyxicYarBp3GwdnlsXkKKsPw1H8d8UyXSpakyURcQ1yYkhm5nod8d+Qlx+CfcLg==
+"@tanem/svg-injector@^8.0.18":
+  version "8.0.19"
+  resolved "https://registry.yarnpkg.com/@tanem/svg-injector/-/svg-injector-8.0.19.tgz#f227c80318dcd7c64d0e5b45a87e16cc31995578"
+  integrity sha512-5DTAvIJAVut6yn8KX+bRb3WeBohyjF/dItN4fhU93jFVu6YAZ2LRcBAaBpb16zZE8aNLepeUZ5ghXN1wHzuWDg==
   dependencies:
     "@babel/runtime" "^7.4.5"
 
@@ -6428,10 +6428,10 @@ eslint-import-resolver-node@^0.3.2:
     debug "^2.6.9"
     resolve "^1.5.0"
 
-eslint-loader@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/eslint-loader/-/eslint-loader-2.1.2.tgz#453542a1230d6ffac90e4e7cb9cadba9d851be68"
-  integrity sha512-rA9XiXEOilLYPOIInvVH5S/hYfyTPyxag6DZhoQOduM+3TkghAEQ3VcFO8VnX4J4qg/UIBzp72aOf/xvYmpmsg==
+eslint-loader@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-loader/-/eslint-loader-2.2.0.tgz#e2322b46fc5584ebbffd13c78089cd27d63565a9"
+  integrity sha512-O7zOQw6HS1t8H08O8DsAXPccSIu3xduku/aqdjQwPHp/NzIT/nwwkq+Ly5EtGfXo931/yTwiCuB9kjg/0D2sTg==
   dependencies:
     loader-fs-cache "^1.0.0"
     loader-utils "^1.0.2"
@@ -7906,10 +7906,10 @@ graphql-tools@4.0.5, graphql-tools@^4.0.5:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql@^14.4.1:
-  version "14.4.1"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.4.1.tgz#7a7818d3f63f66b9528ba5416b6c88460db62280"
-  integrity sha512-g4HUH26CohlMjaHneXMAtvG3QtO6peJIUTFxrPW4g5LNnXkUuFoBI6Bk1c14Q5kW8+FyjM/tTbePTgpiVB/2hQ==
+graphql@^14.4.2:
+  version "14.4.2"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-14.4.2.tgz#553a7d546d524663eda49ed6df77577be3203ae3"
+  integrity sha512-6uQadiRgnpnSS56hdZUSvFrVcQ6OF9y6wkxJfKquFtHlnl7+KSuWwSJsdwiK1vybm1HgcdbpGkCpvhvsVQ0UZQ==
   dependencies:
     iterall "^1.2.2"
 
@@ -13364,10 +13364,10 @@ react-focus-lock@^1.18.3:
     prop-types "^15.6.2"
     react-clientside-effect "^1.2.0"
 
-react-fullstory@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-fullstory/-/react-fullstory-1.1.0.tgz#ea117c63a08896ebc0856798e87dee290271f492"
-  integrity sha512-2WSlOTHBPAwfqNjyYlULvWrlWrz+8QxJ+5z8RIZP2oWQ+4TaoJLJF1MSeAL4LI2Rs2/E24vnkEmYUjoUDL6bGw==
+react-fullstory@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-fullstory/-/react-fullstory-1.1.1.tgz#8cf40424ed10be25e719f7236b3442653b9dc4ab"
+  integrity sha512-NtjBYhrCLYp/bjFpqBowT+xN4YmA5c9RpQFMGuc6AJT2yc7MJidd2D0psnrK7d1ZGqrUAy1z4ueSRE2Vc0u+Vg==
 
 react-helmet-async@^1.0.2:
   version "1.0.2"
@@ -13380,10 +13380,10 @@ react-helmet-async@^1.0.2:
     react-fast-compare "2.0.4"
     shallowequal "1.1.0"
 
-react-hot-loader@^4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.0.tgz#cb93d78db8b97fd7c1f5ab688a7eeaa4ad47df3f"
-  integrity sha512-N+8ct1euiQnwqqDyX+SrxsgZ13ax4e8JiHbSAPf7xAshPxF3iTqVJQUxOLH90RXOFaT8LLynq0VPz3rCK7AW1A==
+react-hot-loader@^4.12.2:
+  version "4.12.2"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.12.2.tgz#0f2859909f5843442f3da755f02e0a108abb7a86"
+  integrity sha512-0WvOXtdYIl+5djpyMtGLxY3Iqe7t/QAqmikE9hUB8Kv3G+jSOBLtBQkSoamHl58AWEUj1rSISXcz9dVe08zjgw==
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -13519,13 +13519,13 @@ react-snap@^1.23.0:
     serve-static "1.13.2"
     sourcemapped-stacktrace-node "2.1.8"
 
-react-svg@^10.0.9:
-  version "10.0.9"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.9.tgz#b8f5a3231243467799901132a2af7cd31ff7c610"
-  integrity sha512-da6qPsc+LZPBwncUZwIIpw9JOpzoThHBy64GqLYARFcWiAb8j793HGhTtamLw8hw1srulEJF2P6UOmjA0X3Uwg==
+react-svg@^10.0.10:
+  version "10.0.10"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-10.0.10.tgz#e071a13f2fb4068f6def26cca5b62f975041cb8c"
+  integrity sha512-VTYC66p6nW2cMCstXmETpgQiS6/5s5VYeIcELUl2s30dn1MdsutkuJFy5j/pdKv8o+tlaIEHkdZANmcWCAm3iQ==
   dependencies:
     "@babel/runtime" "^7.4.5"
-    "@tanem/svg-injector" "^8.0.14"
+    "@tanem/svg-injector" "^8.0.18"
     prop-types "^15.7.2"
 
 react-syntax-highlighter@^8.0.1:
@@ -14606,9 +14606,9 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
 simple-git@^1.85.0:
-  version "1.116.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.116.0.tgz#ea6e533466f1e0152186e306e004d4eefa6e3e00"
-  integrity sha512-Pbo3tceqMYy0j3U7jzMKabOWcx5+67GdgQUjpK83XUxGhA+1BX93UPvlWNzbCRoFwd7EJTyDSCC2XCoT4NTLYQ==
+  version "1.118.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.118.0.tgz#6e31d50672c58abdbdb0410fadfdb1db29bd71bd"
+  integrity sha512-0CaCfxdR7ula3EuOkrVFKBiqt7LcvMPfXgIdUhSwjC4A+OaO8yEPGjdO/kWY7ew9uYP9KEoH+dvslOOm7eVzkA==
   dependencies:
     debug "^4.0.1"
 
