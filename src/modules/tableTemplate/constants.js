@@ -193,6 +193,7 @@ export const batchColumns = [
       'batch.expiredAt',
       'batch.producedAt',
       'batch.tags',
+      'batch.totalPrice',
     ],
     columns: [
       <FormattedMessage {...batchMessages.batchNo} />,
@@ -207,6 +208,7 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.expiredAt} />,
       <FormattedMessage {...batchMessages.producedAt} />,
       <FormattedMessage {...batchMessages.tags} />,
+      <FormattedMessage {...batchMessages.totalPrice} />,
     ],
   },
   {
