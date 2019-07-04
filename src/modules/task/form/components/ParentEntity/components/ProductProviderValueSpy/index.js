@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react';
 import type { ProductProvider, Task } from 'generated/graphql';
-import client from 'apollo';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
@@ -57,48 +56,44 @@ export default function ProductProviderValueSpy({
         inParentEntityForm,
       });
 
-      if (inParentEntityForm) {
-        let date = mappingDate({ field, task, values });
-        if (autoDateDuration) {
-          date = calculateDate({
-            date,
-            duration: autoDateDuration.metric,
-            offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-          });
-        }
-        if (field !== START_DATE) {
-          setTaskValue(selectedField, date);
-          emitter.emit('LIVE_VALUE', field, date);
-        } else {
+      let date = mappingDate({ field, task, values });
+      if (autoDateDuration) {
+        date = calculateDate({
+          date,
+          duration: autoDateDuration.metric,
+          offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
+        });
+      }
+      if (field !== START_DATE) {
+        setTaskValue(selectedField, date);
+        emitter.emit('LIVE_VALUE', field, date);
+      } else {
+        setTaskValue(
+          selectedField,
+          autoDateDuration
+            ? calculateDate({
+                date: task.startDate,
+                duration: autoDateDuration.metric,
+                offset:
+                  autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
+              })
+            : task.startDate
+        );
+      }
+
+      // we need to set the due date if those field are binding together
+      if (selectedField === 'startDate') {
+        if (task.dueDateBinding === START_DATE) {
+          const { weeks, months, days } = task.dueDateInterval || {};
           setTaskValue(
-            selectedField,
-            autoDateDuration
-              ? calculateDate({
-                  date: task.startDate,
-                  duration: autoDateDuration.metric,
-                  offset:
-                    autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-                })
-              : task.startDate
+            'dueDate',
+            calculateDate({
+              date,
+              duration: findDuration({ weeks, months }),
+              offset: weeks || months || days,
+            })
           );
         }
-
-        // we need to set the due date if those field are binding together
-        if (selectedField === 'startDate') {
-          if (task.dueDateBinding === START_DATE) {
-            const { weeks, months, days } = task.dueDateInterval || {};
-            setTaskValue(
-              'dueDate',
-              calculateDate({
-                date,
-                duration: findDuration({ weeks, months }),
-                offset: weeks || months || days,
-              })
-            );
-          }
-        }
-      } else {
-        logger.warn('query product provider data for id', client);
       }
     });
 

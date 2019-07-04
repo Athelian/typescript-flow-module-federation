@@ -63,7 +63,7 @@ export const deleteTaskMutation = gql`
 
 export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
   ...(!values ? {} : { id: values.id }),
-  ...parseTaskField(originalValues, values),
+  ...parseTaskField(originalValues, values, true),
 });
 
 const prepareParseMilestone = (originalValues: Object, newValues: Object): Object => ({

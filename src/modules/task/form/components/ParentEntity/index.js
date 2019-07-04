@@ -12,7 +12,7 @@ import OrderItemValueSpy from './components/OrderItemValueSpy';
 import BatchValueSpy from './components/BatchValueSpy';
 import ShipmentValueSpy from './components/ShipmentValueSpy';
 import ProductValueSpy from './components/ProductValueSpy';
-import ProductProviderValueSpy from './components/ProductProviderSpy';
+import ProductProviderValueSpy from './components/ProductProviderValueSpy';
 
 type Props = {|
   entity: Object,

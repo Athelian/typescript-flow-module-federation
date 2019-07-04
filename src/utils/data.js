@@ -360,7 +360,11 @@ const parseDateFieldForTask = (key: string, originalTask: ?TaskType, newTask: Ta
 };
 
 // Used only in Task Form. For tasks inside other entities, use parseTodoField function.
-export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Object => {
+export const parseTaskField = (
+  originalTask: ?TaskType,
+  newTask: TaskType,
+  isInProject: boolean = false
+): Object => {
   if (isEquals(originalTask, newTask)) return {};
 
   return {
@@ -464,11 +468,13 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'taskTemplate', originalTask),
       newTask.taskTemplate
     ),
-    ...parseParentIdField(
-      'milestoneId',
-      getByPathWithDefault(null, 'milestone', originalTask),
-      newTask.milestone
-    ),
+    ...(!isInProject
+      ? parseParentIdField(
+          'milestoneId',
+          getByPathWithDefault(null, 'milestone', originalTask),
+          newTask.milestone
+        )
+      : {}),
   };
 };
 
