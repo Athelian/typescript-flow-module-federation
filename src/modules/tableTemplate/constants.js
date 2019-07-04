@@ -23,6 +23,9 @@ import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
 import {
   calculateOrderTotalVolume,
+  calculateOrderTotalPrice,
+  calculateOrderItemTotalPrice,
+  calculateBatchTotalPrice,
   calculateShipmentTotalVolume,
   calculateShipmentTotalBatchQuantity,
   calculateShipmentTotalPrice,
@@ -193,6 +196,7 @@ export const batchColumns = [
       'batch.expiredAt',
       'batch.producedAt',
       'batch.tags',
+      'batch.totalPrice',
     ],
     columns: [
       <FormattedMessage {...batchMessages.batchNo} />,
@@ -207,6 +211,7 @@ export const batchColumns = [
       <FormattedMessage {...batchMessages.expiredAt} />,
       <FormattedMessage {...batchMessages.producedAt} />,
       <FormattedMessage {...batchMessages.tags} />,
+      <FormattedMessage {...batchMessages.totalPrice} />,
     ],
   },
   {
@@ -497,42 +502,17 @@ export const orderColumnFields = [
     columnName: 'order.totalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
-      const { orderItems = [], currency } = values;
-      if (orderItems.length === 0) {
-        return `0${currency}`;
-      }
-      return `${orderItems.reduce((total, orderItemId) => {
-        return total + editData.orderItems[orderItemId].price.amount;
-      }, 0)}${currency}`;
+      const { amount, currency } = calculateOrderTotalPrice(values, editData);
+      return `${amount} ${currency}`;
     },
     getExportValue: (values: Object, editData: Object) => {
-      const { orderItems = [], currency } = values;
-      if (orderItems.length === 0) {
-        return `0${currency}`;
-      }
-      return `${orderItems.reduce((total, orderItemId) => {
-        return total + editData.orderItems[orderItemId].price.amount;
-      }, 0)}${currency}`;
+      const { amount, currency } = calculateOrderTotalPrice(values, editData);
+      return `${amount} ${currency}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
-        const { orderItems = [], currency } = values;
-        if (orderItems.length === 0) {
-          return (
-            <>
-              <FormattedNumber value={0} suffix={currency} />
-            </>
-          );
-        }
-
-        const orderTotalPrice = orderItems.reduce((total, orderItemId) => {
-          return total + editData.orderItems[orderItemId].price.amount;
-        }, 0);
-        return (
-          <>
-            <FormattedNumber value={orderTotalPrice} suffix={currency} />
-          </>
-        );
+        const { amount, currency } = calculateOrderTotalPrice(values, editData);
+        return <FormattedNumber value={amount} suffix={currency} />;
       },
     },
   },
@@ -692,23 +672,17 @@ export const orderItemColumnFields = [
     columnName: 'orderItem.totalPrice',
     type: 'calculate',
     getFieldValue: (values: Object, editData: Object) => {
-      const { id: orderItemId } = values;
-      const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
-      const order = editData.orders[orderId];
-      return `${price.amount * quantity}${order.currency}`;
+      const { amount, currency } = calculateOrderItemTotalPrice(values.id, editData);
+      return `${amount} ${currency}`;
     },
     getExportValue: (values: Object, editData: Object) => {
-      const { id: orderItemId } = values;
-      const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
-      const order = editData.orders[orderId];
-      return `${price.amount * quantity}${order.currency}`;
+      const { amount, currency } = calculateOrderItemTotalPrice(values.id, editData);
+      return `${amount} ${currency}`;
     },
     meta: {
       renderValue: (values: Object, editData: Object) => {
-        const { id: orderItemId } = values;
-        const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
-        const order = editData.orders[orderId];
-        return <FormattedNumber value={price.amount * quantity} suffix={order.currency} />;
+        const { amount, currency } = calculateOrderItemTotalPrice(values.id, editData);
+        return <FormattedNumber value={amount} suffix={currency} />;
       },
     },
   },
@@ -916,6 +890,26 @@ export const batchColumnFields = [
     },
     getExportValue: ({ tags }: { tags: Array<Object> } = {}) =>
       tags.reduce((field, tag) => `${field}${tag.name}, `, ''),
+  },
+  {
+    messageId: batchMessages.totalPrice.id,
+    name: 'batchTotalPrice',
+    columnName: 'batch.totalPrice',
+    type: 'calculate',
+    getFieldValue: (values: Object, editData: Object) => {
+      const { amount, currency } = calculateBatchTotalPrice(values.id, editData);
+      return `${amount} ${currency}`;
+    },
+    getExportValue: (values: Object, editData: Object) => {
+      const { amount, currency } = calculateBatchTotalPrice(values.id, editData);
+      return `${amount} ${currency}`;
+    },
+    meta: {
+      renderValue: (values: Object, editData: Object) => {
+        const { amount, currency } = calculateBatchTotalPrice(values.id, editData);
+        return <FormattedNumber value={amount} suffix={currency} />;
+      },
+    },
   },
   {
     messageId: batchMessages.packageName.id,
