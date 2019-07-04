@@ -86,3 +86,59 @@ export function calculateContainerTotalPrice(containerId: string, editData: Obje
 
   return totalBatchesPrice(allBatches, editData);
 }
+
+export const calculateOrderTotalPrice = (
+  order: Object,
+  editData: Object
+): {
+  amount: number,
+  currency: string,
+} => {
+  const { orderItems = [], currency } = order;
+  if (orderItems.length === 0) {
+    return {
+      amount: 0,
+      currency,
+    };
+  }
+
+  const totalAmount = orderItems.reduce((total, orderItemId) => {
+    return total + editData.orderItems[orderItemId].price.amount;
+  }, 0);
+
+  return {
+    amount: totalAmount,
+    currency,
+  };
+};
+
+export const calculateOrderItemTotalPrice = (
+  orderItemId: string,
+  editData: Object
+): {
+  amount: number,
+  currency: string,
+} => {
+  const { price, quantity, order: orderId } = editData.orderItems[orderItemId];
+  const order = editData.orders[orderId];
+  return {
+    amount: price.amount * quantity,
+    currency: order.currency,
+  };
+};
+
+export const calculateBatchTotalPrice = (
+  batchId: string,
+  editData: Object
+): {
+  amount: number,
+  currency: string,
+} => {
+  const { quantity, batchQuantityRevisions, orderItem: orderItemId } = editData.batches[batchId];
+  const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
+  const { price: orderItemPrice } = editData.orderItems[orderItemId];
+  return {
+    amount: orderItemPrice.amount * latestQuantity,
+    currency: orderItemPrice.currency,
+  };
+};
