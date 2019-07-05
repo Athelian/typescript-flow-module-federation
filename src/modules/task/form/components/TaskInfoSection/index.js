@@ -136,8 +136,13 @@ const TaskInfoSection = ({
   const canViewProductForm = hasPermission(PRODUCT_FORM);
 
   const initDuration = {};
+  let isBeforeStartDate = true;
+  let isBeforeDueDate = true;
   if (task && task.startDateBinding) {
     const { months = 0, weeks = 0, days = 0 } = task.startDateInterval || {};
+    if ((months || weeks || days) > 0) {
+      isBeforeStartDate = false;
+    }
     initDuration[task.startDateBinding] = calculateDate({
       duration: findDuration({ months, weeks }),
       date: task.startDate,
@@ -147,6 +152,9 @@ const TaskInfoSection = ({
 
   if (task && task.dueDateBinding) {
     const { months = 0, weeks = 0, days = 0 } = task.dueDateInterval || {};
+    if ((months || weeks || days) > 0) {
+      isBeforeDueDate = false;
+    }
     initDuration[task.dueDateBinding] = calculateDate({
       duration: findDuration({ months, weeks }),
       date: task.dueDate,
@@ -155,6 +163,8 @@ const TaskInfoSection = ({
   }
 
   const parentValues = React.useRef(initDuration);
+  const [isBeforeStartDateBinding, setIsBeforeStartDateBinding] = React.useState(isBeforeStartDate);
+  const [isBeforeDueDateBinding, setIsBeforeDueDateBinding] = React.useState(isBeforeDueDate);
 
   const onChangeBinding = React.useCallback(
     ({
@@ -448,6 +458,7 @@ const TaskInfoSection = ({
                             <ObjectValue
                               value={{
                                 autoDateField: values.dueDateBinding,
+                                autoDateOffset: isBeforeDueDateBinding ? 'before' : 'after',
                                 ...convertBindingToSelection(values.dueDateInterval),
                               }}
                               onChange={({ autoDateOffset, autoDateDuration }) => {
@@ -511,6 +522,7 @@ const TaskInfoSection = ({
                                       name="autoDueDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={(field, value) => {
+                                        setIsBeforeDueDateBinding(value === 'before');
                                         set('autoDateOffset', value);
                                       }}
                                       saveOnChange
@@ -694,6 +706,7 @@ const TaskInfoSection = ({
                               value={{
                                 autoDateField: values.startDateBinding,
                                 ...convertBindingToSelection(values.startDateInterval),
+                                autoDateOffset: isBeforeStartDateBinding ? 'before' : 'after',
                                 dueDateBinding: values.dueDateBinding,
                                 dueDateInterval: values.dueDateInterval,
                               }}
@@ -772,6 +785,7 @@ const TaskInfoSection = ({
                                       name="autoStartDateOffset"
                                       initValue={autoDateOffset}
                                       setFieldValue={(field, value) => {
+                                        setIsBeforeStartDateBinding(value === 'before');
                                         set('autoDateOffset', value);
                                       }}
                                       saveOnChange
