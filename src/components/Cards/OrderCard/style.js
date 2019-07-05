@@ -7,7 +7,7 @@ export const OrderCardWrapperStyle: string = css`
   flex-direction: column;
   align-items: center;
   width: 195px;
-  height: 278px;
+  height: 303px;
 `;
 
 export const OrderInfoWrapperStyle: string = css`
