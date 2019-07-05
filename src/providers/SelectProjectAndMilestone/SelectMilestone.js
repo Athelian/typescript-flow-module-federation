@@ -32,6 +32,7 @@ function SelectMilestone({ onCancel, onSelect, milestones, milestone }: Props) {
                 }}
               />
               <SaveButton
+                data-testid="btnSaveSelectMilestone"
                 disabled={
                   getByPathWithDefault('', 'id', selectedMilestone) ===
                   getByPathWithDefault('', 'id', milestone)

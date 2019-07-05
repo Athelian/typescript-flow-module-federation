@@ -150,6 +150,7 @@ function SelectProducts({
                     </div>
                     <CancelButton onClick={onCancel} />
                     <SaveButton
+                      data-testid="btnSaveSelectProducts"
                       disabled={selected.length === 0}
                       onClick={() => onSelect(removeTypename(selected))}
                     />

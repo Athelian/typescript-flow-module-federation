@@ -36,9 +36,17 @@ Cypress.Commands.add('login', () => {
         },
       },
     };
-    cy.request(options);
+    cy.request(options).then(res => {
+      const { token } = res.body.data.login;
+      cy.task('me', token).then(({ data: { viewer: { user } } }) => {
+        cy.task('language', {
+          token,
+          variables: { id: user.id, input: { language: 'en' } },
+        });
+      });
+    });
+
     cy.visit('/login');
-    cy.url().should('include', '/order');
   });
 });
 Cypress.Commands.add('logout', () => {

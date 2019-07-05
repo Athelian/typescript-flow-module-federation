@@ -8,7 +8,7 @@ import type { IntlShape } from 'react-intl';
 import emitter from 'utils/emitter';
 import { injectUid } from 'utils/id';
 import { getByPath } from 'utils/fp';
-import { isNotFound } from 'utils/data';
+import { isNotFound, isForbidden } from 'utils/data';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import GridColumn from 'components/GridColumn';
@@ -530,40 +530,59 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                     set,
                   }) => (
                     <div>
-                      {milestone && !isNotFound(milestone) ? (
+                      {milestone ? (
                         <div
+                          data-testid="btnSelectMilestone"
                           role="presentation"
                           onClick={() =>
                             canUpdateMilestone ? set('isOpenOfSelector', true) : null
                           }
                         >
-                          <GridColumn>
-                            <FieldItem
-                              label={
-                                <Label>
-                                  <FormattedMessage
-                                    id="modules.task.project"
-                                    defaultMessage="PROJECT"
-                                  />
-                                </Label>
-                              }
-                              input={<ProjectCard project={milestone.project} />}
-                              vertical
-                            />
-
-                            <FieldItem
-                              label={
-                                <Label>
-                                  <FormattedMessage
-                                    id="modules.task.milestone"
-                                    defaultMessage="MILESTONE"
-                                  />
-                                </Label>
-                              }
-                              input={<MilestoneCard milestone={milestone} />}
-                              vertical
-                            />
-                          </GridColumn>
+                          {(() => {
+                            let milestoneObj;
+                            if (isNotFound(milestone)) {
+                              milestoneObj = null;
+                            } else if (isForbidden(milestone)) {
+                              milestoneObj = {
+                                __typename: 'Forbidden',
+                                project: {
+                                  __typename: 'Forbidden',
+                                },
+                              };
+                            } else {
+                              milestoneObj = milestone;
+                            }
+                            return (
+                              <GridColumn>
+                                <FieldItem
+                                  label={
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                  }
+                                  input={
+                                    <ProjectCard project={getByPath('project', milestoneObj)} />
+                                  }
+                                  vertical
+                                />
+                                <FieldItem
+                                  label={
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.milestone"
+                                        defaultMessage="MILESTONE"
+                                      />
+                                    </Label>
+                                  }
+                                  input={<MilestoneCard milestone={milestoneObj} />}
+                                  vertical
+                                />
+                              </GridColumn>
+                            );
+                          })()}
                         </div>
                       ) : (
                         <FieldItem
@@ -579,6 +598,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                             <>
                               {canUpdateMilestone ? (
                                 <DashedPlusButton
+                                  data-testid="btnSelectMilestone"
                                   width="195px"
                                   height="463px"
                                   onClick={() => set('isOpenOfSelector', true)}

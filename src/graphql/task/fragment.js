@@ -67,6 +67,18 @@ export const taskCardFragment = gql`
     tags {
       ...tagFragment
     }
+    milestone {
+      ... on Milestone {
+        id
+        name
+        project {
+          ... on Project {
+            id
+            name
+          }
+        }
+      }
+    }
   }
 `;
 

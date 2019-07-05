@@ -8,12 +8,10 @@ describe('Batch', () => {
 
   it('update a batch', () => {
     cy.visit('/batch')
-      .wait(1000)
       .get('.InfiniteScroll')
       .children()
       .first()
-      .click()
-      .wait(1000);
+      .click();
 
     cy.url().should('include', '/batch/emV');
 
@@ -27,9 +25,8 @@ describe('Batch', () => {
 
       cy.getByTestId('btnSaveBatch')
         .click()
-        .wait(1000);
-
-      cy.get('input[name="no"]').should('have.value', batchNo);
+        .get('input[name="no"]')
+        .should('have.value', batchNo);
     });
   });
 });

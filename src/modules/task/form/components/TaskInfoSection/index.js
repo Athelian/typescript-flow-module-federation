@@ -10,6 +10,7 @@ import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import { UserConsumer } from 'modules/user';
+import { isNotFound, isForbidden } from 'utils/data';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import emitter from 'utils/emitter';
@@ -1030,141 +1031,148 @@ const TaskInfoSection = ({
 
                     {!isInTemplate && !isInProject && (
                       <div>
-                        {editable.milestone ? (
-                          <BooleanValue>
-                            {({ value: opened, set: toggleSlide }) => (
-                              <>
-                                {values.milestone ? (
-                                  <div role="presentation" onClick={() => toggleSlide(true)}>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.task.project"
-                                        defaultMessage="PROJECT"
-                                      />
-                                    </Label>
-                                    <ProjectCard project={values.milestone.project} />
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.task.milestone"
-                                        defaultMessage="MILESTONE"
-                                      />
-                                    </Label>
-                                    <MilestoneCard milestone={values.milestone} />
-                                  </div>
-                                ) : (
-                                  <>
-                                    <Label>
-                                      <FormattedMessage
-                                        id="modules.task.project"
-                                        defaultMessage="PROJECT"
-                                      />
-                                    </Label>
-                                    <DashedPlusButton
-                                      width="195px"
-                                      height="458px"
-                                      onClick={() => toggleSlide(true)}
-                                    />
-                                  </>
-                                )}
-                                <SlideView
-                                  isOpen={opened}
-                                  onRequestClose={() => toggleSlide(false)}
+                        <BooleanValue>
+                          {({ value: opened, set: toggleSlide }) => (
+                            <>
+                              {values.milestone ? (
+                                <div
+                                  role="presentation"
+                                  onClick={() => (editable.milestone ? toggleSlide(true) : null)}
                                 >
-                                  {opened && (
-                                    <SelectProjectAndMilestone
-                                      filter={{
-                                        query: '',
-                                      }}
-                                      project={getByPath('milestone.project', values)}
-                                      milestone={values.milestone}
-                                      onSelect={({ milestone, project }) => {
-                                        setFieldValues({
-                                          milestone: milestone
-                                            ? {
-                                                ...milestone,
-                                                project,
-                                              }
-                                            : null,
-                                        });
-                                        toggleSlide(false);
-                                        if (!manualSettings.dueDate || !manualSettings.startDate) {
-                                          setTimeout(() => {
-                                            if (!manualSettings.dueDate) {
-                                              const { months = 0, weeks = 0, days = 0 } =
-                                                values.dueDateInterval || {};
-                                              emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                                selectedField: 'dueDate',
-                                                field: values.dueDateBinding,
-                                                entityId: getByPath('entity.id', task),
-                                                autoDateDuration: {
-                                                  metric: findDuration({ months, weeks }),
-                                                  value: months || weeks || days,
-                                                },
-                                                autoDateOffset:
-                                                  -(months || weeks || days) > 0
-                                                    ? 'before'
-                                                    : 'after',
-                                              });
+                                  {(() => {
+                                    let milestoneObj;
+                                    if (isNotFound(values.milestone)) {
+                                      milestoneObj = null;
+                                    } else if (isForbidden(values.milestone)) {
+                                      milestoneObj = {
+                                        __typename: 'Forbidden',
+                                        project: {
+                                          __typename: 'Forbidden',
+                                        },
+                                      };
+                                    } else {
+                                      milestoneObj = values.milestone;
+                                    }
+                                    return (
+                                      <GridColumn>
+                                        <FieldItem
+                                          label={
+                                            <Label>
+                                              <FormattedMessage
+                                                id="modules.task.project"
+                                                defaultMessage="PROJECT"
+                                              />
+                                            </Label>
+                                          }
+                                          input={
+                                            <ProjectCard
+                                              project={getByPath('project', milestoneObj)}
+                                            />
+                                          }
+                                          vertical
+                                        />
+                                        <FieldItem
+                                          label={
+                                            <Label>
+                                              <FormattedMessage
+                                                id="modules.task.milestone"
+                                                defaultMessage="MILESTONE"
+                                              />
+                                            </Label>
+                                          }
+                                          input={<MilestoneCard milestone={milestoneObj} />}
+                                          vertical
+                                        />
+                                      </GridColumn>
+                                    );
+                                  })()}
+                                </div>
+                              ) : (
+                                <FieldItem
+                                  label={
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                  }
+                                  input={
+                                    <>
+                                      {editable.milestone ? (
+                                        <DashedPlusButton
+                                          width="195px"
+                                          height="463px"
+                                          onClick={() => toggleSlide(true)}
+                                        />
+                                      ) : (
+                                        <GrayCard width="195px" height="463px" />
+                                      )}
+                                    </>
+                                  }
+                                  vertical
+                                />
+                              )}
+                              <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
+                                {opened && (
+                                  <SelectProjectAndMilestone
+                                    filter={{
+                                      query: '',
+                                    }}
+                                    project={getByPath('milestone.project', values)}
+                                    milestone={values.milestone}
+                                    onSelect={({ milestone, project }) => {
+                                      setFieldValues({
+                                        milestone: milestone
+                                          ? {
+                                              ...milestone,
+                                              project,
                                             }
-                                            if (!manualSettings.startDate) {
-                                              const { months = 0, weeks = 0, days = 0 } =
-                                                values.startDateInterval || {};
-                                              emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                                selectedField: 'startDate',
-                                                field: values.startDateBinding,
-                                                entityId: getByPath('entity.id', task),
-                                                autoDateDuration: {
-                                                  metric: findDuration({ months, weeks }),
-                                                  value: months || weeks || days,
-                                                },
-                                                autoDateOffset:
-                                                  -(months || weeks || days) > 0
-                                                    ? 'before'
-                                                    : 'after',
-                                              });
-                                            }
-                                          }, 200);
-                                        }
-                                      }}
-                                      onCancel={() => toggleSlide(false)}
-                                    />
-                                  )}
-                                </SlideView>
-                              </>
-                            )}
-                          </BooleanValue>
-                        ) : (
-                          <>
-                            {values.milestone ? (
-                              <>
-                                <Label>
-                                  <FormattedMessage
-                                    id="modules.task.project"
-                                    defaultMessage="PROJECT"
+                                          : null,
+                                      });
+                                      toggleSlide(false);
+                                      if (!manualSettings.dueDate || !manualSettings.startDate) {
+                                        setTimeout(() => {
+                                          if (!manualSettings.dueDate) {
+                                            const { months = 0, weeks = 0, days = 0 } =
+                                              values.dueDateInterval || {};
+                                            emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                              selectedField: 'dueDate',
+                                              field: values.dueDateBinding,
+                                              entityId: getByPath('entity.id', task),
+                                              autoDateDuration: {
+                                                metric: findDuration({ months, weeks }),
+                                                value: months || weeks || days,
+                                              },
+                                              autoDateOffset:
+                                                -(months || weeks || days) > 0 ? 'before' : 'after',
+                                            });
+                                          }
+                                          if (!manualSettings.startDate) {
+                                            const { months = 0, weeks = 0, days = 0 } =
+                                              values.startDateInterval || {};
+                                            emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                              selectedField: 'startDate',
+                                              field: values.startDateBinding,
+                                              entityId: getByPath('entity.id', task),
+                                              autoDateDuration: {
+                                                metric: findDuration({ months, weeks }),
+                                                value: months || weeks || days,
+                                              },
+                                              autoDateOffset:
+                                                -(months || weeks || days) > 0 ? 'before' : 'after',
+                                            });
+                                          }
+                                        }, 200);
+                                      }
+                                    }}
+                                    onCancel={() => toggleSlide(false)}
                                   />
-                                </Label>
-                                <ProjectCard project={values.milestone.project} />
-                                <Label>
-                                  <FormattedMessage
-                                    id="modules.task.milestone"
-                                    defaultMessage="MILESTONE"
-                                  />
-                                </Label>
-                                <MilestoneCard milestone={values.milestone} />
-                              </>
-                            ) : (
-                              <>
-                                <Label>
-                                  <FormattedMessage
-                                    id="modules.task.project"
-                                    defaultMessage="PROJECT"
-                                  />
-                                </Label>
-                                <GrayCard width="195px" height="458px" />
-                              </>
-                            )}
-                          </>
-                        )}
+                                )}
+                              </SlideView>
+                            </>
+                          )}
+                        </BooleanValue>
                       </div>
                     )}
                   </GridColumn>

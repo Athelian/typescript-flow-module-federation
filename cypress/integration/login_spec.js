@@ -12,9 +12,10 @@ describe('Login', () => {
     cy.getByTestId('password')
       .type('wrong')
       .should('have.value', 'wrong');
-    cy.getByTestId('submitButton').click();
-    cy.wait(1000);
-    cy.contains('#errorMsg', 'Invalid username/password');
+    cy.getByTestId('submitButton')
+      .click()
+      .get('#errorMsg')
+      .contains('Invalid username/password');
   });
 
   it('Redirect to home page after successful login', function loginSuccess() {
@@ -26,8 +27,9 @@ describe('Login', () => {
     cy.getByTestId('password')
       .type(`${password}`)
       .should('have.value', password);
-    cy.getByTestId('submitButton').click();
-    cy.wait(1000);
-    cy.url().should('include', '/order');
+    cy.getByTestId('submitButton')
+      .click()
+      .url()
+      .should('include', '/order');
   });
 });

@@ -20,17 +20,14 @@ describe('Shipment', () => {
         .should('have.value', shipmentNo)
         .getByTestId('btnSelectBatches')
         .click()
-        .wait(1000)
         .get('.InfiniteScroll')
         .children()
         .first()
         .click()
         .getByTestId('btnSaveSelectBatches')
         .click()
-        .wait(1000)
         .getByTestId('saveButton')
         .click()
-        .wait(1000)
         .should('not.exist');
 
       cy.get('input[name="no"]').should('have.value', shipmentNo);
@@ -51,14 +48,12 @@ describe('Shipment', () => {
         .should('have.value', shipmentNo)
         .getByTestId('btnSelectBatches')
         .click()
-        .wait(1000)
         .get('.InfiniteScroll')
         .children()
         .first()
         .click()
         .getByTestId('btnSaveSelectBatches')
-        .click()
-        .wait(1000);
+        .click();
 
       const cargoReadyDateMoment = Cypress.moment(cargoReadyDate).format('YYYY-MM-DD');
 
@@ -74,8 +69,7 @@ describe('Shipment', () => {
       cy.getByTestId('cargoReady_addDateButton').click();
       cy.getByTestId('cargoReady_DateRevisions')
         .children()
-        .should('have.length', 3)
-        .wait(500);
+        .should('have.length', 3);
 
       cy.getByTestId('voyageSelector').click();
       cy.getByTestId('voyageOptions')
