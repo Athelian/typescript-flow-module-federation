@@ -46,9 +46,7 @@ describe('Product', () => {
 
         cy.getByTestId('saveProviderButton').click();
 
-        cy.getByTestId('saveButton')
-          .click()
-          .wait(1000);
+        cy.getByTestId('saveButton').click();
 
         cy.url().should('include', '/product/emV');
 
@@ -78,7 +76,6 @@ describe('Product', () => {
         .blur();
       cy.getByTestId('saveButton')
         .click()
-        .wait(1000)
         .should('not.exist');
 
       cy.get('input[name="name"]').should('have.value', updatedName);
@@ -88,9 +85,7 @@ describe('Product', () => {
   it('clone a product', () => {
     cy.task('fixture', 'product').then(
       ({ clonedName, clonedSerial, clonedJanCode, clonedHsCode, material }) => {
-        cy.getByTestId('cloneButton')
-          .click()
-          .wait(1000);
+        cy.getByTestId('cloneButton').click();
 
         cy.url().should('include', 'clone');
 
@@ -111,9 +106,7 @@ describe('Product', () => {
           .type(material)
           .blur();
 
-        cy.getByTestId('saveButton')
-          .click()
-          .wait(1000);
+        cy.getByTestId('saveButton').click();
 
         cy.url().should('include', '/product/emV');
 
@@ -131,25 +124,22 @@ describe('Product', () => {
     );
   });
 
-  it('archive a product', () => {
+  it.skip('archive a product', () => {
     cy.getByTestId('archivedStatusToggle').click();
     cy.get('#dialog-root')
       .children()
       .should('have.length', 1);
-    cy.getByTestId('archiveButton')
-      .click()
-      .wait(1000);
+    cy.getByTestId('archiveButton').click();
+
     cy.get('svg[data-icon="toggle-off"]').should('be.exist');
   });
 
-  it('activate a product', () => {
+  it.skip('activate a product', () => {
     cy.getByTestId('archivedStatusToggle').click();
     cy.get('#dialog-root')
       .children()
       .should('have.length', 1);
-    cy.getByTestId('activeButton')
-      .click()
-      .wait(1000);
+    cy.getByTestId('activeButton').click();
     cy.get('svg[data-icon="toggle-on"]').should('be.exist');
   });
 });

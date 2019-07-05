@@ -9,12 +9,10 @@ describe('Order update action', () => {
   it('should change the order info section', () => {
     // select first order
     cy.visit('/order')
-      .wait(1000)
       .get('.InfiniteScroll')
       .children()
       .first()
-      .click()
-      .wait(1000);
+      .click();
 
     cy.url().should('include', '/order/emV');
 
@@ -27,7 +25,6 @@ describe('Order update action', () => {
         .blur()
         .getByTestId('addAssignerButton')
         .click()
-        .wait(1000)
         .get('.InfiniteScroll')
         .children()
         .first()
@@ -43,7 +40,6 @@ describe('Order update action', () => {
         .clear()
         .type(incoterm)
         .should('have.value', incoterm)
-        .wait(500)
         .get('input[name="deliveryPlace"]')
         .clear()
         .type(deliveryPlace)
@@ -53,10 +49,8 @@ describe('Order update action', () => {
         .type(memo)
         .should('have.value', memo)
         .blur()
-        .getByTestId('saveButton')
-        .click()
-        .wait(1000)
-        .should('not.exist');
+        .get('[data-testid="btnSaveOrder"]')
+        .click();
 
       // Verify the input data is correct after saving
       cy.get('input[name="poNo"]').should('have.value', poNo);

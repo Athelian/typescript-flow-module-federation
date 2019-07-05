@@ -9,12 +9,10 @@ describe('Order items section', () => {
   it('should change add 3 order items as same kind', () => {
     // select first order
     cy.visit('/order')
-      .wait(1000)
       .get('.InfiniteScroll')
       .children()
       .first()
-      .click()
-      .wait(1000);
+      .click();
 
     cy.url().should('include', '/order/emV');
 
@@ -23,7 +21,6 @@ describe('Order items section', () => {
 
     cy.getByTestId('btnNewItems')
       .click()
-      .wait(1000)
       .get('.InfiniteScroll')
       .children()
       .first()
@@ -31,13 +28,12 @@ describe('Order items section', () => {
       .getByTestId('increaseButton')
       .click()
       .click()
-      .getByTestId('saveButton')
+      .get('[data-testid="btnSaveSelectProducts"]')
       .children()
       .last()
       .click()
-      .getByTestId('saveButton')
+      .get('[data-testid="btnSaveOrder"]')
       .click()
-      .wait(2000) // API slow
       .should('not.exist');
   });
 });
