@@ -113,7 +113,6 @@ export const shipmentsInProductQuery = gql`
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
-  ${userAvatarFragment}
   ${metricFragment}
   ${taskCountFragment}
   ${partnerNameFragment}

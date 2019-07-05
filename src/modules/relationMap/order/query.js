@@ -171,6 +171,7 @@ export const shipmentCardRMFragment = gql`
     blNo
     booked
     transportType
+    totalPackageQuantity
     batchCount
     orderItemCount
     importer {
@@ -191,9 +192,6 @@ export const shipmentCardRMFragment = gql`
     }
     tags {
       ...tagFragment
-    }
-    inCharges {
-      ...userAvatarFragment
     }
     todo {
       taskCount {

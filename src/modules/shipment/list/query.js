@@ -7,7 +7,6 @@ import {
   timelineDateMinimalFragment,
   tagFragment,
   portFragment,
-  userAvatarFragment,
   metricFragment,
   taskCountFragment,
   partnerNameFragment,
@@ -41,7 +40,6 @@ export const shipmentListQuery = gql`
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
-  ${userAvatarFragment}
   ${metricFragment}
   ${taskCountFragment}
   ${partnerNameFragment}

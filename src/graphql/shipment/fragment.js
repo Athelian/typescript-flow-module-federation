@@ -157,9 +157,6 @@ export const shipmentCardFragment = gql`
         ...taskCountFragment
       }
     }
-    inCharges {
-      ...userAvatarFragment
-    }
     voyages {
       ... on Voyage {
         id
