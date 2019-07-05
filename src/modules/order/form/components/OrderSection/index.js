@@ -47,6 +47,7 @@ import {
   ORDER_SET_CURRENCY,
   ORDER_SET_DELIVERY_PLACE,
   ORDER_SET_ISSUE_AT,
+  ORDER_SET_DELIVERY_DATE,
   ORDER_SET_CUSTOM_FIELDS,
   ORDER_SET_CUSTOM_FIELDS_MASK,
   ORDER_SET_MEMO,
@@ -195,6 +196,24 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                         </FormField>
                       )}
                     </Subscribe>
+
+                    <FormField
+                      name="deliveryDate"
+                      initValue={values.deliveryDate}
+                      setFieldValue={setFieldValue}
+                      values={values}
+                      validator={validator}
+                    >
+                      {({ name, ...inputHandlers }) => (
+                        <DateInputFactory
+                          name={name}
+                          {...inputHandlers}
+                          originalValue={initialValues.deliveryDate}
+                          label={<FormattedMessage {...messages.deliveryDate} />}
+                          editable={hasPermission([ORDER_UPDATE, ORDER_SET_DELIVERY_DATE])}
+                        />
+                      )}
+                    </FormField>
 
                     <BooleanValue>
                       {({ value: isOpen, set: setPriceDialog }) => (

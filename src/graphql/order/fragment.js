@@ -26,6 +26,7 @@ export const orderFormQueryFragment = gql`
     batchShippedCount
     shipmentCount
     issuedAt
+    deliveryDate
     piNo
     incoterm
     deliveryPlace
@@ -69,6 +70,7 @@ export const orderFormFragment = gql`
     batchShippedCount
     shipmentCount
     issuedAt
+    deliveryDate
     piNo
     incoterm
     deliveryPlace
