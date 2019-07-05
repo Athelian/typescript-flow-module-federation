@@ -131,6 +131,7 @@ export const shipmentCardFragment = gql`
     booked
     transportType
     batchCount
+    totalPackageQuantity
     orderItemCount
     totalVolume {
       ...metricFragment
