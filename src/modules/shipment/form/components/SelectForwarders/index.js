@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import type { Partner } from 'generated/graphql';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
@@ -20,7 +21,7 @@ type Props = {|
     id: string,
     name: string,
   }>,
-  onSelect: (item: Object) => void,
+  onSelect: (item: Partner) => void,
   onCancel: Function,
   intl: IntlShape,
 |};
@@ -29,29 +30,26 @@ const MAX_SELECTIONS = 4;
 
 function onSelectForwarders({
   selected,
+  isSelected,
   item,
   push,
   set,
 }: {
-  selected: Array<Object>,
-  item: Object,
+  isSelected: boolean,
+  selected: Array<{
+    id: string,
+    name: string,
+  }>,
+  item: Partner,
   push: Function,
   set: Function,
 }) {
-  if (!selected.includes(item)) {
+  if (!isSelected) {
     if (selected.length < MAX_SELECTIONS) push(item);
   } else {
     set(selected.filter((orderItem: Object) => orderItem.id !== item.id));
   }
 }
-
-const selectedItems = (selected: ?Array<{ id: string, name: string }>, items: Array<Object>) => {
-  if (selected) {
-    const itemIds = selected.map(item => item.id);
-    return items.filter(item => itemIds.includes(item.id));
-  }
-  return [];
-};
 
 const getInitFilter = (): Object => {
   return {
@@ -93,7 +91,7 @@ const SelectForwarders = ({ selected, onCancel, onSelect, intl }: Props) => {
         const hasMore = nextPage <= totalPage;
 
         return (
-          <ArrayValue defaultValue={selectedItems(selected, items)}>
+          <ArrayValue defaultValue={selected}>
             {({ value: values, push, set }) => (
               <Layout
                 navBar={
@@ -120,15 +118,20 @@ const SelectForwarders = ({ selected, onCancel, onSelect, intl }: Props) => {
                   isLoading={loading}
                   onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
                   items={items}
-                  renderItem={item => (
-                    <PartnerCard
-                      partner={item}
-                      key={item.id}
-                      onSelect={() => onSelectForwarders({ selected: values, item, push, set })}
-                      selectable
-                      selected={values.includes(item)}
-                    />
-                  )}
+                  renderItem={item => {
+                    const isSelected = values.map(({ id }) => id).includes(item.id);
+                    return (
+                      <PartnerCard
+                        partner={item}
+                        key={item.id}
+                        onSelect={() =>
+                          onSelectForwarders({ selected: values, isSelected, item, push, set })
+                        }
+                        selectable
+                        selected={isSelected}
+                      />
+                    );
+                  }}
                 />
               </Layout>
             )}

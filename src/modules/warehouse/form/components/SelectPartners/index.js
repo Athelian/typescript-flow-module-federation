@@ -44,32 +44,25 @@ const MAX_SELECTIONS = 4;
 const partnerPath = 'viewer.user.group.partners';
 
 function onSelectPartners({
+  isSelected,
   selected,
   item,
   push,
   set,
 }: {
+  isSelected: boolean,
   selected: Array<Object>,
   item: Object,
   push: Function,
   set: Function,
 }) {
-  if (!selected.includes(item)) {
+  if (!isSelected) {
     if (selected.length < MAX_SELECTIONS) push(item);
   } else {
     set(selected.filter((orderItem: Object) => orderItem.id !== item.id));
   }
 }
 
-const selectedItems = (selected: ?Array<{ id: string, name: string }>, items: Array<Object>) => {
-  if (selected) {
-    const itemIds = selected.map(item => item.id);
-    return items.filter(item => itemIds.includes(item.id));
-  }
-  return [];
-};
-
-// FIXME: need to check the selected items
 const SelectPartners = ({ selected, onCancel, onSelect, intl }: Props) => {
   const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter(getInitFilter());
   const sortFields = [
@@ -93,7 +86,7 @@ const SelectPartners = ({ selected, onCancel, onSelect, intl }: Props) => {
         const hasMore = nextPage <= totalPage;
 
         return (
-          <ArrayValue defaultValue={selectedItems(selected, items)}>
+          <ArrayValue defaultValue={selected}>
             {({ value: values, push, set }) => (
               <Layout
                 navBar={
@@ -123,15 +116,20 @@ const SelectPartners = ({ selected, onCancel, onSelect, intl }: Props) => {
                   isLoading={loading}
                   onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
                   items={items}
-                  renderItem={item => (
-                    <PartnerCard
-                      partner={item}
-                      key={item.id}
-                      onSelect={() => onSelectPartners({ selected: values, item, push, set })}
-                      selectable
-                      selected={values.map(({ id }) => id).includes(item.id)}
-                    />
-                  )}
+                  renderItem={item => {
+                    const isSelected = values.map(({ id }) => id).includes(item.id);
+                    return (
+                      <PartnerCard
+                        partner={item}
+                        key={item.id}
+                        onSelect={() =>
+                          onSelectPartners({ selected: values, isSelected, item, push, set })
+                        }
+                        selectable
+                        selected={isSelected}
+                      />
+                    );
+                  }}
                 />
               </Layout>
             )}
