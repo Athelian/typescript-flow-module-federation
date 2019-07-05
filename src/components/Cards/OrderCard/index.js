@@ -42,6 +42,7 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
     archived,
     poNo,
     issuedAt,
+    deliveryDate,
     totalPrice,
     totalOrdered,
     totalBatched,
@@ -108,6 +109,21 @@ const OrderCard = ({ order, actions, onClick, ...rest }: Props) => {
               </Display>
             }
           />
+          <FieldItem
+            label={
+              <Label>
+                <FormattedMessage
+                  id="components.cards.contractDate"
+                  defaultMessage="CONTRACT DATE"
+                />
+              </Label>
+            }
+            input={
+              <Display>
+                <FormattedDate value={deliveryDate} />
+              </Display>
+            }
+          />
           <div className={DividerStyle} />
           <div className={ChartWrapperStyle}>
             <QuantityChart
@@ -149,7 +165,7 @@ OrderCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(OrderCard, 'order', {
   width: '195px',
-  height: '278px',
+  height: '303px',
   entityIcon: 'ORDER',
   entityColor: 'ORDER',
 });

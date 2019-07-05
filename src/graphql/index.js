@@ -12,7 +12,6 @@ import {
   orderFormQueryFragment,
   orderCardFragment,
   orderCardWithOwnedFragment,
-  orderBasicFragment,
 } from './order/fragment';
 import { partnerFormFragment, partnerCardFragment } from './partner/fragment';
 import {
@@ -90,7 +89,6 @@ export {
   orderFormQueryFragment,
   orderCardFragment,
   orderCardWithOwnedFragment,
-  orderBasicFragment,
   partnerFormFragment,
   partnerCardFragment,
   productFormFragment,
