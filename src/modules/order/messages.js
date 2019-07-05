@@ -106,6 +106,10 @@ export default defineMessages({
     id: 'modules.Orders.issuedAt',
     defaultMessage: 'PO Date',
   },
+  deliveryDate: {
+    id: 'modules.order.deliveryDate',
+    defaultMessage: 'Contract Delivery Date',
+  },
   PI: {
     id: 'modules.Orders.piNo',
     defaultMessage: 'PI NO.',
