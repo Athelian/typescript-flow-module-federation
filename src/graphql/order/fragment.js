@@ -26,6 +26,7 @@ export const orderFormQueryFragment = gql`
     batchShippedCount
     shipmentCount
     issuedAt
+    deliveryDate
     piNo
     incoterm
     deliveryPlace
@@ -69,6 +70,7 @@ export const orderFormFragment = gql`
     batchShippedCount
     shipmentCount
     issuedAt
+    deliveryDate
     piNo
     incoterm
     deliveryPlace
@@ -121,84 +123,6 @@ export const orderFormFragment = gql`
   }
 `;
 
-export const orderBasicFragment = gql`
-  fragment orderBasicFragment on Order {
-    id
-    archived
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    memo
-    poNo
-    currency
-    issuedAt
-    piNo
-    incoterm
-    deliveryPlace
-    customFields {
-      ...customFieldsFragment
-    }
-    exporter {
-      ...partnerCardFragment
-    }
-    inCharges {
-      ...userAvatarFragment
-    }
-    tags {
-      ...tagFragment
-    }
-    todo {
-      taskCount {
-        ...taskCountFragment
-      }
-    }
-    files {
-      ...documentFragment
-    }
-    totalPrice {
-      ...priceFragment
-    }
-    orderItems {
-      ... on OrderItem {
-        id
-        quantity
-        price {
-          ...priceFragment
-        }
-        productProvider {
-          ... on ProductProvider {
-            id
-            unitPrice {
-              currency
-              amount
-            }
-            product {
-              ... on Product {
-                id
-                name
-                serial
-                files {
-                  ...imageFragment
-                }
-              }
-            }
-            exporter {
-              ...partnerNameFragment
-            }
-            supplier {
-              ...partnerNameFragment
-            }
-          }
-        }
-        batches {
-          ...batchFormFragment
-        }
-      }
-    }
-  }
-`;
-
 export const orderCardFragment = gql`
   fragment orderCardFragment on Order {
     id
@@ -208,6 +132,7 @@ export const orderCardFragment = gql`
     archived
     poNo
     issuedAt
+    deliveryDate
     totalPrice {
       ...priceFragment
     }

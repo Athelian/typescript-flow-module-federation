@@ -113,6 +113,11 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
     getByPathWithDefault(null, 'issuedAt', originalValues),
     newValues.issuedAt
   ),
+  ...parseDateField(
+    'deliveryDate',
+    getByPathWithDefault(null, 'deliveryDate', originalValues),
+    newValues.deliveryDate
+  ),
   ...parseEnumField(
     'currency',
     getByPathWithDefault(null, 'currency', originalValues),

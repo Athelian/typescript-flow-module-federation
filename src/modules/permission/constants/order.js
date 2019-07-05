@@ -13,6 +13,7 @@ export const ORDER_SET_MEMO = 'order.orders.setMemo';
 export const ORDER_SET_ARCHIVED = 'order.orders.setArchived';
 export const ORDER_SET_CURRENCY = 'order.orders.setCurrency';
 export const ORDER_SET_DELIVERY_PLACE = 'order.orders.setDeliveryPlace';
+export const ORDER_SET_DELIVERY_DATE = 'order.orders.setDeliveryDate';
 export const ORDER_SET_DOCUMENTS = 'order.orders.setDocuments';
 export const ORDER_SET_EXPORTER = 'order.orders.setExporter';
 export const ORDER_SET_IMPORTER = 'order.orders.setImporter';
