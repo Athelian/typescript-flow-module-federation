@@ -1,10 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
 import {
+  milestoneCardFragment,
+  projectCardFragment,
   taskTemplateCardFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
-  todoFragment,
+  taskCountFragment,
   userAvatarFragment,
   tagFragment,
   forbiddenFragment,
@@ -16,7 +18,17 @@ export const orderFormTasksQuery = gql`
       ... on Order {
         id
         todo {
-          ...todoFragment
+          milestone {
+            ... on Milestone {
+              ...milestoneCardFragment
+              project {
+                ...projectCardFragment
+              }
+            }
+          }
+          taskCount {
+            ...taskCountFragment
+          }
           tasks {
             ...taskWithoutParentInfoFragment
             ...forbiddenFragment
@@ -30,10 +42,12 @@ export const orderFormTasksQuery = gql`
     }
   }
 
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${forbiddenFragment}

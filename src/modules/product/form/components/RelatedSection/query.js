@@ -5,7 +5,7 @@ import {
   tagFragment,
   priceFragment,
   userAvatarFragment,
-  todoFragment,
+  taskCountFragment,
   itemCardFragment,
   imageFragment,
   batchCardFragment,
@@ -34,7 +34,7 @@ export const ordersInProductQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${userAvatarFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${ownedByFragment}
 `;
 
@@ -55,7 +55,7 @@ export const itemsInProductQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}
-  ${todoFragment}
+  ${taskCountFragment}
 `;
 
 export const batchesInProductQuery = gql`
@@ -76,7 +76,7 @@ export const batchesInProductQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}
-  ${todoFragment}
+  ${taskCountFragment}
 `;
 
 export const containersInProductQuery = gql`
@@ -115,6 +115,6 @@ export const shipmentsInProductQuery = gql`
   ${portFragment}
   ${userAvatarFragment}
   ${metricFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${partnerNameFragment}
 `;

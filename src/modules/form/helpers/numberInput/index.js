@@ -41,7 +41,12 @@ const numberInputFactory = ({
   originalValue,
   renderCalculate = renderDefaultCalculateComponent,
 }: {
-  WrapperComponent?: () => React.Node,
+  WrapperComponent?: ({
+    transparent?: boolean,
+    tabIndex?: string,
+    id?: string,
+    children: React.Node,
+  }) => React.Node,
   required?: boolean,
   hasTooltip?: boolean,
   align?: string,

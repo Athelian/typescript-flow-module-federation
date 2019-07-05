@@ -30,7 +30,7 @@ const ProjectList = ({ ...filtersAndSort }: Props) => {
         if (error) {
           return error.message;
         }
-        const nextPage = getByPathWithDefault(1, 'project.page', data) + 1;
+        const nextPage = getByPathWithDefault(1, 'projects.page', data) + 1;
         const totalPage = getByPathWithDefault(1, 'projects.totalPage', data);
         const hasMore = nextPage <= totalPage;
 

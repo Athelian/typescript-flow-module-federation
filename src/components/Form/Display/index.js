@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Blackout } from 'components/Form';
+import Blackout from '../Blackout';
 import { DisplayWrapperStyle } from './style';
 
 type OptionalProps = {

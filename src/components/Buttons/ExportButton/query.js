@@ -8,7 +8,6 @@ export const exportTemplatesQuery = gql`
         id
         name
         extension
-        dynamic
       }
     }
   }

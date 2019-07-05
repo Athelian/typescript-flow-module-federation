@@ -2,13 +2,13 @@
 import { css } from 'react-emotion';
 import { layout, colors, presets, borderRadiuses, fontSizes, transitions } from 'styles/common';
 
-export const TaskCardWrapperStyle = (hideParentInfo: boolean): string => css`
+export const TaskCardWrapperStyle = (cardHeight: string): string => css`
   position: relative;
   ${layout.GRID_VERTICAL};
   grid-template-columns: 195px;
   grid-gap: 5px;
   width: 195px;
-  height: ${hideParentInfo ? '159px' : '184px'};
+  height: ${cardHeight};
   padding: 5px 0 10px 0;
 `;
 
@@ -115,10 +115,59 @@ export const DividerStyle: string = css`
   margin: 0 10px;
 `;
 
+export const ProjectInfoStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 155px;
+  width: 100%;
+  padding: 0 0 0 10px;
+  align-items: center;
+`;
+
+export const ProjectIconStyle = (has: boolean = false): string => css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${has ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  color: ${colors.WHITE};
+  font-size: 11px;
+  ${has &&
+    `
+      &:hover, :focus {
+        background-color: ${colors.TEAL_DARK};
+      }
+    `};
+`;
+
+export const MilestoneInfoStyle: string = css`
+  display: grid;
+  grid-template-columns: 20px 155px;
+  width: 100%;
+  padding: 0 0 0 10px;
+  align-items: center;
+`;
+
+export const MilestoneIconStyle = (has: boolean = false): string => css`
+  ${presets.BUTTON};
+  ${borderRadiuses.MAIN};
+  width: 20px;
+  height: 20px;
+  background-color: ${has ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  color: ${colors.WHITE};
+  font-size: 11px;
+`;
+
 export const TaskStatusWrapperStyle: string = css`
-  height: 40px;
+  height: 65px;
   width: 195px;
   padding: 0 10px;
+`;
+
+export const TaskStatusPlaceholderStyle: string = css`
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  color: ${colors.GRAY_LIGHT};
+  ${presets.ELLIPSIS};
 `;
 
 export const TaskTagsWrapperStyle: string = css`
@@ -140,7 +189,7 @@ export const ApprovalWrapperStyle: string = css`
 
 export const ApprovalPanelWrapperStyle = (height: string) => css`
   position: relative;
-  background-color: ${colors.BLUE};
+  background-color: ${colors.GRAY_LIGHT};
   ${borderRadiuses.MAIN};
   height: ${height};
   width: 100%;
@@ -203,9 +252,37 @@ export const ApprovalButtonStyle = (
   `};
   ${isExpanded &&
     `
-    background-color: ${colors.PURPLE};
+    background-color: ${colors.GRAY};
     &:hover, :focus {
-      background-color: ${colors.PURPLE_DARK};
+      background-color: ${colors.GRAY_DARK};
     }
   `};
+`;
+
+export const ApprovalStatusPlaceholderStyle: string = css`
+  ${fontSizes.MAIN};
+  font-weight: bold;
+  color: ${colors.WHITE};
+  white-space: wrap;
+`;
+
+export const UnapprovedButtonStyle = (editable: boolean): string => css`
+  ${presets.BUTTON};
+  height: 40px;
+  width: 175px;
+  ${borderRadiuses.BUTTON};
+  ${fontSizes.SMALL};
+  letter-spacing: 2px;
+  color: ${colors.GRAY_DARK};
+  background-color: ${colors.GRAY_SUPER_LIGHT};
+  ${editable
+    ? `
+    &:hover,
+    :focus {
+      background-color: ${colors.GRAY_VERY_LIGHT};
+    }
+  `
+    : `
+    cursor: inherit;
+  `}
 `;

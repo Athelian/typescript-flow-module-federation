@@ -1,7 +1,7 @@
 // @flow
 import * as Yup from 'yup';
 
-export default Yup.object().shape({
+export default (Yup.object().shape({
   exporter: Yup.string().required(),
   name: Yup.string().required(),
   todo: Yup.object().shape({
@@ -11,4 +11,4 @@ export default Yup.object().shape({
       })
     ),
   }),
-});
+}): Object);

@@ -22,7 +22,9 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
-  todoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  taskCountFragment,
   taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
@@ -90,7 +92,9 @@ export const updateOrderMutation = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
-  ${todoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskCountFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
@@ -160,7 +164,11 @@ export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Obje
   ),
   ...parseFilesField('files', getByPathWithDefault(null, 'files', originalValues), newValues.files),
   ...parseTodoField(
-    getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+    getByPathWithDefault(
+      { tasks: [], taskTemplate: null, milestone: null },
+      'todo',
+      originalValues
+    ),
     newValues.todo
   ),
 });

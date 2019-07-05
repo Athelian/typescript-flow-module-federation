@@ -4,7 +4,7 @@ import { omit } from 'lodash';
 import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import SlideView from 'components/SlideView';
-import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
+import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import TaskFormInSlide from 'modules/task/common/TaskFormInSlide';
 import { TaskCard, CardAction } from 'components/Cards';
 import { ItemStyle, EmptyMessageStyle } from './style';
@@ -19,7 +19,10 @@ type Props = OptionalProps & {
   onSwap: Function,
   onRemove: Function,
   onSave: Function,
-  editable: TaskEditable,
+  editable: TaskCardEditableProps,
+  navigable: {
+    project: boolean,
+  },
   removable: boolean,
   sortable: boolean,
   viewForm: boolean,
@@ -38,6 +41,7 @@ const Tasks = ({
   onRemove,
   onSave,
   editable,
+  navigable,
   viewForm,
   removable,
   sortable,
@@ -52,7 +56,6 @@ const Tasks = ({
       </div>
     );
 
-  const isEditable = Object.keys(editable).some(key => editable[key]);
   return (tasks.map((task, index) => (
     <div id={`task_${task.id}`} className={ItemStyle} key={task.id}>
       <BooleanValue>
@@ -62,6 +65,7 @@ const Tasks = ({
               groupIds={groupIds}
               isInTemplate={isInTemplate}
               editable={editable}
+              navigable={navigable}
               entity={{
                 ...task.entity,
                 __typename: type,
@@ -100,8 +104,7 @@ const Tasks = ({
                     id: entityId,
                   }}
                   parentEntity={type}
-                  isInTemplate={isInTemplate}
-                  editable={isEditable}
+                  inParentEntityForm
                   task={{ ...omit(task, ['entity']), sort: index }}
                   onSave={value => {
                     selectTaskSlideToggle(false);

@@ -122,11 +122,17 @@ const ShipmentSummary = () => {
           }
         });
 
-        const tasksPending = tasks.filter(item => isNullOrUndefined(item.inProgressAt)).length;
+        const tasksCompleted = tasks.filter(item => !isNullOrUndefined(item.completedAt)).length;
         const tasksInProgress = tasks.filter(
           item => !isNullOrUndefined(item.inProgressAt) && isNullOrUndefined(item.completedAt)
         ).length;
-        const tasksCompleted = tasks.filter(item => !isNullOrUndefined(item.completedAt)).length;
+        const tasksUncompleted = tasks.filter(
+          item =>
+            isNullOrUndefined(item.inProgressAt) &&
+            isNullOrUndefined(item.completedAt) &&
+            isNullOrUndefined(item.skippedAt)
+        ).length;
+        const tasksSkipped = tasks.filter(item => !isNullOrUndefined(item.skippedAt)).length;
         const tasksApproved = tasks.filter(item => !isNullOrUndefined(item.approvedAt)).length;
         const tasksRejected = tasks.filter(item => !isNullOrUndefined(item.rejectedAt)).length;
 
@@ -370,27 +376,28 @@ const ShipmentSummary = () => {
                   <FieldItem
                     label={
                       <>
-                        <div className={TaskIconStyle('GRAY_DARK')}>
-                          <Icon icon="TASK" />
+                        <div className={TaskIconStyle('TEAL')}>
+                          <Icon icon="CHECKED" />
                         </div>
                         <Label>
                           <FormattedMessage
-                            id="modules.Shipments.pending"
-                            defaultMessage="PENDING"
+                            id="modules.Shipments.completed"
+                            defaultMessage="COMPLETED"
                           />
                         </Label>
                       </>
                     }
                     input={
                       <Display>
-                        <FormattedNumber value={tasksPending} />
+                        <FormattedNumber value={tasksCompleted} />
                       </Display>
                     }
                   />
+
                   <FieldItem
                     label={
                       <>
-                        <div className={TaskIconStyle('GRAY_DARK')}>
+                        <div className={TaskIconStyle('TEAL')}>
                           <Icon icon="CLOCK" />
                         </div>
                         <Label>
@@ -407,33 +414,56 @@ const ShipmentSummary = () => {
                       </Display>
                     }
                   />
+
                   <FieldItem
                     label={
                       <>
-                        <div className={TaskIconStyle('TEAL')}>
-                          <Icon icon="CONFIRM" />
+                        <div className={TaskIconStyle('GRAY_SUPER_LIGHT')}>
+                          <Icon icon="CHECKED" />
                         </div>
-                        <Label color="TEAL">
+                        <Label>
                           <FormattedMessage
-                            id="modules.Shipments.completed"
-                            defaultMessage="COMPLETED"
+                            id="modules.Shipments.uncompleted"
+                            defaultMessage="UNCOMPLETED"
                           />
                         </Label>
                       </>
                     }
                     input={
                       <Display>
-                        <FormattedNumber value={tasksCompleted} />
+                        <FormattedNumber value={tasksUncompleted} />
                       </Display>
                     }
                   />
+
+                  <FieldItem
+                    label={
+                      <>
+                        <div className={TaskIconStyle('GRAY_DARK')}>
+                          <Icon icon="SKIPPED" />
+                        </div>
+                        <Label>
+                          <FormattedMessage
+                            id="modules.Shipments.skipped"
+                            defaultMessage="SKIPPED"
+                          />
+                        </Label>
+                      </>
+                    }
+                    input={
+                      <Display>
+                        <FormattedNumber value={tasksSkipped} />
+                      </Display>
+                    }
+                  />
+
                   <FieldItem
                     label={
                       <>
                         <div className={TaskIconStyle('BLUE')}>
                           <Icon icon="CHECKED" />
                         </div>
-                        <Label color="BLUE">
+                        <Label>
                           <FormattedMessage
                             id="modules.Shipments.approved"
                             defaultMessage="APPROVED"
@@ -447,13 +477,14 @@ const ShipmentSummary = () => {
                       </Display>
                     }
                   />
+
                   <FieldItem
                     label={
                       <>
                         <div className={TaskIconStyle('RED')}>
                           <Icon icon="CANCEL" />
                         </div>
-                        <Label color="RED">
+                        <Label>
                           <FormattedMessage
                             id="modules.Shipments.rejected"
                             defaultMessage="REJECTED"

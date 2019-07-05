@@ -1,17 +1,21 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { BooleanValue } from 'react-values';
+import { BooleanValue, ObjectValue } from 'react-values';
 import { lowerFirst } from 'lodash';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import emitter from 'utils/emitter';
 import { injectUid } from 'utils/id';
+import { getByPath } from 'utils/fp';
+import { isNotFound, isForbidden } from 'utils/data';
 import { SectionNavBar } from 'components/NavBar';
 import SlideView from 'components/SlideView';
+import GridColumn from 'components/GridColumn';
 import { NewButton } from 'components/Buttons';
-import { SectionWrapper, SectionHeader, DashedPlusButton, Label } from 'components/Form';
-import { TemplateCard, GrayCard } from 'components/Cards';
-import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
+import { SectionWrapper, SectionHeader, DashedPlusButton, Label, FieldItem } from 'components/Form';
+import { TemplateCard, GrayCard, ProjectCard, MilestoneCard } from 'components/Cards';
+import type { TaskCardEditableProps } from 'components/Cards/TaskCard/type.js.flow';
 import FormattedNumber from 'components/FormattedNumber';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
@@ -30,16 +34,16 @@ import {
   ORDER_TASK_FORM,
   ORDER_TASK_LIST,
   ORDER_SET_TASKS,
+  ORDER_SET_MILESTONE,
   ORDER_SET_TASK_TEMPLATE,
   ORDER_TASK_SET_NAME,
   ORDER_TASK_SET_DUE_DATE,
   ORDER_TASK_SET_START_DATE,
   ORDER_TASK_SET_IN_PROGRESS,
+  ORDER_TASK_SET_SKIPPED,
   ORDER_TASK_SET_COMPLETED,
-  ORDER_TASK_SET_ASSIGNEES,
   ORDER_TASK_SET_APPROVED,
   ORDER_TASK_SET_REJECTED,
-  ORDER_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_UPDATE,
@@ -49,16 +53,16 @@ import {
   ORDER_ITEMS_TASK_FORM,
   ORDER_ITEMS_TASK_LIST,
   ORDER_ITEMS_SET_TASKS,
+  ORDER_ITEMS_SET_MILESTONE,
   ORDER_ITEMS_SET_TASK_TEMPLATE,
   ORDER_ITEMS_TASK_SET_NAME,
   ORDER_ITEMS_TASK_SET_DUE_DATE,
   ORDER_ITEMS_TASK_SET_START_DATE,
   ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+  ORDER_ITEMS_TASK_SET_SKIPPED,
   ORDER_ITEMS_TASK_SET_COMPLETED,
-  ORDER_ITEMS_TASK_SET_ASSIGNEES,
   ORDER_ITEMS_TASK_SET_APPROVED,
   ORDER_ITEMS_TASK_SET_REJECTED,
-  ORDER_ITEMS_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_UPDATE,
@@ -68,16 +72,16 @@ import {
   BATCH_TASK_FORM,
   BATCH_TASK_LIST,
   BATCH_SET_TASKS,
+  BATCH_SET_MILESTONE,
   BATCH_SET_TASK_TEMPLATE,
   BATCH_TASK_SET_NAME,
   BATCH_TASK_SET_DUE_DATE,
   BATCH_TASK_SET_START_DATE,
   BATCH_TASK_SET_IN_PROGRESS,
+  BATCH_TASK_SET_SKIPPED,
   BATCH_TASK_SET_COMPLETED,
-  BATCH_TASK_SET_ASSIGNEES,
   BATCH_TASK_SET_APPROVED,
   BATCH_TASK_SET_REJECTED,
-  BATCH_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/batch';
 import {
   PRODUCT_UPDATE,
@@ -87,16 +91,16 @@ import {
   PRODUCT_TASK_FORM,
   PRODUCT_TASK_LIST,
   PRODUCT_SET_TASKS,
+  PRODUCT_SET_MILESTONE,
   PRODUCT_SET_TASK_TEMPLATE,
   PRODUCT_TASK_SET_NAME,
   PRODUCT_TASK_SET_DUE_DATE,
   PRODUCT_TASK_SET_START_DATE,
   PRODUCT_TASK_SET_IN_PROGRESS,
+  PRODUCT_TASK_SET_SKIPPED,
   PRODUCT_TASK_SET_COMPLETED,
-  PRODUCT_TASK_SET_ASSIGNEES,
   PRODUCT_TASK_SET_APPROVED,
   PRODUCT_TASK_SET_REJECTED,
-  PRODUCT_TASK_SET_APPROVERS,
   PRODUCT_PROVIDER_UPDATE,
   PRODUCT_PROVIDER_TASK_CREATE,
   PRODUCT_PROVIDER_TASK_DELETE,
@@ -104,16 +108,16 @@ import {
   PRODUCT_PROVIDER_TASK_FORM,
   PRODUCT_PROVIDER_TASK_LIST,
   PRODUCT_PROVIDER_SET_TASKS,
+  PRODUCT_PROVIDER_SET_MILESTONE,
   PRODUCT_PROVIDER_SET_TASK_TEMPLATE,
   PRODUCT_PROVIDER_TASK_SET_NAME,
   PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
   PRODUCT_PROVIDER_TASK_SET_START_DATE,
   PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+  PRODUCT_PROVIDER_TASK_SET_SKIPPED,
   PRODUCT_PROVIDER_TASK_SET_COMPLETED,
-  PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
   PRODUCT_PROVIDER_TASK_SET_APPROVED,
   PRODUCT_PROVIDER_TASK_SET_REJECTED,
-  PRODUCT_PROVIDER_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/product';
 import {
   SHIPMENT_UPDATE,
@@ -123,17 +127,19 @@ import {
   SHIPMENT_TASK_FORM,
   SHIPMENT_TASK_LIST,
   SHIPMENT_SET_TASKS,
+  SHIPMENT_SET_MILESTONE,
   SHIPMENT_SET_TASK_TEMPLATE,
   SHIPMENT_TASK_SET_NAME,
   SHIPMENT_TASK_SET_DUE_DATE,
   SHIPMENT_TASK_SET_START_DATE,
   SHIPMENT_TASK_SET_IN_PROGRESS,
+  SHIPMENT_TASK_SET_SKIPPED,
   SHIPMENT_TASK_SET_COMPLETED,
-  SHIPMENT_TASK_SET_ASSIGNEES,
   SHIPMENT_TASK_SET_APPROVED,
   SHIPMENT_TASK_SET_REJECTED,
-  SHIPMENT_TASK_SET_APPROVERS,
 } from 'modules/permission/constants/shipment';
+import { PROJECT_FORM, PROJECT_LIST } from 'modules/permission/constants/project';
+import { MILESTONE_LIST } from 'modules/permission/constants/milestone';
 import { ProductTasksContainer } from 'modules/product/form/containers';
 import { ProductProviderTasksContainer } from 'modules/productProvider/form/containers';
 import { OrderTasksContainer } from 'modules/order/form/containers';
@@ -141,10 +147,18 @@ import { OrderItemTasksContainer } from 'modules/orderItem/form/containers';
 import { BatchTasksContainer } from 'modules/batch/form/containers';
 import { ShipmentTasksContainer } from 'modules/shipment/form/containers';
 import { FormContainer } from 'modules/form';
+import SelectProjectAndMilestone from 'providers/SelectProjectAndMilestone';
 import messages from 'modules/task/messages';
-import { TasksSectionWrapperStyle, TasksSectionBodyStyle, TemplateItemStyle } from './style';
+import {
+  TasksSectionWrapperStyle,
+  TasksSectionStyle,
+  TemplateItemStyle,
+  TasksSectionProjectAreaStyle,
+  TasksSectionTasksAreaStyle,
+} from './style';
 import Tasks from './components/Tasks';
 import SelectTaskTemplate from './components/SelectTaskTemplate';
+import ConfirmDialog from './components/ConfirmDialog';
 
 export type CompatibleEntityTypes =
   | 'Batch'
@@ -170,9 +184,10 @@ const getConfig = (
   canAddTasks: boolean,
   canDeleteTasks: boolean,
   canOrderingTasks: boolean,
+  canUpdateMilestone: boolean,
   canUpdateTaskTemplate: boolean,
   tasksContainer: Object,
-  editable: TaskEditable,
+  editable: TaskCardEditableProps,
 } => {
   switch (type) {
     case 'Order':
@@ -182,6 +197,11 @@ const getConfig = (
         canAddTasks: hasPermission([ORDER_TASK_CREATE, ORDER_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(ORDER_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(ORDER_UPDATE) ||
+            (hasPermission(ORDER_SET_MILESTONE) && hasPermission(ORDER_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([ORDER_UPDATE, ORDER_SET_TASK_TEMPLATE]) &&
           hasPermission([ORDER_UPDATE, ORDER_SET_TASKS]) &&
@@ -193,11 +213,10 @@ const getConfig = (
           startDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_START_DATE]),
           dueDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DUE_DATE]),
           inProgress: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_IN_PROGRESS]),
+          skipped: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_COMPLETED]),
-          assignedTo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_REJECTED]),
-          approvers: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVERS]),
         },
       };
     case 'OrderItem':
@@ -207,6 +226,11 @@ const getConfig = (
         canAddTasks: hasPermission([ORDER_ITEMS_TASK_CREATE, ORDER_ITEMS_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(ORDER_ITEMS_SET_TASKS),
         canDeleteTasks: hasPermission([ORDER_ITEMS_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(ORDER_ITEMS_UPDATE) ||
+            (hasPermission(ORDER_ITEMS_SET_MILESTONE) && hasPermission(ORDER_ITEMS_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASK_TEMPLATE]) &&
           hasPermission([ORDER_ITEMS_UPDATE, ORDER_ITEMS_SET_TASKS]) &&
@@ -230,15 +254,15 @@ const getConfig = (
             ORDER_ITEMS_TASK_UPDATE,
             ORDER_ITEMS_TASK_SET_IN_PROGRESS,
           ]),
+          skipped: hasPermission([
+            TASK_UPDATE,
+            ORDER_ITEMS_TASK_UPDATE,
+            ORDER_ITEMS_TASK_SET_SKIPPED,
+          ]),
           completed: hasPermission([
             TASK_UPDATE,
             ORDER_ITEMS_TASK_UPDATE,
             ORDER_ITEMS_TASK_SET_COMPLETED,
-          ]),
-          assignedTo: hasPermission([
-            TASK_UPDATE,
-            ORDER_ITEMS_TASK_UPDATE,
-            ORDER_ITEMS_TASK_SET_ASSIGNEES,
           ]),
           approved: hasPermission([
             TASK_UPDATE,
@@ -250,11 +274,6 @@ const getConfig = (
             ORDER_ITEMS_TASK_UPDATE,
             ORDER_ITEMS_TASK_SET_REJECTED,
           ]),
-          approvers: hasPermission([
-            TASK_UPDATE,
-            ORDER_ITEMS_TASK_UPDATE,
-            ORDER_ITEMS_TASK_SET_APPROVERS,
-          ]),
         },
       };
     case 'Batch':
@@ -264,6 +283,11 @@ const getConfig = (
         canAddTasks: hasPermission([BATCH_TASK_CREATE, BATCH_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(BATCH_SET_TASKS),
         canDeleteTasks: hasPermission([BATCH_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(BATCH_UPDATE) ||
+            (hasPermission(BATCH_SET_MILESTONE) && hasPermission(BATCH_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([BATCH_UPDATE, BATCH_SET_TASK_TEMPLATE]) &&
           hasPermission([BATCH_UPDATE, BATCH_SET_TASKS]) &&
@@ -275,11 +299,10 @@ const getConfig = (
           startDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_START_DATE]),
           dueDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DUE_DATE]),
           inProgress: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_IN_PROGRESS]),
+          skipped: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_COMPLETED]),
-          assignedTo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_REJECTED]),
-          approvers: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVERS]),
         },
       };
     case 'Product':
@@ -289,6 +312,11 @@ const getConfig = (
         canAddTasks: hasPermission([PRODUCT_TASK_CREATE, PRODUCT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(PRODUCT_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(PRODUCT_UPDATE) ||
+            (hasPermission(PRODUCT_SET_MILESTONE) && hasPermission(PRODUCT_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASK_TEMPLATE]) &&
           hasPermission([PRODUCT_UPDATE, PRODUCT_SET_TASKS]) &&
@@ -304,11 +332,10 @@ const getConfig = (
             PRODUCT_TASK_UPDATE,
             PRODUCT_TASK_SET_IN_PROGRESS,
           ]),
+          skipped: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_SKIPPED]),
           completed: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_COMPLETED]),
-          assignedTo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_ASSIGNEES]),
           approved: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_REJECTED]),
-          approvers: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVERS]),
         },
       };
     case 'ProductProvider':
@@ -322,6 +349,12 @@ const getConfig = (
         ]),
         canOrderingTasks: hasPermission(PRODUCT_PROVIDER_SET_TASKS),
         canDeleteTasks: hasPermission([PRODUCT_PROVIDER_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(PRODUCT_PROVIDER_UPDATE) ||
+            (hasPermission(PRODUCT_PROVIDER_SET_MILESTONE) &&
+              hasPermission(PRODUCT_PROVIDER_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASK_TEMPLATE]) &&
           hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_TASKS]) &&
@@ -349,15 +382,15 @@ const getConfig = (
             PRODUCT_PROVIDER_TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
           ]),
+          skipped: hasPermission([
+            TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_UPDATE,
+            PRODUCT_PROVIDER_TASK_SET_SKIPPED,
+          ]),
           completed: hasPermission([
             TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_SET_COMPLETED,
-          ]),
-          assignedTo: hasPermission([
-            TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
           ]),
           approved: hasPermission([
             TASK_UPDATE,
@@ -369,11 +402,6 @@ const getConfig = (
             PRODUCT_PROVIDER_TASK_UPDATE,
             PRODUCT_PROVIDER_TASK_SET_REJECTED,
           ]),
-          approvers: hasPermission([
-            TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_UPDATE,
-            PRODUCT_PROVIDER_TASK_SET_APPROVERS,
-          ]),
         },
       };
     default:
@@ -383,6 +411,11 @@ const getConfig = (
         canAddTasks: hasPermission([SHIPMENT_TASK_CREATE, SHIPMENT_SET_TASKS, TASK_CREATE]),
         canOrderingTasks: hasPermission(SHIPMENT_SET_TASKS),
         canDeleteTasks: hasPermission([SHIPMENT_TASK_DELETE, TASK_DELETE]),
+        canUpdateMilestone:
+          hasPermission(PROJECT_LIST) &&
+          hasPermission(MILESTONE_LIST) &&
+          (hasPermission(SHIPMENT_UPDATE) ||
+            (hasPermission(SHIPMENT_SET_MILESTONE) && hasPermission(SHIPMENT_SET_TASKS))),
         canUpdateTaskTemplate:
           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASK_TEMPLATE]) &&
           hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_TASKS]) &&
@@ -402,23 +435,14 @@ const getConfig = (
             SHIPMENT_TASK_UPDATE,
             SHIPMENT_TASK_SET_IN_PROGRESS,
           ]),
+          skipped: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_SKIPPED]),
           completed: hasPermission([
             TASK_UPDATE,
             SHIPMENT_TASK_UPDATE,
             SHIPMENT_TASK_SET_COMPLETED,
           ]),
-          assignedTo: hasPermission([
-            TASK_UPDATE,
-            SHIPMENT_TASK_UPDATE,
-            SHIPMENT_TASK_SET_ASSIGNEES,
-          ]),
           approved: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_APPROVED]),
           rejected: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_REJECTED]),
-          approvers: hasPermission([
-            TASK_UPDATE,
-            SHIPMENT_TASK_UPDATE,
-            SHIPMENT_TASK_SET_APPROVERS,
-          ]),
         },
       };
   }
@@ -428,15 +452,18 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
+  const canViewProjectForm = hasPermission(PROJECT_FORM);
+
   const {
     canViewList,
     canViewForm,
     canAddTasks,
     canDeleteTasks,
     canOrderingTasks,
-    editable,
+    canUpdateMilestone,
     canUpdateTaskTemplate,
     tasksContainer,
+    editable,
   } = getConfig(type, hasPermission);
 
   if (!canViewList) return null;
@@ -446,7 +473,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
       {(
         {
           state: {
-            todo: { tasks, taskTemplate },
+            todo: { tasks, taskTemplate, milestone },
           },
           setFieldValue,
           applyTemplate,
@@ -476,10 +503,11 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                       injectUid({
                         isNew: true,
                         name: `task - ${tasks.length + 1}`,
-                        assignedTo: [],
                         tags: [],
+                        assignedTo: [],
                         approvers: [],
                         approvable: false,
+                        milestone,
                       }),
                     ]);
                     setFieldTouched('tasks');
@@ -487,92 +515,266 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                 />
               )}
             </SectionNavBar>
-            <div className={TasksSectionBodyStyle}>
-              {
-                <BooleanValue>
-                  {({ value: opened, set: slideToggle }) => (
-                    <>
-                      <div className={TemplateItemStyle}>
-                        <Label height="24px">
-                          {' '}
-                          <FormattedMessage id="modules.Tasks.template" defaultMessage="TEMPLATE" />
-                        </Label>
-                        {taskTemplate ? (
-                          <TemplateCard
-                            type="TASK"
-                            template={{
-                              id: taskTemplate.id,
-                              title: taskTemplate.name,
-                              description: taskTemplate.description,
-                              count: taskTemplate.tasks && taskTemplate.tasks.length,
+
+            <div className={TasksSectionStyle}>
+              <div className={TasksSectionProjectAreaStyle}>
+                <ObjectValue
+                  defaultValue={{
+                    selectedMilestone: milestone,
+                    isOpenOfSelector: false,
+                    isOpenOfConfirmDialog: false,
+                  }}
+                >
+                  {({
+                    value: { selectedMilestone, isOpenOfSelector, isOpenOfConfirmDialog },
+                    set,
+                  }) => (
+                    <div>
+                      {milestone ? (
+                        <div
+                          data-testid="btnSelectMilestone"
+                          role="presentation"
+                          onClick={() =>
+                            canUpdateMilestone ? set('isOpenOfSelector', true) : null
+                          }
+                        >
+                          {(() => {
+                            let milestoneObj;
+                            if (isNotFound(milestone)) {
+                              milestoneObj = null;
+                            } else if (isForbidden(milestone)) {
+                              milestoneObj = {
+                                __typename: 'Forbidden',
+                                project: {
+                                  __typename: 'Forbidden',
+                                },
+                              };
+                            } else {
+                              milestoneObj = milestone;
+                            }
+                            return (
+                              <GridColumn>
+                                <FieldItem
+                                  label={
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.project"
+                                        defaultMessage="PROJECT"
+                                      />
+                                    </Label>
+                                  }
+                                  input={
+                                    <ProjectCard project={getByPath('project', milestoneObj)} />
+                                  }
+                                  vertical
+                                />
+                                <FieldItem
+                                  label={
+                                    <Label>
+                                      <FormattedMessage
+                                        id="modules.task.milestone"
+                                        defaultMessage="MILESTONE"
+                                      />
+                                    </Label>
+                                  }
+                                  input={<MilestoneCard milestone={milestoneObj} />}
+                                  vertical
+                                />
+                              </GridColumn>
+                            );
+                          })()}
+                        </div>
+                      ) : (
+                        <FieldItem
+                          label={
+                            <Label>
+                              <FormattedMessage
+                                id="modules.task.project"
+                                defaultMessage="PROJECT"
+                              />
+                            </Label>
+                          }
+                          input={
+                            <>
+                              {canUpdateMilestone ? (
+                                <DashedPlusButton
+                                  data-testid="btnSelectMilestone"
+                                  width="195px"
+                                  height="463px"
+                                  onClick={() => set('isOpenOfSelector', true)}
+                                />
+                              ) : (
+                                <GrayCard width="195px" height="463px" />
+                              )}
+                            </>
+                          }
+                          vertical
+                        />
+                      )}
+
+                      <SlideView
+                        isOpen={isOpenOfSelector}
+                        onRequestClose={() => set('isOpenOfSelector', false)}
+                      >
+                        {isOpenOfSelector && (
+                          <SelectProjectAndMilestone
+                            filter={{
+                              query: '',
                             }}
-                            onClick={() => {
-                              if (canUpdateTaskTemplate) {
-                                slideToggle(true);
+                            project={getByPath('project', milestone)}
+                            milestone={milestone}
+                            onSelect={({ milestone: newMilestone, project: newProject }) => {
+                              if (newMilestone) {
+                                set('selectedMilestone', {
+                                  ...newMilestone,
+                                  project: newProject,
+                                });
+                                set('isOpenOfConfirmDialog', true);
+                              } else {
+                                setFieldValue('todo.milestone', null);
+                                set('isOpenOfSelector', false);
                               }
                             }}
-                            readOnly={!canUpdateTaskTemplate}
-                          />
-                        ) : (
-                          <>
-                            {canUpdateTaskTemplate ? (
-                              <DashedPlusButton
-                                width="195px"
-                                height="125px"
-                                onClick={() => slideToggle(true)}
-                              />
-                            ) : (
-                              <GrayCard width="195px" height="125px" />
-                            )}
-                          </>
-                        )}
-                      </div>
-
-                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                        {opened && (
-                          <SelectTaskTemplate
-                            entityType={type}
-                            onCancel={() => slideToggle(false)}
-                            onSelect={newValue => {
-                              slideToggle(false);
-                              applyTemplate(newValue);
-                            }}
+                            onCancel={() => set('isOpenOfSelector', false)}
                           />
                         )}
                       </SlideView>
-                    </>
+                      <ConfirmDialog
+                        isOpen={isOpenOfConfirmDialog}
+                        message={
+                          <>
+                            <FormattedMessage
+                              id="modules.task.setProjectWarningMessage"
+                              defaultMessage="Binding this {entityType} to this Project will automatically place any new Tasks into the same Project & Milestone."
+                              values={{
+                                entityType: type,
+                              }}
+                            />
+                            <br />
+                            <FormattedMessage
+                              id="modules.task.setProjectConfirmMessage"
+                              defaultMessage="Would you like to add all current Tasks to the selected Project & Milestone?"
+                            />
+                          </>
+                        }
+                        onRequestClose={() => {}}
+                        onCancel={() => {
+                          set('isOpenOfConfirmDialog', false);
+                        }}
+                        onAddNone={() => {
+                          setFieldValue('todo.milestone', selectedMilestone);
+                          set('isOpenOfConfirmDialog', false);
+                          set('isOpenOfSelector', false);
+                        }}
+                        onAddAllTasks={() => {
+                          setFieldValue('todo.milestone', selectedMilestone);
+                          setFieldValue(
+                            'todo.tasks',
+                            tasks.map(task => ({ ...task, milestone: selectedMilestone }))
+                          );
+                          set('isOpenOfConfirmDialog', false);
+                          set('isOpenOfSelector', false);
+                          setTimeout(() => {
+                            emitter.emit('AUTO_DATE');
+                          }, 200);
+                        }}
+                      />
+                    </div>
                   )}
-                </BooleanValue>
-              }
-              <Tasks
-                groupIds={groupIds}
-                entityId={entityId}
-                type={type}
-                editable={editable}
-                sortable={canOrderingTasks}
-                viewForm={canViewForm}
-                removable={canDeleteTasks}
-                tasks={tasks}
-                onSwap={(index: number, direction: 'left' | 'right') => {
-                  const nextIndex = direction === 'left' ? index - 1 : index + 1;
+                </ObjectValue>
+              </div>
 
-                  if (nextIndex > -1 && nextIndex < tasks.length) {
-                    const clonedTasks = [...tasks];
-                    clonedTasks[nextIndex] = { ...tasks[index] };
-                    clonedTasks[index] = { ...tasks[nextIndex] };
-                    setFieldValue('todo.tasks', clonedTasks);
-                    setFieldTouched(`tasks.${index}`);
-                    setFieldTouched(`tasks.${nextIndex}`);
-                  }
-                }}
-                onRemove={({ id }) => {
-                  setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
-                  setFieldTouched(`tasks.${id}`);
-                }}
-                onSave={(index, newValue) => {
-                  setFieldValue(`todo.tasks.${index}`, newValue);
-                }}
-              />
+              <div className={TasksSectionTasksAreaStyle}>
+                {
+                  <BooleanValue>
+                    {({ value: opened, set: slideToggle }) => (
+                      <>
+                        <div className={TemplateItemStyle}>
+                          <Label height="30px">
+                            {' '}
+                            <FormattedMessage
+                              id="modules.Tasks.template"
+                              defaultMessage="TEMPLATE"
+                            />
+                          </Label>
+                          {taskTemplate ? (
+                            <TemplateCard
+                              type="TASK"
+                              template={{
+                                id: taskTemplate.id,
+                                title: taskTemplate.name,
+                                description: taskTemplate.description,
+                                count: taskTemplate.tasks && taskTemplate.tasks.length,
+                              }}
+                              onClick={() => {
+                                if (canUpdateTaskTemplate) {
+                                  slideToggle(true);
+                                }
+                              }}
+                              readOnly={!canUpdateTaskTemplate}
+                            />
+                          ) : (
+                            <>
+                              {canUpdateTaskTemplate ? (
+                                <DashedPlusButton
+                                  width="195px"
+                                  height="125px"
+                                  onClick={() => slideToggle(true)}
+                                />
+                              ) : (
+                                <GrayCard width="195px" height="125px" />
+                              )}
+                            </>
+                          )}
+                        </div>
+
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          {opened && (
+                            <SelectTaskTemplate
+                              entityType={type}
+                              onCancel={() => slideToggle(false)}
+                              onSelect={newValue => {
+                                slideToggle(false);
+                                applyTemplate(newValue);
+                              }}
+                            />
+                          )}
+                        </SlideView>
+                      </>
+                    )}
+                  </BooleanValue>
+                }
+                <Tasks
+                  groupIds={groupIds}
+                  entityId={entityId}
+                  type={type}
+                  editable={editable}
+                  navigable={{ project: canViewProjectForm }}
+                  sortable={canOrderingTasks}
+                  viewForm={canViewForm}
+                  removable={canDeleteTasks}
+                  tasks={tasks}
+                  onSwap={(index: number, direction: 'left' | 'right') => {
+                    const nextIndex = direction === 'left' ? index - 1 : index + 1;
+
+                    if (nextIndex > -1 && nextIndex < tasks.length) {
+                      const clonedTasks = [...tasks];
+                      clonedTasks[nextIndex] = { ...tasks[index] };
+                      clonedTasks[index] = { ...tasks[nextIndex] };
+                      setFieldValue('todo.tasks', clonedTasks);
+                      setFieldTouched(`tasks.${index}`);
+                      setFieldTouched(`tasks.${nextIndex}`);
+                    }
+                  }}
+                  onRemove={({ id }) => {
+                    setFieldValue('todo.tasks', tasks.filter(({ id: itemId }) => id !== itemId));
+                    setFieldTouched(`tasks.${id}`);
+                  }}
+                  onSave={(index, newValue) => {
+                    setFieldValue(`todo.tasks.${index}`, newValue);
+                  }}
+                />
+              </div>
             </div>
           </div>
         </SectionWrapper>

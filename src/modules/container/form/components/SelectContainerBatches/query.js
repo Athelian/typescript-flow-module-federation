@@ -19,8 +19,10 @@ import {
   fieldValuesFragment,
   fieldDefinitionFragment,
   ownedByFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   taskWithoutParentInfoFragment,
-  todoFragment,
+  taskCountFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
@@ -59,8 +61,10 @@ export const selectBatchListQuery = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskWithoutParentInfoFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}

@@ -4,28 +4,18 @@ import { isEquals } from 'utils/fp';
 import TaskInfoSection from './components/TaskInfoSection';
 import ParentEntity from './components/ParentEntity';
 
-type OptionalProps = {
+type Props = {|
+  groupIds: Array<string>,
   task?: Object,
   entity?: Object,
   onFormReady?: () => void,
   parentEntity?: string,
-  hideParentInfo?: boolean,
-  isInTemplate: boolean,
-};
-
-type Props = OptionalProps & {
-  groupIds: Array<string>,
-};
-
-const defaultProps = {
-  task: {},
-  onFormReady: () => {},
-  isInTemplate: false,
-};
+  inParentEntityForm: boolean,
+  isInTemplate?: boolean,
+  isInProject?: boolean,
+|};
 
 export default class TaskForm extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
   componentDidMount() {
     const { onFormReady } = this.props;
 
@@ -39,16 +29,25 @@ export default class TaskForm extends React.Component<Props> {
   }
 
   render() {
-    const { task, groupIds, entity, parentEntity, hideParentInfo, isInTemplate } = this.props;
+    const {
+      task,
+      groupIds,
+      entity,
+      parentEntity,
+      isInTemplate,
+      isInProject,
+      inParentEntityForm,
+    } = this.props;
     return (
       <>
         <TaskInfoSection
+          isInTemplate={isInTemplate}
+          isInProject={isInProject}
           groupIds={groupIds}
           parentEntity={parentEntity}
           task={task}
-          isInTemplate={isInTemplate}
         />
-        <ParentEntity inForm={!!hideParentInfo} entity={entity} />
+        <ParentEntity inParentEntityForm={inParentEntityForm} entity={entity} />
       </>
     );
   }

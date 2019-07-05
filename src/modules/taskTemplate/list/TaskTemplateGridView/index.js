@@ -66,7 +66,7 @@ const TaskTemplateGridView = ({
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="200px"
+      itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={
         <FormattedMessage id="modules.TableTemplates.noItem" defaultMessage="No template found" />

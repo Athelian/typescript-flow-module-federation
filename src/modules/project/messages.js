@@ -3,19 +3,35 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   createdAt: {
-    id: 'modules.Tasks.createdAt',
+    id: 'modules.Projects.createdAt',
     defaultMessage: 'Date Created',
   },
   updatedAt: {
-    id: 'modules.Tasks.updatedAt',
+    id: 'modules.Projects.updatedAt',
     defaultMessage: 'Last Modified',
   },
   name: {
-    id: 'modules.Tasks.name',
-    defaultMessage: 'Task Name',
+    id: 'modules.Projects.name',
+    defaultMessage: 'Project Name',
   },
   dueDate: {
-    id: 'modules.Tasks.dueDate',
-    defaultMessage: 'Due Date',
+    id: 'modules.Projects.dueDate',
+    defaultMessage: 'Project Due Date',
+  },
+  lastMilestoneDueDate: {
+    id: 'modules.Projects.lastMilestoneDueDate',
+    defaultMessage: 'Last Milestone Due Date',
+  },
+  tags: {
+    id: 'modules.Projects.tags',
+    defaultMessage: 'Tags',
+  },
+  description: {
+    id: 'modules.Projects.description',
+    defaultMessage: 'Description',
+  },
+  diffBetweenLastMilestoneAndProjectDueDate: {
+    id: 'modules.Projects.diffBetweenLastMilestoneAndProjectDueDate',
+    defaultMessage: ' days difference between Project Due Date and Last Milestone Due Date',
   },
 });

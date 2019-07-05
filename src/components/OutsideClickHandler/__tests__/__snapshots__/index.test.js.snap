@@ -2,7 +2,7 @@
 
 exports[`<OutsideClickHandler /> should render without crash 1`] = `
 <div
-  className=""
+  class=""
 >
   Click outside of this element.
 </div>

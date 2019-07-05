@@ -35,7 +35,7 @@ type Props = {
 };
 
 const MilestoneCard = ({ milestone, ...rest }: Props) => {
-  const { name, dueDate, taskCount, completedAt } = milestone;
+  const { name, dueDate, taskCount = {}, completedAt } = milestone;
   const { count, remain, inProgress, skipped, completed, delayed } = taskCount;
 
   return (

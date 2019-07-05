@@ -1,10 +1,11 @@
 [ignore]
-<PROJECT_ROOT>/node_modules/findup
-<PROJECT_ROOT>/node_modules/react-window
-<PROJECT_ROOT>/node_modules/react-beautiful-dnd
-<PROJECT_ROOT>/node_modules/unstated/lib/unstated.js.flow
-<PROJECT_ROOT>/node_modules/date-fns-tz/index.js.flow
 <PROJECT_ROOT>/node_modules/.cache
+
+[untyped]
+<PROJECT_ROOT>/node_modules/react-beautiful-dnd
+<PROJECT_ROOT>/node_modules/date-fns-tz
+<PROJECT_ROOT>/node_modules/unstated
+
 [include]
 
 [libs]
@@ -12,6 +13,7 @@
 [lints]
 
 [options]
+lazy_mode=fs
 name= Zenport web app
 module.file_ext=.js
 module.file_ext=.mjs

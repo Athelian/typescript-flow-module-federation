@@ -1,11 +1,10 @@
 // @flow
 import { css } from 'react-emotion';
 import { presets, borderRadiuses, fontSizes, colors, shadows } from 'styles/common';
-import { type TaskStatusType } from './types.js.flow';
 
 type TaskStatusInputWrapperStyleType = {
-  status: TaskStatusType,
-  editable: boolean,
+  status: string,
+  editable: Object,
   width: string,
 };
 
@@ -13,34 +12,67 @@ export const TaskStatusInputWrapperStyle = ({
   status,
   editable,
   width,
-}: TaskStatusInputWrapperStyleType): string => css`
-  ${presets.BUTTON};
-  ${borderRadiuses.BUTTON};
-  border: 2px solid ${colors.TEAL};
-  height: 40px;
-  width: ${width};
-  ${status === 'InProgress'
-    ? `
-    background-color: ${colors.WHITE};
-    color: ${colors.TEAL};
-    ${
-      editable
-        ? `
-      &:hover, :focus {
-        background-color: ${colors.GRAY_SUPER_LIGHT};
+}: TaskStatusInputWrapperStyleType): string => {
+  let statusStyle = '';
+  if (status === 'unCompleted') {
+    statusStyle = `
+      background-color: ${colors.GRAY_SUPER_LIGHT};
+      color: ${colors.GRAY_DARK};
+      ${
+        editable.inProgress
+          ? `
+        &:hover, :focus {
+          background-color: ${colors.GRAY_VERY_LIGHT};
+        }
+      `
+          : `
+        cursor: inherit;
+      `
       }
-    `
-        : `
+    `;
+  }
+  if (status === 'inProgress') {
+    statusStyle = `
+      background-color: ${colors.WHITE};
+      color: ${colors.TEAL};
+      border-color: ${colors.TEAL};
+      ${
+        editable.completed
+          ? `
+        &:hover, :focus {
+          background-color: ${colors.GRAY_SUPER_LIGHT};
+        }
+      `
+          : `
+        cursor: inherit;
+      `
+      }
+    `;
+  }
+  if (status === 'skipped') {
+    statusStyle = `
+      background-color: ${colors.GRAY_LIGHT};
+      color: ${colors.BLACK};
       cursor: inherit;
-    `
-    }
-  `
-    : `
-    background-color: ${colors.TEAL};
-    color: ${colors.WHITE};
-    cursor: inherit;
-  `};
-`;
+    `;
+  }
+  if (status === 'completed') {
+    statusStyle = `
+      background-color: ${colors.TEAL};
+      color: ${colors.WHITE};
+      cursor: inherit;
+    `;
+  }
+
+  return css`
+    ${presets.BUTTON};
+    ${borderRadiuses.BUTTON};
+    height: 40px;
+    width: ${width};
+    border: 2px solid ${colors.TRANSPARENT};
+    ${statusStyle}
+  `;
+};
 
 export const UserAvatarWrapperStyle: string = css`
   position: relative;
@@ -91,4 +123,22 @@ export const StatusLabelStyle: string = css`
   user-select: none;
   text-transform: uppercase;
   text-align: center;
+`;
+
+export const SkipButtonStyle: string = css`
+  ${presets.BUTTON};
+  ${borderRadiuses.BUTTON};
+  width: min-content;
+  height: 20px;
+  background-color: ${colors.GRAY_VERY_LIGHT};
+  color: ${colors.GRAY_DARK};
+  letter-spacing: 2px;
+  ${fontSizes.SMALL};
+  margin: 5px 0 0 0;
+  padding: 0 10px;
+  &:hover,
+  :focus {
+    background-color: ${colors.GRAY_LIGHT};
+    color: ${colors.BLACK};
+  }
 `;

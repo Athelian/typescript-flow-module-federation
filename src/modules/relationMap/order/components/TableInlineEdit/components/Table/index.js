@@ -2,7 +2,6 @@
 import * as React from 'react';
 import memoize from 'memoize-one';
 import AutoSizer from 'react-virtualized-auto-sizer';
-// $FlowFixMe: not have flow type yet
 import { FixedSizeGrid as Grid } from 'react-window';
 import { getByPath } from 'utils/fp';
 import {
@@ -90,6 +89,8 @@ export default function Table({
   showAllColumn,
   lines,
   itemData,
+  onToggle,
+  templateColumns,
   ...renderOptions
 }: Props) {
   const headerRef = React.useRef();
@@ -107,6 +108,8 @@ export default function Table({
     <>
       <StickyHeader
         {...renderOptions}
+        onToggle={onToggle}
+        templateColumns={templateColumns}
         itemData={data}
         showAllColumn={showAllColumn}
         customColumns={customColumns}

@@ -22,7 +22,10 @@ import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './s
 
 type Props = {
   onCancel: () => void,
-  onSelect: (selectedProject: ?Project, selectedMilestone: ?Milestone) => mixed,
+  onSelect: ({
+    project: ?Project,
+    milestone: ?Milestone,
+  }) => void,
   filter: {
     query?: string,
     createdAt?: DateRangeInput,
@@ -47,17 +50,17 @@ function initFilterBy(filter: Object) {
 }
 
 function resetSelection({
-  selectedProject,
-  selectedMilestone,
+  project,
+  milestone,
   set,
 }: {
-  selectedProject: ?Project,
-  selectedMilestone: ?Milestone,
+  project: ?Project,
+  milestone: ?Milestone,
   set: Function,
 }) {
   set('currentSelection', {
-    project: selectedProject,
-    milestone: selectedMilestone,
+    project,
+    milestone,
   });
 }
 
@@ -135,6 +138,7 @@ function SelectProjectAndMilestone({
                 }}
               />
               <SaveButton
+                data-testid="btnSaveSelectProjectAndMilestone"
                 disabled={
                   !(
                     getByPathWithDefault('', 'id', selectedProject) !==
@@ -143,7 +147,12 @@ function SelectProjectAndMilestone({
                       getByPathWithDefault('', 'id', milestone)
                   )
                 }
-                onClick={() => onSelect(selectedProject, selectedMilestone)}
+                onClick={() =>
+                  onSelect({
+                    project: selectedProject,
+                    milestone: selectedMilestone,
+                  })
+                }
               />
             </SlideViewNavBar>
           }
@@ -153,7 +162,7 @@ function SelectProjectAndMilestone({
               if (error) {
                 return error.message;
               }
-              const nextPage = getByPathWithDefault(1, 'project.page', data) + 1;
+              const nextPage = getByPathWithDefault(1, 'projects.page', data) + 1;
               const totalPage = getByPathWithDefault(1, 'projects.totalPage', data);
               const hasMore = nextPage <= totalPage;
               const projects = getByPathWithDefault([], 'projects.nodes', data);
@@ -170,7 +179,7 @@ function SelectProjectAndMilestone({
                       defaultMessage="No projects found"
                     />
                   }
-                  itemWidth="200px"
+                  itemWidth="195px"
                 >
                   {projects.map(item => {
                     const selected =
@@ -221,8 +230,8 @@ function SelectProjectAndMilestone({
                                   isOpen={isOpen}
                                   onRequestClose={() => {
                                     resetSelection({
-                                      selectedProject,
-                                      selectedMilestone,
+                                      project: selectedProject,
+                                      milestone: selectedMilestone,
                                       set,
                                     });
                                     slideToggle(false);
@@ -234,8 +243,8 @@ function SelectProjectAndMilestone({
                                       milestone={selectedMilestone}
                                       onCancel={() => {
                                         resetSelection({
-                                          selectedProject,
-                                          selectedMilestone,
+                                          project: selectedProject,
+                                          milestone: selectedMilestone,
                                           set,
                                         });
                                         slideToggle(false);

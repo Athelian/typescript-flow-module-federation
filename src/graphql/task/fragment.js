@@ -48,6 +48,10 @@ export const taskCardFragment = gql`
       ...userAvatarFragment
     }
     inProgressAt
+    skippedBy {
+      ...userAvatarFragment
+    }
+    skippedAt
     completedBy {
       ...userAvatarFragment
     }
@@ -62,6 +66,18 @@ export const taskCardFragment = gql`
     approvedAt
     tags {
       ...tagFragment
+    }
+    milestone {
+      ... on Milestone {
+        id
+        name
+        project {
+          ... on Project {
+            id
+            name
+          }
+        }
+      }
     }
   }
 `;
@@ -160,6 +176,10 @@ export const taskWithoutParentInfoFragment = gql`
     completedBy {
       ...userAvatarFragment
     }
+    skippedAt
+    skippedBy {
+      ...userAvatarFragment
+    }
     rejectedAt
     rejectedBy {
       ...userAvatarFragment
@@ -170,6 +190,18 @@ export const taskWithoutParentInfoFragment = gql`
     }
     assignedTo {
       ...userAvatarFragment
+    }
+    milestone {
+      ... on Milestone {
+        id
+        name
+        project {
+          ... on Project {
+            id
+            name
+          }
+        }
+      }
     }
     approvers {
       ...userAvatarFragment
@@ -216,6 +248,10 @@ export const taskWithParentInfoFragment = gql`
     description
     inProgressAt
     inProgressBy {
+      ...userAvatarFragment
+    }
+    skippedAt
+    skippedBy {
       ...userAvatarFragment
     }
     completedAt
@@ -293,6 +329,14 @@ export const taskWithParentInfoFragment = gql`
         ...shipmentCardFragment
       }
     }
+    milestone {
+      ... on Milestone {
+        ...milestoneCardFragment
+        project {
+          ...projectCardFragment
+        }
+      }
+    }
   }
 `;
 
@@ -312,10 +356,15 @@ export const taskTemplateFormFragment = gql`
   }
 `;
 
-export const todoFragment = gql`
-  fragment todoFragment on Todo {
-    completedCount
-    inProgressCount
-    remainingCount
+export const taskCountFragment = gql`
+  fragment taskCountFragment on TaskCount {
+    count
+    remain
+    inProgress
+    completed
+    rejected
+    approved
+    skipped
+    delayed
   }
 `;

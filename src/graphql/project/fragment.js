@@ -7,36 +7,13 @@ export const projectCardFragment = gql`
     name
     description
     dueDate
-    taskCount {
-      count
-      remain
-      inProgress
-      completed
-      delayed
-    }
-    tags {
-      ...tagFragment
-    }
-  }
-`;
-
-export const projectFragment = gql`
-  fragment projectFragment on Project {
-    id
-    updatedAt
-    updatedBy {
-      ...userAvatarFragment
-    }
-    ownedBy {
-      ...ownedByFragment
-    }
-    name
-    description
-    dueDate
     milestones {
       ... on Milestone {
         id
       }
+    }
+    taskCount {
+      ...taskCountFragment
     }
     tags {
       ...tagFragment
@@ -51,11 +28,175 @@ export const milestoneCardFragment = gql`
     description
     dueDate
     taskCount {
-      count
-      remain
-      inProgress
-      completed
-      delayed
+      ...taskCountFragment
+    }
+  }
+`;
+
+export const projectFormQueryFragment = gql`
+  fragment projectFormQueryFragment on Project {
+    id
+    name
+    description
+    dueDate
+    taskCount {
+      ...taskCountFragment
+    }
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    milestones {
+      ... on Milestone {
+        id
+        name
+        dueDate
+        completedAt
+        completedBy {
+          ...userAvatarFragment
+        }
+        taskCount {
+          ...taskCountFragment
+        }
+        tasks {
+          ...taskWithParentInfoFragment
+          ... on Task {
+            milestoneSort
+            entity {
+              ... on Order {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        id
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on Product {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        id
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on OrderItem {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        id
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on Batch {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        id
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ... on Shipment {
+                todo {
+                  ... on Todo {
+                    milestone {
+                      ... on Milestone {
+                        id
+                        project {
+                          ... on Project {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        entitiesCount {
+          ... on MilestoneEntitiesCount {
+            products
+            productProviders
+            orders
+            orderItems
+            batches
+            shipments
+            containers
+          }
+        }
+        entitiesRelatedCount {
+          ... on MilestoneEntitiesCount {
+            products
+            productProviders
+            orders
+            orderItems
+            batches
+            shipments
+            containers
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const projectFormFragment = gql`
+  fragment projectFormFragment on Project {
+    id
+    name
+    description
+    dueDate
+    taskCount {
+      ...taskCountFragment
+    }
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    ownedBy {
+      ...ownedByFragment
+    }
+    tags {
+      ...tagFragment
     }
   }
 `;

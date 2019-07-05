@@ -7,7 +7,9 @@ import {
   priceFragment,
   customFieldsFragment,
   tagFragment,
-  todoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  taskCountFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
@@ -46,7 +48,9 @@ export const orderFormItemsQuery = gql`
   ${priceFragment}
   ${customFieldsFragment}
   ${tagFragment}
-  ${todoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskCountFragment}
   ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
   ${taskTemplateCardFragment}

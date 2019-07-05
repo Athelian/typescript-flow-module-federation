@@ -88,7 +88,17 @@ export const orderFormFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      milestone {
+        ... on Milestone {
+          ...milestoneCardFragment
+          project {
+            ...projectCardFragment
+          }
+        }
+      }
+      taskCount {
+        ...taskCountFragment
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
@@ -139,7 +149,9 @@ export const orderBasicFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     files {
       ...documentFragment
@@ -215,7 +227,9 @@ export const orderCardFragment = gql`
       ...tagFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
     inCharges {
       ...userAvatarFragment

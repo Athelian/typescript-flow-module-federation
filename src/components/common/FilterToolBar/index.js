@@ -5,6 +5,8 @@ import { EntityIcon, SortInput, SearchInput, StatusToggleTabs } from 'components
 type OptionalProps = {
   icon?: string,
   renderIcon: Function,
+  searchable: boolean,
+  sortable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -22,6 +24,8 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  searchable: true,
+  sortable: true,
   renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
 
@@ -43,6 +47,8 @@ export default function FilterToolBar({
   sortFields,
   filtersAndSort,
   onChange,
+  searchable,
+  sortable,
 }: Props) {
   return (
     <>
@@ -58,6 +64,7 @@ export default function FilterToolBar({
       <SortInput
         sort={currentSort(sortFields, filtersAndSort.sort)}
         ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+        sortable={sortable}
         fields={sortFields}
         onChange={({ field: { value }, ascending }) =>
           onChange({
@@ -69,22 +76,25 @@ export default function FilterToolBar({
           })
         }
       />
-      <SearchInput
-        value={filtersAndSort.filter.query}
-        name="search"
-        onClear={() =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, query: '' },
-          })
-        }
-        onChange={newQuery =>
-          onChange({
-            ...filtersAndSort,
-            filter: { ...filtersAndSort.filter, query: newQuery },
-          })
-        }
-      />
+
+      {searchable && (
+        <SearchInput
+          value={filtersAndSort.filter.query}
+          name="search"
+          onClear={() =>
+            onChange({
+              ...filtersAndSort,
+              filter: { ...filtersAndSort.filter, query: '' },
+            })
+          }
+          onChange={newQuery =>
+            onChange({
+              ...filtersAndSort,
+              filter: { ...filtersAndSort.filter, query: newQuery },
+            })
+          }
+        />
+      )}
     </>
   );
 }

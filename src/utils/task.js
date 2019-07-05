@@ -1,5 +1,4 @@
 // @flow
-import type { TaskEditable } from 'components/Cards/TaskCard/type.js.flow';
 import { getByPath } from 'utils/fp';
 import { TASK_UPDATE } from 'modules/permission/constants/task';
 import {
@@ -8,6 +7,7 @@ import {
   ORDER_TASK_SET_DUE_DATE,
   ORDER_TASK_SET_START_DATE,
   ORDER_TASK_SET_IN_PROGRESS,
+  ORDER_TASK_SET_SKIPPED,
   ORDER_TASK_SET_COMPLETED,
   ORDER_TASK_SET_ASSIGNEES,
   ORDER_TASK_SET_APPROVED,
@@ -19,6 +19,7 @@ import {
   ORDER_TASK_SET_DESCRIPTION,
   ORDER_TASK_SET_MEMO,
   ORDER_TASK_SET_TAGS,
+  ORDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/order';
 import {
   ORDER_ITEMS_TASK_UPDATE,
@@ -26,6 +27,7 @@ import {
   ORDER_ITEMS_TASK_SET_DUE_DATE,
   ORDER_ITEMS_TASK_SET_START_DATE,
   ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+  ORDER_ITEMS_TASK_SET_SKIPPED,
   ORDER_ITEMS_TASK_SET_COMPLETED,
   ORDER_ITEMS_TASK_SET_ASSIGNEES,
   ORDER_ITEMS_TASK_SET_APPROVED,
@@ -37,6 +39,7 @@ import {
   ORDER_ITEMS_TASK_SET_DESCRIPTION,
   ORDER_ITEMS_TASK_SET_MEMO,
   ORDER_ITEMS_TASK_SET_TAGS,
+  ORDER_ITEMS_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/orderItem';
 import {
   BATCH_TASK_UPDATE,
@@ -44,6 +47,7 @@ import {
   BATCH_TASK_SET_DUE_DATE,
   BATCH_TASK_SET_START_DATE,
   BATCH_TASK_SET_IN_PROGRESS,
+  BATCH_TASK_SET_SKIPPED,
   BATCH_TASK_SET_COMPLETED,
   BATCH_TASK_SET_ASSIGNEES,
   BATCH_TASK_SET_APPROVED,
@@ -55,6 +59,7 @@ import {
   BATCH_TASK_SET_DESCRIPTION,
   BATCH_TASK_SET_MEMO,
   BATCH_TASK_SET_TAGS,
+  BATCH_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/batch';
 import {
   PRODUCT_TASK_UPDATE,
@@ -62,6 +67,7 @@ import {
   PRODUCT_TASK_SET_DUE_DATE,
   PRODUCT_TASK_SET_START_DATE,
   PRODUCT_TASK_SET_IN_PROGRESS,
+  PRODUCT_TASK_SET_SKIPPED,
   PRODUCT_TASK_SET_COMPLETED,
   PRODUCT_TASK_SET_ASSIGNEES,
   PRODUCT_TASK_SET_APPROVED,
@@ -73,11 +79,13 @@ import {
   PRODUCT_TASK_SET_APPROVABLE,
   PRODUCT_TASK_SET_MEMO,
   PRODUCT_TASK_SET_TAGS,
+  PRODUCT_TASK_SET_MILESTONE,
   PRODUCT_PROVIDER_TASK_UPDATE,
   PRODUCT_PROVIDER_TASK_SET_NAME,
   PRODUCT_PROVIDER_TASK_SET_DUE_DATE,
   PRODUCT_PROVIDER_TASK_SET_START_DATE,
   PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+  PRODUCT_PROVIDER_TASK_SET_SKIPPED,
   PRODUCT_PROVIDER_TASK_SET_COMPLETED,
   PRODUCT_PROVIDER_TASK_SET_ASSIGNEES,
   PRODUCT_PROVIDER_TASK_SET_APPROVED,
@@ -89,6 +97,7 @@ import {
   PRODUCT_PROVIDER_TASK_SET_DESCRIPTION,
   PRODUCT_PROVIDER_TASK_SET_MEMO,
   PRODUCT_PROVIDER_TASK_SET_TAGS,
+  PRODUCT_PROVIDER_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/product';
 import {
   SHIPMENT_TASK_UPDATE,
@@ -96,6 +105,7 @@ import {
   SHIPMENT_TASK_SET_DUE_DATE,
   SHIPMENT_TASK_SET_START_DATE,
   SHIPMENT_TASK_SET_IN_PROGRESS,
+  SHIPMENT_TASK_SET_SKIPPED,
   SHIPMENT_TASK_SET_COMPLETED,
   SHIPMENT_TASK_SET_ASSIGNEES,
   SHIPMENT_TASK_SET_APPROVED,
@@ -107,7 +117,21 @@ import {
   SHIPMENT_TASK_SET_DESCRIPTION,
   SHIPMENT_TASK_SET_MEMO,
   SHIPMENT_TASK_SET_TAGS,
+  SHIPMENT_TASK_SET_MILESTONE,
 } from 'modules/permission/constants/shipment';
+
+export type TaskEditableProps = {
+  name: boolean,
+  startDate: boolean,
+  dueDate: boolean,
+  inProgress: boolean,
+  skipped: boolean,
+  completed: boolean,
+  approved: boolean,
+  rejected: boolean,
+  assignedTo: boolean,
+  approvers: boolean,
+};
 
 export const parseGroupIds = (task: Object) => {
   const entity = getByPath('entity.__typename', task);
@@ -150,13 +174,14 @@ export const parseGroupIds = (task: Object) => {
 export const checkEditableFromEntity = (
   type: string,
   hasPermission: Function
-): TaskEditable & {
+): TaskEditableProps & {
   startDateBinding: boolean,
   dueDateBinding: boolean,
   approvable: boolean,
   description: boolean,
   memo: boolean,
   tags: boolean,
+  milestone: boolean,
 } => {
   switch (type) {
     case 'Order':
@@ -165,6 +190,7 @@ export const checkEditableFromEntity = (
         startDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_START_DATE]),
         dueDate: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DUE_DATE]),
         inProgress: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_IN_PROGRESS]),
+        skipped: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_SKIPPED]),
         completed: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_COMPLETED]),
         assignedTo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_ASSIGNEES]),
         approved: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_APPROVED]),
@@ -184,6 +210,7 @@ export const checkEditableFromEntity = (
         description: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_DESCRIPTION]),
         memo: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, ORDER_TASK_UPDATE, ORDER_TASK_SET_MILESTONE]),
       };
     case 'OrderItem':
       return {
@@ -202,6 +229,11 @@ export const checkEditableFromEntity = (
           TASK_UPDATE,
           ORDER_ITEMS_TASK_UPDATE,
           ORDER_ITEMS_TASK_SET_IN_PROGRESS,
+        ]),
+        skipped: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_SKIPPED,
         ]),
         completed: hasPermission([
           TASK_UPDATE,
@@ -250,6 +282,11 @@ export const checkEditableFromEntity = (
         ]),
         memo: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, ORDER_ITEMS_TASK_UPDATE, ORDER_ITEMS_TASK_SET_TAGS]),
+        milestone: hasPermission([
+          TASK_UPDATE,
+          ORDER_ITEMS_TASK_UPDATE,
+          ORDER_ITEMS_TASK_SET_MILESTONE,
+        ]),
       };
     case 'Batch':
       return {
@@ -257,6 +294,7 @@ export const checkEditableFromEntity = (
         startDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_START_DATE]),
         dueDate: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DUE_DATE]),
         inProgress: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_IN_PROGRESS]),
+        skipped: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_SKIPPED]),
         completed: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_COMPLETED]),
         assignedTo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_ASSIGNEES]),
         approved: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_APPROVED]),
@@ -276,6 +314,7 @@ export const checkEditableFromEntity = (
         description: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_DESCRIPTION]),
         memo: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, BATCH_TASK_UPDATE, BATCH_TASK_SET_MILESTONE]),
       };
     case 'Product':
       return {
@@ -283,6 +322,7 @@ export const checkEditableFromEntity = (
         startDate: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_START_DATE]),
         dueDate: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_DUE_DATE]),
         inProgress: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_IN_PROGRESS]),
+        skipped: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_SKIPPED]),
         completed: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_COMPLETED]),
         assignedTo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_ASSIGNEES]),
         approved: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_APPROVED]),
@@ -306,6 +346,7 @@ export const checkEditableFromEntity = (
         ]),
         memo: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, PRODUCT_TASK_UPDATE, PRODUCT_TASK_SET_MILESTONE]),
       };
     case 'ProductProvider':
       return {
@@ -328,6 +369,11 @@ export const checkEditableFromEntity = (
           TASK_UPDATE,
           PRODUCT_PROVIDER_TASK_UPDATE,
           PRODUCT_PROVIDER_TASK_SET_IN_PROGRESS,
+        ]),
+        skipped: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_SKIPPED,
         ]),
         completed: hasPermission([
           TASK_UPDATE,
@@ -384,6 +430,11 @@ export const checkEditableFromEntity = (
           PRODUCT_PROVIDER_TASK_UPDATE,
           PRODUCT_PROVIDER_TASK_SET_TAGS,
         ]),
+        milestone: hasPermission([
+          TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_UPDATE,
+          PRODUCT_PROVIDER_TASK_SET_MILESTONE,
+        ]),
       };
     default:
       return {
@@ -395,6 +446,7 @@ export const checkEditableFromEntity = (
           SHIPMENT_TASK_UPDATE,
           SHIPMENT_TASK_SET_IN_PROGRESS,
         ]),
+        skipped: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_SKIPPED]),
         completed: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_COMPLETED]),
         assignedTo: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_ASSIGNEES]),
         approved: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_APPROVED]),
@@ -422,6 +474,7 @@ export const checkEditableFromEntity = (
         ]),
         memo: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_MEMO]),
         tags: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_TAGS]),
+        milestone: hasPermission([TASK_UPDATE, SHIPMENT_TASK_UPDATE, SHIPMENT_TASK_SET_MILESTONE]),
       };
   }
 };

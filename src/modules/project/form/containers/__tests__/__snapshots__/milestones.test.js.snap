@@ -1,0 +1,130 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`milestones container should calculate related entities base on tasks 1`] = `
+Object {
+  "batches": 3,
+  "containers": 3,
+  "orderItems": 3,
+  "orders": 3,
+  "productProviders": 3,
+  "products": 3,
+  "shipments": 3,
+}
+`;
+
+exports[`milestones container should calculate related entities base on tasks 2`] = `
+Object {
+  "batches": 0,
+  "containers": 0,
+  "orderItems": 0,
+  "orders": 30,
+  "productProviders": 0,
+  "products": 0,
+  "shipments": 0,
+}
+`;
+
+exports[`milestones container should change the milestone name 1`] = `
+Array [
+  Object {
+    "dueDate": "2019-06-26T10:57:34.256Z",
+    "id": "1",
+    "name": "a",
+    "tasks": Array [
+      Object {
+        "id": 4,
+      },
+    ],
+  },
+  Object {
+    "dueDate": null,
+    "id": "2",
+    "name": "b",
+    "tasks": Array [],
+  },
+  Object {
+    "dueDate": null,
+    "id": "3",
+    "name": "c",
+    "tasks": Array [],
+  },
+]
+`;
+
+exports[`milestones container should count task by milestone id 1`] = `
+Object {
+  "approved": 0,
+  "completed": 1,
+  "count": 1,
+  "delayed": 0,
+  "inProgress": 0,
+  "rejected": 0,
+  "remain": 0,
+  "skipped": 0,
+  "unapproved": 0,
+}
+`;
+
+exports[`milestones container should count task by milestone id 2`] = `
+Object {
+  "approved": 0,
+  "completed": 0,
+  "count": 0,
+  "delayed": 0,
+  "inProgress": 0,
+  "rejected": 0,
+  "remain": 0,
+  "skipped": 0,
+  "unapproved": 0,
+}
+`;
+
+exports[`milestones container should delete milestone by id 1`] = `
+Object {
+  "ignoreTaskIds": Array [],
+  "milestones": Array [
+    Object {
+      "dueDate": null,
+      "id": "1",
+      "name": "a",
+      "tasks": Array [
+        Object {
+          "id": 4,
+        },
+      ],
+    },
+    Object {
+      "dueDate": null,
+      "id": "3",
+      "name": "c",
+      "tasks": Array [],
+    },
+  ],
+}
+`;
+
+exports[`milestones container should return milestone status 1`] = `
+Array [
+  Object {
+    "completed": 0,
+    "dueDate": null,
+    "isCompleted": false,
+    "name": "a",
+    "total": 1,
+  },
+  Object {
+    "completed": 0,
+    "dueDate": null,
+    "isCompleted": false,
+    "name": "b",
+    "total": 0,
+  },
+  Object {
+    "completed": 0,
+    "dueDate": null,
+    "isCompleted": false,
+    "name": "c",
+    "total": 0,
+  },
+]
+`;

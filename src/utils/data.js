@@ -360,7 +360,11 @@ const parseDateFieldForTask = (key: string, originalTask: ?TaskType, newTask: Ta
 };
 
 // Used only in Task Form. For tasks inside other entities, use parseTodoField function.
-export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Object => {
+export const parseTaskField = (
+  originalTask: ?TaskType,
+  newTask: TaskType,
+  isInProject: boolean = false
+): Object => {
   if (isEquals(originalTask, newTask)) return {};
 
   return {
@@ -412,6 +416,16 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'completedAt', originalTask),
       newTask.completedAt
     ),
+    ...parseParentIdField(
+      'skippedById',
+      getByPathWithDefault(null, 'skippedBy', originalTask),
+      newTask.skippedBy
+    ),
+    ...parseDateField(
+      'skippedAt',
+      getByPathWithDefault(null, 'skippedAt', originalTask),
+      newTask.skippedAt
+    ),
     ...parseGenericField(
       'approvable',
       getByPathWithDefault(null, 'approvable', originalTask),
@@ -454,6 +468,13 @@ export const parseTaskField = (originalTask: ?TaskType, newTask: TaskType): Obje
       getByPathWithDefault(null, 'taskTemplate', originalTask),
       newTask.taskTemplate
     ),
+    ...(!isInProject
+      ? parseParentIdField(
+          'milestoneId',
+          getByPathWithDefault(null, 'milestone', originalTask),
+          newTask.milestone
+        )
+      : {}),
   };
 };
 
@@ -462,10 +483,12 @@ export const parseTodoField = (
   originalTodo: ?{
     tasks: Array<TaskType>,
     taskTemplate: ?{ id: string },
+    milestone?: { id: string },
   },
   newTodo: {
     tasks: Array<TaskType>,
     taskTemplate: ?{ id: string },
+    milestone?: { id: string },
   }
 ): Object => {
   if (isEquals(originalTodo, newTodo)) return {};
@@ -485,6 +508,11 @@ export const parseTodoField = (
         'taskTemplateId',
         getByPathWithDefault(null, 'taskTemplate', originalTodo),
         newTodo.taskTemplate
+      ),
+      ...parseParentIdField(
+        'milestoneId',
+        getByPathWithDefault(null, 'milestone', originalTodo),
+        newTodo.milestone
       ),
     },
   };

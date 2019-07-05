@@ -5,6 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import GridView from 'components/GridView';
 import { TaskCard } from 'components/Cards';
 import { encodeId } from 'utils/id';
+import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 
 type Props = {
   items: Array<Object>,
@@ -15,14 +17,18 @@ type Props = {
 };
 
 const defaultRenderItem = (item: Object) => (
-  <TaskCard
-    key={item.id}
-    position={item.sort + 1}
-    entity={item.entity}
-    task={item}
-    onClick={() => navigate(`/task/${encodeId(item.id)}`)}
-    showActionsOnHover
-  />
+  <PartnerPermissionsWrapper key={item.id} data={item}>
+    {permissions => (
+      <TaskCard
+        position={item.sort + 1}
+        entity={item.entity}
+        task={item}
+        navigable={{ project: permissions.includes(PROJECT_FORM) }}
+        onClick={() => navigate(`/task/${encodeId(item.id)}`)}
+        showActionsOnHover
+      />
+    )}
+  </PartnerPermissionsWrapper>
 );
 
 const defaultProps = {
@@ -37,11 +43,11 @@ const TaskGridView = (props: Props) => {
       onLoadMore={onLoadMore}
       hasMore={hasMore}
       isLoading={isLoading}
-      itemWidth="200px"
+      itemWidth="195px"
       isEmpty={items.length === 0}
       emptyMessage={<FormattedMessage id="modules.Tasks.noItem" defaultMessage="No tasks found" />}
     >
-      {items.map(item => renderItem(item))}
+      {items.map(renderItem)}
     </GridView>
   );
 };

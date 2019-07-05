@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { timelineDateMinimalFragment } from 'graphql';
 
 export const shipmentAutoDateQuery = gql`
-  query($id: ID!) {
+  query shipmentAutoDateQuery($id: ID!) {
     shipment(id: $id) {
       ... on Shipment {
         id

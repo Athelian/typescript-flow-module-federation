@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BaseButton } from 'components/Buttons';
+import BaseButton from '../BaseButton';
 
 type OptionalProps = {
   disabled: boolean,

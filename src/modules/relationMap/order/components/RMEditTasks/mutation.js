@@ -2,6 +2,8 @@
 import gql from 'graphql-tag';
 import {
   taskWithParentInfoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   userAvatarFragment,
   tagFragment,
   productCardFragment,
@@ -16,7 +18,7 @@ import {
   imageFragment,
   timelineDateMinimalFragment,
   portFragment,
-  todoFragment,
+  taskCountFragment,
   sizeFragment,
   ownedByFragment,
 } from 'graphql';
@@ -32,6 +34,8 @@ export const taskUpdateManyMutation = gql`
     }
   }
   ${taskWithParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
@@ -47,7 +51,7 @@ export const taskUpdateManyMutation = gql`
   ${imageFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${sizeFragment}
 `;
 

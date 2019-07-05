@@ -17,32 +17,27 @@ import TaskContainer from 'modules/task/form/container';
 import TaskForm from 'modules/task/form';
 import { taskTimelineQuery } from 'modules/task/query';
 
-type OptionalProps = {
-  isInTemplate: boolean,
-  parentEntity?: string,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   task: Object,
   entity: Object,
   groupIds: Array<string>,
-  editable: boolean,
   onSave: Function,
-};
-
-const defaultProps = {
-  isInTemplate: false,
-};
+  inParentEntityForm: boolean,
+  isInTemplate: boolean,
+  isInProject: boolean,
+  parentEntity?: string,
+|};
 
 const formContainer = new FormContainer();
 
 const TaskFormInSlide = ({
   groupIds,
-  editable,
   onSave,
   task,
   parentEntity,
   entity,
+  inParentEntityForm,
+  isInProject,
   isInTemplate,
 }: Props) => {
   useEffect(() => {
@@ -97,7 +92,7 @@ const TaskFormInSlide = ({
                   </BooleanValue>
                 )}
 
-                {editable && taskContainer.isDirty() && (
+                {taskContainer.isDirty() && (
                   <>
                     <ResetButton
                       onClick={() => {
@@ -118,9 +113,10 @@ const TaskFormInSlide = ({
               groupIds={groupIds}
               task={task}
               entity={entity}
-              hideParentInfo
               parentEntity={parentEntity}
+              isInProject={isInProject}
               isInTemplate={isInTemplate}
+              inParentEntityForm={inParentEntityForm}
               onFormReady={() => taskContainer.initDetailValues(task)}
             />
           </Layout>
@@ -130,6 +126,4 @@ const TaskFormInSlide = ({
   );
 };
 
-TaskFormInSlide.defaultProps = defaultProps;
-
-export default withCache(TaskFormInSlide, ['task', 'entity', 'groupIds', 'editable']);
+export default withCache(TaskFormInSlide, ['task', 'entity', 'groupIds']);

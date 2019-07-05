@@ -22,6 +22,10 @@ export default defineMessages({
     id: 'components.Header.profile.profile',
     defaultMessage: 'PROFILE',
   },
+  import: {
+    id: 'components.Header.import',
+    defaultMessage: 'IMPORT',
+  },
   preferences: {
     id: 'components.Header.profile.preferences',
     defaultMessage: 'PREFERENCES',

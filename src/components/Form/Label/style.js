@@ -12,6 +12,7 @@ type LabelWrapperType = {
 export const LabelWrapperStyle = ({ align, height, width, color }: LabelWrapperType): string => css`
   width: ${width};
   height: ${height};
+  max-height: ${height};
   line-height: ${height};
   ${fontSizes.SMALL};
   ${presets.ELLIPSIS};

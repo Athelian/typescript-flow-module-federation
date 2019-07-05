@@ -40,7 +40,7 @@ type Props = OptionalProps & {
 };
 
 const ProjectCard = ({ project, onClick, ...rest }: Props) => {
-  const { name, dueDate, milestones = [], taskCount, tags = [] } = project;
+  const { name, dueDate, milestones = [], taskCount = {}, tags = [] } = project;
   const { count, remain, inProgress, skipped, completed, delayed } = taskCount;
 
   return (

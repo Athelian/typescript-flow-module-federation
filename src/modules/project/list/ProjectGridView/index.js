@@ -23,7 +23,7 @@ const ProjectGridView = ({ items, onLoadMore, hasMore, isLoading }: Props) => {
       emptyMessage={
         <FormattedMessage id="modules.project.noFound" defaultMessage="No projects found" />
       }
-      itemWidth="200px"
+      itemWidth="195px"
     >
       {items.map(item => (
         <ProjectCard

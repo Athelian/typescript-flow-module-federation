@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Order, OrderItem, Shipment, Batch, Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
@@ -18,6 +19,32 @@ type Props = {
   setTaskValue: Function,
 };
 
+// The binding date would come from 2 sources: parent entity or in task itself
+// depend on the place, we will get data from *EntityContainer* or we need to query
+const mappingDate = ({
+  field,
+  mappingFields,
+  task,
+  values,
+}: {
+  mappingFields: Object,
+  field: string,
+  task: Task,
+  values: Order | Shipment | OrderItem | Batch,
+}) => {
+  const path = mappingFields[field] || 'N/A';
+  if (path.includes('milestone')) {
+    return getValueBy(path, task);
+  }
+
+  return getValueBy(path, values);
+};
+
+const defaultMappingFields = {
+  ProjectDueDate: 'milestone.project.dueDate',
+  MilestoneDueDate: 'milestone.dueDate',
+};
+
 export default function AutoDateBinding({ tasks, type, values, setTaskValue }: Props) {
   React.useEffect(() => {
     const mappingFields = {
@@ -25,15 +52,15 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
       OrderItem: OrderItemMappingField,
       Batch: BatchMappingField,
       Shipment: findMappingFields(values.voyages || []),
-      Product: {},
-      ProductProvider: {},
+      Product: defaultMappingFields,
+      ProductProvider: defaultMappingFields,
     };
-    emitter.addListener('AUTO_DATE', (field: ?string, value: any) => {
+    emitter.addListener('AUTO_DATE', (field: mixed, value: mixed) => {
       const latestValues = {
         ...values,
-        ...(field ? { [field]: value } : {}),
+        ...(field ? { [String(field)]: value } : {}),
       };
-      logger.warn('auto calculate binding data');
+      logger.warn('auto calculate binding data', type, field, latestValues);
       setTaskValue(
         'todo.tasks',
         tasks.map(task => {
@@ -51,8 +78,14 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
 
           if (startDateBinding) {
             const { months, weeks, days } = startDateInterval || {};
+
             newStartDate = calculateDate({
-              date: getValueBy(mappingFields[type][startDateBinding], latestValues),
+              date: mappingDate({
+                field: startDateBinding,
+                mappingFields: mappingFields[type],
+                values: latestValues,
+                task,
+              }),
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,
             });
@@ -60,10 +93,16 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
 
           if (dueDateBinding) {
             const { months, weeks, days } = dueDateInterval || {};
+
             newDueDate = calculateDate({
               date:
                 dueDateBinding !== START_DATE
-                  ? getValueBy(mappingFields[type][dueDateBinding], latestValues)
+                  ? mappingDate({
+                      field: dueDateBinding,
+                      mappingFields: mappingFields[type],
+                      values: latestValues,
+                      task,
+                    })
                   : newStartDate,
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,

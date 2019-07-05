@@ -9,7 +9,7 @@ import {
   portFragment,
   userAvatarFragment,
   metricFragment,
-  todoFragment,
+  taskCountFragment,
   partnerNameFragment,
   badRequestFragment,
   notFoundFragment,
@@ -43,7 +43,7 @@ export const shipmentListQuery = gql`
   ${portFragment}
   ${userAvatarFragment}
   ${metricFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${partnerNameFragment}
   ${forbiddenFragment}
   ${badRequestFragment}

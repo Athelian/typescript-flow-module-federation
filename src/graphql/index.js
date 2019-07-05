@@ -37,7 +37,12 @@ import {
 import { staffFormFragment, staffCardFragment } from './staff/fragment';
 import { tagFormFragment, tagCardFragment } from './tag/fragment';
 import { warehouseFormFragment, warehouseCardFragment } from './warehouse/fragment';
-import { projectCardFragment, projectFragment, milestoneCardFragment } from './project/fragment';
+import {
+  projectCardFragment,
+  milestoneCardFragment,
+  projectFormQueryFragment,
+  projectFormFragment,
+} from './project/fragment';
 import {
   taskCardFragment,
   taskTemplateCardFragment,
@@ -45,7 +50,7 @@ import {
   taskWithParentInfoFragment,
   taskTemplateFormFragment,
   taskFormInTemplateFragment,
-  todoFragment,
+  taskCountFragment,
 } from './task/fragment';
 import { tableTemplateCardFragment } from './tableTemplate/fragment';
 import { badRequestFragment, notFoundFragment, forbiddenFragment } from './errors/fragment';
@@ -128,8 +133,9 @@ export {
   ownedByFragment,
   projectCardFragment,
   milestoneCardFragment,
-  projectFragment,
+  projectFormQueryFragment,
+  projectFormFragment,
   taskCardFragment,
   taskTemplateCardFragment,
-  todoFragment,
+  taskCountFragment,
 };

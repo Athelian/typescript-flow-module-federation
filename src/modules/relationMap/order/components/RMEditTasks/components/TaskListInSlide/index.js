@@ -7,6 +7,7 @@ import { getByPath } from 'utils/fp';
 import { checkEditableFromEntity, parseGroupIds } from 'utils/task';
 import QueryFormPermissionContext from 'components/common/QueryForm/context';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
+import { PROJECT_FORM } from 'modules/permission/constants/project';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import { TaskCard } from 'components/Cards';
@@ -27,7 +28,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
       hasMore={hasMore}
       isLoading={isLoading}
       isEmpty={tasks.length === 0}
-      itemWidth="200px"
+      itemWidth="195px"
       emptyMessage={
         <FormattedMessage
           id="modules.RelationalMaps.noTasksFound"
@@ -55,6 +56,7 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                         return permissions.includes(checkPermission);
                       }
                     )}
+                    navigable={{ project: permissions.includes(PROJECT_FORM) }}
                     saveOnBlur={value => onChange(task.id, value)}
                     onClick={() => toggleTaskForm(true)}
                   />
@@ -67,16 +69,8 @@ const TaskListInSlide = ({ tasks, onChange, onLoadMore, hasMore, isLoading }: Pr
                         }}
                       >
                         <TaskFormInSlide
+                          inParentEntityForm={false}
                           groupIds={parseGroupIds(task)}
-                          editable={checkEditableFromEntity(
-                            getByPath('entity.__typename', task),
-                            (checkPermission: string | Array<string>) => {
-                              if (Array.isArray(checkPermission)) {
-                                return intersection(permissions, checkPermission).length > 0;
-                              }
-                              return permissions.includes(checkPermission);
-                            }
-                          )}
                           entity={task.entity}
                           task={{ ...task, sort: index }}
                           onSave={value => {

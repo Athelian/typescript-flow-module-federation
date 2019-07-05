@@ -11,13 +11,15 @@ import OrderValueSpy from './components/OrderValueSpy';
 import OrderItemValueSpy from './components/OrderItemValueSpy';
 import BatchValueSpy from './components/BatchValueSpy';
 import ShipmentValueSpy from './components/ShipmentValueSpy';
+import ProductValueSpy from './components/ProductValueSpy';
+import ProductProviderValueSpy from './components/ProductProviderValueSpy';
 
-type Props = {
+type Props = {|
   entity: Object,
-  inForm: boolean,
-};
+  inParentEntityForm: boolean,
+|};
 
-export default function ParentEntity({ entity, inForm }: Props) {
+export default function ParentEntity({ entity, inParentEntityForm }: Props) {
   return (
     <Location>
       {({ location }) => (
@@ -26,7 +28,7 @@ export default function ParentEntity({ entity, inForm }: Props) {
             <Subscribe to={[OrderInfoContainer, TaskContainer]}>
               {({ state }, { state: task, setFieldValue }) => (
                 <OrderValueSpy
-                  inForm={inForm}
+                  inParentEntityForm={inParentEntityForm}
                   setTaskValue={setFieldValue}
                   task={task}
                   values={state}
@@ -47,7 +49,7 @@ export default function ParentEntity({ entity, inForm }: Props) {
             <Subscribe to={[BatchInfoContainer, TaskContainer]}>
               {({ state }, { state: task, setFieldValue }) => (
                 <BatchValueSpy
-                  inForm={inForm}
+                  inParentEntityForm={inParentEntityForm}
                   setTaskValue={setFieldValue}
                   task={task}
                   values={state}
@@ -57,10 +59,30 @@ export default function ParentEntity({ entity, inForm }: Props) {
             <Subscribe to={[ShipmentInfoContainer, ShipmentTimelineContainer, TaskContainer]}>
               {({ state: info }, { state: timeline }, { state: task, setFieldValue }) => (
                 <ShipmentValueSpy
-                  inForm={inForm}
+                  inParentEntityForm={inParentEntityForm}
                   setTaskValue={setFieldValue}
                   task={task}
                   values={{ ...info, ...timeline }}
+                />
+              )}
+            </Subscribe>
+            <Subscribe to={[TaskContainer]}>
+              {({ state: task, setFieldValue }) => (
+                <ProductValueSpy
+                  inParentEntityForm={inParentEntityForm}
+                  setTaskValue={setFieldValue}
+                  task={task}
+                  values={{}}
+                />
+              )}
+            </Subscribe>
+            <Subscribe to={[TaskContainer]}>
+              {({ state: task, setFieldValue }) => (
+                <ProductProviderValueSpy
+                  inParentEntityForm={inParentEntityForm}
+                  setTaskValue={setFieldValue}
+                  task={task}
+                  values={{}}
                 />
               )}
             </Subscribe>

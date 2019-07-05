@@ -8,7 +8,7 @@ import {
   tagFragment,
   priceFragment,
   imageFragment,
-  todoFragment,
+  taskCountFragment,
   partnerNameFragment,
   forbiddenFragment,
 } from 'graphql';
@@ -37,7 +37,7 @@ export const batchListQuery = gql`
   ${tagFragment}
   ${priceFragment}
   ${imageFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${forbiddenFragment}
 `;
 

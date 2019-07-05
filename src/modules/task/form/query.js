@@ -3,6 +3,8 @@ import gql from 'graphql-tag';
 
 import {
   taskWithParentInfoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   userAvatarFragment,
   tagFragment,
   orderCardFragment,
@@ -16,7 +18,7 @@ import {
   imageFragment,
   timelineDateMinimalFragment,
   portFragment,
-  todoFragment,
+  taskCountFragment,
   productProviderCardFragment,
   sizeFragment,
   ownedByFragment,
@@ -30,6 +32,8 @@ export const taskFormQuery = gql`
   }
 
   ${taskWithParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${userAvatarFragment}
   ${tagFragment}
   ${orderCardFragment}
@@ -44,7 +48,7 @@ export const taskFormQuery = gql`
   ${imageFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${todoFragment}
+  ${taskCountFragment}
   ${sizeFragment}
   ${ownedByFragment}
 `;

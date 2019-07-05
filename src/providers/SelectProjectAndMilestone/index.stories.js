@@ -42,12 +42,9 @@ storiesOf('Selector/SelectProjectAndMilestone', module).add('with gray card', ()
                       milestone,
                     });
                   }}
-                  onSelect={(selectedProject, selectedMilestone) => {
+                  onSelect={value => {
                     slideToggle(false);
-                    set({
-                      project: selectedProject,
-                      milestone: selectedMilestone,
-                    });
+                    set(value);
                   }}
                 />
               )}

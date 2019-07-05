@@ -59,7 +59,7 @@ const TaskApprovalStatusInput = ({
   };
   const parsedDate = approval
     ? getByPathWithDefault('', 'approvedAt', approval)
-    : getByPathWithDefault('', 'approvedAt', rejection);
+    : getByPathWithDefault('', 'rejectedAt', rejection);
 
   return (
     <div className={TaskApprovalStatusInputWrapperStyle(!!approval, width)}>

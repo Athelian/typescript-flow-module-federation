@@ -8,6 +8,7 @@ import { showToastError } from 'utils/errors';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import { decodeId } from 'utils/id';
+import { getByPath } from 'utils/fp';
 import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
 import Layout from 'components/Layout';
@@ -58,7 +59,7 @@ class TaskFormModule extends React.Component<Props> {
       if (violations && violations.length) {
         onErrors(violations);
       } else {
-        onSuccess();
+        onSuccess(getByPath('taskUpdate', data));
       }
     }
   };
@@ -87,7 +88,7 @@ class TaskFormModule extends React.Component<Props> {
             >
               {(saveTask, { loading: isLoading, error }) => (
                 <Subscribe to={[TaskContainer, FormContainer]}>
-                  {({ initDetailValues, originalValues, state, isDirty, onSuccess }, form) => {
+                  {({ initDetailValues, originalValues, state, isDirty }, form) => {
                     return (
                       <Layout
                         {...uiState}
@@ -157,8 +158,8 @@ class TaskFormModule extends React.Component<Props> {
                                     this.onSave(
                                       { originalValues, state },
                                       saveTask,
-                                      () => {
-                                        onSuccess();
+                                      responseData => {
+                                        initDetailValues(responseData);
                                         form.onReset();
                                       },
                                       form.onErrors
@@ -184,6 +185,7 @@ class TaskFormModule extends React.Component<Props> {
                           entityType="task"
                           render={task => (
                             <TaskForm
+                              inParentEntityForm={false}
                               groupIds={parseGroupIds(task)}
                               task={task}
                               onFormReady={() => initDetailValues(task)}

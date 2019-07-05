@@ -89,3 +89,24 @@ export const AutoDateSyncIconStyle: string = css`
   ${fontSizes.SMALL};
   color: ${colors.GRAY_LIGHT};
 `;
+
+export const UnapprovedButtonStyle = (editable: boolean): string => css`
+  ${presets.BUTTON};
+  height: 40px;
+  width: 200px;
+  ${borderRadiuses.BUTTON};
+  ${fontSizes.SMALL};
+  letter-spacing: 2px;
+  color: ${colors.GRAY_DARK};
+  background-color: ${colors.GRAY_LIGHT};
+  ${editable
+    ? `
+    &:hover,
+    :focus {
+      background-color: ${colors.GRAY_VERY_LIGHT};
+    }
+  `
+    : `
+    cursor: inherit;
+  `}
+`;

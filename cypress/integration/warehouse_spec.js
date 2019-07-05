@@ -30,7 +30,6 @@ describe('Warehouse', () => {
           .get('input[aria-labelledby="countrySearchSelectInput"]')
           .type(country)
           .should('have.value', country)
-          .wait(500)
           .get('input[name="surface"]')
           .type(surface)
           .blur()
@@ -39,7 +38,6 @@ describe('Warehouse', () => {
 
         cy.getByTestId('saveButton')
           .click()
-          .wait(1000)
           .should('not.exist');
 
         cy.get('input[name="name"]')
@@ -72,7 +70,6 @@ describe('Warehouse', () => {
 
       cy.getByTestId('saveButton')
         .click()
-        .wait(1000)
         .should('not.exist');
     });
   });
@@ -81,7 +78,6 @@ describe('Warehouse', () => {
     cy.task('fixture', 'warehouse').then(({ clonedName }) => {
       cy.getByTestId('cloneButton').click();
       cy.url().should('include', 'clone');
-      cy.wait(1000);
       cy.get('input[name="name"]')
         .clear()
         .type(clonedName)
@@ -89,7 +85,6 @@ describe('Warehouse', () => {
 
       cy.getByTestId('saveButton')
         .click()
-        .wait(1000)
         .should('not.exist');
     });
   });

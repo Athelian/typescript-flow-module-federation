@@ -25,7 +25,9 @@ import {
   fieldDefinitionFragment,
   badRequestFragment,
   ownedByFragment,
-  todoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  taskCountFragment,
   taskWithoutParentInfoFragment,
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
@@ -111,7 +113,9 @@ export const updateShipmentMutation: Object = gql`
   ${fieldValuesFragment}
   ${fieldDefinitionFragment}
   ${ownedByFragment}
-  ${todoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${taskCountFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskFormInTemplateFragment}
@@ -432,7 +436,11 @@ export const prepareParsedShipmentInput = ({
     ),
     ...parseFilesField('files', getByPathWithDefault([], 'files', originalValues), newValues.files),
     ...parseTodoField(
-      getByPathWithDefault({ tasks: [], taskTemplate: null }, 'todo', originalValues),
+      getByPathWithDefault(
+        { tasks: [], taskTemplate: null, milestone: null },
+        'todo',
+        originalValues
+      ),
       newValues.todo
     ),
   };

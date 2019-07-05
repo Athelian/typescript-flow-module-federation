@@ -39,15 +39,21 @@ export const PropsStyle: string = css`
   justify-content: space-between;
 `;
 
-export const NumberStyle = (color: string): string => css`
+export const NumberStyle = ({
+  color,
+  backgroundColor,
+}: {
+  color: string,
+  backgroundColor: string,
+}): string => css`
   height: 20px;
   width: 40px;
   ${presets.ELLIPSIS};
   text-overflow: clip;
   ${borderRadiuses.BUTTON};
-  background-color: ${colors[color]};
-  border: 1px solid ${color === 'WHITE' ? colors.TEAL : colors[color]};
-  color: ${color === 'WHITE' ? colors.TEAL : colors.WHITE};
+  background-color: ${colors[backgroundColor]};
+  border: 1px solid ${backgroundColor === 'WHITE' ? colors.TEAL : colors[backgroundColor]};
+  color: ${colors[color]};
   text-align: center;
   ${fontSizes.SMALL};
   line-height: 18px;

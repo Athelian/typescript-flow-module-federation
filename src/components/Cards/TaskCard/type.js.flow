@@ -1,13 +1,12 @@
 // @flow
 
-export type TaskEditable = {
+export type TaskCardEditableProps = {
   name: boolean,
   startDate: boolean,
   dueDate: boolean,
   inProgress: boolean,
+  skipped: boolean,
   completed: boolean,
-  assignedTo: boolean,
   approved: boolean,
   rejected: boolean,
-  approvers: boolean,
 };

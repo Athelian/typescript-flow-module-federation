@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jun 27 2019 21:16:26 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Jul 04 2019 10:21:35 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -26893,13 +26893,10 @@ type Container implements Model & Owned & Tagged & Sortable & Memorizable {
   totalVolume: MetricValue!
   totalWeight: MetricValue!
   totalPrice: Price
-  totalBatched: Float!
-  totalBatchedPackage: Int!
+  totalQuantity: Float!
+  totalPackageQuantity: Int!
   orderItemCount: Int!
   batchCount: Int!
-  totalBatchQuantity: Float! @deprecated(reason: "Use `totalBatched` instead")
-  totalBatchPackages: Int! @deprecated(reason: "Use `totalBatchedPackage` instead")
-  totalNumberOfUniqueOrderItems: Int! @deprecated(reason: "Use `orderItemCount` instead")
   batches: [BatchPayload!]!
   todo: Todo!
   id: ID!
@@ -28407,6 +28404,8 @@ input EntityInput {
   batchId: ID
   shipmentId: ID
   containerId: ID
+  projectId: ID
+  milestoneId: ID
   taskId: ID
 }
 
@@ -29713,7 +29712,7 @@ input MilestoneCreateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskCreateInput!]
+  tasks: [MilestoneTaskInput!]
   projectId: ID!
 }
 
@@ -29729,33 +29728,7 @@ type MilestoneEntitiesCount {
 
 union MilestonePayload = Milestone | BadRequest | Forbidden | NotFound
 
-input MilestoneTaskCreateInput {
-  name: String!
-  approvable: Boolean
-  startDate: DateTime
-  startDateInterval: IntervalInput
-  startDateBinding: TaskDateBinding
-  dueDate: DateTime
-  dueDateInterval: IntervalInput
-  dueDateBinding: TaskDateBinding
-  assignedToIds: [ID!]
-  approverIds: [ID!]
-  inProgressById: ID
-  inProgressAt: DateTime
-  completedById: ID
-  completedAt: DateTime
-  rejectedById: ID
-  rejectedAt: DateTime
-  approvedById: ID
-  approvedAt: DateTime
-  skippedById: ID
-  skippedAt: DateTime
-  memo: String
-  description: String
-  tagIds: [ID!]
-}
-
-input MilestoneTaskUpdateInput {
+input MilestoneTaskInput {
   name: String
   approvable: Boolean
   startDate: DateTime
@@ -29780,6 +29753,7 @@ input MilestoneTaskUpdateInput {
   description: String
   tagIds: [ID!]
   id: ID
+  entity: EntityInput
 }
 
 input MilestoneUpdateInput {
@@ -29788,7 +29762,7 @@ input MilestoneUpdateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskUpdateInput!]
+  tasks: [MilestoneTaskInput!]
   id: ID
   projectId: ID
 }
@@ -30096,6 +30070,7 @@ type Order implements Model & Owned & Tagged & Supervised & Documented & Customi
   piNo: String
   incoterm: Incoterm
   deliveryPlace: String
+  deliveryDate: DateTime
   timeline: Timeline!
   todo: Todo!
   totalPrice: Price!
@@ -30133,6 +30108,7 @@ input OrderCreateInput {
   currency: Currency!
   incoterm: Incoterm
   deliveryPlace: String
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
@@ -30400,6 +30376,7 @@ input OrderUpdateInput {
   currency: Currency
   incoterm: Incoterm
   deliveryPlace: String
+  deliveryDate: DateTime
   memo: String
   tagIds: [ID!]
   inChargeIds: [ID!]
@@ -30807,7 +30784,7 @@ input ProjectMilestoneCreateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskCreateInput!]
+  tasks: [MilestoneTaskInput!]
 }
 
 input ProjectMilestoneUpdateInput {
@@ -30816,7 +30793,7 @@ input ProjectMilestoneUpdateInput {
   dueDate: DateTime
   completedById: ID
   completedAt: DateTime
-  tasks: [MilestoneTaskUpdateInput!]
+  tasks: [MilestoneTaskInput!]
   id: ID
 }
 
@@ -86555,6 +86532,7 @@ type Shipment implements Model & Owned & Tagged & Supervised & Documented & Cust
   containerGroups: [ContainerGroupPayload!]!
   forwarders: [GroupPayload!]!
   totalVolume: MetricValue!
+  totalPackageQuantity: Float!
   orderCount: Int!
   orderItemCount: Int!
   batchCount: Int!
@@ -86989,6 +86967,7 @@ input TaskCreateInput {
 
 enum TaskDateBinding {
   OrderIssuedAt
+  OrderDeliveryDate
   OrderItemOrderIssuedAt
   BatchDeliveredAt
   BatchDesiredAt
@@ -87006,6 +86985,8 @@ enum TaskDateBinding {
   ShipmentCustomClearance
   ShipmentWarehouseArrival
   ShipmentDeliveryReady
+  ProjectDueDate
+  MilestoneDueDate
   TaskStartDate
   TaskDueDate
 }
@@ -87020,6 +87001,7 @@ input TaskFilterInput {
   entities: [EntityInput!]
   milestoneId: ID
   hasMilestone: Boolean
+  hasMilestoneExceptIds: [ID!]
 }
 
 union TaskPayload = Task | BadRequest | Forbidden | NotFound
@@ -87318,6 +87300,7 @@ input TodoTaskInput {
   tagIds: [ID!]
   id: ID
   taskTemplateId: ID
+  milestoneId: ID
 }
 
 type Token {

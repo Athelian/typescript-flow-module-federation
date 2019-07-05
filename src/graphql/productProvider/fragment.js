@@ -56,6 +56,14 @@ export const productProviderFormFragment = gql`
       ...documentFragment
     }
     todo {
+      milestone {
+        ... on Milestone {
+          ...milestoneCardFragment
+          project {
+            ...projectCardFragment
+          }
+        }
+      }
       tasks {
         ...taskWithoutParentInfoFragment
       }
@@ -108,7 +116,9 @@ export const productProviderCardFragment = gql`
       ...priceFragment
     }
     todo {
-      ...todoFragment
+      taskCount {
+        ...taskCountFragment
+      }
     }
   }
 `;

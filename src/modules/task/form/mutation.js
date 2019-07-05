@@ -1,36 +1,69 @@
 // @flow
 import gql from 'graphql-tag';
-import { badRequestFragment, forbiddenFragment } from 'graphql';
-import { parseTaskField } from 'utils/data';
-
-export const createTaskMutation = gql`
-  mutation taskCreate($input: TaskCreateInput!) {
-    taskCreate(input: $input) {
-      ... on Task {
-        id
-      }
-      ...badRequestFragment
-      ...forbiddenFragment
-    }
-  }
-  ${badRequestFragment}
-  ${forbiddenFragment}
-`;
+import {
+  badRequestFragment,
+  forbiddenFragment,
+  taskWithParentInfoFragment,
+  milestoneCardFragment,
+  projectCardFragment,
+  userAvatarFragment,
+  tagFragment,
+  orderCardFragment,
+  itemCardFragment,
+  batchCardFragment,
+  productCardFragment,
+  shipmentCardFragment,
+  partnerNameFragment,
+  priceFragment,
+  metricFragment,
+  imageFragment,
+  timelineDateMinimalFragment,
+  portFragment,
+  taskCountFragment,
+  productProviderCardFragment,
+  sizeFragment,
+  ownedByFragment,
+} from 'graphql';
+import { parseTaskField, parseParentIdField } from 'utils/data';
+import { getByPathWithDefault } from 'utils/fp';
 
 export const updateTaskMutation = gql`
   mutation taskUpdate($id: ID!, $input: TaskUpdateInput!) {
     taskUpdate(id: $id, input: $input) {
-      ... on Task {
-        id
-      }
+      ...taskWithParentInfoFragment
       ...badRequestFragment
       ...forbiddenFragment
     }
   }
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${taskWithParentInfoFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
+  ${userAvatarFragment}
+  ${tagFragment}
+  ${orderCardFragment}
+  ${batchCardFragment}
+  ${productCardFragment}
+  ${shipmentCardFragment}
+  ${itemCardFragment}
+  ${productProviderCardFragment}
+  ${partnerNameFragment}
+  ${priceFragment}
+  ${metricFragment}
+  ${imageFragment}
+  ${timelineDateMinimalFragment}
+  ${portFragment}
+  ${taskCountFragment}
+  ${sizeFragment}
+  ${ownedByFragment}
 `;
 
 export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
   ...parseTaskField(originalValues, values),
+  ...parseParentIdField(
+    'milestoneId',
+    getByPathWithDefault(null, 'milestone', originalValues),
+    values.milestone
+  ),
 });
