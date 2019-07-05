@@ -100,7 +100,7 @@ const OrderGridView = ({
         <FormattedMessage id="modules.Orders.noOrderFound" defaultMessage="No orders found" />
       }
     >
-      {items.map(item => renderItem(item))}
+      {items.map(renderItem)}
     </GridView>
   );
 };
