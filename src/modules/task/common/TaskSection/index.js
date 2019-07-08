@@ -621,14 +621,10 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                             filter={{
                               query: '',
                             }}
-                            project={getByPath('project', milestone)}
                             milestone={milestone}
-                            onSelect={({ milestone: newMilestone, project: newProject }) => {
+                            onSelect={newMilestone => {
                               if (newMilestone) {
-                                set('selectedMilestone', {
-                                  ...newMilestone,
-                                  project: newProject,
-                                });
+                                set('selectedMilestone', newMilestone);
                                 set('isOpenOfConfirmDialog', true);
                               } else {
                                 setFieldValue('todo.milestone', null);
