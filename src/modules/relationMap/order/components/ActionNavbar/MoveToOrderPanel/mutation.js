@@ -12,6 +12,7 @@ import {
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
   partnerNameFragment,
+  taskCountFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -41,6 +42,7 @@ export const updateOrderMutation = gql`
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
+  ${taskCountFragment}
 `;
 
 export default updateOrderMutation;

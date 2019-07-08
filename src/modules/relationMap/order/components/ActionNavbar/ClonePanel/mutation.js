@@ -13,6 +13,7 @@ import {
   taskTemplateCardFragment,
   partnerNameFragment,
   forbiddenFragment,
+  taskCountFragment,
 } from 'graphql';
 import {
   orderCardRMFragment,
@@ -36,6 +37,7 @@ export const cloneBatchMutation = gql`
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
+  ${taskCountFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
 `;
@@ -60,6 +62,7 @@ export const cloneShipmentMutation = gql`
   ${partnerNameFragment}
   ${userAvatarFragment}
   ${metricFragment}
+  ${taskCountFragment}
   ${tagFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
@@ -109,6 +112,7 @@ export const cloneOrderItemMutation = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
+  ${taskCountFragment}
   ${taskTemplateCardFragment}
 `;
 
@@ -132,4 +136,5 @@ export const cloneOrderMutation = gql`
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
+  ${taskCountFragment}
 `;
