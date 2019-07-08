@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import type { Task } from 'generated/graphql';
 import { type IntlShape, injectIntl, FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { Subscribe } from 'unstated';
@@ -126,6 +127,53 @@ function defaultBindingOptions(intl: IntlShape, isStartDate: boolean) {
       }),
     },
   ];
+}
+
+function triggerAutoBinding({
+  manualSettings,
+  values,
+  entity,
+  hasCircleBindingError,
+  task,
+}: {|
+  manualSettings: Object,
+  values: Object,
+  entity: string,
+  hasCircleBindingError: boolean,
+  task: Task,
+|}) {
+  if (!manualSettings.dueDate || !manualSettings.startDate) {
+    setTimeout(() => {
+      if (!manualSettings.dueDate) {
+        const { months = 0, weeks = 0, days = 0 } = values.dueDateInterval || {};
+        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+          hasCircleBindingError,
+          selectedField: 'dueDate',
+          field: values.dueDateBinding,
+          entityId: getByPath('entity.id', task),
+          autoDateDuration: {
+            metric: findDuration({ months, weeks }),
+            value: months || weeks || days,
+          },
+          autoDateOffset: -(months || weeks || days) > 0 ? 'before' : 'after',
+        });
+      }
+      if (!manualSettings.startDate) {
+        const { months = 0, weeks = 0, days = 0 } = values.startDateInterval || {};
+        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+          hasCircleBindingError,
+          selectedField: 'startDate',
+          field: values.startDateBinding,
+          entityId: getByPath('entity.id', task),
+          autoDateDuration: {
+            metric: findDuration({ months, weeks }),
+            value: months || weeks || days,
+          },
+          autoDateOffset: -(months || weeks || days) > 0 ? 'before' : 'after',
+        });
+      }
+    }, 200);
+  }
 }
 
 const TaskInfoSection = ({
@@ -478,6 +526,16 @@ const TaskInfoSection = ({
                                       : 'BLACK'
                                   }
                                   {...inputHandlers}
+                                  onBlur={evt => {
+                                    inputHandlers.onBlur(evt);
+                                    triggerAutoBinding({
+                                      manualSettings,
+                                      values,
+                                      entity,
+                                      hasCircleBindingError,
+                                      task,
+                                    });
+                                  }}
                                   originalValue={originalValues[name]}
                                   editable={editable.dueDate && manualSettings.dueDate}
                                   hideTooltip={!manualSettings.dueDate}
@@ -740,6 +798,16 @@ const TaskInfoSection = ({
                                 <DateInputFactory
                                   name={name}
                                   {...inputHandlers}
+                                  onBlur={evt => {
+                                    inputHandlers.onBlur(evt);
+                                    triggerAutoBinding({
+                                      manualSettings,
+                                      values,
+                                      entity,
+                                      hasCircleBindingError,
+                                      task,
+                                    });
+                                  }}
                                   originalValue={originalValues[name]}
                                   editable={editable.startDate && manualSettings.startDate}
                                   hideTooltip={!manualSettings.startDate}
@@ -1181,42 +1249,13 @@ const TaskInfoSection = ({
                                         milestone: newMilestone,
                                       });
                                       toggleSlide(false);
-                                      if (!manualSettings.dueDate || !manualSettings.startDate) {
-                                        setTimeout(() => {
-                                          if (!manualSettings.dueDate) {
-                                            const { months = 0, weeks = 0, days = 0 } =
-                                              values.dueDateInterval || {};
-                                            emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                              hasCircleBindingError,
-                                              selectedField: 'dueDate',
-                                              field: values.dueDateBinding,
-                                              entityId: getByPath('entity.id', task),
-                                              autoDateDuration: {
-                                                metric: findDuration({ months, weeks }),
-                                                value: months || weeks || days,
-                                              },
-                                              autoDateOffset:
-                                                -(months || weeks || days) > 0 ? 'before' : 'after',
-                                            });
-                                          }
-                                          if (!manualSettings.startDate) {
-                                            const { months = 0, weeks = 0, days = 0 } =
-                                              values.startDateInterval || {};
-                                            emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                              hasCircleBindingError,
-                                              selectedField: 'startDate',
-                                              field: values.startDateBinding,
-                                              entityId: getByPath('entity.id', task),
-                                              autoDateDuration: {
-                                                metric: findDuration({ months, weeks }),
-                                                value: months || weeks || days,
-                                              },
-                                              autoDateOffset:
-                                                -(months || weeks || days) > 0 ? 'before' : 'after',
-                                            });
-                                          }
-                                        }, 200);
-                                      }
+                                      triggerAutoBinding({
+                                        manualSettings,
+                                        values,
+                                        entity,
+                                        hasCircleBindingError,
+                                        task,
+                                      });
                                     }}
                                     onCancel={() => toggleSlide(false)}
                                   />
