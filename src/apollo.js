@@ -75,13 +75,17 @@ const SSELink = new ApolloLink((operation: Operation, forward?: NextLink) => {
 
 const errorLogger = errors => {
   errors.forEach(error => {
-    const { message, locations, path } = error;
+    const { message } = error;
     if (!isDevEnvironment) {
-      if (!(path && path.includes('login'))) Sentry.captureException(error);
+      if (!(message.includes('Unauthorized') || message.includes('Network error with auth'))) {
+        Sentry.withScope(scope => {
+          scope.setExtra('full-error-message', error);
+          Sentry.captureException(new Error(message));
+        });
+      }
     } else {
       // this is toast message only shows on develop environment
       toast.error(error.message);
-      logger.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
     }
   });
 };
