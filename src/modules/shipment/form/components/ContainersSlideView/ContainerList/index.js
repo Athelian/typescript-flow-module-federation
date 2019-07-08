@@ -75,6 +75,7 @@ export default function ContainerList({ containers, setDeepFieldValue }: Props) 
               >
                 {isOpenSelectWarehouse && (
                   <SelectWareHouse
+                    cacheKey="shipmentContainersSlideViewSelectWarehouseQuery"
                     selected={container.warehouse}
                     onCancel={() => toggleSelectWarehouse(false)}
                     onSelect={newValue => {

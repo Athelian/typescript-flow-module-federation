@@ -15,9 +15,11 @@ import WarehouseGridView from 'modules/warehouse/list/WarehouseGridView';
 import { WarehouseCard } from 'components/Cards';
 import { warehouseListQuery } from 'modules/warehouse/list/query';
 import messages from 'modules/warehouse/messages';
+import { warehousesDefaultQueryVariables } from 'modules/warehouse/constants';
 
 type Props = {
   intl: IntlShape,
+  cacheKey: string,
   selected?: ?{
     id: string,
     name: string,
@@ -33,39 +35,18 @@ const defaultProps = {
   },
 };
 
-const getInitFilter = () => {
-  const state = {
-    filter: {},
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
-};
-
-const SelectWareHouse = ({ intl, selected, onCancel, onSelect }: Props) => {
+const SelectWareHouse = ({ intl, cacheKey, selected, onCancel, onSelect }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(),
-    'filterWarehouse'
+    warehousesDefaultQueryVariables,
+    cacheKey
   );
 
   return (
-    <Query
-      query={warehouseListQuery}
-      variables={{
-        page: 1,
-        perPage: 10,
-        ...queryVariables,
-      }}
-      fetchPolicy="network-only"
-    >
+    <Query query={warehouseListQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
