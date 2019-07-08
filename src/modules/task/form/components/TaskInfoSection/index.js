@@ -1143,16 +1143,10 @@ const TaskInfoSection = ({
                                     filter={{
                                       query: '',
                                     }}
-                                    project={getByPath('milestone.project', values)}
                                     milestone={values.milestone}
-                                    onSelect={({ milestone, project }) => {
+                                    onSelect={milestone => {
                                       setFieldValues({
-                                        milestone: milestone
-                                          ? {
-                                              ...milestone,
-                                              project,
-                                            }
-                                          : null,
+                                        milestone,
                                       });
                                       toggleSlide(false);
                                       if (!manualSettings.dueDate || !manualSettings.startDate) {

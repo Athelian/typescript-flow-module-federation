@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { BooleanValue, ObjectValue } from 'react-values';
 import type { DateRangeInput, Project, Milestone } from 'generated/graphql';
 import loadMore from 'utils/loadMore';
-import { getByPathWithDefault } from 'utils/fp';
+import { getByPathWithDefault, getByPath } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import Layout from 'components/Layout';
@@ -22,10 +22,7 @@ import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './s
 
 type Props = {
   onCancel: () => void,
-  onSelect: ({
-    project: ?Project,
-    milestone: ?Milestone,
-  }) => void,
+  onSelect: (milestone: ?Milestone) => void,
   filter: {
     query?: string,
     createdAt?: DateRangeInput,
@@ -33,7 +30,6 @@ type Props = {
     dueDate?: DateRangeInput,
   },
   intl: IntlShape,
-  project: ?Project,
   milestone: ?Milestone,
 };
 
@@ -64,14 +60,7 @@ function resetSelection({
   });
 }
 
-function SelectProjectAndMilestone({
-  intl,
-  onCancel,
-  onSelect,
-  filter,
-  project,
-  milestone,
-}: Props) {
+function SelectProjectAndMilestone({ intl, onCancel, onSelect, filter, milestone }: Props) {
   const fields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -83,6 +72,8 @@ function SelectProjectAndMilestone({
     queryVariables,
     onChangeFilter: onChange,
   } = useSortAndFilter(initFilterBy(filter));
+
+  const project = getByPath('project', milestone);
 
   return (
     <ObjectValue
@@ -140,19 +131,25 @@ function SelectProjectAndMilestone({
               <SaveButton
                 data-testid="btnSaveSelectProjectAndMilestone"
                 disabled={
-                  !(
-                    getByPathWithDefault('', 'id', selectedProject) !==
-                      getByPathWithDefault('', 'id', project) &&
-                    getByPathWithDefault('', 'id', selectedMilestone) !==
-                      getByPathWithDefault('', 'id', milestone)
-                  )
+                  getByPathWithDefault('', 'id', selectedMilestone) ===
+                  getByPathWithDefault('', 'id', milestone)
                 }
-                onClick={() =>
-                  onSelect({
-                    project: selectedProject,
-                    milestone: selectedMilestone,
-                  })
-                }
+                onClick={() => {
+                  if (selectedMilestone) {
+                    onSelect({
+                      ...selectedMilestone,
+                      project: {
+                        ...selectedProject,
+                        milestones: selectedProject.milestones.map(item => ({
+                          id: item.id,
+                          __typename: 'Milestone',
+                        })),
+                      },
+                    });
+                  } else {
+                    onSelect(null);
+                  }
+                }}
               />
             </SlideViewNavBar>
           }
