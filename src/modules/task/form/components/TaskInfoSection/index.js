@@ -1144,9 +1144,9 @@ const TaskInfoSection = ({
                                       query: '',
                                     }}
                                     milestone={values.milestone}
-                                    onSelect={milestone => {
+                                    onSelect={newMilestone => {
                                       setFieldValues({
-                                        milestone,
+                                        milestone: newMilestone,
                                       });
                                       toggleSlide(false);
                                       if (!manualSettings.dueDate || !manualSettings.startDate) {
