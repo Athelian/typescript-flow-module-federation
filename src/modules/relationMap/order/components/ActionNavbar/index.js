@@ -530,25 +530,29 @@ export default function ActionNavbar({ highLightEntities, entities }: Props) {
                     });
                     actions.autoFillBatches(orderItemIds);
                     try {
-                      const balanceSplitBatches = await client.mutate({
-                        mutation: batchBalanceSplitManyMutation,
-                        variables: { orderItemIds },
-                        refetchQueries: orderIds.map(orderId => ({
-                          query: orderDetailQuery,
-                          variables: {
-                            id: orderId,
-                          },
-                        })),
-                      });
-                      const result = getByPathWithDefault(
-                        [],
-                        'data.batchBalanceSplitMany',
-                        balanceSplitBatches
-                      ).map((item, index) => ({
-                        id: orderItemIds[index],
-                        batches: getByPathWithDefault([], 'batches', item),
-                      }));
-                      actions.autoFillBatchesSuccess(result);
+                      if (orderItemIds.length) {
+                        const balanceSplitBatches = await client.mutate({
+                          mutation: batchBalanceSplitManyMutation,
+                          variables: { orderItemIds },
+                          refetchQueries: orderIds.map(orderId => ({
+                            query: orderDetailQuery,
+                            variables: {
+                              id: orderId,
+                            },
+                          })),
+                        });
+                        const result = getByPathWithDefault(
+                          [],
+                          'data.batchBalanceSplitMany',
+                          balanceSplitBatches
+                        ).map((item, index) => ({
+                          id: orderItemIds[index],
+                          batches: getByPathWithDefault([], 'batches', item),
+                        }));
+                        actions.autoFillBatchesSuccess(result);
+                      } else {
+                        actions.autoFillBatchesSuccess([]);
+                      }
                     } catch (error) {
                       actions.autoFillBatchesFailed(error);
                     }
