@@ -93,9 +93,6 @@ function SelectProducts({
     { title: intl.formatMessage(messages.endProductName), value: 'name' },
     { title: intl.formatMessage(messages.productName), value: 'productName' },
     { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
-    // no API
-    // { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
-    // FIXME: front-end only query order's exporter, so exporterName doesn't need.
     { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
     { title: intl.formatMessage(messages.supplier), value: 'supplierName' },
   ];
