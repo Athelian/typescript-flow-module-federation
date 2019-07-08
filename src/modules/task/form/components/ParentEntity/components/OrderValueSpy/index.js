@@ -5,7 +5,7 @@ import client from 'apollo';
 import emitter from 'utils/emitter';
 import { getByPath } from 'utils/fp';
 import logger from 'utils/logger';
-import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
+import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 import { orderAutoDateQuery } from './query';
 
@@ -16,29 +16,125 @@ type Props = {
   setTaskValue: Function,
 };
 
+type Duration = ?{ metric: 'days' | 'weeks' | 'months', value: number };
+type Offset = ?'before' | ?'after';
+type BindingField = 'startDate' | 'dueDate';
+
 export const MappingFields = {
   OrderIssuedAt: 'issuedAt',
   ProjectDueDate: 'milestone.project.dueDate',
   MilestoneDueDate: 'milestone.dueDate',
+  TaskStartDate: 'startDate',
+  TaskDueDate: 'dueDate',
 };
 
-const mappingDate = ({ field, task, values }: { field: string, task: Task, values: Order }) => {
+const mappingDate = ({
+  field,
+  task,
+  values,
+}: {
+  field: string,
+  task: Task,
+  values: Order,
+}): ?(string | Date) => {
   const path = MappingFields[field] || 'N/A';
-  if (path.includes('milestone')) {
+  if (field.includes('DueDate') || field.includes('StartDate')) {
     return getByPath(path, task);
   }
 
   return getByPath(path, values);
 };
 
+function autoCalculateDate({
+  autoDateDuration,
+  date,
+  autoDateOffset,
+  field,
+  setTaskValue,
+  selectedField,
+}: {|
+  autoDateDuration: Duration,
+  date: ?(string | Date),
+  autoDateOffset: Offset,
+  field: string,
+  setTaskValue: Function,
+  selectedField: string,
+|}) {
+  let result = date;
+  if (autoDateDuration) {
+    result = calculateDate({
+      date,
+      duration: autoDateDuration.metric,
+      offset:
+        autoDateOffset === 'after'
+          ? Math.abs(autoDateDuration.value)
+          : -Math.abs(autoDateDuration.value),
+    });
+  }
+  if (![START_DATE, DUE_DATE].includes(field)) {
+    logger.warn({
+      field,
+    });
+    setTaskValue(selectedField, result);
+    emitter.emit('LIVE_VALUE', field, result);
+  } else {
+    logger.warn({
+      selectedField,
+    });
+    setTaskValue(selectedField, result);
+  }
+  return result;
+}
+
+function bindingRelateField({
+  selectedField,
+  task,
+  setTaskValue,
+  date,
+}: {
+  selectedField: BindingField,
+  task: Task,
+  setTaskValue: Function,
+  date: ?(string | Date),
+}) {
+  if (selectedField === 'startDate') {
+    if (task.dueDateBinding === START_DATE) {
+      const { weeks, months, days } = task.dueDateInterval || {};
+      setTaskValue(
+        'dueDate',
+        calculateDate({
+          date,
+          duration: findDuration({ weeks, months }),
+          offset: weeks || months || days,
+        })
+      );
+    }
+  }
+
+  if (selectedField === 'dueDate') {
+    if (task.startDateBinding === DUE_DATE) {
+      const { weeks, months, days } = task.startDateInterval || {};
+      setTaskValue(
+        'startDate',
+        calculateDate({
+          date,
+          duration: findDuration({ weeks, months }),
+          offset: weeks || months || days,
+        })
+      );
+    }
+  }
+}
+
 export default function OrderValueSpy({ values, task, inParentEntityForm, setTaskValue }: Props) {
   React.useEffect(() => {
     emitter.addListener('FIND_ORDER_VALUE', (bindingData: mixed) => {
       const field = getByPath('field', bindingData);
       const entityId = getByPath('entityId', bindingData);
-      const selectedField = getByPath('selectedField', bindingData);
-      const autoDateDuration = getByPath('autoDateDuration', bindingData);
-      const autoDateOffset = getByPath('autoDateOffset', bindingData);
+      const selectedField: BindingField = getByPath('selectedField', bindingData);
+      const autoDateDuration: Duration = getByPath('autoDateDuration', bindingData);
+      const autoDateOffset: Offset = getByPath('autoDateOffset', bindingData);
+      const hasCircleBindingError: boolean = getByPath('hasCircleBindingError', bindingData);
       logger.warn({
         field,
         entityId,
@@ -46,48 +142,31 @@ export default function OrderValueSpy({ values, task, inParentEntityForm, setTas
         autoDateDuration,
         autoDateOffset,
         inParentEntityForm,
+        hasCircleBindingError,
       });
+
+      if (hasCircleBindingError) {
+        setTaskValue('dueDate', '');
+        setTaskValue('startDate', '');
+        return;
+      }
 
       if (inParentEntityForm) {
         let date = mappingDate({ field, task, values });
-        if (autoDateDuration) {
-          date = calculateDate({
-            date,
-            duration: autoDateDuration.metric,
-            offset: autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-          });
-        }
-        if (field !== START_DATE) {
-          setTaskValue(selectedField, date);
-          emitter.emit('LIVE_VALUE', field, date);
-        } else {
-          setTaskValue(
-            selectedField,
-            autoDateDuration
-              ? calculateDate({
-                  date: task.startDate,
-                  duration: autoDateDuration.metric,
-                  offset:
-                    autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-                })
-              : task.startDate
-          );
-        }
-
-        // we need to set the due date if those field are binding together
-        if (selectedField === 'startDate') {
-          if (task.dueDateBinding === START_DATE) {
-            const { weeks, months, days } = task.dueDateInterval || {};
-            setTaskValue(
-              'dueDate',
-              calculateDate({
-                date,
-                duration: findDuration({ weeks, months }),
-                offset: weeks || months || days,
-              })
-            );
-          }
-        }
+        date = autoCalculateDate({
+          autoDateDuration,
+          date,
+          autoDateOffset,
+          field,
+          setTaskValue,
+          selectedField,
+        });
+        bindingRelateField({
+          selectedField,
+          date,
+          task,
+          setTaskValue,
+        });
       } else {
         logger.warn('query order data for id', client);
         // TODO: This flag will be used for showing loading on UI
@@ -100,50 +179,21 @@ export default function OrderValueSpy({ values, task, inParentEntityForm, setTas
           })
           .then(({ data }) => {
             emitter.emit('LIVE_VALUE_PROCESS', false);
-
             let date = mappingDate({ field, task, values: data.order });
-            if (autoDateDuration) {
-              date = calculateDate({
-                date,
-                duration: autoDateDuration.metric,
-                offset:
-                  autoDateOffset === 'after' ? autoDateDuration.value : -autoDateDuration.value,
-              });
-            }
-
-            if (field !== START_DATE) {
-              setTaskValue(selectedField, date);
-              emitter.emit('LIVE_VALUE', field, date);
-            } else {
-              setTaskValue(
-                selectedField,
-                autoDateDuration
-                  ? calculateDate({
-                      date: task.startDate,
-                      duration: autoDateDuration.metric,
-                      offset:
-                        autoDateOffset === 'after'
-                          ? autoDateDuration.value
-                          : -autoDateDuration.value,
-                    })
-                  : task.startDate
-              );
-            }
-
-            // we need to set the due date if those field are binding together
-            if (selectedField === 'startDate') {
-              if (task.dueDateBinding === START_DATE) {
-                const { weeks, months, days } = task.dueDateInterval || {};
-                setTaskValue(
-                  'dueDate',
-                  calculateDate({
-                    date,
-                    duration: findDuration({ weeks, months }),
-                    offset: weeks || months || days,
-                  })
-                );
-              }
-            }
+            date = autoCalculateDate({
+              autoDateDuration,
+              date,
+              autoDateOffset,
+              field,
+              setTaskValue,
+              selectedField,
+            });
+            bindingRelateField({
+              selectedField,
+              task,
+              date,
+              setTaskValue,
+            });
           });
       }
     });

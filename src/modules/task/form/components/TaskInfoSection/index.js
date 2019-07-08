@@ -188,8 +188,6 @@ const TaskInfoSection = ({
       field: 'startDate' | 'dueDate',
       onChange: Object => void,
     }) => {
-      if (hasCircleBindingError) return;
-
       if (!isManual) {
         switch (type) {
           case 'Shipment': {
@@ -201,6 +199,7 @@ const TaskInfoSection = ({
               field: field === 'dueDate' ? START_DATE : DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -213,6 +212,7 @@ const TaskInfoSection = ({
               field: field === 'dueDate' ? START_DATE : DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -225,6 +225,7 @@ const TaskInfoSection = ({
               field: field === 'dueDate' ? START_DATE : DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -237,6 +238,7 @@ const TaskInfoSection = ({
               field: field === 'dueDate' ? START_DATE : DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -249,6 +251,7 @@ const TaskInfoSection = ({
               field: field === 'dueDate' ? START_DATE : DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -261,6 +264,7 @@ const TaskInfoSection = ({
               field: field === 'dueDate' ? START_DATE : DUE_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -273,6 +277,7 @@ const TaskInfoSection = ({
               START_DATE,
               entityId: getByPath('entity.id', task),
               selectedField: field,
+              hasCircleBindingError,
             });
             break;
           }
@@ -417,7 +422,7 @@ const TaskInfoSection = ({
                                       field: 'dueDate',
                                       isManual: true,
                                       onChange: setFieldValues,
-                                      hasCircleBindingError,
+                                      hasCircleBindingError: false,
                                     })
                                   : () => {}
                               }
@@ -436,7 +441,7 @@ const TaskInfoSection = ({
                                       field: 'dueDate',
                                       isManual: false,
                                       onChange: setFieldValues,
-                                      hasCircleBindingError,
+                                      hasCircleBindingError: values.startDateBinding === DUE_DATE,
                                     })
                                   : () => {}
                               }
@@ -485,28 +490,36 @@ const TaskInfoSection = ({
                             <ObjectValue
                               value={{
                                 autoDateField: values.dueDateBinding,
+                                startDateBinding: values.startDateBinding,
                                 autoDateOffset: isBeforeDueDateBinding ? 'before' : 'after',
                                 ...convertBindingToSelection(values.dueDateInterval),
                               }}
-                              onChange={({ autoDateOffset, autoDateDuration }) => {
-                                const newDate = calculateDate({
-                                  date:
-                                    values.dueDateBinding === START_DATE
-                                      ? values.startDate
-                                      : parentValues.current &&
-                                        parentValues.current[values.dueDateBinding],
-                                  duration: autoDateDuration.metric,
-                                  offset:
-                                    autoDateOffset === 'after'
-                                      ? Math.abs(autoDateDuration.value)
-                                      : -Math.abs(autoDateDuration.value),
-                                });
-                                setFieldValue('dueDate', newDate);
+                              onChange={({
+                                autoDateField,
+                                startDateBinding,
+                                autoDateOffset,
+                                autoDateDuration,
+                              }) => {
                                 setFieldValue('dueDateInterval', {
                                   [autoDateDuration.metric]:
                                     autoDateOffset === 'after'
                                       ? Math.abs(autoDateDuration.value)
                                       : -Math.abs(autoDateDuration.value),
+                                });
+                                emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                  selectedField: 'dueDate',
+                                  field: autoDateField,
+                                  entityId: getByPath('entity.id', task),
+                                  autoDateDuration: {
+                                    ...autoDateDuration,
+                                    value:
+                                      autoDateOffset === 'after'
+                                        ? Math.abs(autoDateDuration.value)
+                                        : -Math.abs(autoDateDuration.value),
+                                  },
+                                  autoDateOffset,
+                                  hasCircleBindingError:
+                                    autoDateField === START_DATE && startDateBinding === DUE_DATE,
                                 });
                               }}
                             >
@@ -582,13 +595,6 @@ const TaskInfoSection = ({
                                       if (values.dueDateBinding !== value) {
                                         set(field, value);
                                         setFieldValue('dueDateBinding', value);
-                                        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                          field: value,
-                                          entityId: getByPath('entity.id', task),
-                                          selectedField: 'dueDate',
-                                          autoDateDuration,
-                                          autoDateOffset,
-                                        });
                                       }
                                     }}
                                     saveOnChange
@@ -669,7 +675,7 @@ const TaskInfoSection = ({
                                       field: 'startDate',
                                       isManual: true,
                                       onChange: setFieldValues,
-                                      hasCircleBindingError,
+                                      hasCircleBindingError: false,
                                     })
                                   : () => {}
                               }
@@ -688,7 +694,7 @@ const TaskInfoSection = ({
                                       field: 'startDate',
                                       isManual: false,
                                       onChange: setFieldValues,
-                                      hasCircleBindingError,
+                                      hasCircleBindingError: values.dueDateBinding === START_DATE,
                                     })
                                   : () => {}
                               }
@@ -746,44 +752,36 @@ const TaskInfoSection = ({
                             <ObjectValue
                               value={{
                                 autoDateField: values.startDateBinding,
+                                dueDateBinding: values.dueDateBinding,
                                 ...convertBindingToSelection(values.startDateInterval),
                                 autoDateOffset: isBeforeStartDateBinding ? 'before' : 'after',
-                                dueDateBinding: values.dueDateBinding,
-                                dueDateInterval: values.dueDateInterval,
                               }}
                               onChange={({
+                                autoDateField,
                                 dueDateBinding,
-                                dueDateInterval,
                                 autoDateOffset,
                                 autoDateDuration,
                               }) => {
-                                const newDate = calculateDate({
-                                  date:
-                                    parentValues.current &&
-                                    parentValues.current[values.startDateBinding],
-                                  duration: autoDateDuration.metric,
-                                  offset:
-                                    autoDateOffset === 'after'
-                                      ? Math.abs(autoDateDuration.value)
-                                      : -Math.abs(autoDateDuration.value),
-                                });
-                                setFieldValue('startDate', newDate);
-                                if (!manualSettings.dueDate && dueDateBinding === START_DATE) {
-                                  const { weeks, months, days } = dueDateInterval || {};
-                                  setFieldValue(
-                                    'dueDate',
-                                    calculateDate({
-                                      date: newDate,
-                                      duration: findDuration({ weeks, months }),
-                                      offset: weeks || months || days,
-                                    })
-                                  );
-                                }
                                 setFieldValue('startDateInterval', {
                                   [autoDateDuration.metric]:
                                     autoDateOffset === 'after'
                                       ? Math.abs(autoDateDuration.value)
                                       : -Math.abs(autoDateDuration.value),
+                                });
+                                emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                  selectedField: 'startDate',
+                                  field: autoDateField,
+                                  entityId: getByPath('entity.id', task),
+                                  autoDateDuration: {
+                                    ...autoDateDuration,
+                                    value:
+                                      autoDateOffset === 'after'
+                                        ? Math.abs(autoDateDuration.value)
+                                        : -Math.abs(autoDateDuration.value),
+                                  },
+                                  autoDateOffset,
+                                  hasCircleBindingError:
+                                    autoDateField === DUE_DATE && dueDateBinding === START_DATE,
                                 });
                               }}
                             >
@@ -859,13 +857,6 @@ const TaskInfoSection = ({
                                       if (values.startDateBinding !== value) {
                                         set(field, value);
                                         setFieldValue('startDateBinding', value);
-                                        emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
-                                          field: value,
-                                          entityId: getByPath('entity.id', task),
-                                          selectedField: 'startDate',
-                                          autoDateDuration,
-                                          autoDateOffset,
-                                        });
                                       }
                                     }}
                                     values={{ autoDateDuration, autoDateOffset, autoDateField }}
@@ -1196,6 +1187,7 @@ const TaskInfoSection = ({
                                             const { months = 0, weeks = 0, days = 0 } =
                                               values.dueDateInterval || {};
                                             emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                              hasCircleBindingError,
                                               selectedField: 'dueDate',
                                               field: values.dueDateBinding,
                                               entityId: getByPath('entity.id', task),
@@ -1211,6 +1203,7 @@ const TaskInfoSection = ({
                                             const { months = 0, weeks = 0, days = 0 } =
                                               values.startDateInterval || {};
                                             emitter.emit(`FIND_${entity.toUpperCase()}_VALUE`, {
+                                              hasCircleBindingError,
                                               selectedField: 'startDate',
                                               field: values.startDateBinding,
                                               entityId: getByPath('entity.id', task),
