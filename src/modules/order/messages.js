@@ -240,7 +240,7 @@ export default defineMessages({
   },
   productName: {
     id: 'modules.Orders.productName',
-    defaultMessage: 'PRODUCT NAME',
+    defaultMessage: 'Product Name',
   },
   productPrice: {
     id: 'modules.Orders.productPrice',
@@ -252,7 +252,11 @@ export default defineMessages({
   },
   supplier: {
     id: 'modules.Orders.supplier',
-    defaultMessage: 'SUPPLIER',
+    defaultMessage: 'Supplier',
+  },
+  endProductName: {
+    id: 'modules.Orders.endProductName',
+    defaultMessage: 'End Product Name',
   },
   batchNo: {
     id: 'modules.Batches.no',
@@ -513,6 +517,10 @@ export default defineMessages({
   serialSort: {
     id: 'modules.Orders.list.sort.serial',
     defaultMessage: 'SERIAL',
+  },
+  productSerial: {
+    id: 'modules.Orders.productSerial',
+    defaultMessage: 'Product Serial',
   },
   exporterSort: {
     id: 'modules.Orders.list.sort.exporter',

@@ -88,18 +88,19 @@ function SelectProducts({
   orderCurrency,
 }: Props) {
   const sortFields = [
-    { title: intl.formatMessage(messages.nameSort), value: 'productName' },
-    { title: intl.formatMessage(messages.serialSort), value: 'productSerial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
-    { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
+    { title: intl.formatMessage(messages.endProductName), value: 'name' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
+    // no API
+    // { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
+    // FIXME: front-end only query order's exporter, so exporterName doesn't need.
+    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
+    { title: intl.formatMessage(messages.supplier), value: 'supplierName' },
   ];
 
-  const {
-    filterAndSort: filtersAndSort,
-    queryVariables,
-    onChangeFilter: onChange,
-  } = useSortAndFilter({
+  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter({
     perPage: 20,
     page: 1,
     filter: {
@@ -132,8 +133,8 @@ function SelectProducts({
                     <FilterToolBar
                       icon="PRODUCT_PROVIDER"
                       sortFields={sortFields}
-                      filtersAndSort={filtersAndSort}
-                      onChange={onChange}
+                      filtersAndSort={filterAndSort}
+                      onChange={onChangeFilter}
                     />
                     <div>
                       <Label>
@@ -159,7 +160,7 @@ function SelectProducts({
               >
                 <GridView
                   onLoadMore={() =>
-                    loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
+                    loadMore({ fetchMore, data }, queryVariables, 'productProviders')
                   }
                   hasMore={hasMore}
                   isLoading={loading}
