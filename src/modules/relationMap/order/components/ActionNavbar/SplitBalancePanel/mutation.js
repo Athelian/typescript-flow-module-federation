@@ -8,6 +8,7 @@ import {
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
+  taskCountFragment,
   userAvatarFragment,
 } from 'graphql';
 import { batchCardRMFragment } from 'modules/relationMap/order/query';
@@ -33,6 +34,7 @@ export const batchBalanceSplitManyMutation = gql`
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
+  ${taskCountFragment}
 `;
 
 export default batchBalanceSplitManyMutation;

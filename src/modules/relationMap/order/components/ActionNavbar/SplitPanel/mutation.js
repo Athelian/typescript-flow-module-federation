@@ -7,6 +7,7 @@ import {
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
+  taskCountFragment,
   userAvatarFragment,
 } from 'graphql';
 import { batchCardRMFragment } from 'modules/relationMap/order/query';
@@ -29,6 +30,7 @@ export const batchSimpleSplitMutation = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
+  ${taskCountFragment}
   ${taskTemplateCardFragment}
 `;
 
@@ -50,5 +52,6 @@ export const batchEqualSplitMutation = gql`
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
   ${taskWithoutParentInfoFragment}
+  ${taskCountFragment}
   ${taskTemplateCardFragment}
 `;
