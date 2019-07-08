@@ -37,9 +37,9 @@ const getInitFilter = () => {
 const TagListModule = (props: Props) => {
   const { intl } = props;
   const sortFields = [
-    { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.name), value: 'name' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(getInitFilter(), 'filterTag');
   const { hasPermission } = usePermission();

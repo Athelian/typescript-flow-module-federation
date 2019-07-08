@@ -2,18 +2,17 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  // Field
   name: {
     id: 'modules.Tags.name',
-    defaultMessage: 'NAME',
+    defaultMessage: 'Name',
   },
   createdAt: {
     id: 'modules.Tags.createdAt',
-    defaultMessage: 'CREATED ON',
+    defaultMessage: 'Date Created',
   },
   updatedAt: {
     id: 'modules.Tags.updatedAt',
-    defaultMessage: 'LAST MODIFIED',
+    defaultMessage: 'Last Modified',
   },
   description: {
     id: 'modules.Tags.description',
