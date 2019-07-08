@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { isForbidden } from 'utils/data';
+import { isForbidden, isNotFound } from 'utils/data';
 import { Display, FieldItem, Label } from 'components/Form';
 import FormattedDate from 'components/FormattedDate';
 import FormattedNumber from 'components/FormattedNumber';
@@ -116,7 +116,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
 
           <div className={TagsWrapperStyle}>
             {tags
-              .filter(item => !isForbidden(item))
+              .filter(item => !isNotFound(item) && !isForbidden(item))
               .map(tag => (
                 <Tag key={tag.id} tag={tag} />
               ))}
