@@ -8,6 +8,8 @@ import {
   timelineDateMinimalFragment,
   portFragment,
   priceFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
@@ -35,6 +37,8 @@ export const cloneBatchMutation = gql`
   ${metricFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskCountFragment}
@@ -111,6 +115,8 @@ export const cloneOrderItemMutation = gql`
   ${metricFragment}
   ${userAvatarFragment}
   ${taskFormInTemplateFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskWithoutParentInfoFragment}
   ${taskCountFragment}
   ${taskTemplateCardFragment}
@@ -134,6 +140,8 @@ export const cloneOrderMutation = gql`
   ${metricFragment}
   ${priceFragment}
   ${taskFormInTemplateFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskCountFragment}
