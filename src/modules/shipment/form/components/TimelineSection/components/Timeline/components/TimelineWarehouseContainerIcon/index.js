@@ -1,53 +1,29 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
+import type { ContainerPayload } from 'generated/graphql';
 import { Link } from '@reach/router';
 import scrollIntoView from 'utils/scrollIntoView';
-import { isNullOrUndefined } from 'utils/fp';
+import { getByPath } from 'utils/fp';
 import Icon from 'components/Icon';
 import { TimelineIconStyle, IconWrapperStyle } from './style';
 import Ring from './Ring';
 
-type Container = {
-  warehouseArrivalAgreedDate: string,
-  warehouseArrivalAgreedDateApprovedAt: string,
-  warehouseArrivalAgreedDateApprovedBy: Object,
-  warehouseArrivalActualDate: string,
-  warehouseArrivalActualDateApprovedAt: string,
-  warehouseArrivalActualDateApprovedBy: Object,
-};
-type Props = {
-  containers: Array<Container>,
-  linkPath: string,
-  targetId: string,
-  boundaryId: string,
-};
-
-const defaultProps = {
-  containers: [],
-  linkPath: '',
-  targetId: '',
-  boundaryId: '',
-};
+type Props = {|
+  containers: Array<ContainerPayload>,
+  linkPath?: string,
+  targetId?: string,
+  boundaryId?: string,
+|};
 
 const getApproved = (container: Object) => {
-  const {
-    warehouseArrivalAgreedDateApprovedAt: agreedDateApprovedAt,
-    warehouseArrivalActualDateApprovedAt: actualDateApprovedAt,
-    warehouseArrivalAgreedDateApprovedBy: agreedDateApprovedBy,
-    warehouseArrivalActualDateApprovedBy: actualDateApprovedBy,
-  } = container;
-  const agreedDateApproved =
-    !isNullOrUndefined(agreedDateApprovedAt) || !isNullOrUndefined(agreedDateApprovedBy);
-  const actualDateApproved =
-    !isNullOrUndefined(actualDateApprovedAt) || !isNullOrUndefined(actualDateApprovedBy);
+  const agreedDateApproved = getByPath('warehouseArrivalAgreedDateApprovedAt', container);
+  const actualDateApproved = getByPath('warehouseArrivalActualDateApprovedAt', container);
   return { agreedDateApproved, actualDateApproved };
 };
-const getIconColor = (containers: Array<Container>) => {
+const getIconColor = (containers: Array<ContainerPayload>) => {
   let color = 'TEAL';
   const allAgreed = containers.every(
-    container =>
-      !isNullOrUndefined(container.warehouseArrivalAgreedDateApprovedAt) ||
-      !isNullOrUndefined(container.warehouseArrivalAgreedDateApprovedBy)
+    container => !getByPath('warehouseArrivalAgreedDateApprovedAt', container)
   );
   containers.forEach(container => {
     const { agreedDateApproved, actualDateApproved } = getApproved(container);
@@ -60,7 +36,7 @@ const getIconColor = (containers: Array<Container>) => {
   return color;
 };
 
-const getRingPercent = (containers: Array<Container>) => {
+const getRingPercent = (containers: Array<ContainerPayload>) => {
   const totalContainer = containers.length;
   if (totalContainer === 0) {
     return [0, 0];
@@ -129,7 +105,5 @@ const TimelineWarehouseContainerIcon = ({ containers, linkPath, targetId, bounda
     </div>
   );
 };
-
-TimelineWarehouseContainerIcon.defaultProps = defaultProps;
 
 export default TimelineWarehouseContainerIcon;

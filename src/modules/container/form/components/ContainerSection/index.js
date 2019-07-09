@@ -526,6 +526,7 @@ const ContainerSection = () => {
                           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                             {opened && (
                               <SelectWareHouse
+                                cacheKey="containerFormSelectWarehouseQuery"
                                 selected={values.warehouse}
                                 onCancel={() => slideToggle(false)}
                                 onSelect={newValue => {

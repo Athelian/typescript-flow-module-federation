@@ -116,7 +116,7 @@ const ProjectCard = ({ project, onClick, ...rest }: Props) => {
 
           <div className={TagsWrapperStyle}>
             {tags
-              .filter(item => !isNotFound(item) && !isForbidden(item))
+              .filter(item => !isForbidden(item) && !isNotFound(item))
               .map(tag => (
                 <Tag key={tag.id} tag={tag} />
               ))}

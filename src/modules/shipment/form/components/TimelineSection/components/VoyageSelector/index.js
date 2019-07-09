@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { ShipmentPayload } from 'generated/graphql';
 import { cloneDeep } from 'lodash';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
@@ -20,35 +21,7 @@ import {
 
 type Props = {
   editable: boolean,
-  shipment: {
-    voyages: Array<{
-      arrival?: {
-        approvedAt: ?Date,
-        approvedBy: ?Object,
-        assignedTo: Array<Object>,
-        date: ?Date,
-        timelineDateRevisions: Array<Object>,
-      },
-      arrivalPort?: {
-        airport: string,
-        seaport: string,
-      },
-      departure?: {
-        approvedAt: ?Date,
-        approvedBy: ?Object,
-        assignedTo: Array<Object>,
-        date: ?Date,
-        timelineDateRevisions: Array<Object>,
-      },
-      departurePort?: {
-        airport: string,
-        seaport: string,
-      },
-      vesselCode?: string,
-      vesselName?: string,
-    }>,
-    transportType: string,
-  },
+  shipment: ShipmentPayload,
   setFieldDeepValue: (field: string, value: any) => void,
   setShipmentContainers: Function,
   shipmentContainers: Array<Object>,
@@ -114,7 +87,7 @@ class VoyageSelector extends React.PureComponent<Props> {
   renderIcon = (options: RenderIconOptions) => {
     const { numOfIcons, isActive, toggle, isOptionsOpen, editable } = options;
     const { shipment } = this.props;
-    const { transportType } = shipment;
+    const transportType = getByPathWithDefault('', 'transportType', shipment);
 
     const transportIcon = getTransportIcon(transportType);
 
@@ -171,7 +144,7 @@ class VoyageSelector extends React.PureComponent<Props> {
   onClick = (numOfIcons: number, isOptionsOpen: boolean, toggle?: () => void) => () => {
     const { shipment, setFieldDeepValue, setShipmentContainers, shipmentContainers } = this.props;
 
-    const { voyages } = shipment;
+    const voyages = getByPathWithDefault([], 'voyages', shipment);
     if (isOptionsOpen) {
       const newVoyages = generateVoyages(voyages, numOfIcons);
       setFieldDeepValue('voyages', newVoyages);
@@ -194,10 +167,8 @@ class VoyageSelector extends React.PureComponent<Props> {
   };
 
   render() {
-    const {
-      shipment: { voyages },
-      editable,
-    } = this.props;
+    const { shipment, editable } = this.props;
+    const voyages = getByPathWithDefault([], 'voyages', shipment);
     return (
       <BooleanValue>
         {({ value: isOptionsOpen, set: selectorToggle }) =>

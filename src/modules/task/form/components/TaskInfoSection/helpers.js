@@ -116,9 +116,9 @@ export const getFieldsByEntity = (type: string, intl: IntlShape) => {
 
 export const findDuration = ({ months, weeks }: { months: number, weeks: number }) => {
   let duration = 'days';
-  if (months > 0) {
+  if (Math.abs(months) > 0) {
     duration = 'months';
-  } else if (weeks > 0) {
+  } else if (Math.abs(weeks) > 0) {
     duration = 'weeks';
   }
   return duration;

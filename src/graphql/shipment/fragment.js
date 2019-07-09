@@ -200,6 +200,7 @@ export const shipmentCardFragment = gql`
     containers {
       ... on Container {
         id
+        no
         warehouseArrivalAgreedDate
         warehouseArrivalAgreedDateApprovedAt
         warehouseArrivalActualDate

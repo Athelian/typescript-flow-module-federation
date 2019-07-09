@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jul 04 2019 10:21:35 GMT+0900 (Japan Standard Time)
+# timestamp: Tue Jul 09 2019 13:52:28 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28455,7 +28455,9 @@ type ExportTemplate implements Model {
   name: String!
   types: [ExportType!]!
   extension: String!
-  dynamic: Boolean!
+  builder: String!
+  fetcher: String!
+  normalizers: [String!]!
   ownedBy: GroupPayload
   id: ID!
   createdAt: DateTime!
@@ -28782,6 +28784,7 @@ type IntegrationConfiguration implements Model & Owned {
   integration: IntegrationPayload!
   automated: Boolean!
   interval: Duration!
+  key: String
   integrationLinks(page: Int! = 1, perPage: Int! = 10): IntegrationLinkPayloadPagination!
   id: ID!
   createdAt: DateTime!

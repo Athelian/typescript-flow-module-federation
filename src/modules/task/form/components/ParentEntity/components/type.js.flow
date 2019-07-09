@@ -1,0 +1,7 @@
+// @flow
+export type Duration = ?{
+  metric: 'days' | 'weeks' | 'months';
+  value: number;
+};
+export type Offset = ?'before' | ?'after';
+export type BindingField = 'startDate' | 'dueDate';
