@@ -6,6 +6,7 @@ import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
 import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
+import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
@@ -17,7 +18,6 @@ import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import useSortAndFilter from 'hooks/useSortAndFilter';
 import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
@@ -39,45 +39,8 @@ const defaultProps = {
   orderCurrency: '',
 };
 
-function onSelectProduct({
-  selected,
-  item,
-  push,
-  set,
-}: {
-  selected: Array<OrderItem>,
-  item: OrderItem,
-  push: Function,
-  set: Function,
-}) {
-  if (!selected.includes(item)) {
-    push(item);
-  } else {
-    set(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id));
-  }
-}
-
-const getProductQuantity = (items: Array<OrderItem> = [], item: OrderItem) =>
-  items.filter(endProduct => endProduct.id === item.id).length;
-
-function onChangeProductQuantity({
-  selected,
-  set,
-  item,
-  total,
-}: {
-  selected: Array<OrderItem>,
-  item: OrderItem,
-  set: Function,
-  total: number,
-}) {
-  const items = [...selected];
-  const count = getProductQuantity(items, item);
-  const index = items.indexOf(item);
-  items.splice(index, count, ...Array(total).fill(item));
-
-  set(items);
-}
+const countSelected = (selected: Array<OrderItem> = [], value: OrderItem) =>
+  selected.filter(item => item.id === value.id).length;
 
 function SelectProducts({
   intl,
@@ -88,19 +51,18 @@ function SelectProducts({
   orderCurrency,
 }: Props) {
   const sortFields = [
-    { title: intl.formatMessage(messages.nameSort), value: 'productName' },
-    { title: intl.formatMessage(messages.serialSort), value: 'productSerial' },
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
+    { title: intl.formatMessage(messages.endProductName), value: 'name' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
     { title: intl.formatMessage(messages.priceCurrency), value: 'unitPriceCurrency' },
+    { title: intl.formatMessage(messages.exporterName), value: 'exporterName' },
+    { title: intl.formatMessage(messages.supplier), value: 'supplierName' },
   ];
 
-  const {
-    filterAndSort: filtersAndSort,
-    queryVariables,
-    onChangeFilter: onChange,
-  } = useSortAndFilter({
-    perPage: 20,
+  const endProductsDefaultQueryVariables = {
+    perPage: 10,
     page: 1,
     filter: {
       importerId,
@@ -109,7 +71,13 @@ function SelectProducts({
       query: '',
     },
     sort: { field: 'updatedAt', direction: 'DESCENDING' },
-  });
+  };
+
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    endProductsDefaultQueryVariables,
+    'orderFormEndProductSelector'
+  );
+
   return (
     <Query query={productProvidersListQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
@@ -124,16 +92,16 @@ function SelectProducts({
         const items = getByPathWithDefault([], 'productProviders.nodes', data);
 
         return (
-          <ArrayValue>
-            {({ value: selected, push, set }) => (
+          <ArrayValue defaultValue={[]}>
+            {({ value: selected, push, splice, filter }) => (
               <Layout
                 navBar={
                   <SlideViewNavBar>
                     <FilterToolBar
                       icon="PRODUCT_PROVIDER"
                       sortFields={sortFields}
-                      filtersAndSort={filtersAndSort}
-                      onChange={onChange}
+                      filtersAndSort={filterAndSort}
+                      onChange={onChangeFilter}
                     />
                     <div>
                       <Label>
@@ -159,7 +127,7 @@ function SelectProducts({
               >
                 <GridView
                   onLoadMore={() =>
-                    loadMore({ fetchMore, data }, filtersAndSort, 'productProviders')
+                    loadMore({ fetchMore, data }, queryVariables, 'productProviders')
                   }
                   hasMore={hasMore}
                   isLoading={loading}
@@ -172,25 +140,34 @@ function SelectProducts({
                     />
                   }
                 >
-                  {items.map(item => (
-                    <div key={item.id} className={ItemWrapperStyle}>
-                      {selected.includes(item) && (
-                        <IncrementInput
-                          value={getProductQuantity(selected, item)}
-                          onChange={total =>
-                            onChangeProductQuantity({ selected, set, total, item })
-                          }
+                  {items.map(item => {
+                    const index = selected.map(({ id }) => id).indexOf(item.id);
+                    const isSelected = index !== -1;
+                    return (
+                      <div key={item.id} className={ItemWrapperStyle}>
+                        {isSelected && (
+                          <IncrementInput
+                            value={countSelected(selected, item)}
+                            onMinus={() => splice(index, 1)}
+                            onPlus={() => push(item)}
+                          />
+                        )}
+                        <OrderProductProviderCard
+                          orderCurrency={orderCurrency}
+                          productProvider={item}
+                          selectable
+                          selected={isSelected}
+                          onSelect={() => {
+                            if (isSelected) {
+                              filter(({ id }) => id !== item.id);
+                            } else {
+                              push(item);
+                            }
+                          }}
                         />
-                      )}
-                      <OrderProductProviderCard
-                        orderCurrency={orderCurrency}
-                        productProvider={item}
-                        selectable
-                        selected={selected.includes(item)}
-                        onSelect={() => onSelectProduct({ selected, item, push, set })}
-                      />
-                    </div>
-                  ))}
+                      </div>
+                    );
+                  })}
                 </GridView>
               </Layout>
             )}
