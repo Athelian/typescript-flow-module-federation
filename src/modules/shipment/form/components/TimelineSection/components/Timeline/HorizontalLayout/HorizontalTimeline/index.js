@@ -1,5 +1,16 @@
 // @flow
 import * as React from 'react';
+import type {
+  ShipmentPayload,
+  UserPayload,
+  TimelineDatePayload,
+  VoyagePayload,
+  ContainerGroupPayload,
+  ContainerPayload,
+  TransportType,
+} from 'generated/graphql';
+import { FormattedMessage } from 'react-intl';
+import { getByPathWithDefault } from 'utils/fp';
 import { encodeId } from 'utils/id';
 import {
   TimelineIcon,
@@ -8,33 +19,47 @@ import {
   TimelineVoyage,
   TimelineWarehouseContainerIcon,
   TimelineContainerIcon,
-} from '../../components';
-import { getTimelineColoring, getTransportIcon } from '../../helpers';
+} from 'modules/shipment/form/components/TimelineSection/components/Timeline/components';
+import {
+  getTimelineColoring,
+  getTransportIcon,
+} from 'modules/shipment/form/components/TimelineSection/components/Timeline/helpers';
+import { Tooltip } from 'components/Tooltip';
 import {
   HorizontalTimelineWrapperStyle,
   BlankSpaceStyle,
   ContainerIconWrapperStyle,
   WarehouseContainerWrapperStyle,
+  TooltipTitleStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {|
+  shipment: ShipmentPayload,
   navigable: {
     form: boolean,
   },
-};
+|};
 
-type Props = OptionalProps & {
-  shipment: any,
-};
-
-const defaultProps = {
-  navigable: {
-    form: false,
-  },
+const ApprovedBy = (user: UserPayload) => {
+  return (
+    <FormattedMessage
+      id="components.Shipments.approvedBy"
+      defaultMessage="Approved by {firstName} {lastName}"
+      values={user}
+    />
+  );
 };
 
 const HorizontalTimeline = ({ shipment, navigable }: Props) => {
-  const { cargoReady, voyages, containerGroups, transportType, containers } = shipment;
+  const cargoReady: TimelineDatePayload = getByPathWithDefault({}, 'cargoReady', shipment);
+  const voyages: Array<VoyagePayload> = getByPathWithDefault([], 'voyages', shipment);
+  const containerGroups: Array<ContainerGroupPayload> = getByPathWithDefault(
+    [],
+    'containerGroups',
+    shipment
+  );
+  const transportType: TransportType = getByPathWithDefault('', 'transportType', shipment);
+  const containers: Array<ContainerPayload> = getByPathWithDefault([], 'containers', shipment);
 
   const transportIcon = getTransportIcon(transportType);
 
@@ -46,23 +71,40 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
   const customClearanceColoring = coloring[coloring.length - 3];
   const warehouseArrivalColoring = coloring[coloring.length - 2];
   const deliveryReadyColoring = coloring[coloring.length - 1];
+  const shipmentId = encodeId(getByPathWithDefault('', 'id', shipment));
 
   return (
     <div className={HorizontalTimelineWrapperStyle}>
       <div className={BlankSpaceStyle} />
-
-      <TimelineIcon
-        icon="CARGO_READY"
-        color={cargoReadyColoring}
-        linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/cargoReady` : ''}
-      />
+      <Tooltip
+        message={
+          <div>
+            <div className={TooltipTitleStyle}>
+              <FormattedMessage id="components.Shipments.cargoReady" defaultMessage="CARGO READY" />
+            </div>
+            {getByPathWithDefault(null, 'approvedAt', cargoReady) ? (
+              <ApprovedBy user={getByPathWithDefault(null, 'approvedBy', cargoReady)} />
+            ) : (
+              <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+            )}
+          </div>
+        }
+      >
+        <div>
+          <TimelineIcon
+            icon="CARGO_READY"
+            color={cargoReadyColoring}
+            linkPath={navigable.form ? `/shipment/${shipmentId}/cargoReady` : ''}
+          />
+        </div>
+      </Tooltip>
 
       <TimelineLine color={loadPortDepartureColoring} />
 
       <TimelineIcon
         icon="PORT"
         color={loadPortDepartureColoring}
-        linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/loadPortDeparture` : ''}
+        linkPath={navigable.form ? `/shipment/${shipmentId}/loadPortDeparture` : ''}
       />
 
       <TimelineVoyage>
@@ -71,25 +113,25 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
         <TimelineIcon
           icon={transportIcon}
           color={loadPortDepartureColoring}
-          linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/firstVoyage` : ''}
+          linkPath={navigable.form ? `/shipment/${shipmentId}/firstVoyage` : ''}
         />
       </TimelineVoyage>
 
       {voyages.length > 1 &&
         voyages.slice(1).map((voyage, index) => (
-          <React.Fragment key={voyage.id}>
+          <React.Fragment key={getByPathWithDefault('', 'id', 'voyage')}>
             <TimelineTransitIcon
               color={coloring[index * 2 + 2]}
               arrivalLinkPath={
                 navigable.form
-                  ? `/shipment/${encodeId(shipment.id)}/${
+                  ? `/shipment/${shipmentId}/${
                       index === 0 ? 'firstTransitPortArrival' : 'secondTransitPortArrival'
                     }`
                   : ''
               }
               departureLinkPath={
                 navigable.form
-                  ? `/shipment/${encodeId(shipment.id)}/${
+                  ? `/shipment/${shipmentId}/${
                       index === 0 ? 'firstTransitPortDeparture' : 'secondTransitPortDeparture'
                     }`
                   : ''
@@ -104,9 +146,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
                 color={coloring[index * 2 + 3]}
                 linkPath={
                   navigable.form
-                    ? `/shipment/${encodeId(shipment.id)}/${
-                        index === 0 ? 'secondVoyage' : 'thirdVoyage'
-                      }`
+                    ? `/shipment/${shipmentId}/${index === 0 ? 'secondVoyage' : 'thirdVoyage'}`
                     : ''
                 }
               />
@@ -117,7 +157,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
       <TimelineIcon
         icon="PORT"
         color={dischargePortArrivalColoring}
-        linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/dischargePortArrival` : ''}
+        linkPath={navigable.form ? `/shipment/${shipmentId}/dischargePortArrival` : ''}
       />
 
       <TimelineLine color={customClearanceColoring} />
@@ -125,7 +165,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
       <TimelineIcon
         icon="CUSTOMS"
         color={customClearanceColoring}
-        linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/customClearance` : ''}
+        linkPath={navigable.form ? `/shipment/${shipmentId}/customClearance` : ''}
       />
 
       {containers && containers.length > 0 ? (
@@ -136,7 +176,11 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
             <div className={ContainerIconWrapperStyle}>
               <TimelineContainerIcon />
             </div>
-            <TimelineWarehouseContainerIcon containers={containers} />
+            <TimelineWarehouseContainerIcon
+              containers={containers}
+              targetId="containersWarehouseArrival"
+              boundaryId="timelineInfoSection"
+            />
           </div>
 
           <TimelineLine color={deliveryReadyColoring} flex="1.59" />
@@ -148,7 +192,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
           <TimelineIcon
             icon="WAREHOUSE"
             color={warehouseArrivalColoring}
-            linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/warehouseArrival` : ''}
+            linkPath={navigable.form ? `/shipment/${shipmentId}/warehouseArrival` : ''}
           />
 
           <TimelineLine color={deliveryReadyColoring} />
@@ -158,14 +202,12 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
       <TimelineIcon
         icon="DELIVERY_READY"
         color={deliveryReadyColoring}
-        linkPath={navigable.form ? `/shipment/${encodeId(shipment.id)}/deliveryReady` : ''}
+        linkPath={navigable.form ? `/shipment/${shipmentId}/deliveryReady` : ''}
       />
 
       <div className={BlankSpaceStyle} />
     </div>
   );
 };
-
-HorizontalTimeline.defaultProps = defaultProps;
 
 export default HorizontalTimeline;

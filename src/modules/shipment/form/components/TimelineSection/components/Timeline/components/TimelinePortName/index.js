@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Port, TransportType } from 'generated/graphql';
 import { getPortName } from 'utils/shipment';
 import { TimelinePortNameWrapperStyle } from './style';
 
@@ -8,11 +9,8 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  port: {
-    seaport: string,
-    airport: string,
-  },
-  transportType: ?string,
+  port: Port,
+  transportType: TransportType,
 };
 
 const defaultProps = {

@@ -1,6 +1,11 @@
 // @flow
 import * as React from 'react';
-import { TimelinePortName, TimelineWarehouseName } from '../../components';
+import type { ShipmentPayload } from 'generated/graphql';
+import { getByPathWithDefault } from 'utils/fp';
+import {
+  TimelinePortName,
+  TimelineWarehouseName,
+} from 'modules/shipment/form/components/TimelineSection/components/Timeline/components';
 import {
   HorizontalPortsWrapperStyle,
   PortNameWrapperStyle,
@@ -8,13 +13,16 @@ import {
   WarehouseNameWrapperStyle,
 } from './style';
 
-type Props = {
-  shipment: any,
-};
+type Props = {|
+  shipment: ShipmentPayload,
+|};
 
 const HorizontalPortNames = ({ shipment }: Props) => {
-  const { voyages, transportType, containerGroups, containers } = shipment;
+  const voyages = getByPathWithDefault([], 'voyages', shipment);
   const loadPort = voyages[0].departurePort;
+  const containerGroups = getByPathWithDefault([], 'containerGroups', shipment);
+  const transportType = getByPathWithDefault('', 'transportType', shipment);
+  const containers = getByPathWithDefault([], 'containers', shipment);
   const dischargePort = voyages[voyages.length - 1].arrivalPort;
 
   const haveContainer = containers && containers.length > 0;

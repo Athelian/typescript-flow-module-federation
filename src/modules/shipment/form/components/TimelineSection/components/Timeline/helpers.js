@@ -1,5 +1,12 @@
 // @flow
-import { isNullOrUndefined } from 'utils/fp';
+import type {
+  TimelineDatePayload,
+  VoyagePayload,
+  ContainerGroupPayload,
+  ContainerPayload,
+  TransportType,
+} from 'generated/graphql';
+import { isNullOrUndefined, getByPath } from 'utils/fp';
 import { isBefore, isAfter } from 'utils/date';
 
 export const getTimelineColoring = ({
@@ -7,30 +14,25 @@ export const getTimelineColoring = ({
   voyages,
   containerGroups,
 }: {
-  cargoReady?: Object,
-  voyages?: Array<{
-    departure?: Object,
-    arrival?: Object,
-  }>,
-  containerGroups?: Array<{
-    customClearance?: Object,
-    warehouseArrival?: Object,
-    deliveryReady?: Object,
-  }>,
+  cargoReady: TimelineDatePayload,
+  voyages: Array<VoyagePayload>,
+  containerGroups: Array<ContainerGroupPayload>,
 }): Array<string> => {
   // Add all boolean approvals of all the dates to an array in order
-  const arrayOfApprovals = [cargoReady && !!cargoReady.approvedAt];
+  const arrayOfApprovals = [!!getByPath('approvedAt', cargoReady)];
   if (voyages && voyages.length) {
     voyages.forEach(voyage => {
       arrayOfApprovals.push(
-        voyage.departure && !!voyage.departure.approvedAt,
-        voyage.arrival && !!voyage.arrival.approvedAt
+        !!getByPath('departure.approvedAt', voyage),
+        !!getByPath('arrival.approvedAt', voyage)
       );
     });
   }
 
   if (containerGroups && containerGroups.length) {
-    const [{ customClearance, warehouseArrival, deliveryReady }] = containerGroups;
+    const customClearance = getByPath('0.customClearance', containerGroups);
+    const warehouseArrival = getByPath('0.warehouseArrival', containerGroups);
+    const deliveryReady = getByPath('0.deliveryReady', containerGroups);
     arrayOfApprovals.push(
       customClearance && !!customClearance.approvedAt,
       warehouseArrival && !!warehouseArrival.approvedAt,
@@ -58,22 +60,13 @@ export const getTimelineColoring = ({
   return arrayOfColors.reverse();
 };
 
-export const getTransportIcon = (transportType: ?string) => {
+export const getTransportIcon = (transportType: TransportType) => {
   if (transportType === 'Air') return 'PLANE';
   if (transportType === 'Sea') return 'SHIPMENT';
   return 'UNKNOWN';
 };
 
-export const getContainerDatesRange = (
-  containers: Array<{
-    warehouseArrivalAgreedDate: ?string,
-    warehouseArrivalAgreedDateApprovedAt?: ?string,
-    warehouseArrivalAgreedDateApprovedBy?: ?Object,
-    warehouseArrivalActualDate: ?string,
-    warehouseArrivalActualDateApprovedAt?: ?string,
-    warehouseArrivalActualDateApprovedBy?: ?Object,
-  }> = []
-) => {
+export const getContainerDatesRange = (containers: Array<ContainerPayload> = []) => {
   let minAgreedDate = null;
   let maxAgreedDate = null;
   let agreedApproved = false;
@@ -84,66 +77,75 @@ export const getContainerDatesRange = (
   let agreedApprovalCounter = 0;
   let actualApprovalCounter = 0;
 
-  containers.forEach(
-    ({
-      warehouseArrivalAgreedDate,
-      warehouseArrivalAgreedDateApprovedAt,
-      warehouseArrivalAgreedDateApprovedBy,
-      warehouseArrivalActualDate,
-      warehouseArrivalActualDateApprovedAt,
-      warehouseArrivalActualDateApprovedBy,
-    }) => {
-      if (!isNullOrUndefined(warehouseArrivalAgreedDate)) {
-        if (!isNullOrUndefined(minAgreedDate)) {
-          if (isBefore(new Date(warehouseArrivalAgreedDate), new Date(minAgreedDate))) {
-            minAgreedDate = warehouseArrivalAgreedDate;
-          }
-        } else {
+  containers.forEach(container => {
+    const warehouseArrivalAgreedDate = getByPath('warehouseArrivalAgreedDate', container);
+    const warehouseArrivalAgreedDateApprovedAt = getByPath(
+      'warehouseArrivalAgreedDateApprovedAt',
+      container
+    );
+    const warehouseArrivalAgreedDateApprovedBy = getByPath(
+      'warehouseArrivalAgreedDateApprovedBy',
+      container
+    );
+    const warehouseArrivalActualDate = getByPath('warehouseArrivalActualDate', container);
+    const warehouseArrivalActualDateApprovedAt = getByPath(
+      'warehouseArrivalActualDateApprovedAt',
+      container
+    );
+    const warehouseArrivalActualDateApprovedBy = getByPath(
+      'warehouseArrivalActualDateApprovedBy',
+      container
+    );
+    if (!isNullOrUndefined(warehouseArrivalAgreedDate)) {
+      if (!isNullOrUndefined(minAgreedDate)) {
+        if (isBefore(new Date(warehouseArrivalAgreedDate), new Date(minAgreedDate))) {
           minAgreedDate = warehouseArrivalAgreedDate;
         }
+      } else {
+        minAgreedDate = warehouseArrivalAgreedDate;
+      }
 
-        if (!isNullOrUndefined(maxAgreedDate)) {
-          if (isAfter(new Date(warehouseArrivalAgreedDate), new Date(maxAgreedDate))) {
-            maxAgreedDate = warehouseArrivalAgreedDate;
-          }
-        } else {
+      if (!isNullOrUndefined(maxAgreedDate)) {
+        if (isAfter(new Date(warehouseArrivalAgreedDate), new Date(maxAgreedDate))) {
           maxAgreedDate = warehouseArrivalAgreedDate;
         }
-      }
-
-      if (!isNullOrUndefined(warehouseArrivalActualDate)) {
-        if (!isNullOrUndefined(minActualDate)) {
-          if (isBefore(new Date(warehouseArrivalActualDate), new Date(minActualDate))) {
-            minActualDate = warehouseArrivalActualDate;
-          }
-        } else {
-          minActualDate = warehouseArrivalActualDate;
-        }
-
-        if (!isNullOrUndefined(maxActualDate)) {
-          if (isAfter(new Date(warehouseArrivalActualDate), new Date(maxActualDate))) {
-            maxActualDate = warehouseArrivalActualDate;
-          }
-        } else {
-          maxActualDate = warehouseArrivalActualDate;
-        }
-      }
-
-      if (
-        !isNullOrUndefined(warehouseArrivalAgreedDateApprovedAt) ||
-        !isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
-      ) {
-        agreedApprovalCounter += 1;
-      }
-
-      if (
-        !isNullOrUndefined(warehouseArrivalActualDateApprovedAt) ||
-        !isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
-      ) {
-        actualApprovalCounter += 1;
+      } else {
+        maxAgreedDate = warehouseArrivalAgreedDate;
       }
     }
-  );
+
+    if (!isNullOrUndefined(warehouseArrivalActualDate)) {
+      if (!isNullOrUndefined(minActualDate)) {
+        if (isBefore(new Date(warehouseArrivalActualDate), new Date(minActualDate))) {
+          minActualDate = warehouseArrivalActualDate;
+        }
+      } else {
+        minActualDate = warehouseArrivalActualDate;
+      }
+
+      if (!isNullOrUndefined(maxActualDate)) {
+        if (isAfter(new Date(warehouseArrivalActualDate), new Date(maxActualDate))) {
+          maxActualDate = warehouseArrivalActualDate;
+        }
+      } else {
+        maxActualDate = warehouseArrivalActualDate;
+      }
+    }
+
+    if (
+      !isNullOrUndefined(warehouseArrivalAgreedDateApprovedAt) ||
+      !isNullOrUndefined(warehouseArrivalAgreedDateApprovedBy)
+    ) {
+      agreedApprovalCounter += 1;
+    }
+
+    if (
+      !isNullOrUndefined(warehouseArrivalActualDateApprovedAt) ||
+      !isNullOrUndefined(warehouseArrivalActualDateApprovedBy)
+    ) {
+      actualApprovalCounter += 1;
+    }
+  });
 
   if (agreedApprovalCounter === containers.length) {
     agreedApproved = true;
