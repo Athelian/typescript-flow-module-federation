@@ -268,4 +268,192 @@ const shipment = {
 
 storiesOf('Card/Shipment', module)
   .add('with blackout', () => <Shipment />)
-  .add('with shipment and no actions', () => <Shipment shipment={shipment} />);
+  .add('with shipment and no actions', () => <Shipment shipment={shipment} />)
+  .add('with 2 voyages', () => (
+    <Shipment
+      shipment={{
+        ...shipment,
+        voyages: [
+          {
+            id: faker.random.uuid(),
+            departurePort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            arrivalPort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            departure: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: null,
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            arrival: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: '2019-06-18T05:57:07Z',
+              approvedBy: {
+                id: faker.random.uuid(),
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+              },
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            vesselName: null,
+            __typename: 'Voyage',
+          },
+          {
+            id: faker.random.uuid(),
+            departurePort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            arrivalPort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            departure: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: null,
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            arrival: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: '2019-06-18T05:57:07Z',
+              approvedBy: {
+                id: faker.random.uuid(),
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+              },
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            vesselName: null,
+            __typename: 'Voyage',
+          },
+        ],
+      }}
+    />
+  ))
+  .add('with 3 voyages', () => (
+    <Shipment
+      shipment={{
+        ...shipment,
+        voyages: [
+          {
+            id: faker.random.uuid(),
+            departurePort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            arrivalPort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            departure: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: null,
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            arrival: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: '2019-06-18T05:57:07Z',
+              approvedBy: {
+                id: faker.random.uuid(),
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+              },
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            vesselName: null,
+            __typename: 'Voyage',
+          },
+          {
+            id: faker.random.uuid(),
+            departurePort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            arrivalPort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            departure: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: null,
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            arrival: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: '2019-06-18T05:57:07Z',
+              approvedBy: {
+                id: faker.random.uuid(),
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+              },
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            vesselName: null,
+            __typename: 'Voyage',
+          },
+          {
+            id: faker.random.uuid(),
+            departurePort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            arrivalPort: {
+              seaport: null,
+              airport: null,
+              __typename: 'Port',
+            },
+            departure: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: null,
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            arrival: {
+              id: faker.random.uuid(),
+              date: null,
+              approvedAt: '2019-06-18T05:57:07Z',
+              approvedBy: {
+                id: faker.random.uuid(),
+                firstName: faker.name.firstName(),
+                lastName: faker.name.lastName(),
+              },
+              timelineDateRevisions: [],
+              __typename: 'TimelineDate',
+            },
+            vesselName: null,
+            __typename: 'Voyage',
+          },
+        ],
+      }}
+    />
+  ));

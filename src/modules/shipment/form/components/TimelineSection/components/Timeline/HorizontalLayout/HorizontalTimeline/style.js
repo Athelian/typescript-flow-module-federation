@@ -28,13 +28,12 @@ export const TooltipTitleStyle: string = css`
   ${fontSizes.MAIN};
   border-bottom: 1px solid ${colors.WHITE};
   padding: 0 0 5px 0;
-  margin: 0 0 5px 0;
+  margin: 10px 0 5px 0;
   letter-spacing: 2px;
 `;
 
 export const TooltipWrapperStyle: string = css`
-  display: grid;
-  grid-template-columns: 70px minmax(50px, 1fr);
+  padding: 10px;
 `;
 
 export const TooltipLabelStyle: string = css`

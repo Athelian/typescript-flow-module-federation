@@ -30,6 +30,7 @@ import {
   BlankSpaceStyle,
   ContainerIconWrapperStyle,
   WarehouseContainerWrapperStyle,
+  TooltipWrapperStyle,
   TooltipTitleStyle,
 } from './style';
 
@@ -136,25 +137,70 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
 
       {voyages.length > 1 &&
         voyages.slice(1).map((voyage, index) => (
-          <React.Fragment key={getByPathWithDefault('', 'id', 'voyage')}>
-            <TimelineTransitIcon
-              color={coloring[index * 2 + 2]}
-              arrivalLinkPath={
-                navigable.form
-                  ? `/shipment/${shipmentId}/${
-                      index === 0 ? 'firstTransitPortArrival' : 'secondTransitPortArrival'
-                    }`
-                  : ''
+          <React.Fragment key={getByPathWithDefault(index, 'id', 'voyage')}>
+            <Tooltip
+              message={
+                <div className={TooltipWrapperStyle}>
+                  <div className={TooltipTitleStyle}>
+                    {index ? (
+                      <FormattedMessage
+                        id="components.Shipments.secondTransitPortArrival"
+                        defaultMessage="SECOND TRANSIT PORT ARRIVAL"
+                      />
+                    ) : (
+                      <FormattedMessage
+                        id="components.Shipments.firstTransitPortArrival"
+                        defaultMessage="FIRST TRANSIT PORT ARRIVAL"
+                      />
+                    )}
+                  </div>
+                  {getByPathWithDefault(null, `${index + 1}.arrival.approvedAt`, voyages) ? (
+                    <ApprovedBy
+                      user={getByPathWithDefault(null, `${index + 1}.arrival.approvedBy`, voyages)}
+                    />
+                  ) : (
+                    <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+                  )}
+                  <div className={TooltipTitleStyle}>
+                    <FormattedMessage
+                      id="components.Shipments.departure"
+                      defaultMessage="DEPARTURE"
+                    />
+                  </div>
+                  {getByPathWithDefault(null, `${index + 1}.departure.approvedAt`, voyages) ? (
+                    <ApprovedBy
+                      user={getByPathWithDefault(
+                        null,
+                        `${index + 1}.departure.approvedBy`,
+                        voyages
+                      )}
+                    />
+                  ) : (
+                    <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+                  )}
+                </div>
               }
-              departureLinkPath={
-                navigable.form
-                  ? `/shipment/${shipmentId}/${
-                      index === 0 ? 'firstTransitPortDeparture' : 'secondTransitPortDeparture'
-                    }`
-                  : ''
-              }
-            />
-
+            >
+              <div>
+                <TimelineTransitIcon
+                  color={coloring[index * 2 + 2]}
+                  arrivalLinkPath={
+                    navigable.form
+                      ? `/shipment/${shipmentId}/${
+                          index === 0 ? 'firstTransitPortArrival' : 'secondTransitPortArrival'
+                        }`
+                      : ''
+                  }
+                  departureLinkPath={
+                    navigable.form
+                      ? `/shipment/${shipmentId}/${
+                          index === 0 ? 'firstTransitPortDeparture' : 'secondTransitPortDeparture'
+                        }`
+                      : ''
+                  }
+                />
+              </div>
+            </Tooltip>
             <TimelineVoyage>
               <TimelineLine color={coloring[index * 2 + 3]} />
               <TimelineLine color={coloring[index * 2 + 4]} />
