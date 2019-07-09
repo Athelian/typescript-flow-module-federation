@@ -18,6 +18,7 @@ type Props = {
 
 export const MappingFields = {
   OrderIssuedAt: 'issuedAt',
+  OrderDeliveryDate: 'deliveryDate',
   ProjectDueDate: 'milestone.project.dueDate',
   MilestoneDueDate: 'milestone.dueDate',
   TaskStartDate: 'startDate',

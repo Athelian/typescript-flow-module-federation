@@ -197,23 +197,34 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                       )}
                     </Subscribe>
 
-                    <FormField
-                      name="deliveryDate"
-                      initValue={values.deliveryDate}
-                      setFieldValue={setFieldValue}
-                      values={values}
-                      validator={validator}
-                    >
-                      {({ name, ...inputHandlers }) => (
-                        <DateInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          originalValue={initialValues.deliveryDate}
-                          label={<FormattedMessage {...messages.deliveryDate} />}
-                          editable={hasPermission([ORDER_UPDATE, ORDER_SET_DELIVERY_DATE])}
-                        />
+                    <Subscribe to={[OrderTasksContainer]}>
+                      {taskContainer => (
+                        <FormField
+                          name="deliveryDate"
+                          initValue={values.deliveryDate}
+                          setFieldValue={setFieldValue}
+                          values={values}
+                          validator={validator}
+                        >
+                          {({ name, ...inputHandlers }) => (
+                            <DateInputFactory
+                              name={name}
+                              {...inputHandlers}
+                              onBlur={evt => {
+                                inputHandlers.onBlur(evt);
+                                emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                                if (!taskContainer.state.hasCalledTasksApiYet) {
+                                  taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
+                                }
+                              }}
+                              originalValue={initialValues.deliveryDate}
+                              label={<FormattedMessage {...messages.deliveryDate} />}
+                              editable={hasPermission([ORDER_UPDATE, ORDER_SET_DELIVERY_DATE])}
+                            />
+                          )}
+                        </FormField>
                       )}
-                    </FormField>
+                    </Subscribe>
 
                     <BooleanValue>
                       {({ value: isOpen, set: setPriceDialog }) => (
