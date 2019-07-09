@@ -102,6 +102,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               <Subscribe to={[ProductProviderTasksContainer]}>
                                 {({ onChangeExporter }) => (
                                   <SelectExporter
+                                    cacheKey="endProductSelectExporter"
                                     isRequired
                                     selected={values.exporter}
                                     onCancel={() => exporterSlideToggle(false)}
