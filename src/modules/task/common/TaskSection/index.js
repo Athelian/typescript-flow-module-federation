@@ -618,9 +618,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                       >
                         {isOpenOfSelector && (
                           <SelectProjectAndMilestone
-                            filter={{
-                              query: '',
-                            }}
+                            cacheKey="taskSectionSelectProjectAndMilestone"
                             milestone={milestone}
                             onSelect={newMilestone => {
                               if (newMilestone) {

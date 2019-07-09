@@ -30,9 +30,6 @@ storiesOf('Selector/SelectProjectAndMilestone', module).add('with gray card', ()
             >
               {isOpen && (
                 <SelectProjectAndMilestone
-                  filter={{
-                    query: '',
-                  }}
                   project={project}
                   milestone={milestone}
                   onCancel={() => {
