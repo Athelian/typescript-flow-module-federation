@@ -89,7 +89,7 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
 
   return (
     <ArrayValue defaultValue={[]}>
-      {({ value: selected, push, splice }) => (
+      {({ value: selected, push, splice, filter: arrayValueFilter }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
@@ -212,7 +212,7 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
                     selected={isSelected}
                     onSelect={() => {
                       if (isSelected) {
-                        splice(index, 1);
+                        arrayValueFilter(({ id }) => id !== item.id);
                       } else {
                         push(item);
                       }

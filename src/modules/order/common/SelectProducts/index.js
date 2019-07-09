@@ -93,7 +93,7 @@ function SelectProducts({
 
         return (
           <ArrayValue defaultValue={[]}>
-            {({ value: selected, push, splice }) => (
+            {({ value: selected, push, splice, filter }) => (
               <Layout
                 navBar={
                   <SlideViewNavBar>
@@ -159,7 +159,7 @@ function SelectProducts({
                           selected={isSelected}
                           onSelect={() => {
                             if (isSelected) {
-                              splice(index, 1);
+                              filter(({ id }) => id !== item.id);
                             } else {
                               push(item);
                             }
