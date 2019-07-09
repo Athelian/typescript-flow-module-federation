@@ -164,7 +164,7 @@ class OrderFormModule extends React.PureComponent<Props> {
       hasCalledTasksApiYet = false,
       tags = [],
       files = [],
-      todo = { tasks: [] },
+      todo = { milestone: null, tasks: [] },
       ...info
     } = order;
     orderInfoState.initDetailValues(info);
