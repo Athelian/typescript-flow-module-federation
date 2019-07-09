@@ -25,6 +25,7 @@ export default function InlineWarehouse({ name, value, id }: Props) {
           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
             {opened && (
               <SelectWareHouse
+                cacheKey="rmSelectWarehouseQuery"
                 onSelect={selectedItem => {
                   emitter.emit('INLINE_CHANGE', {
                     name,

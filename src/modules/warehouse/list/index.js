@@ -7,24 +7,17 @@ import WarehouseGridView from './WarehouseGridView';
 import { warehouseListQuery } from './query';
 
 type Props = {
-  sortBy: {
-    [field: string]: string,
-  },
+  filterBy: Object,
+  sortBy: Object,
+  page: number,
   perPage: number,
 };
 
 class WarehouseList extends React.Component<Props> {
   render() {
-    const { ...filtersAndSort } = this.props;
+    const { ...queryVariables } = this.props;
     return (
-      <Query
-        query={warehouseListQuery}
-        variables={{
-          page: 1,
-          ...filtersAndSort,
-        }}
-        fetchPolicy="network-only"
-      >
+      <Query query={warehouseListQuery} variables={queryVariables} fetchPolicy="network-only">
         {({ loading, data, fetchMore, error }) => {
           if (error) {
             return error.message;
@@ -36,7 +29,7 @@ class WarehouseList extends React.Component<Props> {
           return (
             <WarehouseGridView
               items={getByPathWithDefault([], 'warehouses.nodes', data)}
-              onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'warehouses')}
+              onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'warehouses')}
               hasMore={hasMore}
               isLoading={loading}
             />

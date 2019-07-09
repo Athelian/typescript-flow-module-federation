@@ -37,6 +37,7 @@
     "jsx-a11y/label-has-associated-control": 0,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "import/prefer-default-export": 0,
     "import/no-cycle": "warn"
   },
   "settings": {

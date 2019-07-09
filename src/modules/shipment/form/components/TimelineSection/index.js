@@ -388,6 +388,7 @@ const TimelineSection = ({ isNew }: Props) => {
                               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                                 {opened && (
                                   <SelectWareHouse
+                                    cacheKey="shipmentTimelineSectionSelectWarehouseQuery"
                                     selected={warehouse}
                                     onCancel={() => slideToggle(false)}
                                     onSelect={newValue => {

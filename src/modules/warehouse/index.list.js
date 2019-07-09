@@ -12,24 +12,13 @@ import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import WarehouseList from './list';
+import { warehousesDefaultQueryVariables } from './constants';
 import messages from './messages';
 
 type Props = {
   intl: IntlShape,
 };
 
-const getInitFilter = () => {
-  const state = {
-    filter: {},
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    perPage: 10,
-    page: 1,
-  };
-  return state;
-};
 const WarehouseModule = (props: Props) => {
   const { intl } = props;
 
@@ -38,8 +27,8 @@ const WarehouseModule = (props: Props) => {
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    getInitFilter(),
-    'filterWarehouse'
+    warehousesDefaultQueryVariables,
+    'warehousesFilter'
   );
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
