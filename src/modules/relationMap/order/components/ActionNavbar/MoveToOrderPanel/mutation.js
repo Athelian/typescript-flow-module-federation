@@ -8,6 +8,8 @@ import {
   userAvatarFragment,
   metricFragment,
   priceFragment,
+  milestoneCardFragment,
+  projectCardFragment,
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   taskTemplateCardFragment,
@@ -40,6 +42,8 @@ export const updateOrderMutation = gql`
   ${metricFragment}
   ${priceFragment}
   ${taskFormInTemplateFragment}
+  ${milestoneCardFragment}
+  ${projectCardFragment}
   ${taskWithoutParentInfoFragment}
   ${taskTemplateCardFragment}
   ${taskCountFragment}

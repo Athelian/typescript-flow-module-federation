@@ -193,13 +193,9 @@ export const taskWithoutParentInfoFragment = gql`
     }
     milestone {
       ... on Milestone {
-        id
-        name
+        ...milestoneCardFragment
         project {
-          ... on Project {
-            id
-            name
-          }
+          ...projectCardFragment
         }
       }
     }
