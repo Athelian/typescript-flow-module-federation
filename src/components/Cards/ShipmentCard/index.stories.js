@@ -169,6 +169,11 @@ const shipment = {
         id: faker.random.uuid(),
         date: null,
         approvedAt: '2019-06-18T05:57:07Z',
+        approvedBy: {
+          id: faker.random.uuid(),
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+        },
         timelineDateRevisions: [],
         __typename: 'TimelineDate',
       },
@@ -183,6 +188,11 @@ const shipment = {
         id: faker.random.uuid(),
         date: null,
         approvedAt: '2019-06-18T05:57:15Z',
+        approvedBy: {
+          id: faker.random.uuid(),
+          firstName: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+        },
         timelineDateRevisions: [
           {
             id: faker.random.uuid(),

@@ -40,7 +40,7 @@ type Props = {|
   },
 |};
 
-const ApprovedBy = (user: UserPayload) => {
+const ApprovedBy = ({ user }: { user: UserPayload }) => {
   return (
     <FormattedMessage
       id="components.Shipments.approvedBy"
@@ -60,11 +60,8 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
   );
   const transportType: TransportType = getByPathWithDefault('', 'transportType', shipment);
   const containers: Array<ContainerPayload> = getByPathWithDefault([], 'containers', shipment);
-
   const transportIcon = getTransportIcon(transportType);
-
   const coloring = getTimelineColoring({ cargoReady, voyages, containerGroups });
-
   const cargoReadyColoring = coloring[0];
   const loadPortDepartureColoring = coloring[1];
   const dischargePortArrivalColoring = coloring[coloring.length - 4];
@@ -101,11 +98,31 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
 
       <TimelineLine color={loadPortDepartureColoring} />
 
-      <TimelineIcon
-        icon="PORT"
-        color={loadPortDepartureColoring}
-        linkPath={navigable.form ? `/shipment/${shipmentId}/loadPortDeparture` : ''}
-      />
+      <Tooltip
+        message={
+          <div>
+            <div className={TooltipTitleStyle}>
+              <FormattedMessage
+                id="components.Shipments.loadPortDeparture"
+                defaultMessage="LOAD PORT DEPARTURE"
+              />
+            </div>
+            {getByPathWithDefault(null, '0.departure.approvedAt', voyages) ? (
+              <ApprovedBy user={getByPathWithDefault(null, '0.departure.approvedBy', voyages)} />
+            ) : (
+              <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+            )}
+          </div>
+        }
+      >
+        <div>
+          <TimelineIcon
+            icon="PORT"
+            color={loadPortDepartureColoring}
+            linkPath={navigable.form ? `/shipment/${shipmentId}/loadPortDeparture` : ''}
+          />
+        </div>
+      </Tooltip>
 
       <TimelineVoyage>
         <TimelineLine color={loadPortDepartureColoring} />
@@ -154,19 +171,71 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
           </React.Fragment>
         ))}
 
-      <TimelineIcon
-        icon="PORT"
-        color={dischargePortArrivalColoring}
-        linkPath={navigable.form ? `/shipment/${shipmentId}/dischargePortArrival` : ''}
-      />
+      <Tooltip
+        message={
+          <div>
+            <div className={TooltipTitleStyle}>
+              <FormattedMessage
+                id="components.Shipments.dischargePortArrival"
+                defaultMessage="DISCHARGE PORT ARRIVAL"
+              />
+            </div>
+            {getByPathWithDefault(
+              null,
+              `${(voyages || []).length - 1}.arrival.approvedAt`,
+              voyages
+            ) ? (
+              <ApprovedBy
+                user={getByPathWithDefault(
+                  null,
+                  `${(voyages || []).length - 1}.arrival.approvedBy`,
+                  voyages
+                )}
+              />
+            ) : (
+              <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+            )}
+          </div>
+        }
+      >
+        <div>
+          <TimelineIcon
+            icon="PORT"
+            color={dischargePortArrivalColoring}
+            linkPath={navigable.form ? `/shipment/${shipmentId}/dischargePortArrival` : ''}
+          />
+        </div>
+      </Tooltip>
 
       <TimelineLine color={customClearanceColoring} />
 
-      <TimelineIcon
-        icon="CUSTOMS"
-        color={customClearanceColoring}
-        linkPath={navigable.form ? `/shipment/${shipmentId}/customClearance` : ''}
-      />
+      <Tooltip
+        message={
+          <div>
+            <div className={TooltipTitleStyle}>
+              <FormattedMessage
+                id="components.Shipments.customClearance"
+                defaultMessage="CUSTOMS CLEARANCE"
+              />
+            </div>
+            {getByPathWithDefault(null, '0.customClearance.approvedAt', containerGroups) ? (
+              <ApprovedBy
+                user={getByPathWithDefault(null, '0.customClearance.approvedBy', containerGroups)}
+              />
+            ) : (
+              <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+            )}
+          </div>
+        }
+      >
+        <div>
+          <TimelineIcon
+            icon="CUSTOMS"
+            color={customClearanceColoring}
+            linkPath={navigable.form ? `/shipment/${shipmentId}/customClearance` : ''}
+          />
+        </div>
+      </Tooltip>
 
       {containers && containers.length > 0 ? (
         <>
@@ -189,22 +258,69 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
         <>
           <TimelineLine color={warehouseArrivalColoring} />
 
-          <TimelineIcon
-            icon="WAREHOUSE"
-            color={warehouseArrivalColoring}
-            linkPath={navigable.form ? `/shipment/${shipmentId}/warehouseArrival` : ''}
-          />
+          <Tooltip
+            message={
+              <div>
+                <div className={TooltipTitleStyle}>
+                  <FormattedMessage
+                    id="components.Shipments.warehouseArrival"
+                    defaultMessage="WAREHOUSE ARRIVAL"
+                  />
+                </div>
+                {getByPathWithDefault(null, '0.warehouseArrival.approvedAt', containerGroups) ? (
+                  <ApprovedBy
+                    user={getByPathWithDefault(
+                      null,
+                      '0.warehouseArrival.approvedBy',
+                      containerGroups
+                    )}
+                  />
+                ) : (
+                  <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+                )}
+              </div>
+            }
+          >
+            <div>
+              <TimelineIcon
+                icon="WAREHOUSE"
+                color={warehouseArrivalColoring}
+                linkPath={navigable.form ? `/shipment/${shipmentId}/warehouseArrival` : ''}
+              />
+            </div>
+          </Tooltip>
 
           <TimelineLine color={deliveryReadyColoring} />
         </>
       )}
 
-      <TimelineIcon
-        icon="DELIVERY_READY"
-        color={deliveryReadyColoring}
-        linkPath={navigable.form ? `/shipment/${shipmentId}/deliveryReady` : ''}
-      />
-
+      <Tooltip
+        message={
+          <div>
+            <div className={TooltipTitleStyle}>
+              <FormattedMessage
+                id="components.Shipments.deliveryReady"
+                defaultMessage="DELIVERY READY"
+              />
+            </div>
+            {getByPathWithDefault(null, '0.deliveryReady.approvedAt', containerGroups) ? (
+              <ApprovedBy
+                user={getByPathWithDefault(null, '0.deliveryReady.approvedBy', containerGroups)}
+              />
+            ) : (
+              <FormattedMessage id="modules.cards.unapproved" defaultMessage="Unapproved" />
+            )}
+          </div>
+        }
+      >
+        <div>
+          <TimelineIcon
+            icon="DELIVERY_READY"
+            color={deliveryReadyColoring}
+            linkPath={navigable.form ? `/shipment/${shipmentId}/deliveryReady` : ''}
+          />
+        </div>
+      </Tooltip>
       <div className={BlankSpaceStyle} />
     </div>
   );
