@@ -16,6 +16,7 @@ import {
   TimelineIcon,
   TimelineTransitIcon,
   TimelineLine,
+  TimelineDate,
   TimelineVoyage,
   TimelineWarehouseContainerIcon,
   TimelineContainerIcon,
@@ -31,7 +32,9 @@ import {
   ContainerIconWrapperStyle,
   WarehouseContainerWrapperStyle,
   TooltipWrapperStyle,
+  TooltipGirdStyle,
   TooltipTitleStyle,
+  TooltipLabelStyle,
 } from './style';
 
 type Props = {|
@@ -291,11 +294,87 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
             <div className={ContainerIconWrapperStyle}>
               <TimelineContainerIcon />
             </div>
-            <TimelineWarehouseContainerIcon
-              containers={containers}
-              targetId="containersWarehouseArrival"
-              boundaryId="timelineInfoSection"
-            />
+            <Tooltip
+              message={
+                <div>
+                  <div className={TooltipTitleStyle}>
+                    <FormattedMessage
+                      id="components.Shipments.warehouseArrival"
+                      defaultMessage="WAREHOUSE ARRIVAL"
+                    />
+                  </div>
+                  <div className={TooltipGirdStyle}>
+                    <div>
+                      <FormattedMessage
+                        id="components.Shipments.containers"
+                        defaultMessage="CONTAINERS"
+                      />
+                    </div>
+                    <div>
+                      <FormattedMessage
+                        id="components.Shipments.agreedDateLabel"
+                        defaultMessage="AGREED"
+                      />
+                    </div>
+                    <div>
+                      <FormattedMessage
+                        id="components.Shipments.actualDateLabel"
+                        defaultMessage="ACTUAL"
+                      />
+                    </div>
+                    {containers.map(container => (
+                      <>
+                        <div className={TooltipLabelStyle}>
+                          {getByPathWithDefault('', 'no', container)}
+                        </div>
+                        <div>
+                          <TimelineDate
+                            timelineDate={{
+                              date: getByPathWithDefault(
+                                null,
+                                'warehouseArrivalAgreedDate',
+                                container
+                              ),
+                              approvedAt: getByPathWithDefault(
+                                null,
+                                'warehouseArrivalAgreedDateApprovedAt',
+                                container
+                              ),
+                              timelineDateRevisions: [],
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <TimelineDate
+                            timelineDate={{
+                              date: getByPathWithDefault(
+                                null,
+                                'warehouseArrivalActualDate',
+                                container
+                              ),
+                              approvedAt: getByPathWithDefault(
+                                null,
+                                'warehouseArrivalActualDateApprovedAt',
+                                container
+                              ),
+                              timelineDateRevisions: [],
+                            }}
+                          />
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                </div>
+              }
+            >
+              <div>
+                <TimelineWarehouseContainerIcon
+                  containers={containers}
+                  targetId="containersWarehouseArrival"
+                  boundaryId="timelineInfoSection"
+                />
+              </div>
+            </Tooltip>
           </div>
 
           <TimelineLine color={deliveryReadyColoring} flex="1.59" />

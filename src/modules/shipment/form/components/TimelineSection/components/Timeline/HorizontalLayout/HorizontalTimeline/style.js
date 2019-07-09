@@ -36,6 +36,12 @@ export const TooltipWrapperStyle: string = css`
   padding: 10px;
 `;
 
+export const TooltipGirdStyle: string = css`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  color: ${colors.WHITE};
+`;
+
 export const TooltipLabelStyle: string = css`
   ${presets.ELLIPSIS};
   ${fontSizes.MAIN};

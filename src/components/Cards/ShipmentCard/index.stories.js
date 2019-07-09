@@ -227,8 +227,9 @@ const shipment = {
   containers: [
     {
       id: faker.random.uuid(),
-      warehouseArrivalAgreedDate: null,
-      warehouseArrivalAgreedDateApprovedAt: null,
+      no: faker.random.uuid(),
+      warehouseArrivalAgreedDate: faker.date.future(),
+      warehouseArrivalAgreedDateApprovedAt: faker.date.future(),
       warehouseArrivalActualDate: null,
       warehouseArrivalActualDateApprovedAt: null,
       warehouse: {
