@@ -6,6 +6,7 @@ import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
 import { removeTypename } from 'utils/data';
 import GridView from 'components/GridView';
+import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
 import Layout from 'components/Layout';
@@ -17,7 +18,6 @@ import { getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import messages from 'modules/order/messages';
 import type { OrderItem } from 'modules/order/type.js.flow';
-import useSortAndFilter from 'hooks/useSortAndFilter';
 import { productProvidersListQuery } from 'modules/productProvider/list/query';
 import { ItemWrapperStyle } from './style';
 
@@ -98,8 +98,8 @@ function SelectProducts({
     { title: intl.formatMessage(messages.supplier), value: 'supplierName' },
   ];
 
-  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter({
-    perPage: 20,
+  const endProductsDefaultQueryVariables = {
+    perPage: 10,
     page: 1,
     filter: {
       importerId,
@@ -108,7 +108,13 @@ function SelectProducts({
       query: '',
     },
     sort: { field: 'updatedAt', direction: 'DESCENDING' },
-  });
+  };
+
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    endProductsDefaultQueryVariables,
+    'orderFormEndProductSelector'
+  );
+
   return (
     <Query query={productProvidersListQuery} variables={queryVariables} fetchPolicy="network-only">
       {({ loading, data, error, fetchMore }) => {
