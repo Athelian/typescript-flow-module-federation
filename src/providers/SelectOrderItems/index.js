@@ -17,7 +17,6 @@ import { ItemCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/order/messages';
-import type { OrderItem } from 'modules/order/type.js.flow';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import orderItemsQuery from 'providers/OrderItemsList/query';
 import useSortAndFilter from 'hooks/useSortAndFilter';
@@ -43,42 +42,6 @@ function initFilterBy(filter: Object) {
     },
     sort: { field: 'updatedAt', direction: 'DESCENDING' },
   };
-}
-
-function onSelectProduct({
-  selected,
-  item,
-  push,
-  set,
-}: {
-  selected: Array<OrderItem>,
-  item: OrderItem,
-  push: Function,
-  set: Function,
-}) {
-  if (!selected.includes(item)) {
-    push(item);
-  } else {
-    set(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id));
-  }
-}
-
-function onChangeProductQuantity({
-  selected,
-  item,
-  set,
-  total,
-}: {
-  selected: Array<OrderItem>,
-  item: OrderItem,
-  set: Function,
-  total: number,
-}) {
-  const orderItems = [];
-  for (let counter = 0; counter < total; counter += 1) {
-    orderItems.push(item);
-  }
-  set(orderItems.concat(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id)));
 }
 
 function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
@@ -125,8 +88,8 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
   }
 
   return (
-    <ArrayValue>
-      {({ value: selected, push, set }) => (
+    <ArrayValue defaultValue={[]}>
+      {({ value: selected, push, splice }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
@@ -226,19 +189,16 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
                 hideOrder: false,
               };
 
+              const index = selected.map(({ id }) => id).indexOf(item.id);
+              const isSelected = index !== -1;
+
               return (
                 <div key={item.id} className={ItemWrapperStyle}>
-                  {selected.includes(item) && (
+                  {isSelected && (
                     <IncrementInput
                       value={selected.filter(selectedItem => selectedItem.id === item.id).length}
-                      onChange={total =>
-                        onChangeProductQuantity({
-                          total,
-                          selected,
-                          item,
-                          set,
-                        })
-                      }
+                      onMinus={() => splice(index, 1)}
+                      onPlus={() => push(item)}
                     />
                   )}
                   <ItemCard
@@ -249,8 +209,14 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
                     viewable={viewable}
                     config={config}
                     selectable
-                    selected={selected.includes(item)}
-                    onSelect={() => onSelectProduct({ selected, item, push, set })}
+                    selected={isSelected}
+                    onSelect={() => {
+                      if (isSelected) {
+                        splice(index, 1);
+                      } else {
+                        push(item);
+                      }
+                    }}
                   />
                 </div>
               );

@@ -39,45 +39,8 @@ const defaultProps = {
   orderCurrency: '',
 };
 
-function onSelectProduct({
-  selected,
-  item,
-  push,
-  set,
-}: {
-  selected: Array<OrderItem>,
-  item: OrderItem,
-  push: Function,
-  set: Function,
-}) {
-  if (!selected.includes(item)) {
-    push(item);
-  } else {
-    set(selected.filter((orderItem: OrderItem) => orderItem.id !== item.id));
-  }
-}
-
-const getProductQuantity = (items: Array<OrderItem> = [], item: OrderItem) =>
-  items.filter(endProduct => endProduct.id === item.id).length;
-
-function onChangeProductQuantity({
-  selected,
-  set,
-  item,
-  total,
-}: {
-  selected: Array<OrderItem>,
-  item: OrderItem,
-  set: Function,
-  total: number,
-}) {
-  const items = [...selected];
-  const count = getProductQuantity(items, item);
-  const index = items.indexOf(item);
-  items.splice(index, count, ...Array(total).fill(item));
-
-  set(items);
-}
+const countSelected = (selected: Array<OrderItem> = [], value: OrderItem) =>
+  selected.filter(item => item.id === value.id).length;
 
 function SelectProducts({
   intl,
@@ -129,8 +92,8 @@ function SelectProducts({
         const items = getByPathWithDefault([], 'productProviders.nodes', data);
 
         return (
-          <ArrayValue>
-            {({ value: selected, push, set }) => (
+          <ArrayValue defaultValue={[]}>
+            {({ value: selected, push, splice }) => (
               <Layout
                 navBar={
                   <SlideViewNavBar>
@@ -177,25 +140,34 @@ function SelectProducts({
                     />
                   }
                 >
-                  {items.map(item => (
-                    <div key={item.id} className={ItemWrapperStyle}>
-                      {selected.includes(item) && (
-                        <IncrementInput
-                          value={getProductQuantity(selected, item)}
-                          onChange={total =>
-                            onChangeProductQuantity({ selected, set, total, item })
-                          }
+                  {items.map(item => {
+                    const index = selected.map(({ id }) => id).indexOf(item.id);
+                    const isSelected = index !== -1;
+                    return (
+                      <div key={item.id} className={ItemWrapperStyle}>
+                        {isSelected && (
+                          <IncrementInput
+                            value={countSelected(selected, item)}
+                            onMinus={() => splice(index, 1)}
+                            onPlus={() => push(item)}
+                          />
+                        )}
+                        <OrderProductProviderCard
+                          orderCurrency={orderCurrency}
+                          productProvider={item}
+                          selectable
+                          selected={isSelected}
+                          onSelect={() => {
+                            if (isSelected) {
+                              splice(index, 1);
+                            } else {
+                              push(item);
+                            }
+                          }}
                         />
-                      )}
-                      <OrderProductProviderCard
-                        orderCurrency={orderCurrency}
-                        productProvider={item}
-                        selectable
-                        selected={selected.includes(item)}
-                        onSelect={() => onSelectProduct({ selected, item, push, set })}
-                      />
-                    </div>
-                  ))}
+                      </div>
+                    );
+                  })}
                 </GridView>
               </Layout>
             )}
