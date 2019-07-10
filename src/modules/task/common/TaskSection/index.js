@@ -618,9 +618,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                       >
                         {isOpenOfSelector && (
                           <SelectProjectAndMilestone
-                            filter={{
-                              query: '',
-                            }}
+                            cacheKey={`${type}TaskSectionSelectProjectAndMilestone`}
                             milestone={milestone}
                             onSelect={newMilestone => {
                               if (newMilestone) {
@@ -727,6 +725,7 @@ function TaskSection({ type, entityId, intl, groupIds }: Props) {
                         <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                           {opened && (
                             <SelectTaskTemplate
+                              cacheKey={`${type}SelectTaskTemplate`}
                               entityType={type}
                               onCancel={() => slideToggle(false)}
                               onSelect={newValue => {

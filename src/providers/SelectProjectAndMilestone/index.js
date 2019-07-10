@@ -4,46 +4,42 @@ import { Query } from 'react-apollo';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { BooleanValue, ObjectValue } from 'react-values';
-import type { DateRangeInput, Project, Milestone } from 'generated/graphql';
+import type { Project, Milestone } from 'generated/graphql';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
 import Layout from 'components/Layout';
+import { currentSort } from 'components/common/FilterToolBar';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { Display } from 'components/Form';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import BaseCard, { ProjectCard } from 'components/Cards';
 import messages from 'modules/project/messages';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import useFilter from 'hooks/useFilter';
 import SelectMilestone from './SelectMilestone';
 import { selectProjectQuery } from './query';
 import { ItemWrapperStyle, MilestoneWrapperStyle, MilestoneNameStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {
   onCancel: () => void,
   onSelect: (milestone: ?Milestone) => void,
-  filter: {
-    query?: string,
-    createdAt?: DateRangeInput,
-    updatedAt?: DateRangeInput,
-    dueDate?: DateRangeInput,
-  },
   intl: IntlShape,
   milestone: ?Milestone,
 };
 
-function initFilterBy(filter: Object) {
-  return {
-    perPage: 20,
-    page: 1,
-    filter: {
-      query: '',
-      ...filter,
-    },
-    sort: { field: 'updatedAt', direction: 'DESCENDING' },
-  };
-}
+const projectsDefaultQueryVariables = {
+  perPage: 20,
+  page: 1,
+  filter: {
+    query: '',
+  },
+  sort: { field: 'updatedAt', direction: 'DESCENDING' },
+};
 
 function resetSelection({
   project,
@@ -60,18 +56,23 @@ function resetSelection({
   });
 }
 
-function SelectProjectAndMilestone({ intl, onCancel, onSelect, filter, milestone }: Props) {
-  const fields = [
+function SelectProjectAndMilestone({
+  cacheKey = 'SelectProjectAndMilestone',
+  intl,
+  onCancel,
+  onSelect,
+  milestone,
+}: Props) {
+  const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
   ];
-  const {
-    filterAndSort: filtersAndSort,
-    queryVariables,
-    onChangeFilter: onChange,
-  } = useSortAndFilter(initFilterBy(filter));
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    projectsDefaultQueryVariables,
+    cacheKey
+  );
 
   const project = getByPath('project', milestone);
 
@@ -92,12 +93,12 @@ function SelectProjectAndMilestone({ intl, onCancel, onSelect, filter, milestone
             <SlideViewNavBar>
               <EntityIcon icon="PROJECT" color="PROJECT" />
               <SortInput
-                sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
-                ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-                fields={fields}
+                sort={currentSort(sortFields, filterAndSort.sort)}
+                ascending={filterAndSort.sort.direction !== 'DESCENDING'}
+                fields={sortFields}
                 onChange={({ field: { value }, ascending }) =>
-                  onChange({
-                    ...filtersAndSort,
+                  onChangeFilter({
+                    ...filterAndSort,
                     sort: {
                       field: value,
                       direction: ascending ? 'ASCENDING' : 'DESCENDING',
@@ -106,18 +107,18 @@ function SelectProjectAndMilestone({ intl, onCancel, onSelect, filter, milestone
                 }
               />
               <SearchInput
-                value={filtersAndSort.filter.query}
+                value={filterAndSort.filter.query}
                 name="search"
                 onClear={() =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: '' },
+                  onChangeFilter({
+                    ...filterAndSort,
+                    filter: { ...filterAndSort.filter, query: '' },
                   })
                 }
                 onChange={newQuery =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: newQuery },
+                  onChangeFilter({
+                    ...filterAndSort,
+                    filter: { ...filterAndSort.filter, query: newQuery },
                   })
                 }
               />
@@ -166,7 +167,7 @@ function SelectProjectAndMilestone({ intl, onCancel, onSelect, filter, milestone
               return (
                 <GridView
                   items={projects}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filtersAndSort, 'projects')}
+                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'projects')}
                   hasMore={hasMore}
                   isLoading={loading}
                   isEmpty={projects.length === 0}

@@ -755,6 +755,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                         batchesContainer
                                       ) => (
                                         <SelectExporter
+                                          cacheKey="shipmentSelectExporter"
                                           selected={values.exporter}
                                           onCancel={() => exporterSelectorToggle(false)}
                                           selectMessage={
