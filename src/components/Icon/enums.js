@@ -141,6 +141,7 @@ import {
   faMagic as MAGIC_REGULAR,
   faFileAlt as DOCUMENT_REGULAR,
   faCheckCircle as CHECKED_REGULAR,
+  faStar as STAR_REGULAR,
 } from '@fortawesome/pro-regular-svg-icons';
 
 import {
@@ -190,6 +191,7 @@ export default {
   METADATA,
   TEMPLATE,
   STAR,
+  STAR_REGULAR,
   STOPWATCH,
   EDIT_TABLE,
   SECURITY,

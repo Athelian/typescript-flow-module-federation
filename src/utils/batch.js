@@ -1,5 +1,6 @@
 // @flow
 import { set, cloneDeep } from 'lodash';
+import type { MetricValue, Size } from 'generated/graphql';
 import {
   BATCH_UPDATE,
   BATCH_SET_CUSTOM_FIELDS,
@@ -89,7 +90,13 @@ function calculateVolume(
 const isBadMetricData = (data: Object): boolean =>
   isNullOrUndefined(data.metric) || isNullOrUndefined(data.value);
 
-export const calculatePackageVolume = ({ packageVolume, packageSize }: Object): Object => {
+export const calculatePackageVolume = ({
+  packageVolume,
+  packageSize,
+}: {
+  packageVolume: MetricValue,
+  packageSize: Size,
+}): Object => {
   if (
     isNullOrUndefined(packageVolume) ||
     isBadMetricData(packageVolume) ||

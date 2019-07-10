@@ -103,3 +103,8 @@ export const PRODUCT_PROVIDER_TASK_SET_START_DATE_BINDING =
 export const PRODUCT_PROVIDER_TASK_SET_TAGS = 'product.productProviderTasks.setTags';
 export const PRODUCT_PROVIDER_TASK_SET_TEMPLATE = 'product.productProviderTasks.setTaskTemplate';
 export const PRODUCT_PROVIDER_TASK_SET_MILESTONE = 'product.productProviderTasks.setMilestone';
+
+export const PRODUCT_PROVIDER_PACKAGES_DELETE = 'product.productProviderPackages.delete';
+export const PRODUCT_PROVIDER_PACKAGES_SET_DEFAULT =
+  'product.productProviderPackages.setDefaultPackage';
+export const PRODUCT_PROVIDER_PACKAGES_CREATE = 'product.productProviderPackages.create';
