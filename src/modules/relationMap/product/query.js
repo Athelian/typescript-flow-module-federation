@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { timelineDateMinimalFragment } from 'graphql';
+import { timelineDateMinimalFragment, userAvatarFragment } from 'graphql';
 
 export const productListQuery = gql`
   query(
@@ -117,6 +117,7 @@ export const productListQuery = gql`
   }
 
   ${timelineDateMinimalFragment}
+  ${userAvatarFragment}
 `;
 
 export default productListQuery;
