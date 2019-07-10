@@ -64,16 +64,16 @@ export default function PackageName({
         className={DefaultButtonStyle(isDefault, isActive)}
         role="presentation"
       >
-        <Icon icon="STAR" />
+        <Icon icon={isActive && !isDefault && !isHovered ? 'STAR_REGULAR' : 'STAR'} />
       </div>
-      {name ? (
-        <div className={PackageNameStyle}>{name}</div>
-      ) : (
-        <FormattedMessage
-          defaultMessage="No package name"
-          id="modules.ProductProviders.noPackageName"
-        />
-      )}
+      <div className={PackageNameStyle(isActive, !!name)}>
+        {name || (
+          <FormattedMessage
+            defaultMessage="No package name"
+            id="modules.ProductProviders.noPackageName"
+          />
+        )}
+      </div>
 
       {removable && (
         <div className={DeleteButtonStyle(isHovered)} onClick={onDelete} role="presentation">

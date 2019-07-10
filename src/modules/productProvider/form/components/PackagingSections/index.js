@@ -58,7 +58,7 @@ export default function PackagingSections() {
                       onActive={() => {
                         setActivePackageId(pkg.id);
                       }}
-                      onSetDefault={() => setDefault(pkg.id)}
+                      onSetDefault={() => setDefault(pkg)}
                       onRemove={() => {
                         removePackage(pkg.id);
                         if (packageId === pkg.id) {

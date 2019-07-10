@@ -13,29 +13,45 @@ export const PackageItemWrapperStyle = (isHover: boolean, isActive: boolean) => 
   background: ${colors.TEAL};
   color: ${colors.WHITE};
   `}
-  ${isHover
-    ? `
+  ${
+    isHover
+      ? `
     color: ${colors.WHITE};
     `
-    : `
+      : `
     color: ${colors.GRAY_LIGHT};
+    `
+  }
+    ${!isActive &&
+      `
+      &:hover,
+      :focus {
+        background: ${colors.GRAY_SUPER_LIGHT};
+        cursor: pointer;
+      }
     `}
 `;
 
-export const PackageNameStyle = css`
-  ${presets.ELLIPSIS};
-  color: ${colors.BLACK};
-`;
-
-const currentColor = (isDefault: boolean, isActive: boolean) => {
-  if (isDefault) return colors.TEAL;
+const buttonColor = (isDefault: boolean, isActive: boolean) => {
   if (isActive) return colors.WHITE;
+  if (isDefault) return colors.TEAL;
   return colors.ALMOST_WHITE;
 };
 
+const textColor = (isActive: boolean, hasName: boolean) => {
+  if (isActive) return colors.WHITE;
+  if (!hasName) return colors.GRAY_LIGHT;
+  return colors.BLACK;
+};
+
+export const PackageNameStyle = (isActive: boolean, hasName: boolean) => css`
+  ${presets.ELLIPSIS};
+  color: ${textColor(isActive, hasName)};
+`;
+
 export const DefaultButtonStyle = (isDefault: boolean, isActive: boolean) => css`
   ${presets.BUTTON};
-  color: ${currentColor(isDefault, isActive)};
+  color: ${buttonColor(isDefault, isActive)};
   &:hover,
   :focus {
     color: ${isActive ? colors.WHITE : colors.TEAL};
