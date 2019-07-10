@@ -3,9 +3,9 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { ObjectValue } from 'react-values';
+import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
-import useSortAndFilter from 'hooks/useSortAndFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
@@ -15,20 +15,27 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import messages from 'modules/partner/messages';
 import { PartnerCard } from 'components/Cards';
 
-type Props = {|
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {|
+  intl: IntlShape,
+  partnerTypes: Array<string>,
   selected?: ?{
     id: string,
     name: string,
   },
   onSelect: (item: Object) => void,
   onCancel: Function,
-  intl: IntlShape,
 |};
 
-const getInitFilter = (): Object => {
-  return {
+const partnerPath = 'viewer.user.group.partners';
+
+const SelectSupplier = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
+  const initialQueryVariables = {
     filter: {
-      types: ['Supplier'],
+      types: partnerTypes,
     },
     sort: {
       field: 'updatedAt',
@@ -37,12 +44,10 @@ const getInitFilter = (): Object => {
     page: 1,
     perPage: 10,
   };
-};
-
-const partnerPath = 'viewer.user.group.partners';
-
-const SelectSupplier = ({ selected, onCancel, onSelect, intl }: Props) => {
-  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    initialQueryVariables,
+    cacheKey
+  );
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -86,7 +91,7 @@ const SelectSupplier = ({ selected, onCancel, onSelect, intl }: Props) => {
                 <PartnerGridView
                   hasMore={hasMore}
                   isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, partnerPath)}
                   items={items}
                   renderItem={item => (
                     <PartnerCard
@@ -112,5 +117,11 @@ const SelectSupplier = ({ selected, onCancel, onSelect, intl }: Props) => {
     </PartnerListProvider>
   );
 };
+
+const defaultProps = {
+  cacheKey: 'SelectSupplier',
+};
+
+SelectSupplier.defaultProps = defaultProps;
 
 export default injectIntl(SelectSupplier);

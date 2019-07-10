@@ -197,6 +197,8 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               >
                                 {({ onChange }) => (
                                   <SelectSupplier
+                                    cacheKey="EndProductSelectPartner"
+                                    partnerTypes={['Supplier']}
                                     selected={values.supplier}
                                     onCancel={() => supplierSlideToggle(false)}
                                     onSelect={newValue => {
