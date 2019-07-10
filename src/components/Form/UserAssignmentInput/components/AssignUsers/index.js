@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { Query } from 'react-apollo';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import UserListProvider from 'providers/UserListProvider';
+import { usersQuery } from 'graphql/staff/query';
 import Layout from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -88,7 +89,7 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(initialFilter, cacheKey);
 
   return (
-    <UserListProvider queryVariables={queryVariables}>
+    <Query fetchPolicy="network-only" query={usersQuery} variables={queryVariables}>
       {({ loading, error, fetchMore, data }) => {
         if (error) {
           return error.message;
@@ -145,7 +146,7 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
           </ArrayValue>
         );
       }}
-    </UserListProvider>
+    </Query>
   );
 };
 
