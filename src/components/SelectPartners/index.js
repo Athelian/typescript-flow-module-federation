@@ -20,6 +20,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {|
+  intl: IntlShape,
   partnerTypes: Array<string>,
   selected: Array<{
     id: string,
@@ -27,32 +28,11 @@ type Props = OptionalProps & {|
   }>,
   onSelect: (item: Object) => void,
   onCancel: Function,
-  intl: IntlShape,
 |};
 
 const MAX_SELECTIONS = 4;
 
 const partnerPath = 'viewer.user.group.partners';
-
-function onSelectPartners({
-  isSelected,
-  selected,
-  item,
-  push,
-  set,
-}: {
-  isSelected: boolean,
-  selected: Array<Object>,
-  item: Object,
-  push: Function,
-  set: Function,
-}) {
-  if (!isSelected) {
-    if (selected.length < MAX_SELECTIONS) push(item);
-  } else {
-    set(selected.filter((orderItem: Object) => orderItem.id !== item.id));
-  }
-}
 
 const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
   const initialQueryVariables = {
@@ -93,7 +73,7 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
 
         return (
           <ArrayValue defaultValue={selected}>
-            {({ value: values, push, set }) => (
+            {({ value: values, push, filter }) => (
               <Layout
                 navBar={
                   <SlideViewNavBar>
@@ -126,13 +106,17 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
                     const isSelected = values.map(({ id }) => id).includes(item.id);
                     return (
                       <PartnerCard
-                        partner={item}
                         key={item.id}
-                        onSelect={() =>
-                          onSelectPartners({ selected: values, isSelected, item, push, set })
-                        }
                         selectable
                         selected={isSelected}
+                        partner={item}
+                        onSelect={() => {
+                          if (isSelected) {
+                            filter(({ id }) => id !== item.id);
+                          } else if (values.length < MAX_SELECTIONS) {
+                            push(item);
+                          }
+                        }}
                       />
                     );
                   }}
