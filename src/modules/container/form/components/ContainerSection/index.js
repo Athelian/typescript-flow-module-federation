@@ -241,6 +241,7 @@ const ContainerSection = () => {
                         )}
                       </FormField>
                       <AssignmentApprovalFactory
+                        cacheKey="ContainerUserSelect"
                         groupIds={[
                           getByPath('shipment.importer.id', values),
                           getByPath('shipment.exporter.id', values),
@@ -290,6 +291,7 @@ const ContainerSection = () => {
                       </FormField>
 
                       <AssignmentApprovalFactory
+                        cacheKey="ContainerUserSelect"
                         groupIds={[
                           getByPath('shipment.importer.id', values),
                           getByPath('shipment.exporter.id', values),
@@ -484,6 +486,7 @@ const ContainerSection = () => {
                     </FormField>
 
                     <AssignmentApprovalFactory
+                      cacheKey="ContainerUserSelect"
                       groupIds={[
                         getByPath('shipment.importer.id', values),
                         getByPath('shipment.exporter.id', values),

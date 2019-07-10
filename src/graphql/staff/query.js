@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 import { staffCardFragment, tagFragment } from 'graphql';
 
-export const userListQuery = gql`
-  query userListQuery(
+export const usersQuery = gql`
+  query usersQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: UserFilterInput
@@ -21,5 +21,3 @@ export const userListQuery = gql`
   ${staffCardFragment}
   ${tagFragment}
 `;
-
-export default userListQuery;

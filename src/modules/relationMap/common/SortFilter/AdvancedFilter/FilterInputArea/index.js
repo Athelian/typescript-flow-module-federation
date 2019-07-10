@@ -6,7 +6,7 @@ import { Display } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { orderListQuery } from 'modules/order/list/query';
 import { partnerListQuery } from 'providers/PartnerList/query';
-import { userListQuery } from 'providers/UserList/query';
+import { usersQuery } from 'graphql/staff/query';
 import { warehouseListQuery } from 'providers/WarehouseListProvider/query';
 import {
   DateRange,
@@ -91,7 +91,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'users',
-              query: userListQuery,
+              query: usersQuery,
               filterBy: {
                 query: '',
               },
@@ -339,7 +339,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'users',
-              query: userListQuery,
+              query: usersQuery,
               filterBy: {
                 query: '',
               },

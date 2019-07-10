@@ -1313,6 +1313,7 @@ const TaskInfoSection = ({
                   <div className={AssignedToStyle}>
                     <GridColumn gap="5px">
                       <UserAssignmentInputFactory
+                        cacheKey="TaskUserSelect"
                         name="assignedTo"
                         label={
                           <FormattedMessage
@@ -1467,6 +1468,7 @@ const TaskInfoSection = ({
                           <div className={AssignedToStyle}>
                             <GridColumn gap="5px">
                               <UserAssignmentInputFactory
+                                cacheKey="TaskUserSelect"
                                 name="approvers"
                                 label={
                                   <FormattedMessage

@@ -17,6 +17,7 @@ type OptionalProps = {
   assignable: boolean,
   approvable: boolean,
   name: string,
+  cacheKey: string,
 };
 
 type Props = OptionalProps & {
@@ -37,6 +38,7 @@ const defaultProps = {
 };
 
 const AssignmentApprovalFactory = ({
+  cacheKey,
   name,
   assignmentsName,
   assignments,
@@ -64,6 +66,7 @@ const AssignmentApprovalFactory = ({
         {')'}
       </>
     ),
+    cacheKey,
     editable: assignable,
   };
 
