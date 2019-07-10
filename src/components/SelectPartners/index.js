@@ -4,9 +4,9 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
+import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import PartnerListProvider from 'providers/PartnerList';
-import useSortAndFilter from 'hooks/useSortAndFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import Layout from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -15,7 +15,12 @@ import messages from 'modules/partner/messages';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import { PartnerCard } from 'components/Cards';
 
-type Props = {|
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {|
+  partnerTypes: Array<string>,
   selected: Array<{
     id: string,
     name: string,
@@ -24,20 +29,6 @@ type Props = {|
   onCancel: Function,
   intl: IntlShape,
 |};
-
-const getInitFilter = (): Object => {
-  return {
-    filter: {
-      types: [],
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    page: 1,
-    perPage: 10,
-  };
-};
 
 const MAX_SELECTIONS = 4;
 
@@ -63,8 +54,23 @@ function onSelectPartners({
   }
 }
 
-const SelectPartners = ({ selected, onCancel, onSelect, intl }: Props) => {
-  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter(getInitFilter());
+const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
+  const initialQueryVariables = {
+    filter: {
+      types: partnerTypes,
+    },
+    sort: {
+      field: 'updatedAt',
+      direction: 'DESCENDING',
+    },
+    page: 1,
+    perPage: 10,
+  };
+
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    initialQueryVariables,
+    cacheKey
+  );
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -139,5 +145,11 @@ const SelectPartners = ({ selected, onCancel, onSelect, intl }: Props) => {
     </PartnerListProvider>
   );
 };
+
+const defaultProps = {
+  cacheKey: 'SelectForwarders',
+};
+
+SelectPartners.defaultProps = defaultProps;
 
 export default injectIntl(SelectPartners);

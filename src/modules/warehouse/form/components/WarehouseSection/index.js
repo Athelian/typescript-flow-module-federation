@@ -23,6 +23,7 @@ import { FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
+import SelectPartners from 'components/SelectPartners';
 import {
   FieldItem,
   FormTooltip,
@@ -37,7 +38,7 @@ import {
   MetricInputFactory,
 } from 'components/Form';
 import { getByPath } from 'utils/fp';
-import SelectPartners from '../SelectPartners';
+
 import { WarehouseSectionWrapperStyle, MainFieldsWrapperStyle } from './style';
 import { renderPartners } from './helpers';
 
@@ -314,6 +315,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectPartners
+                                  partnerTypes={[]}
                                   selected={values.groups}
                                   onCancel={() => slideToggle(false)}
                                   onSelect={selected => {
