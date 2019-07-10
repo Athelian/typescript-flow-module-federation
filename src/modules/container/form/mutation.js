@@ -41,7 +41,7 @@ import {
   parseParentIdField,
   parseArrayOfChildrenField,
   parseApprovalField,
-  parseRepresentativeBatchIndexField,
+  parseDefaultIndexField,
 } from 'utils/data';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 
@@ -244,7 +244,7 @@ export const prepareParsedContainerInput = ({
       }),
       forceSendBatchIds
     ),
-    ...parseRepresentativeBatchIndexField(
+    ...parseDefaultIndexField(
       'representativeBatchIndex',
       getByPathWithDefault(null, 'representativeBatch', originalValues),
       newValues.representativeBatch,

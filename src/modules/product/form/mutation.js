@@ -35,6 +35,7 @@ import {
   parseFilesField,
   parseTodoField,
   parseMemoField,
+  parseDefaultIndexField,
 } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
 
@@ -205,39 +206,53 @@ export const prepareParsedProductInput = (originalValues: ?Object, newValues: Ob
         getByPathWithDefault(null, 'unitSize', newProductProvider)
       ),
       ...parseGenericField(
-        'packageName',
-        getByPathWithDefault(null, 'packageName', oldProductProvider),
-        getByPathWithDefault(null, 'packageName', newProductProvider)
-      ),
-      ...parseGenericField(
-        'packageCapacity',
-        getByPathWithDefault(null, 'packageCapacity', oldProductProvider),
-        getByPathWithDefault(null, 'packageCapacity', newProductProvider)
-      ),
-      ...parseGenericField(
-        'packageGrossWeight',
-        getByPathWithDefault(null, 'packageGrossWeight', oldProductProvider),
-        getByPathWithDefault(null, 'packageGrossWeight', newProductProvider)
-      ),
-      ...parseGenericField(
-        'packageVolume',
-        getByPathWithDefault(null, 'packageVolume', oldProductProvider),
-        getByPathWithDefault(null, 'packageVolume', newProductProvider)
-      ),
-      ...parseGenericField(
-        'packageSize',
-        getByPathWithDefault(null, 'packageSize', oldProductProvider),
-        getByPathWithDefault(null, 'packageSize', newProductProvider)
-      ),
-      ...parseGenericField(
-        'autoCalculatePackageVolume',
-        getByPathWithDefault(null, 'autoCalculatePackageVolume', oldProductProvider),
-        getByPathWithDefault(null, 'autoCalculatePackageVolume', newProductProvider)
-      ),
-      ...parseGenericField(
         'autoCalculateUnitVolume',
         getByPathWithDefault(null, 'autoCalculateUnitVolume', oldProductProvider),
         getByPathWithDefault(null, 'autoCalculateUnitVolume', newProductProvider)
+      ),
+      ...parseDefaultIndexField(
+        'defaultPackageIndex',
+        getByPathWithDefault(null, 'defaultPackage', oldProductProvider),
+        newProductProvider.defaultPackage,
+        newProductProvider.packages
+      ),
+      ...parseArrayOfChildrenField(
+        'packages',
+        getByPathWithDefault([], 'packages', oldProductProvider),
+        newProductProvider.packages,
+        (oldPackage: ?Object, newPackage: Object) => ({
+          ...(!oldPackage ? {} : { id: oldPackage.id }),
+          ...parseGenericField(
+            'name',
+            getByPathWithDefault(null, 'name', oldPackage),
+            getByPathWithDefault(null, 'name', newPackage)
+          ),
+          ...parseGenericField(
+            'capacity',
+            getByPathWithDefault(null, 'capacity', oldPackage),
+            getByPathWithDefault(null, 'capacity', newPackage)
+          ),
+          ...parseGenericField(
+            'grossWeight',
+            getByPathWithDefault(null, 'grossWeight', oldPackage),
+            getByPathWithDefault(null, 'grossWeight', newPackage)
+          ),
+          ...parseGenericField(
+            'volume',
+            getByPathWithDefault(null, 'volume', oldPackage),
+            getByPathWithDefault(null, 'volume', newPackage)
+          ),
+          ...parseGenericField(
+            'size',
+            getByPathWithDefault(null, 'size', oldPackage),
+            getByPathWithDefault(null, 'size', newPackage)
+          ),
+          ...parseGenericField(
+            'autoCalculateVolume',
+            getByPathWithDefault(null, 'autoCalculateVolume', oldPackage),
+            getByPathWithDefault(null, 'autoCalculateVolume', newPackage)
+          ),
+        })
       ),
       ...parseFilesField(
         'files',

@@ -216,6 +216,7 @@ const ProductProviderFormWrapper = ({
                             onSave({
                               ...productProviderInfoContainer.state,
                               ...productProviderTasksContainer.state,
+                              ...productProviderPackagesContainer.state,
                             })
                           }
                         />

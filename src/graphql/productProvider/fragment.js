@@ -35,19 +35,7 @@ export const productProviderFormFragment = gql`
     unitSize {
       ...sizeFragment
     }
-    packageName
-    packageCapacity
-    packageGrossWeight {
-      ...metricFragment
-    }
-    packageVolume {
-      ...metricFragment
-    }
-    autoCalculatePackageVolume
     autoCalculateUnitVolume
-    packageSize {
-      ...sizeFragment
-    }
     defaultPackage {
       ... on ProductProviderPackage {
         id
@@ -124,6 +112,7 @@ export const productProviderCardFragment = gql`
         }
       }
     }
+    # TODO: remove old field
     packageName
     packageCapacity
     packageGrossWeight {

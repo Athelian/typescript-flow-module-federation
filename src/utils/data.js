@@ -296,31 +296,25 @@ export const parseApprovalField = (
 };
 
 // Use for Representative Batch. Send index, not id.
-export const parseRepresentativeBatchIndexField = (
+export const parseDefaultIndexField = (
   key: string,
-  originalRepresentativeBatch: ?{
+  originalValues: ?{
     id: string,
   },
-  newRepresentativeBatch: ?{
+  newValues: ?{
     id: string,
   },
-  batches: Array<Object>
+  sources: Array<Object>
 ): Object => {
-  const originalRepresentativeBatchId = getByPathWithDefault(
-    null,
-    'id',
-    originalRepresentativeBatch
-  );
-  const newRepresentativeBatchId = getByPathWithDefault(null, 'id', newRepresentativeBatch);
+  const originalValuesId = getByPathWithDefault(null, 'id', originalValues);
+  const newValuesId = getByPathWithDefault(null, 'id', newValues);
 
-  if (isEquals(originalRepresentativeBatchId, newRepresentativeBatchId)) return {};
+  if (isEquals(originalValuesId, newValuesId)) return {};
 
-  let newRepresentativeBatchIndex = batches.findIndex(
-    batch => batch.id === newRepresentativeBatchId
-  );
-  if (newRepresentativeBatchIndex === -1) newRepresentativeBatchIndex = null;
+  let newValuesIndex = sources.findIndex(item => item.id === newValuesId);
+  if (newValuesIndex === -1) newValuesIndex = null;
 
-  return { [key]: newRepresentativeBatchIndex };
+  return { [key]: newValuesIndex };
 };
 
 type TaskType = {

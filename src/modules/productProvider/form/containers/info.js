@@ -1,61 +1,36 @@
 // @flow
 import { Container } from 'unstated';
+import type { MetricValue, Size, Price } from 'generated/graphql';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
 import { calculatePackageVolume, calculateUnitVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
-type Price = {
-  amount: number,
-  currency: string,
-};
-
-type Metric = {
-  value: number,
-  metric: string,
-};
-
 type FormState = {
   isNew?: boolean,
-  name: string,
+  name: ?string,
   exporter?: ?Object,
   supplier?: ?Object,
-  origin?: string,
-  packageName?: string,
-  packageCapacity?: number,
+  origin: ?string,
   productionLeadTime?: number,
-  unitType?: string,
-  unitVolume: Metric,
-  unitWeight: Metric,
+  unitType: ?string,
+  unitVolume: MetricValue,
+  unitWeight: MetricValue,
   unitPrice: Price,
-  unitSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
+  unitSize: Size,
   inspectionFee: Price,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  autoCalculatePackageVolume: boolean,
   autoCalculateUnitVolume: boolean,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
   customFields: Object,
-  memo: string,
+  memo: ?string,
   files?: Array<Document>,
 };
 
-export const initValues = {
+export const initValues: FormState = {
   supplier: null,
   origin: null,
   name: null,
-  packageName: null,
   unitType: null,
-  packageCapacity: 0,
   productionLeadTime: 0,
   unitVolume: {
     metric: defaultVolumeMetric,
@@ -87,30 +62,7 @@ export const initValues = {
     currency: 'USD',
     amount: 0,
   },
-  packageGrossWeight: {
-    metric: defaultWeightMetric,
-    value: 0,
-  },
-  packageVolume: {
-    metric: defaultVolumeMetric,
-    value: 0,
-  },
-  autoCalculatePackageVolume: true,
   autoCalculateUnitVolume: true,
-  packageSize: {
-    width: {
-      metric: defaultDistanceMetric,
-      value: 0,
-    },
-    height: {
-      metric: defaultDistanceMetric,
-      value: 0,
-    },
-    length: {
-      metric: defaultDistanceMetric,
-      value: 0,
-    },
-  },
   customFields: {
     mask: null,
     fieldValues: [],
@@ -176,20 +128,6 @@ export default class ProductProviderInfoContainer extends Container<FormState> {
     } else {
       this.setState({
         autoCalculateUnitVolume: !autoCalculateUnitVolume,
-      });
-    }
-  };
-
-  toggleAutoCalculatePackageVolume = () => {
-    const { autoCalculatePackageVolume } = this.state;
-    if (!autoCalculatePackageVolume) {
-      this.setState(prevState => ({
-        packageVolume: calculatePackageVolume(prevState),
-        autoCalculatePackageVolume: !autoCalculatePackageVolume,
-      }));
-    } else {
-      this.setState({
-        autoCalculatePackageVolume: !autoCalculatePackageVolume,
       });
     }
   };
