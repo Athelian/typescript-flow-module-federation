@@ -22,10 +22,6 @@ export default defineMessages({
     id: 'modules.Tasks.dueDate',
     defaultMessage: 'Due Date',
   },
-  taskName: {
-    id: 'modules.Tasks.taskName',
-    defaultMessage: 'Task Name',
-  },
   name: {
     id: 'modules.Tasks.name',
     defaultMessage: 'Name',
