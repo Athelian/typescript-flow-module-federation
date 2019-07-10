@@ -48,6 +48,29 @@ export const productProviderFormFragment = gql`
     packageSize {
       ...sizeFragment
     }
+    defaultPackage {
+      ... on ProductProviderPackage {
+        id
+        name
+      }
+    }
+    packages {
+      ... on ProductProviderPackage {
+        id
+        name
+        capacity
+        grossWeight {
+          ...metricFragment
+        }
+        volume {
+          ...metricFragment
+        }
+        autoCalculateVolume
+        size {
+          ...sizeFragment
+        }
+      }
+    }
     customFields {
       ...customFieldsFragment
     }

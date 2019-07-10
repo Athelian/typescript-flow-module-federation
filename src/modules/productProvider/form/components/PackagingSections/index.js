@@ -6,7 +6,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import {
   PRODUCT_PROVIDER_PACKAGES_DELETE,
-  PRODUCT_PROVIDER_PACKAGES_SET_DEFAULT,
+  PRODUCT_PROVIDER_SET_DEFAULT,
   PRODUCT_PROVIDER_PACKAGES_CREATE,
   PRODUCT_PROVIDER_UPDATE,
 } from 'modules/permission/constants/product';
@@ -72,7 +72,7 @@ export default function PackagingSections() {
                       }
                       allowToSetDefault={hasPermission([
                         PRODUCT_PROVIDER_UPDATE,
-                        PRODUCT_PROVIDER_PACKAGES_SET_DEFAULT,
+                        PRODUCT_PROVIDER_SET_DEFAULT,
                       ])}
                     />
                   ))}

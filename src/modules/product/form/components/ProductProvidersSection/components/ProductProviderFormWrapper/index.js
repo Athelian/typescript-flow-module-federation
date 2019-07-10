@@ -6,6 +6,7 @@ import { Provider, Subscribe } from 'unstated';
 import {
   ProductProviderInfoContainer,
   ProductProviderTasksContainer,
+  ProductProviderPackagesContainer,
 } from 'modules/productProvider/form/containers';
 import validator from 'modules/productProvider/form/validator';
 import ProductProviderForm from 'modules/productProvider/form';
@@ -69,12 +70,26 @@ const ProductProviderFormWrapper = ({
   });
   return (
     <Provider inject={[formContainer]}>
-      <Subscribe to={[ProductProviderInfoContainer, ProductProviderTasksContainer]}>
-        {(productProviderInfoContainer, productProviderTasksContainer) => {
+      <Subscribe
+        to={[
+          ProductProviderInfoContainer,
+          ProductProviderTasksContainer,
+          ProductProviderPackagesContainer,
+        ]}
+      >
+        {(
+          productProviderInfoContainer,
+          productProviderTasksContainer,
+          productProviderPackagesContainer
+        ) => {
           const isExist = exist(productProviderInfoContainer.state, productProviders);
           const disableSaveButton =
             !formContainer.isReady(
-              { ...productProviderInfoContainer.state, ...productProviderTasksContainer.state },
+              {
+                ...productProviderInfoContainer.state,
+                ...productProviderTasksContainer.state,
+                ...productProviderPackagesContainer.state,
+              },
               validator
             ) || isExist;
 
@@ -175,6 +190,7 @@ const ProductProviderFormWrapper = ({
                           onSave({
                             ...productProviderInfoContainer.state,
                             ...productProviderTasksContainer.state,
+                            ...productProviderPackagesContainer.state,
                           })
                         }
                       />
@@ -182,11 +198,13 @@ const ProductProviderFormWrapper = ({
                   )}
                   {!isNew &&
                     (productProviderInfoContainer.isDirty() ||
+                      productProviderPackagesContainer.isDirty() ||
                       productProviderTasksContainer.isDirty()) && (
                       <>
                         <ResetButton
                           onClick={() => {
                             resetFormState(productProviderInfoContainer);
+                            resetFormState(productProviderPackagesContainer);
                             resetFormState(productProviderTasksContainer, 'todo');
                             formContainer.onReset();
                           }}
@@ -209,9 +227,10 @@ const ProductProviderFormWrapper = ({
               <ProductProviderForm
                 productProvider={productProvider}
                 initDetailValues={(values: Object) => {
-                  const { todo, ...info } = values;
+                  const { todo, packages, defaultPage, ...info } = values;
                   productProviderInfoContainer.initDetailValues(info);
                   productProviderTasksContainer.initDetailValues(todo);
+                  productProviderPackagesContainer.initDetailValues({ packages, defaultPage });
                 }}
                 isExist={isExist}
                 isNew={isNew}

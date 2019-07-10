@@ -22,8 +22,6 @@ export const ScrollbarWrapperStyle: string = css`
 `;
 
 export const ButtonWrapperStyle: string = css`
-  position: absolute;
-  bottom: 0;
   width: 240px;
   height: 50px;
   display: flex;

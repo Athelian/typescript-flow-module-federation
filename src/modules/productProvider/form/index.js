@@ -8,7 +8,7 @@ import LoadingIcon from 'components/LoadingIcon';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
 import { ProductInfoContainer } from 'modules/product/form/containers';
 import { ProductProviderInfoContainer, ProductProviderTasksContainer } from './containers';
-import { PackagingSection, ProductProviderSection, SpecificationsSection } from './components';
+import { PackagingSections, ProductProviderSection, SpecificationsSection } from './components';
 import { ProductProviderFormWrapperStyle } from './style';
 
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
@@ -79,18 +79,7 @@ class ProductProviderForm extends React.Component<Props> {
             <SpecificationsSection isNew={isNew} isOwner={isOwner} />
           </SectionWrapper>
 
-          <SectionWrapper id="productProvider_productProviderPackagingSection">
-            <SectionHeader
-              icon="PACKAGING"
-              title={
-                <FormattedMessage
-                  id="modules.ProductProviders.packaging"
-                  defaultMessage="PACKAGING"
-                />
-              }
-            />
-            <PackagingSection isNew={isNew} isOwner={isOwner} />
-          </SectionWrapper>
+          <PackagingSections isNew={isNew} isOwner={isOwner} />
 
           <SectionWrapper id="productProvider_documentsSection">
             <Subscribe to={[ProductProviderInfoContainer]}>
