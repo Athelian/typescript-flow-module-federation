@@ -3,23 +3,23 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   createdAt: {
-    id: 'modules.sort.createdAt',
+    id: 'components.form.createdAt',
     defaultMessage: 'Date Created',
   },
   updatedAt: {
-    id: 'modules.sort.updatedAt',
+    id: 'components.form.updatedAt',
     defaultMessage: 'Last Modified',
   },
   firstName: {
-    id: 'modules.sort.firstName',
+    id: 'components.form.firstName',
     defaultMessage: 'First Name',
   },
   lastName: {
-    id: 'modules.sort.lastName',
+    id: 'components.form.lastName',
     defaultMessage: 'Last Name',
   },
   fullName: {
-    id: 'modules.sort.fullName',
+    id: 'components.form.fullName',
     defaultMessage: 'Full Name',
   },
 });
