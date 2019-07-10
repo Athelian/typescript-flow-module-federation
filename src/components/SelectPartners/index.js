@@ -2,11 +2,12 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { Query } from 'react-apollo';
+import { partnersQuery } from 'graphql/partner/query';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import PartnerListProvider from 'providers/PartnerList';
 import FilterToolBar from 'components/common/FilterToolBar';
 import Layout from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -58,7 +59,7 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
     { title: intl.formatMessage(messages.code), value: 'code' },
   ];
   return (
-    <PartnerListProvider {...queryVariables}>
+    <Query fetchPolicy="network-only" query={partnersQuery} variables={queryVariables}>
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
@@ -126,7 +127,7 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
           </ArrayValue>
         );
       }}
-    </PartnerListProvider>
+    </Query>
   );
 };
 
