@@ -5,16 +5,7 @@ import type { QueryRenderPropFunction } from 'react-apollo';
 import query from './query';
 
 type OptionalProps = {
-  filterBy: {
-    query?: string,
-    groupIds?: Array<string>,
-  },
-  sortBy: {
-    createdAt?: string,
-    updatedAt?: string,
-  },
-  perPage: number,
-  page: number,
+  queryVariables: Object,
 };
 
 type Props = OptionalProps & {
@@ -22,18 +13,20 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  filterBy: {},
-  sortBy: {},
-  page: 1,
-  perPage: 100,
+  queryVariables: {
+    filterBy: {},
+    sortBy: {},
+    page: 1,
+    perPage: 100,
+  },
 };
 
-const UserList = ({ filterBy, sortBy, page, perPage, children }: Props) => (
-  <Query fetchPolicy="network-only" query={query} variables={{ page, perPage, filterBy, sortBy }}>
+const UserListProvider = ({ queryVariables, children }: Props) => (
+  <Query fetchPolicy="network-only" query={query} variables={queryVariables}>
     {children}
   </Query>
 );
 
-UserList.defaultProps = defaultProps;
+UserListProvider.defaultProps = defaultProps;
 
-export default UserList;
+export default UserListProvider;
