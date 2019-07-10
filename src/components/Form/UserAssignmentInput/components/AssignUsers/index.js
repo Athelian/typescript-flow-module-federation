@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ArrayValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import UserListProvider from 'providers/UserList';
+import UserListProvider from 'providers/UserListProvider';
 import Layout from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';

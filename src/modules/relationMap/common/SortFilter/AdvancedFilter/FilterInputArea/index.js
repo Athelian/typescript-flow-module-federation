@@ -6,7 +6,7 @@ import { Display } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { orderListQuery } from 'modules/order/list/query';
 import { partnerListQuery } from 'providers/PartnerList/query';
-import { userListQuery } from 'providers/UserList/query';
+import { userListQuery } from 'providers/UserListProvider/query';
 import { warehouseListQuery } from 'providers/WarehouseListProvider/query';
 import {
   DateRange,
