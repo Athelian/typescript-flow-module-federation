@@ -80,8 +80,7 @@ import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
-import SelectImporter from '../SelectImporter';
-
+import SelectPartner from 'components/SelectPartner';
 import ShipmentSummary from './ShipmentSummary';
 import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
 import {
@@ -601,7 +600,9 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                                 set: setSelectedImporter,
                                               }) => (
                                                 <>
-                                                  <SelectImporter
+                                                  <SelectPartner
+                                                    cacheKey="ShipmentSelectImporter"
+                                                    partnerTypes={['Importer']}
                                                     selected={values.importer}
                                                     onCancel={() => importerSelectorToggle(false)}
                                                     onSelect={selected => {
@@ -675,7 +676,10 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                           )}
                                         </BooleanValue>
                                       ) : (
-                                        <SelectImporter
+                                        // TODO: check again,really useful?
+                                        <SelectPartner
+                                          cacheKey="ShipmentSelectImporter"
+                                          partnerTypes={['Importer']}
                                           selected={values.importer}
                                           onCancel={() => importerSelectorToggle(false)}
                                           onSelect={selected => {

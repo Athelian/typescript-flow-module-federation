@@ -3,32 +3,39 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { ObjectValue } from 'react-values';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import PartnerListProvider from 'providers/PartnerList';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import FilterToolBar from 'components/common/FilterToolBar';
+import PartnerListProvider from 'providers/PartnerList';
 import Layout from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
-import messages from 'modules/partner/messages';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
+import messages from 'modules/partner/messages';
 import { PartnerCard } from 'components/Cards';
 
-type Props = {|
-  selected: ?{
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {|
+  intl: IntlShape,
+  partnerTypes: Array<string>,
+  selected?: ?{
     id: string,
     name: string,
   },
   onSelect: (item: Object) => void,
   onCancel: Function,
-  intl: IntlShape,
 |};
 
-const getInitFilter = (): Object => {
-  return {
+const partnerPath = 'viewer.user.group.partners';
+
+const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
+  const initialQueryVariables = {
     filter: {
-      types: ['Importer'],
+      types: partnerTypes,
     },
     sort: {
       field: 'updatedAt',
@@ -37,19 +44,16 @@ const getInitFilter = (): Object => {
     page: 1,
     perPage: 10,
   };
-};
-
-const partnerPath = 'viewer.user.group.partners';
-
-const SelectImporter = ({ selected, onCancel, onSelect, intl }: Props) => {
-  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    initialQueryVariables,
+    cacheKey
+  );
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.code), value: 'code' },
   ];
-
   return (
     <PartnerListProvider {...queryVariables}>
       {({ loading, data, fetchMore, error }) => {
@@ -76,7 +80,7 @@ const SelectImporter = ({ selected, onCancel, onSelect, intl }: Props) => {
                       filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
-                    <CancelButton disabled={false} onClick={onCancel} />
+                    <CancelButton onClick={onCancel} />
                     <SaveButton
                       disabled={isEquals(value, selected)}
                       onClick={() => onSelect(value)}
@@ -87,15 +91,21 @@ const SelectImporter = ({ selected, onCancel, onSelect, intl }: Props) => {
                 <PartnerGridView
                   hasMore={hasMore}
                   isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, partnerPath)}
                   items={items}
                   renderItem={item => (
                     <PartnerCard
-                      selectable
                       partner={item}
+                      onSelect={() => {
+                        if (value && item.id === value.id) {
+                          set(null);
+                        } else {
+                          set(item);
+                        }
+                      }}
+                      selectable
+                      selected={value && item.id === value.id}
                       key={item.id}
-                      onSelect={() => set(item)}
-                      selected={item && value && item.id === value.id}
                     />
                   )}
                 />
@@ -107,4 +117,11 @@ const SelectImporter = ({ selected, onCancel, onSelect, intl }: Props) => {
     </PartnerListProvider>
   );
 };
-export default injectIntl(SelectImporter);
+
+const defaultProps = {
+  cacheKey: 'SelectPartner',
+};
+
+SelectPartner.defaultProps = defaultProps;
+
+export default injectIntl(SelectPartner);
