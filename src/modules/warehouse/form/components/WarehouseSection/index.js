@@ -238,6 +238,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                 </GridColumn>
                 <GridColumn>
                   <UserAssignmentInputFactory
+                    cacheKey="WarehouseUserSelect"
                     name="inCharges"
                     values={values.inCharges}
                     onChange={(name: string, assignments: Array<Object>) =>

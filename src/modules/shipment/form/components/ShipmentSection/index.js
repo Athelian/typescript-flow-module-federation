@@ -505,6 +505,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
 
                 <GridColumn>
                   <UserAssignmentInputFactory
+                    cacheKey="ShipmentUserSelect"
                     name="inCharges"
                     groupIds={[
                       getByPath('importer.id', values),
