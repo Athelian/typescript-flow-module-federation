@@ -27,13 +27,11 @@ type Props = OptionalProps & {
   onCancel: Function,
 };
 
-const SelectTaskTemplate = ({
-  intl,
-  cacheKey = 'SelectTaskTemplate',
-  entityType,
-  onCancel,
-  onSelect,
-}: Props) => {
+const defaultProps = {
+  cacheKey: 'SelectTaskTemplate',
+};
+
+const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -121,5 +119,7 @@ const SelectTaskTemplate = ({
     </Query>
   );
 };
+
+SelectTaskTemplate.defaultProps = defaultProps;
 
 export default injectIntl(SelectTaskTemplate);
