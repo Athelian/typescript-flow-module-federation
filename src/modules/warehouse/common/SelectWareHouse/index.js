@@ -17,9 +17,12 @@ import { warehouseListQuery } from 'modules/warehouse/list/query';
 import messages from 'modules/warehouse/messages';
 import { warehousesDefaultQueryVariables } from 'modules/warehouse/constants';
 
-type Props = {
-  intl: IntlShape,
+type OptionalProps = {
   cacheKey: string,
+};
+
+type Props = OptionalProps & {
+  intl: IntlShape,
   selected?: ?{
     id: string,
     name: string,
@@ -29,6 +32,7 @@ type Props = {
 };
 
 const defaultProps = {
+  cacheKey: 'SelectWareHouse',
   selected: {
     id: '',
     name: '',

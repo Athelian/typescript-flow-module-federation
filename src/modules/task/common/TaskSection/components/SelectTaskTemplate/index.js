@@ -16,14 +16,24 @@ import { TemplateCard } from 'components/Cards';
 import { taskTemplateListQuery } from 'modules/taskTemplate/list/query';
 import messages from 'modules/task/messages';
 
-type Props = {
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {
   intl: IntlShape,
   entityType: string,
   onSelect: (item: Object) => void,
   onCancel: Function,
 };
 
-const SelectTaskTemplate = ({ intl, entityType, onCancel, onSelect }: Props) => {
+const SelectTaskTemplate = ({
+  intl,
+  cacheKey = 'SelectTaskTemplate',
+  entityType,
+  onCancel,
+  onSelect,
+}: Props) => {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -42,10 +52,7 @@ const SelectTaskTemplate = ({ intl, entityType, onCancel, onSelect }: Props) => 
     perPage: 10,
   };
 
-  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    initialFilter,
-    'SelectTaskTemplate'
-  );
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(initialFilter, cacheKey);
 
   return (
     <Query

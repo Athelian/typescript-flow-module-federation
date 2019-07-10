@@ -1240,7 +1240,7 @@ const TaskInfoSection = ({
                               <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
                                 {opened && (
                                   <SelectProjectAndMilestone
-                                    cacheKey="taskInfoSectionSelectProjectAndMilestone"
+                                    cacheKey={`${entity}TaskInfoSectionSelectProjectAndMilestone`}
                                     milestone={values.milestone}
                                     onSelect={newMilestone => {
                                       setFieldValues({
