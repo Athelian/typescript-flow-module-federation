@@ -5,7 +5,6 @@ import { ContainersAmountSummary, ContainersDatesSummary } from './ContainersSum
 import DocumentsSection from './DocumentsSection';
 import OrdersSection from './OrdersSection';
 import SelectShipmentBatches from './SelectShipmentBatches';
-import SelectForwarders from './SelectForwarders';
 import ShipmentSection from './ShipmentSection';
 import TimelineSection from './TimelineSection';
 
@@ -17,7 +16,6 @@ export {
   DocumentsSection,
   OrdersSection,
   SelectShipmentBatches,
-  SelectForwarders,
   ShipmentSection,
   TimelineSection,
 };
