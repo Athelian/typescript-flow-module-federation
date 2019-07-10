@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { Order, OrderItem, Shipment, Batch, Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
-import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
+import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 import { MappingFields as OrderMappingField } from 'modules/task/form/components/ParentEntity/components/OrderValueSpy';
 import { MappingFields as OrderItemMappingField } from 'modules/task/form/components/ParentEntity/components/OrderItemValueSpy';
@@ -76,37 +76,80 @@ export default function AutoDateBinding({ tasks, type, values, setTaskValue }: P
           let newStartDate = startDate;
           let newDueDate = dueDate;
 
-          if (startDateBinding) {
+          if (startDateBinding === DUE_DATE) {
+            // do the due date first
+            if (dueDateBinding) {
+              const { months, weeks, days } = dueDateInterval || {};
+
+              newDueDate = calculateDate({
+                date: mappingDate({
+                  field: dueDateBinding,
+                  mappingFields: mappingFields[type],
+                  values: latestValues,
+                  task,
+                }),
+                duration: findDuration({ months, weeks }),
+                offset: months || weeks || days,
+              });
+            }
             const { months, weeks, days } = startDateInterval || {};
-
             newStartDate = calculateDate({
-              date: mappingDate({
-                field: startDateBinding,
-                mappingFields: mappingFields[type],
-                values: latestValues,
-                task,
-              }),
+              date: newDueDate,
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,
             });
-          }
+          } else if (dueDateBinding === START_DATE) {
+            // do the start date first
+            if (startDateBinding) {
+              const { months, weeks, days } = startDateInterval || {};
 
-          if (dueDateBinding) {
+              newStartDate = calculateDate({
+                date: mappingDate({
+                  field: startDateBinding,
+                  mappingFields: mappingFields[type],
+                  values: latestValues,
+                  task,
+                }),
+                duration: findDuration({ months, weeks }),
+                offset: months || weeks || days,
+              });
+            }
             const { months, weeks, days } = dueDateInterval || {};
-
             newDueDate = calculateDate({
-              date:
-                dueDateBinding !== START_DATE
-                  ? mappingDate({
-                      field: dueDateBinding,
-                      mappingFields: mappingFields[type],
-                      values: latestValues,
-                      task,
-                    })
-                  : newStartDate,
+              date: newStartDate,
               duration: findDuration({ months, weeks }),
               offset: months || weeks || days,
             });
+          } else {
+            if (startDateBinding) {
+              const { months, weeks, days } = startDateInterval || {};
+
+              newStartDate = calculateDate({
+                date: mappingDate({
+                  field: startDateBinding,
+                  mappingFields: mappingFields[type],
+                  values: latestValues,
+                  task,
+                }),
+                duration: findDuration({ months, weeks }),
+                offset: months || weeks || days,
+              });
+            }
+
+            if (dueDateBinding) {
+              const { months, weeks, days } = dueDateInterval || {};
+
+              newDueDate = calculateDate({
+                date: mappingDate({
+                  field: dueDateBinding,
+                  mappingFields: mappingFields[type],
+                  values: latestValues,
+                  task,
+                }),
+                duration: findDuration({ months, weeks }),
+                offset: months || weeks || days,
+              });
+            }
           }
 
           logger.warn({

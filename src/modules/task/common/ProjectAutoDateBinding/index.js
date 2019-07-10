@@ -4,7 +4,7 @@ import type { Task } from 'generated/graphql';
 import emitter from 'utils/emitter';
 import logger from 'utils/logger';
 import { getByPath, setIn } from 'utils/fp';
-import { START_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
+import { START_DATE, DUE_DATE } from 'modules/task/form/components/TaskInfoSection/constants';
 import { calculateDate, findDuration } from 'modules/task/form/components/TaskInfoSection/helpers';
 
 type Props = {
@@ -76,27 +76,67 @@ export default function ProjectAutoDateBinding({ tasks, setTaskValue }: Props) {
           let newStartDate = startDate;
           let newDueDate = dueDate;
 
-          if (startDateBinding) {
-            const { months, weeks, days } = startDateInterval || {};
-            const path = mappingFields[startDateBinding];
-            if (path) {
-              newStartDate = calculateDate({
-                date: getByPath(path, latestValues),
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              });
+          if (startDateBinding === DUE_DATE) {
+            // do the due date first
+            if (dueDateBinding) {
+              const { months, weeks, days } = dueDateInterval || {};
+              const path = mappingFields[dueDateBinding];
+              if (path) {
+                newDueDate = calculateDate({
+                  date: getByPath(path, latestValues),
+                  duration: findDuration({ months, weeks }),
+                  offset: months || weeks || days,
+                });
+              }
             }
-          }
-
-          if (dueDateBinding) {
+            const { months, weeks, days } = startDateInterval || {};
+            newStartDate = calculateDate({
+              date: newDueDate,
+              duration: findDuration({ months, weeks }),
+              offset: months || weeks || days,
+            });
+          } else if (dueDateBinding === START_DATE) {
+            // do the start date first
+            if (startDateBinding) {
+              const { months, weeks, days } = startDateInterval || {};
+              const path = mappingFields[startDateBinding];
+              if (path) {
+                newStartDate = calculateDate({
+                  date: getByPath(path, latestValues),
+                  duration: findDuration({ months, weeks }),
+                  offset: months || weeks || days,
+                });
+              }
+            }
             const { months, weeks, days } = dueDateInterval || {};
-            const path = mappingFields[dueDateBinding];
-            if (path) {
-              newDueDate = calculateDate({
-                date: dueDateBinding !== START_DATE ? getByPath(path, latestValues) : newStartDate,
-                duration: findDuration({ months, weeks }),
-                offset: months || weeks || days,
-              });
+            newDueDate = calculateDate({
+              date: newStartDate,
+              duration: findDuration({ months, weeks }),
+              offset: months || weeks || days,
+            });
+          } else {
+            if (startDateBinding) {
+              const { months, weeks, days } = startDateInterval || {};
+              const path = mappingFields[startDateBinding];
+              if (path) {
+                newStartDate = calculateDate({
+                  date: getByPath(path, latestValues),
+                  duration: findDuration({ months, weeks }),
+                  offset: months || weeks || days,
+                });
+              }
+            }
+
+            if (dueDateBinding) {
+              const { months, weeks, days } = dueDateInterval || {};
+              const path = mappingFields[dueDateBinding];
+              if (path) {
+                newDueDate = calculateDate({
+                  date: getByPath(path, latestValues),
+                  duration: findDuration({ months, weeks }),
+                  offset: months || weeks || days,
+                });
+              }
             }
           }
 

@@ -10,6 +10,7 @@ export const orderItemAutoDateQuery = gql`
           ... on Order {
             id
             issuedAt
+            deliveryDate
           }
         }
       }
