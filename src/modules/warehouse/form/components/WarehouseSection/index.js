@@ -315,6 +315,7 @@ const WarehouseSection = ({ isNew }: Props) => {
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectPartners
+                                  cacheKey="WarehouseSelectPartners"
                                   partnerTypes={[]}
                                   selected={values.groups}
                                   onCancel={() => slideToggle(false)}

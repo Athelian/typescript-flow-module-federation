@@ -147,7 +147,7 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
 };
 
 const defaultProps = {
-  cacheKey: 'SelectForwarders',
+  cacheKey: 'SelectPartners',
 };
 
 SelectPartners.defaultProps = defaultProps;
