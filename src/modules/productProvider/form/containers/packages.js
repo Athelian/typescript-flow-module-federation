@@ -48,10 +48,14 @@ export default class ProductProviderPackagesContainer extends Container<FormStat
   };
 
   newPackaging = () => {
+    const newPkg = generatePackaging();
     this.setState(prevState => {
       return {
         ...prevState,
-        packages: [...prevState.packages, generatePackaging()],
+        packages: [...prevState.packages, newPkg],
+        defaultPackage: {
+          $set: newPkg,
+        },
       };
     });
   };
