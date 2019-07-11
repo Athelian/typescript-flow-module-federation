@@ -177,7 +177,7 @@ Follow [airbnb coding style](https://github.com/airbnb/javascript) and [clean co
   yarn check:quality
   ```
 
-check for duplication on our codebase with [jsinspect](https://github.com/danielstjules/jsinspect)
+check for duplication on our codebase with [jscpd](https://github.com/kucherenko/jscpd)
 
 - **build:storybook**
 
