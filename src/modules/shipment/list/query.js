@@ -7,13 +7,13 @@ import {
   timelineDateMinimalFragment,
   tagFragment,
   portFragment,
-  userAvatarFragment,
   metricFragment,
   taskCountFragment,
   partnerNameFragment,
   badRequestFragment,
   notFoundFragment,
   forbiddenFragment,
+  userAvatarFragment,
 } from 'graphql';
 
 export const shipmentListQuery = gql`
@@ -38,10 +38,10 @@ export const shipmentListQuery = gql`
   ${shipmentCardWithOwnedFragment}
   ${shipmentCardFragment}
   ${ownedByFragment}
+  ${userAvatarFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
-  ${userAvatarFragment}
   ${metricFragment}
   ${taskCountFragment}
   ${partnerNameFragment}

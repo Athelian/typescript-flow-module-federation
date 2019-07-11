@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import Tag from 'components/Tag';
-import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
@@ -31,8 +30,6 @@ import {
   ShipmentExporterIconStyle,
   ShipmentExporterStyle,
   ShipmentDataWrapperStyle,
-  ShipmentInChargeWrapperStyle,
-  InChargeStyle,
   ShipmentBadgeWrapperStyle,
   ShipmentBadgeIconStyle,
   ShipmentBadgeStyle,
@@ -63,7 +60,6 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
     blNo,
     booked,
     tags,
-    inCharges,
     batchCount,
     orderItemCount,
     totalVolume,
@@ -73,6 +69,7 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
     todo,
     containerTypeCounts,
     voyages,
+    totalPackageQuantity,
   } = shipment;
 
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
@@ -129,26 +126,11 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
             </div>
 
             <div className={ShipmentDataWrapperStyle}>
-              <div className={ShipmentInChargeWrapperStyle}>
-                {inCharges &&
-                  inCharges.length > 0 &&
-                  inCharges.map((inCharge, index) => (
-                    <div key={inCharge.id} className={InChargeStyle(index)}>
-                      <UserAvatar
-                        firstName={inCharge.firstName}
-                        lastName={inCharge.lastName}
-                        width="20px"
-                        height="20px"
-                      />
-                    </div>
-                  ))}
-              </div>
-
               <div className={ShipmentBadgeWrapperStyle}>
                 <Label>
                   <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
                 </Label>
-                <div className={ShipmentBadgeStyle('80px')}>
+                <div className={ShipmentBadgeStyle('60px')}>
                   {getByPathWithDefault(
                     <FormattedMessage id="components.cards.na" defaultMessage="N/A" />,
                     `${(voyages || []).length - 1}.vesselName`,
@@ -165,6 +147,15 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                   {totalVolume && (
                     <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
+                </div>
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.ttlPkgs" defaultMessage="TTL PKGS" />
+                </Label>
+                <div className={ShipmentBadgeStyle('40px')}>
+                  <FormattedNumber value={totalPackageQuantity} />
                 </div>
               </div>
 

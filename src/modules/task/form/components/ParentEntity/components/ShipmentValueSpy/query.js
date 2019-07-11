@@ -1,6 +1,6 @@
 // @flow
 import gql from 'graphql-tag';
-import { timelineDateMinimalFragment } from 'graphql';
+import { timelineDateMinimalFragment, userAvatarFragment } from 'graphql';
 
 export const shipmentAutoDateQuery = gql`
   query shipmentAutoDateQuery($id: ID!) {
@@ -41,6 +41,7 @@ export const shipmentAutoDateQuery = gql`
     }
   }
 
+  ${userAvatarFragment}
   ${timelineDateMinimalFragment}
 `;
 

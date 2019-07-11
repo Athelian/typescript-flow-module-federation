@@ -5,9 +5,9 @@ import {
   timelineDateMinimalFragment,
   tagFragment,
   portFragment,
-  userAvatarFragment,
   metricFragment,
   taskCountFragment,
+  userAvatarFragment,
   partnerNameFragment,
 } from 'graphql';
 
@@ -24,11 +24,11 @@ export const orderFormShipmentsQuery = gql`
   }
 
   ${shipmentCardFragment}
+  ${userAvatarFragment}
   ${partnerNameFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
-  ${userAvatarFragment}
   ${metricFragment}
   ${taskCountFragment}
 `;
