@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Wed Jul 10 2019 16:05:09 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Jul 11 2019 15:05:21 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28511,6 +28511,12 @@ enum ExportType {
 
   """Tags"""
   Tags
+
+  """Project"""
+  Project
+
+  """Projects"""
+  Projects
 }
 
 type FieldDefinition implements Model & Owned & Sortable {
@@ -87012,6 +87018,7 @@ enum TaskDateBinding {
   OrderIssuedAt
   OrderDeliveryDate
   OrderItemOrderIssuedAt
+  OrderItemOrderDeliveryDate
   BatchDeliveredAt
   BatchDesiredAt
   BatchProducedAt
