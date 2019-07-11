@@ -379,7 +379,7 @@ export const parseChangedData = ({
             input: {
               ...existUpdateOrder.input,
               orderItems: [
-                ...order.orderItems
+                ...(order.orderItems || [])
                   .filter(orderItemId => orderItemId !== id)
                   .map(orderItemId => ({ id: orderItemId })),
                 {
@@ -395,7 +395,7 @@ export const parseChangedData = ({
         orders.push({
           input: {
             orderItems: [
-              ...order.orderItems
+              ...(order.orderItems || [])
                 .filter(orderItemId => orderItemId !== id)
                 .map(orderItemId => ({ id: orderItemId })),
               {
