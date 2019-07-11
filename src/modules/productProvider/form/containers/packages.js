@@ -47,17 +47,15 @@ export default class ProductProviderPackagesContainer extends Container<FormStat
     this.originalValues = { ...parsedValues };
   };
 
-  newPackaging = () => {
+  newPackaging = (): ProductProviderPackagePayload => {
     const newPkg = generatePackaging();
     this.setState(prevState => {
       return {
         ...prevState,
         packages: [...prevState.packages, newPkg],
-        defaultPackage: {
-          $set: newPkg,
-        },
       };
     });
+    return newPkg;
   };
 
   removePackage = (id: string) => {

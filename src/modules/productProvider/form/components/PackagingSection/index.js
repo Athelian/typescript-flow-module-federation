@@ -91,7 +91,10 @@ export default function PackagingSection() {
                           defaultMessage="NEW PACKAGING"
                         />
                       }
-                      onClick={newPackaging}
+                      onClick={() => {
+                        const pkg = newPackaging();
+                        setActivePackageId(pkg.id);
+                      }}
                     />
                   )}
                 </div>
