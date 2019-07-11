@@ -4,6 +4,7 @@ import { colors, presets, fontSizes, transitions } from 'styles/common';
 
 export const PackageItemWrapperStyle: string = css`
   ${presets.BUTTON};
+  justify-content: flex-start;
   width: 100%;
   height: 40px;
   &:hover {
