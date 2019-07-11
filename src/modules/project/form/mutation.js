@@ -24,6 +24,7 @@ import {
   ownedByFragment,
   badRequestFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import type { ProjectCreateInput } from 'generated/graphql';
 import {
@@ -132,6 +133,7 @@ export const updateProjectMutation = gql`
   ${ownedByFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParsedProjectInput = (

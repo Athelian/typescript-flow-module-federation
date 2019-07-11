@@ -24,6 +24,7 @@ import {
   notFoundFragment,
   badRequestFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const selectTaskListQuery = gql`
@@ -69,6 +70,7 @@ export const selectTaskListQuery = gql`
   ${portFragment}
   ${taskCountFragment}
   ${sizeFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default selectTaskListQuery;

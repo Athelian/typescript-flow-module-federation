@@ -22,6 +22,7 @@ import {
   productProviderCardFragment,
   sizeFragment,
   ownedByFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const taskFormQuery = gql`
@@ -51,6 +52,7 @@ export const taskFormQuery = gql`
   ${taskCountFragment}
   ${sizeFragment}
   ${ownedByFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default taskFormQuery;

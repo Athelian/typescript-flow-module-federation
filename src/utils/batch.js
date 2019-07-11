@@ -147,9 +147,6 @@ export const findTotalAutoFillBatches = ({
 };
 
 export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => {
-  console.warn({
-    orderItem,
-  });
   const packageName = getByPathWithDefault('', 'productProvider.defaultPackage.name', orderItem);
   const packageCapacity = getByPathWithDefault(
     '',
