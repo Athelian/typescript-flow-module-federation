@@ -43,7 +43,10 @@ export default function PackagingSections() {
           setDefault,
           setPackageValue,
         }) => {
-          const packageId = activePackageId || packages[0].id;
+          const packageId =
+            activePackageId && packages.map(item => item.id).includes(activePackageId)
+              ? activePackageId
+              : packages[0].id;
           const currentPackage = getActivePackage(packageId);
           return (
             <div className={PackagingWrapperStyle}>

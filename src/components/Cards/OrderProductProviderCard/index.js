@@ -88,7 +88,7 @@ class OrderProductProviderCard extends React.PureComponent<Props, State> {
         <FormTooltip
           infoMessage={
             <FormattedMessage
-              id="components,cards.currencyDifferentWarningMessage"
+              id="components.cards.currencyDifferentWarningMessage"
               defaultMessage="The Unit Price will not be automatically synced into the Item because the Currency of the Unit Price of this End Product does not match the Currency of this Order."
             />
           }

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import useHover from 'hooks/useHover';
+import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import {
   PackageItemWrapperStyle,
@@ -59,13 +60,22 @@ export default function PackageName({
       className={PackageItemWrapperStyle(isHovered, isActive)}
       role="presentation"
     >
-      <div
-        onClick={onChangeDefault}
-        className={DefaultButtonStyle(isDefault, isActive)}
-        role="presentation"
+      <Tooltip
+        message={
+          <FormattedMessage
+            id="components.ProductProviders.defaultPackagingTooltip"
+            defaultMessage="Set as Default to automatically load Packaging info into newly created Batches."
+          />
+        }
       >
-        <Icon icon={isActive && !isDefault && !isHovered ? 'STAR_REGULAR' : 'STAR'} />
-      </div>
+        <div
+          onClick={onChangeDefault}
+          className={DefaultButtonStyle(isDefault, isActive)}
+          role="presentation"
+        >
+          <Icon icon={isActive && !isDefault && !isHovered ? 'STAR_REGULAR' : 'STAR'} />
+        </div>
+      </Tooltip>
       <div className={PackageNameStyle(isActive, !!name)}>
         {name || (
           <FormattedMessage

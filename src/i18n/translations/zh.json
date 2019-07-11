@@ -51,7 +51,7 @@
   "components.cards.ttlItems": "总商品",
   "components.cards.poDate": "订单日期",
   "components.cards.contractDate": "合同日期",
-  "components,cards.currencyDifferentWarningMessage": "价格不会自动同步到物料中，因为此出口商・供应商的货币价格与此订货的货币不匹配。",
+  "components.cards.currencyDifferentWarningMessage": "价格不会自动同步到物料中，因为此出口商・供应商的货币价格与此订货的货币不匹配。",
   "modules.Orders.price": "单价",
   "components.cards.milestones": "里程碑",
   "components.cards.overdueTasks": "过期的",
