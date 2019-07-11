@@ -92,7 +92,7 @@ function SelectProducts({
         const items = getByPathWithDefault([], 'productProviders.nodes', data);
 
         return (
-          <ArrayValue defaultValue={[]}>
+          <ArrayValue>
             {({ value: selected, push, splice, filter }) => (
               <Layout
                 navBar={

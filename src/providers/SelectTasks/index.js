@@ -87,7 +87,7 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
 
   return (
     <ArrayValue>
-      {({ value: selected, push: onPush, set: onSet }) => (
+      {({ value: selected, push, filter: arrayValueFilter }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
@@ -168,30 +168,35 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
             }}
             hasMore={hasMore}
             isLoading={isLoading && tasks.length === 0}
-            renderItem={(item, position) => (
-              <TaskCard
-                entity={{
-                  ...item.entity,
-                  ...getByPathWithDefault({}, 'order', item),
-                  ...getByPathWithDefault({}, 'orderItem', item),
-                  ...getByPathWithDefault({}, 'batch', item),
-                  ...getByPathWithDefault({}, 'product', item),
-                  ...getByPathWithDefault({}, 'productProvider', item),
-                  ...getByPathWithDefault({}, 'shipment', item),
-                }}
-                position={position + 1}
-                key={item.id}
-                selectable
-                task={item}
-                selected={selected.includes(item)}
-                onSelect={() =>
-                  selected.includes(item)
-                    ? onSet(selected.filter(selectedItem => selectedItem.id !== item.id))
-                    : onPush(item)
-                }
-                hideProjectInfo
-              />
-            )}
+            renderItem={(item, position) => {
+              const isSelected = selected.map(({ id }) => id).includes(item.id);
+              return (
+                <TaskCard
+                  entity={{
+                    ...item.entity,
+                    ...getByPathWithDefault({}, 'order', item),
+                    ...getByPathWithDefault({}, 'orderItem', item),
+                    ...getByPathWithDefault({}, 'batch', item),
+                    ...getByPathWithDefault({}, 'product', item),
+                    ...getByPathWithDefault({}, 'productProvider', item),
+                    ...getByPathWithDefault({}, 'shipment', item),
+                  }}
+                  position={position + 1}
+                  key={item.id}
+                  selectable
+                  task={item}
+                  selected={isSelected}
+                  onSelect={() => {
+                    if (isSelected) {
+                      arrayValueFilter(({ id }) => id !== item.id);
+                    } else {
+                      push(item);
+                    }
+                  }}
+                  hideProjectInfo
+                />
+              );
+            }}
           />
           {isLoading && tasks.length > 0 && <LoadingIcon />}
         </Layout>

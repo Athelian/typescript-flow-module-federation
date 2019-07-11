@@ -88,7 +88,7 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
   }
 
   return (
-    <ArrayValue defaultValue={[]}>
+    <ArrayValue>
       {({ value: selected, push, splice, filter: arrayValueFilter }) => (
         <Layout
           navBar={
