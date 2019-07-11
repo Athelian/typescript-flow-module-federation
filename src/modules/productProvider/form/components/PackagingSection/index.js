@@ -16,18 +16,18 @@ import { NewButton } from 'components/Buttons';
 import PackagingForm from './components/PackagingForm';
 import PackageName from './components/PackageName';
 import {
-  PackagingWrapperStyle,
-  SidebarWrapperStyle,
-  ButtonWrapperStyle,
-  ScrollbarWrapperStyle,
+  PackagingSectionWrapperStyle,
+  PackagingListWrapperStyle,
+  PackagingListBodyStyle,
+  NewPackagingButtonWrapperStyle,
 } from './style';
 
-export default function PackagingSections() {
+export default function PackagingSection() {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [activePackageId, setActivePackageId] = React.useState('');
   return (
-    <SectionWrapper id="productProvider_productProviderPackagingSection">
+    <SectionWrapper id="productProvider_packagingSection">
       <SectionHeader
         icon="PACKAGING"
         title={
@@ -49,9 +49,9 @@ export default function PackagingSections() {
               : packages[0].id;
           const currentPackage = getActivePackage(packageId);
           return (
-            <div className={PackagingWrapperStyle}>
-              <div className={SidebarWrapperStyle}>
-                <div className={ScrollbarWrapperStyle}>
+            <div className={PackagingSectionWrapperStyle}>
+              <div className={PackagingListWrapperStyle}>
+                <div className={PackagingListBodyStyle}>
                   {packages.map(pkg => (
                     <PackageName
                       key={pkg.id}
@@ -80,7 +80,8 @@ export default function PackagingSections() {
                     />
                   ))}
                 </div>
-                <div className={ButtonWrapperStyle}>
+
+                <div className={NewPackagingButtonWrapperStyle}>
                   {hasPermission([PRODUCT_PROVIDER_PACKAGES_CREATE]) && (
                     <NewButton
                       data-testid="btnNewPackaging"
@@ -95,6 +96,7 @@ export default function PackagingSections() {
                   )}
                 </div>
               </div>
+
               <PackagingForm
                 id={packageId}
                 {...currentPackage}

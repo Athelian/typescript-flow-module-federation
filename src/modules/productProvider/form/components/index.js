@@ -1,5 +1,5 @@
-import PackagingSections from './PackagingSections';
+import PackagingSection from './PackagingSection';
 import ProductProviderSection from './ProductProviderSection';
 import SpecificationsSection from './SpecificationsSection';
 
-export { PackagingSections, ProductProviderSection, SpecificationsSection };
+export { PackagingSection, ProductProviderSection, SpecificationsSection };

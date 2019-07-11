@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import useHover from 'hooks/useHover';
 import { Tooltip } from 'components/Tooltip';
 import Icon from 'components/Icon';
 import {
   PackageItemWrapperStyle,
+  BarStyle,
   DefaultButtonStyle,
   DeleteButtonStyle,
   PackageNameStyle,
@@ -32,7 +32,6 @@ export default function PackageName({
   onRemove,
   onSetDefault,
 }: Props) {
-  const [hoverRef, isHovered] = useHover();
   const onChangeDefault = React.useCallback(
     evt => {
       evt.stopPropagation();
@@ -54,12 +53,9 @@ export default function PackageName({
   );
 
   return (
-    <div
-      ref={hoverRef}
-      onClick={onActive}
-      className={PackageItemWrapperStyle(isHovered, isActive)}
-      role="presentation"
-    >
+    <div onClick={onActive} className={PackageItemWrapperStyle} role="presentation">
+      <span className={BarStyle(isActive)} />
+
       <Tooltip
         message={
           <FormattedMessage
@@ -68,15 +64,12 @@ export default function PackageName({
           />
         }
       >
-        <div
-          onClick={onChangeDefault}
-          className={DefaultButtonStyle(isDefault, isActive)}
-          role="presentation"
-        >
-          <Icon icon={isActive && !isDefault && !isHovered ? 'STAR_REGULAR' : 'STAR'} />
-        </div>
+        <button onClick={onChangeDefault} className={DefaultButtonStyle(isDefault)} type="button">
+          <Icon icon="STAR" />
+        </button>
       </Tooltip>
-      <div className={PackageNameStyle(isActive, !!name)}>
+
+      <div className={PackageNameStyle(!!name)}>
         {name || (
           <FormattedMessage
             defaultMessage="No package name"
@@ -86,9 +79,9 @@ export default function PackageName({
       </div>
 
       {removable && (
-        <div className={DeleteButtonStyle(isHovered)} onClick={onDelete} role="presentation">
+        <button className={DeleteButtonStyle} onClick={onDelete} type="button">
           <Icon icon="REMOVE" />
-        </div>
+        </button>
       )}
     </div>
   );
