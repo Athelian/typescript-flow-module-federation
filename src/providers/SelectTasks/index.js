@@ -13,11 +13,15 @@ import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import messages from 'modules/task/messages';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import useFilter from 'hooks/useFilter';
 import { TaskCard } from 'components/Cards';
 import { selectTaskListQuery } from './query';
 
-type Props = {
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
   intl: IntlShape,
@@ -35,7 +39,7 @@ const getInitFilter = (filter: Object) => ({
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
 
-function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
+function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
   const fields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -44,14 +48,11 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
     { title: intl.formatMessage(messages.dueDate), value: 'dueDate' },
     { title: intl.formatMessage(messages.entity), value: 'entity' },
   ];
-  const {
-    filterAndSort: filtersAndSort,
-    queryVariables,
-    onChangeFilter: onChange,
-  } = useSortAndFilter(
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
     getInitFilter({
       ...filter,
-    })
+    }),
+    cacheKey
   );
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -198,5 +199,11 @@ function SelectTasks({ intl, onCancel, onSelect, filter }: Props) {
     </ArrayValue>
   );
 }
+
+const defaultProps = {
+  cacheKey: 'SelectTasks',
+};
+
+SelectTasks.defaultProps = defaultProps;
 
 export default injectIntl(SelectTasks);
