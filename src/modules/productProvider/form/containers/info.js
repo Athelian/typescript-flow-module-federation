@@ -4,7 +4,7 @@ import type { MetricValue, Size, Price } from 'generated/graphql';
 import { set, unset, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { removeNulls, cleanFalsyAndTypeName } from 'utils/data';
-import { calculatePackageVolume, calculateUnitVolume } from 'utils/batch';
+import { calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 type FormState = {
@@ -114,7 +114,7 @@ export default class ProductProviderInfoContainer extends Container<FormState> {
 
   calculateUnitVolume = () => {
     this.setState(prevState => ({
-      unitVolume: calculateUnitVolume(prevState),
+      unitVolume: calculateVolume(prevState.unitVolume, prevState.unitSize),
     }));
   };
 
@@ -122,7 +122,7 @@ export default class ProductProviderInfoContainer extends Container<FormState> {
     const { autoCalculateUnitVolume } = this.state;
     if (!autoCalculateUnitVolume) {
       this.setState(prevState => ({
-        unitVolume: calculateUnitVolume(prevState),
+        unitVolume: calculateVolume(prevState.unitVolume, prevState.unitSize),
         autoCalculateUnitVolume: !autoCalculateUnitVolume,
       }));
     } else {
@@ -134,7 +134,7 @@ export default class ProductProviderInfoContainer extends Container<FormState> {
 
   calculatePackageVolume = () => {
     this.setState(prevState => ({
-      packageVolume: calculatePackageVolume(prevState),
+      packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
     }));
   };
 }

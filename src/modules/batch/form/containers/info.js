@@ -3,7 +3,7 @@ import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { calculatePackageQuantity, calculatePackageVolume } from 'utils/batch';
+import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 export type Metric = {
@@ -205,7 +205,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     const { autoCalculatePackageVolume } = this.state;
     if (!autoCalculatePackageVolume) {
       this.setState(prevState => ({
-        packageVolume: calculatePackageVolume(prevState),
+        packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
         autoCalculatePackageVolume: !autoCalculatePackageVolume,
       }));
     } else {
@@ -217,7 +217,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   calculatePackageVolume = () => {
     this.setState(prevState => ({
-      packageVolume: calculatePackageVolume(prevState),
+      packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
     }));
   };
 }

@@ -3,7 +3,7 @@ import type { ProductProviderPackagePayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import update from 'immutability-helper';
 import { cloneDeep, set } from 'lodash';
-import { calculatePackageVolume } from 'utils/batch';
+import { calculateVolume } from 'utils/batch';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import { generatePackaging } from 'utils/product';
 
@@ -119,10 +119,10 @@ export default class ProductProviderPackagesContainer extends Container<FormStat
     const index = this.state.packages.findIndex(pkg => pkg.id === id);
     const pkg = { ...value };
     if (autoCalculate) {
-      pkg.volume = calculatePackageVolume({
-        packageSize: getByPathWithDefault(null, 'size', pkg),
-        packageVolume: getByPathWithDefault(null, 'volume', pkg),
-      });
+      pkg.volume = calculateVolume(
+        getByPathWithDefault(null, 'volume', pkg),
+        getByPathWithDefault(null, 'size', pkg)
+      );
     }
     this.setState(prevState =>
       update(prevState, {

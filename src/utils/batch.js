@@ -1,6 +1,12 @@
 // @flow
 import { set, cloneDeep } from 'lodash';
-import type { MetricValue, Size } from 'generated/graphql';
+import type {
+  MetricValue,
+  Size,
+  BatchPayload,
+  OrderItemPayload,
+  BatchQuantityRevision,
+} from 'generated/graphql';
 import {
   BATCH_UPDATE,
   BATCH_SET_CUSTOM_FIELDS,
@@ -10,16 +16,11 @@ import {
 import { times, divide } from './number';
 import { injectUid } from './id';
 import { convertVolume, convertWeight } from './metric';
-import { isNullOrUndefined, getByPathWithDefault } from './fp';
+import { getByPathWithDefault } from './fp';
 
-export const findWeight = (batch: Object) => {
-  const {
-    packageQuantity,
-    packageGrossWeight,
-  }: {
-    packageQuantity: number,
-    packageGrossWeight: Object,
-  } = batch;
+export const findWeight = (batch: BatchPayload) => {
+  const packageGrossWeight = getByPathWithDefault(null, 'packageGrossWeight', batch);
+  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
   return packageQuantity && packageGrossWeight
     ? times(
         packageQuantity,
@@ -28,26 +29,17 @@ export const findWeight = (batch: Object) => {
     : 0;
 };
 
-export const findVolume = (batch: Object) => {
-  const {
-    packageQuantity,
-    packageVolume,
-  }: {
-    packageQuantity: number,
-    packageVolume: Object,
-  } = batch;
-  return packageQuantity && packageVolume
-    ? times(packageQuantity, convertVolume(packageVolume.value, packageVolume.metric, 'm³'))
+export const findVolume = (batch: BatchPayload) => {
+  const volume = getByPathWithDefault(null, 'volume', batch);
+  const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
+  return packageQuantity && volume
+    ? times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'))
     : 0;
 };
 
-export const getBatchLatestQuantity = ({
-  quantity = 0,
-  batchQuantityRevisions = [],
-}: {
-  quantity: number,
-  batchQuantityRevisions: Array<{ quantity: number }>,
-}): number => {
+export const getBatchLatestQuantity = (batch: BatchPayload): number => {
+  const quantity = getByPathWithDefault(0, 'quantity', batch);
+  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
   return batchQuantityRevisions.length > 0
     ? batchQuantityRevisions[batchQuantityRevisions.length - 1].quantity
     : quantity;
@@ -59,8 +51,8 @@ export const totalBatchPriceAmount = ({
   orderItem,
 }: {
   quantity: number,
-  batchQuantityRevisions: Array<{ quantity: number }>,
-  orderItem: Object,
+  batchQuantityRevisions: Array<BatchQuantityRevision>,
+  orderItem: OrderItemPayload,
 }): number => {
   return times(
     getBatchLatestQuantity({ quantity, batchQuantityRevisions }),
@@ -68,84 +60,32 @@ export const totalBatchPriceAmount = ({
   );
 };
 
-type Metric = {
-  value: number,
-  metric: string,
-};
-
-function calculateVolume(
-  volumeMetric: string,
-  height: Metric,
-  width: Metric,
-  length: Metric
-): number {
-  const heightValue = height.metric === 'cm' ? height.value : times(height.value, 100);
-  const widthValue = width.metric === 'cm' ? width.value : times(width.value, 100);
-  const lengthValue = length.metric === 'cm' ? length.value : times(length.value, 100);
+export const calculateVolume = (volume: MetricValue, size: Size): Object => {
+  if (
+    !getByPathWithDefault('', 'metric', volume) ||
+    !getByPathWithDefault('', 'width.metric', size) ||
+    !getByPathWithDefault('', 'height.metric', size) ||
+    !getByPathWithDefault('', 'length.metric', size)
+  ) {
+    return volume;
+  }
+  const heightValue =
+    size.height.metric === 'cm' ? size.height.value : times(size.height.value, 100);
+  const widthValue = size.width.metric === 'cm' ? size.width.value : times(size.width.value, 100);
+  const lengthValue =
+    size.length.metric === 'cm' ? size.length.value : times(size.length.value, 100);
   const volumeValue = times(heightValue, widthValue, lengthValue);
 
-  return volumeMetric === 'cm³' ? volumeValue : divide(volumeValue, 1000000);
-}
-
-const isBadMetricData = (data: Object): boolean =>
-  isNullOrUndefined(data.metric) || isNullOrUndefined(data.value);
-
-export const calculatePackageVolume = ({
-  packageVolume,
-  packageSize,
-}: {
-  packageVolume: MetricValue,
-  packageSize: Size,
-}): Object => {
-  if (
-    isNullOrUndefined(packageVolume) ||
-    isBadMetricData(packageVolume) ||
-    isNullOrUndefined(packageSize) ||
-    isNullOrUndefined(packageSize.height) ||
-    isBadMetricData(packageSize.height) ||
-    isNullOrUndefined(packageSize.width) ||
-    isBadMetricData(packageSize.width) ||
-    isNullOrUndefined(packageSize.length) ||
-    isBadMetricData(packageSize.length)
-  ) {
-    return packageVolume;
-  }
   return {
-    metric: packageVolume.metric,
-    value: calculateVolume(
-      packageVolume.metric,
-      packageSize.height,
-      packageSize.width,
-      packageSize.length
-    ),
+    metric: volume.metric,
+    value: volume.metric === 'cm³' ? volumeValue : divide(volumeValue, 1000000),
   };
 };
 
-export const calculateUnitVolume = ({ unitVolume, unitSize }: Object): Object => {
-  if (
-    isNullOrUndefined(unitVolume) ||
-    isBadMetricData(unitVolume) ||
-    isNullOrUndefined(unitSize) ||
-    isNullOrUndefined(unitSize.height) ||
-    isBadMetricData(unitSize.height) ||
-    isNullOrUndefined(unitSize.width) ||
-    isBadMetricData(unitSize.width) ||
-    isNullOrUndefined(unitSize.length) ||
-    isBadMetricData(unitSize.length)
-  ) {
-    return unitVolume;
-  }
-  return {
-    metric: unitVolume.metric,
-    value: calculateVolume(unitVolume.metric, unitSize.height, unitSize.width, unitSize.length),
-  };
-};
-
-export const calculatePackageQuantity = ({
-  quantity = 0,
-  batchQuantityRevisions = [],
-  packageCapacity = 0,
-}: Object) => {
+export const calculatePackageQuantity = (batch: BatchPayload) => {
+  const quantity = getByPathWithDefault(0, 'quantity', batch);
+  const packageCapacity = getByPathWithDefault(0, 'packageCapacity', batch);
+  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
   if (packageCapacity > 0) {
     const validQuantity =
       batchQuantityRevisions.length > 0
@@ -182,44 +122,39 @@ export const generateCloneBatch = (
   });
 };
 
-export const totalVolume = (total: number, packageQuantity: number, packageVolume: Metric) =>
-  !packageVolume || !packageQuantity
+export const totalVolume = (total: number, packageQuantity: number, volume: MetricValue) =>
+  !volume || !packageQuantity
     ? total
     : total +
       times(
         packageQuantity,
-        packageVolume.metric !== 'cm³' ? packageVolume.value : divide(packageVolume.value, 1000000)
+        volume.metric !== 'cm³' ? volume.value : divide(volume.value, 1000000)
       );
 
 export const findTotalAutoFillBatches = ({
   batches,
   quantity,
 }: {
-  batches: Array<Object>,
+  batches: Array<BatchPayload>,
   quantity: number,
 }): Object => {
   const totalBatchQuantity = batches.reduce(
-    (total, batch) => total + (batch.latestQuantity || getBatchLatestQuantity(batch)),
+    (total, batch) =>
+      total + (getByPathWithDefault(0, 'latestQuantity', batch) || getBatchLatestQuantity(batch)),
     0
   );
   return quantity - totalBatchQuantity;
 };
 
 export const generateBatchByOrderItem = ({ productProvider }: { productProvider: Object }) => {
-  const {
-    packageName,
-    packageCapacity,
-    packageGrossWeight,
-    packageVolume,
-    packageSize,
-  } = productProvider;
+  const { packageName, packageCapacity, packageGrossWeight, volume, size } = productProvider;
   return injectUid({
     tags: [],
     packageName,
     packageCapacity,
     packageGrossWeight,
-    packageVolume,
-    packageSize,
+    volume,
+    size,
     quantity: 0,
     packageQuantity: 0,
     isNew: true,
@@ -236,8 +171,13 @@ export const generateBatchByOrderItem = ({ productProvider }: { productProvider:
   });
 };
 
-export const updateBatchCardQuantity = (batch: Object, quantity: number): Object => {
-  const { batchQuantityRevisions, autoCalculatePackageQuantity } = batch;
+export const updateBatchCardQuantity = (batch: BatchPayload, quantity: number): Object => {
+  const autoCalculatePackageQuantity = getByPathWithDefault(
+    true,
+    'autoCalculatePackageQuantity',
+    batch
+  );
+  const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
 
   const newBatch = cloneDeep(batch);
   if (batchQuantityRevisions.length > 0) {
