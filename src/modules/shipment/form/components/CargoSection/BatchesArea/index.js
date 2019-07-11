@@ -567,6 +567,7 @@ function BatchesArea({
                           >
                             {createBatchesIsOpen && (
                               <SelectOrderItems
+                                cacheKey="ShipmentSelectOrderItems"
                                 filter={{
                                   importerId,
                                   ...(exporterId ? { exporterId } : {}),
