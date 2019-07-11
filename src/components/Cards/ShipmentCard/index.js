@@ -128,15 +128,6 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
             <div className={ShipmentDataWrapperStyle}>
               <div className={ShipmentBadgeWrapperStyle}>
                 <Label>
-                  <FormattedMessage id="components.cards.ttlPkgs" defaultMessage="TTL PKGS" />
-                </Label>
-                <div className={ShipmentBadgeStyle('80px')}>
-                  <FormattedNumber value={totalPackageQuantity} />
-                </div>
-              </div>
-
-              <div className={ShipmentBadgeWrapperStyle}>
-                <Label>
                   <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
                 </Label>
                 <div className={ShipmentBadgeStyle('60px')}>
@@ -156,6 +147,15 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                   {totalVolume && (
                     <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
+                </div>
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.ttlPkgs" defaultMessage="TTL PKGS" />
+                </Label>
+                <div className={ShipmentBadgeStyle('40px')}>
+                  <FormattedNumber value={totalPackageQuantity} />
                 </div>
               </div>
 
