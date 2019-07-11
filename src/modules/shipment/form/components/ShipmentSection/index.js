@@ -863,7 +863,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
                                 <SelectPartners
-                                  cacheKey="ShipmentSelectPartners"
+                                  cacheKey="ShipmentSelectForwarders"
                                   partnerTypes={['Forwarder']}
                                   selected={getByPathWithDefault([], 'forwarders', values)}
                                   onCancel={() => slideToggle(false)}
