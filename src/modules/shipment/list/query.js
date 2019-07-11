@@ -13,6 +13,7 @@ import {
   badRequestFragment,
   notFoundFragment,
   forbiddenFragment,
+  userAvatarFragment,
 } from 'graphql';
 
 export const shipmentListQuery = gql`
@@ -37,6 +38,7 @@ export const shipmentListQuery = gql`
   ${shipmentCardWithOwnedFragment}
   ${shipmentCardFragment}
   ${ownedByFragment}
+  ${userAvatarFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}

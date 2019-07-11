@@ -53,7 +53,6 @@ export const selectTaskListQuery = gql`
   ${projectCardFragment}
   ${userAvatarFragment}
   ${tagFragment}
-  ${userAvatarFragment}
   ${ownedByFragment}
   ${taskWithParentInfoFragment}
   ${orderCardFragment}

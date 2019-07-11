@@ -110,6 +110,7 @@ export const shipmentsInProductQuery = gql`
   }
 
   ${shipmentCardFragment}
+  ${userAvatarFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}

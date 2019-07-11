@@ -7,6 +7,7 @@ import {
   portFragment,
   metricFragment,
   taskCountFragment,
+  userAvatarFragment,
   partnerNameFragment,
 } from 'graphql';
 
@@ -23,6 +24,7 @@ export const orderFormShipmentsQuery = gql`
   }
 
   ${shipmentCardFragment}
+  ${userAvatarFragment}
   ${partnerNameFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}

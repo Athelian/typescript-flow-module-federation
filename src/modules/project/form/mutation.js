@@ -108,7 +108,6 @@ export const updateProjectMutation = gql`
   ${taskWithParentInfoFragment}
   ${taskCountFragment}
   ${tagFragment}
-  ${userAvatarFragment}
   ${ownedByFragment}
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
