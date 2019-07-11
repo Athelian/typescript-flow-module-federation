@@ -11,11 +11,12 @@ import GridColumn from 'components/GridColumn';
 import { getByPath } from 'utils/fp';
 import {
   PRODUCT_PROVIDER_UPDATE,
-  PRODUCT_PROVIDER_SET_PACKAGE_NAME,
-  PRODUCT_PROVIDER_SET_PACKAGE_CAPACITY,
-  PRODUCT_PROVIDER_SET_PACKAGE_WEIGHT,
-  PRODUCT_PROVIDER_SET_PACKAGE_VOLUME,
-  PRODUCT_PROVIDER_SET_PACKAGE_SIZE,
+  PRODUCT_PROVIDER_PACKAGES_UPDATE,
+  PRODUCT_PROVIDER_PACKAGE_SET_NAME,
+  PRODUCT_PROVIDER_PACKAGE_SET_CAPACITY,
+  PRODUCT_PROVIDER_PACKAGE_SET_WEIGHT,
+  PRODUCT_PROVIDER_PACKAGE_SET_VOLUME,
+  PRODUCT_PROVIDER_PACKAGE_SET_SIZE,
 } from 'modules/permission/constants/product';
 import { PackagingFormWrapperStyle } from './style';
 
@@ -60,7 +61,11 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
                   defaultMessage="PACKAGE NAME"
                 />
               }
-              editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_NAME])}
+              editable={hasPermission([
+                PRODUCT_PROVIDER_UPDATE,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_NAME,
+              ])}
             />
           )}
         </FormField>
@@ -84,7 +89,8 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
               }
               editable={hasPermission([
                 PRODUCT_PROVIDER_UPDATE,
-                PRODUCT_PROVIDER_SET_PACKAGE_CAPACITY,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_CAPACITY,
               ])}
             />
           )}
@@ -110,7 +116,8 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
               }
               editable={hasPermission([
                 PRODUCT_PROVIDER_UPDATE,
-                PRODUCT_PROVIDER_SET_PACKAGE_WEIGHT,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_WEIGHT,
               ])}
             />
           )}
@@ -137,7 +144,8 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
               }
               showExtraToggleButton={hasPermission([
                 PRODUCT_PROVIDER_UPDATE,
-                PRODUCT_PROVIDER_SET_PACKAGE_VOLUME,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_VOLUME,
               ])}
               autoCalculateIsToggled={getByPath('autoCalculateVolume', values)}
               onToggleAutoCalculate={() => {
@@ -175,7 +183,8 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
               }}
               editable={hasPermission([
                 PRODUCT_PROVIDER_UPDATE,
-                PRODUCT_PROVIDER_SET_PACKAGE_VOLUME,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_VOLUME,
               ])}
             />
           )}
@@ -199,7 +208,11 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
                   defaultMessage="PKG WIDTH"
                 />
               }
-              editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_SIZE])}
+              editable={hasPermission([
+                PRODUCT_PROVIDER_UPDATE,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_SIZE,
+              ])}
             />
           )}
         </FormField>
@@ -222,7 +235,11 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
                   defaultMessage="PKG HEIGHT"
                 />
               }
-              editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_SIZE])}
+              editable={hasPermission([
+                PRODUCT_PROVIDER_UPDATE,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_SIZE,
+              ])}
             />
           )}
         </FormField>
@@ -245,7 +262,11 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
                   defaultMessage="PKG DEPTH"
                 />
               }
-              editable={hasPermission([PRODUCT_PROVIDER_UPDATE, PRODUCT_PROVIDER_SET_PACKAGE_SIZE])}
+              editable={hasPermission([
+                PRODUCT_PROVIDER_UPDATE,
+                PRODUCT_PROVIDER_PACKAGES_UPDATE,
+                PRODUCT_PROVIDER_PACKAGE_SET_SIZE,
+              ])}
             />
           )}
         </FormField>

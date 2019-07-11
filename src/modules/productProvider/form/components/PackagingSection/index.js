@@ -8,6 +8,7 @@ import {
   PRODUCT_PROVIDER_PACKAGES_DELETE,
   PRODUCT_PROVIDER_SET_DEFAULT,
   PRODUCT_PROVIDER_PACKAGES_CREATE,
+  PRODUCT_PROVIDER_PACKAGES_UPDATE,
   PRODUCT_PROVIDER_UPDATE,
 } from 'modules/permission/constants/product';
 import { ProductProviderPackagesContainer } from 'modules/productProvider/form/containers';
@@ -75,6 +76,7 @@ export default function PackagingSection() {
                       }
                       allowToSetDefault={hasPermission([
                         PRODUCT_PROVIDER_UPDATE,
+                        PRODUCT_PROVIDER_PACKAGES_UPDATE,
                         PRODUCT_PROVIDER_SET_DEFAULT,
                       ])}
                     />
