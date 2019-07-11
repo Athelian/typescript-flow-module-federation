@@ -22,7 +22,11 @@ import messages from 'modules/batch/messages';
 import useFilter from 'hooks/useFilter';
 import { selectBatchListQuery } from './query';
 
-type Props = {
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
   intl: IntlShape,
@@ -42,7 +46,14 @@ const getInitFilter = (filter: Object) => ({
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
 
-function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, filter }: Props) {
+function SelectShipmentBatches({
+  intl,
+  cacheKey,
+  onCancel,
+  onSelect,
+  selectedBatches,
+  filter,
+}: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const viewPrice = hasPermission(ORDER_ITEMS_GET_PRICE);
@@ -61,7 +72,7 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
   ];
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
     getInitFilter(filter),
-    'SelectContainerBatches'
+    cacheKey
   );
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -210,4 +221,10 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
   );
 }
 
-export default injectIntl(SelectContainerBatches);
+const defaultProps = {
+  cacheKey: 'SelectShipmentBatches',
+};
+
+SelectShipmentBatches.defaultProps = defaultProps;
+
+export default injectIntl(SelectShipmentBatches);

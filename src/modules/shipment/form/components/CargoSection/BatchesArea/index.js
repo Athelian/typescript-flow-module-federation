@@ -49,7 +49,7 @@ import {
 } from 'modules/shipment/form/containers';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
-import SelectShipmentBatches from 'modules/shipment/form/components/SelectShipmentBatches';
+import SelectShipmentBatches from 'components/SelectShipmentBatches';
 import { HIDE, NAVIGABLE } from 'modules/batch/constants';
 import {
   BatchesWrapperStyle,
