@@ -67,7 +67,7 @@ export default class ProductProviderPackagesContainer extends Container<FormStat
             $splice: [[index, 1]],
           },
           defaultPackage: {
-            $set: prevState.packages[0],
+            $set: prevState.packages.filter(pkg => pkg.id !== id)[0],
           },
         })
       );
