@@ -1,8 +1,8 @@
 // @flow
 import gql from 'graphql-tag';
 
-export const partnerListQuery = gql`
-  query partnerListQuery(
+export const partnersQuery = gql`
+  query partnersQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: PartnerFilterInput
@@ -45,5 +45,3 @@ export const partnerListQuery = gql`
     }
   }
 `;
-
-export default partnerListQuery;

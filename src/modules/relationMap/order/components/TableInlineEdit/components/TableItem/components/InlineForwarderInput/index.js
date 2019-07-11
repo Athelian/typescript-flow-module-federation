@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { BooleanValue } from 'react-values';
 import { DefaultStyle, Display } from 'components/Form';
-import { SelectForwarders } from 'modules/shipment/form/components';
+import SelectPartners from 'components/SelectPartners';
 import SlideView from 'components/SlideView';
 import emitter from 'utils/emitter';
 import { getByPathWithDefault } from 'utils/fp';
@@ -43,7 +43,9 @@ export default function InlineForwarderInput({ name, values, id, disabled }: Pro
             </button>
             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
               {opened && (
-                <SelectForwarders
+                <SelectPartners
+                  cacheKey="EditableTableSelectForwarders"
+                  partnerTypes={['Forwarder']}
                   selected={getByPathWithDefault([], 'forwarders', values)}
                   onCancel={() => slideToggle(false)}
                   onSelect={selected => {

@@ -6,6 +6,7 @@ import { getByPath, getByPathWithDefault } from 'utils/fp';
 import { FormField } from 'modules/form';
 import { BooleanValue } from 'react-values';
 import usePermission from 'hooks/usePermission';
+import SelectPartner from 'components/SelectPartner';
 import {
   ProductProviderInfoContainer,
   ProductProviderTasksContainer,
@@ -41,7 +42,6 @@ import {
   PRODUCT_PROVIDER_SET_CUSTOM_FIELDS_MASK,
   PRODUCT_PROVIDER_SET_MEMO,
 } from 'modules/permission/constants/product';
-import SelectSupplier from '../SelectSupplier';
 import { ProductProviderSectionWrapperStyle, DividerStyle } from './style';
 import { generateName } from './helper';
 
@@ -102,7 +102,7 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                               <Subscribe to={[ProductProviderTasksContainer]}>
                                 {({ onChangeExporter }) => (
                                   <SelectExporter
-                                    cacheKey="endProductSelectExporter"
+                                    cacheKey="EndProductSelectExporter"
                                     isRequired
                                     selected={values.exporter}
                                     onCancel={() => exporterSlideToggle(false)}
@@ -196,7 +196,9 @@ const ProductProviderSection = ({ isNew, isOwner, isExist }: Props) => {
                                 validationOnChange
                               >
                                 {({ onChange }) => (
-                                  <SelectSupplier
+                                  <SelectPartner
+                                    cacheKey="EndProductSelectSupplier"
+                                    partnerTypes={['Supplier']}
                                     selected={values.supplier}
                                     onCancel={() => supplierSlideToggle(false)}
                                     onSelect={newValue => {

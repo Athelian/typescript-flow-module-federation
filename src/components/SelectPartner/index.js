@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import type { Partner } from 'generated/graphql';
-import { ArrayValue } from 'react-values';
-import { isEquals, getByPathWithDefault } from 'utils/fp';
+import { Query } from 'react-apollo';
+import { partnersQuery } from 'graphql/partner/query';
+import { ObjectValue } from 'react-values';
+import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import PartnerListProvider from 'providers/PartnerList';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import { getByPathWithDefault, isEquals } from 'utils/fp';
 import FilterToolBar from 'components/common/FilterToolBar';
 import Layout from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -16,45 +16,27 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import messages from 'modules/partner/messages';
 import { PartnerCard } from 'components/Cards';
 
-type Props = {|
-  selected: Array<{
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {|
+  intl: IntlShape,
+  partnerTypes: Array<string>,
+  selected?: ?{
     id: string,
     name: string,
-  }>,
-  onSelect: (item: Partner) => void,
+  },
+  onSelect: (item: Object) => void,
   onCancel: Function,
-  intl: IntlShape,
 |};
 
-const MAX_SELECTIONS = 4;
+const partnerPath = 'viewer.user.group.partners';
 
-function onSelectForwarders({
-  selected,
-  isSelected,
-  item,
-  push,
-  set,
-}: {
-  isSelected: boolean,
-  selected: Array<{
-    id: string,
-    name: string,
-  }>,
-  item: Partner,
-  push: Function,
-  set: Function,
-}) {
-  if (!isSelected) {
-    if (selected.length < MAX_SELECTIONS) push(item);
-  } else {
-    set(selected.filter((orderItem: Object) => orderItem.id !== item.id));
-  }
-}
-
-const getInitFilter = (): Object => {
-  return {
+const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSelect }: Props) => {
+  const initialQueryVariables = {
     filter: {
-      types: ['Forwarder'],
+      types: partnerTypes,
     },
     sort: {
       field: 'updatedAt',
@@ -63,21 +45,18 @@ const getInitFilter = (): Object => {
     page: 1,
     perPage: 10,
   };
-};
-
-const partnerPath = 'viewer.user.group.partners';
-
-const SelectForwarders = ({ selected, onCancel, onSelect, intl }: Props) => {
-  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    initialQueryVariables,
+    cacheKey
+  );
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
     { title: intl.formatMessage(messages.name), value: 'name' },
     { title: intl.formatMessage(messages.code), value: 'code' },
   ];
-
   return (
-    <PartnerListProvider {...queryVariables}>
+    <Query fetchPolicy="network-only" query={partnersQuery} variables={queryVariables}>
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
@@ -91,8 +70,8 @@ const SelectForwarders = ({ selected, onCancel, onSelect, intl }: Props) => {
         const hasMore = nextPage <= totalPage;
 
         return (
-          <ArrayValue defaultValue={selected}>
-            {({ value: values, push, set }) => (
+          <ObjectValue defaultValue={selected}>
+            {({ value, set }) => (
               <Layout
                 navBar={
                   <SlideViewNavBar>
@@ -102,13 +81,10 @@ const SelectForwarders = ({ selected, onCancel, onSelect, intl }: Props) => {
                       filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
                     />
-                    <h3>
-                      {values.length}/{MAX_SELECTIONS}
-                    </h3>
-                    <CancelButton disabled={false} onClick={onCancel} />
+                    <CancelButton onClick={onCancel} />
                     <SaveButton
-                      disabled={isEquals(values, selected)}
-                      onClick={() => onSelect(values)}
+                      disabled={isEquals(value, selected)}
+                      onClick={() => onSelect(value)}
                     />
                   </SlideViewNavBar>
                 }
@@ -116,30 +92,37 @@ const SelectForwarders = ({ selected, onCancel, onSelect, intl }: Props) => {
                 <PartnerGridView
                   hasMore={hasMore}
                   isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, partnerPath)}
                   items={items}
-                  renderItem={item => {
-                    const isSelected = values.map(({ id }) => id).includes(item.id);
-                    return (
-                      <PartnerCard
-                        partner={item}
-                        key={item.id}
-                        onSelect={() =>
-                          onSelectForwarders({ selected: values, isSelected, item, push, set })
+                  renderItem={item => (
+                    <PartnerCard
+                      partner={item}
+                      onSelect={() => {
+                        if (value && item.id === value.id) {
+                          set(null);
+                        } else {
+                          set(item);
                         }
-                        selectable
-                        selected={isSelected}
-                      />
-                    );
-                  }}
+                      }}
+                      selectable
+                      selected={value && item.id === value.id}
+                      key={item.id}
+                    />
+                  )}
                 />
               </Layout>
             )}
-          </ArrayValue>
+          </ObjectValue>
         );
       }}
-    </PartnerListProvider>
+    </Query>
   );
 };
 
-export default injectIntl(SelectForwarders);
+const defaultProps = {
+  cacheKey: 'SelectPartner',
+};
+
+SelectPartner.defaultProps = defaultProps;
+
+export default injectIntl(SelectPartner);
