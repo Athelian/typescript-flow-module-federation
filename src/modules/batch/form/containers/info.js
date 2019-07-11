@@ -1,27 +1,19 @@
 // @flow
+import type {
+  // ProductProviderPayload,
+  MetricValue,
+  Size,
+  TaskPayload,
+  TagPayload,
+  OrderItemPayload,
+  BatchQuantityRevisionPayload,
+} from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
+// import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
-
-export type Metric = {
-  value: number,
-  metric: string,
-};
-
-export type ProductProvider = {
-  packageName: string,
-  packageCapacity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
-};
 
 export type BatchFormState = {
   no?: ?string,
@@ -31,28 +23,24 @@ export type BatchFormState = {
   expiredAt?: ?Date | string,
   producedAt?: ?Date | string,
   customFields: ?Object,
-  tags?: Array<Object>,
-  memo?: string,
-  orderItem?: Object,
-  batchQuantityRevisions: Array<any>,
+  tags?: Array<TagPayload>,
+  memo: ?string,
+  orderItem: ?OrderItemPayload,
+  batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
   packageName?: ?string,
   packageCapacity?: number,
   packageQuantity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
+  packageGrossWeight: MetricValue,
+  packageVolume: MetricValue,
+  packageSize: Size,
   autoCalculatePackageQuantity: boolean,
   autoCalculatePackageVolume: boolean,
   todo: {
-    tasks: Array<Object>,
+    tasks: Array<TaskPayload>,
   },
 };
 
-export const initValues = {
+export const initValues: BatchFormState = {
   no: null,
   quantity: 0,
   deliveredAt: null,
@@ -138,86 +126,86 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     });
   };
 
-  syncProductProvider = (productProvider: ProductProvider) => {
-    const { quantity, batchQuantityRevisions } = this.state;
-    const {
-      packageName,
-      packageCapacity = 0,
-      packageGrossWeight = { value: 0, metric: defaultWeightMetric },
-      packageVolume = { value: 0, metric: defaultVolumeMetric },
-      packageSize = {
-        width: {
-          metric: defaultDistanceMetric,
-          value: 0,
-        },
-        height: {
-          metric: defaultDistanceMetric,
-          value: 0,
-        },
-        length: {
-          metric: defaultDistanceMetric,
-          value: 0,
-        },
-      },
-    } = productProvider;
+  // syncProductProvider = (productProvider: ProductProviderPayload) => {
+  //   const { quantity, batchQuantityRevisions } = this.state;
+  //   const {
+  //     packageName,
+  //     packageCapacity = 0,
+  //     packageGrossWeight = { value: 0, metric: defaultWeightMetric },
+  //     packageVolume = { value: 0, metric: defaultVolumeMetric },
+  //     packageSize = {
+  //       width: {
+  //         metric: defaultDistanceMetric,
+  //         value: 0,
+  //       },
+  //       height: {
+  //         metric: defaultDistanceMetric,
+  //         value: 0,
+  //       },
+  //       length: {
+  //         metric: defaultDistanceMetric,
+  //         value: 0,
+  //       },
+  //     },
+  //   } = productProvider;
 
-    this.setState(prevState => ({
-      packageName,
-      packageCapacity,
-      packageQuantity: prevState.autoCalculatePackageQuantity
-        ? calculatePackageQuantity({ quantity, batchQuantityRevisions, packageCapacity })
-        : prevState.packageQuantity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    }));
-  };
+  //   this.setState(prevState => ({
+  //     packageName,
+  //     packageCapacity,
+  //     packageQuantity: prevState.autoCalculatePackageQuantity
+  //       ? calculatePackageQuantity({ quantity, batchQuantityRevisions, packageCapacity })
+  //       : prevState.packageQuantity,
+  //     packageGrossWeight,
+  //     packageVolume,
+  //     packageSize,
+  //   }));
+  // };
 
-  getPackageQuantity = () => calculatePackageQuantity(this.state);
+  // getPackageQuantity = () => calculatePackageQuantity(this.state);
 
-  toggleAutoCalculatePackageQuantity = () => {
-    const { autoCalculatePackageQuantity } = this.state;
-    if (autoCalculatePackageQuantity) {
-      this.setState({
-        autoCalculatePackageQuantity: false,
-      });
-    } else {
-      this.setState(prevState => ({
-        autoCalculatePackageQuantity: true,
-        packageQuantity: calculatePackageQuantity(prevState),
-      }));
-    }
-  };
+  // toggleAutoCalculatePackageQuantity = () => {
+  //   const { autoCalculatePackageQuantity } = this.state;
+  //   if (autoCalculatePackageQuantity) {
+  //     this.setState({
+  //       autoCalculatePackageQuantity: false,
+  //     });
+  //   } else {
+  //     this.setState(prevState => ({
+  //       autoCalculatePackageQuantity: true,
+  //       packageQuantity: calculatePackageQuantity(prevState),
+  //     }));
+  //   }
+  // };
 
-  calculatePackageQuantity = (setFieldTouched?: Function) => {
-    const { autoCalculatePackageQuantity } = this.state;
-    if (autoCalculatePackageQuantity) {
-      this.setState(prevState => ({
-        packageQuantity: calculatePackageQuantity(prevState),
-      }));
-      if (setFieldTouched) {
-        setFieldTouched('packageQuantity');
-      }
-    }
-  };
+  // calculatePackageQuantity = (setFieldTouched?: Function) => {
+  //   const { autoCalculatePackageQuantity } = this.state;
+  //   if (autoCalculatePackageQuantity) {
+  //     this.setState(prevState => ({
+  //       packageQuantity: calculatePackageQuantity(prevState),
+  //     }));
+  //     if (setFieldTouched) {
+  //       setFieldTouched('packageQuantity');
+  //     }
+  //   }
+  // };
 
-  toggleAutoCalculatePackageVolume = () => {
-    const { autoCalculatePackageVolume } = this.state;
-    if (!autoCalculatePackageVolume) {
-      this.setState(prevState => ({
-        packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
-        autoCalculatePackageVolume: !autoCalculatePackageVolume,
-      }));
-    } else {
-      this.setState({
-        autoCalculatePackageVolume: !autoCalculatePackageVolume,
-      });
-    }
-  };
+  // toggleAutoCalculatePackageVolume = () => {
+  //   const { autoCalculatePackageVolume } = this.state;
+  //   if (!autoCalculatePackageVolume) {
+  //     this.setState(prevState => ({
+  //       packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
+  //       autoCalculatePackageVolume: !autoCalculatePackageVolume,
+  //     }));
+  //   } else {
+  //     this.setState({
+  //       autoCalculatePackageVolume: !autoCalculatePackageVolume,
+  //     });
+  //   }
+  // };
 
-  calculatePackageVolume = () => {
-    this.setState(prevState => ({
-      packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
-    }));
-  };
+  // calculatePackageVolume = () => {
+  //   this.setState(prevState => ({
+  //     packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
+  //   }));
+  // };
 }

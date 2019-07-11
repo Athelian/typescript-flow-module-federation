@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Batch } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
@@ -231,10 +232,9 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                                 ...(exporterId ? { exporterId } : {}),
                               }}
                               onSelect={selectedOrderItems => {
-                                const createdBatches = selectedOrderItems.map(
+                                const createdBatches: Array<Batch> = selectedOrderItems.map(
                                   (orderItem, counter) => ({
                                     ...generateBatchByOrderItem(orderItem),
-                                    orderItem,
                                     no: `batch no ${batches.length + counter + 1}`,
                                     archived: orderItem.archived && containerIsArchived,
                                   })

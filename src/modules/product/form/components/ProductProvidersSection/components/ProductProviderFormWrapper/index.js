@@ -228,10 +228,10 @@ const ProductProviderFormWrapper = ({
               <ProductProviderForm
                 productProvider={productProvider}
                 initDetailValues={(values: Object) => {
-                  const { todo, packages, defaultPage, ...info } = values;
+                  const { todo, packages, defaultPackage, ...info } = values;
                   productProviderInfoContainer.initDetailValues(info);
                   productProviderTasksContainer.initDetailValues(todo);
-                  productProviderPackagesContainer.initDetailValues({ packages, defaultPage });
+                  productProviderPackagesContainer.initDetailValues({ packages, defaultPackage });
                 }}
                 isExist={isExist}
                 isNew={isNew}

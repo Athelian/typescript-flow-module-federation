@@ -3,6 +3,7 @@ import { set, cloneDeep } from 'lodash';
 import type {
   MetricValue,
   Size,
+  Batch,
   BatchPayload,
   OrderItemPayload,
   BatchQuantityRevision,
@@ -14,8 +15,8 @@ import {
   BATCH_SET_TAGS,
 } from 'modules/permission/constants/batch';
 import { times, divide } from './number';
-import { injectUid } from './id';
-import { convertVolume, convertWeight } from './metric';
+import { uuid } from './id';
+import { defaultVolumeMetric, convertVolume, convertWeight } from './metric';
 import { getByPathWithDefault } from './fp';
 
 export const findWeight = (batch: BatchPayload) => {
@@ -82,7 +83,7 @@ export const calculateVolume = (volume: MetricValue, size: Size): Object => {
   };
 };
 
-export const calculatePackageQuantity = (batch: BatchPayload) => {
+export const calculatePackageQuantity = (batch: Batch) => {
   const quantity = getByPathWithDefault(0, 'quantity', batch);
   const packageCapacity = getByPathWithDefault(0, 'packageCapacity', batch);
   const batchQuantityRevisions = getByPathWithDefault([], 'batchQuantityRevisions', batch);
@@ -98,28 +99,27 @@ export const calculatePackageQuantity = (batch: BatchPayload) => {
 };
 
 export const generateCloneBatch = (
-  { id, deliveredAt, desired, expiredAt, producedAt, no, ...rest }: Object,
+  { id, deliveredAt, desiredAt, expiredAt, producedAt, no, tags, customFields, ...rest }: Batch,
   hasPermission: Function
 ) => {
-  return injectUid({
+  return {
     ...rest,
+    id: uuid(),
     isNew: true,
     no: `${no} - clone`,
     batchQuantityRevisions: [],
     todo: {
       tasks: [],
     },
-    tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]) ? rest.tags : [],
+    tags: hasPermission([BATCH_UPDATE, BATCH_SET_TAGS]) ? tags : [],
     customFields: {
-      ...rest.customFields,
+      ...customFields,
       fieldValues: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS])
-        ? rest.customFields.fieldValues
+        ? customFields.fieldValues
         : [],
-      mask: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS_MASK])
-        ? rest.customFields.mask
-        : null,
+      mask: hasPermission([BATCH_UPDATE, BATCH_SET_CUSTOM_FIELDS_MASK]) ? customFields.mask : null,
     },
-  });
+  };
 };
 
 export const totalVolume = (total: number, packageQuantity: number, volume: MetricValue) =>
@@ -146,32 +146,99 @@ export const findTotalAutoFillBatches = ({
   return quantity - totalBatchQuantity;
 };
 
-export const generateBatchByOrderItem = ({ productProvider }: { productProvider: Object }) => {
-  const { packageName, packageCapacity, packageGrossWeight, volume, size } = productProvider;
-  return injectUid({
-    tags: [],
+export const generateBatchByOrderItem = (orderItem: OrderItemPayload): Batch => {
+  console.warn({
+    orderItem,
+  });
+  const packageName = getByPathWithDefault('', 'productProvider.defaultPackage.name', orderItem);
+  const packageCapacity = getByPathWithDefault(
+    '',
+    'productProvider.defaultPackage.capacity',
+    orderItem
+  );
+  const packageGrossWeight = getByPathWithDefault(
+    '',
+    'productProvider.defaultPackage.grossWeight',
+    orderItem
+  );
+  const packageVolume = getByPathWithDefault(
+    '',
+    'productProvider.defaultPackage.volume',
+    orderItem
+  );
+  const packageSize = getByPathWithDefault('', 'productProvider.defaultPackage.size', orderItem);
+  const autoCalculatePackageVolume = getByPathWithDefault(
+    '',
+    'productProvider.defaultPackage.autoCalculateVolume',
+    orderItem
+  );
+  return {
     packageName,
     packageCapacity,
     packageGrossWeight,
-    volume,
-    size,
-    quantity: 0,
+    packageVolume,
+    packageSize,
+    autoCalculatePackageVolume,
+    orderItem,
     packageQuantity: 0,
+    id: uuid(),
     isNew: true,
-    batchQuantityRevisions: [],
+    archived: false,
     autoCalculatePackageQuantity: true,
+    no: '',
+    tags: [],
+    sort: 0,
+    containerSort: 0,
+    shipmentSort: 0,
+    quantity: 0,
+    latestQuantity: 0,
+    batchQuantityRevisions: [],
     customFields: {
       mask: null,
       fieldValues: [],
+      fieldDefinitions: [],
     },
     todo: {
       tasks: [],
       taskTemplate: null,
+      taskCount: {
+        count: 0,
+        remain: 0,
+        inProgress: 0,
+        completed: 0,
+        rejected: 0,
+        approved: 0,
+        skipped: 0,
+        delayed: 0,
+      },
+      // TODO: remove deprecated field
+      completedCount: 0,
+      inProgressCount: 0,
+      remainingCount: 0,
     },
-  });
+    createdAt: null,
+    updatedAt: null,
+    ownedBy: {},
+    totalVolume: {
+      metric: defaultVolumeMetric,
+      value: 0,
+    },
+  };
 };
 
-export const updateBatchCardQuantity = (batch: BatchPayload, quantity: number): Object => {
+export const autoFillBatch = (orderItem: OrderItemPayload, quantity: number): Batch => {
+  const batch = {
+    ...generateBatchByOrderItem(orderItem),
+    latestQuantity: quantity,
+    quantity,
+  };
+  return {
+    ...batch,
+    packageQuantity: calculatePackageQuantity(batch),
+  };
+};
+
+export const updateBatchCardQuantity = (batch: Batch, quantity: number): Batch => {
   const autoCalculatePackageQuantity = getByPathWithDefault(
     true,
     'autoCalculatePackageQuantity',

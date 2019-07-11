@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Batch } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { intersection } from 'lodash';
 import { Subscribe } from 'unstated';
@@ -573,10 +574,9 @@ function BatchesArea({
                                   ...(exporterId ? { exporterId } : {}),
                                 }}
                                 onSelect={selectedOrderItems => {
-                                  const createdBatches = selectedOrderItems.map(
+                                  const createdBatches: Array<Batch> = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
-                                      orderItem,
                                       no: `batch no ${batches.length + index + 1}`,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }

@@ -4,11 +4,11 @@ import {
   productProviderCardFragment,
   tagFragment,
   imageFragment,
-  priceFragment,
   partnerNameFragment,
   metricFragment,
   sizeFragment,
   taskCountFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const productProvidersListQuery = gql`
@@ -31,10 +31,10 @@ export const productProvidersListQuery = gql`
   ${partnerNameFragment}
   ${tagFragment}
   ${imageFragment}
-  ${priceFragment}
   ${metricFragment}
   ${sizeFragment}
   ${taskCountFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default productProvidersListQuery;

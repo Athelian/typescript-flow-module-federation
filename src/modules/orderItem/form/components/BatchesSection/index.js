@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Batch, OrderItemPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
@@ -15,10 +16,12 @@ import {
   BATCH_SET_DESIRED_DATE,
   BATCH_SET_QUANTITY_ADJUSTMENTS,
 } from 'modules/permission/constants/batch';
+import { getByPathWithDefault } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
 import {
   findTotalAutoFillBatches,
   generateBatchByOrderItem,
+  autoFillBatch,
   generateCloneBatch,
 } from 'utils/batch';
 import { SectionWrapper, SectionHeader } from 'components/Form';
@@ -38,11 +41,7 @@ import {
 } from './style';
 
 type Props = {
-  itemInfo: {
-    quantity: ?number,
-    price: ?Object,
-    productProvider: ?Object,
-  },
+  itemInfo: OrderItemPayload,
   itemIsArchived: boolean,
   isSlideView: boolean,
 };
@@ -65,7 +64,6 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
   return (
     <Subscribe to={[OrderItemBatchesContainer]}>
       {({ state: { batches }, setFieldValue, setDeepFieldValue }) => {
-        const values = { ...itemInfo, batches };
         return (
           <SectionWrapper id="orderItem_batchesSection">
             <SectionHeader
@@ -92,8 +90,7 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                         setFieldValue('batches', [
                           ...batches,
                           {
-                            ...generateBatchByOrderItem(values),
-                            orderItem: itemInfo,
+                            ...generateBatchByOrderItem(itemInfo),
                             no: `batch no ${batches.length + 1}`,
                             archived: itemIsArchived,
                           },
@@ -110,14 +107,12 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                       onClick={() => {
                         const quantity = findTotalAutoFillBatches({
                           batches,
-                          quantity: itemInfo.quantity || 0,
+                          quantity: getByPathWithDefault(0, 'quantity', itemInfo),
                         });
                         if (quantity > 0) {
-                          const newBatch = {
-                            ...generateBatchByOrderItem(itemInfo),
-                            orderItem: itemInfo,
+                          const newBatch: Batch = {
+                            ...autoFillBatch(itemInfo, quantity),
                             no: `batch no ${batches.length + 1}`,
-                            quantity,
                           };
                           setFieldValue('batches', [...batches, newBatch]);
                         }
@@ -169,8 +164,8 @@ function BatchesSection({ itemInfo, itemIsArchived, isSlideView }: Props) {
                                   desiredAt: allowUpdateBatchDesired,
                                 }}
                                 batch={batch}
-                                currency={itemInfo.price && itemInfo.price.currency}
-                                price={itemInfo.price}
+                                currency={getByPathWithDefault('', 'price.currency', itemInfo)}
+                                price={getByPathWithDefault({}, 'price', itemInfo)}
                                 onClick={() => batchSlideToggle(true)}
                                 saveOnBlur={value => setDeepFieldValue(`batches.${index}`, value)}
                                 onRemove={() =>

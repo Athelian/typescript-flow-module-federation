@@ -1,6 +1,24 @@
 // @flow
 import gql from 'graphql-tag';
 
+export const productProviderPackagingFragment = gql`
+  fragment productProviderPackagingFragment on ProductProviderPackage {
+    id
+    name
+    capacity
+    grossWeight {
+      ...metricFragment
+    }
+    volume {
+      ...metricFragment
+    }
+    autoCalculateVolume
+    size {
+      ...sizeFragment
+    }
+  }
+`;
+
 export const productProviderFormFragment = gql`
   fragment productProviderFormFragment on ProductProvider {
     id
@@ -37,27 +55,10 @@ export const productProviderFormFragment = gql`
     }
     autoCalculateUnitVolume
     defaultPackage {
-      ... on ProductProviderPackage {
-        id
-        name
-      }
+      ...productProviderPackagingFragment
     }
     packages {
-      ... on ProductProviderPackage {
-        id
-        name
-        capacity
-        grossWeight {
-          ...metricFragment
-        }
-        volume {
-          ...metricFragment
-        }
-        autoCalculateVolume
-        size {
-          ...sizeFragment
-        }
-      }
+      ...productProviderPackagingFragment
     }
     customFields {
       ...customFieldsFragment
@@ -112,20 +113,8 @@ export const productProviderCardFragment = gql`
         }
       }
     }
-    # TODO: remove old field
-    packageName
-    packageCapacity
-    packageGrossWeight {
-      ...metricFragment
-    }
-    packageVolume {
-      ...metricFragment
-    }
-    packageSize {
-      ...sizeFragment
-    }
-    unitPrice {
-      ...priceFragment
+    defaultPackage {
+      ...productProviderPackagingFragment
     }
     todo {
       taskCount {

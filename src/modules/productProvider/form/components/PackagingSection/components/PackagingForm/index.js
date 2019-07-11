@@ -83,8 +83,8 @@ const PackagingForm = ({ isNew, id, originalValues, values, onChange }: Props) =
               originalValue={getByPath('capacity', originalValues)}
               label={
                 <FormattedMessage
-                  id="modules.ProductProviders.capacity"
-                  defaultMessage="CAPACITY"
+                  id="modules.ProductProviders.packageCapacity"
+                  defaultMessage="PACKAGE CAPACITY"
                 />
               }
               editable={hasPermission([

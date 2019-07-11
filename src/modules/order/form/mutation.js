@@ -32,6 +32,7 @@ import {
   itemInOrderFormFragment,
   itemInBatchFormFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -103,6 +104,7 @@ export const updateOrderMutation = gql`
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParsedOrderInput = (originalValues: ?Object, newValues: Object): OrderForm => ({

@@ -24,6 +24,7 @@ import {
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -85,6 +86,7 @@ export const updateProductMutation: Object = gql`
   ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParsedProductInput = (originalValues: ?Object, newValues: Object): Object => ({

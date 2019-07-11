@@ -1,10 +1,12 @@
 // @flow
 import * as React from 'react';
+import type { Batch, OrderItem } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { flatten } from 'lodash';
 import { BooleanValue } from 'react-values';
 import {
   findTotalAutoFillBatches,
+  autoFillBatch,
   generateBatchByOrderItem,
   generateCloneBatch,
 } from 'utils/batch';
@@ -147,11 +149,9 @@ function BatchesArea({
                     const newOrderItems = orderItems.map(orderItem => {
                       const quantity = findTotalAutoFillBatches(orderItem);
                       if (quantity > 0) {
-                        const newBatch = {
-                          ...generateBatchByOrderItem(orderItem),
-                          orderItem,
+                        const newBatch: Batch = {
+                          ...autoFillBatch(orderItem, quantity),
                           no: `batch no ${orderItem.batches.length + 1}`,
-                          quantity,
                           archived: orderIsArchived,
                         };
                         return {
@@ -173,28 +173,21 @@ function BatchesArea({
                     });
                     setFieldValue('orderItems', newOrderItems);
                   } else {
-                    const orderItem = orderItems[focusedItemIndex];
+                    const orderItem = {
+                      ...orderItems[focusedItemIndex],
+                      order,
+                    };
+
                     const quantity = findTotalAutoFillBatches(orderItem);
                     if (quantity > 0) {
-                      const newBatch = {
-                        ...generateBatchByOrderItem(orderItem),
-                        orderItem,
+                      const newBatch: Batch = {
+                        ...autoFillBatch(orderItem, quantity),
                         no: `batch no ${orderItem.batches.length + 1}`,
-                        quantity,
                         archived: orderIsArchived,
                       };
-                      const newOrderItem = {
+                      const newOrderItem: OrderItem = {
                         ...orderItem,
-                        batches: [
-                          ...orderItem.batches,
-                          {
-                            ...newBatch,
-                            orderItem: {
-                              ...orderItem,
-                              order,
-                            },
-                          },
-                        ],
+                        batches: [...orderItem.batches, newBatch],
                       };
                       setFieldValue(`orderItems.${focusedItemIndex}`, newOrderItem);
                     }
@@ -291,13 +284,9 @@ function BatchesArea({
           <NewButton
             label={<FormattedMessage id="modules.Orders.newBatch" defaultMessage="NEW BATCH" />}
             onClick={() => {
-              const orderItem = orderItems[focusedItemIndex];
-              const newBatch = {
+              const orderItem = { ...orderItems[focusedItemIndex], order };
+              const newBatch: Batch = {
                 ...generateBatchByOrderItem(orderItem),
-                orderItem: {
-                  ...orderItem,
-                  order,
-                },
                 no: `batch ${batches.length + 1}`,
                 archived: orderIsArchived,
               };

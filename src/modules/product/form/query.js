@@ -23,6 +23,7 @@ import {
   taskWithoutParentInfoFragment,
   taskFormInTemplateFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const productFormQuery = gql`
@@ -55,6 +56,7 @@ export const productFormQuery = gql`
   ${taskWithoutParentInfoFragment}
   ${taskFormInTemplateFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default productFormQuery;
