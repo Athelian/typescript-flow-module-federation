@@ -40,7 +40,8 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) return `Error!: ${error}`;
-        const selectedItem = data.find(item => item.name === inputHandlers.value);
+        const selectedItem =
+          data.find(item => item.name === inputHandlers.value) || inputHandlers.value;
         return (
           <FieldItem
             input={
