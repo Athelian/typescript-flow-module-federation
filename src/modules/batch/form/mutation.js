@@ -28,6 +28,7 @@ import {
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -78,6 +79,7 @@ export const updateBatchMutation = gql`
   ${partnerCardFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParsedBatchInput = (

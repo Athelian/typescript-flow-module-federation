@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { timelineDateMinimalFragment, userAvatarFragment } from 'graphql';
 
 export const productListQuery = gql`
-  query(
+  query productListQuery(
     $page: Int!
     $perPage: Int!
     $filterBy: ProductFilterInput

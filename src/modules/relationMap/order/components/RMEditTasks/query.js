@@ -21,6 +21,7 @@ import {
   productProviderCardFragment,
   sizeFragment,
   ownedByFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 const editableTaskListQuery = gql`
@@ -59,6 +60,7 @@ const editableTaskListQuery = gql`
   ${taskCountFragment}
   ${sizeFragment}
   ${ownedByFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default editableTaskListQuery;

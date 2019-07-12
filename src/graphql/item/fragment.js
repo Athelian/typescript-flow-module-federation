@@ -157,16 +157,11 @@ export const itemInSelectorFragment = gql`
         exporter {
           ...partnerCardFragment
         }
-        packageName
-        packageCapacity
-        packageGrossWeight {
-          ...metricFragment
+        defaultPackage {
+          ...productProviderPackagingFragment
         }
-        packageVolume {
-          ...metricFragment
-        }
-        packageSize {
-          ...sizeFragment
+        packages {
+          ...productProviderPackagingFragment
         }
         product {
           ... on Product {
@@ -223,16 +218,11 @@ export const itemInOrderFormFragment = gql`
         supplier {
           ...partnerNameFragment
         }
-        packageName
-        packageCapacity
-        packageGrossWeight {
-          ...metricFragment
+        defaultPackage {
+          ...productProviderPackagingFragment
         }
-        packageVolume {
-          ...metricFragment
-        }
-        packageSize {
-          ...sizeFragment
+        packages {
+          ...productProviderPackagingFragment
         }
         unitPrice {
           ...priceFragment
@@ -292,16 +282,11 @@ export const itemInBatchFormFragment = gql`
         exporter {
           ...partnerCardFragment
         }
-        packageName
-        packageCapacity
-        packageGrossWeight {
-          ...metricFragment
+        defaultPackage {
+          ...productProviderPackagingFragment
         }
-        packageVolume {
-          ...metricFragment
-        }
-        packageSize {
-          ...sizeFragment
+        packages {
+          ...productProviderPackagingFragment
         }
         product {
           ... on Product {

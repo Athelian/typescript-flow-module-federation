@@ -23,6 +23,7 @@ import {
   productProviderCardFragment,
   sizeFragment,
   ownedByFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import { parseTaskField, parseParentIdField } from 'utils/data';
 import { getByPathWithDefault } from 'utils/fp';
@@ -57,6 +58,7 @@ export const updateTaskMutation = gql`
   ${taskCountFragment}
   ${sizeFragment}
   ${ownedByFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({

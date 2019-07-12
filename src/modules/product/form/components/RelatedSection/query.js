@@ -18,7 +18,12 @@ import {
 } from 'graphql';
 
 export const ordersInProductQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderFilterInput, $sortBy: OrderSortInput) {
+  query ordersInProductQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: OrderFilterInput
+    $sortBy: OrderSortInput
+  ) {
     orders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...orderCardFragment
@@ -39,7 +44,12 @@ export const ordersInProductQuery = gql`
 `;
 
 export const itemsInProductQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: OrderItemFilterInput, $sortBy: OrderItemSortInput) {
+  query itemsInProductQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: OrderItemFilterInput
+    $sortBy: OrderItemSortInput
+  ) {
     orderItems(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...itemCardFragment
@@ -59,7 +69,12 @@ export const itemsInProductQuery = gql`
 `;
 
 export const batchesInProductQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: BatchFilterInput, $sortBy: BatchSortInput) {
+  query batchesInProductQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: BatchFilterInput
+    $sortBy: BatchSortInput
+  ) {
     batches(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...batchCardFragment
@@ -80,7 +95,12 @@ export const batchesInProductQuery = gql`
 `;
 
 export const containersInProductQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: ContainerFilterInput, $sortBy: ContainerSortInput) {
+  query containersInProductQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ContainerFilterInput
+    $sortBy: ContainerSortInput
+  ) {
     containers(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...containerCardFragment
@@ -98,7 +118,12 @@ export const containersInProductQuery = gql`
 `;
 
 export const shipmentsInProductQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: ShipmentFilterInput, $sortBy: ShipmentSortInput) {
+  query shipmentsInProductQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: ShipmentFilterInput
+    $sortBy: ShipmentSortInput
+  ) {
     shipments(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...shipmentCardFragment
@@ -110,10 +135,10 @@ export const shipmentsInProductQuery = gql`
   }
 
   ${shipmentCardFragment}
+  ${userAvatarFragment}
   ${timelineDateMinimalFragment}
   ${tagFragment}
   ${portFragment}
-  ${userAvatarFragment}
   ${metricFragment}
   ${taskCountFragment}
   ${partnerNameFragment}

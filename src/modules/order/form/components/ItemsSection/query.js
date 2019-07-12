@@ -28,6 +28,7 @@ import {
   partnerCardFragment,
   timelineDateMinimalFragment,
   portFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const orderFormItemsQuery = gql`
@@ -69,6 +70,7 @@ export const orderFormItemsQuery = gql`
   ${partnerCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default orderFormItemsQuery;

@@ -89,6 +89,7 @@ const TimelineInfoSection = (props: Props) => {
         </SectionHeader>
 
         <AssignmentApprovalFactory
+          cacheKey="ShipmentUserSelect"
           groupIds={groupIds}
           name={sourceName}
           assignmentsName={`${sourceName}.assignedTo`}

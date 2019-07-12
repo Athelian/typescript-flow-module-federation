@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Tue Jul 09 2019 13:52:28 GMT+0900 (Japan Standard Time)
+# timestamp: Thu Jul 11 2019 15:05:21 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -28511,6 +28511,12 @@ enum ExportType {
 
   """Tags"""
   Tags
+
+  """Project"""
+  Project
+
+  """Projects"""
+  Projects
 }
 
 type FieldDefinition implements Model & Owned & Sortable {
@@ -29622,6 +29628,10 @@ input MaskEditUpdateInput {
 }
 
 input MaskFilterInput {
+  query: String
+  excludeIds: [ID!]
+  createdAt: DateRangeInput
+  updatedAt: DateRangeInput
   entityTypes: [CustomizableEntityType!]
 }
 
@@ -30558,9 +30568,9 @@ input ProductCreateInput {
   tagIds: [ID!]
   files: [FileInput!]
   memo: String
+  productProviders: [ProductProviderCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
-  productProviders: [ProductProviderCreateInput!]!
 }
 
 input ProductFilterInput {
@@ -30587,7 +30597,7 @@ type ProductPayloadPagination {
   totalCount: Int!
 }
 
-type ProductProvider implements Model & Owned & Sortable & Package & Documented & Customizable & Memorizable {
+type ProductProvider implements Model & Owned & Sortable & Documented & Customizable & Memorizable {
   archived: Boolean!
 
   """
@@ -30607,6 +30617,14 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   inspectionFee: Price
   origin: Country
   productionLeadTime: Int
+  packageName: String @deprecated(reason: "use `defaultPackage` or `packages` instead")
+  packageGrossWeight: MetricValue @deprecated(reason: "use `defaultPackage` or `packages` instead")
+  packageVolume: MetricValue @deprecated(reason: "use `defaultPackage` or `packages` instead")
+  autoCalculatePackageVolume: Boolean! @deprecated(reason: "use `defaultPackage` or `packages` instead")
+  packageSize: Size @deprecated(reason: "use `defaultPackage` or `packages` instead")
+  packageCapacity: Float @deprecated(reason: "use `defaultPackage` or `packages` instead")
+  defaultPackage: ProductProviderPackagePayload
+  packages: [ProductProviderPackagePayload!]!
   timeline: Timeline!
   todo: Todo!
   batches(page: Int! = 1, perPage: Int! = 10, filterBy: BatchFilterInput, sortBy: BatchSortInput): BatchPayloadPagination!
@@ -30619,12 +30637,6 @@ type ProductProvider implements Model & Owned & Sortable & Package & Documented 
   deletedBy: UserPayload
   ownedBy: GroupPayload!
   sort: Int!
-  packageName: String
-  packageGrossWeight: MetricValue
-  packageVolume: MetricValue
-  autoCalculatePackageVolume: Boolean!
-  packageSize: Size
-  packageCapacity: Float
   files: [FilePayload!]!
   customFields: CustomFields!
   memo: String
@@ -30643,14 +30655,11 @@ input ProductProviderCreateInput {
   inspectionFee: PriceInput
   origin: Country
   productionLeadTime: Int
-  packageName: String
-  packageGrossWeight: MetricValueInput
-  packageVolume: MetricValueInput
-  autoCalculatePackageVolume: Boolean
-  packageSize: SizeInput
-  packageCapacity: Float
   files: [FileInput!]
   memo: String
+  defaultPackageId: ID
+  defaultPackageIndex: Int
+  packages: [ProductProviderPackageCreateInput!]!
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30668,6 +30677,46 @@ input ProductProviderFilterInput {
   tagIds: [ID!]
   milestoneId: ID
   milestoneRelatedId: ID
+}
+
+type ProductProviderPackage implements Model & Owned & Sortable {
+  productProvider: ProductProviderPayload!
+  name: String
+  grossWeight: MetricValue
+  volume: MetricValue
+  autoCalculateVolume: Boolean!
+  size: Size
+  capacity: Float
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  createdBy: UserPayload
+  updatedBy: UserPayload
+  deletedBy: UserPayload
+  ownedBy: GroupPayload!
+  sort: Int!
+}
+
+input ProductProviderPackageCreateInput {
+  name: String
+  grossWeight: MetricValueInput
+  volume: MetricValueInput
+  autoCalculateVolume: Boolean
+  size: SizeInput
+  capacity: Float
+}
+
+union ProductProviderPackagePayload = ProductProviderPackage | BadRequest | Forbidden | NotFound
+
+input ProductProviderPackageUpdateInput {
+  id: ID
+  name: String
+  grossWeight: MetricValueInput
+  volume: MetricValueInput
+  autoCalculateVolume: Boolean
+  size: SizeInput
+  capacity: Float
 }
 
 union ProductProviderPayload = ProductProvider | BadRequest | Forbidden | NotFound
@@ -30707,14 +30756,11 @@ input ProductProviderUpdateInput {
   inspectionFee: PriceInput
   origin: Country
   productionLeadTime: Int
-  packageName: String
-  packageGrossWeight: MetricValueInput
-  packageVolume: MetricValueInput
-  autoCalculatePackageVolume: Boolean
-  packageSize: SizeInput
-  packageCapacity: Float
   files: [FileInput!]
   memo: String
+  defaultPackageId: ID
+  defaultPackageIndex: Int
+  packages: [ProductProviderPackageUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
 }
@@ -30737,9 +30783,9 @@ input ProductUpdateInput {
   tagIds: [ID!]
   files: [FileInput!]
   memo: String
+  productProviders: [ProductProviderUpdateInput!]
   customFields: CustomFieldsInput
   todo: TodoInput
-  productProviders: [ProductProviderUpdateInput!]
 }
 
 input ProductUpdateWrapperInput {
@@ -86972,6 +87018,7 @@ enum TaskDateBinding {
   OrderIssuedAt
   OrderDeliveryDate
   OrderItemOrderIssuedAt
+  OrderItemOrderDeliveryDate
   BatchDeliveredAt
   BatchDesiredAt
   BatchProducedAt

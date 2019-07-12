@@ -26,10 +26,11 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const batchFormQuery = gql`
-  query($id: ID!) {
+  query batchFormQuery($id: ID!) {
     batch(id: $id) {
       ...batchFormFragment
     }
@@ -60,6 +61,7 @@ export const batchFormQuery = gql`
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default batchFormQuery;

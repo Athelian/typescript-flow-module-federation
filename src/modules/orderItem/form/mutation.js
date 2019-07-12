@@ -31,6 +31,7 @@ import {
   documentFragment,
   badRequestFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import {
   parseGenericField,
@@ -83,6 +84,7 @@ export const updateOrderItemMutation = gql`
   ${documentFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParseOrderItem = (originalValues: Object, newValues: Object): Object => ({

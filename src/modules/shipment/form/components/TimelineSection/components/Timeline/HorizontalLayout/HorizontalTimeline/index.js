@@ -1,5 +1,5 @@
 // @flow
-import * as React from 'react';
+import React, { Fragment } from 'react';
 import type {
   ShipmentPayload,
   UserPayload,
@@ -323,7 +323,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
                       />
                     </div>
                     {containers.map(container => (
-                      <>
+                      <Fragment key={getByPathWithDefault('', 'id', container)}>
                         <div className={TooltipLabelStyle}>
                           {getByPathWithDefault('', 'no', container)}
                         </div>
@@ -361,7 +361,7 @@ const HorizontalTimeline = ({ shipment, navigable }: Props) => {
                             }}
                           />
                         </div>
-                      </>
+                      </Fragment>
                     ))}
                   </div>
                 </div>

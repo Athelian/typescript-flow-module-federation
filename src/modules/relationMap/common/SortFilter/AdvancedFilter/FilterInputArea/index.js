@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
+import { partnersQuery } from 'graphql/partner/query';
 import FormattedName from 'components/FormattedName';
 import UserAvatar from 'components/UserAvatar';
 import { Display } from 'components/Form';
 import { type EntityTypes } from 'modules/relationMap/common/SortFilter/AdvancedFilter/type';
 import { orderListQuery } from 'modules/order/list/query';
-import { partnerListQuery } from 'providers/PartnerList/query';
-import { userListQuery } from 'providers/UserList/query';
+import { usersQuery } from 'graphql/staff/query';
 import { warehouseListQuery } from 'providers/WarehouseListProvider/query';
 import {
   DateRange,
@@ -70,7 +70,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'viewer.user.group.partners',
-              query: partnerListQuery,
+              query: partnersQuery,
               filterBy: {
                 query: '',
                 types: ['Exporter'],
@@ -91,7 +91,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'users',
-              query: userListQuery,
+              query: usersQuery,
               filterBy: {
                 query: '',
               },
@@ -172,7 +172,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'viewer.user.group.partners',
-              query: partnerListQuery,
+              query: partnersQuery,
               filterBy: {
                 query: '',
                 types: ['Exporter'],
@@ -193,7 +193,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'viewer.user.group.partners',
-              query: partnerListQuery,
+              query: partnersQuery,
               filterBy: {
                 query: '',
                 types: ['Supplier'],
@@ -298,7 +298,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'viewer.user.group.partners',
-              query: partnerListQuery,
+              query: partnersQuery,
               filterBy: {
                 query: '',
                 types: ['Forwarder'],
@@ -339,7 +339,7 @@ const getFilterInputArea = ({
           return () =>
             MiniSelector({
               entityType: 'users',
-              query: userListQuery,
+              query: usersQuery,
               filterBy: {
                 query: '',
               },

@@ -40,6 +40,7 @@ export const orderColumns = [
       'order.PO',
       'order.PI',
       'order.date',
+      'order.deliveryDate',
       'order.exporterName',
       'order.exporterCode',
       'order.currency',
@@ -55,6 +56,7 @@ export const orderColumns = [
       <FormattedMessage {...orderMessages.PO} />,
       <FormattedMessage {...orderMessages.PI} />,
       <FormattedMessage {...orderMessages.date} />,
+      <FormattedMessage {...orderMessages.deliveryDate} />,
       <FormattedMessage {...orderMessages.exporterName} />,
       <FormattedMessage {...orderMessages.exporterCode} />,
       <FormattedMessage {...orderMessages.currency} />,
@@ -389,6 +391,12 @@ export const orderColumnFields = [
     messageId: orderMessages.date.id,
     name: 'issuedAt',
     columnName: 'order.date',
+    type: 'date',
+  },
+  {
+    messageId: orderMessages.deliveryDate.id,
+    name: 'deliveryDate',
+    columnName: 'order.deliveryDate',
     type: 'date',
   },
   {

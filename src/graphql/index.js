@@ -26,6 +26,7 @@ import {
 } from './container/fragment';
 import {
   productProviderFormFragment,
+  productProviderPackagingFragment,
   productProviderCardFragment,
 } from './productProvider/fragment';
 import {
@@ -95,6 +96,7 @@ export {
   productCardFragment,
   productCardWithOwnedFragment,
   productProviderFormFragment,
+  productProviderPackagingFragment,
   productProviderCardFragment,
   shipmentFormFragment,
   shipmentCardFragment,

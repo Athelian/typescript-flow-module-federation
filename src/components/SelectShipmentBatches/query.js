@@ -26,6 +26,7 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const selectBatchListQuery = gql`
@@ -69,6 +70,7 @@ export const selectBatchListQuery = gql`
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default selectBatchListQuery;

@@ -436,6 +436,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
 
                   <GridColumn>
                     <UserAssignmentInputFactory
+                      cacheKey="OrderUserSelect"
                       groupIds={[
                         getByPath('id', values.importer),
                         getByPath('id', values.exporter),
@@ -518,6 +519,7 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                         { changeExporter: updateOrderInfo }
                                       ) => (
                                         <SelectExporter
+                                          cacheKey="OrderSelectExporter"
                                           isRequired
                                           selected={values.exporter}
                                           onCancel={() => slideToggle(false)}

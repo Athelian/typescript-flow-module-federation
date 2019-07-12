@@ -1,13 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 
 # testing
-/coverage
+coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
@@ -44,3 +44,6 @@ cypress/screenshots
 # storybook cache
 .cache
 storybook-static
+
+# jscpd
+report

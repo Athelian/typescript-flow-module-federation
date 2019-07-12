@@ -21,6 +21,7 @@ import {
   taskCountFragment,
   sizeFragment,
   ownedByFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import { parseTaskField } from 'utils/data';
 import { isEquals } from 'utils/fp';
@@ -53,6 +54,7 @@ export const taskUpdateManyMutation = gql`
   ${portFragment}
   ${taskCountFragment}
   ${sizeFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareTasksForUpdateMany = (

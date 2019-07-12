@@ -1,27 +1,20 @@
 // @flow
+import type {
+  ProductProviderPackagePayload,
+  MetricValue,
+  Size,
+  TaskPayload,
+  TagPayload,
+  OrderItemPayload,
+  BatchQuantityRevisionPayload,
+} from 'generated/graphql';
 import { Container } from 'unstated';
+import update from 'immutability-helper';
 import { set, cloneDeep } from 'lodash';
-import { isEquals } from 'utils/fp';
+import { getByPath, isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
-import { calculatePackageQuantity, calculatePackageVolume } from 'utils/batch';
+import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
-
-export type Metric = {
-  value: number,
-  metric: string,
-};
-
-export type ProductProvider = {
-  packageName: string,
-  packageCapacity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
-};
 
 export type BatchFormState = {
   no?: ?string,
@@ -31,28 +24,24 @@ export type BatchFormState = {
   expiredAt?: ?Date | string,
   producedAt?: ?Date | string,
   customFields: ?Object,
-  tags?: Array<Object>,
-  memo?: string,
-  orderItem?: Object,
-  batchQuantityRevisions: Array<any>,
+  tags?: Array<TagPayload>,
+  memo: ?string,
+  orderItem: ?OrderItemPayload,
+  batchQuantityRevisions: Array<BatchQuantityRevisionPayload>,
   packageName?: ?string,
   packageCapacity?: number,
   packageQuantity: number,
-  packageGrossWeight: Metric,
-  packageVolume: Metric,
-  packageSize: {
-    width: Metric,
-    height: Metric,
-    length: Metric,
-  },
+  packageGrossWeight: MetricValue,
+  packageVolume: MetricValue,
+  packageSize: Size,
   autoCalculatePackageQuantity: boolean,
   autoCalculatePackageVolume: boolean,
   todo: {
-    tasks: Array<Object>,
+    tasks: Array<TaskPayload>,
   },
 };
 
-export const initValues = {
+export const initValues: BatchFormState = {
   no: null,
   quantity: 0,
   deliveredAt: null,
@@ -138,42 +127,30 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     });
   };
 
-  syncProductProvider = (productProvider: ProductProvider) => {
-    const { quantity, batchQuantityRevisions } = this.state;
-    const {
-      packageName,
-      packageCapacity = 0,
-      packageGrossWeight = { value: 0, metric: defaultWeightMetric },
-      packageVolume = { value: 0, metric: defaultVolumeMetric },
-      packageSize = {
-        width: {
-          metric: defaultDistanceMetric,
-          value: 0,
+  syncPackaging = (pkg: ProductProviderPackagePayload) => {
+    this.setState(prevState =>
+      update(prevState, {
+        packageCapacity: { $set: getByPath('capacity', pkg) },
+        packageName: { $set: getByPath('name', pkg) },
+        packageGrossWeight: { $set: getByPath('grossWeight', pkg) },
+        packageSize: { $set: getByPath('size', pkg) },
+        autoCalculatePackageVolume: { $set: getByPath('autoCalculateVolume', pkg) },
+        packageVolume: {
+          $set: getByPath('autoCalculateVolume', pkg)
+            ? calculateVolume(getByPath('volume', pkg), getByPath('size', pkg))
+            : getByPath('volume', pkg),
         },
-        height: {
-          metric: defaultDistanceMetric,
-          value: 0,
+        packageQuantity: {
+          $set: prevState.autoCalculatePackageQuantity
+            ? calculatePackageQuantity({
+                ...prevState,
+                packageCapacity: getByPath('capacity', pkg),
+              })
+            : prevState.packageQuantity,
         },
-        length: {
-          metric: defaultDistanceMetric,
-          value: 0,
-        },
-      },
-    } = productProvider;
-
-    this.setState(prevState => ({
-      packageName,
-      packageCapacity,
-      packageQuantity: prevState.autoCalculatePackageQuantity
-        ? calculatePackageQuantity({ quantity, batchQuantityRevisions, packageCapacity })
-        : prevState.packageQuantity,
-      packageGrossWeight,
-      packageVolume,
-      packageSize,
-    }));
+      })
+    );
   };
-
-  getPackageQuantity = () => calculatePackageQuantity(this.state);
 
   toggleAutoCalculatePackageQuantity = () => {
     const { autoCalculatePackageQuantity } = this.state;
@@ -189,15 +166,12 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     }
   };
 
-  calculatePackageQuantity = (setFieldTouched?: Function) => {
+  calculatePackageQuantity = () => {
     const { autoCalculatePackageQuantity } = this.state;
     if (autoCalculatePackageQuantity) {
       this.setState(prevState => ({
         packageQuantity: calculatePackageQuantity(prevState),
       }));
-      if (setFieldTouched) {
-        setFieldTouched('packageQuantity');
-      }
     }
   };
 
@@ -205,7 +179,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     const { autoCalculatePackageVolume } = this.state;
     if (!autoCalculatePackageVolume) {
       this.setState(prevState => ({
-        packageVolume: calculatePackageVolume(prevState),
+        packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
         autoCalculatePackageVolume: !autoCalculatePackageVolume,
       }));
     } else {
@@ -217,7 +191,7 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
 
   calculatePackageVolume = () => {
     this.setState(prevState => ({
-      packageVolume: calculatePackageVolume(prevState),
+      packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
     }));
   };
 }

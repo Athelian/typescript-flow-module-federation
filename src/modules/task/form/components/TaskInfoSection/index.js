@@ -1240,9 +1240,7 @@ const TaskInfoSection = ({
                               <SlideView isOpen={opened} onRequestClose={() => toggleSlide(false)}>
                                 {opened && (
                                   <SelectProjectAndMilestone
-                                    filter={{
-                                      query: '',
-                                    }}
+                                    cacheKey="TaskInfoSectionSelectProjectAndMilestone"
                                     milestone={values.milestone}
                                     onSelect={newMilestone => {
                                       setFieldValues({
@@ -1315,6 +1313,7 @@ const TaskInfoSection = ({
                   <div className={AssignedToStyle}>
                     <GridColumn gap="5px">
                       <UserAssignmentInputFactory
+                        cacheKey="TaskUserSelect"
                         name="assignedTo"
                         label={
                           <FormattedMessage
@@ -1469,6 +1468,7 @@ const TaskInfoSection = ({
                           <div className={AssignedToStyle}>
                             <GridColumn gap="5px">
                               <UserAssignmentInputFactory
+                                cacheKey="TaskUserSelect"
                                 name="approvers"
                                 label={
                                   <FormattedMessage

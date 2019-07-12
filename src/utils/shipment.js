@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
+import { uniqBy } from 'lodash';
 import EnumProvider from 'providers/enum';
+import { getByPathWithDefault } from './fp';
 
 export const getLatestDate = (timelineDate: ?Object) => {
   if (!timelineDate) return null;
@@ -44,4 +46,12 @@ export const getPortName = (
   return null;
 };
 
-export default getLatestDate;
+export const getUniqueExporters = (batches: Array<Object> = []) => {
+  // $FlowFixMe need to change type from lodash
+  const uniqueExporters = uniqBy(
+    batches.map(batch => getByPathWithDefault({}, 'orderItem.productProvider.exporter', batch)),
+    'id'
+  );
+
+  return uniqueExporters;
+};

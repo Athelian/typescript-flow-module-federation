@@ -24,6 +24,7 @@ import {
   ownedByFragment,
   badRequestFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import type { ProjectCreateInput } from 'generated/graphql';
 import {
@@ -108,7 +109,6 @@ export const updateProjectMutation = gql`
   ${taskWithParentInfoFragment}
   ${taskCountFragment}
   ${tagFragment}
-  ${userAvatarFragment}
   ${ownedByFragment}
   ${taskWithParentInfoFragment}
   ${milestoneCardFragment}
@@ -133,6 +133,7 @@ export const updateProjectMutation = gql`
   ${ownedByFragment}
   ${badRequestFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const prepareParsedProjectInput = (

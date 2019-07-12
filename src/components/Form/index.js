@@ -49,7 +49,6 @@ import TaskApprovalStatusInput from './TaskApprovalStatusInput';
 import TaskStatusInput from './TaskStatusInput';
 import ToggleInput from './ToggleInput';
 import UserAssignmentInput from './UserAssignmentInput';
-import TaskAssignmentInput from './UserAssignmentInput/TaskAssignmentInput';
 import {
   AssignmentApprovalFactory,
   CustomFieldsFactory,
@@ -117,7 +116,6 @@ export {
   TaskStatusInput,
   ToggleInput,
   UserAssignmentInput,
-  TaskAssignmentInput,
   AssignmentApprovalFactory,
   CustomFieldsFactory,
   DateInputFactory,

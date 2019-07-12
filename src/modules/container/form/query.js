@@ -28,10 +28,11 @@ import {
   taskTemplateCardFragment,
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 export const containerFormQuery = gql`
-  query($id: ID!) {
+  query containerFormQuery($id: ID!) {
     container(id: $id) {
       ...containerFormFragment
     }
@@ -64,6 +65,7 @@ export const containerFormQuery = gql`
   ${taskFormInTemplateFragment}
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export default containerFormQuery;

@@ -24,7 +24,7 @@ export default defineMessages({
   },
   name: {
     id: 'modules.Tasks.name',
-    defaultMessage: 'Task Name',
+    defaultMessage: 'Name',
   },
   hierarchy: {
     id: 'modules.Tasks.hierarchy',

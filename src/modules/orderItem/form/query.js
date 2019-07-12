@@ -29,11 +29,12 @@ import {
   timelineDateMinimalFragment,
   documentFragment,
   productProviderCardFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import { commentFragment, eventFragment } from 'modules/timeline/query';
 
 export const orderItemFormQuery = gql`
-  query($id: ID!) {
+  query orderItemFormQuery($id: ID!) {
     orderItem(id: $id) {
       ...itemFormFragment
     }
@@ -66,6 +67,7 @@ export const orderItemFormQuery = gql`
   ${timelineDateMinimalFragment}
   ${documentFragment}
   ${productProviderCardFragment}
+  ${productProviderPackagingFragment}
 `;
 
 export const orderItemTimelineQuery = gql`

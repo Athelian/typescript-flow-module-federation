@@ -3,7 +3,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { getByPathWithDefault } from 'utils/fp';
 import Tag from 'components/Tag';
-import UserAvatar from 'components/UserAvatar';
 import Icon from 'components/Icon';
 import TaskRing from 'components/TaskRing';
 import FormattedNumber from 'components/FormattedNumber';
@@ -12,6 +11,7 @@ import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import { Tooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { getUniqueExporters } from 'utils/shipment';
 import BaseCard from '../BaseCard';
 import {
   ShipmentCardWrapperStyle,
@@ -31,8 +31,6 @@ import {
   ShipmentExporterIconStyle,
   ShipmentExporterStyle,
   ShipmentDataWrapperStyle,
-  ShipmentInChargeWrapperStyle,
-  InChargeStyle,
   ShipmentBadgeWrapperStyle,
   ShipmentBadgeIconStyle,
   ShipmentBadgeStyle,
@@ -63,7 +61,6 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
     blNo,
     booked,
     tags,
-    inCharges,
     batchCount,
     orderItemCount,
     totalVolume,
@@ -73,7 +70,20 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
     todo,
     containerTypeCounts,
     voyages,
+    totalPackageQuantity,
+    batches,
   } = shipment;
+  let exporterName = '';
+  let remainingExporterCount = 0;
+  if (exporter) {
+    exporterName = exporter.name;
+  } else {
+    const uniqueExporters = getUniqueExporters(batches);
+    if (uniqueExporters.length > 0) {
+      exporterName = uniqueExporters[0].name;
+      remainingExporterCount = uniqueExporters.length - 1;
+    }
+  }
 
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
   sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
@@ -124,31 +134,24 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                 <div className={ShipmentExporterIconStyle}>
                   <Icon icon="EXPORTER" />
                 </div>
-                <div className={ShipmentExporterStyle}>{exporter && exporter.name}</div>
+                <div className={ShipmentExporterStyle}>
+                  {exporterName}
+                  {remainingExporterCount !== 0 && (
+                    <span>
+                      +
+                      <FormattedNumber value={remainingExporterCount} />
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
             <div className={ShipmentDataWrapperStyle}>
-              <div className={ShipmentInChargeWrapperStyle}>
-                {inCharges &&
-                  inCharges.length > 0 &&
-                  inCharges.map((inCharge, index) => (
-                    <div key={inCharge.id} className={InChargeStyle(index)}>
-                      <UserAvatar
-                        firstName={inCharge.firstName}
-                        lastName={inCharge.lastName}
-                        width="20px"
-                        height="20px"
-                      />
-                    </div>
-                  ))}
-              </div>
-
               <div className={ShipmentBadgeWrapperStyle}>
                 <Label>
                   <FormattedMessage id="components.cards.lastVessel" defaultMessage="LAST VESSEL" />
                 </Label>
-                <div className={ShipmentBadgeStyle('80px')}>
+                <div className={ShipmentBadgeStyle('60px')}>
                   {getByPathWithDefault(
                     <FormattedMessage id="components.cards.na" defaultMessage="N/A" />,
                     `${(voyages || []).length - 1}.vesselName`,
@@ -165,6 +168,15 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                   {totalVolume && (
                     <FormattedNumber value={totalVolume.value} suffix={totalVolume.metric} />
                   )}
+                </div>
+              </div>
+
+              <div className={ShipmentBadgeWrapperStyle}>
+                <Label>
+                  <FormattedMessage id="components.cards.ttlPkgs" defaultMessage="TTL PKGS" />
+                </Label>
+                <div className={ShipmentBadgeStyle('40px')}>
+                  <FormattedNumber value={totalPackageQuantity} />
                 </div>
               </div>
 

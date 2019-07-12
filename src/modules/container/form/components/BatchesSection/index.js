@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Batch } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
@@ -7,6 +8,7 @@ import { isNullOrUndefined } from 'utils/fp';
 import FormattedNumber from 'components/FormattedNumber';
 import { Tooltip } from 'components/Tooltip';
 import { SectionHeader, SectionWrapper } from 'components/Form';
+import SelectShipmentBatches from 'components/SelectShipmentBatches';
 import {
   calculatePackageQuantity,
   generateCloneBatch,
@@ -43,7 +45,7 @@ import { ContainerBatchesContainer } from 'modules/container/form/containers';
 import BatchFormInSlide from 'modules/batch/common/BatchFormInSlide';
 import SelectOrderItems from 'providers/SelectOrderItems';
 import { HIDE, NAVIGABLE } from 'modules/batch/constants';
-import SelectContainerBatches from '../SelectContainerBatches';
+
 import {
   BatchesSectionWrapperStyle,
   BatchesSectionBodyStyle,
@@ -153,7 +155,8 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                           onRequestClose={() => selectBatchesSlideToggle(false)}
                         >
                           {selectBatchesIsOpen && (
-                            <SelectContainerBatches
+                            <SelectShipmentBatches
+                              cacheKey="ContainerSelectBatches"
                               filter={{
                                 importerId,
                                 ...(exporterId ? { exporterId } : {}),
@@ -223,15 +226,15 @@ function BatchesSection({ containerIsArchived, isSlideView, importerId, exporter
                         >
                           {createBatchesIsOpen && (
                             <SelectOrderItems
+                              cacheKey="ContainerSelectOrderItems"
                               filter={{
                                 importerId,
                                 ...(exporterId ? { exporterId } : {}),
                               }}
                               onSelect={selectedOrderItems => {
-                                const createdBatches = selectedOrderItems.map(
+                                const createdBatches: Array<Batch> = selectedOrderItems.map(
                                   (orderItem, counter) => ({
                                     ...generateBatchByOrderItem(orderItem),
-                                    orderItem,
                                     no: `batch no ${batches.length + counter + 1}`,
                                     archived: orderItem.archived && containerIsArchived,
                                   })

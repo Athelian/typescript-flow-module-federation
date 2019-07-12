@@ -30,6 +30,7 @@ import {
   taskFormInTemplateFragment,
   itemInBatchFormFragment,
   forbiddenFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
 import {
@@ -41,7 +42,7 @@ import {
   parseParentIdField,
   parseArrayOfChildrenField,
   parseApprovalField,
-  parseRepresentativeBatchIndexField,
+  parseDefaultIndexField,
 } from 'utils/data';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 
@@ -83,6 +84,7 @@ export const updateContainerMutation = gql`
   ${itemInBatchFormFragment}
   ${partnerCardFragment}
   ${forbiddenFragment}
+  ${productProviderPackagingFragment}
 `;
 
 type UpdateContainerInputType = {
@@ -244,7 +246,7 @@ export const prepareParsedContainerInput = ({
       }),
       forceSendBatchIds
     ),
-    ...parseRepresentativeBatchIndexField(
+    ...parseDefaultIndexField(
       'representativeBatchIndex',
       getByPathWithDefault(null, 'representativeBatch', originalValues),
       newValues.representativeBatch,

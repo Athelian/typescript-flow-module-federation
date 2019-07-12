@@ -76,6 +76,11 @@ const ShipmentSummary = () => {
           0
         );
 
+        const totalPackageQuantity = batches.reduce(
+          (total, batch) => total + getByPathWithDefault(0, 'packageQuantity', batch),
+          0
+        );
+
         const currency = getByPath('0.orderItem.price.currency', batches);
         let totalPrice = 0;
         for (let i = 0; i < batches.length; i += 1) {
@@ -207,6 +212,21 @@ const ShipmentSummary = () => {
                 input={
                   <Display>
                     <FormattedNumber value={totalBatchQuantity} />
+                  </Display>
+                }
+              />
+              <FieldItem
+                label={
+                  <Label>
+                    <FormattedMessage
+                      id="modules.Shipments.totalPackages"
+                      defaultMessage="Total Packages"
+                    />
+                  </Label>
+                }
+                input={
+                  <Display>
+                    <FormattedNumber value={totalPackageQuantity} />
                   </Display>
                 }
               />

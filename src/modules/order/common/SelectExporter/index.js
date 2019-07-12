@@ -2,12 +2,13 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { Query } from 'react-apollo';
+import { partnersQuery } from 'graphql/partner/query';
 import { ObjectValue } from 'react-values';
 import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import { cleanUpData } from 'utils/data';
-import useSortAndFilter from 'hooks/useSortAndFilter';
-import PartnerListProvider from 'providers/PartnerList';
+import useFilter from 'hooks/useFilter';
 import Layout from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -18,6 +19,7 @@ import PartnerGridView from 'modules/partner/list/PartnerGridView';
 import messages from 'modules/partner/messages';
 
 type OptionalProps = {
+  cacheKey: string,
   isRequired: boolean,
   selected: {
     id: string,
@@ -36,6 +38,7 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
+  cacheKey: 'SelectExporter',
   isRequired: false,
 };
 
@@ -69,23 +72,22 @@ const chooseMessage = ({
   return selectMessage || warningMessage;
 };
 
-const getInitFilter = (): Object => {
-  return {
-    filter: {
-      types: ['Exporter'],
-    },
-    sort: {
-      field: 'updatedAt',
-      direction: 'DESCENDING',
-    },
-    page: 1,
-    perPage: 10,
-  };
+const getInitFilter = {
+  filter: {
+    types: ['Exporter'],
+  },
+  sort: {
+    field: 'updatedAt',
+    direction: 'DESCENDING',
+  },
+  page: 1,
+  perPage: 10,
 };
 
 const partnerPath = 'viewer.user.group.partners';
 
 const SelectExporter = ({
+  cacheKey,
   isRequired,
   selected,
   onCancel,
@@ -97,7 +99,7 @@ const SelectExporter = ({
   intl,
 }: Props) => {
   const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
-  const { filterAndSort, queryVariables, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(getInitFilter, cacheKey);
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
@@ -105,7 +107,7 @@ const SelectExporter = ({
     { title: intl.formatMessage(messages.code), value: 'code' },
   ];
   return (
-    <PartnerListProvider {...queryVariables}>
+    <Query fetchPolicy="network-only" query={partnersQuery} variables={queryVariables}>
       {({ loading, data, fetchMore, error }) => {
         if (error) {
           return error.message;
@@ -192,7 +194,7 @@ const SelectExporter = ({
           </ObjectValue>
         );
       }}
-    </PartnerListProvider>
+    </Query>
   );
 };
 

@@ -19,12 +19,16 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/order/messages';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import orderItemsQuery from 'providers/OrderItemsList/query';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import useFilter from 'hooks/useFilter';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import { ItemWrapperStyle } from './style';
 
-type Props = {
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
   filter: Object,
@@ -44,18 +48,17 @@ function initFilterBy(filter: Object) {
   };
 }
 
-function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
+function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const fields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
     { title: intl.formatMessage(messages.createdAtSort), value: 'createdAt' },
   ];
-  const {
-    filterAndSort: filtersAndSort,
-    queryVariables,
-    onChangeFilter: onChange,
-  } = useSortAndFilter(initFilterBy(filter));
+  const { filterAndSort: filtersAndSort, queryVariables, onChangeFilter: onChange } = useFilter(
+    initFilterBy(filter),
+    cacheKey
+  );
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
@@ -88,7 +91,7 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
   }
 
   return (
-    <ArrayValue defaultValue={[]}>
+    <ArrayValue>
       {({ value: selected, push, splice, filter: arrayValueFilter }) => (
         <Layout
           navBar={
@@ -228,5 +231,11 @@ function SelectOrderItems({ intl, onCancel, onSelect, filter }: Props) {
     </ArrayValue>
   );
 }
+
+const defaultProps = {
+  cacheKey: 'SelectOrderItems',
+};
+
+SelectOrderItems.defaultProps = defaultProps;
 
 export default injectIntl(SelectOrderItems);

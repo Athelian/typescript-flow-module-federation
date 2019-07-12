@@ -11,6 +11,7 @@ type Props = {
 
 type State = {
   activeNode: React.Node,
+  ratio: number,
 };
 
 class JumpToSection extends React.Component<Props, State> {
@@ -23,6 +24,7 @@ class JumpToSection extends React.Component<Props, State> {
 
   state = {
     activeNode: null,
+    ratio: 0,
   };
 
   io: IntersectionObserver;
@@ -57,7 +59,12 @@ class JumpToSection extends React.Component<Props, State> {
             target: { id: activeNode },
           } = activeSection;
           const ratio = intersectionRatio * 100;
-          if (ratio > 50 && this.isMountedOnDOM) this.setState(() => ({ activeNode }));
+          const { ratio: lastRadio } = this.state;
+          if (
+            (ratio > 50 || (intersectSections.length === 1 && ratio >= lastRadio)) &&
+            this.isMountedOnDOM
+          )
+            this.setState(() => ({ activeNode, ratio }));
         }
       },
       {

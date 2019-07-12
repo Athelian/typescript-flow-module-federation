@@ -5,8 +5,9 @@ import { BooleanValue, ObjectValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
-import { getByPath, isNullOrUndefined } from 'utils/fp';
+import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { getUniqueExporters } from 'utils/shipment';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
@@ -79,10 +80,10 @@ import { ShipmentActivateDialog, ShipmentArchiveDialog } from 'modules/shipment/
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
-import SelectImporter from '../SelectImporter';
-import SelectForwarders from '../SelectForwarders';
+import SelectPartners from 'components/SelectPartners';
+import SelectPartner from 'components/SelectPartner';
 import ShipmentSummary from './ShipmentSummary';
-import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
+import { renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,
@@ -505,6 +506,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
 
                 <GridColumn>
                   <UserAssignmentInputFactory
+                    cacheKey="ShipmentUserSelect"
                     name="inCharges"
                     groupIds={[
                       getByPath('importer.id', values),
@@ -599,7 +601,9 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                                 set: setSelectedImporter,
                                               }) => (
                                                 <>
-                                                  <SelectImporter
+                                                  <SelectPartner
+                                                    cacheKey="ShipmentSelectImporter"
+                                                    partnerTypes={['Importer']}
                                                     selected={values.importer}
                                                     onCancel={() => importerSelectorToggle(false)}
                                                     onSelect={selected => {
@@ -673,7 +677,10 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                           )}
                                         </BooleanValue>
                                       ) : (
-                                        <SelectImporter
+                                        // TODO: check again,really useful?
+                                        <SelectPartner
+                                          cacheKey="ShipmentSelectImporter"
+                                          partnerTypes={['Importer']}
                                           selected={values.importer}
                                           onCancel={() => importerSelectorToggle(false)}
                                           onSelect={selected => {
@@ -755,6 +762,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                         batchesContainer
                                       ) => (
                                         <SelectExporter
+                                          cacheKey="ShipmentSelectExporter"
                                           selected={values.exporter}
                                           onCancel={() => exporterSelectorToggle(false)}
                                           selectMessage={
@@ -855,8 +863,10 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                             </div>
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               {opened && (
-                                <SelectForwarders
-                                  selected={values.forwarders}
+                                <SelectPartners
+                                  cacheKey="ShipmentSelectForwarders"
+                                  partnerTypes={['Forwarder']}
+                                  selected={getByPathWithDefault([], 'forwarders', values)}
                                   onCancel={() => slideToggle(false)}
                                   onSelect={selected => {
                                     slideToggle(false);

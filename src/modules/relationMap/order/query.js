@@ -153,6 +153,17 @@ export const orderCardRMFragment = gql`
                     id
                   }
                 }
+                productProvider {
+                  ... on ProductProvider {
+                    id
+                    exporter {
+                      ... on Group {
+                        id
+                        name
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -171,6 +182,7 @@ export const shipmentCardRMFragment = gql`
     blNo
     booked
     transportType
+    totalPackageQuantity
     batchCount
     orderItemCount
     importer {
@@ -191,9 +203,6 @@ export const shipmentCardRMFragment = gql`
     }
     tags {
       ...tagFragment
-    }
-    inCharges {
-      ...userAvatarFragment
     }
     todo {
       taskCount {
@@ -267,6 +276,17 @@ export const shipmentCardRMFragment = gql`
             order {
               ... on Order {
                 id
+              }
+            }
+            productProvider {
+              ... on ProductProvider {
+                id
+                exporter {
+                  ... on Group {
+                    id
+                    name
+                  }
+                }
               }
             }
           }
@@ -377,6 +397,17 @@ export const shipmentListQuery = gql`
                   order {
                     ... on Order {
                       id
+                    }
+                  }
+                  productProvider {
+                    ... on ProductProvider {
+                      id
+                      exporter {
+                        ... on Group {
+                          id
+                          name
+                        }
+                      }
                     }
                   }
                 }

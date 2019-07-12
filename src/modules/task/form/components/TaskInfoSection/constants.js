@@ -9,10 +9,9 @@ export const DUE_DATE = 'TaskDueDate';
 export const PROJECT_DUE_DATE = 'ProjectDueDate';
 export const MILESTONE_DUE_DATE = 'MilestoneDueDate';
 const ORDER_ISSUED_AT = 'OrderIssuedAt';
-// TODO: hide on UI for API
-// const ORDER_DELIVERY_DATE = 'OrderDeliveryDate';
+const ORDER_DELIVERY_DATE = 'OrderDeliveryDate';
 const ORDER_ITEM_ISSUED_AT = 'OrderItemOrderIssuedAt';
-// const ORDER_ITEM_DELIVERY_DATE = 'OrderItemOrderDeliveryDate';
+const ORDER_ITEM_DELIVERY_DATE = 'OrderItemOrderDeliveryDate';
 const BATCH_DELIVERED_AT = 'BatchDeliveredAt';
 const BATCH_DESIRED_AT = 'BatchDesiredAt';
 const BATCH_PRODUCED_AT = 'BatchProducedAt';
@@ -35,10 +34,10 @@ export const orderBinding = (intl: IntlShape) => ({
     field: ORDER_ISSUED_AT,
     description: intl.formatMessage(orderMessages.date),
   },
-  // deliveryDate: {
-  //   field: ORDER_DELIVERY_DATE,
-  //   description: intl.formatMessage(orderMessages.deliveryDate),
-  // },
+  deliveryDate: {
+    field: ORDER_DELIVERY_DATE,
+    description: intl.formatMessage(orderMessages.deliveryDate),
+  },
 });
 
 export const orderItemBinding = (intl: IntlShape) => ({
@@ -46,10 +45,10 @@ export const orderItemBinding = (intl: IntlShape) => ({
     field: ORDER_ITEM_ISSUED_AT,
     description: intl.formatMessage(orderMessages.date),
   },
-  // deliveryDate: {
-  //   field: ORDER_ITEM_DELIVERY_DATE,
-  //   description: intl.formatMessage(orderMessages.deliveryDate),
-  // },
+  deliveryDate: {
+    field: ORDER_ITEM_DELIVERY_DATE,
+    description: intl.formatMessage(orderMessages.deliveryDate),
+  },
 });
 
 export const batchBinding = (intl: IntlShape) => ({

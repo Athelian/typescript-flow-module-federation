@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
+import OutsideClickHandler from 'components/OutsideClickHandler';
 import { PRODUCT_PROVIDER_GET } from 'modules/permission/constants/product';
 import {
   BATCH_UPDATE,
@@ -16,9 +17,8 @@ import {
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SyncButton } from 'components/Buttons';
-import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import { BatchInfoContainer } from 'modules/batch/form/containers';
-import { FormField, FormContainer } from 'modules/form';
+import { FormField } from 'modules/form';
 import GridColumn from 'components/GridColumn';
 import {
   SectionHeader,
@@ -27,7 +27,8 @@ import {
   NumberInputFactory,
   MetricInputFactory,
 } from 'components/Form';
-import { getByPath } from 'utils/fp';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
+import PackageSelection from './components/PackageSelection';
 import { PackagingSectionWrapperStyle } from './style';
 
 const PackagingSection = () => {
@@ -56,43 +57,43 @@ const PackagingSection = () => {
       >
         {allowSyncPackage && (
           <BooleanValue>
-            {({ value: syncDialogIsOpen, set: dialogToggle }) => (
-              <>
-                <SyncButton onClick={() => dialogToggle(true)} />
-                <Subscribe to={[BatchInfoContainer, FormContainer]}>
-                  {({ state, syncProductProvider }, { setFieldTouched }) => (
-                    <ConfirmDialog
-                      isOpen={syncDialogIsOpen}
-                      onRequestClose={() => dialogToggle(false)}
-                      onCancel={() => dialogToggle(false)}
-                      onConfirm={() => {
-                        if (state.orderItem && state.orderItem.productProvider) {
-                          syncProductProvider(state.orderItem.productProvider);
-                          setFieldTouched('packageName');
-                          setFieldTouched('packageCapacity');
-                          setFieldTouched('packageQuantity');
-                          setFieldTouched('packageGrossWeight');
-                          setFieldTouched('packageVolume');
-                          setFieldTouched('packageSize.length');
-                          setFieldTouched('packageSize.width');
-                          setFieldTouched('packageSize.height');
-                        }
-                        dialogToggle(false);
-                      }}
-                      message={
-                        <FormattedMessage
-                          id="modules.Batches.syncPackagingMessage"
-                          defaultMessage="Syncing the packaging data from the End Product will replace your current packaging values. Are you sure?"
+            {({ value: syncIsShow, set: syncToggle }) =>
+              !syncIsShow ? (
+                <SyncButton onClick={() => syncToggle(true)} />
+              ) : (
+                <Subscribe to={[BatchInfoContainer]}>
+                  {({ state: { orderItem }, syncPackaging }) => {
+                    return (
+                      <OutsideClickHandler
+                        onOutsideClick={() => syncToggle(false)}
+                        ignoreClick={false}
+                      >
+                        <PackageSelection
+                          items={getByPathWithDefault([], 'productProvider.packages', orderItem)}
+                          defaultPackaging={getByPathWithDefault(
+                            '',
+                            'productProvider.defaultPackage',
+                            orderItem
+                          )}
+                          onApply={pkgId => {
+                            syncToggle(false);
+                            syncPackaging(
+                              getByPathWithDefault([], 'productProvider.packages', orderItem).find(
+                                pkg => pkg.id === pkgId
+                              )
+                            );
+                          }}
                         />
-                      }
-                    />
-                  )}
+                      </OutsideClickHandler>
+                    );
+                  }}
                 </Subscribe>
-              </>
-            )}
+              )
+            }
           </BooleanValue>
         )}
       </SectionHeader>
+
       <div className={PackagingSectionWrapperStyle}>
         <Subscribe to={[BatchInfoContainer]}>
           {({
@@ -137,27 +138,23 @@ const PackagingSection = () => {
                   values={values}
                 >
                   {({ name, onBlur, ...inputHandlers }) => (
-                    <Subscribe to={[FormContainer]}>
-                      {({ setFieldTouched }) => (
-                        <NumberInputFactory
-                          name={name}
-                          {...inputHandlers}
-                          onBlur={evt => {
-                            onBlur(evt);
-                            setFieldValue('packageCapacity', inputHandlers.value);
-                            calculatePackageQuantity(setFieldTouched);
-                          }}
-                          originalValue={originalValues[name]}
-                          label={
-                            <FormattedMessage
-                              id="modules.Batches.packageCapacity"
-                              defaultMessage="PACKAGE CAPACITY"
-                            />
-                          }
-                          editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_CAPACITY)}
+                    <NumberInputFactory
+                      name={name}
+                      {...inputHandlers}
+                      onBlur={evt => {
+                        onBlur(evt);
+                        setFieldValue('packageCapacity', inputHandlers.value);
+                        calculatePackageQuantity();
+                      }}
+                      originalValue={originalValues[name]}
+                      label={
+                        <FormattedMessage
+                          id="modules.Batches.packageCapacity"
+                          defaultMessage="PACKAGE CAPACITY"
                         />
-                      )}
-                    </Subscribe>
+                      }
+                      editable={allowUpdate || hasPermission(BATCH_SET_PACKAGE_CAPACITY)}
+                    />
                   )}
                 </FormField>
 
@@ -260,7 +257,7 @@ const PackagingSection = () => {
                       }
                       showExtraToggleButton={allowAutoCalculatePackageVolume}
                       autoCalculateIsToggled={values.autoCalculatePackageVolume}
-                      onToggleAutoCalculate={() => toggleAutoCalculatePackageVolume()}
+                      onToggleAutoCalculate={toggleAutoCalculatePackageVolume}
                       autoCalculateToggleMessages={{
                         editable: {
                           on: (

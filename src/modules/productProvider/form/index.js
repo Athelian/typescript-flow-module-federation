@@ -79,18 +79,7 @@ class ProductProviderForm extends React.Component<Props> {
             <SpecificationsSection isNew={isNew} isOwner={isOwner} />
           </SectionWrapper>
 
-          <SectionWrapper id="productProvider_productProviderPackagingSection">
-            <SectionHeader
-              icon="PACKAGING"
-              title={
-                <FormattedMessage
-                  id="modules.ProductProviders.packaging"
-                  defaultMessage="PACKAGING"
-                />
-              }
-            />
-            <PackagingSection isNew={isNew} isOwner={isOwner} />
-          </SectionWrapper>
+          <PackagingSection />
 
           <SectionWrapper id="productProvider_documentsSection">
             <Subscribe to={[ProductProviderInfoContainer]}>
