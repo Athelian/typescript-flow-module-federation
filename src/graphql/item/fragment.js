@@ -160,6 +160,9 @@ export const itemInSelectorFragment = gql`
         defaultPackage {
           ...productProviderPackagingFragment
         }
+        packages {
+          ...productProviderPackagingFragment
+        }
         product {
           ... on Product {
             id
