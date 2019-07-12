@@ -11,6 +11,7 @@ import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import { Tooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { getUniqueExporters } from 'utils/shipment';
 import BaseCard from '../BaseCard';
 import {
   ShipmentCardWrapperStyle,
@@ -76,9 +77,12 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
   let remainingExporterCount = 0;
   if (exporter) {
     exporterName = exporter.name;
-  } else if (batches.length > 0) {
-    exporterName = getByPathWithDefault('', 'orderItem.productProvider.exporter.name', batches[0]);
-    remainingExporterCount = batchCount - 1;
+  } else {
+    const uniqueExporters = getUniqueExporters(batches);
+    if (uniqueExporters.length > 0) {
+      exporterName = uniqueExporters[0].name;
+      remainingExporterCount = uniqueExporters.length - 1;
+    }
   }
 
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
