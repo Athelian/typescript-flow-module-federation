@@ -7,7 +7,7 @@ import PackageSelection from './index';
 
 storiesOf('PackageSelection', module).add('with selected value', () => (
   <PackageSelection
-    selected={{
+    defaultPackaging={{
       id: 1,
     }}
     items={[

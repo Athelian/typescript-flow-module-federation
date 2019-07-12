@@ -3,36 +3,125 @@ import * as React from 'react';
 import type { ProductProviderPackagePayload } from 'generated/graphql';
 import { injectIntl, type IntlShape } from 'react-intl';
 import { getByPath } from 'utils/fp';
+import logger from 'utils/logger';
+import { useTextInput } from 'modules/form/hooks';
+import Icon from 'components/Icon';
+import { FieldItem, SelectInput, DefaultSelect, DefaultOptions } from 'components/Form';
 import { ApplyButton } from 'components/Buttons';
-import OutsideClickHandler from 'components/OutsideClickHandler';
+import { WrapperStyle, DefaultOptionStyle } from './style';
 
 type Props = {|
   intl: IntlShape,
   items: Array<ProductProviderPackagePayload>,
-  selected: ProductProviderPackagePayload,
-  onClose: () => void,
+  defaultPackaging: ProductProviderPackagePayload,
   onApply: (pkgId: string) => void,
 |};
 
-function PackageSelection({ intl, items, selected, onClose, onApply }: Props) {
-  const [selectedId, setSelectedId] = React.useState(getByPath('id', selected));
+function renderOptionValue({
+  items,
+  item,
+  intl,
+  defaultPackaging,
+}: {|
+  defaultPackaging: ProductProviderPackagePayload,
+  items: Array<ProductProviderPackagePayload>,
+  intl: IntlShape,
+  item: { label: string, value: string },
+|}) {
+  const pkg = items.find(currentPkg => getByPath('id', currentPkg) === getByPath('value', item));
+  const isDefault = getByPath('id', defaultPackaging) === getByPath('id', pkg);
   return (
-    <OutsideClickHandler onOutsideClick={onClose}>
-      <div>
-        <select value={selectedId} name="packing" onChange={evt => setSelectedId(evt.target.value)}>
-          {items.map(item => (
-            <option key={getByPath('id', item)} value={getByPath('id', item)}>
-              {getByPath('name', item) ||
-                intl.formatMessage({
-                  id: 'modules.ProductProviders.noPackageName',
-                  defaultMessage: 'No package name',
-                })}
-            </option>
-          ))}
-        </select>
-        <ApplyButton onClick={() => onApply(selectedId)} />
-      </div>
-    </OutsideClickHandler>
+    <div>
+      <span className={DefaultOptionStyle(isDefault)}>
+        <Icon icon="STAR" />
+      </span>
+      {item
+        ? item.label ||
+          intl.formatMessage({
+            id: 'modules.ProductProviders.noPackageName',
+            defaultMessage: 'No package name',
+          })
+        : ''}
+    </div>
+  );
+}
+
+function PackageSelection({ intl, items, defaultPackaging, onApply }: Props) {
+  const selectItems = items.map(item => ({
+    label: getByPath('name', item),
+    value: getByPath('id', item),
+  }));
+  const { hasError, isFocused, ...inputHandlers } = useTextInput(
+    getByPath('id', defaultPackaging),
+    {
+      isRequired: true,
+    }
+  );
+  return (
+    <div className={WrapperStyle}>
+      <FieldItem
+        input={
+          <SelectInput
+            {...inputHandlers}
+            name="defaultPackaging"
+            items={selectItems}
+            itemToString={item =>
+              item
+                ? item.label ||
+                  intl.formatMessage({
+                    id: 'modules.ProductProviders.noPackageName',
+                    defaultMessage: 'No package name',
+                  })
+                : ''
+            }
+            itemToValue={item => (item ? item.value : '')}
+            inputValue={inputHandlers.value}
+            renderSelect={({ ...selectProps }) => (
+              <DefaultSelect
+                {...selectProps}
+                hideClearIcon
+                hasError={hasError}
+                itemToString={item =>
+                  item
+                    ? item.label ||
+                      intl.formatMessage({
+                        id: 'modules.ProductProviders.noPackageName',
+                        defaultMessage: 'No package name',
+                      })
+                    : ''
+                }
+                itemToValue={item => (item ? item.value : '')}
+                isOpen={isFocused}
+                width="200px"
+                align="left"
+              />
+            )}
+            renderOptions={({ ...optionProps }) => (
+              <DefaultOptions
+                {...optionProps}
+                itemToString={item => renderOptionValue({ intl, item, items, defaultPackaging })}
+                itemToValue={item => (item ? item.value : '')}
+                items={selectItems}
+                width="200px"
+                align="left"
+              />
+            )}
+            onChange={(item: ?{ value: string }) => {
+              logger.warn('SelectInput onChange', item);
+              inputHandlers.onChange({
+                currentTarget: {
+                  value: item && item.value,
+                },
+              });
+            }}
+            onBlur={() => {
+              logger.warn('SelectInput onBlur', inputHandlers.value);
+            }}
+          />
+        }
+      />
+      <ApplyButton onClick={() => onApply(inputHandlers.value)} />
+    </div>
   );
 }
 

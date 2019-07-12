@@ -65,12 +65,11 @@ const PackagingSection = () => {
                     return (
                       <PackageSelection
                         items={getByPathWithDefault([], 'productProvider.packages', orderItem)}
-                        selected={getByPathWithDefault(
+                        defaultPackaging={getByPathWithDefault(
                           '',
                           'productProvider.defaultPackage',
                           orderItem
                         )}
-                        onClose={() => syncToggle(false)}
                         onApply={pkgId => {
                           syncToggle(false);
                           syncPackaging(

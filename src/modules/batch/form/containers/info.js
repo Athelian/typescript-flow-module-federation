@@ -130,13 +130,6 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
   syncPackaging = (pkg: ProductProviderPackagePayload) => {
     this.setState(prevState =>
       update(prevState, {
-        orderItem: {
-          productProvider: {
-            defaultPackage: {
-              $set: pkg,
-            },
-          },
-        },
         packageCapacity: { $set: getByPath('capacity', pkg) },
         packageName: { $set: getByPath('name', pkg) },
         packageGrossWeight: { $set: getByPath('grossWeight', pkg) },

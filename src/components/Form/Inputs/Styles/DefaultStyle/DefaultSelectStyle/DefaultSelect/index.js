@@ -18,6 +18,7 @@ type OptionalProps = {
   height: string,
   align: 'left' | 'right' | 'center',
   hideDropdownArrow: boolean,
+  hideClearIcon: boolean,
   placeholder: ?string,
 };
 
@@ -37,6 +38,7 @@ const defaultProps = {
   height: '30px',
   align: 'right',
   hideDropdownArrow: false,
+  hideClearIcon: false,
   placeholder: null,
 };
 
@@ -57,6 +59,7 @@ function DefaultSelect({
   getInputProps,
   itemToString,
   hideDropdownArrow,
+  hideClearIcon,
   placeholder,
   ...rest
 }: Props) {
@@ -73,12 +76,12 @@ function DefaultSelect({
       })}
       style={{ cursor: 'pointer' }}
     >
-      {align === 'right' && !required && selectedItem && (
+      {align === 'right' && !required && selectedItem && !hideClearIcon && (
         <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
           <Icon icon="CLEAR" />
         </button>
       )}
-      {align === 'right' && !selectedItem && !hideDropdownArrow && (
+      {align === 'right' && !hideDropdownArrow && (
         <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
           <Icon icon="CHEVRON_DOWN" />
         </button>
@@ -98,12 +101,12 @@ function DefaultSelect({
         }
         {...rest}
       />
-      {align === 'left' && !required && selectedItem && (
+      {align === 'left' && !required && selectedItem && !hideClearIcon && (
         <button type="button" onClick={clearSelection} className={ClearButtonStyle}>
           <Icon icon="CLEAR" />
         </button>
       )}
-      {align === 'left' && !selectedItem && !hideDropdownArrow && (
+      {align === 'left' && !hideDropdownArrow && (
         <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
           <Icon icon="CHEVRON_DOWN" />
         </button>
