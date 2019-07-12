@@ -121,7 +121,7 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
                         onSelect={() => {
                           if (isSelected) {
                             filter(({ id }) => id !== item.id);
-                          } else {
+                          } else if (values.length < MAX_SELECTIONS) {
                             push(item);
                           }
                         }}
