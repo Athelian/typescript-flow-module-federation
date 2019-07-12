@@ -70,7 +70,16 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
     containerTypeCounts,
     voyages,
     totalPackageQuantity,
+    batches,
   } = shipment;
+  let exporterName = '';
+  let remainingExporterCount = 0;
+  if (exporter) {
+    exporterName = exporter.name;
+  } else if (batches.length > 0) {
+    exporterName = getByPathWithDefault('', 'orderItem.productProvider.exporter.name', batches[0]);
+    remainingExporterCount = batchCount - 1;
+  }
 
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
   sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
@@ -121,7 +130,15 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                 <div className={ShipmentExporterIconStyle}>
                   <Icon icon="EXPORTER" />
                 </div>
-                <div className={ShipmentExporterStyle}>{exporter && exporter.name}</div>
+                <div className={ShipmentExporterStyle}>
+                  {exporterName}
+                  {remainingExporterCount !== 0 && (
+                    <span>
+                      +
+                      <FormattedNumber value={remainingExporterCount} />
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
