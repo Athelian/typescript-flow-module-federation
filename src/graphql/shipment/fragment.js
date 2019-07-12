@@ -214,22 +214,6 @@ export const shipmentCardFragment = gql`
     batches {
       ... on Batch {
         id
-        orderItem {
-          ... on OrderItem {
-            id
-            productProvider {
-              ... on ProductProvider {
-                id
-                exporter {
-                  ... on Group {
-                    id
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }

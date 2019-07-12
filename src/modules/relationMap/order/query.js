@@ -153,17 +153,6 @@ export const orderCardRMFragment = gql`
                     id
                   }
                 }
-                productProvider {
-                  ... on ProductProvider {
-                    id
-                    exporter {
-                      ... on Group {
-                        id
-                        name
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -278,17 +267,6 @@ export const shipmentCardRMFragment = gql`
                 id
               }
             }
-            productProvider {
-              ... on ProductProvider {
-                id
-                exporter {
-                  ... on Group {
-                    id
-                    name
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -397,17 +375,6 @@ export const shipmentListQuery = gql`
                   order {
                     ... on Order {
                       id
-                    }
-                  }
-                  productProvider {
-                    ... on ProductProvider {
-                      id
-                      exporter {
-                        ... on Group {
-                          id
-                          name
-                        }
-                      }
                     }
                   }
                 }
