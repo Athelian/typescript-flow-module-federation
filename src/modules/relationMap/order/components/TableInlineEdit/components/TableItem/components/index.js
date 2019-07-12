@@ -6,7 +6,6 @@ import InlineDateInput from './InlineDateInput';
 import InlineSearchEnumInput from './InlineSearchEnumInput';
 import InlineInChargeInput from './InlineInChargeInput';
 import InlineTagInput from './InlineTagInput';
-import InlineProductProvider from './InlineProductProvider';
 import InlineMetricInput from './InlineMetricInput';
 import InlineForwarderInput from './InlineForwarderInput';
 import InlineTimeLineInput from './InlineTimeLineInput';
@@ -25,7 +24,6 @@ export {
   InlineSearchEnumInput,
   InlineInChargeInput,
   InlineTagInput,
-  InlineProductProvider,
   InlineMetricInput,
   InlineForwarderInput,
   InlineTimeLineInput,
