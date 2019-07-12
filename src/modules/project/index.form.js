@@ -15,12 +15,12 @@ import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryForm from 'components/common/QueryForm';
-import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
+import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
-import { projectTimelineQuery } from './query';
+import { projectExportQuery, projectTimelineQuery } from './query';
 import ProjectForm from './form';
 import validator from './form/validator';
 import {
@@ -336,6 +336,13 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                     );
                                     this.onDeleteTask(projectMilestonesState.deleteTasks);
                                   }}
+                                />
+                              )}
+                              {projectId && !isDirty && !isNew && (
+                                <ExportButton
+                                  type="Project"
+                                  exportQuery={projectExportQuery}
+                                  variables={{ id: decodeId(projectId) }}
                                 />
                               )}
                             </>
