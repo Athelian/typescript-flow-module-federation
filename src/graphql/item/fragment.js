@@ -218,6 +218,9 @@ export const itemInOrderFormFragment = gql`
         defaultPackage {
           ...productProviderPackagingFragment
         }
+        packages {
+          ...productProviderPackagingFragment
+        }
         unitPrice {
           ...priceFragment
         }
@@ -277,6 +280,9 @@ export const itemInBatchFormFragment = gql`
           ...partnerCardFragment
         }
         defaultPackage {
+          ...productProviderPackagingFragment
+        }
+        packages {
           ...productProviderPackagingFragment
         }
         product {

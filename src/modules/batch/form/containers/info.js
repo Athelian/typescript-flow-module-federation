@@ -1,6 +1,6 @@
 // @flow
 import type {
-  // ProductProviderPayload,
+  ProductProviderPackagePayload,
   MetricValue,
   Size,
   TaskPayload,
@@ -9,10 +9,11 @@ import type {
   BatchQuantityRevisionPayload,
 } from 'generated/graphql';
 import { Container } from 'unstated';
+import update from 'immutability-helper';
 import { set, cloneDeep } from 'lodash';
-import { isEquals } from 'utils/fp';
+import { getByPath, isEquals } from 'utils/fp';
 import { cleanFalsyAndTypeName } from 'utils/data';
-// import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
+import { calculatePackageQuantity, calculateVolume } from 'utils/batch';
 import { defaultDistanceMetric, defaultVolumeMetric, defaultWeightMetric } from 'utils/metric';
 
 export type BatchFormState = {
@@ -126,86 +127,78 @@ export default class BatchInfoContainer extends Container<BatchFormState> {
     });
   };
 
-  // syncProductProvider = (productProvider: ProductProviderPayload) => {
-  //   const { quantity, batchQuantityRevisions } = this.state;
-  //   const {
-  //     packageName,
-  //     packageCapacity = 0,
-  //     packageGrossWeight = { value: 0, metric: defaultWeightMetric },
-  //     packageVolume = { value: 0, metric: defaultVolumeMetric },
-  //     packageSize = {
-  //       width: {
-  //         metric: defaultDistanceMetric,
-  //         value: 0,
-  //       },
-  //       height: {
-  //         metric: defaultDistanceMetric,
-  //         value: 0,
-  //       },
-  //       length: {
-  //         metric: defaultDistanceMetric,
-  //         value: 0,
-  //       },
-  //     },
-  //   } = productProvider;
+  syncPackaging = (pkg: ProductProviderPackagePayload) => {
+    this.setState(prevState =>
+      update(prevState, {
+        orderItem: {
+          productProvider: {
+            defaultPackage: {
+              $set: pkg,
+            },
+          },
+        },
+        packageCapacity: { $set: getByPath('capacity', pkg) },
+        packageName: { $set: getByPath('name', pkg) },
+        packageGrossWeight: { $set: getByPath('grossWeight', pkg) },
+        packageSize: { $set: getByPath('size', pkg) },
+        autoCalculatePackageVolume: { $set: getByPath('autoCalculateVolume', pkg) },
+        packageVolume: {
+          $set: getByPath('autoCalculateVolume', pkg)
+            ? calculateVolume(getByPath('volume', pkg), getByPath('size', pkg))
+            : getByPath('volume', pkg),
+        },
+        packageQuantity: {
+          $set: prevState.autoCalculatePackageQuantity
+            ? calculatePackageQuantity({
+                ...prevState,
+                packageCapacity: getByPath('capacity', pkg),
+              })
+            : prevState.packageQuantity,
+        },
+      })
+    );
+  };
 
-  //   this.setState(prevState => ({
-  //     packageName,
-  //     packageCapacity,
-  //     packageQuantity: prevState.autoCalculatePackageQuantity
-  //       ? calculatePackageQuantity({ quantity, batchQuantityRevisions, packageCapacity })
-  //       : prevState.packageQuantity,
-  //     packageGrossWeight,
-  //     packageVolume,
-  //     packageSize,
-  //   }));
-  // };
+  toggleAutoCalculatePackageQuantity = () => {
+    const { autoCalculatePackageQuantity } = this.state;
+    if (autoCalculatePackageQuantity) {
+      this.setState({
+        autoCalculatePackageQuantity: false,
+      });
+    } else {
+      this.setState(prevState => ({
+        autoCalculatePackageQuantity: true,
+        packageQuantity: calculatePackageQuantity(prevState),
+      }));
+    }
+  };
 
-  // getPackageQuantity = () => calculatePackageQuantity(this.state);
+  calculatePackageQuantity = () => {
+    const { autoCalculatePackageQuantity } = this.state;
+    if (autoCalculatePackageQuantity) {
+      this.setState(prevState => ({
+        packageQuantity: calculatePackageQuantity(prevState),
+      }));
+    }
+  };
 
-  // toggleAutoCalculatePackageQuantity = () => {
-  //   const { autoCalculatePackageQuantity } = this.state;
-  //   if (autoCalculatePackageQuantity) {
-  //     this.setState({
-  //       autoCalculatePackageQuantity: false,
-  //     });
-  //   } else {
-  //     this.setState(prevState => ({
-  //       autoCalculatePackageQuantity: true,
-  //       packageQuantity: calculatePackageQuantity(prevState),
-  //     }));
-  //   }
-  // };
+  toggleAutoCalculatePackageVolume = () => {
+    const { autoCalculatePackageVolume } = this.state;
+    if (!autoCalculatePackageVolume) {
+      this.setState(prevState => ({
+        packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      }));
+    } else {
+      this.setState({
+        autoCalculatePackageVolume: !autoCalculatePackageVolume,
+      });
+    }
+  };
 
-  // calculatePackageQuantity = (setFieldTouched?: Function) => {
-  //   const { autoCalculatePackageQuantity } = this.state;
-  //   if (autoCalculatePackageQuantity) {
-  //     this.setState(prevState => ({
-  //       packageQuantity: calculatePackageQuantity(prevState),
-  //     }));
-  //     if (setFieldTouched) {
-  //       setFieldTouched('packageQuantity');
-  //     }
-  //   }
-  // };
-
-  // toggleAutoCalculatePackageVolume = () => {
-  //   const { autoCalculatePackageVolume } = this.state;
-  //   if (!autoCalculatePackageVolume) {
-  //     this.setState(prevState => ({
-  //       packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
-  //       autoCalculatePackageVolume: !autoCalculatePackageVolume,
-  //     }));
-  //   } else {
-  //     this.setState({
-  //       autoCalculatePackageVolume: !autoCalculatePackageVolume,
-  //     });
-  //   }
-  // };
-
-  // calculatePackageVolume = () => {
-  //   this.setState(prevState => ({
-  //     packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
-  //   }));
-  // };
+  calculatePackageVolume = () => {
+    this.setState(prevState => ({
+      packageVolume: calculateVolume(prevState.packageVolume, prevState.packageSize),
+    }));
+  };
 }
