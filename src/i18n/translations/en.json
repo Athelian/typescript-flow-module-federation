@@ -111,7 +111,7 @@
   "components.form.days": "Days",
   "components.numberRangeInput.min": "MIN",
   "components.numberRangeInput.max": "MAX",
-  "components.form.updatedAt": "LAST MODIFIED",
+  "components.form.updatedAt": "Last Modified",
   "components.form.archived": "Archived",
   "components.form.active": "Active",
   "components.inputs.approved": "APPROVED",

@@ -93,7 +93,7 @@
     "translate:clean": "rimraf node_modules/.cache/",
     "translate": "npm-run-all translate:clean build:stg translate:generate",
     "translate:generate": "cross-env NODE_ENV=production babel-node --no-babelrc --presets=@babel/preset-env scripts/translate.js",
-    "check:quality": "npx jsinspect -t 50 src",
+    "check:quality": "npx jscpd src",
     "storybook": "start-storybook -p 6006",
     "build:storybook": "build-storybook",
     "gql-gen": "graphql-codegen --config codegen.yml"

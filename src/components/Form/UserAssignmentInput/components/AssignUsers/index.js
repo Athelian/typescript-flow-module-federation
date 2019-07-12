@@ -38,24 +38,6 @@ const defaultProps = {
 
 const MAX_SELECTIONS = 5;
 
-function onAssignUsers({
-  selected,
-  item,
-  push,
-  set,
-}: {
-  selected: Array<UserAvatarType>,
-  item: UserAvatarType,
-  push: Function,
-  set: Function,
-}) {
-  if (!selected.includes(item)) {
-    if (selected.length < MAX_SELECTIONS) push(item);
-  } else {
-    set(selected.filter((orderItem: Object) => orderItem.id !== item.id));
-  }
-}
-
 const selectedItems = (
   selected: Array<{ id: string, firstName: string, lastName: string }>,
   items: Array<Object>
@@ -104,7 +86,7 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
           <ArrayValue
             defaultValue={selectedItems(selected, getByPathWithDefault([], 'users.nodes', data))}
           >
-            {({ value: values, push, set }) => (
+            {({ value: values, push, filter }) => (
               <Layout
                 navBar={
                   <SlideViewNavBar>
@@ -131,15 +113,24 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
                   isLoading={loading}
                   onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'users')}
                   items={getByPathWithDefault([], 'users.nodes', data)}
-                  renderItem={item => (
-                    <StaffCard
-                      staff={item}
-                      onSelect={() => onAssignUsers({ selected: values, item, push, set })}
-                      selectable
-                      selected={values.includes(item)}
-                      key={item.id}
-                    />
-                  )}
+                  renderItem={item => {
+                    const isSelected = values.map(({ id }) => id).includes(item.id);
+                    return (
+                      <StaffCard
+                        staff={item}
+                        onSelect={() => {
+                          if (isSelected) {
+                            filter(({ id }) => id !== item.id);
+                          } else if (values.length < MAX_SELECTIONS) {
+                            push(item);
+                          }
+                        }}
+                        selectable
+                        selected={isSelected}
+                        key={item.id}
+                      />
+                    );
+                  }}
                 />
               </Layout>
             )}

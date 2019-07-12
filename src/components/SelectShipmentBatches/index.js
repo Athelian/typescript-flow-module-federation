@@ -19,10 +19,14 @@ import { SaveButton, CancelButton } from 'components/Buttons';
 import { getByPathWithDefault } from 'utils/fp';
 import { removeTypename } from 'utils/data';
 import messages from 'modules/batch/messages';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import useFilter from 'hooks/useFilter';
 import { selectBatchListQuery } from './query';
 
-type Props = {
+type OptionalProps = {
+  cacheKey: string,
+};
+
+type Props = OptionalProps & {
   onCancel: Function,
   onSelect: Function,
   intl: IntlShape,
@@ -42,25 +46,14 @@ const getInitFilter = (filter: Object) => ({
   sort: { field: 'updatedAt', direction: 'DESCENDING' },
 });
 
-function onSelectBatch({
-  selected,
-  item,
-  onPush,
-  onSet,
-}: {
-  selected: Array<Object>,
-  item: Object,
-  onPush: Function,
-  onSet: Function,
-}) {
-  if (!selected.includes(item)) {
-    onPush(item);
-  } else {
-    onSet(selected.filter((batchItem: Object) => batchItem.id !== item.id));
-  }
-}
-
-function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, filter }: Props) {
+function SelectShipmentBatches({
+  intl,
+  cacheKey,
+  onCancel,
+  onSelect,
+  selectedBatches,
+  filter,
+}: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const viewPrice = hasPermission(ORDER_ITEMS_GET_PRICE);
@@ -77,11 +70,10 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
     { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
-  const {
-    filterAndSort: filtersAndSort,
-    queryVariables,
-    onChangeFilter: onChange,
-  } = useSortAndFilter(getInitFilter(filter));
+  const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
+    getInitFilter(filter),
+    cacheKey
+  );
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
@@ -115,18 +107,18 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
 
   return (
     <ArrayValue>
-      {({ value: selected, push: onPush, set: onSet }) => (
+      {({ value: selected, push, filter: arrayValueFilter }) => (
         <Layout
           navBar={
             <SlideViewNavBar>
               <EntityIcon icon="BATCH" color="BATCH" />
               <SortInput
-                sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
-                ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+                sort={fields.find(item => item.value === filterAndSort.sort.field) || fields[0]}
+                ascending={filterAndSort.sort.direction !== 'DESCENDING'}
                 fields={fields}
                 onChange={({ field: { value }, ascending }) =>
-                  onChange({
-                    ...filtersAndSort,
+                  onChangeFilter({
+                    ...filterAndSort,
                     sort: {
                       field: value,
                       direction: ascending ? 'ASCENDING' : 'DESCENDING',
@@ -135,18 +127,18 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
                 }
               />
               <SearchInput
-                value={filtersAndSort.filter.query}
+                value={filterAndSort.filter.query}
                 name="search"
                 onClear={() =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: '' },
+                  onChangeFilter({
+                    ...filterAndSort,
+                    filter: { ...filterAndSort.filter, query: '' },
                   })
                 }
                 onChange={newQuery =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: newQuery },
+                  onChangeFilter({
+                    ...filterAndSort,
+                    filter: { ...filterAndSort.filter, query: newQuery },
                   })
                 }
               />
@@ -199,19 +191,28 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
             }}
             hasMore={hasMore}
             isLoading={isLoading && batches.length === 0}
-            renderItem={item => (
-              <ShipmentBatchCard
-                key={item.id}
-                batch={item}
-                selectable
-                selected={selected.includes(item)}
-                onSelect={() => onSelectBatch({ selected, item, onPush, onSet })}
-                viewable={{
-                  price: viewPrice,
-                  tasks: viewTasks,
-                }}
-              />
-            )}
+            renderItem={item => {
+              const isSelected = selected.map(({ id }) => id).includes(item.id);
+              return (
+                <ShipmentBatchCard
+                  key={item.id}
+                  batch={item}
+                  selectable
+                  selected={isSelected}
+                  onSelect={() => {
+                    if (isSelected) {
+                      arrayValueFilter(({ id }) => id !== item.id);
+                    } else {
+                      push(item);
+                    }
+                  }}
+                  viewable={{
+                    price: viewPrice,
+                    tasks: viewTasks,
+                  }}
+                />
+              );
+            }}
           />
           {isLoading && batches.length > 0 && <LoadingIcon />}
         </Layout>
@@ -220,4 +221,10 @@ function SelectContainerBatches({ intl, onCancel, onSelect, selectedBatches, fil
   );
 }
 
-export default injectIntl(SelectContainerBatches);
+const defaultProps = {
+  cacheKey: 'SelectShipmentBatches',
+};
+
+SelectShipmentBatches.defaultProps = defaultProps;
+
+export default injectIntl(SelectShipmentBatches);
