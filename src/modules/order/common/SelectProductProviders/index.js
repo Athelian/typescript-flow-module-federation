@@ -42,7 +42,7 @@ const defaultProps = {
 const countSelected = (selected: Array<OrderItem> = [], value: OrderItem) =>
   selected.filter(item => item.id === value.id).length;
 
-function SelectProducts({
+function SelectProductProviders({
   intl,
   onCancel,
   onSelect,
@@ -118,7 +118,7 @@ function SelectProducts({
                     </div>
                     <CancelButton onClick={onCancel} />
                     <SaveButton
-                      data-testid="btnSaveSelectProducts"
+                      data-testid="btnSaveSelectProductProviders"
                       disabled={selected.length === 0}
                       onClick={() => onSelect(removeTypename(selected))}
                     />
@@ -178,6 +178,6 @@ function SelectProducts({
   );
 }
 
-SelectProducts.defaultProps = defaultProps;
+SelectProductProviders.defaultProps = defaultProps;
 
-export default injectIntl(SelectProducts);
+export default injectIntl(SelectProductProviders);
