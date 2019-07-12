@@ -34,6 +34,7 @@ export const tagFragment = gql`
     id
     name
     color
+    entityTypes
   }
 `;
 
