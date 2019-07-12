@@ -1,13 +1,12 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  tagFragment,
   imageFragment,
-  priceFragment,
   partnerNameFragment,
   metricFragment,
   sizeFragment,
   taskCountFragment,
+  productProviderPackagingFragment,
 } from 'graphql';
 
 // only for order form "NEW ITEMS"
@@ -43,20 +42,11 @@ const productProviderCardFragment = gql`
         }
       }
     }
-    # TODO: remove old field
-    packageName
-    packageCapacity
-    packageGrossWeight {
-      ...metricFragment
+    defaultPackage {
+      ...productProviderPackagingFragment
     }
-    packageVolume {
-      ...metricFragment
-    }
-    packageSize {
-      ...sizeFragment
-    }
-    unitPrice {
-      ...priceFragment
+    packages {
+      ...productProviderPackagingFragment
     }
     todo {
       taskCount {
@@ -83,10 +73,9 @@ export const productProvidersListQuery = gql`
   }
 
   ${productProviderCardFragment}
+  ${productProviderPackagingFragment}
   ${partnerNameFragment}
-  ${tagFragment}
   ${imageFragment}
-  ${priceFragment}
   ${metricFragment}
   ${sizeFragment}
   ${taskCountFragment}
