@@ -116,6 +116,9 @@ export const productProviderCardFragment = gql`
     defaultPackage {
       ...productProviderPackagingFragment
     }
+    packages {
+      ...productProviderPackagingFragment
+    }
     todo {
       taskCount {
         ...taskCountFragment
