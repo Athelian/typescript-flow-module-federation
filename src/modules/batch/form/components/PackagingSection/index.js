@@ -3,6 +3,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import { Subscribe } from 'unstated';
+import OutsideClickHandler from 'components/OutsideClickHandler';
 import { PRODUCT_PROVIDER_GET } from 'modules/permission/constants/product';
 import {
   BATCH_UPDATE,
@@ -63,22 +64,27 @@ const PackagingSection = () => {
                 <Subscribe to={[BatchInfoContainer]}>
                   {({ state: { orderItem }, syncPackaging }) => {
                     return (
-                      <PackageSelection
-                        items={getByPathWithDefault([], 'productProvider.packages', orderItem)}
-                        defaultPackaging={getByPathWithDefault(
-                          '',
-                          'productProvider.defaultPackage',
-                          orderItem
-                        )}
-                        onApply={pkgId => {
-                          syncToggle(false);
-                          syncPackaging(
-                            getByPathWithDefault([], 'productProvider.packages', orderItem).find(
-                              pkg => pkg.id === pkgId
-                            )
-                          );
-                        }}
-                      />
+                      <OutsideClickHandler
+                        onOutsideClick={() => syncToggle(false)}
+                        ignoreClick={false}
+                      >
+                        <PackageSelection
+                          items={getByPathWithDefault([], 'productProvider.packages', orderItem)}
+                          defaultPackaging={getByPathWithDefault(
+                            '',
+                            'productProvider.defaultPackage',
+                            orderItem
+                          )}
+                          onApply={pkgId => {
+                            syncToggle(false);
+                            syncPackaging(
+                              getByPathWithDefault([], 'productProvider.packages', orderItem).find(
+                                pkg => pkg.id === pkgId
+                              )
+                            );
+                          }}
+                        />
+                      </OutsideClickHandler>
                     );
                   }}
                 </Subscribe>
@@ -87,6 +93,7 @@ const PackagingSection = () => {
           </BooleanValue>
         )}
       </SectionHeader>
+
       <div className={PackagingSectionWrapperStyle}>
         <Subscribe to={[BatchInfoContainer]}>
           {({
