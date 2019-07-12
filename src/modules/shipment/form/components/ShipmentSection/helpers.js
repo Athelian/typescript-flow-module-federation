@@ -1,21 +1,9 @@
 // @flow
 import * as React from 'react';
-import { uniqBy } from 'lodash';
-import { getByPathWithDefault } from 'utils/fp';
 import { PartnerCard, GrayCard } from 'components/Cards';
 import GridRow from 'components/GridRow';
 import GridColumn from 'components/GridColumn';
 import { DashedPlusButton } from 'components/Form';
-
-export const getUniqueExporters = (batches: Array<Object>) => {
-  // $FlowFixMe need to change type from lodash
-  const uniqueExporters = uniqBy(
-    batches.map(batch => getByPathWithDefault({}, 'orderItem.productProvider.exporter', batch)),
-    'id'
-  );
-
-  return uniqueExporters;
-};
 
 export const renderExporters = (exporters: Array<Object>) => {
   const numOfExporters = exporters.length;

@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import emitter from 'utils/emitter';
 import { getByPath, getByPathWithDefault, isNullOrUndefined } from 'utils/fp';
 import { encodeId } from 'utils/id';
+import { getUniqueExporters } from 'utils/shipment';
 import useUser from 'hooks/useUser';
 import usePermission from 'hooks/usePermission';
 import { STAFF_LIST } from 'modules/permission/constants/staff';
@@ -82,7 +83,7 @@ import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
 import ShipmentSummary from './ShipmentSummary';
-import { getUniqueExporters, renderExporters, renderForwarders } from './helpers';
+import { renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
   MainFieldsWrapperStyle,

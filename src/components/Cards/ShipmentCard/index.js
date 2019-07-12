@@ -11,6 +11,7 @@ import withForbiddenCard from 'hoc/withForbiddenCard';
 import { HorizontalLayout } from 'modules/shipment/form/components/TimelineSection/components/Timeline';
 import { Tooltip } from 'components/Tooltip';
 import { CONTAINER_TYPE_ITEMS } from 'modules/container/constants';
+import { getUniqueExporters } from 'utils/shipment';
 import BaseCard from '../BaseCard';
 import {
   ShipmentCardWrapperStyle,
@@ -70,7 +71,19 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
     containerTypeCounts,
     voyages,
     totalPackageQuantity,
+    batches,
   } = shipment;
+  let exporterName = '';
+  let remainingExporterCount = 0;
+  if (exporter) {
+    exporterName = exporter.name;
+  } else {
+    const uniqueExporters = getUniqueExporters(batches);
+    if (uniqueExporters.length > 0) {
+      exporterName = uniqueExporters[0].name;
+      remainingExporterCount = uniqueExporters.length - 1;
+    }
+  }
 
   const sortedContainerTypes = containerTypeCounts ? [...containerTypeCounts] : [];
   sortedContainerTypes.sort((firstContainerType, secondContainerType) => {
@@ -121,7 +134,15 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                 <div className={ShipmentExporterIconStyle}>
                   <Icon icon="EXPORTER" />
                 </div>
-                <div className={ShipmentExporterStyle}>{exporter && exporter.name}</div>
+                <div className={ShipmentExporterStyle}>
+                  {exporterName}
+                  {remainingExporterCount !== 0 && (
+                    <span>
+                      +
+                      <FormattedNumber value={remainingExporterCount} />
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

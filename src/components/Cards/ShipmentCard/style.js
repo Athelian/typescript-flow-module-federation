@@ -124,6 +124,10 @@ export const ShipmentExporterStyle: string = css`
   ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
   width: 120px;
+
+  & > span {
+    float: right;
+  }
 `;
 
 export const ShipmentDataWrapperStyle: string = css`
