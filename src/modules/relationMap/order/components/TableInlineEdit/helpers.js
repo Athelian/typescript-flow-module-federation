@@ -253,6 +253,10 @@ export const parseChangedData = ({
             changedOrder[key] = updateValue ? new Date(updateValue) : null;
             break;
           }
+          case 'deliveryDate': {
+            changedOrder[key] = updateValue ? new Date(updateValue) : null;
+            break;
+          }
 
           case 'inCharges':
             changedOrder.inChargeIds = updateValue.map(({ id: userId }) => userId);

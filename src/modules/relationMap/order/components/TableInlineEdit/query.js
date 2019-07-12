@@ -22,6 +22,7 @@ export const orderEntityFragment = gql`
     poNo
     piNo
     issuedAt
+    deliveryDate
     importer {
       ...partnerCardFragment
     }
