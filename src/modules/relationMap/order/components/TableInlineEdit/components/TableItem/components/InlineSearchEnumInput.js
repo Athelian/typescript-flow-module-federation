@@ -34,14 +34,33 @@ const defaultProps = {
 
 export default function InlineSearchEnumInput({ name, value, enumType, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
+  const [isValidEnum, setInValidEnum] = React.useState(false);
+
+  React.useEffect(() => {
+    // clear data when the enum is not valid
+    if (!isValidEnum && !isFocused) {
+      logger.warn('reset enum data');
+      emitter.emit('INLINE_CHANGE', {
+        name,
+        hasError: !!isRequired,
+        value,
+      });
+      setTimeout(() => {
+        inputHandlers.onChange({
+          currentTarget: {
+            value,
+          },
+        });
+      }, 0);
+    }
+  }, [inputHandlers, isFocused, isRequired, isValidEnum, name, value]);
 
   return (
     <EnumProvider enumType={enumType}>
       {({ loading, error, data }) => {
         if (loading) return null;
         if (error) return `Error!: ${error}`;
-        const selectedItem =
-          data.find(item => item.name === inputHandlers.value) || inputHandlers.value;
+        const selectedItem = data.find(item => item.name === inputHandlers.value);
         return (
           <FieldItem
             input={
@@ -51,7 +70,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 items={filterItems(inputHandlers.value, data)}
                 itemToString={parseEnumDescriptionOrValue}
                 itemToValue={parseEnumValue}
-                inputValue={parseEnumDescriptionOrValue(selectedItem)}
+                inputValue={parseEnumDescriptionOrValue(selectedItem) || inputHandlers.value}
                 renderSelect={({ ...selectProps }) => (
                   <DefaultSearchSelect
                     {...selectProps}
@@ -65,48 +84,6 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                 renderOptions={({ ...optionProps }) => (
                   <DefaultOptions {...optionProps} width="200px" align="left" />
                 )}
-                afterClearSelection={() => {
-                  logger.warn('afterClearSelection');
-                  inputHandlers.onChange({
-                    currentTarget: {
-                      value: '',
-                    },
-                  });
-                  setTimeout(() => {
-                    inputHandlers.onBlur();
-                    emitter.emit('INLINE_CHANGE', {
-                      name,
-                      hasError: !!isRequired,
-                      value: '',
-                    });
-                    inputHandlers.onFocus();
-                  }, 0);
-                }}
-                onBlur={() => {
-                  logger.warn('SearchSelectInput onBlur', inputHandlers.value);
-                  if (data.find(item => item.name === inputHandlers.value)) {
-                    inputHandlers.onBlur();
-                    emitter.emit('INLINE_CHANGE', {
-                      name,
-                      hasError: false,
-                      value: inputHandlers.value,
-                    });
-                  } else {
-                    inputHandlers.onChange({
-                      currentTarget: {
-                        value: '',
-                      },
-                    });
-                    setTimeout(() => {
-                      inputHandlers.onBlur();
-                      emitter.emit('INLINE_CHANGE', {
-                        name,
-                        hasError: !!isRequired,
-                        value: '',
-                      });
-                    }, 0);
-                  }
-                }}
                 onChange={(item: ?{ name: string }) => {
                   logger.warn('SearchSelectInput onChange', item);
                   if (!item) {
@@ -120,7 +97,9 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                       hasError: !!isRequired,
                       value: '',
                     });
+                    setInValidEnum(false);
                   } else {
+                    setInValidEnum(true);
                     inputHandlers.onChange({
                       currentTarget: {
                         value: item && item.name,
@@ -134,10 +113,19 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
                   }
                 }}
                 onSearch={newQuery => {
-                  logger.warn('onSearch', newQuery);
+                  logger.warn('onSearch', isValidEnum, newQuery);
                   inputHandlers.onChange({
                     currentTarget: {
                       value: newQuery,
+                    },
+                  });
+                  setInValidEnum(false);
+                }}
+                afterClearSelection={() => {
+                  logger.warn('afterClearSelection');
+                  inputHandlers.onChange({
+                    currentTarget: {
+                      value: '',
                     },
                   });
                 }}
