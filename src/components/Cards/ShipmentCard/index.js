@@ -30,6 +30,7 @@ import {
   ShipmentExporterWrapperStyle,
   ShipmentExporterIconStyle,
   ShipmentExporterStyle,
+  RemainingExporterCountStyle,
   ShipmentDataWrapperStyle,
   ShipmentBadgeWrapperStyle,
   ShipmentBadgeIconStyle,
@@ -134,15 +135,12 @@ const ShipmentCard = ({ shipment, actions, onClick, ...rest }: Props) => {
                 <div className={ShipmentExporterIconStyle}>
                   <Icon icon="EXPORTER" />
                 </div>
-                <div className={ShipmentExporterStyle}>
-                  {exporterName}
-                  {remainingExporterCount !== 0 && (
-                    <span>
-                      +
-                      <FormattedNumber value={remainingExporterCount} />
-                    </span>
-                  )}
-                </div>
+                <div className={ShipmentExporterStyle}>{exporterName}</div>
+                {remainingExporterCount !== 0 && (
+                  <div className={RemainingExporterCountStyle}>
+                    +<FormattedNumber value={remainingExporterCount} />
+                  </div>
+                )}
               </div>
             </div>
 
