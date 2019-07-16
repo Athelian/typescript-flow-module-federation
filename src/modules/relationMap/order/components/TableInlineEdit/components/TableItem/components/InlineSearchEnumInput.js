@@ -34,10 +34,10 @@ const defaultProps = {
 
 export default function InlineSearchEnumInput({ name, value, enumType, isRequired, id }: Props) {
   const { hasError, isFocused, ...inputHandlers } = useTextInput(value, { isRequired });
-  const [isValidEnum, setInValidEnum] = React.useState(false);
+  const [isValidEnum, setInValidEnum] = React.useState(true);
 
   React.useEffect(() => {
-    if (!isValidEnum && !isFocused) {
+    if (!isValidEnum && !isFocused && value !== inputHandlers.value) {
       logger.warn('reset enum data');
       // clear data when the enum is not valid
       if (isRequired || inputHandlers.value) {
