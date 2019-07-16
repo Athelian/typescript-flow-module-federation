@@ -1,41 +1,32 @@
 // @flow
 import * as React from 'react';
-import { StringValue } from 'react-values';
 import Icon from 'components/Icon';
 import { Tooltip } from 'components/Tooltip';
 import { ActionCardWrapperStyle, DisabledWrapper, ActionWrapperStyle } from './style';
 
-type ActionCardProps = {
-  children: Function,
+type ActionCardProps = {|
+  children: React$Node,
   show: boolean,
-};
+|};
 
-type OptionalActionProps = {
-  className: string,
+type ActionProps = {|
+  className?: string,
   onClick?: Function,
-  toggle?: Function,
-  targeted?: string,
+  targeted: boolean,
   tooltipMessage?: React.Node,
-};
-
-type ActionProps = OptionalActionProps & {
   icon: string,
-};
+|};
 
 const DisabledAction = () => <div className={DisabledWrapper} />;
 
-const Action = ({ icon, targeted, className, onClick, toggle, tooltipMessage }: ActionProps) => {
+const Action = ({ icon, targeted, className, onClick, tooltipMessage }: ActionProps) => {
   const action = (
     <div
-      className={ActionWrapperStyle(targeted === icon)}
+      className={ActionWrapperStyle(targeted)}
       role="presentation"
       onClick={() => {
-        const isSelectedAction = targeted === icon;
-        if (toggle) {
-          toggle(isSelectedAction ? null : icon);
-        }
         if (onClick) {
-          onClick(isSelectedAction);
+          onClick(!targeted);
         }
       }}
     >
@@ -56,24 +47,9 @@ const Action = ({ icon, targeted, className, onClick, toggle, tooltipMessage }: 
   return action;
 };
 
-Action.defaultProps = {
-  className: '',
+const ActionCard = ({ children, show }: ActionCardProps) => {
+  return show && <div className={ActionCardWrapperStyle}>{children}</div>;
 };
-
-const ActionCard = ({ children, show }: ActionCardProps) => (
-  <StringValue>
-    {({ value: targeted, set: toggle }) =>
-      show && (
-        <div className={ActionCardWrapperStyle}>
-          {children({
-            targeted,
-            toggle,
-          })}
-        </div>
-      )
-    }
-  </StringValue>
-);
 
 export { Action, DisabledAction };
 

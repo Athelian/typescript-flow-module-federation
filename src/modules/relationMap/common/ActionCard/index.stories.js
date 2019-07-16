@@ -1,6 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
+import faker from 'faker';
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 import { css } from 'react-emotion';
 import ActionCard, { Action } from './index';
 
@@ -16,16 +18,14 @@ const ContainerStyle = css`
 
 storiesOf('RelationMap/ActionCard', module).add('ActionCard', () => (
   <div className={ContainerStyle}>
-    <div>XXXXXXXXXXXXXXXXX</div>
+    <div>{faker.name.findName()}</div>
     <ActionCard show>
-      {({ targeted, toggle }) => (
-        <>
-          <Action icon="MAGIC" targeted={targeted} toggle={toggle} />
-          <Action icon="DOCUMENT" targeted={targeted} toggle={toggle} />
-          <Action icon="BRANCH" targeted={targeted} toggle={toggle} />
-          <Action icon="CHECKED" targeted={targeted} toggle={toggle} />
-        </>
-      )}
+      <>
+        <Action icon="MAGIC" targeted={false} onClick={action('click')} />
+        <Action icon="DOCUMENT" targeted={false} onClick={action('click')} />
+        <Action icon="BRANCH" targeted={false} onClick={action('click')} />
+        <Action icon="CHECKED" targeted onClick={action('click')} />
+      </>
     </ActionCard>
   </div>
 ));

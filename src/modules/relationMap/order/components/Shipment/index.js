@@ -8,6 +8,7 @@ import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import ActionCard, { Action, DisabledAction } from 'modules/relationMap/common/ActionCard';
 import type { ShipmentProps } from 'modules/relationMap/order/type.js.flow';
+import { SHIPMENT } from 'constants/keywords';
 import { ItemWrapperStyle } from 'modules/relationMap/order/style';
 import { ShipmentCard } from 'components/Cards';
 import SelectedShipment from './SelectedShipment';
@@ -65,69 +66,68 @@ export default function Shipment({
               {uiSelectors.isAllowToConnectShipment() && state.connectShipment.enableSelectMode ? (
                 (() => {
                   if (!uiSelectors.isAllowToSelectShipment(importer.id, exporter && exporter.id)) {
-                    return <ActionCard show>{() => <DisabledAction />}</ActionCard>;
+                    return (
+                      <ActionCard show>
+                        <DisabledAction />
+                      </ActionCard>
+                    );
                   }
                   if (uiSelectors.selectedConnectShipment(id)) {
                     return (
                       <ActionCard show>
-                        {() => (
-                          <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />
-                        )}
+                        <SelectedShipment onClick={() => actions.toggleSelectedShipment(id)} />
                       </ActionCard>
                     );
                   }
                   return (
                     <ActionCard show={hovered}>
-                      {() => (
-                        <Action icon="CHECKED" onClick={() => actions.toggleSelectedShipment(id)} />
-                      )}
+                      <Action
+                        targeted={uiSelectors.isTarget(SHIPMENT, id)}
+                        icon="CHECKED"
+                        onClick={() => actions.toggleSelectedShipment(id)}
+                      />
                     </ActionCard>
                   );
                 })()
               ) : (
                 <ActionCard show={hovered}>
-                  {({ targeted, toggle }) => (
-                    <>
-                      <Action
-                        icon="MAGIC"
-                        targeted={targeted}
-                        toggle={toggle}
-                        onClick={() => actions.toggleHighLight('SHIPMENT', id)}
-                        tooltipMessage={
-                          <FormattedMessage
-                            id="modules.RelationMaps.highlightTooltip"
-                            defaultMessage="Highlight / Unhighlight"
-                          />
-                        }
-                      />
-                      <Action
-                        icon="DOCUMENT"
-                        targeted={targeted}
-                        toggle={toggle}
-                        onClick={() => actions.showEditForm('SHIPMENT', id)}
-                        tooltipMessage={
-                          <FormattedMessage
-                            id="modules.RelationMaps.viewFormTooltip"
-                            defaultMessage="View Form"
-                          />
-                        }
-                      />
-                      {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                        <Action
-                          icon="CHECKED"
-                          targeted={targeted}
-                          toggle={toggle}
-                          onClick={() => actions.targetShipmentEntity(id, no)}
-                          tooltipMessage={
-                            <FormattedMessage
-                              id="modules.RelationMaps.targetTooltip"
-                              defaultMessage="Target / Untarget"
-                            />
-                          }
+                  <>
+                    <Action
+                      icon="MAGIC"
+                      targeted={uiSelectors.isHightLight(SHIPMENT, id)}
+                      onClick={() => actions.toggleHighLight(SHIPMENT, id)}
+                      tooltipMessage={
+                        <FormattedMessage
+                          id="modules.RelationMaps.highlightTooltip"
+                          defaultMessage="Highlight / Unhighlight"
                         />
-                      )}
-                    </>
-                  )}
+                      }
+                    />
+                    <Action
+                      icon="DOCUMENT"
+                      targeted={false}
+                      onClick={() => actions.showEditForm(SHIPMENT, id)}
+                      tooltipMessage={
+                        <FormattedMessage
+                          id="modules.RelationMaps.viewFormTooltip"
+                          defaultMessage="View Form"
+                        />
+                      }
+                    />
+                    {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                      <Action
+                        icon="CHECKED"
+                        targeted={uiSelectors.isTarget(SHIPMENT, id)}
+                        onClick={() => actions.targetShipmentEntity(id, no)}
+                        tooltipMessage={
+                          <FormattedMessage
+                            id="modules.RelationMaps.targetTooltip"
+                            defaultMessage="Target / Untarget"
+                          />
+                        }
+                      />
+                    )}
+                  </>
                 </ActionCard>
               )}
             </>

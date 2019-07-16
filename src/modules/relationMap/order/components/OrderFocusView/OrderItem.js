@@ -10,7 +10,7 @@ import { RMOrderItemCard } from 'components/Cards';
 import { RotateIcon } from 'modules/relationMap/common/ActionCard/style';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
 import ActionDispatch from 'modules/relationMap/order/provider';
-import { actionCreators } from 'modules/relationMap/order/store';
+import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import { ORDER_ITEM, BATCH } from 'constants/keywords';
 import type { OrderItemProps } from 'modules/relationMap/order/type.js.flow';
 import Badge from '../Badge';
@@ -70,6 +70,7 @@ export default function OrderItem({
 }: Props) {
   const context = React.useContext(ActionDispatch);
   const { state, dispatch } = context;
+  const uiSelectors = selectors(state);
   const actions = actionCreators(dispatch);
   const { clone, showTag } = state;
   const showCloneBadge = (Object.entries(clone.orderItems || {}): Array<any>).some(([, item]) =>
@@ -90,88 +91,91 @@ export default function OrderItem({
           />
           {showCloneBadge && <Badge label="clone" />}
           <ActionCard show={hovered}>
-            {({ targeted, toggle }) => (
-              <>
-                <Action
-                  icon="MAGIC"
-                  targeted={targeted}
-                  toggle={toggle}
-                  onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
-                  tooltipMessage={
-                    <FormattedMessage
-                      id="modules.RelationMaps.highlightTooltip"
-                      defaultMessage="Highlight / Unhighlight"
-                    />
-                  }
-                />
-                <Action
-                  icon="DOCUMENT"
-                  targeted={targeted}
-                  toggle={toggle}
-                  onClick={() => actions.showEditForm(ORDER_ITEM, id)}
-                  tooltipMessage={
-                    <FormattedMessage
-                      id="modules.RelationMaps.viewFormTooltip"
-                      defaultMessage="View Form"
-                    />
-                  }
-                />
-                {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                  <>
-                    <Action
-                      icon="BRANCH"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() =>
-                        actions.selectBranch([
-                          {
-                            id,
-                            entity: ORDER_ITEM,
-                            exporterId: `${id}-${exporter.id}`,
-                            importerId: `${id}-${importer.id}`,
-                            partners: [importer, exporter],
-                          },
-                          ...batches.map(batch => ({
-                            entity: BATCH,
-                            id: batch.id,
-                            exporterId: `${id}-${exporter.id}`,
-                            importerId: `${id}-${importer.id}`,
-                            partners: [importer, exporter],
-                          })),
-                        ])
-                      }
-                      className={RotateIcon}
-                      tooltipMessage={
-                        <FormattedMessage
-                          id="modules.RelationMaps.targetTreeTooltip"
-                          defaultMessage="Target / Untarget Tree"
-                        />
-                      }
-                    />
-                    <Action
-                      icon="CHECKED"
-                      targeted={targeted}
-                      toggle={toggle}
-                      onClick={() =>
-                        actions.targetOrderItemEntity({
+            <>
+              <Action
+                icon="MAGIC"
+                targeted={uiSelectors.isHightLight(ORDER_ITEM, id)}
+                onClick={() => actions.toggleHighLight(ORDER_ITEM, id)}
+                tooltipMessage={
+                  <FormattedMessage
+                    id="modules.RelationMaps.highlightTooltip"
+                    defaultMessage="Highlight / Unhighlight"
+                  />
+                }
+              />
+              <Action
+                icon="DOCUMENT"
+                targeted={false}
+                onClick={() => actions.showEditForm(ORDER_ITEM, id)}
+                tooltipMessage={
+                  <FormattedMessage
+                    id="modules.RelationMaps.viewFormTooltip"
+                    defaultMessage="View Form"
+                  />
+                }
+              />
+              {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                <>
+                  <Action
+                    icon="BRANCH"
+                    targeted={uiSelectors.isSelectBranch([
+                      {
+                        id,
+                        entity: ORDER_ITEM,
+                      },
+                      ...batches.map(batch => ({
+                        entity: BATCH,
+                        id: batch.id,
+                      })),
+                    ])}
+                    onClick={() =>
+                      actions.selectBranch([
+                        {
                           id,
-                          parentOrderId,
+                          entity: ORDER_ITEM,
                           exporterId: `${id}-${exporter.id}`,
                           importerId: `${id}-${importer.id}`,
                           partners: [importer, exporter],
-                        })
-                      }
-                      tooltipMessage={
-                        <FormattedMessage
-                          id="modules.RelationMaps.targetTooltip"
-                          defaultMessage="Target / Untarget"
-                        />
-                      }
-                    />
-                  </>
-                )}
-              </>
-            )}
+                        },
+                        ...batches.map(batch => ({
+                          entity: BATCH,
+                          id: batch.id,
+                          exporterId: `${id}-${exporter.id}`,
+                          importerId: `${id}-${importer.id}`,
+                          partners: [importer, exporter],
+                        })),
+                      ])
+                    }
+                    className={RotateIcon}
+                    tooltipMessage={
+                      <FormattedMessage
+                        id="modules.RelationMaps.targetTreeTooltip"
+                        defaultMessage="Target / Untarget Tree"
+                      />
+                    }
+                  />
+                  <Action
+                    icon="CHECKED"
+                    targeted={uiSelectors.isTarget(ORDER_ITEM, id)}
+                    onClick={() =>
+                      actions.targetOrderItemEntity({
+                        id,
+                        parentOrderId,
+                        exporterId: `${id}-${exporter.id}`,
+                        importerId: `${id}-${importer.id}`,
+                        partners: [importer, exporter],
+                      })
+                    }
+                    tooltipMessage={
+                      <FormattedMessage
+                        id="modules.RelationMaps.targetTooltip"
+                        defaultMessage="Target / Untarget"
+                      />
+                    }
+                  />
+                </>
+              )}
+            </>
           </ActionCard>
           {showTag && <Tags dataSource={tags} />}
         </div>
