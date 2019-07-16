@@ -123,7 +123,7 @@ export const ShipmentExporterStyle: string = css`
   color: ${colors.BLACK};
   ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
-  width: 80px;
+  width: 95px;
 `;
 
 export const RemainingExporterCountStyle: string = css`
@@ -131,7 +131,7 @@ export const RemainingExporterCountStyle: string = css`
   ${presets.ELLIPSIS};
   ${fontSizes.SMALL};
   text-align: right;
-  width: 35px;
+  width: 20px;
 `;
 
 export const ShipmentDataWrapperStyle: string = css`
