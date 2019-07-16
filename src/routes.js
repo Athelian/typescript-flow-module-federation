@@ -6,6 +6,8 @@ import { hot } from 'react-hot-loader';
 import { Router } from '@reach/router';
 import UserProvider from 'modules/user';
 import { AuthenticationConsumer } from 'modules/authentication';
+import { UIConsumer } from 'modules/ui';
+import Layout from './components/Layout/layout';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
 import DashBoard from './modules/dashboard';
@@ -55,48 +57,54 @@ const AsyncTaskTemplate = lazy(() => import('./modules/taskTemplate'));
 const AsyncProfile = lazy(() => import('./modules/profile'));
 
 const Routes: StatelessFunctionalComponent<{}> = () => (
-  <>
-    <AuthenticationConsumer>
-      {({ authenticated }) =>
-        authenticated && (
-          <UserProvider>
-            <SideBar />
-          </UserProvider>
-        )
-      }
-    </AuthenticationConsumer>
-    <Suspense fallback={<LoadingIcon />}>
-      <Router>
-        <Authorized path="/">
-          <DashBoard path="/" />
-          <AsyncOrder path="order/*" />
-          <AsyncOrderItem path="order-item/*" />
-          <AsyncBatch path="batch/*" />
-          <AsyncShipment path="shipment/*" />
-          <AsyncContainer path="container/*" />
-          <AsyncProduct path="product/*" />
-          <AsyncWarehouse path="warehouse/*" />
-          <AsyncPartner path="partner/*" />
-          <AsyncStaff path="staff/*" />
-          <AsyncProject path="project/*" />
-          <AsyncTask path="task/*" />
-          <AsyncRelationMap path="relation-map/*" />
-          <AsyncNotifications path="notifications/*" />
-          <AsyncTags path="tags/*" />
-          <AsyncMetadata path="templates/metadata/*" />
-          <AsyncTableTemplate path="templates/table-template/*" />
-          <AsyncTaskTemplate path="templates/task-template/*" />
-          <AsyncProfile path="profile/*" />
-          <PageNotFound default />
-        </Authorized>
-        <AsyncLogin path="/login" />
-        <AsyncForgotPassword path="/forgot-password" />
-        <AsyncResetPassword path="/reset-password/:token" />
-        <PageNotFound path="/403" />
-        <PageNotFound default />
-      </Router>
-    </Suspense>
-  </>
+  <UIConsumer>
+    {uiState => (
+      <>
+        <AuthenticationConsumer>
+          {({ authenticated }) =>
+            authenticated && (
+              <UserProvider>
+                <SideBar />
+              </UserProvider>
+            )
+          }
+        </AuthenticationConsumer>
+        <Suspense fallback={<LoadingIcon />}>
+          <Router>
+            <Authorized path="/">
+              <Layout {...uiState} path="/">
+                <DashBoard path="/" />
+                <AsyncOrder path="order/*" />
+                <AsyncOrderItem path="order-item/*" />
+                <AsyncBatch path="batch/*" />
+                <AsyncShipment path="shipment/*" />
+                <AsyncContainer path="container/*" />
+                <AsyncProduct path="product/*" />
+                <AsyncWarehouse path="warehouse/*" />
+                <AsyncPartner path="partner/*" />
+                <AsyncStaff path="staff/*" />
+                <AsyncProject path="project/*" />
+                <AsyncTask path="task/*" />
+                <AsyncRelationMap path="relation-map/*" />
+                <AsyncNotifications path="notifications/*" />
+                <AsyncTags path="tags/*" />
+                <AsyncMetadata path="templates/metadata/*" />
+                <AsyncTableTemplate path="templates/table-template/*" />
+                <AsyncTaskTemplate path="templates/task-template/*" />
+                <AsyncProfile path="profile/*" />
+                <PageNotFound default />
+              </Layout>
+            </Authorized>
+            <AsyncLogin path="/login" />
+            <AsyncForgotPassword path="/forgot-password" />
+            <AsyncResetPassword path="/reset-password/:token" />
+            <PageNotFound path="/403" />
+            <PageNotFound default />
+          </Router>
+        </Suspense>
+      </>
+    )}
+  </UIConsumer>
 );
 
 const HotReloadRoutes: ComponentType<any> = hot(module)(Routes);

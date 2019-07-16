@@ -2,12 +2,11 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
 import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { UIConsumer } from 'modules/ui';
-import NavBar from 'components/NavBar';
+import NewNavBar from 'components/NavBar/NewNavBar';
 import BatchList from './list';
+import { ContentWrapperStyle } from './styles';
 import messages from './messages';
 
 type Props = {
@@ -48,27 +47,18 @@ const BatchListModule = (props: Props) => {
     getInitFilter(),
     'filterBatch'
   );
-
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="BATCH"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-            </NavBar>
-          }
-        >
-          <BatchList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <div className={ContentWrapperStyle}>
+      <NewNavBar>
+        <FilterToolBar
+          icon="BATCH"
+          sortFields={sortFields}
+          filtersAndSort={filterAndSort}
+          onChange={onChangeFilter}
+        />
+      </NewNavBar>
+      <BatchList {...queryVariables} />
+    </div>
   );
 };
 
