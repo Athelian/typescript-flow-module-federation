@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import Layout from 'components/Layout';
 import NavBar from 'components/NavBar';
-import { NewButton } from 'components/Buttons';
+import { NewButton, ExportButton } from 'components/Buttons';
 import { PROJECT_CREATE } from 'modules/permission/constants/project';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
@@ -13,6 +13,7 @@ import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
 import ProjectList from './list';
 import messages from './messages';
+import { projectsExportQuery } from './query';
 
 type Props = {
   intl: IntlShape,
@@ -67,6 +68,16 @@ const ProjectListModule = (props: Props) => {
                   <NewButton />
                 </Link>
               )}
+              <ExportButton
+                type="Projects"
+                exportQuery={projectsExportQuery}
+                variables={{
+                  filterBy: filterAndSort.filter,
+                  sortBy: {
+                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
+                  },
+                }}
+              />
             </NavBar>
           }
         >

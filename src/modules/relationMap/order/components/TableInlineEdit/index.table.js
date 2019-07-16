@@ -481,7 +481,7 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
           productColumnFieldsFilter,
           productCustomFieldsFilter,
         };
-        logger.warn({ mappingObjects, editData, entities });
+        logger.warn({ mappingObjects, editData, entities, errors });
         return (
           <ApolloConsumer>
             {client => (

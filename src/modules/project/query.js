@@ -25,4 +25,24 @@ export const projectTimelineQuery = gql`
   ${commentFragment}
 `;
 
+export const projectExportQuery = gql`
+  query projectExport($id: ID!, $templateId: ID!) {
+    projectExport(id: $id, templateId: $templateId) {
+      ... on Export {
+        id
+      }
+    }
+  }
+`;
+
+export const projectsExportQuery = gql`
+  query projectsExport($filterBy: ProjectFilterInput, $sortBy: ProjectSortInput, $templateId: ID!) {
+    projectsExport(filterBy: $filterBy, sortBy: $sortBy, templateId: $templateId) {
+      ... on Export {
+        id
+      }
+    }
+  }
+`;
+
 export default projectTimelineQuery;

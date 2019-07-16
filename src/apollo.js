@@ -77,7 +77,14 @@ const errorLogger = errors => {
   errors.forEach(error => {
     const { message } = error;
     if (!isDevEnvironment) {
-      if (!(message.includes('Unauthorized') || message.includes('Network error with auth'))) {
+      // ignore error from authentication
+      if (
+        !(
+          message.includes('Unauthorized') ||
+          message.includes('Network error with auth') ||
+          message.includes('401')
+        )
+      ) {
         Sentry.withScope(scope => {
           scope.setExtra('full-error-message', error);
           Sentry.captureException(new Error(message));

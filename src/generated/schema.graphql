@@ -1,5 +1,5 @@
 # source: https://graphql-staging.zenport.io/graphql
-# timestamp: Thu Jul 11 2019 15:05:21 GMT+0900 (Japan Standard Time)
+# timestamp: Fri Jul 12 2019 18:01:17 GMT+0900 (Japan Standard Time)
 
 enum Airport {
   """Andorra la Vella"""
@@ -30933,6 +30933,9 @@ type Query {
   project(id: ID!): ProjectPayload!
   projects(page: Int! = 1, perPage: Int! = 10, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ProjectPayloadPagination!
   projectsByIDs(ids: [ID!]!): [ProjectPayload!]!
+  projectExport(id: ID!, templateId: ID!): ExportPayload!
+  projectsExport(templateId: ID!, filterBy: ProjectFilterInput, sortBy: ProjectSortInput): ExportPayload!
+  projectsByIDsExport(ids: [ID!]!, templateId: ID!): ExportPayload!
   milestone(id: ID!): MilestonePayload!
   milestonesByIDs(ids: [ID!]!): [MilestonePayload!]!
   fieldDefinition(id: ID!): FieldDefinitionPayload!
