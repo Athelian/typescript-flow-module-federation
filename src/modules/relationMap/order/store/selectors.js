@@ -16,6 +16,16 @@ const entitySelector = ({
   state.select.entities.includes(entity) &&
   total === state.targets.filter(item => item.includes(`${entity}-`)).length;
 
+const isSelectBranch = (
+  state: UIState,
+  selectItems: Array<{
+    id: string,
+    entity: string,
+  }>
+) => {
+  return selectItems.every(({ id, entity }) => state.targets.includes(`${entity}-${id}`));
+};
+
 const targetedIds = (state: UIState, type: BATCH | SHIPMENT | ORDER | ORDER_ITEM) => {
   const ids = state.targets.filter(item => item.includes(`${type}-`));
   return (ids.map(orderItem => {
@@ -193,6 +203,14 @@ function selectors(state: UIState) {
       highLightEntities.includes(`${entity}-${id}`),
     isSelectAllEntity: (entity: string, total: number) => entitySelector({ state, entity, total }),
     isTarget: (entity: string, id: string) => state.targets.includes(`${entity}-${id}`),
+    isSelectBranch: (
+      selectItems: Array<{
+        entity: string,
+        id: string,
+      }>
+    ) => isSelectBranch(state, selectItems),
+    isHightLight: (entity: string, id: string) =>
+      state.highlight.selectedId === id && state.highlight.type === entity,
     isTargetAnyItem: () => state.targets.length > 0,
     isHighLightAnyItem: () => state.highlight.selectedId !== '',
     countTargetBy: (entity: string) =>

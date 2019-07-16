@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import usePermission from 'hooks/usePermission';
 import { RM_ORDER_FOCUS_MANIPULATE } from 'modules/permission/constants/relationMap';
 import ActionDispatch from 'modules/relationMap/order/provider';
-import { actionCreators } from 'modules/relationMap/order/store';
+import { selectors, actionCreators } from 'modules/relationMap/order/store';
 import { RMBatchCard } from 'components/Cards';
 import { Tags } from 'components/RelationMap';
 import ActionCard, { Action } from 'modules/relationMap/common/ActionCard';
@@ -54,10 +54,9 @@ export default function Batch({
   todo,
 }: Props) {
   const context = React.useContext(ActionDispatch);
-  const {
-    state: { showTag, split, clone, balanceSplit },
-    dispatch,
-  } = context;
+  const { state, dispatch } = context;
+  const uiSelectors = selectors(state);
+  const { showTag, split, clone, balanceSplit } = state;
   const actions = actionCreators(dispatch);
   const showSplitBadge = (Object.entries(split.batches || {}): Array<any>).some(([, item]) =>
     item.map(({ id: batchId }) => batchId).includes(id)
@@ -91,56 +90,51 @@ export default function Batch({
             <Badge label={findBadgeLabel({ showSplitBadge, showCloneBadge, showAutoFillBadge })} />
           )}
           <ActionCard show={hovered}>
-            {({ targeted, toggle }) => (
-              <>
-                <Action
-                  icon="MAGIC"
-                  targeted={targeted}
-                  toggle={toggle}
-                  onClick={() => actions.toggleHighLight(BATCH, id)}
-                  tooltipMessage={
-                    <FormattedMessage
-                      id="modules.RelationMaps.highlightTooltip"
-                      defaultMessage="Highlight / Unhighlight"
-                    />
-                  }
-                />
-                <Action
-                  icon="DOCUMENT"
-                  targeted={targeted}
-                  toggle={toggle}
-                  onClick={() => actions.showEditForm(BATCH, id)}
-                  tooltipMessage={
-                    <FormattedMessage
-                      id="modules.RelationMaps.viewFormTooltip"
-                      defaultMessage="View Form"
-                    />
-                  }
-                />
-                {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
-                  <Action
-                    icon="CHECKED"
-                    targeted={targeted}
-                    toggle={toggle}
-                    onClick={() =>
-                      actions.targetBatchEntity({
-                        id,
-                        parentOrderId,
-                        exporterId: `${id}-${exporter.id}`,
-                        importerId: `${id}-${importer.id}`,
-                        partners: [importer, exporter],
-                      })
-                    }
-                    tooltipMessage={
-                      <FormattedMessage
-                        id="modules.RelationMaps.targetTooltip"
-                        defaultMessage="Target / Untarget"
-                      />
-                    }
+            <>
+              <Action
+                icon="MAGIC"
+                targeted={uiSelectors.isHightLight(BATCH, id)}
+                onClick={() => actions.toggleHighLight(BATCH, id)}
+                tooltipMessage={
+                  <FormattedMessage
+                    id="modules.RelationMaps.highlightTooltip"
+                    defaultMessage="Highlight / Unhighlight"
                   />
-                )}
-              </>
-            )}
+                }
+              />
+              <Action
+                icon="DOCUMENT"
+                targeted={false}
+                onClick={() => actions.showEditForm(BATCH, id)}
+                tooltipMessage={
+                  <FormattedMessage
+                    id="modules.RelationMaps.viewFormTooltip"
+                    defaultMessage="View Form"
+                  />
+                }
+              />
+              {hasPermission(RM_ORDER_FOCUS_MANIPULATE) && (
+                <Action
+                  icon="CHECKED"
+                  targeted={uiSelectors.isTarget(BATCH, id)}
+                  onClick={() =>
+                    actions.targetBatchEntity({
+                      id,
+                      parentOrderId,
+                      exporterId: `${id}-${exporter.id}`,
+                      importerId: `${id}-${importer.id}`,
+                      partners: [importer, exporter],
+                    })
+                  }
+                  tooltipMessage={
+                    <FormattedMessage
+                      id="modules.RelationMaps.targetTooltip"
+                      defaultMessage="Target / Untarget"
+                    />
+                  }
+                />
+              )}
+            </>
           </ActionCard>
           {showTag && <Tags dataSource={tags} />}
         </div>
