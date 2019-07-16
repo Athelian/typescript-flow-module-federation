@@ -44,7 +44,7 @@ export default function InlineSearchEnumInput({ name, value, enumType, isRequire
         // for require field, restore original value
         emitter.emit('INLINE_CHANGE', {
           name,
-          hasError: !!isRequired,
+          hasError: false,
           value,
         });
       } else {
