@@ -7,7 +7,7 @@ import { ObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ApplyButton, CancelButton } from 'components/Buttons';

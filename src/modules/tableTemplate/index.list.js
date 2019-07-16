@@ -9,7 +9,7 @@ import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import { UIConsumer } from 'modules/ui';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';

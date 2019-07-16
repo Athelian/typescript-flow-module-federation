@@ -8,7 +8,7 @@ import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import useFilter from 'hooks/useFilter';
 import { FilterToolBar } from 'components/common';

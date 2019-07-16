@@ -2,7 +2,7 @@
 import React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { earliest, latest } from 'utils/date';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { resetFormState } from 'modules/form';

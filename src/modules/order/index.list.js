@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import usePermission from 'hooks/usePermission';

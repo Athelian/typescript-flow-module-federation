@@ -11,7 +11,7 @@ import { UIConsumer } from 'modules/ui';
 import { showToastError } from 'utils/errors';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';

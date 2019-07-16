@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';

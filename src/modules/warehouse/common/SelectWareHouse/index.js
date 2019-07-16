@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { SlideViewNavBar } from 'components/NavBar';

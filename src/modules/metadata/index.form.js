@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import { UIConsumer } from 'modules/ui';
 import withCache from 'hoc/withCache';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import useFilter from 'hooks/useFilter';
 import { getByPathWithDefault } from 'utils/fp';
 import NavBar, { EntityIcon } from 'components/NavBar';

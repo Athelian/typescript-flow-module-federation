@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { WAREHOUSE_CREATE } from 'modules/permission/constants/warehouse';
 import usePermission from 'hooks/usePermission';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { UIConsumer } from 'modules/ui';

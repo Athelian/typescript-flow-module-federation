@@ -7,7 +7,7 @@ import withCache from 'hoc/withCache';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';

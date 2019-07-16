@@ -9,7 +9,7 @@ import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import { cleanUpData } from 'utils/data';
 import useFilter from 'hooks/useFilter';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { SlideViewNavBar } from 'components/NavBar';

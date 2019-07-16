@@ -12,7 +12,7 @@ import { removeTypename } from 'utils/data';
 import LoadingIcon from 'components/LoadingIcon';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { ItemCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';

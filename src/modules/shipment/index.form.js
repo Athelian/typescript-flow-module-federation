@@ -12,7 +12,7 @@ import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import { removeTypename } from 'utils/data';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';

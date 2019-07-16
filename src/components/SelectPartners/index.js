@@ -9,7 +9,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import FilterToolBar from 'components/common/FilterToolBar';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/partner/messages';

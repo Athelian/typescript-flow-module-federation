@@ -7,7 +7,7 @@ import { Mutation } from 'react-apollo';
 import { decodeId, encodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';

@@ -5,7 +5,7 @@ import { Mutation, Query } from 'react-apollo';
 import { navigate } from '@reach/router';
 import { Subscribe, Provider } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';

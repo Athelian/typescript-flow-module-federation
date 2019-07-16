@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';

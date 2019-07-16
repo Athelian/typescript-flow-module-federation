@@ -7,7 +7,7 @@ import { showToastError } from 'utils/errors';
 import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
 import { UIConsumer } from 'modules/ui';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import NavBar, { EntityIcon } from 'components/NavBar';

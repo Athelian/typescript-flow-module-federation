@@ -8,7 +8,7 @@ import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import { UIConsumer } from 'modules/ui';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import ShipmentList from './list';

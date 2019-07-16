@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { TAG_CREATE } from 'modules/permission/constants/tag';
 import usePermission from 'hooks/usePermission';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, SortInput } from 'components/NavBar';
 import { ExportButton, NewButton } from 'components/Buttons';

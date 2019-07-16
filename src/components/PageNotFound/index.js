@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import ReactSVG from 'react-svg';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import Icon from 'components/Icon';
 import {
   PageNotFoundWrapperStyle,

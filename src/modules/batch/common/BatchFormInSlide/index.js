@@ -6,7 +6,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';

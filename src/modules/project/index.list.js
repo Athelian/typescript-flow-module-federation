@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import NavBar from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import { PROJECT_CREATE } from 'modules/permission/constants/project';

@@ -5,7 +5,7 @@ import { Provider } from 'unstated';
 import { FormattedMessage } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import NavBar, { EntityIcon, Tabs } from 'components/NavBar';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import messages from 'modules/relationMap/messages';
 import { ResetContentWrapperStyle } from 'modules/relationMap/style';
 import {

@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { useQuery } from '@apollo/react-hooks';
 import { ArrayValue } from 'react-values';
 import { trackingError } from 'utils/trackingError';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import TaskGridView from 'modules/task/list/TaskGridView';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';

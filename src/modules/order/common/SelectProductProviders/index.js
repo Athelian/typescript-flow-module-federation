@@ -9,7 +9,7 @@ import GridView from 'components/GridView';
 import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { Label, Display } from 'components/Form';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import withCache from 'hoc/withCache';
 import { UIConsumer } from 'modules/ui';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';

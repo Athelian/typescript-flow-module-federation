@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
 import NavBar from 'components/NavBar';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 
 import NotificationList from './list';
 

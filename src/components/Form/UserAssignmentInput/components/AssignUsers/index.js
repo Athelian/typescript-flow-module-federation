@@ -8,7 +8,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';

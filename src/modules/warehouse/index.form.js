@@ -8,7 +8,7 @@ import { prepareCustomFieldsData } from 'utils/customFields';
 import { showToastError } from 'utils/errors';
 import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';

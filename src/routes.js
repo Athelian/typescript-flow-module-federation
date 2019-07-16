@@ -7,7 +7,7 @@ import { Router } from '@reach/router';
 import UserProvider from 'modules/user';
 import { AuthenticationConsumer } from 'modules/authentication';
 import { UIConsumer } from 'modules/ui';
-import Layout from './components/Layout/layout';
+import { Layout } from './components/Layout';
 import LoadingIcon from './components/LoadingIcon';
 import PageNotFound from './components/PageNotFound';
 import DashBoard from './modules/dashboard';

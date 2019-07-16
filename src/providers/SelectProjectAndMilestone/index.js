@@ -9,7 +9,7 @@ import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { currentSort } from 'components/common/FilterToolBar';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { Display } from 'components/Form';

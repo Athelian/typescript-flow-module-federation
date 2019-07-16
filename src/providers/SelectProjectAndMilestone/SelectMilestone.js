@@ -5,7 +5,7 @@ import { ObjectValue } from 'react-values';
 import type { Milestone } from 'generated/graphql';
 import { getByPathWithDefault } from 'utils/fp';
 import GridView from 'components/GridView';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { MilestoneCard } from 'components/Cards';

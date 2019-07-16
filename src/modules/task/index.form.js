@@ -11,7 +11,7 @@ import { decodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
 import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';

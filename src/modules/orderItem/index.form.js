@@ -8,7 +8,7 @@ import { showToastError } from 'utils/errors';
 import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import NavBar, { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';

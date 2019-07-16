@@ -10,7 +10,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
-import Layout from 'components/Layout';
+import { Layout } from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import LoadingIcon from 'components/LoadingIcon';
 import { ShipmentBatchCard } from 'components/Cards';

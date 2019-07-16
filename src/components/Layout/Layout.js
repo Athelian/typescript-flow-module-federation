@@ -5,7 +5,7 @@ import { isDevEnvironment } from 'utils/env';
 import InternalError from 'components/InternalError';
 import UserNavbar from 'modules/userNavbar';
 import { DesktopWrapperStyle } from 'styles/main';
-import { LayoutWrapperStyle, NavBarStyle, ChildrenWrapperStyle } from './layoutStyle';
+import { LayoutWrapperStyle, NavBarWrapperStyle, NavBarStyle } from './style';
 
 type Props = {
   isSideBarExpanded?: boolean,
@@ -50,8 +50,8 @@ export default class Layout extends React.Component<Props, State> {
     return (
       <div className={DesktopWrapperStyle(isSideBarExpanded)}>
         <div className={LayoutWrapperStyle}>
-          <div className={NavBarStyle}>
-            <div id="navbar-root" className={ChildrenWrapperStyle} />
+          <div className={NavBarWrapperStyle}>
+            <div id="navbar-root" className={NavBarStyle} />
             <UserNavbar />
           </div>
 
