@@ -59,9 +59,6 @@ export const shipmentFormFragment = gql`
     tags {
       ...tagFragment
     }
-    files {
-      ...documentFragment
-    }
     cargoReady {
       ...timelineDateFullFragment
     }

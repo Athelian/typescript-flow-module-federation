@@ -17,7 +17,6 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
-  documentFragment,
   partnerCardFragment,
   customFieldsFragment,
   maskFragment,
@@ -59,7 +58,6 @@ export const shipmentFormQuery = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${documentFragment}
   ${customFieldsFragment}
   ${maskFragment}
   ${fieldValuesFragment}

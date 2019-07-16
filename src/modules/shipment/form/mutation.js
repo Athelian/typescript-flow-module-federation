@@ -17,7 +17,6 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
-  documentFragment,
   partnerCardFragment,
   customFieldsFragment,
   maskFragment,
@@ -107,7 +106,6 @@ export const updateShipmentMutation: Object = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${documentFragment}
   ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}

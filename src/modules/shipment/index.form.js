@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl, type IntlShape } from 'react-intl';
 import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
-import { QueryForm } from 'components/common';
+import QueryFormV2 from 'components/common/QueryFormV2';
 import { navigate } from '@reach/router';
 import { UIConsumer } from 'modules/ui';
 import { UserConsumer } from 'modules/user';
@@ -590,6 +590,7 @@ class ShipmentFormModule extends React.Component<Props> {
                               <ShipmentForm
                                 shipment={{}}
                                 isNew
+                                loading={false}
                                 initDataForSlideView={initDataForSlideView}
                               />
                               <Subscribe
@@ -657,14 +658,15 @@ class ShipmentFormModule extends React.Component<Props> {
                         }}
                       </UserConsumer>
                     ) : (
-                      <QueryForm
+                      <QueryFormV2
                         query={shipmentFormQuery}
                         entityId={shipmentId}
                         entityType="shipment"
-                        render={(shipment, isOwner) => (
+                        render={(shipment, queryState) => (
                           <>
                             <ShipmentForm
-                              isOwner={isOwner}
+                              loading={queryState.isLoading}
+                              isOwner={queryState.isOwner}
                               isClone={this.isClone()}
                               shipment={shipment}
                               anchor={anchor}

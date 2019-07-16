@@ -13,7 +13,6 @@ import {
   ShipmentTasksContainer,
   ShipmentInfoContainer,
   ShipmentTimelineContainer,
-  ShipmentFilesContainer,
 } from './containers';
 import { ShipmentSection } from './components';
 import { ShipmentFormWrapperStyle } from './style';
@@ -26,6 +25,7 @@ const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
 
 type OptionalProps = {
   isNew: boolean,
+  loading: boolean,
   isOwner: boolean,
   isClone: boolean,
   anchor: string,
@@ -73,7 +73,7 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, shipment } = this.props;
+    const { isNew, shipment, loading } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
@@ -115,25 +115,7 @@ class ShipmentForm extends React.Component<Props> {
           </SectionWrapper>
 
           <SectionWrapper id="shipment_documentsSection">
-            <Subscribe to={[ShipmentFilesContainer]}>
-              {({ state: { files } }) => (
-                <SectionHeader
-                  icon="DOCUMENT"
-                  title={
-                    <>
-                      <FormattedMessage
-                        id="modules.Shipments.documents"
-                        defaultMessage="DOCUMENTS"
-                      />
-                      {' ('}
-                      <FormattedNumber value={files.length} />
-                      {')'}
-                    </>
-                  }
-                />
-              )}
-            </Subscribe>
-            <AsyncDocumentsSection />
+            <AsyncDocumentsSection entityId={shipment.id} isLoading={loading} />
           </SectionWrapper>
           <Subscribe to={[ShipmentInfoContainer]}>
             {({ state: info }) => (
@@ -147,7 +129,9 @@ class ShipmentForm extends React.Component<Props> {
             )}
           </Subscribe>
 
-          <AsyncOrdersSection />
+          <SectionWrapper id="shipment_orderSection">
+            <AsyncOrdersSection entityId={shipment.id} isLoading={loading} />
+          </SectionWrapper>
           <Subscribe
             to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}
           >

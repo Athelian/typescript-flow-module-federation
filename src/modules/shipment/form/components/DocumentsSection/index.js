@@ -1,8 +1,9 @@
 // @flow
 import * as React from 'react';
 import { Subscribe } from 'unstated';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { getByPathWithDefault } from 'utils/fp';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import {
@@ -10,15 +11,20 @@ import {
   SHIPMENT_DOWNLOAD_DOCUMENTS,
   SHIPMENT_SET_DOCUMENTS,
 } from 'modules/permission/constants/shipment';
-import { DocumentsInput } from 'components/Form';
+import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
+import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
+import { DocumentsInput, SectionHeader } from 'components/Form';
 import { ShipmentFilesContainer } from 'modules/shipment/form/containers';
 import messages from 'modules/shipment/messages';
+import { shipmentFormFilesQuery } from './query';
 
-type Props = {
+type Props = {|
   intl: IntlShape,
-};
+  entityId: string,
+  isLoading: boolean,
+|};
 
-function DocumentsSection({ intl }: Props) {
+function DocumentsSection({ intl, entityId, isLoading }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
 
@@ -28,43 +34,68 @@ function DocumentsSection({ intl }: Props) {
 
   return (
     <Subscribe to={[ShipmentFilesContainer]}>
-      {({ state: { files }, setFieldValue: changeFiles }) => (
-        <DocumentsInput
-          id="files"
-          name="files"
-          editable={allowUpdate}
-          downloadable={allowDownload}
-          values={files}
-          onChange={(field, value) => {
-            changeFiles(field, value);
+      {({ state: { files }, initDetailValues, setFieldValue: changeFiles }) => (
+        <QueryPlaceHolder
+          PlaceHolder={ListCardPlaceHolder}
+          query={shipmentFormFilesQuery}
+          entityId={entityId}
+          isLoading={isLoading}
+          onCompleted={result => {
+            initDetailValues(getByPathWithDefault([], 'shipment.files', result));
           }}
-          types={[
-            {
-              value: 'ShipmentBl',
-              label: intl.formatMessage(messages.bl),
-            },
-            {
-              value: 'ShipmentInvoice',
-              label: intl.formatMessage(messages.invoice),
-            },
-            {
-              value: 'ShipmentPackingList',
-              label: intl.formatMessage(messages.packingList),
-            },
-            {
-              value: 'ShipmentImportDeclaration',
-              label: intl.formatMessage(messages.importDeclaration),
-            },
-            {
-              value: 'ShipmentInspectionApplication',
-              label: intl.formatMessage(messages.inspectionApplication),
-            },
-            {
-              value: 'Document',
-              label: intl.formatMessage(messages.document),
-            },
-          ]}
-        />
+        >
+          {() => {
+            return (
+              <>
+                <SectionHeader
+                  icon="DOCUMENT"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Orders.documents" defaultMessage="DOCUMENTS" />{' '}
+                      ({files.length})
+                    </>
+                  }
+                />
+                <DocumentsInput
+                  id="files"
+                  name="files"
+                  editable={allowUpdate}
+                  downloadable={allowDownload}
+                  values={files}
+                  onChange={(field, value) => {
+                    changeFiles(field, value);
+                  }}
+                  types={[
+                    {
+                      value: 'ShipmentBl',
+                      label: intl.formatMessage(messages.bl),
+                    },
+                    {
+                      value: 'ShipmentInvoice',
+                      label: intl.formatMessage(messages.invoice),
+                    },
+                    {
+                      value: 'ShipmentPackingList',
+                      label: intl.formatMessage(messages.packingList),
+                    },
+                    {
+                      value: 'ShipmentImportDeclaration',
+                      label: intl.formatMessage(messages.importDeclaration),
+                    },
+                    {
+                      value: 'ShipmentInspectionApplication',
+                      label: intl.formatMessage(messages.inspectionApplication),
+                    },
+                    {
+                      value: 'Document',
+                      label: intl.formatMessage(messages.document),
+                    },
+                  ]}
+                />
+              </>
+            );
+          }}
+        </QueryPlaceHolder>
       )}
     </Subscribe>
   );
