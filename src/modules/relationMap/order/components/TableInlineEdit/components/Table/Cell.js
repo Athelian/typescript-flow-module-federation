@@ -23,7 +23,6 @@ import {
   InlineSearchEnumInput,
   InlineInChargeInput,
   InlineTagInput,
-  InlineProductProvider,
   InlineMetricInput,
   InlineForwarderInput,
   InlineTimeLineInput,
@@ -184,17 +183,6 @@ function renderItem({
 
       return <InlineTagInput name={name} values={value} {...meta} id={id} editable={editable} />;
     }
-
-    case 'productProvider':
-      return (
-        <InlineProductProvider
-          name={name}
-          value={value}
-          exporter={value.exporter.id}
-          {...meta}
-          id={id}
-        />
-      );
 
     case 'warehouse': {
       if (getByPath('disableIfContainersExist', meta)) {

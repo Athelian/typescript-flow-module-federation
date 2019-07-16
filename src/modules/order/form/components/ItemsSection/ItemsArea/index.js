@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { BooleanValue } from 'react-values';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import SelectProducts from 'modules/order/common/SelectProducts';
+import SelectProductProviders from 'modules/order/common/SelectProductProviders';
 import ItemFormInSlide from 'modules/orderItem/common/ItemFormInSlide';
 import SlideView from 'components/SlideView';
 import { NewButton, BaseButton } from 'components/Buttons';
@@ -406,12 +406,18 @@ function ItemsArea({
 
                 <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                   {opened && (
-                    <SelectProducts
+                    <SelectProductProviders
                       onSelect={selectedItems => {
                         setFieldValue('orderItems', [
                           ...orderItems,
-                          ...selectedItems.map((productProvider, position) =>
-                            injectUid({
+                          ...selectedItems.map((productProvider, position) => {
+                            const tags = getByPathWithDefault(
+                              [],
+                              'product.tags',
+                              productProvider
+                            ).filter(({ entityTypes = [] }) => entityTypes.includes('OrderItem'));
+
+                            return injectUid({
                               productProvider,
                               isNew: true,
                               batches: [],
@@ -432,10 +438,10 @@ function ItemsArea({
                                 tasks: [],
                                 taskTemplate: null,
                               },
-                              tags: [],
+                              tags,
                               archived: orderIsArchived,
-                            })
-                          ),
+                            });
+                          }),
                         ]);
                         setFieldTouched('orderItems');
                         slideToggle(false);

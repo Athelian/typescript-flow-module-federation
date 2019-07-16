@@ -28,7 +28,7 @@ describe('Order items section', () => {
       .getByTestId('increaseButton')
       .click()
       .click()
-      .get('[data-testid="btnSaveSelectProducts"]')
+      .get('[data-testid="btnSaveSelectProductProviders"]')
       .children()
       .last()
       .click()
