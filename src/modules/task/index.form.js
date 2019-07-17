@@ -12,9 +12,8 @@ import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
 import { Content, SlideViewLayout } from 'components/Layout';
 import SlideView from 'components/SlideView';
-import Portal from 'components/Portal';
+import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
-import { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
@@ -96,7 +95,7 @@ class TaskFormModule extends React.Component<Props> {
               {({ initDetailValues, originalValues, state, isDirty }, form) => {
                 return (
                   <>
-                    <Portal>
+                    <NavBar>
                       <EntityIcon icon="TASK" color="TASK" />
                       <JumpToSection>
                         <SectionTabs
@@ -175,7 +174,7 @@ class TaskFormModule extends React.Component<Props> {
                           variables={{ id: decodeId(taskId) }}
                         />
                       )}
-                    </Portal>
+                    </NavBar>
                     <Content>
                       {error && <p>Error: Please try again.</p>}
                       <QueryForm

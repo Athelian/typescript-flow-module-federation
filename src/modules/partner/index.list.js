@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import useFilter from 'hooks/useFilter';
 import PartnerList from './list';
 import messages from './messages';
@@ -54,14 +54,14 @@ const PartnerModule = (props: Props) => {
 
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="PARTNER"
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
         />
-      </Portal>
+      </NavBar>
       <PartnerList {...queryVariables} />
     </Content>
   );

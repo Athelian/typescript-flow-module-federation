@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Match, navigate, Redirect, Router } from '@reach/router';
 import { Provider } from 'unstated';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
-import { EntityIcon } from 'components/NavBar';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import ProfileSecurity from './index.security';
 
@@ -13,7 +12,7 @@ export default function ProfileModule() {
   return (
     <Provider>
       <Content>
-        <Portal>
+        <NavBar>
           <EntityIcon icon="PROFILE" color="TEMPLATE" invert />
           <Match path="/profile/security">
             {({ match }) => (
@@ -25,7 +24,7 @@ export default function ProfileModule() {
               />
             )}
           </Match>
-        </Portal>
+        </NavBar>
         <Router>
           {/* $FlowFixMe path prop is necessary or breaks hot reload */}
           <Redirect path="/" from="/" to="/profile/security" noThrow />

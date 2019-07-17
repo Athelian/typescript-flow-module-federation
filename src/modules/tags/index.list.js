@@ -6,8 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { TAG_CREATE } from 'modules/permission/constants/tag';
 import usePermission from 'hooks/usePermission';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
-import { EntityIcon, SortInput } from 'components/NavBar';
+import { NavBar, EntityIcon, SortInput } from 'components/NavBar';
 import { ExportButton, NewButton } from 'components/Buttons';
 import { currentSort } from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
@@ -46,7 +45,7 @@ const TagListModule = (props: Props) => {
   const allowCreate = hasPermission(TAG_CREATE);
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <EntityIcon icon="TAG" color="TAG" />
         <SortInput
           sort={currentSort(sortFields, filterAndSort.sort)}
@@ -76,7 +75,7 @@ const TagListModule = (props: Props) => {
             },
           }}
         />
-      </Portal>
+      </NavBar>
       <TagsList {...queryVariables} />
     </Content>
   );

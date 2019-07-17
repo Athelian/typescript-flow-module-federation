@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import { PRODUCT_CREATE, PRODUCT_EXPORT_LIST } from 'modules/permission/constants/product';
 import { PermissionConsumer } from 'modules/permission';
@@ -66,7 +66,7 @@ const ProductListModule = (props: Props) => {
     <PermissionConsumer>
       {hasPermission => (
         <Content>
-          <Portal>
+          <NavBar>
             <FilterToolBar
               icon="PRODUCT"
               sortFields={sortFields}
@@ -90,7 +90,7 @@ const ProductListModule = (props: Props) => {
                 }}
               />
             )}
-          </Portal>
+          </NavBar>
           <ProductList {...queryVariables} />
         </Content>
       )}

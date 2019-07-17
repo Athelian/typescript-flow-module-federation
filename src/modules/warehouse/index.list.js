@@ -8,7 +8,7 @@ import usePermission from 'hooks/usePermission';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import { NewButton } from 'components/Buttons';
 import WarehouseList from './list';
 import { warehousesDefaultQueryVariables } from './constants';
@@ -33,7 +33,7 @@ const WarehouseModule = (props: Props) => {
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="WAREHOUSE"
           sortFields={sortFields}
@@ -45,7 +45,7 @@ const WarehouseModule = (props: Props) => {
             <NewButton />
           </Link>
         )}
-      </Portal>
+      </NavBar>
       <WarehouseList {...queryVariables} />
     </Content>
   );

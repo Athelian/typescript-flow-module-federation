@@ -9,8 +9,7 @@ import { decodeId } from 'utils/id';
 import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
-import { EntityIcon } from 'components/NavBar';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
@@ -155,7 +154,7 @@ class ContainerFormModule extends React.Component<Props> {
         >
           {(saveContainer, { loading, error }) => (
             <>
-              <Portal>
+              <NavBar>
                 <EntityIcon icon="CONTAINER" color="CONTAINER" />
                 <JumpToSection>
                   <SectionTabs
@@ -253,7 +252,7 @@ class ContainerFormModule extends React.Component<Props> {
                     </>
                   )}
                 </Subscribe>
-              </Portal>
+              </NavBar>
               <Content>
                 {error && <p>Error: Please try again.</p>}
                 <QueryForm

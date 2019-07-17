@@ -8,7 +8,7 @@ import { SHIPMENT_CREATE } from 'modules/permission/constants/shipment';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import ShipmentList from './list';
 import { shipmentsExportQuery } from './query';
@@ -100,7 +100,7 @@ const ShipmentListModule = (props: Props) => {
   const { hasPermission } = usePermission();
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="SHIPMENT"
           sortFields={sortFields}
@@ -122,7 +122,7 @@ const ShipmentListModule = (props: Props) => {
             filterBy: filterAndSort.filter,
           }}
         />
-      </Portal>
+      </NavBar>
       <ShipmentList {...queryVariables} />
     </Content>
   );

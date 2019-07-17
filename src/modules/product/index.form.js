@@ -11,9 +11,8 @@ import { showToastError } from 'utils/errors';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
 import { Content, SlideViewLayout } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
-import { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -275,7 +274,7 @@ class ProductFormModule extends React.Component<Props> {
       >
         {(saveProduct, { loading: isLoading, error: apiError }) => (
           <>
-            <Portal>
+            <NavBar>
               <EntityIcon icon="PRODUCT" color="PRODUCT" />
               <JumpToSection>
                 <SectionTabs
@@ -454,7 +453,7 @@ class ProductFormModule extends React.Component<Props> {
                   </>
                 )}
               </Subscribe>
-            </Portal>
+            </NavBar>
 
             <Content>
               {apiError && <p>Error: Please try again.</p>}

@@ -6,7 +6,7 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import ContainerList from './list';
 import { containersExportQuery } from './query';
 import messages from './messages';
@@ -53,7 +53,7 @@ function OrderModule(props: Props) {
   );
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="CONTAINER"
           sortFields={sortFields}
@@ -70,7 +70,7 @@ function OrderModule(props: Props) {
             },
           }}
         />
-      </Portal>
+      </NavBar>
       <ContainerList {...queryVariables} />
     </Content>
   );

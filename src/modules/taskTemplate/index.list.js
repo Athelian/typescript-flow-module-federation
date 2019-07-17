@@ -5,8 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import withCache from 'hoc/withCache';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
-import { EntityIcon } from 'components/NavBar';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -40,7 +39,7 @@ const TaskTemplateListModule = () => {
   return (
     <Provider>
       <Content>
-        <Portal>
+        <NavBar>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
           <TabItem
             active={activeType === 'Order'}
@@ -143,7 +142,7 @@ const TaskTemplateListModule = () => {
               </>
             )}
           </BooleanValue>
-        </Portal>
+        </NavBar>
         <TaskTemplateList queryVariables={queryVariables} entityType={activeType} />
       </Content>
     </Provider>

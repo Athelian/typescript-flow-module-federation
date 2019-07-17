@@ -8,8 +8,7 @@ import { decodeId, encodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
-import { EntityIcon } from 'components/NavBar';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -121,7 +120,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
         >
           {(saveTag, { loading: isLoading, error: apiError }) => (
             <>
-              <Portal>
+              <NavBar>
                 <EntityIcon icon="TAG" color="TAG" />
                 <JumpToSection>
                   <SectionTabs
@@ -192,7 +191,7 @@ export default class TagFormModule extends React.PureComponent<Props> {
                     </>
                   )}
                 </Subscribe>
-              </Portal>
+              </NavBar>
               <Content>
                 {apiError && <p>Error: Please try again.</p>}
                 {!tagId ? (

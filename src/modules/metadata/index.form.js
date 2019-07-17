@@ -6,8 +6,7 @@ import withCache from 'hoc/withCache';
 import useFilter from 'hooks/useFilter';
 import { getByPathWithDefault } from 'utils/fp';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
-import { EntityIcon } from 'components/NavBar';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import FieldDefinitionsFormWrapper from 'modules/metadata/components/FieldDefinitionsFormWrapper';
 import MaskList from 'modules/metadata/components/MaskList';
@@ -35,7 +34,7 @@ const MetadataForm = () => {
   return (
     <Provider>
       <>
-        <Portal>
+        <NavBar>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
           <TabItem
             active={activeType === 'Order'}
@@ -130,7 +129,7 @@ const MetadataForm = () => {
               }
             }}
           />
-        </Portal>
+        </NavBar>
 
         <Content>
           <div className={MainContentWrapperStyle}>

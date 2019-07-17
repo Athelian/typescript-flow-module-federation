@@ -4,7 +4,7 @@ import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import usePermission from 'hooks/usePermission';
@@ -52,7 +52,7 @@ function OrderModule(props: Props) {
 
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="ORDER"
           sortFields={sortFields}
@@ -74,7 +74,7 @@ function OrderModule(props: Props) {
             },
           }}
         />
-      </Portal>
+      </NavBar>
       <OrderList {...queryVariables} />
     </Content>
   );

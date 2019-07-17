@@ -5,9 +5,8 @@ import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { showToastError } from 'utils/errors';
-import { EntityIcon, SlideViewNavBar } from 'components/NavBar';
+import { NavBar, EntityIcon, SlideViewNavBar } from 'components/NavBar';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -86,7 +85,7 @@ class BatchFormModule extends React.Component<Props> {
 
   render() {
     const { batchId, isSlideView } = this.props;
-    const CurrentNavBar = isSlideView ? SlideViewNavBar : Portal;
+    const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
 
     let mutationKey = {};
     if (batchId) {

@@ -9,9 +9,8 @@ import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
@@ -51,7 +50,7 @@ const TableTemplateModule = (props: Props) => {
   return (
     <Provider>
       <Content>
-        <Portal>
+        <NavBar>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
           <TabItem
             active
@@ -81,7 +80,7 @@ const TableTemplateModule = (props: Props) => {
               </Content>
             )}
           </BooleanValue>
-        </Portal>
+        </NavBar>
         <TableTemplateList {...queryVariables} />
       </Content>
     </Provider>

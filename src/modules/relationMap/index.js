@@ -3,9 +3,8 @@ import React from 'react';
 import { Router, Location, navigate } from '@reach/router';
 import { Provider } from 'unstated';
 import { FormattedMessage } from 'react-intl';
-import { EntityIcon, Tabs } from 'components/NavBar';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar, EntityIcon, Tabs } from 'components/NavBar';
 import messages from 'modules/relationMap/messages';
 import { ResetContentWrapperStyle } from 'modules/relationMap/style';
 import {
@@ -35,7 +34,7 @@ const RelationMap = () => {
 
   return (
     <Provider>
-      <Portal>
+      <NavBar>
         <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
         <Location>
           {({ location }) => (
@@ -54,7 +53,7 @@ const RelationMap = () => {
             />
           )}
         </Location>
-      </Portal>
+      </NavBar>
 
       {/* $FlowFixMe override Router's div style */}
       <Content>

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { UIConsumer } from 'modules/ui';
-import { NavBar } from 'components/NavBar';
 import { Layout } from 'components/Layout';
 
 import NotificationList from './list';
@@ -28,7 +27,7 @@ class NotificationListModule extends React.Component<Props, State> {
     return (
       <UIConsumer>
         {uiState => (
-          <Layout {...uiState} navBar={<NavBar>{null}</NavBar>}>
+          <Layout {...uiState} navBar={null}>
             <NotificationList {...this.state} />
           </Layout>
         )}

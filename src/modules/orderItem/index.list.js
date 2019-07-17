@@ -5,7 +5,7 @@ import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import OrderItemList from './list';
 import messages from './messages';
 
@@ -44,14 +44,14 @@ function OrderItemModule(props: Props) {
 
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="ORDER_ITEM"
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
         />
-      </Portal>
+      </NavBar>
       <OrderItemList {...queryVariables} />
     </Content>
   );

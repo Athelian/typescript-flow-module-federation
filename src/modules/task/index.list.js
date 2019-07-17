@@ -6,7 +6,7 @@ import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar } from 'components/NavBar';
 import TaskList from './list';
 import { tasksExportQuery } from './query';
 import messages from './messages';
@@ -46,7 +46,7 @@ const TaskModule = (props: Props) => {
   );
   return (
     <Content>
-      <Portal>
+      <NavBar>
         <FilterToolBar
           icon="TASK"
           sortFields={sortFields}
@@ -63,7 +63,7 @@ const TaskModule = (props: Props) => {
             },
           }}
         />
-      </Portal>
+      </NavBar>
       <TaskList {...queryVariables} />
     </Content>
   );

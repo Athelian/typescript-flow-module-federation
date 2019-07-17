@@ -9,12 +9,11 @@ import { showToastError } from 'utils/errors';
 import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
 import { Content } from 'components/Layout';
-import Portal from 'components/Portal';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import { EntityIcon } from 'components/NavBar';
 import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
 import WarehouseContainer from './form/containers';
@@ -134,7 +133,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
         >
           {(saveWarehouse, { loading: isLoading, error: apiError }) => (
             <>
-              <Portal>
+              <NavBar>
                 <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
                 <JumpToSection>
                   <SectionTabs
@@ -186,7 +185,7 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                     )
                   }
                 </Subscribe>
-              </Portal>
+              </NavBar>
               <Content>
                 {apiError && <p>Error: Please try again.</p>}
                 {!warehouseId ? (
