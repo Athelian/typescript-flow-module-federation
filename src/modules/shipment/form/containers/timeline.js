@@ -1,39 +1,20 @@
 // @flow
+import type {
+  TimelineDatePayload,
+  ContainerGroupPayload,
+  VoyagePayload,
+  GroupPayload,
+} from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 import { removeNulls } from 'utils/data';
 import emitter from 'utils/emitter';
 
-type ActionDetail = {
-  approvedAt?: ?Date,
-  approvedBy?: ?Object,
-  assignedTo?: Array<Object>,
-  date?: ?Date,
-  timelineDateRevisions?: Array<Object>,
-};
-
 type FormState = {
-  cargoReady: ActionDetail,
-  containerGroups: Array<{
-    customClearance?: ActionDetail,
-    deliveryReady?: ActionDetail,
-    warehouseArrival?: ActionDetail,
-  }>,
-  voyages: Array<{
-    arrival?: ActionDetail,
-    arrivalPort?: {
-      airport: string,
-      seaport: string,
-    },
-    departure?: ActionDetail,
-    departurePort?: {
-      airport: string,
-      seaport: string,
-    },
-    vesselCode?: string,
-    vesselName?: string,
-  }>,
+  cargoReady: TimelineDatePayload,
+  containerGroups: Array<ContainerGroupPayload>,
+  voyages: Array<VoyagePayload>,
 };
 
 export const initValues: FormState = {
@@ -47,9 +28,9 @@ const removeOldImporterStaff = ({
   field,
   partner,
 }: {
-  entity: Object,
+  entity: TimelineDatePayload,
   field: string,
-  partner: Object,
+  partner: GroupPayload,
 }) => {
   if (Object.keys(entity || {}).length < 1) {
     return {};
@@ -58,11 +39,17 @@ const removeOldImporterStaff = ({
   return {
     [field]: {
       ...entity,
-      assignedTo: entity.assignedTo.filter(user => getByPath('group.id', user) !== partner.id),
+      assignedTo: getByPathWithDefault([], 'assignedTo', entity).filter(
+        user => getByPath('group.id', user) !== getByPath('id', partner)
+      ),
       approvedAt:
-        getByPath('approvedBy.group.id', entity) === partner.id ? null : entity.approvedAt,
+        getByPath('approvedBy.group.id', entity) === getByPath('id', partner)
+          ? null
+          : getByPath('approvedAt', entity),
       approvedBy:
-        getByPath('approvedBy.group.id', entity) === partner.id ? null : entity.approvedBy,
+        getByPath('approvedBy.group.id', entity) === getByPath('id', partner)
+          ? null
+          : getByPath('approvedBy', entity),
     },
   };
 };
@@ -146,17 +133,17 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
           ? {
               ...group,
               ...removeOldImporterStaff({
-                entity: group.customClearance,
+                entity: getByPath('customClearance', group),
                 field: 'customClearance',
                 partner,
               }),
               ...removeOldImporterStaff({
-                entity: group.deliveryReady,
+                entity: getByPath('deliveryReady', group),
                 field: 'deliveryReady',
                 partner,
               }),
               ...removeOldImporterStaff({
-                entity: group.warehouseArrival,
+                entity: getByPath('warehouseArrival', group),
                 field: 'warehouseArrival',
                 partner,
               }),
@@ -168,12 +155,12 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
           ? {
               ...voyage,
               ...removeOldImporterStaff({
-                entity: voyage.arrival,
+                entity: getByPath('arrival', voyage),
                 field: 'arrival',
                 partner,
               }),
               ...removeOldImporterStaff({
-                entity: voyage.departure,
+                entity: getByPath('departure', voyage),
                 field: 'departure',
                 partner,
               }),
