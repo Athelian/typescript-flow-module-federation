@@ -110,10 +110,12 @@ class DocumentsInput extends React.Component<Props, State> {
     return null;
   }
 
-  handleChange = (
-    event: SyntheticInputEvent<HTMLInputElement> | Array<File>,
-    onUpload: (Array<Object>) => any
-  ) => {
+  handleUpload = (newFiles: Array<Object>) => {
+    const { name, values, onChange } = this.props;
+    onChange(name, [...values, ...newFiles]);
+  };
+
+  handleChange = (event: SyntheticInputEvent<HTMLInputElement> | Array<File>) => {
     let newFiles = [];
     if (Array.isArray(event)) {
       newFiles = event;
@@ -155,7 +157,7 @@ class DocumentsInput extends React.Component<Props, State> {
           )
         )
           .then(uploadResult => {
-            onUpload(
+            this.handleUpload(
               uploadResult.map(({ id, name, path }) => ({
                 id,
                 name,
@@ -195,6 +197,8 @@ class DocumentsInput extends React.Component<Props, State> {
     const { name, values, onChange, onBlur, types, editable, downloadable } = this.props;
     const { filesState } = this.state;
 
+    const fileInputValue = '';
+
     return (
       <div className={DocumentsSectionWrapperStyle}>
         <SectionNavBar>
@@ -212,11 +216,8 @@ class DocumentsInput extends React.Component<Props, State> {
                   accept="*"
                   hidden
                   multiple
-                  onChange={e => {
-                    this.handleChange(e, newFiles => {
-                      onChange(name, [...values, ...newFiles]);
-                    });
-                  }}
+                  value={fileInputValue}
+                  onChange={this.handleChange}
                 />
               </label>
             </>
@@ -224,13 +225,7 @@ class DocumentsInput extends React.Component<Props, State> {
         </SectionNavBar>
 
         {editable ? (
-          <Dropzone
-            onDrop={acceptedFiles => {
-              this.handleChange(acceptedFiles, newFiles => {
-                onChange(name, [...values, ...newFiles]);
-              });
-            }}
-          >
+          <Dropzone onDrop={this.handleChange}>
             {({ getRootProps, isDragActive }) => (
               <div {...getRootProps()} className={DocumentsDragAndDropBodyWrapperStyle}>
                 <div className={DocumentsSectionBodyStyle}>
