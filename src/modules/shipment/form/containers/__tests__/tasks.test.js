@@ -85,10 +85,9 @@ describe('shipment task container', () => {
           },
         },
       ],
-      taskTemplate: null,
     };
 
-    await container.initDetailValues(initTodo);
+    await container.initDetailValues(initTodo, true);
 
     expect(container.originalValues.todo).toEqual(initTodo);
     expect(container.state.todo).toEqual(initTodo);

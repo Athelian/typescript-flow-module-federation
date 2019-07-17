@@ -1,5 +1,5 @@
 // @flow
-import type { Todo } from 'generated/graphql';
+import type { Todo, GroupPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
 import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
@@ -60,23 +60,6 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     }, 200);
   };
 
-  changeExporter = (prevExporter: Object) => {
-    let retry;
-    if (this.state.hasCalledTasksApiYet) {
-      this.cleanOldStaff(prevExporter);
-    } else {
-      const waitForApiReady = () => {
-        if (this.state.hasCalledTasksApiYet) {
-          this.cleanOldStaff(prevExporter);
-          cancelAnimationFrame(retry);
-        } else {
-          retry = requestAnimationFrame(waitForApiReady);
-        }
-      };
-      retry = requestAnimationFrame(waitForApiReady);
-    }
-  };
-
   initDetailValues = (todo: Todo, hasCalledTasksApiYet: boolean = false) => {
     const parsedValues: Object = { ...initValues, todo, hasCalledTasksApiYet };
     this.setState(parsedValues);
@@ -106,7 +89,7 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     }
   };
 
-  cleanOldStaff(prevExporter: ?Object) {
+  onChangePartner(partner: GroupPayload) {
     const { todo } = this.state;
     this.setState({
       todo: {
@@ -114,41 +97,41 @@ export default class ShipmentTasksContainer extends Container<FormState> {
         tasks: todo.tasks.map(task => ({
           ...task,
           assignedTo: getByPathWithDefault([], 'assignedTo', task).filter(
-            user => getByPath('group.id', user) !== getByPath('id', prevExporter)
+            user => getByPath('group.id', user) !== getByPath('id', partner)
           ),
           approvers: getByPathWithDefault([], 'approvers', task).filter(
-            user => getByPath('group.id', user) !== getByPath('id', prevExporter)
+            user => getByPath('group.id', user) !== getByPath('id', partner)
           ),
           inProgressAt:
-            getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('inProgressAt', task),
           inProgressBy:
-            getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('inProgressBy', task),
           completedAt:
-            getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('completedBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('completedAt', task),
           completedBy:
-            getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('completedBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('completedBy', task),
           rejectedAt:
-            getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('rejectedAt', task),
           rejectedBy:
-            getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('rejectedBy', task),
           approvedAt:
-            getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('approvedAt', task),
           approvedBy:
-            getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
+            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
               ? null
               : getByPath('approvedBy', task),
         })),
