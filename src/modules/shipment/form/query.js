@@ -1,7 +1,7 @@
 // @flow
 import gql from 'graphql-tag';
 import {
-  shipmentFormFragment,
+  shipmentFormQueryFragment,
   containerFormFragment,
   warehouseCardFragment,
   timelineDateFullFragment,
@@ -37,12 +37,12 @@ import {
 export const shipmentFormQuery = gql`
   query shipmentFormQuery($id: ID!) {
     shipment(id: $id) {
-      ...shipmentFormFragment
+      ...shipmentFormQueryFragment
       ...forbiddenFragment
     }
   }
 
-  ${shipmentFormFragment}
+  ${shipmentFormQueryFragment}
   ${containerFormFragment}
   ${warehouseCardFragment}
   ${timelineDateFullFragment}

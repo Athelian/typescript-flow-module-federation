@@ -1,6 +1,124 @@
 // @flow
 import gql from 'graphql-tag';
 
+export const shipmentFormQueryFragment = gql`
+  fragment shipmentFormQueryFragment on Shipment {
+    id
+    archived
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    memo
+    no
+    blNo
+    blDate
+    booked
+    bookingNo
+    bookingDate
+    invoiceNo
+    contractNo
+    incoterm
+    loadType
+    transportType
+    carrier
+    ownedBy {
+      ...ownedByFragment
+    }
+    todo {
+      milestone {
+        ... on Milestone {
+          ...milestoneCardFragment
+          project {
+            ...projectCardFragment
+          }
+        }
+      }
+      tasks {
+        ...taskWithoutParentInfoFragment
+      }
+      taskTemplate {
+        ...taskTemplateCardFragment
+      }
+    }
+    customFields {
+      ...customFieldsFragment
+    }
+    forwarders {
+      ...partnerCardFragment
+    }
+    importer {
+      ...partnerCardFragment
+    }
+    exporter {
+      ...partnerCardFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    cargoReady {
+      ...timelineDateFullFragment
+    }
+    voyages {
+      ... on Voyage {
+        id
+        vesselName
+        vesselCode
+        departurePort {
+          ...portFragment
+        }
+        arrivalPort {
+          ...portFragment
+        }
+        departure {
+          ...timelineDateFullFragment
+        }
+        arrival {
+          ...timelineDateFullFragment
+        }
+      }
+    }
+    containerGroups {
+      ... on ContainerGroup {
+        id
+        warehouse {
+          ... on Warehouse {
+            id
+            name
+            ownedBy {
+              ... on Group {
+                id
+                name
+              }
+            }
+          }
+        }
+        customClearance {
+          ...timelineDateFullFragment
+        }
+        warehouseArrival {
+          ...timelineDateFullFragment
+        }
+        deliveryReady {
+          ...timelineDateFullFragment
+        }
+      }
+    }
+    containers {
+      ...containerFormFragment
+    }
+    totalVolume {
+      ...metricFragment
+    }
+    batches {
+      ...batchFormFragment
+    }
+  }
+`;
+
 export const shipmentFormFragment = gql`
   fragment shipmentFormFragment on Shipment {
     id
@@ -58,6 +176,9 @@ export const shipmentFormFragment = gql`
     }
     tags {
       ...tagFragment
+    }
+    files {
+      ...documentFragment
     }
     cargoReady {
       ...timelineDateFullFragment

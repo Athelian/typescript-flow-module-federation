@@ -86,11 +86,6 @@ export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
     shipmentUpdate(id: $id, input: $input) {
       ...shipmentFormFragment
-      ... on Shipment {
-        files {
-          ...documentFragment
-        }
-      }
       ...badRequestFragment
       ...forbiddenFragment
     }

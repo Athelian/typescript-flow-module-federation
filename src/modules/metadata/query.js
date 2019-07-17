@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { maskFragment, fieldDefinitionFragment } from 'graphql';
 
 export const fieldDefinitionsQuery = gql`
-  query($entityType: CustomizableEntityType!) {
+  query fieldDefinitionsQuery($entityType: CustomizableEntityType!) {
     fieldDefinitions(entityType: $entityType) {
       ...fieldDefinitionFragment
     }
@@ -12,7 +12,12 @@ export const fieldDefinitionsQuery = gql`
 `;
 
 export const masksQuery = gql`
-  query($page: Int!, $perPage: Int!, $filterBy: MaskFilterInput, $sortBy: MaskSortInput) {
+  query masksQuery(
+    $page: Int!
+    $perPage: Int!
+    $filterBy: MaskFilterInput
+    $sortBy: MaskSortInput
+  ) {
     masks(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...maskFragment
