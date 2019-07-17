@@ -1,23 +1,33 @@
 // @flow
+import type { Todo } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 
-type FormState = {
-  todo: {
-    milestone: Object,
-    tasks: Array<Object>,
-    taskTemplate: ?Object,
-  },
-};
+type FormState = {|
+  todo: Todo,
+  hasCalledTasksApiYet: boolean,
+|};
 
 export const initValues: FormState = {
   todo: {
-    milestone: null,
+    completedCount: 0,
+    inProgressCount: 0,
+    remainingCount: 0,
+    taskCount: {
+      count: 0,
+      remain: 0,
+      inProgress: 0,
+      completed: 0,
+      rejected: 0,
+      approved: 0,
+      skipped: 0,
+      delayed: 0,
+    },
     tasks: [],
-    taskTemplate: null,
   },
+  hasCalledTasksApiYet: false,
 };
 
 export default class ShipmentTasksContainer extends Container<FormState> {
@@ -40,7 +50,7 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     const {
       todo: { milestone },
     } = this.state;
-    const nonTemplateTasks = this.state.todo.tasks.filter(task => !task.taskTemplate);
+    const nonTemplateTasks = this.state.todo.tasks.filter(task => !getByPath('taskTemplate', task));
     const templateTasks = template.tasks.map(task => ({ ...task, milestone }));
     const newTaskList = [...nonTemplateTasks, ...templateTasks];
 
@@ -50,59 +60,99 @@ export default class ShipmentTasksContainer extends Container<FormState> {
     }, 200);
   };
 
-  onChangePartner = (partner: Object) => {
+  changeExporter = (prevExporter: Object) => {
+    let retry;
+    if (this.state.hasCalledTasksApiYet) {
+      this.cleanOldStaff(prevExporter);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledTasksApiYet) {
+          this.cleanOldStaff(prevExporter);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
+  initDetailValues = (todo: Todo, hasCalledTasksApiYet: boolean = false) => {
+    const parsedValues: Object = { ...initValues, todo, hasCalledTasksApiYet };
+    this.setState(parsedValues);
+    if (hasCalledTasksApiYet) {
+      this.originalValues = parsedValues;
+    }
+  };
+
+  waitForTasksSectionReady = (name: string, value: ?Date) => {
+    let retry;
+    if (this.state.hasCalledTasksApiYet) {
+      setTimeout(() => {
+        emitter.emit('AUTO_DATE', name, value);
+      }, 200);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledTasksApiYet) {
+          setTimeout(() => {
+            emitter.emit('AUTO_DATE', name, value);
+          }, 200);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
+  cleanOldStaff(prevExporter: ?Object) {
     const { todo } = this.state;
     this.setState({
       todo: {
         ...todo,
         tasks: todo.tasks.map(task => ({
           ...task,
-          assignedTo: task.assignedTo.filter(
-            user => getByPath('group.id', user) !== getByPath('id', partner)
+          assignedTo: getByPathWithDefault([], 'assignedTo', task).filter(
+            user => getByPath('group.id', user) !== getByPath('id', prevExporter)
           ),
-          approvers: task.approvers.filter(
-            user => getByPath('group.id', user) !== getByPath('id', partner)
+          approvers: getByPathWithDefault([], 'approvers', task).filter(
+            user => getByPath('group.id', user) !== getByPath('id', prevExporter)
           ),
           inProgressAt:
-            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
+            getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.inProgressAt,
+              : getByPath('inProgressAt', task),
           inProgressBy:
-            getByPath('inProgressBy.group.id', task) === getByPath('id', partner)
+            getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.inProgressBy,
+              : getByPath('inProgressBy', task),
           completedAt:
-            getByPath('completedBy.group.id', task) === getByPath('id', partner)
+            getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.completedAt,
+              : getByPath('completedAt', task),
           completedBy:
-            getByPath('completedBy.group.id', task) === getByPath('id', partner)
+            getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.completedBy,
+              : getByPath('completedBy', task),
           rejectedAt:
-            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
+            getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.rejectedAt,
+              : getByPath('rejectedAt', task),
           rejectedBy:
-            getByPath('rejectedBy.group.id', task) === getByPath('id', partner)
+            getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.rejectedBy,
+              : getByPath('rejectedBy', task),
           approvedAt:
-            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
+            getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.approvedAt,
+              : getByPath('approvedAt', task),
           approvedBy:
-            getByPath('approvedBy.group.id', task) === getByPath('id', partner)
+            getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.approvedBy,
+              : getByPath('approvedBy', task),
         })),
       },
     });
-  };
-
-  initDetailValues = (todo: { tasks: Array<Object> }) => {
-    const parsedValues: Object = { ...initValues, todo };
-    this.setState(parsedValues);
-    this.originalValues = { ...parsedValues };
-  };
+  }
 }

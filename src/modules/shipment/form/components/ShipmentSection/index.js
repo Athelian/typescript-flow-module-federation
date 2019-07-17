@@ -190,28 +190,35 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                       />
                     )}
                   </FormField>
-                  <FormField
-                    name="blDate"
-                    initValue={values.blDate}
-                    setFieldValue={setFieldValue}
-                    values={values}
-                    validator={validator}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <DateInputFactory
-                        {...inputHandlers}
-                        onBlur={evt => {
-                          inputHandlers.onBlur(evt);
-                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                        }}
-                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
-                        name={name}
-                        isNew={isNew}
-                        originalValue={initialValues[name]}
-                        label={<FormattedMessage {...messages.blDate} />}
-                      />
+                  <Subscribe to={[ShipmentTasksContainer]}>
+                    {taskContainer => (
+                      <FormField
+                        name="blDate"
+                        initValue={values.blDate}
+                        setFieldValue={setFieldValue}
+                        values={values}
+                        validator={validator}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              if (!taskContainer.state.hasCalledTasksApiYet) {
+                                taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
+                              }
+                            }}
+                            editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
+                            name={name}
+                            isNew={isNew}
+                            originalValue={initialValues[name]}
+                            label={<FormattedMessage {...messages.blDate} />}
+                          />
+                        )}
+                      </FormField>
                     )}
-                  </FormField>
+                  </Subscribe>
                   <FormField
                     name="bookingNo"
                     initValue={values.bookingNo}
@@ -265,28 +272,35 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                       )}
                     </ToggleInput>
                   </div>
-                  <FormField
-                    name="bookingDate"
-                    initValue={values.bookingDate}
-                    setFieldValue={setFieldValue}
-                    values={values}
-                    validator={validator}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <DateInputFactory
-                        {...inputHandlers}
-                        onBlur={evt => {
-                          inputHandlers.onBlur(evt);
-                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                        }}
-                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
-                        name={name}
-                        isNew={isNew}
-                        originalValue={initialValues[name]}
-                        label={<FormattedMessage {...messages.bookingDate} />}
-                      />
+                  <Subscribe to={[ShipmentTasksContainer]}>
+                    {taskContainer => (
+                      <FormField
+                        name="bookingDate"
+                        initValue={values.bookingDate}
+                        setFieldValue={setFieldValue}
+                        values={values}
+                        validator={validator}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              if (!taskContainer.state.hasCalledTasksApiYet) {
+                                taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
+                              }
+                            }}
+                            editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
+                            name={name}
+                            isNew={isNew}
+                            originalValue={initialValues[name]}
+                            label={<FormattedMessage {...messages.bookingDate} />}
+                          />
+                        )}
+                      </FormField>
                     )}
-                  </FormField>
+                  </Subscribe>
                   <FormField
                     name="invoiceNo"
                     initValue={values.invoiceNo}

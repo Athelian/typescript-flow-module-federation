@@ -25,22 +25,6 @@ export const shipmentFormQueryFragment = gql`
     ownedBy {
       ...ownedByFragment
     }
-    todo {
-      milestone {
-        ... on Milestone {
-          ...milestoneCardFragment
-          project {
-            ...projectCardFragment
-          }
-        }
-      }
-      tasks {
-        ...taskWithoutParentInfoFragment
-      }
-      taskTemplate {
-        ...taskTemplateCardFragment
-      }
-    }
     customFields {
       ...customFieldsFragment
     }

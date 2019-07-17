@@ -21,7 +21,7 @@ const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
 const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
 const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
 const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
-const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
+const AsyncShipmentTasksSection = lazy(() => import('./components/ShipmentTasksSection'));
 
 type OptionalProps = {
   isNew: boolean,
@@ -73,7 +73,7 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   render() {
-    const { isNew, shipment, loading } = this.props;
+    const { isNew, isClone, shipment, loading } = this.props;
     return (
       <Suspense fallback={<LoadingIcon />}>
         <div className={ShipmentFormWrapperStyle}>
@@ -115,19 +115,23 @@ class ShipmentForm extends React.Component<Props> {
           </SectionWrapper>
 
           <SectionWrapper id="shipment_documentsSection">
-            <AsyncDocumentsSection entityId={shipment.id} isLoading={loading} />
+            <AsyncDocumentsSection
+              entityId={!isClone && shipment.id ? shipment.id : ''}
+              isLoading={loading}
+            />
           </SectionWrapper>
-          <Subscribe to={[ShipmentInfoContainer]}>
-            {({ state: info }) => (
-              <AsyncTaskSection
-                groupIds={[getByPath('importer.id', info), getByPath('exporter.id', info)].filter(
-                  Boolean
-                )}
-                entityId={shipment.id}
-                type="Shipment"
-              />
-            )}
-          </Subscribe>
+          <SectionWrapper id="shipment_taskSection">
+            <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
+              {({ initDetailValues }, { state: { importer, exporter } }) => (
+                <AsyncShipmentTasksSection
+                  groupIds={[getByPath('id', importer), getByPath('id', exporter)].filter(Boolean)}
+                  initValues={initDetailValues}
+                  isLoading={loading}
+                  entityId={!isClone && shipment.id ? shipment.id : ''}
+                />
+              )}
+            </Subscribe>
+          </SectionWrapper>
 
           <SectionWrapper id="shipment_orderSection">
             <AsyncOrdersSection entityId={shipment.id} isLoading={loading} />
