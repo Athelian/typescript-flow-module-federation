@@ -690,7 +690,7 @@
   "components.ProductProviders.defaultPackagingTooltip": "设置为默认值以自动将包裹信息加载到新创建的批次中。Set as Default to automatically load Packaging info into newly created Batches.",
   "modules.ProductProviders.noPackageName": "没有包裹名称",
   "modules.ProductProviders.packageName": "包裹名称",
-  "modules.ProductProviders.packageCapacity": "PACKAGE CAPACITY",
+  "modules.ProductProviders.capacity": "包裹容量",
   "modules.ProductProviders.grossWeight": "总重量",
   "modules.ProductProviders.packageVolumeTooltipEditableOn": "通过乘以包裹长度，包裹宽度和包裹高度自动计算。手动输入仍然可用，但在包裹长度，包裹宽度或包裹高度发生变化时将被覆盖。",
   "modules.ProductProviders.packageVolumeTooltipEditableOff": "仅手动输入。",
