@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { TAG_CREATE } from 'modules/permission/constants/tag';
 import usePermission from 'hooks/usePermission';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { EntityIcon, SortInput } from 'components/NavBar';
 import { ExportButton, NewButton } from 'components/Buttons';
@@ -44,7 +45,7 @@ const TagListModule = (props: Props) => {
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(TAG_CREATE);
   return (
-    <>
+    <Content>
       <Portal>
         <EntityIcon icon="TAG" color="TAG" />
         <SortInput
@@ -77,7 +78,7 @@ const TagListModule = (props: Props) => {
         />
       </Portal>
       <TagsList {...queryVariables} />
-    </>
+    </Content>
   );
 };
 

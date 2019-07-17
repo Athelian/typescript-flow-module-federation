@@ -4,6 +4,7 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import withCache from 'hoc/withCache';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
@@ -38,7 +39,7 @@ const TaskTemplateListModule = () => {
 
   return (
     <Provider>
-      <>
+      <Content>
         <Portal>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
           <TabItem
@@ -144,7 +145,7 @@ const TaskTemplateListModule = () => {
           </BooleanValue>
         </Portal>
         <TaskTemplateList queryVariables={queryVariables} entityType={activeType} />
-      </>
+      </Content>
     </Provider>
   );
 };

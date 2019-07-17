@@ -9,8 +9,7 @@ import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import { cleanUpData } from 'utils/data';
 import useFilter from 'hooks/useFilter';
-import { SlideViewLayout } from 'components/Layout';
-import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
+import { Content, SlideViewLayout } from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -124,50 +123,49 @@ const SelectExporter = ({
           <ObjectValue defaultValue={selected}>
             {({ value, set }) => (
               <SlideViewLayout>
-                <div className={NavBarWrapperStyle}>
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="PARTNER"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="btnSaveExporter"
-                      disabled={isEquals(value, selected)}
-                      onClick={() => {
-                        if (isRequired) {
-                          if (!isNullOrUndefined(selected)) {
-                            setOpenConfirmDialog(true);
-                          } else {
-                            onSelect(value);
-                          }
-                        } else {
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="PARTNER"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    data-testid="btnSaveExporter"
+                    disabled={isEquals(value, selected)}
+                    onClick={() => {
+                      if (isRequired) {
+                        if (!isNullOrUndefined(selected)) {
                           setOpenConfirmDialog(true);
+                        } else {
+                          onSelect(value);
                         }
-                      }}
-                    />
-                    <ConfirmDialog
-                      isOpen={openConfirmDialog}
-                      onRequestClose={() => setOpenConfirmDialog(false)}
-                      onCancel={() => setOpenConfirmDialog(false)}
-                      onConfirm={() => {
-                        onSelect(value);
-                        setOpenConfirmDialog(false);
-                      }}
-                      message={chooseMessage({
-                        selected,
-                        value,
-                        selectMessage,
-                        changeMessage,
-                        deselectMessage,
-                        warningMessage,
-                      })}
-                    />
-                  </SlideViewNavBar>
-                </div>
-                <div className={ContentWrapperStyle}>
+                      } else {
+                        setOpenConfirmDialog(true);
+                      }
+                    }}
+                  />
+                  <ConfirmDialog
+                    isOpen={openConfirmDialog}
+                    onRequestClose={() => setOpenConfirmDialog(false)}
+                    onCancel={() => setOpenConfirmDialog(false)}
+                    onConfirm={() => {
+                      onSelect(value);
+                      setOpenConfirmDialog(false);
+                    }}
+                    message={chooseMessage({
+                      selected,
+                      value,
+                      selectMessage,
+                      changeMessage,
+                      deselectMessage,
+                      warningMessage,
+                    })}
+                  />
+                </SlideViewNavBar>
+
+                <Content>
                   <PartnerGridView
                     hasMore={hasMore}
                     isLoading={loading}
@@ -190,7 +188,7 @@ const SelectExporter = ({
                       />
                     )}
                   />
-                </div>
+                </Content>
               </SlideViewLayout>
             )}
           </ObjectValue>

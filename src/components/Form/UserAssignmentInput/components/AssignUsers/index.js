@@ -8,7 +8,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -105,30 +105,33 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
                     onClick={() => onSelect(values)}
                   />
                 </SlideViewNavBar>
-                <StaffGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'users')}
-                  items={getByPathWithDefault([], 'users.nodes', data)}
-                  renderItem={item => {
-                    const isSelected = values.map(({ id }) => id).includes(item.id);
-                    return (
-                      <StaffCard
-                        staff={item}
-                        onSelect={() => {
-                          if (isSelected) {
-                            filter(({ id }) => id !== item.id);
-                          } else if (values.length < MAX_SELECTIONS) {
-                            push(item);
-                          }
-                        }}
-                        selectable
-                        selected={isSelected}
-                        key={item.id}
-                      />
-                    );
-                  }}
-                />
+
+                <Content>
+                  <StaffGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'users')}
+                    items={getByPathWithDefault([], 'users.nodes', data)}
+                    renderItem={item => {
+                      const isSelected = values.map(({ id }) => id).includes(item.id);
+                      return (
+                        <StaffCard
+                          staff={item}
+                          onSelect={() => {
+                            if (isSelected) {
+                              filter(({ id }) => id !== item.id);
+                            } else if (values.length < MAX_SELECTIONS) {
+                              push(item);
+                            }
+                          }}
+                          selectable
+                          selected={isSelected}
+                          key={item.id}
+                        />
+                      );
+                    }}
+                  />
+                </Content>
               </SlideViewLayout>
             )}
           </ArrayValue>

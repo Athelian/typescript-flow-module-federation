@@ -7,8 +7,7 @@ import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import { TemplateCard } from 'components/Cards';
-import { SlideViewLayout } from 'components/Layout';
-import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { masksQuery } from 'modules/metadata/query';
@@ -57,18 +56,17 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
         <ObjectValue defaultValue={selected}>
           {({ value, set }) => (
             <SlideViewLayout>
-              <div className={NavBarWrapperStyle}>
-                <SlideViewNavBar>
-                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    data-testid="saveButtonOnSelectMask"
-                    disabled={isEquals(value, selected)}
-                    onClick={() => onSave(value)}
-                  />
-                </SlideViewNavBar>
-              </div>
-              <div className={ContentWrapperStyle}>
+              <SlideViewNavBar>
+                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                <CancelButton onClick={onCancel} />
+                <SaveButton
+                  data-testid="saveButtonOnSelectMask"
+                  disabled={isEquals(value, selected)}
+                  onClick={() => onSave(value)}
+                />
+              </SlideViewNavBar>
+
+              <Content>
                 <MaskGridView
                   entityType={entityType}
                   items={getByPathWithDefault([], 'masks.nodes', data)}
@@ -99,7 +97,7 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
                     />
                   )}
                 />
-              </div>
+              </Content>
             </SlideViewLayout>
           )}
         </ObjectValue>

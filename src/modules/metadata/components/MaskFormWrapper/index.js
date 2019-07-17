@@ -5,7 +5,7 @@ import { Mutation, Query } from 'react-apollo';
 import { navigate } from '@reach/router';
 import { Subscribe, Provider } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -177,59 +177,62 @@ class MaskFormWrapper extends React.Component<Props> {
                               />
                             )}
                           </SlideViewNavBar>
-                          {isNew ? (
-                            <MaskForm
-                              isNew
-                              fieldDefinitions={allFieldDefinitions}
-                              onFormReady={() =>
-                                maskContainer.initDetailValues({
-                                  name: '',
-                                  memo: '',
-                                  fieldDefinitionIDs: [],
-                                })
-                              }
-                            />
-                          ) : (
-                            <Query
-                              key={id}
-                              query={maskQuery}
-                              variables={{ id }}
-                              fetchPolicy="network-only"
-                            >
-                              {({ loading: maskLoading, data: maskData, error: maskError }) => {
-                                if (maskError) {
-                                  if (maskError.message && maskError.message.includes('403')) {
-                                    navigate('/403');
-                                  }
-                                  return maskError.message;
+
+                          <Content>
+                            {isNew ? (
+                              <MaskForm
+                                isNew
+                                fieldDefinitions={allFieldDefinitions}
+                                onFormReady={() =>
+                                  maskContainer.initDetailValues({
+                                    name: '',
+                                    memo: '',
+                                    fieldDefinitionIDs: [],
+                                  })
                                 }
+                              />
+                            ) : (
+                              <Query
+                                key={id}
+                                query={maskQuery}
+                                variables={{ id }}
+                                fetchPolicy="network-only"
+                              >
+                                {({ loading: maskLoading, data: maskData, error: maskError }) => {
+                                  if (maskError) {
+                                    if (maskError.message && maskError.message.includes('403')) {
+                                      navigate('/403');
+                                    }
+                                    return maskError.message;
+                                  }
 
-                                if (maskLoading) return <LoadingIcon />;
+                                  if (maskLoading) return <LoadingIcon />;
 
-                                const name = getByPathWithDefault({}, 'mask.name', maskData);
-                                const memo = getByPathWithDefault({}, 'mask.memo', maskData);
+                                  const name = getByPathWithDefault({}, 'mask.name', maskData);
+                                  const memo = getByPathWithDefault({}, 'mask.memo', maskData);
 
-                                const fieldDefinitions = getByPathWithDefault(
-                                  {},
-                                  'mask.fieldDefinitions',
-                                  maskData
-                                );
+                                  const fieldDefinitions = getByPathWithDefault(
+                                    {},
+                                    'mask.fieldDefinitions',
+                                    maskData
+                                  );
 
-                                const mask = {
-                                  name,
-                                  memo,
-                                  fieldDefinitionIDs: fieldDefinitions.map(item => item.id),
-                                };
+                                  const mask = {
+                                    name,
+                                    memo,
+                                    fieldDefinitionIDs: fieldDefinitions.map(item => item.id),
+                                  };
 
-                                return (
-                                  <MaskForm
-                                    fieldDefinitions={allFieldDefinitions}
-                                    onFormReady={() => maskContainer.initDetailValues(mask)}
-                                  />
-                                );
-                              }}
-                            </Query>
-                          )}
+                                  return (
+                                    <MaskForm
+                                      fieldDefinitions={allFieldDefinitions}
+                                      onFormReady={() => maskContainer.initDetailValues(mask)}
+                                    />
+                                  );
+                                }}
+                              </Query>
+                            )}
+                          </Content>
                         </SlideViewLayout>
                       </>
                     )}

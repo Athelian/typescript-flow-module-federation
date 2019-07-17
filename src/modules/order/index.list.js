@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ORDER_CREATE } from 'modules/permission/constants/order';
 import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
-
 import { NewButton, ExportButton } from 'components/Buttons';
 import OrderList from './list';
 import messages from './messages';
@@ -51,8 +51,7 @@ function OrderModule(props: Props) {
   const { hasPermission } = usePermission();
 
   return (
-    <>
-      <OrderList {...queryVariables} />
+    <Content>
       <Portal>
         <FilterToolBar
           icon="ORDER"
@@ -76,7 +75,8 @@ function OrderModule(props: Props) {
           }}
         />
       </Portal>
-    </>
+      <OrderList {...queryVariables} />
+    </Content>
   );
 }
 

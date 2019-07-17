@@ -5,7 +5,7 @@ import { ObjectValue } from 'react-values';
 import type { Milestone } from 'generated/graphql';
 import { getByPathWithDefault } from 'utils/fp';
 import GridView from 'components/GridView';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { MilestoneCard } from 'components/Cards';
@@ -39,36 +39,39 @@ function SelectMilestone({ onCancel, onSelect, milestones, milestone }: Props) {
               onClick={() => onSelect(selectedMilestone)}
             />
           </SlideViewNavBar>
-          <GridView
-            items={milestones}
-            hasMore={false}
-            isLoading={false}
-            isEmpty={milestones.length === 0}
-            onLoadMore={() => {}}
-            emptyMessage={
-              <FormattedMessage
-                id="modules.Milestones.noFound"
-                defaultMessage="No milestone found"
-              />
-            }
-            itemWidth="195px"
-          >
-            {milestones.map(item => {
-              return (
-                <MilestoneCard
-                  key={item.id}
-                  milestone={item}
-                  onClick={() =>
-                    item.id === getByPathWithDefault('', 'id', selectedMilestone)
-                      ? setSelectMilestone(null)
-                      : setSelectMilestone(item)
-                  }
-                  selectable
-                  selected={item.id === getByPathWithDefault('', 'id', selectedMilestone)}
+
+          <Content>
+            <GridView
+              items={milestones}
+              hasMore={false}
+              isLoading={false}
+              isEmpty={milestones.length === 0}
+              onLoadMore={() => {}}
+              emptyMessage={
+                <FormattedMessage
+                  id="modules.Milestones.noFound"
+                  defaultMessage="No milestone found"
                 />
-              );
-            })}
-          </GridView>
+              }
+              itemWidth="195px"
+            >
+              {milestones.map(item => {
+                return (
+                  <MilestoneCard
+                    key={item.id}
+                    milestone={item}
+                    onClick={() =>
+                      item.id === getByPathWithDefault('', 'id', selectedMilestone)
+                        ? setSelectMilestone(null)
+                        : setSelectMilestone(item)
+                    }
+                    selectable
+                    selected={item.id === getByPathWithDefault('', 'id', selectedMilestone)}
+                  />
+                );
+              })}
+            </GridView>
+          </Content>
         </SlideViewLayout>
       )}
     </ObjectValue>

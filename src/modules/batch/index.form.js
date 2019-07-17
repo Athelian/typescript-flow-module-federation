@@ -5,8 +5,8 @@ import { Provider, Subscribe } from 'unstated';
 import { Mutation } from 'react-apollo';
 import { QueryForm } from 'components/common';
 import { showToastError } from 'utils/errors';
-
 import { EntityIcon, SlideViewNavBar } from 'components/NavBar';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer } from 'modules/form';
@@ -21,7 +21,6 @@ import { BatchInfoContainer, BatchTasksContainer } from './form/containers';
 import validator from './form/validator';
 import { batchFormQuery } from './form/query';
 import { updateBatchMutation, prepareParsedBatchInput } from './form/mutation';
-import { ContentWrapperStyle } from './styles';
 
 type BatchFormState = {
   batchInfoContainer: Object,
@@ -208,7 +207,7 @@ class BatchFormModule extends React.Component<Props> {
                 </Subscribe>
               </CurrentNavBar>
               {error && <p>Error: Please try again.</p>}
-              <div className={ContentWrapperStyle}>
+              <Content>
                 <QueryForm
                   query={batchFormQuery}
                   entityId={batchId}
@@ -236,7 +235,7 @@ class BatchFormModule extends React.Component<Props> {
                     </>
                   )}
                 />
-              </div>
+              </Content>
             </>
           )}
         </Mutation>

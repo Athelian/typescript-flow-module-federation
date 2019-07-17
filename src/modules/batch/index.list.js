@@ -4,9 +4,9 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import BatchList from './list';
-import { ContentWrapperStyle } from './styles';
 import messages from './messages';
 
 type Props = {
@@ -48,7 +48,7 @@ const BatchListModule = (props: Props) => {
     'filterBatch'
   );
   return (
-    <div className={ContentWrapperStyle}>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="BATCH"
@@ -58,7 +58,7 @@ const BatchListModule = (props: Props) => {
         />
       </Portal>
       <BatchList {...queryVariables} />
-    </div>
+    </Content>
   );
 };
 

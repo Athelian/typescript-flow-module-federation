@@ -5,6 +5,7 @@ import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import ContainerList from './list';
 import { containersExportQuery } from './query';
@@ -51,7 +52,7 @@ function OrderModule(props: Props) {
     'filterContainer'
   );
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="CONTAINER"
@@ -71,7 +72,7 @@ function OrderModule(props: Props) {
         />
       </Portal>
       <ContainerList {...queryVariables} />
-    </>
+    </Content>
   );
 }
 

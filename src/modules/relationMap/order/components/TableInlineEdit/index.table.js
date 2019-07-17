@@ -13,7 +13,7 @@ import emitter from 'utils/emitter';
 import { trackingError } from 'utils/trackingError';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import { calculatePackageQuantity, getBatchLatestQuantity } from 'utils/batch';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import {
@@ -572,110 +572,117 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
                     <div style={{ width: 400 }}> Error: {errorMessage} </div>
                   )}
                 </SlideViewNavBar>
-                <div className={NavbarWrapperStyle}>
-                  <UserConsumer>
-                    {({ user }) => {
-                      const lastUsedTemplate = window.localStorage.getItem(
-                        `${user.id}-table-template`
-                      );
-                      return (
-                        <>
-                          {lastUsedTemplate && (
-                            <div className={LastTemplateUsedStyle}>
+
+                <Content>
+                  <div className={NavbarWrapperStyle}>
+                    <UserConsumer>
+                      {({ user }) => {
+                        const lastUsedTemplate = window.localStorage.getItem(
+                          `${user.id}-table-template`
+                        );
+                        return (
+                          <>
+                            {lastUsedTemplate && (
+                              <div className={LastTemplateUsedStyle}>
+                                <Label>
+                                  <FormattedMessage
+                                    id="modules.RelationMaps.lastUsed"
+                                    defaultMessage="LAST USED TEMPLATE:"
+                                  />
+                                </Label>
+                                <Display width="400px" align="left">
+                                  {lastUsedTemplate}
+                                </Display>
+                              </div>
+                            )}
+                            <SelectTemplateButton onClick={() => setShowTemplate(true)} />
+                            <SlideView
+                              isOpen={showTemplate}
+                              onRequestClose={() => setShowTemplate(false)}
+                            >
+                              <SelectTemplate
+                                onSelect={template => {
+                                  setShowTemplate(false);
+                                  setShowAll(false);
+                                  window.localStorage.setItem(
+                                    `${user.id}-table-template`,
+                                    template.name
+                                  );
+                                  window.localStorage.setItem(
+                                    'rmTemplateFilterColumns',
+                                    JSON.stringify(template.fields)
+                                  );
+                                  setTemplateColumns(template.fields);
+                                }}
+                                onCancel={() => setShowTemplate(false)}
+                              />
+                            </SlideView>
+                            <ToggleInput
+                              toggled={showAll}
+                              onToggle={() => {
+                                setShowAll(!showAll);
+                                window.localStorage.setItem(
+                                  'filterRMEditViewShowAll',
+                                  showAll ? '0' : '1'
+                                );
+                              }}
+                            >
                               <Label>
                                 <FormattedMessage
-                                  id="modules.RelationMaps.lastUsed"
-                                  defaultMessage="LAST USED TEMPLATE:"
+                                  id="modules.RelationMaps.showAll"
+                                  defaultMessage="SHOW ALL"
                                 />
                               </Label>
-                              <Display width="400px" align="left">
-                                {lastUsedTemplate}
-                              </Display>
-                            </div>
-                          )}
-                          <SelectTemplateButton onClick={() => setShowTemplate(true)} />
-                          <SlideView
-                            isOpen={showTemplate}
-                            onRequestClose={() => setShowTemplate(false)}
-                          >
-                            <SelectTemplate
-                              onSelect={template => {
-                                setShowTemplate(false);
-                                setShowAll(false);
-                                window.localStorage.setItem(
-                                  `${user.id}-table-template`,
-                                  template.name
-                                );
-                                window.localStorage.setItem(
-                                  'rmTemplateFilterColumns',
-                                  JSON.stringify(template.fields)
-                                );
-                                setTemplateColumns(template.fields);
-                              }}
-                              onCancel={() => setShowTemplate(false)}
-                            />
-                          </SlideView>
-                          <ToggleInput
-                            toggled={showAll}
-                            onToggle={() => {
-                              setShowAll(!showAll);
-                              window.localStorage.setItem(
-                                'filterRMEditViewShowAll',
-                                showAll ? '0' : '1'
-                              );
-                            }}
-                          >
-                            <Label>
-                              <FormattedMessage
-                                id="modules.RelationMaps.showAll"
-                                defaultMessage="SHOW ALL"
-                              />
-                            </Label>
-                          </ToggleInput>
-                        </>
-                      );
-                    }}
-                  </UserConsumer>
-                </div>
-                <HotKeys keyMap={keyMap} handlers={handlers} className={EditTableViewWrapperStyle}>
-                  {Object.keys(editData.orders || {}).length === 0 &&
-                  Object.keys(editData.shipments || {}).length === 0 ? (
-                    <LoadingIcon />
-                  ) : (
-                    <Table
-                      itemData={{
-                        targetIds,
-                        editData,
-                        mappingObjects,
-                        ids: allId,
-                        columns: allColumns,
-                        allColumnIds,
-                        showAll,
-                        templateColumns,
+                            </ToggleInput>
+                          </>
+                        );
                       }}
-                      rowHeight={40}
-                      columnCount={showAll ? totalColumn(allColumns) : templateColumns.length}
-                      columnWidth={210}
-                      showAllColumn={showAll}
-                      customColumns={{
-                        orderCustomFields,
-                        orderItemCustomFields,
-                        batchCustomFields,
-                        shipmentCustomFields,
-                        productCustomFields,
-                      }}
-                      templateColumns={templateColumns}
-                      onToggle={onToggle}
-                      lines={{
-                        targetIds,
-                        orderIds,
-                        batchIds,
-                        orderItemIds,
-                        mappingObjects,
-                      }}
-                    />
-                  )}
-                </HotKeys>
+                    </UserConsumer>
+                  </div>
+                  <HotKeys
+                    keyMap={keyMap}
+                    handlers={handlers}
+                    className={EditTableViewWrapperStyle}
+                  >
+                    {Object.keys(editData.orders || {}).length === 0 &&
+                    Object.keys(editData.shipments || {}).length === 0 ? (
+                      <LoadingIcon />
+                    ) : (
+                      <Table
+                        itemData={{
+                          targetIds,
+                          editData,
+                          mappingObjects,
+                          ids: allId,
+                          columns: allColumns,
+                          allColumnIds,
+                          showAll,
+                          templateColumns,
+                        }}
+                        rowHeight={40}
+                        columnCount={showAll ? totalColumn(allColumns) : templateColumns.length}
+                        columnWidth={210}
+                        showAllColumn={showAll}
+                        customColumns={{
+                          orderCustomFields,
+                          orderItemCustomFields,
+                          batchCustomFields,
+                          shipmentCustomFields,
+                          productCustomFields,
+                        }}
+                        templateColumns={templateColumns}
+                        onToggle={onToggle}
+                        lines={{
+                          targetIds,
+                          orderIds,
+                          batchIds,
+                          orderItemIds,
+                          mappingObjects,
+                        }}
+                      />
+                    )}
+                  </HotKeys>
+                </Content>
               </SlideViewLayout>
             )}
           </ApolloConsumer>

@@ -10,7 +10,7 @@ import { decodeId } from 'utils/id';
 import { getByPath } from 'utils/fp';
 import { parseGroupIds } from 'utils/task';
 import { removeTypename } from 'utils/data';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import SlideView from 'components/SlideView';
 import Portal from 'components/Portal';
 import { ExportButton, ResetButton, SaveButton } from 'components/Buttons';
@@ -114,19 +114,22 @@ class TaskFormModule extends React.Component<Props> {
                               <SlideViewLayout>
                                 {taskId && opened && (
                                   <>
-                                    <Timeline
-                                      query={taskTimelineQuery}
-                                      queryField="task"
-                                      variables={{
-                                        id: decodeId(taskId),
-                                      }}
-                                      entity={{
-                                        taskId: decodeId(taskId),
-                                      }}
-                                    />
                                     <SlideViewNavBar>
                                       <EntityIcon icon="LOGS" color="LOGS" />
                                     </SlideViewNavBar>
+
+                                    <Content>
+                                      <Timeline
+                                        query={taskTimelineQuery}
+                                        queryField="task"
+                                        variables={{
+                                          id: decodeId(taskId),
+                                        }}
+                                        entity={{
+                                          taskId: decodeId(taskId),
+                                        }}
+                                      />
+                                    </Content>
                                   </>
                                 )}
                               </SlideViewLayout>
@@ -173,20 +176,22 @@ class TaskFormModule extends React.Component<Props> {
                         />
                       )}
                     </Portal>
-                    {error && <p>Error: Please try again.</p>}
-                    <QueryForm
-                      query={taskFormQuery}
-                      entityId={taskId}
-                      entityType="task"
-                      render={task => (
-                        <TaskForm
-                          inParentEntityForm={false}
-                          groupIds={parseGroupIds(task)}
-                          task={task}
-                          onFormReady={() => initDetailValues(task)}
-                        />
-                      )}
-                    />
+                    <Content>
+                      {error && <p>Error: Please try again.</p>}
+                      <QueryForm
+                        query={taskFormQuery}
+                        entityId={taskId}
+                        entityType="task"
+                        render={task => (
+                          <TaskForm
+                            inParentEntityForm={false}
+                            groupIds={parseGroupIds(task)}
+                            task={task}
+                            onFormReady={() => initDetailValues(task)}
+                          />
+                        )}
+                      />
+                    </Content>
                   </>
                 );
               }}

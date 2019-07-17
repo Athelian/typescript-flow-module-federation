@@ -9,7 +9,7 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
@@ -86,27 +86,30 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
                     onClick={() => onSelect(value)}
                   />
                 </SlideViewNavBar>
-                <PartnerGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, partnerPath)}
-                  items={items}
-                  renderItem={item => (
-                    <PartnerCard
-                      partner={item}
-                      onSelect={() => {
-                        if (value && item.id === value.id) {
-                          set(null);
-                        } else {
-                          set(item);
-                        }
-                      }}
-                      selectable
-                      selected={value && item.id === value.id}
-                      key={item.id}
-                    />
-                  )}
-                />
+
+                <Content>
+                  <PartnerGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, partnerPath)}
+                    items={items}
+                    renderItem={item => (
+                      <PartnerCard
+                        partner={item}
+                        onSelect={() => {
+                          if (value && item.id === value.id) {
+                            set(null);
+                          } else {
+                            set(item);
+                          }
+                        }}
+                        selectable
+                        selected={value && item.id === value.id}
+                        key={item.id}
+                      />
+                    )}
+                  />
+                </Content>
               </SlideViewLayout>
             )}
           </ObjectValue>

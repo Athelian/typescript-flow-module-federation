@@ -14,7 +14,7 @@ import Timeline from 'modules/timeline/components/Timeline';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -158,16 +158,19 @@ const ProductProviderFormWrapper = ({
                                 <SlideViewNavBar>
                                   <EntityIcon icon="LOGS" color="LOGS" />
                                 </SlideViewNavBar>
-                                <Timeline
-                                  query={productProviderTimelineQuery}
-                                  queryField="productProvider"
-                                  variables={{
-                                    id: productProvider.id,
-                                  }}
-                                  entity={{
-                                    productProviderId: productProvider.id,
-                                  }}
-                                />
+
+                                <Content>
+                                  <Timeline
+                                    query={productProviderTimelineQuery}
+                                    queryField="productProvider"
+                                    variables={{
+                                      id: productProvider.id,
+                                    }}
+                                    entity={{
+                                      productProviderId: productProvider.id,
+                                    }}
+                                  />
+                                </Content>
                               </>
                             )}
                           </SlideViewLayout>
@@ -219,18 +222,21 @@ const ProductProviderFormWrapper = ({
                     </>
                   )}
               </SlideViewNavBar>
-              <ProductProviderForm
-                productProvider={productProvider}
-                initDetailValues={(values: Object) => {
-                  const { todo, packages, defaultPackage, ...info } = values;
-                  productProviderInfoContainer.initDetailValues(info);
-                  productProviderTasksContainer.initDetailValues(todo);
-                  productProviderPackagesContainer.initDetailValues({ packages, defaultPackage });
-                }}
-                isExist={isExist}
-                isNew={isNew}
-                isOwner={isOwner}
-              />
+
+              <Content>
+                <ProductProviderForm
+                  productProvider={productProvider}
+                  initDetailValues={(values: Object) => {
+                    const { todo, packages, defaultPackage, ...info } = values;
+                    productProviderInfoContainer.initDetailValues(info);
+                    productProviderTasksContainer.initDetailValues(todo);
+                    productProviderPackagesContainer.initDetailValues({ packages, defaultPackage });
+                  }}
+                  isExist={isExist}
+                  isNew={isNew}
+                  isOwner={isOwner}
+                />
+              </Content>
             </SlideViewLayout>
           );
         }}

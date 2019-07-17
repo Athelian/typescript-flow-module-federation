@@ -8,7 +8,7 @@ import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import useFilter from 'hooks/useFilter';
 import { FilterToolBar } from 'components/common';
@@ -143,20 +143,23 @@ const RMEditTasks = (props: Props) => {
                   </>
                 )}
               </SlideViewNavBar>
-              {mutationError && <p>Error: Please try again.</p>}
-              <TaskListInSlide
-                tasks={rmEditTasksContainer.selectTasks(tasks)}
-                onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
-                hasMore={hasMore}
-                isLoading={queryLoading}
-                onChange={(id, updateTask) =>
-                  rmEditTasksContainer.updateTaskById({
-                    id,
-                    updateTask,
-                    tasks,
-                  })
-                }
-              />
+
+              <Content>
+                {mutationError && <p>Error: Please try again.</p>}
+                <TaskListInSlide
+                  tasks={rmEditTasksContainer.selectTasks(tasks)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, 'tasks')}
+                  hasMore={hasMore}
+                  isLoading={queryLoading}
+                  onChange={(id, updateTask) =>
+                    rmEditTasksContainer.updateTaskById({
+                      id,
+                      updateTask,
+                      tasks,
+                    })
+                  }
+                />
+              </Content>
             </SlideViewLayout>
           )}
         </Subscribe>

@@ -11,7 +11,7 @@ import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import { removeTypename } from 'utils/data';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
@@ -553,22 +553,102 @@ class ShipmentFormModule extends React.Component<Props> {
                     }}
                   </Subscribe>
                 </CurrentNavBar>
-                {apiError && <p>Error: Please try again.</p>}
-                {this.isNew() || !shipmentId ? (
-                  <UserConsumer>
-                    {({ user }) => {
-                      const { group } = user;
-                      const { types = [] } = group;
-                      const isImporter = types.includes('Importer');
-                      const isExporter = types.includes('Exporter');
-                      const isForwarder = types.includes('Forwarder');
-                      return (
+
+                <Content>
+                  {apiError && <p>Error: Please try again.</p>}
+                  {this.isNew() || !shipmentId ? (
+                    <UserConsumer>
+                      {({ user }) => {
+                        const { group } = user;
+                        const { types = [] } = group;
+                        const isImporter = types.includes('Importer');
+                        const isExporter = types.includes('Exporter');
+                        const isForwarder = types.includes('Forwarder');
+                        return (
+                          <>
+                            <ShipmentForm
+                              shipment={{}}
+                              isNew
+                              loading={false}
+                              initDataForSlideView={initDataForSlideView}
+                            />
+                            <Subscribe
+                              to={[
+                                ShipmentInfoContainer,
+                                ShipmentTagsContainer,
+                                ShipmentTransportTypeContainer,
+                                ShipmentTimelineContainer,
+                                ShipmentBatchesContainer,
+                                ShipmentContainersContainer,
+                                ShipmentFilesContainer,
+                                ShipmentTasksContainer,
+                              ]}
+                            >
+                              {(
+                                shipmentInfoContainer,
+                                shipmentTagsContainer,
+                                shipmentTransportTypeContainer,
+                                shipmentTimelineContainer,
+                                shipmentBatchesContainer,
+                                shipmentContainersContainer,
+                                shipmentFilesContainer,
+                                shipmentTasksContainer
+                              ) =>
+                                this.onFormReady(
+                                  {
+                                    shipmentInfoContainer,
+                                    shipmentTagsContainer,
+                                    shipmentTransportTypeContainer,
+                                    shipmentTimelineContainer,
+                                    shipmentBatchesContainer,
+                                    shipmentContainersContainer,
+                                    shipmentFilesContainer,
+                                    shipmentTasksContainer,
+                                  },
+                                  {
+                                    id: uuid(),
+                                    importer: isImporter ? group : null,
+                                    exporter: isExporter ? group : null,
+                                    forwarders: isForwarder ? [group] : [],
+                                    inCharges: [],
+                                    booked: false,
+                                    customFields: {
+                                      mask: null,
+                                      fieldValues: [],
+                                    },
+                                    cargoReady: {},
+                                    containerGroups: [{}],
+                                    voyages: [{}],
+                                    tags: [],
+                                    todo: {
+                                      tasks: [],
+                                      taskTemplate: null,
+                                    },
+                                    files: [],
+                                    containers: [],
+                                    batches: [],
+                                    ...initDataForSlideView,
+                                  }
+                                )
+                              }
+                            </Subscribe>
+                          </>
+                        );
+                      }}
+                    </UserConsumer>
+                  ) : (
+                    <QueryFormV2
+                      query={shipmentFormQuery}
+                      entityId={shipmentId}
+                      entityType="shipment"
+                      render={(shipment, queryState) => (
                         <>
                           <ShipmentForm
-                            shipment={{}}
-                            isNew
-                            loading={false}
-                            initDataForSlideView={initDataForSlideView}
+                            loading={queryState.isLoading}
+                            isOwner={queryState.isOwner}
+                            isClone={this.isClone()}
+                            shipment={shipment}
+                            anchor={anchor}
                           />
                           <Subscribe
                             to={[
@@ -603,92 +683,15 @@ class ShipmentFormModule extends React.Component<Props> {
                                   shipmentFilesContainer,
                                   shipmentTasksContainer,
                                 },
-                                {
-                                  id: uuid(),
-                                  importer: isImporter ? group : null,
-                                  exporter: isExporter ? group : null,
-                                  forwarders: isForwarder ? [group] : [],
-                                  inCharges: [],
-                                  booked: false,
-                                  customFields: {
-                                    mask: null,
-                                    fieldValues: [],
-                                  },
-                                  cargoReady: {},
-                                  containerGroups: [{}],
-                                  voyages: [{}],
-                                  tags: [],
-                                  todo: {
-                                    tasks: [],
-                                    taskTemplate: null,
-                                  },
-                                  files: [],
-                                  containers: [],
-                                  batches: [],
-                                  ...initDataForSlideView,
-                                }
+                                shipment
                               )
                             }
                           </Subscribe>
                         </>
-                      );
-                    }}
-                  </UserConsumer>
-                ) : (
-                  <QueryFormV2
-                    query={shipmentFormQuery}
-                    entityId={shipmentId}
-                    entityType="shipment"
-                    render={(shipment, queryState) => (
-                      <>
-                        <ShipmentForm
-                          loading={queryState.isLoading}
-                          isOwner={queryState.isOwner}
-                          isClone={this.isClone()}
-                          shipment={shipment}
-                          anchor={anchor}
-                        />
-                        <Subscribe
-                          to={[
-                            ShipmentInfoContainer,
-                            ShipmentTagsContainer,
-                            ShipmentTransportTypeContainer,
-                            ShipmentTimelineContainer,
-                            ShipmentBatchesContainer,
-                            ShipmentContainersContainer,
-                            ShipmentFilesContainer,
-                            ShipmentTasksContainer,
-                          ]}
-                        >
-                          {(
-                            shipmentInfoContainer,
-                            shipmentTagsContainer,
-                            shipmentTransportTypeContainer,
-                            shipmentTimelineContainer,
-                            shipmentBatchesContainer,
-                            shipmentContainersContainer,
-                            shipmentFilesContainer,
-                            shipmentTasksContainer
-                          ) =>
-                            this.onFormReady(
-                              {
-                                shipmentInfoContainer,
-                                shipmentTagsContainer,
-                                shipmentTransportTypeContainer,
-                                shipmentTimelineContainer,
-                                shipmentBatchesContainer,
-                                shipmentContainersContainer,
-                                shipmentFilesContainer,
-                                shipmentTasksContainer,
-                              },
-                              shipment
-                            )
-                          }
-                        </Subscribe>
-                      </>
-                    )}
-                  />
-                )}
+                      )}
+                    />
+                  )}
+                </Content>
               </CurrentLayout>
             );
           }}

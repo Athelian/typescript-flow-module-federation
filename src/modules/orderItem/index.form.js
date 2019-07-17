@@ -8,7 +8,7 @@ import { showToastError } from 'utils/errors';
 import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { NavBar, SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -190,16 +190,19 @@ class OrderItemFormModule extends React.Component<Props> {
                               <SlideViewNavBar>
                                 <EntityIcon icon="LOGS" color="LOGS" />
                               </SlideViewNavBar>
-                              <Timeline
-                                query={orderItemTimelineQuery}
-                                queryField="orderItem"
-                                variables={{
-                                  id: decodeId(orderItemId),
-                                }}
-                                entity={{
-                                  orderItemId: decodeId(orderItemId),
-                                }}
-                              />
+
+                              <Content>
+                                <Timeline
+                                  query={orderItemTimelineQuery}
+                                  queryField="orderItem"
+                                  variables={{
+                                    id: decodeId(orderItemId),
+                                  }}
+                                  entity={{
+                                    orderItemId: decodeId(orderItemId),
+                                  }}
+                                />
+                              </Content>
                             </>
                           )}
                         </SlideViewLayout>
@@ -304,45 +307,47 @@ class OrderItemFormModule extends React.Component<Props> {
                   )}
                 </Subscribe>
               </CurrentNavBar>
-              {error && <p>Error: Please try again.</p>}
-              <QueryForm
-                query={orderItemFormQuery}
-                entityId={orderItemId}
-                entityType="orderItem"
-                render={orderItem => (
-                  <>
-                    <ItemForm orderItem={orderItem} />
-                    <Subscribe
-                      to={[
-                        OrderItemInfoContainer,
-                        OrderItemBatchesContainer,
-                        OrderItemFilesContainer,
-                        OrderItemTasksContainer,
-                        OrderItemShipmentsContainer,
-                      ]}
-                    >
-                      {(
-                        orderItemInfoContainer,
-                        orderItemBatchesContainer,
-                        orderItemFilesContainer,
-                        orderItemTasksContainer,
-                        orderItemShipmentsContainer
-                      ) =>
-                        this.onFormReady(
-                          {
-                            orderItemInfoContainer,
-                            orderItemBatchesContainer,
-                            orderItemFilesContainer,
-                            orderItemShipmentsContainer,
-                            orderItemTasksContainer,
-                          },
-                          orderItem
-                        )
-                      }
-                    </Subscribe>
-                  </>
-                )}
-              />
+              <Content>
+                {error && <p>Error: Please try again.</p>}
+                <QueryForm
+                  query={orderItemFormQuery}
+                  entityId={orderItemId}
+                  entityType="orderItem"
+                  render={orderItem => (
+                    <>
+                      <ItemForm orderItem={orderItem} />
+                      <Subscribe
+                        to={[
+                          OrderItemInfoContainer,
+                          OrderItemBatchesContainer,
+                          OrderItemFilesContainer,
+                          OrderItemTasksContainer,
+                          OrderItemShipmentsContainer,
+                        ]}
+                      >
+                        {(
+                          orderItemInfoContainer,
+                          orderItemBatchesContainer,
+                          orderItemFilesContainer,
+                          orderItemTasksContainer,
+                          orderItemShipmentsContainer
+                        ) =>
+                          this.onFormReady(
+                            {
+                              orderItemInfoContainer,
+                              orderItemBatchesContainer,
+                              orderItemFilesContainer,
+                              orderItemShipmentsContainer,
+                              orderItemTasksContainer,
+                            },
+                            orderItem
+                          )
+                        }
+                      </Subscribe>
+                    </>
+                  )}
+                />
+              </Content>
             </CurrentLayout>
           )}
         </Mutation>

@@ -12,7 +12,7 @@ import { removeTypename } from 'utils/data';
 import LoadingIcon from 'components/LoadingIcon';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { ItemCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -132,97 +132,100 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
               onClick={() => onSelect(removeTypename(selected))}
             />
           </SlideViewNavBar>
-          <GridView
-            onLoadMore={() => {
-              setIsLoading(true);
-              client
-                .query({
-                  query: orderItemsQuery,
-                  fetchPolicy: 'no-cache',
-                  variables: {
-                    ...queryVariables,
-                    page,
-                  },
-                })
-                .then(result => {
-                  setOrderItems([
-                    ...orderItems,
-                    ...getByPathWithDefault([], 'data.orderItems.nodes', result),
-                  ]);
-                  const nextPage = getByPathWithDefault(1, 'data.orderItems.page', result) + 1;
-                  const totalPage = getByPathWithDefault(1, 'data.orderItems.totalPage', result);
-                  setHasMore(nextPage <= totalPage);
-                  setPage(nextPage);
-                  setIsLoading(false);
-                })
-                .catch(err => {
-                  trackingError(err);
-                  toast.error(
-                    intl.formatMessage({
-                      id: 'global.apiErrorMessage',
-                      defaultMessage: 'There was an error. Please try again later.',
-                    })
-                  );
-                  setIsLoading(false);
-                });
-            }}
-            loader={null}
-            hasMore={hasMore}
-            isLoading={isLoading && orderItems.length === 0}
-            itemWidth="195px"
-            isEmpty={orderItems.length === 0}
-            emptyMessage={
-              <FormattedMessage
-                id="modules.Batches.noOrderItemsFound"
-                defaultMessage="No orderItems found"
-              />
-            }
-          >
-            {orderItems.map(item => {
-              const { orderItem, productProvider, product, order } = spreadOrderItem(item);
 
-              const viewable = {
-                price: hasPermission(ORDER_ITEMS_GET_PRICE),
-              };
+          <Content>
+            <GridView
+              onLoadMore={() => {
+                setIsLoading(true);
+                client
+                  .query({
+                    query: orderItemsQuery,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                      ...queryVariables,
+                      page,
+                    },
+                  })
+                  .then(result => {
+                    setOrderItems([
+                      ...orderItems,
+                      ...getByPathWithDefault([], 'data.orderItems.nodes', result),
+                    ]);
+                    const nextPage = getByPathWithDefault(1, 'data.orderItems.page', result) + 1;
+                    const totalPage = getByPathWithDefault(1, 'data.orderItems.totalPage', result);
+                    setHasMore(nextPage <= totalPage);
+                    setPage(nextPage);
+                    setIsLoading(false);
+                  })
+                  .catch(err => {
+                    trackingError(err);
+                    toast.error(
+                      intl.formatMessage({
+                        id: 'global.apiErrorMessage',
+                        defaultMessage: 'There was an error. Please try again later.',
+                      })
+                    );
+                    setIsLoading(false);
+                  });
+              }}
+              loader={null}
+              hasMore={hasMore}
+              isLoading={isLoading && orderItems.length === 0}
+              itemWidth="195px"
+              isEmpty={orderItems.length === 0}
+              emptyMessage={
+                <FormattedMessage
+                  id="modules.Batches.noOrderItemsFound"
+                  defaultMessage="No orderItems found"
+                />
+              }
+            >
+              {orderItems.map(item => {
+                const { orderItem, productProvider, product, order } = spreadOrderItem(item);
 
-              const config = {
-                hideOrder: false,
-              };
+                const viewable = {
+                  price: hasPermission(ORDER_ITEMS_GET_PRICE),
+                };
 
-              const index = selected.map(({ id }) => id).indexOf(item.id);
-              const isSelected = index !== -1;
+                const config = {
+                  hideOrder: false,
+                };
 
-              return (
-                <div key={item.id} className={ItemWrapperStyle}>
-                  {isSelected && (
-                    <IncrementInput
-                      value={selected.filter(selectedItem => selectedItem.id === item.id).length}
-                      onMinus={() => splice(index, 1)}
-                      onPlus={() => push(item)}
+                const index = selected.map(({ id }) => id).indexOf(item.id);
+                const isSelected = index !== -1;
+
+                return (
+                  <div key={item.id} className={ItemWrapperStyle}>
+                    {isSelected && (
+                      <IncrementInput
+                        value={selected.filter(selectedItem => selectedItem.id === item.id).length}
+                        onMinus={() => splice(index, 1)}
+                        onPlus={() => push(item)}
+                      />
+                    )}
+                    <ItemCard
+                      orderItem={orderItem}
+                      productProvider={productProvider}
+                      product={product}
+                      order={order}
+                      viewable={viewable}
+                      config={config}
+                      selectable
+                      selected={isSelected}
+                      onSelect={() => {
+                        if (isSelected) {
+                          arrayValueFilter(({ id }) => id !== item.id);
+                        } else {
+                          push(item);
+                        }
+                      }}
                     />
-                  )}
-                  <ItemCard
-                    orderItem={orderItem}
-                    productProvider={productProvider}
-                    product={product}
-                    order={order}
-                    viewable={viewable}
-                    config={config}
-                    selectable
-                    selected={isSelected}
-                    onSelect={() => {
-                      if (isSelected) {
-                        arrayValueFilter(({ id }) => id !== item.id);
-                      } else {
-                        push(item);
-                      }
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </GridView>
-          {isLoading && orderItems.length > 0 && <LoadingIcon />}
+                  </div>
+                );
+              })}
+            </GridView>
+            {isLoading && orderItems.length > 0 && <LoadingIcon />}
+          </Content>
         </SlideViewLayout>
       )}
     </ArrayValue>

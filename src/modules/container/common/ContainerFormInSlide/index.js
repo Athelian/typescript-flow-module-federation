@@ -7,7 +7,7 @@ import ContainerForm from 'modules/container/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import {
@@ -102,7 +102,10 @@ class ContainerFormInSlide extends React.Component<Props> {
               }
             </Subscribe>
           </SlideViewNavBar>
-          <ContainerForm isSlideView container={container} />
+
+          <Content>
+            <ContainerForm isSlideView container={container} />
+          </Content>
         </SlideViewLayout>
       </Provider>
     );

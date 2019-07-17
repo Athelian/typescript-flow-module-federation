@@ -8,6 +8,7 @@ import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
 import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
@@ -253,27 +254,29 @@ class ContainerFormModule extends React.Component<Props> {
                   )}
                 </Subscribe>
               </Portal>
-              {error && <p>Error: Please try again.</p>}
-              <QueryForm
-                query={containerFormQuery}
-                entityId={containerId}
-                entityType="container"
-                render={container => {
-                  return (
-                    <>
-                      <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-                        {(containerInfoContainer, containerBatchesContainer) =>
-                          this.onFormReady(
-                            { containerInfoContainer, containerBatchesContainer },
-                            container
-                          )
-                        }
-                      </Subscribe>
-                      <ContainerForm container={container} />
-                    </>
-                  );
-                }}
-              />
+              <Content>
+                {error && <p>Error: Please try again.</p>}
+                <QueryForm
+                  query={containerFormQuery}
+                  entityId={containerId}
+                  entityType="container"
+                  render={container => {
+                    return (
+                      <>
+                        <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
+                          {(containerInfoContainer, containerBatchesContainer) =>
+                            this.onFormReady(
+                              { containerInfoContainer, containerBatchesContainer },
+                              container
+                            )
+                          }
+                        </Subscribe>
+                        <ContainerForm container={container} />
+                      </>
+                    );
+                  }}
+                />
+              </Content>
             </>
           )}
         </Mutation>

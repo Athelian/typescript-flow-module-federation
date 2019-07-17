@@ -4,6 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import OrderItemList from './list';
 import messages from './messages';
@@ -42,7 +43,7 @@ function OrderItemModule(props: Props) {
   );
 
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="ORDER_ITEM"
@@ -52,7 +53,7 @@ function OrderItemModule(props: Props) {
         />
       </Portal>
       <OrderItemList {...queryVariables} />
-    </>
+    </Content>
   );
 }
 

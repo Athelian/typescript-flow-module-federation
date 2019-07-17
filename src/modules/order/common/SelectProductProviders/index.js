@@ -9,8 +9,7 @@ import GridView from 'components/GridView';
 import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
-import { SlideViewLayout } from 'components/Layout';
-import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { Label, Display } from 'components/Form';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -96,36 +95,35 @@ function SelectProductProviders({
           <ArrayValue>
             {({ value: selected, push, splice, filter }) => (
               <SlideViewLayout>
-                <div className={NavBarWrapperStyle}>
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="PRODUCT_PROVIDER"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <div>
-                      <Label>
-                        <FormattedMessage
-                          id="modules.Orders.orderCurrency"
-                          defaultMessage="ORDER CURRENCY"
-                        />
-                      </Label>
-                      <Display align="left">
-                        {orderCurrency || (
-                          <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
-                        )}
-                      </Display>
-                    </div>
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="btnSaveSelectProductProviders"
-                      disabled={selected.length === 0}
-                      onClick={() => onSelect(removeTypename(selected))}
-                    />
-                  </SlideViewNavBar>
-                </div>
-                <div className={ContentWrapperStyle}>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="PRODUCT_PROVIDER"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <div>
+                    <Label>
+                      <FormattedMessage
+                        id="modules.Orders.orderCurrency"
+                        defaultMessage="ORDER CURRENCY"
+                      />
+                    </Label>
+                    <Display align="left">
+                      {orderCurrency || (
+                        <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+                      )}
+                    </Display>
+                  </div>
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    data-testid="btnSaveSelectProductProviders"
+                    disabled={selected.length === 0}
+                    onClick={() => onSelect(removeTypename(selected))}
+                  />
+                </SlideViewNavBar>
+
+                <Content>
                   <GridView
                     onLoadMore={() =>
                       loadMore({ fetchMore, data }, queryVariables, 'productProviders')
@@ -170,7 +168,7 @@ function SelectProductProviders({
                       );
                     })}
                   </GridView>
-                </div>
+                </Content>
               </SlideViewLayout>
             )}
           </ArrayValue>

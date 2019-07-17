@@ -16,7 +16,7 @@ import {
   prepareParsedTaskTemplate,
 } from 'modules/taskTemplate/form/mutation';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { removeTypename } from 'utils/data';
@@ -176,12 +176,15 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
                       />
                     )}
                   </SlideViewNavBar>
-                  {apiError && <p>Error: Please try again.</p>}
-                  <TaskTemplateForm
-                    initDetailValues={taskTemplateContainer.initDetailValues}
-                    template={template}
-                    isNew={isNew}
-                  />
+
+                  <Content>
+                    {apiError && <p>Error: Please try again.</p>}
+                    <TaskTemplateForm
+                      initDetailValues={taskTemplateContainer.initDetailValues}
+                      template={template}
+                      isNew={isNew}
+                    />
+                  </Content>
                 </SlideViewLayout>
               )}
             </Mutation>

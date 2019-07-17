@@ -9,7 +9,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/partner/messages';
@@ -92,30 +92,33 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
                     onClick={() => onSelect(values)}
                   />
                 </SlideViewNavBar>
-                <PartnerGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
-                  items={items}
-                  renderItem={item => {
-                    const isSelected = values.map(({ id }) => id).includes(item.id);
-                    return (
-                      <PartnerCard
-                        key={item.id}
-                        selectable
-                        selected={isSelected}
-                        partner={item}
-                        onSelect={() => {
-                          if (isSelected) {
-                            filter(({ id }) => id !== item.id);
-                          } else if (values.length < MAX_SELECTIONS) {
-                            push(item);
-                          }
-                        }}
-                      />
-                    );
-                  }}
-                />
+
+                <Content>
+                  <PartnerGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                    items={items}
+                    renderItem={item => {
+                      const isSelected = values.map(({ id }) => id).includes(item.id);
+                      return (
+                        <PartnerCard
+                          key={item.id}
+                          selectable
+                          selected={isSelected}
+                          partner={item}
+                          onSelect={() => {
+                            if (isSelected) {
+                              filter(({ id }) => id !== item.id);
+                            } else if (values.length < MAX_SELECTIONS) {
+                              push(item);
+                            }
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </Content>
               </SlideViewLayout>
             )}
           </ArrayValue>

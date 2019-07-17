@@ -6,8 +6,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
-import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
@@ -52,88 +51,81 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
         {(batchInfoContainer, batchTasksContainer) => {
           return (
             <SlideViewLayout>
-              <div className={NavBarWrapperStyle}>
-                <SlideViewNavBar>
-                  <EntityIcon icon="BATCH" color="BATCH" />
-                  <JumpToSection>
-                    <SectionTabs
-                      link="batch_batchSection"
-                      label={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
-                      icon="BATCH"
+              <SlideViewNavBar>
+                <EntityIcon icon="BATCH" color="BATCH" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="batch_batchSection"
+                    label={<FormattedMessage id="modules.Batches.batch" defaultMessage="BATCH" />}
+                    icon="BATCH"
+                  />
+                  <SectionTabs
+                    link="batch_quantitySection"
+                    label={
+                      <FormattedMessage id="modules.Batches.quantity" defaultMessage="QUANTITY" />
+                    }
+                    icon="QUANTITY_ADJUSTMENTS"
+                  />
+                  <SectionTabs
+                    link="batch_packagingSection"
+                    label={
+                      <FormattedMessage id="modules.Batches.packaging" defaultMessage="PACKAGING" />
+                    }
+                    icon="PACKAGING"
+                  />
+                  <SectionTabs
+                    link="batch_taskSection"
+                    label={<FormattedMessage id="modules.Batches.task" defaultMessage="TASK" />}
+                    icon="TASK"
+                  />
+                  <SectionTabs
+                    link="batch_shipmentSection"
+                    label={
+                      <FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />
+                    }
+                    icon="SHIPMENT"
+                  />
+                  <SectionTabs
+                    link="batch_containerSection"
+                    label={
+                      <FormattedMessage id="modules.Batches.container" defaultMessage="SHIPMENT" />
+                    }
+                    icon="CONTAINER"
+                  />
+                  <SectionTabs
+                    link="batch_orderSection"
+                    label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
+                    icon="ORDER"
+                  />
+                </JumpToSection>
+                {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
+                  <>
+                    <ResetButton
+                      onClick={() => {
+                        resetFormState(batchInfoContainer);
+                        resetFormState(batchTasksContainer, 'todo');
+                        formContainer.onReset();
+                      }}
                     />
-                    <SectionTabs
-                      link="batch_quantitySection"
-                      label={
-                        <FormattedMessage id="modules.Batches.quantity" defaultMessage="QUANTITY" />
+                    <SaveButton
+                      disabled={
+                        !formContainer.isReady(
+                          {
+                            ...batchInfoContainer.state,
+                            ...batchTasksContainer.state,
+                          },
+                          validator
+                        )
                       }
-                      icon="QUANTITY_ADJUSTMENTS"
-                    />
-                    <SectionTabs
-                      link="batch_packagingSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Batches.packaging"
-                          defaultMessage="PACKAGING"
-                        />
+                      onClick={() =>
+                        onSave({ ...batchInfoContainer.state, ...batchTasksContainer.state })
                       }
-                      icon="PACKAGING"
                     />
-                    <SectionTabs
-                      link="batch_taskSection"
-                      label={<FormattedMessage id="modules.Batches.task" defaultMessage="TASK" />}
-                      icon="TASK"
-                    />
-                    <SectionTabs
-                      link="batch_shipmentSection"
-                      label={
-                        <FormattedMessage id="modules.Batches.shipment" defaultMessage="SHIPMENT" />
-                      }
-                      icon="SHIPMENT"
-                    />
-                    <SectionTabs
-                      link="batch_containerSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Batches.container"
-                          defaultMessage="SHIPMENT"
-                        />
-                      }
-                      icon="CONTAINER"
-                    />
-                    <SectionTabs
-                      link="batch_orderSection"
-                      label={<FormattedMessage id="modules.Batches.order" defaultMessage="ORDER" />}
-                      icon="ORDER"
-                    />
-                  </JumpToSection>
-                  {(batchInfoContainer.isDirty() || batchTasksContainer.isDirty()) && (
-                    <>
-                      <ResetButton
-                        onClick={() => {
-                          resetFormState(batchInfoContainer);
-                          resetFormState(batchTasksContainer, 'todo');
-                          formContainer.onReset();
-                        }}
-                      />
-                      <SaveButton
-                        disabled={
-                          !formContainer.isReady(
-                            {
-                              ...batchInfoContainer.state,
-                              ...batchTasksContainer.state,
-                            },
-                            validator
-                          )
-                        }
-                        onClick={() =>
-                          onSave({ ...batchInfoContainer.state, ...batchTasksContainer.state })
-                        }
-                      />
-                    </>
-                  )}
-                </SlideViewNavBar>
-              </div>
-              <div className={ContentWrapperStyle}>
+                  </>
+                )}
+              </SlideViewNavBar>
+
+              <Content>
                 <BatchForm
                   batch={batch}
                   onFormReady={() => {
@@ -143,7 +135,7 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
                   }}
                   {...rest}
                 />
-              </div>
+              </Content>
             </SlideViewLayout>
           );
         }}

@@ -7,6 +7,7 @@ import { Mutation } from 'react-apollo';
 import { decodeId, encodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
@@ -192,36 +193,38 @@ export default class TagFormModule extends React.PureComponent<Props> {
                   )}
                 </Subscribe>
               </Portal>
-              {apiError && <p>Error: Please try again.</p>}
-              {!tagId ? (
-                <TagForm tag={{}} isNew />
-              ) : (
-                <QueryForm
-                  query={tagFormQuery}
-                  entityId={tagId}
-                  entityType="tag"
-                  render={tag => (
-                    <Subscribe to={[TagContainer, EntityTypeContainer]}>
-                      {(tagContainer, entityTypeContainer) => (
-                        <TagForm
-                          isNew={isNewOrClone}
-                          tag={tag}
-                          onFormReady={() => {
-                            const {
-                              name = null,
-                              description = null,
-                              color = '#cccccc',
-                              entityTypes = [],
-                            } = tag;
-                            tagContainer.initDetailValues({ name, description, color });
-                            entityTypeContainer.initDetailValues(entityTypes);
-                          }}
-                        />
-                      )}
-                    </Subscribe>
-                  )}
-                />
-              )}
+              <Content>
+                {apiError && <p>Error: Please try again.</p>}
+                {!tagId ? (
+                  <TagForm tag={{}} isNew />
+                ) : (
+                  <QueryForm
+                    query={tagFormQuery}
+                    entityId={tagId}
+                    entityType="tag"
+                    render={tag => (
+                      <Subscribe to={[TagContainer, EntityTypeContainer]}>
+                        {(tagContainer, entityTypeContainer) => (
+                          <TagForm
+                            isNew={isNewOrClone}
+                            tag={tag}
+                            onFormReady={() => {
+                              const {
+                                name = null,
+                                description = null,
+                                color = '#cccccc',
+                                entityTypes = [],
+                              } = tag;
+                              tagContainer.initDetailValues({ name, description, color });
+                              entityTypeContainer.initDetailValues(entityTypes);
+                            }}
+                          />
+                        )}
+                      </Subscribe>
+                    )}
+                  />
+                )}
+              </Content>
             </>
           )}
         </Mutation>

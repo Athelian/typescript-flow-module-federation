@@ -8,6 +8,7 @@ import { prepareCustomFieldsData } from 'utils/customFields';
 import { showToastError } from 'utils/errors';
 import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -186,34 +187,36 @@ class WarehouseFormModule extends React.PureComponent<Props> {
                   }
                 </Subscribe>
               </Portal>
-              {apiError && <p>Error: Please try again.</p>}
-              {!warehouseId ? (
-                <WarehouseForm warehouse={{}} isNew />
-              ) : (
-                <QueryForm
-                  query={warehouseFormQuery}
-                  entityId={warehouseId}
-                  entityType="warehouse"
-                  render={originalWarehouse => {
-                    const warehouse = this.isClone()
-                      ? { name: `[cloned] ${originalWarehouse.name}` }
-                      : originalWarehouse;
-                    return (
-                      <Subscribe to={[WarehouseContainer]}>
-                        {({ initDetailValues }) => (
-                          <WarehouseForm
-                            isNew={isNewOrClone}
-                            warehouse={warehouse}
-                            onFormReady={() => {
-                              initDetailValues(warehouse);
-                            }}
-                          />
-                        )}
-                      </Subscribe>
-                    );
-                  }}
-                />
-              )}
+              <Content>
+                {apiError && <p>Error: Please try again.</p>}
+                {!warehouseId ? (
+                  <WarehouseForm warehouse={{}} isNew />
+                ) : (
+                  <QueryForm
+                    query={warehouseFormQuery}
+                    entityId={warehouseId}
+                    entityType="warehouse"
+                    render={originalWarehouse => {
+                      const warehouse = this.isClone()
+                        ? { name: `[cloned] ${originalWarehouse.name}` }
+                        : originalWarehouse;
+                      return (
+                        <Subscribe to={[WarehouseContainer]}>
+                          {({ initDetailValues }) => (
+                            <WarehouseForm
+                              isNew={isNewOrClone}
+                              warehouse={warehouse}
+                              onFormReady={() => {
+                                initDetailValues(warehouse);
+                              }}
+                            />
+                          )}
+                        </Subscribe>
+                      );
+                    }}
+                  />
+                )}
+              </Content>
             </>
           )}
         </Mutation>

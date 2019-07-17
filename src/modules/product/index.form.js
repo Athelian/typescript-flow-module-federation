@@ -10,7 +10,7 @@ import { getByPath } from 'utils/fp';
 import { showToastError } from 'utils/errors';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import Portal from 'components/Portal';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
@@ -321,16 +321,19 @@ class ProductFormModule extends React.Component<Props> {
                               <SlideViewNavBar>
                                 <EntityIcon icon="LOGS" color="LOGS" />
                               </SlideViewNavBar>
-                              <Timeline
-                                query={productTimelineQuery}
-                                queryField="product"
-                                variables={{
-                                  id: decodeId(productId),
-                                }}
-                                entity={{
-                                  productId: decodeId(productId),
-                                }}
-                              />
+
+                              <Content>
+                                <Timeline
+                                  query={productTimelineQuery}
+                                  queryField="product"
+                                  variables={{
+                                    id: decodeId(productId),
+                                  }}
+                                  entity={{
+                                    productId: decodeId(productId),
+                                  }}
+                                />
+                              </Content>
                             </>
                           )}
                         </SlideViewLayout>
@@ -452,16 +455,70 @@ class ProductFormModule extends React.Component<Props> {
                 )}
               </Subscribe>
             </Portal>
-            {apiError && <p>Error: Please try again.</p>}
-            {!productId ? (
-              <UserConsumer>
-                {({ user }) => {
-                  const { group } = user;
-                  const { types = [] } = group;
-                  const isImporter = types.includes('Importer');
-                  return (
+
+            <Content>
+              {apiError && <p>Error: Please try again.</p>}
+              {!productId ? (
+                <UserConsumer>
+                  {({ user }) => {
+                    const { group } = user;
+                    const { types = [] } = group;
+                    const isImporter = types.includes('Importer');
+                    return (
+                      <>
+                        <ProductForm product={{}} isNewOrClone />
+                        <Subscribe
+                          to={[
+                            ProductInfoContainer,
+                            ProductProvidersContainer,
+                            ProductTagsContainer,
+                            ProductFilesContainer,
+                            ProductTasksContainer,
+                          ]}
+                        >
+                          {(
+                            productInfoState,
+                            productProvidersState,
+                            productTagsState,
+                            productFilesState,
+                            productTasksState
+                          ) =>
+                            this.onFormReady(
+                              {
+                                productInfoState,
+                                productProvidersState,
+                                productTagsState,
+                                productFilesState,
+                                productTasksState,
+                              },
+                              {
+                                id: uuid(),
+                                importer: isImporter ? group : {},
+                                tags: [],
+                                todo: {
+                                  tasks: [],
+                                },
+                                files: [],
+                              }
+                            )
+                          }
+                        </Subscribe>
+                      </>
+                    );
+                  }}
+                </UserConsumer>
+              ) : (
+                <QueryForm
+                  query={productFormQuery}
+                  entityId={productId}
+                  entityType="product"
+                  render={(product, isOwner) => (
                     <>
-                      <ProductForm product={{}} isNewOrClone />
+                      <ProductForm
+                        isOwner={isOwner}
+                        isNewOrClone={isNewOrClone}
+                        product={product}
+                      />
                       <Subscribe
                         to={[
                           ProductInfoContainer,
@@ -486,62 +543,15 @@ class ProductFormModule extends React.Component<Props> {
                               productFilesState,
                               productTasksState,
                             },
-                            {
-                              id: uuid(),
-                              importer: isImporter ? group : {},
-                              tags: [],
-                              todo: {
-                                tasks: [],
-                              },
-                              files: [],
-                            }
+                            product
                           )
                         }
                       </Subscribe>
                     </>
-                  );
-                }}
-              </UserConsumer>
-            ) : (
-              <QueryForm
-                query={productFormQuery}
-                entityId={productId}
-                entityType="product"
-                render={(product, isOwner) => (
-                  <>
-                    <ProductForm isOwner={isOwner} isNewOrClone={isNewOrClone} product={product} />
-                    <Subscribe
-                      to={[
-                        ProductInfoContainer,
-                        ProductProvidersContainer,
-                        ProductTagsContainer,
-                        ProductFilesContainer,
-                        ProductTasksContainer,
-                      ]}
-                    >
-                      {(
-                        productInfoState,
-                        productProvidersState,
-                        productTagsState,
-                        productFilesState,
-                        productTasksState
-                      ) =>
-                        this.onFormReady(
-                          {
-                            productInfoState,
-                            productProvidersState,
-                            productTagsState,
-                            productFilesState,
-                            productTasksState,
-                          },
-                          product
-                        )
-                      }
-                    </Subscribe>
-                  </>
-                )}
-              />
-            )}
+                  )}
+                />
+              )}
+            </Content>
           </>
         )}
       </Mutation>

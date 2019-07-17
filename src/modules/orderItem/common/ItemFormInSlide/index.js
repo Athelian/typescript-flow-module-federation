@@ -14,7 +14,7 @@ import JumpToSection from 'components/JumpToSection';
 import validator from 'modules/orderItem/form/validator';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import ItemForm from 'modules/orderItem/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 
@@ -131,24 +131,27 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                   </>
                 )}
               </SlideViewNavBar>
-              <ItemForm
-                isSlideView
-                orderItem={orderItem}
-                onFormReady={() => {
-                  const { batches = [], files = [], todo = { tasks: [] }, ...rest } = orderItem;
-                  const shipments = [];
-                  batches.forEach(batch => {
-                    if (batch.shipment && !shipments.includes(batch.shipment)) {
-                      shipments.push(batch.shipment);
-                    }
-                  });
-                  orderItemInfoContainer.initDetailValues(rest);
-                  orderItemBatchesContainer.initDetailValues({ batches });
-                  orderItemFilesContainer.initDetailValues({ files });
-                  orderItemTasksContainer.initDetailValues(todo);
-                  orderItemShipmentsContainer.initDetailValues({ shipments });
-                }}
-              />
+
+              <Content>
+                <ItemForm
+                  isSlideView
+                  orderItem={orderItem}
+                  onFormReady={() => {
+                    const { batches = [], files = [], todo = { tasks: [] }, ...rest } = orderItem;
+                    const shipments = [];
+                    batches.forEach(batch => {
+                      if (batch.shipment && !shipments.includes(batch.shipment)) {
+                        shipments.push(batch.shipment);
+                      }
+                    });
+                    orderItemInfoContainer.initDetailValues(rest);
+                    orderItemBatchesContainer.initDetailValues({ batches });
+                    orderItemFilesContainer.initDetailValues({ files });
+                    orderItemTasksContainer.initDetailValues(todo);
+                    orderItemShipmentsContainer.initDetailValues({ shipments });
+                  }}
+                />
+              </Content>
             </SlideViewLayout>
           );
         }}

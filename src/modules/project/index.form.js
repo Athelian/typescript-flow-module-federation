@@ -8,7 +8,7 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
 import type { ProjectPayload, Project, Tag, Milestone } from 'generated/graphql';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import logger from 'utils/logger';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
@@ -227,16 +227,19 @@ class ProjectFormModule extends React.PureComponent<Props> {
                                 <SlideViewNavBar>
                                   <EntityIcon icon="LOGS" color="LOGS" />
                                 </SlideViewNavBar>
-                                <Timeline
-                                  query={projectTimelineQuery}
-                                  queryField="project"
-                                  variables={{
-                                    id: decodeId(projectId),
-                                  }}
-                                  entity={{
-                                    projectId: decodeId(projectId),
-                                  }}
-                                />
+
+                                <Content>
+                                  <Timeline
+                                    query={projectTimelineQuery}
+                                    queryField="project"
+                                    variables={{
+                                      id: decodeId(projectId),
+                                    }}
+                                    entity={{
+                                      projectId: decodeId(projectId),
+                                    }}
+                                  />
+                                </Content>
                               </>
                             )}
                           </SlideViewLayout>
@@ -343,58 +346,60 @@ class ProjectFormModule extends React.PureComponent<Props> {
                   }}
                 </Subscribe>
               </CurrentNavBar>
-              {apiError && <p>Error: Please try again.</p>}
-              {this.isNew() || !projectId ? (
-                <>
-                  <ProjectForm isNew />
-                  <Subscribe
-                    to={[ProjectInfoContainer, ProjectTagsContainer, ProjectMilestonesContainer]}
-                  >
-                    {(projectInfoState, projectTagsState, projectMilestonesState) =>
-                      this.onFormReady(
-                        {
-                          projectInfoState,
-                          projectTagsState,
-                          projectMilestonesState,
-                        },
-                        {
-                          id: uuid(),
-                        }
-                      )
-                    }
-                  </Subscribe>
-                </>
-              ) : (
-                <QueryForm
-                  query={projectFormQuery}
-                  entityId={projectId}
-                  entityType="project"
-                  onCompleted={logger.warn}
-                  render={(project, isOwner) => (
-                    <>
-                      <ProjectForm project={project} isOwner={isOwner} />
-                      <Subscribe
-                        to={[
-                          ProjectInfoContainer,
-                          ProjectTagsContainer,
-                          ProjectMilestonesContainer,
-                        ]}
-                      >
-                        {(projectInfoState, projectTagsState, projectMilestonesState) =>
-                          this.onFormReady(
-                            {
-                              projectInfoState,
-                              projectTagsState,
-                              projectMilestonesState,
-                            },
-                            project
-                          )
-                        }
-                      </Subscribe>
-                    </>
-                  )}
-                />
-              )}
+              <Content>
+                {apiError && <p>Error: Please try again.</p>}
+                {this.isNew() || !projectId ? (
+                  <>
+                    <ProjectForm isNew />
+                    <Subscribe
+                      to={[ProjectInfoContainer, ProjectTagsContainer, ProjectMilestonesContainer]}
+                    >
+                      {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                        this.onFormReady(
+                          {
+                            projectInfoState,
+                            projectTagsState,
+                            projectMilestonesState,
+                          },
+                          {
+                            id: uuid(),
+                          }
+                        )
+                      }
+                    </Subscribe>
+                  </>
+                ) : (
+                  <QueryForm
+                    query={projectFormQuery}
+                    entityId={projectId}
+                    entityType="project"
+                    onCompleted={logger.warn}
+                    render={(project, isOwner) => (
+                      <>
+                        <ProjectForm project={project} isOwner={isOwner} />
+                        <Subscribe
+                          to={[
+                            ProjectInfoContainer,
+                            ProjectTagsContainer,
+                            ProjectMilestonesContainer,
+                          ]}
+                        >
+                          {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                            this.onFormReady(
+                              {
+                                projectInfoState,
+                                projectTagsState,
+                                projectMilestonesState,
+                              },
+                              project
+                            )
+                          }
+                        </Subscribe>
+                      </>
+                    )}
+                  />
+                )}
+              </Content>
             </CurrentLayout>
           )}
         </Mutation>

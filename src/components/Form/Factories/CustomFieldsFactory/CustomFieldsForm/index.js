@@ -11,8 +11,7 @@ import FormattedNumber from 'components/FormattedNumber';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
-import { SlideViewLayout } from 'components/Layout';
-import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
+import { Content, SlideViewLayout } from 'components/Layout';
 import GridColumn from 'components/GridColumn';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
 import { SectionHeader, SectionWrapper, Label, DashedPlusButton, FieldItem } from 'components/Form';
@@ -73,35 +72,34 @@ class CustomFieldsForm extends React.Component<Props> {
 
           return (
             <SlideViewLayout>
-              <div className={NavBarWrapperStyle}>
-                <SlideViewNavBar>
-                  <EntityIcon icon="METADATA" color="METADATA" />
-                  <JumpToSection>
-                    <SectionTabs
-                      link="metadataSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.metadata.sectionHeader"
-                          defaultMessage="CUSTOM FIELDS"
-                        />
-                      }
-                      icon="METADATA"
-                    />
-                  </JumpToSection>
-                  {customFieldsContainer.isDirty() && (
-                    <>
-                      <ResetButton
-                        onClick={() => {
-                          resetFormState(customFieldsContainer);
-                          formContainer.onReset();
-                        }}
+              <SlideViewNavBar>
+                <EntityIcon icon="METADATA" color="METADATA" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="metadataSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.metadata.sectionHeader"
+                        defaultMessage="CUSTOM FIELDS"
                       />
-                      <SaveButton onClick={() => onSave(values)} />
-                    </>
-                  )}
-                </SlideViewNavBar>
-              </div>
-              <div className={ContentWrapperStyle}>
+                    }
+                    icon="METADATA"
+                  />
+                </JumpToSection>
+                {customFieldsContainer.isDirty() && (
+                  <>
+                    <ResetButton
+                      onClick={() => {
+                        resetFormState(customFieldsContainer);
+                        formContainer.onReset();
+                      }}
+                    />
+                    <SaveButton onClick={() => onSave(values)} />
+                  </>
+                )}
+              </SlideViewNavBar>
+
+              <Content>
                 <div className={CustomFieldsFormWrapperStyle}>
                   <SectionWrapper id="metadataSection">
                     <SectionHeader
@@ -211,7 +209,7 @@ class CustomFieldsForm extends React.Component<Props> {
                     </div>
                   </SectionWrapper>
                 </div>
-              </div>
+              </Content>
             </SlideViewLayout>
           );
         }}

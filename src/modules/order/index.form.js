@@ -6,8 +6,7 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
-import { SlideViewLayout } from 'components/Layout';
-import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import { UserConsumer } from 'modules/user';
@@ -339,12 +338,11 @@ class OrderFormModule extends React.PureComponent<Props> {
                           <SlideViewLayout>
                             {orderId && opened && (
                               <>
-                                <div className={NavBarWrapperStyle}>
-                                  <SlideViewNavBar>
-                                    <EntityIcon icon="LOGS" color="LOGS" />
-                                  </SlideViewNavBar>
-                                </div>
-                                <div className={ContentWrapperStyle}>
+                                <SlideViewNavBar>
+                                  <EntityIcon icon="LOGS" color="LOGS" />
+                                </SlideViewNavBar>
+
+                                <Content>
                                   <Timeline
                                     query={orderTimelineQuery}
                                     queryField="order"
@@ -355,7 +353,7 @@ class OrderFormModule extends React.PureComponent<Props> {
                                       orderId: decodeId(orderId),
                                     }}
                                   />
-                                </div>
+                                </Content>
                               </>
                             )}
                           </SlideViewLayout>
@@ -488,16 +486,80 @@ class OrderFormModule extends React.PureComponent<Props> {
                   }}
                 </Subscribe>
               </CurrentNavBar>
-              {apiError && <p>Error: Please try again.</p>}
-              {this.isNew() || !orderId ? (
-                <UserConsumer>
-                  {({ user }) => {
-                    const { group } = user;
-                    const { types = [] } = group;
-                    const isImporter = types.includes('Importer');
-                    return (
+              <Content>
+                {apiError && <p>Error: Please try again.</p>}
+                {this.isNew() || !orderId ? (
+                  <UserConsumer>
+                    {({ user }) => {
+                      const { group } = user;
+                      const { types = [] } = group;
+                      const isImporter = types.includes('Importer');
+                      return (
+                        <>
+                          <OrderForm isNew />
+                          <Subscribe
+                            to={[
+                              OrderItemsContainer,
+                              OrderInfoContainer,
+                              OrderTagsContainer,
+                              OrderFilesContainer,
+                              OrderTasksContainer,
+                            ]}
+                          >
+                            {(
+                              orderItemState,
+                              orderInfoState,
+                              orderTagsState,
+                              orderFilesState,
+                              orderTasksState
+                            ) =>
+                              this.onFormReady(
+                                {
+                                  orderItemState,
+                                  orderInfoState,
+                                  orderTagsState,
+                                  orderFilesState,
+                                  orderTasksState,
+                                },
+                                {
+                                  id: uuid(),
+                                  inCharges: [],
+                                  currency: 'USD',
+                                  customFields: {
+                                    mask: null,
+                                    fieldValues: [],
+                                  },
+                                  tags: [],
+                                  importer: isImporter ? group : {},
+                                  todo: {
+                                    tasks: [],
+                                  },
+                                  files: [],
+                                  orderItems: [],
+                                  shipments: [],
+                                  containers: [],
+                                  ...initDataForSlideView,
+                                }
+                              )
+                            }
+                          </Subscribe>
+                        </>
+                      );
+                    }}
+                  </UserConsumer>
+                ) : (
+                  <QueryFormV2
+                    query={orderFormQuery}
+                    entityId={orderId}
+                    entityType="order"
+                    render={(order, { isLoading: loading, isOwner }) => (
                       <>
-                        <OrderForm isNew />
+                        <OrderForm
+                          order={order}
+                          loading={loading}
+                          isOwner={isOwner}
+                          isClone={this.isClone()}
+                        />
                         <Subscribe
                           to={[
                             OrderItemsContainer,
@@ -522,77 +584,15 @@ class OrderFormModule extends React.PureComponent<Props> {
                                 orderFilesState,
                                 orderTasksState,
                               },
-                              {
-                                id: uuid(),
-                                inCharges: [],
-                                currency: 'USD',
-                                customFields: {
-                                  mask: null,
-                                  fieldValues: [],
-                                },
-                                tags: [],
-                                importer: isImporter ? group : {},
-                                todo: {
-                                  tasks: [],
-                                },
-                                files: [],
-                                orderItems: [],
-                                shipments: [],
-                                containers: [],
-                                ...initDataForSlideView,
-                              }
+                              order
                             )
                           }
                         </Subscribe>
                       </>
-                    );
-                  }}
-                </UserConsumer>
-              ) : (
-                <QueryFormV2
-                  query={orderFormQuery}
-                  entityId={orderId}
-                  entityType="order"
-                  render={(order, { isLoading: loading, isOwner }) => (
-                    <>
-                      <OrderForm
-                        order={order}
-                        loading={loading}
-                        isOwner={isOwner}
-                        isClone={this.isClone()}
-                      />
-                      <Subscribe
-                        to={[
-                          OrderItemsContainer,
-                          OrderInfoContainer,
-                          OrderTagsContainer,
-                          OrderFilesContainer,
-                          OrderTasksContainer,
-                        ]}
-                      >
-                        {(
-                          orderItemState,
-                          orderInfoState,
-                          orderTagsState,
-                          orderFilesState,
-                          orderTasksState
-                        ) =>
-                          this.onFormReady(
-                            {
-                              orderItemState,
-                              orderInfoState,
-                              orderTagsState,
-                              orderFilesState,
-                              orderTasksState,
-                            },
-                            order
-                          )
-                        }
-                      </Subscribe>
-                    </>
-                  )}
-                />
-              )}
+                    )}
+                  />
+                )}
+              </Content>
             </CurrentLayout>
           )}
         </Mutation>

@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { useQuery } from '@apollo/react-hooks';
 import { ArrayValue } from 'react-values';
 import { trackingError } from 'utils/trackingError';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import TaskGridView from 'modules/task/list/TaskGridView';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
@@ -130,72 +130,75 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
               }}
             />
           </SlideViewNavBar>
-          <TaskGridView
-            items={tasks}
-            loader={null}
-            onLoadMore={() => {
-              setIsLoading(true);
-              client
-                .query({
-                  query: selectTaskListQuery,
-                  fetchPolicy: 'no-cache',
-                  variables: {
-                    ...queryVariables,
-                    page,
-                  },
-                })
-                .then(result => {
-                  setTasks([...tasks, ...getByPathWithDefault([], 'data.tasks.nodes', result)]);
-                  const nextPage = getByPathWithDefault(1, 'data.tasks.page', result) + 1;
-                  const totalPage = getByPathWithDefault(1, 'data.tasks.totalPage', result);
-                  setHasMore(nextPage <= totalPage);
-                  setPage(nextPage);
-                  setIsLoading(false);
-                })
-                .catch(err => {
-                  trackingError(err);
-                  toast.error(
-                    intl.formatMessage({
-                      id: 'global.apiErrorMessage',
-                      defaultMessage: 'There was an error. Please try again later.',
-                    })
-                  );
-                  setIsLoading(false);
-                });
-            }}
-            hasMore={hasMore}
-            isLoading={isLoading && tasks.length === 0}
-            renderItem={(item, position) => {
-              const isSelected = selected.map(({ id }) => id).includes(item.id);
-              return (
-                <TaskCard
-                  entity={{
-                    ...item.entity,
-                    ...getByPathWithDefault({}, 'order', item),
-                    ...getByPathWithDefault({}, 'orderItem', item),
-                    ...getByPathWithDefault({}, 'batch', item),
-                    ...getByPathWithDefault({}, 'product', item),
-                    ...getByPathWithDefault({}, 'productProvider', item),
-                    ...getByPathWithDefault({}, 'shipment', item),
-                  }}
-                  position={position + 1}
-                  key={item.id}
-                  selectable
-                  task={item}
-                  selected={isSelected}
-                  onSelect={() => {
-                    if (isSelected) {
-                      arrayValueFilter(({ id }) => id !== item.id);
-                    } else {
-                      push(item);
-                    }
-                  }}
-                  hideProjectInfo
-                />
-              );
-            }}
-          />
-          {isLoading && tasks.length > 0 && <LoadingIcon />}
+
+          <Content>
+            <TaskGridView
+              items={tasks}
+              loader={null}
+              onLoadMore={() => {
+                setIsLoading(true);
+                client
+                  .query({
+                    query: selectTaskListQuery,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                      ...queryVariables,
+                      page,
+                    },
+                  })
+                  .then(result => {
+                    setTasks([...tasks, ...getByPathWithDefault([], 'data.tasks.nodes', result)]);
+                    const nextPage = getByPathWithDefault(1, 'data.tasks.page', result) + 1;
+                    const totalPage = getByPathWithDefault(1, 'data.tasks.totalPage', result);
+                    setHasMore(nextPage <= totalPage);
+                    setPage(nextPage);
+                    setIsLoading(false);
+                  })
+                  .catch(err => {
+                    trackingError(err);
+                    toast.error(
+                      intl.formatMessage({
+                        id: 'global.apiErrorMessage',
+                        defaultMessage: 'There was an error. Please try again later.',
+                      })
+                    );
+                    setIsLoading(false);
+                  });
+              }}
+              hasMore={hasMore}
+              isLoading={isLoading && tasks.length === 0}
+              renderItem={(item, position) => {
+                const isSelected = selected.map(({ id }) => id).includes(item.id);
+                return (
+                  <TaskCard
+                    entity={{
+                      ...item.entity,
+                      ...getByPathWithDefault({}, 'order', item),
+                      ...getByPathWithDefault({}, 'orderItem', item),
+                      ...getByPathWithDefault({}, 'batch', item),
+                      ...getByPathWithDefault({}, 'product', item),
+                      ...getByPathWithDefault({}, 'productProvider', item),
+                      ...getByPathWithDefault({}, 'shipment', item),
+                    }}
+                    position={position + 1}
+                    key={item.id}
+                    selectable
+                    task={item}
+                    selected={isSelected}
+                    onSelect={() => {
+                      if (isSelected) {
+                        arrayValueFilter(({ id }) => id !== item.id);
+                      } else {
+                        push(item);
+                      }
+                    }}
+                    hideProjectInfo
+                  />
+                );
+              }}
+            />
+            {isLoading && tasks.length > 0 && <LoadingIcon />}
+          </Content>
         </SlideViewLayout>
       )}
     </ArrayValue>

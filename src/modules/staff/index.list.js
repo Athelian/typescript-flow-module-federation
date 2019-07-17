@@ -3,6 +3,7 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import useFilter from 'hooks/useFilter';
 import StaffList from './list';
@@ -49,7 +50,7 @@ const StaffModule = (props: Props) => {
     { title: intl.formatMessage(messages.fullName), value: 'fullName' },
   ];
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="STAFF"
@@ -59,7 +60,7 @@ const StaffModule = (props: Props) => {
         />
       </Portal>
       <StaffList {...queryVariables} />
-    </>
+    </Content>
   );
 };
 

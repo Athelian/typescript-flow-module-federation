@@ -5,6 +5,7 @@ import { Provider } from 'unstated';
 import withCache from 'hoc/withCache';
 import useFilter from 'hooks/useFilter';
 import { getByPathWithDefault } from 'utils/fp';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
@@ -130,10 +131,13 @@ const MetadataForm = () => {
             }}
           />
         </Portal>
-        <div className={MainContentWrapperStyle}>
-          <FieldDefinitionsFormWrapper entityType={activeType} />
-          <MaskList queryVariables={queryVariables} entityType={activeType} />
-        </div>
+
+        <Content>
+          <div className={MainContentWrapperStyle}>
+            <FieldDefinitionsFormWrapper entityType={activeType} />
+            <MaskList queryVariables={queryVariables} entityType={activeType} />
+          </div>
+        </Content>
       </>
     </Provider>
   );

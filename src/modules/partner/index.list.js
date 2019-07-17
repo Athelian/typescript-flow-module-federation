@@ -3,6 +3,7 @@ import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import useFilter from 'hooks/useFilter';
 import PartnerList from './list';
@@ -52,7 +53,7 @@ const PartnerModule = (props: Props) => {
   ];
 
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="PARTNER"
@@ -62,7 +63,7 @@ const PartnerModule = (props: Props) => {
         />
       </Portal>
       <PartnerList {...queryVariables} />
-    </>
+    </Content>
   );
 };
 

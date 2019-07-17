@@ -7,6 +7,7 @@ import { WAREHOUSE_CREATE } from 'modules/permission/constants/warehouse';
 import usePermission from 'hooks/usePermission';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { NewButton } from 'components/Buttons';
 import WarehouseList from './list';
@@ -31,7 +32,7 @@ const WarehouseModule = (props: Props) => {
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(WAREHOUSE_CREATE);
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="WAREHOUSE"
@@ -46,7 +47,7 @@ const WarehouseModule = (props: Props) => {
         )}
       </Portal>
       <WarehouseList {...queryVariables} />
-    </>
+    </Content>
   );
 };
 

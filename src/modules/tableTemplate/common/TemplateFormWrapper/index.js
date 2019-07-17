@@ -14,7 +14,7 @@ import {
   maskEditCreateMutation,
 } from 'modules/tableTemplate/form/mutation';
 import { FormContainer, resetFormState } from 'modules/form';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 
@@ -155,12 +155,15 @@ class TemplateFormWrapper extends React.Component<Props> {
                       />
                     )}
                   </SlideViewNavBar>
-                  {apiError && <p>Error: Please try again.</p>}
-                  <TemplateForm
-                    initDetailValues={formState.initDetailValues}
-                    template={template}
-                    isNew={isNew}
-                  />
+
+                  <Content>
+                    {apiError && <p>Error: Please try again.</p>}
+                    <TemplateForm
+                      initDetailValues={formState.initDetailValues}
+                      template={template}
+                      isNew={isNew}
+                    />
+                  </Content>
                 </SlideViewLayout>
               )}
             </Mutation>

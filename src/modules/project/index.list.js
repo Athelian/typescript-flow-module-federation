@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import { NewButton, ExportButton } from 'components/Buttons';
 import { PROJECT_CREATE } from 'modules/permission/constants/project';
@@ -49,7 +50,7 @@ const ProjectListModule = (props: Props) => {
   );
 
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="PROJECT"
@@ -74,7 +75,7 @@ const ProjectListModule = (props: Props) => {
         />
       </Portal>
       <ProjectList {...queryVariables} />
-    </>
+    </Content>
   );
 };
 

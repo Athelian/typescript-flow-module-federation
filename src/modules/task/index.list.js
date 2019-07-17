@@ -5,6 +5,7 @@ import type { IntlShape } from 'react-intl';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import TaskList from './list';
 import { tasksExportQuery } from './query';
@@ -44,7 +45,7 @@ const TaskModule = (props: Props) => {
     'filterTask'
   );
   return (
-    <>
+    <Content>
       <Portal>
         <FilterToolBar
           icon="TASK"
@@ -64,7 +65,7 @@ const TaskModule = (props: Props) => {
         />
       </Portal>
       <TaskList {...queryVariables} />
-    </>
+    </Content>
   );
 };
 

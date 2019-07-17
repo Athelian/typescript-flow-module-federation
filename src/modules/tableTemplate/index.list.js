@@ -8,6 +8,7 @@ import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
+import { Content } from 'components/Layout';
 import Portal from 'components/Portal';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { EntityIcon } from 'components/NavBar';
@@ -49,7 +50,7 @@ const TableTemplateModule = (props: Props) => {
   const canCreate = hasPermission(TEMPLATE_CREATE);
   return (
     <Provider>
-      <>
+      <Content>
         <Portal>
           <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
           <TabItem
@@ -70,19 +71,19 @@ const TableTemplateModule = (props: Props) => {
 
           <BooleanValue>
             {({ value: isOpen, set: toggle }) => (
-              <>
+              <Content>
                 {canCreate && <NewButton onClick={() => toggle(true)} />}
                 <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                   {isOpen && (
                     <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
                   )}
                 </SlideView>
-              </>
+              </Content>
             )}
           </BooleanValue>
         </Portal>
         <TableTemplateList {...queryVariables} />
-      </>
+      </Content>
     </Provider>
   );
 };

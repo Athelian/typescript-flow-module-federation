@@ -2,7 +2,7 @@
 import React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { earliest, latest } from 'utils/date';
-import { SlideViewLayout } from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { resetFormState } from 'modules/form';
@@ -71,17 +71,19 @@ class ContainersSlideView extends React.Component<Props> {
                   )}
                 </SlideViewNavBar>
 
-                <ContainersSummaryNavbar
-                  agreedArrivalDateFrom={agreedArrivalDateFrom}
-                  agreedArrivalDateTo={agreedArrivalDateTo}
-                  actualArrivalDateFrom={actualArrivalDateFrom}
-                  actualArrivalDateTo={actualArrivalDateTo}
-                  numOfContainers={numOfContainers}
-                  numOfApprovedAgreed={numOfApprovedAgreed}
-                  numOfApprovedActual={numOfApprovedActual}
-                />
+                <Content>
+                  <ContainersSummaryNavbar
+                    agreedArrivalDateFrom={agreedArrivalDateFrom}
+                    agreedArrivalDateTo={agreedArrivalDateTo}
+                    actualArrivalDateFrom={actualArrivalDateFrom}
+                    actualArrivalDateTo={actualArrivalDateTo}
+                    numOfContainers={numOfContainers}
+                    numOfApprovedAgreed={numOfApprovedAgreed}
+                    numOfApprovedActual={numOfApprovedActual}
+                  />
 
-                <ContainerList containers={containers} setDeepFieldValue={setDeepFieldValue} />
+                  <ContainerList containers={containers} setDeepFieldValue={setDeepFieldValue} />
+                </Content>
               </SlideViewLayout>
             );
           }}
