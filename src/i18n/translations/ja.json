@@ -690,7 +690,7 @@
   "components.ProductProviders.defaultPackagingTooltip": "デフォルトに設定することで、新規バッチ作成時に自動的に梱包情報が同期されます。",
   "modules.ProductProviders.noPackageName": "梱包名がありません",
   "modules.ProductProviders.packageName": "梱包形態",
-  "modules.ProductProviders.capacity": "入り数",
+  "modules.ProductProviders.packageCapacity": "PACKAGE CAPACITY",
   "modules.ProductProviders.grossWeight": "総重量",
   "modules.ProductProviders.packageVolumeTooltipEditableOn": "梱包サイズの3辺の情報から、自動的に容積の計算をします。手動での任意入力も可能ですが、梱包サイズ(奥行)、梱包サイズ(幅)、梱包サイズ(高さ)のいずれかを変更すると上書きされます。",
   "modules.ProductProviders.packageVolumeTooltipEditableOff": "手動でのみ入力できます。",
