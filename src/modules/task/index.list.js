@@ -2,12 +2,11 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
-import { UIConsumer } from 'modules/ui';
-import NavBar from 'components/NavBar';
+import { Content } from 'components/Layout';
+import { NavBar } from 'components/NavBar';
 import TaskList from './list';
 import { tasksExportQuery } from './query';
 import messages from './messages';
@@ -46,35 +45,27 @@ const TaskModule = (props: Props) => {
     'filterTask'
   );
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="TASK"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-              <ExportButton
-                type="Tasks"
-                exportQuery={tasksExportQuery}
-                variables={{
-                  filterBy: filterAndSort.filter,
-                  sortBy: {
-                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                  },
-                }}
-              />
-            </NavBar>
-          }
-        >
-          <TaskList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <Content>
+      <NavBar>
+        <FilterToolBar
+          icon="TASK"
+          sortFields={sortFields}
+          filtersAndSort={filterAndSort}
+          onChange={onChangeFilter}
+        />
+        <ExportButton
+          type="Tasks"
+          exportQuery={tasksExportQuery}
+          variables={{
+            filterBy: filterAndSort.filter,
+            sortBy: {
+              [filterAndSort.sort.field]: filterAndSort.sort.direction,
+            },
+          }}
+        />
+      </NavBar>
+      <TaskList {...queryVariables} />
+    </Content>
   );
 };
 

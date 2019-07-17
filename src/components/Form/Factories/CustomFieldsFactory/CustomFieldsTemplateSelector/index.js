@@ -7,7 +7,7 @@ import { removeTypename } from 'utils/data';
 import loadMore from 'utils/loadMore';
 import MaskGridView from 'modules/metadata/components/MaskGridView';
 import { TemplateCard } from 'components/Cards';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import { masksQuery } from 'modules/metadata/query';
@@ -55,50 +55,50 @@ const CustomFieldsTemplateSelector = ({ entityType, selected, onCancel, onSave }
       return (
         <ObjectValue defaultValue={selected}>
           {({ value, set }) => (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    data-testid="saveButtonOnSelectMask"
-                    disabled={isEquals(value, selected)}
-                    onClick={() => onSave(value)}
-                  />
-                </SlideViewNavBar>
-              }
-            >
-              <MaskGridView
-                entityType={entityType}
-                items={getByPathWithDefault([], 'masks.nodes', data)}
-                onLoadMore={() =>
-                  loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
-                }
-                hasMore={hasMore}
-                isLoading={loading}
-                renderItem={mask => (
-                  <TemplateCard
-                    key={mask.id}
-                    template={{
-                      id: mask.id,
-                      title: mask.name,
-                      description: mask.memo,
-                      count: countMaskFieldDefinitions(mask),
-                    }}
-                    type="METADATA"
-                    onSelect={() => {
-                      if (value && mask.id === value.id) {
-                        set(null);
-                      } else {
-                        set(removeTypename(mask));
-                      }
-                    }}
-                    selectable
-                    selected={value && mask.id === value.id}
-                  />
-                )}
-              />
-            </Layout>
+            <SlideViewLayout>
+              <SlideViewNavBar>
+                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                <CancelButton onClick={onCancel} />
+                <SaveButton
+                  data-testid="saveButtonOnSelectMask"
+                  disabled={isEquals(value, selected)}
+                  onClick={() => onSave(value)}
+                />
+              </SlideViewNavBar>
+
+              <Content>
+                <MaskGridView
+                  entityType={entityType}
+                  items={getByPathWithDefault([], 'masks.nodes', data)}
+                  onLoadMore={() =>
+                    loadMore({ fetchMore, data }, { filter: { entityTypes: entityType } }, 'masks')
+                  }
+                  hasMore={hasMore}
+                  isLoading={loading}
+                  renderItem={mask => (
+                    <TemplateCard
+                      key={mask.id}
+                      template={{
+                        id: mask.id,
+                        title: mask.name,
+                        description: mask.memo,
+                        count: countMaskFieldDefinitions(mask),
+                      }}
+                      type="METADATA"
+                      onSelect={() => {
+                        if (value && mask.id === value.id) {
+                          set(null);
+                        } else {
+                          set(removeTypename(mask));
+                        }
+                      }}
+                      selectable
+                      selected={value && mask.id === value.id}
+                    />
+                  )}
+                />
+              </Content>
+            </SlideViewLayout>
           )}
         </ObjectValue>
       );

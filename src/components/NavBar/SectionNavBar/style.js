@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'react-emotion';
 import { borderRadiuses, colors, shadows, transitions } from 'styles/common';
-import { ChildrenWrapperStyle } from 'components/NavBar/style';
+import { NavBarStyle } from '../style';
 
 export const SectionNavBarStyle = (upsideDown: boolean): string => css`
   position: relative;
@@ -27,5 +27,5 @@ export const SectionNavBarStyle = (upsideDown: boolean): string => css`
 `;
 
 export const SectionNavBarChildrenWrapperStyle: string = css`
-  ${ChildrenWrapperStyle};
+  ${NavBarStyle};
 `;

@@ -10,7 +10,7 @@ import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { ORDER_ITEMS_GET_PRICE } from 'modules/permission/constants/orderItem';
 import { BATCH_TASK_LIST } from 'modules/permission/constants/batch';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import BatchGridView from 'modules/batch/list/BatchGridView';
 import LoadingIcon from 'components/LoadingIcon';
 import { ShipmentBatchCard } from 'components/Cards';
@@ -108,114 +108,114 @@ function SelectShipmentBatches({
   return (
     <ArrayValue>
       {({ value: selected, push, filter: arrayValueFilter }) => (
-        <Layout
-          navBar={
-            <SlideViewNavBar>
-              <EntityIcon icon="BATCH" color="BATCH" />
-              <SortInput
-                sort={fields.find(item => item.value === filterAndSort.sort.field) || fields[0]}
-                ascending={filterAndSort.sort.direction !== 'DESCENDING'}
-                fields={fields}
-                onChange={({ field: { value }, ascending }) =>
-                  onChangeFilter({
-                    ...filterAndSort,
-                    sort: {
-                      field: value,
-                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                    },
-                  })
-                }
-              />
-              <SearchInput
-                value={filterAndSort.filter.query}
-                name="search"
-                onClear={() =>
-                  onChangeFilter({
-                    ...filterAndSort,
-                    filter: { ...filterAndSort.filter, query: '' },
-                  })
-                }
-                onChange={newQuery =>
-                  onChangeFilter({
-                    ...filterAndSort,
-                    filter: { ...filterAndSort.filter, query: newQuery },
-                  })
-                }
-              />
-              <CancelButton onClick={onCancel} />
-              <SaveButton
-                data-testid="saveButtonOnSelectContainerBatches"
-                disabled={selected.length === 0}
-                onClick={() => {
-                  onSelect(removeTypename(selected));
-                }}
-              />
-            </SlideViewNavBar>
-          }
-        >
-          <BatchGridView
-            items={batches.filter(item => !ignoreBatches.includes(item.id))}
-            loader={null}
-            onLoadMore={() => {
-              setIsLoading(true);
-              client
-                .query({
-                  query: selectBatchListQuery,
-                  fetchPolicy: 'no-cache',
-                  variables: {
-                    ...queryVariables,
-                    page,
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="BATCH" color="BATCH" />
+            <SortInput
+              sort={fields.find(item => item.value === filterAndSort.sort.field) || fields[0]}
+              ascending={filterAndSort.sort.direction !== 'DESCENDING'}
+              fields={fields}
+              onChange={({ field: { value }, ascending }) =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
                   },
                 })
-                .then(result => {
-                  setBatches([
-                    ...batches,
-                    ...getByPathWithDefault([], 'data.batches.nodes', result),
-                  ]);
-                  const nextPage = getByPathWithDefault(1, 'data.batches.page', result) + 1;
-                  const totalPage = getByPathWithDefault(1, 'data.batches.totalPage', result);
-                  setHasMore(nextPage <= totalPage);
-                  setPage(nextPage);
-                  setIsLoading(false);
+              }
+            />
+            <SearchInput
+              value={filterAndSort.filter.query}
+              name="search"
+              onClear={() =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, query: '' },
                 })
-                .catch(err => {
-                  trackingError(err);
-                  toast.error(
-                    intl.formatMessage({
-                      id: 'global.apiErrorMessage',
-                      defaultMessage: 'There was an error. Please try again later.',
-                    })
-                  );
-                  setIsLoading(false);
-                });
-            }}
-            hasMore={hasMore}
-            isLoading={isLoading && batches.length === 0}
-            renderItem={item => {
-              const isSelected = selected.map(({ id }) => id).includes(item.id);
-              return (
-                <ShipmentBatchCard
-                  key={item.id}
-                  batch={item}
-                  selectable
-                  selected={isSelected}
-                  onSelect={() => {
-                    if (isSelected) {
-                      arrayValueFilter(({ id }) => id !== item.id);
-                    } else {
-                      push(item);
-                    }
-                  }}
-                  viewable={{
-                    price: viewPrice,
-                    tasks: viewTasks,
-                  }}
-                />
-              );
-            }}
-          />
-          {isLoading && batches.length > 0 && <LoadingIcon />}
-        </Layout>
+              }
+              onChange={newQuery =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, query: newQuery },
+                })
+              }
+            />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              data-testid="saveButtonOnSelectContainerBatches"
+              disabled={selected.length === 0}
+              onClick={() => {
+                onSelect(removeTypename(selected));
+              }}
+            />
+          </SlideViewNavBar>
+
+          <Content>
+            {isLoading && batches.length > 0 && <LoadingIcon />}
+            <BatchGridView
+              items={batches.filter(item => !ignoreBatches.includes(item.id))}
+              loader={null}
+              onLoadMore={() => {
+                setIsLoading(true);
+                client
+                  .query({
+                    query: selectBatchListQuery,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                      ...queryVariables,
+                      page,
+                    },
+                  })
+                  .then(result => {
+                    setBatches([
+                      ...batches,
+                      ...getByPathWithDefault([], 'data.batches.nodes', result),
+                    ]);
+                    const nextPage = getByPathWithDefault(1, 'data.batches.page', result) + 1;
+                    const totalPage = getByPathWithDefault(1, 'data.batches.totalPage', result);
+                    setHasMore(nextPage <= totalPage);
+                    setPage(nextPage);
+                    setIsLoading(false);
+                  })
+                  .catch(err => {
+                    trackingError(err);
+                    toast.error(
+                      intl.formatMessage({
+                        id: 'global.apiErrorMessage',
+                        defaultMessage: 'There was an error. Please try again later.',
+                      })
+                    );
+                    setIsLoading(false);
+                  });
+              }}
+              hasMore={hasMore}
+              isLoading={isLoading && batches.length === 0}
+              renderItem={item => {
+                const isSelected = selected.map(({ id }) => id).includes(item.id);
+                return (
+                  <ShipmentBatchCard
+                    key={item.id}
+                    batch={item}
+                    selectable
+                    selected={isSelected}
+                    onSelect={() => {
+                      if (isSelected) {
+                        arrayValueFilter(({ id }) => id !== item.id);
+                      } else {
+                        push(item);
+                      }
+                    }}
+                    viewable={{
+                      price: viewPrice,
+                      tasks: viewTasks,
+                    }}
+                  />
+                );
+              }}
+            />
+          </Content>
+        </SlideViewLayout>
       )}
     </ArrayValue>
   );

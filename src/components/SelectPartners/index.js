@@ -9,7 +9,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import FilterToolBar from 'components/common/FilterToolBar';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import messages from 'modules/partner/messages';
@@ -75,54 +75,51 @@ const SelectPartners = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSe
         return (
           <ArrayValue defaultValue={selected}>
             {({ value: values, push, filter }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="PARTNER"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <h3>
-                      {values.length}/{MAX_SELECTIONS}
-                    </h3>
-                    <CancelButton disabled={false} onClick={onCancel} />
-                    <SaveButton
-                      disabled={isEquals(
-                        values.map(item => item.id),
-                        selected.map(item => item.id)
-                      )}
-                      onClick={() => onSelect(values)}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
-                <PartnerGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
-                  items={items}
-                  renderItem={item => {
-                    const isSelected = values.map(({ id }) => id).includes(item.id);
-                    return (
-                      <PartnerCard
-                        key={item.id}
-                        selectable
-                        selected={isSelected}
-                        partner={item}
-                        onSelect={() => {
-                          if (isSelected) {
-                            filter(({ id }) => id !== item.id);
-                          } else if (values.length < MAX_SELECTIONS) {
-                            push(item);
-                          }
-                        }}
-                      />
-                    );
-                  }}
-                />
-              </Layout>
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="PARTNER"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <h3>
+                    {values.length}/{MAX_SELECTIONS}
+                  </h3>
+                  <CancelButton disabled={false} onClick={onCancel} />
+                  <SaveButton
+                    disabled={isEquals(values.map(item => item.id), selected.map(item => item.id))}
+                    onClick={() => onSelect(values)}
+                  />
+                </SlideViewNavBar>
+
+                <Content>
+                  <PartnerGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                    items={items}
+                    renderItem={item => {
+                      const isSelected = values.map(({ id }) => id).includes(item.id);
+                      return (
+                        <PartnerCard
+                          key={item.id}
+                          selectable
+                          selected={isSelected}
+                          partner={item}
+                          onSelect={() => {
+                            if (isSelected) {
+                              filter(({ id }) => id !== item.id);
+                            } else if (values.length < MAX_SELECTIONS) {
+                              push(item);
+                            }
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </Content>
+              </SlideViewLayout>
             )}
           </ArrayValue>
         );

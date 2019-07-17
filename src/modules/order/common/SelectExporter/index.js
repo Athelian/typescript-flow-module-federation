@@ -9,7 +9,7 @@ import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import { cleanUpData } from 'utils/data';
 import useFilter from 'hooks/useFilter';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -122,74 +122,74 @@ const SelectExporter = ({
         return (
           <ObjectValue defaultValue={selected}>
             {({ value, set }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="PARTNER"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="btnSaveExporter"
-                      disabled={isEquals(value, selected)}
-                      onClick={() => {
-                        if (isRequired) {
-                          if (!isNullOrUndefined(selected)) {
-                            setOpenConfirmDialog(true);
-                          } else {
-                            onSelect(value);
-                          }
-                        } else {
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="PARTNER"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    data-testid="btnSaveExporter"
+                    disabled={isEquals(value, selected)}
+                    onClick={() => {
+                      if (isRequired) {
+                        if (!isNullOrUndefined(selected)) {
                           setOpenConfirmDialog(true);
-                        }
-                      }}
-                    />
-                    <ConfirmDialog
-                      isOpen={openConfirmDialog}
-                      onRequestClose={() => setOpenConfirmDialog(false)}
-                      onCancel={() => setOpenConfirmDialog(false)}
-                      onConfirm={() => {
-                        onSelect(value);
-                        setOpenConfirmDialog(false);
-                      }}
-                      message={chooseMessage({
-                        selected,
-                        value,
-                        selectMessage,
-                        changeMessage,
-                        deselectMessage,
-                        warningMessage,
-                      })}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
-                <PartnerGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
-                  items={items}
-                  renderItem={item => (
-                    <PartnerCard
-                      key={item.id}
-                      data-testid="partnerCard"
-                      partner={item}
-                      onSelect={() => {
-                        if (!isRequired && (value && value.id === item.id)) {
-                          set(null);
                         } else {
-                          set(cleanUpData(item));
+                          onSelect(value);
                         }
-                      }}
-                      selectable
-                      selected={value && value.id === item.id}
-                    />
-                  )}
-                />
-              </Layout>
+                      } else {
+                        setOpenConfirmDialog(true);
+                      }
+                    }}
+                  />
+                  <ConfirmDialog
+                    isOpen={openConfirmDialog}
+                    onRequestClose={() => setOpenConfirmDialog(false)}
+                    onCancel={() => setOpenConfirmDialog(false)}
+                    onConfirm={() => {
+                      onSelect(value);
+                      setOpenConfirmDialog(false);
+                    }}
+                    message={chooseMessage({
+                      selected,
+                      value,
+                      selectMessage,
+                      changeMessage,
+                      deselectMessage,
+                      warningMessage,
+                    })}
+                  />
+                </SlideViewNavBar>
+
+                <Content>
+                  <PartnerGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                    items={items}
+                    renderItem={item => (
+                      <PartnerCard
+                        key={item.id}
+                        data-testid="partnerCard"
+                        partner={item}
+                        onSelect={() => {
+                          if (!isRequired && (value && value.id === item.id)) {
+                            set(null);
+                          } else {
+                            set(cleanUpData(item));
+                          }
+                        }}
+                        selectable
+                        selected={value && value.id === item.id}
+                      />
+                    )}
+                  />
+                </Content>
+              </SlideViewLayout>
             )}
           </ObjectValue>
         );

@@ -4,7 +4,7 @@ import { GradientStyle } from './style';
 
 type Props = {
   className?: string,
-  children: any,
+  children: React.Node,
 };
 
 export default function GradientContainer({ className, children }: Props) {

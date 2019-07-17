@@ -2,7 +2,7 @@
 import { css } from 'react-emotion';
 import { transitions, shadows, colors, layout } from 'styles/common';
 
-export const NavBarStyle: string = css`
+export const NavBarWrapperStyle: string = css`
   display: flex;
   align-items: center;
   position: absolute;
@@ -16,7 +16,7 @@ export const NavBarStyle: string = css`
   ${transitions.EXPAND};
 `;
 
-export const ChildrenWrapperStyle: string = css`
+export const NavBarStyle: string = css`
   ${layout.GRID_HORIZONTAL};
   grid-template-rows: 50px;
   grid-gap: 20px;

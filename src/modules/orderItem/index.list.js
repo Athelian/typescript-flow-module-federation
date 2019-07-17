@@ -2,11 +2,10 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
-import { UIConsumer } from 'modules/ui';
-import NavBar from 'components/NavBar';
+import { Content } from 'components/Layout';
+import { NavBar } from 'components/NavBar';
 import OrderItemList from './list';
 import messages from './messages';
 
@@ -44,25 +43,17 @@ function OrderItemModule(props: Props) {
   );
 
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="ORDER_ITEM"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-            </NavBar>
-          }
-        >
-          <OrderItemList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <Content>
+      <NavBar>
+        <FilterToolBar
+          icon="ORDER_ITEM"
+          sortFields={sortFields}
+          filtersAndSort={filterAndSort}
+          onChange={onChangeFilter}
+        />
+      </NavBar>
+      <OrderItemList {...queryVariables} />
+    </Content>
   );
 }
 

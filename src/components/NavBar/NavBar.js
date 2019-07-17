@@ -1,17 +1,35 @@
 // @flow
 import * as React from 'react';
-import UserNavbar from 'modules/userNavbar';
-import { NavBarStyle, ChildrenWrapperStyle } from './style';
+import ReactDOM from 'react-dom';
 
 type Props = {
-  children?: React.Node,
+  children: React.Node,
 };
 
-const NavBar = ({ children }: Props) => (
-  <div className={NavBarStyle}>
-    <div className={ChildrenWrapperStyle}>{children}</div>
-    <UserNavbar />
-  </div>
-);
+export default class NavBar extends React.Component<Props> {
+  el: HTMLElement;
 
-export default NavBar;
+  constructor(props: Props) {
+    super(props);
+    this.el = document.createElement('div');
+  }
+
+  componentDidMount() {
+    const navBarRoot = document.getElementById('navbar-root');
+    if (navBarRoot) {
+      navBarRoot.appendChild(this.el);
+    }
+  }
+
+  componentWillUnmount() {
+    const navBarRoot = document.getElementById('navbar-root');
+    if (navBarRoot) {
+      navBarRoot.removeChild(this.el);
+    }
+  }
+
+  render() {
+    const { children } = this.props;
+    return ReactDOM.createPortal(children, this.el);
+  }
+}

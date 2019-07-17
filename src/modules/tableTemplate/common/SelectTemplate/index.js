@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { tableTemplateQuery } from 'modules/tableTemplate/list/query';
 import TableTemplateGridView from 'modules/tableTemplate/list/TableTemplateGridView';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -53,43 +53,43 @@ const SelectTemplate = ({ selected, onCancel, onSelect }: Props) => (
       return (
         <ObjectValue defaultValue={selected}>
           {({ value, set }) => (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    disabled={isEquals(value, selected)}
-                    onClick={() => onSelect(value)}
-                    data-testid="saveButtonOnSelectTemplate"
-                  />
-                </SlideViewNavBar>
-              }
-            >
-              <TableTemplateGridView
-                items={getByPathWithDefault([], 'maskEdits.nodes', data)}
-                onLoadMore={() => loadMore({ fetchMore, data }, {}, 'maskEdits')}
-                hasMore={hasMore}
-                isLoading={loading}
-                renderItem={item => (
-                  <TemplateCard
-                    onSelect={() => set(item)}
-                    key={item.id}
-                    template={{
-                      id: item.id,
-                      title: item.name,
-                      description: item.memo,
-                      count: (item.fields || []).length,
-                    }}
-                    type="EDIT_TABLE"
-                    actions={[]}
-                    showActionsOnHover
-                    selectable
-                    selected={value && value.id === item.id}
-                  />
-                )}
-              />
-            </Layout>
+            <SlideViewLayout>
+              <SlideViewNavBar>
+                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                <CancelButton onClick={onCancel} />
+                <SaveButton
+                  disabled={isEquals(value, selected)}
+                  onClick={() => onSelect(value)}
+                  data-testid="saveButtonOnSelectTemplate"
+                />
+              </SlideViewNavBar>
+
+              <Content>
+                <TableTemplateGridView
+                  items={getByPathWithDefault([], 'maskEdits.nodes', data)}
+                  onLoadMore={() => loadMore({ fetchMore, data }, {}, 'maskEdits')}
+                  hasMore={hasMore}
+                  isLoading={loading}
+                  renderItem={item => (
+                    <TemplateCard
+                      onSelect={() => set(item)}
+                      key={item.id}
+                      template={{
+                        id: item.id,
+                        title: item.name,
+                        description: item.memo,
+                        count: (item.fields || []).length,
+                      }}
+                      type="EDIT_TABLE"
+                      actions={[]}
+                      showActionsOnHover
+                      selectable
+                      selected={value && value.id === item.id}
+                    />
+                  )}
+                />
+              </Content>
+            </SlideViewLayout>
           )}
         </ObjectValue>
       );

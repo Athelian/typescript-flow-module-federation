@@ -6,7 +6,7 @@ import { Query } from 'react-apollo';
 import { ObjectValue } from 'react-values';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -62,45 +62,45 @@ const SelectWareHouse = ({ intl, cacheKey, selected, onCancel, onSelect }: Props
         return (
           <ObjectValue defaultValue={selected}>
             {({ value, set }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="WAREHOUSE"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      disabled={isEquals(value, selected)}
-                      onClick={() => onSelect(value)}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
-                <WarehouseGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'warehouses')}
-                  items={getByPathWithDefault([], 'warehouses.nodes', data)}
-                  renderItem={({ item }) => (
-                    <WarehouseCard
-                      warehouse={item}
-                      onSelect={() => {
-                        if (value && item.id === value.id) {
-                          set(null);
-                        } else {
-                          set(item);
-                        }
-                      }}
-                      selectable
-                      selected={value && item.id === value.id}
-                      key={item.id}
-                    />
-                  )}
-                />
-              </Layout>
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="WAREHOUSE"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    disabled={isEquals(value, selected)}
+                    onClick={() => onSelect(value)}
+                  />
+                </SlideViewNavBar>
+
+                <Content>
+                  <WarehouseGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'warehouses')}
+                    items={getByPathWithDefault([], 'warehouses.nodes', data)}
+                    renderItem={({ item }) => (
+                      <WarehouseCard
+                        warehouse={item}
+                        onSelect={() => {
+                          if (value && item.id === value.id) {
+                            set(null);
+                          } else {
+                            set(item);
+                          }
+                        }}
+                        selectable
+                        selected={value && item.id === value.id}
+                        key={item.id}
+                      />
+                    )}
+                  />
+                </Content>
+              </SlideViewLayout>
             )}
           </ObjectValue>
         );
