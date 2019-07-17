@@ -3,6 +3,8 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
+import emitter from 'utils/emitter';
+import usePrevious from 'hooks/usePrevious';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { getByPath, getByPathWithDefault } from 'utils/fp';
@@ -47,15 +49,25 @@ type Props = {|
   isNew: boolean,
   entityId: string,
   isLoading: boolean,
+  isTaskReadyForBinding: boolean,
 |};
 
-const TimelineSection = ({ isNew, entityId, isLoading }: Props) => {
+const TimelineSection = ({ isNew, entityId, isLoading, isTaskReadyForBinding }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const allowToUpdate = hasPermission(SHIPMENT_UPDATE);
 
   const allowSetWarehouse =
     hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_WAREHOUSE]) && hasPermission(WAREHOUSE_LIST);
+
+  const prevValue = usePrevious(isTaskReadyForBinding);
+  React.useEffect(() => {
+    if (!prevValue && isTaskReadyForBinding) {
+      setTimeout(() => {
+        emitter.emit('AUTO_DATE');
+      }, 400);
+    }
+  });
 
   return (
     <Subscribe to={[ShipmentTimelineContainer]}>

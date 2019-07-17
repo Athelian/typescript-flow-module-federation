@@ -89,11 +89,16 @@ class ShipmentForm extends React.Component<Props> {
             icon="TIMELINE"
             title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
           />
-          <TimelineSection
-            isNew={isNew}
-            entityId={!isClone && shipment.id ? shipment.id : ''}
-            isLoading={loading}
-          />
+          <Subscribe to={[ShipmentTasksContainer]}>
+            {({ state: { hasCalledTasksApiYet } }) => (
+              <TimelineSection
+                isTaskReadyForBinding={hasCalledTasksApiYet}
+                isNew={isNew}
+                entityId={!isClone && shipment.id ? shipment.id : ''}
+                isLoading={loading}
+              />
+            )}
+          </Subscribe>
         </SectionWrapper>
 
         <SectionWrapper id="shipment_cargoSection">

@@ -7,12 +7,12 @@ import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
 import { getByPathWithDefault } from 'utils/fp';
 import { shipmentFormTasksQuery } from './query';
 
-type Props = {
+type Props = {|
   isLoading: boolean,
   entityId: string,
   groupIds: Array<string>,
   initValues: (Object, boolean) => void,
-};
+|};
 
 export default function ShipmentTasksSection({ isLoading, entityId, groupIds, initValues }: Props) {
   return (
