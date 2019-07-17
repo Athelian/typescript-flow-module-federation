@@ -1,9 +1,9 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { ContentWrapperStyle } from './style';
 
 type Props = {
-  children: any,
+  children: React.Node,
 };
 
 const Content = ({ children }: Props) => {
