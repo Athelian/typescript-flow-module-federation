@@ -1,9 +1,12 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { getByPathWithDefault } from 'utils/fp';
+import { SectionHeader } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
 import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
 import {
@@ -85,34 +88,47 @@ const CargoSection = ({
         >
           {() => {
             return (
-              <div className={CargoSectionWrapperStyle}>
-                <ContainersArea
-                  isFocusedBatchesPool={focusedContainerIndex === POOL}
-                  focusedContainerIndex={focusedContainerIndex}
-                  isSelectBatchesMode={isSelectBatchesMode}
-                  onChangeSelectMode={onChangeSelectMode}
-                  onSelect={setFocusedCardIndex}
-                  onSelectPool={() =>
-                    focusedContainerIndex === POOL
-                      ? setFocusedCardIndex(UNSELECTED)
-                      : setFocusedCardIndex(POOL)
+              <>
+                <SectionHeader
+                  icon="CARGO"
+                  title={
+                    <>
+                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
+                      {' ('}
+                      <FormattedNumber value={batchesContainer.state.batches.length} />
+                      {')'}
+                    </>
                   }
-                  onDeselect={() => setFocusedCardIndex(UNSELECTED)}
-                  selectedBatches={selectedBatches}
-                  shipmentIsArchived={shipmentIsArchived}
                 />
-                <BatchesArea
-                  importerId={importerId}
-                  exporterId={exporterId}
-                  isFocusedBatchesPool={focusedContainerIndex === POOL}
-                  focusedContainerIndex={focusedContainerIndex}
-                  isSelectBatchesMode={isSelectBatchesMode}
-                  onChangeSelectMode={onChangeSelectMode}
-                  selectedBatches={selectedBatches}
-                  onSelectBatch={onSelectBatch}
-                  shipmentIsArchived={shipmentIsArchived}
-                />
-              </div>
+                <div className={CargoSectionWrapperStyle}>
+                  <ContainersArea
+                    isFocusedBatchesPool={focusedContainerIndex === POOL}
+                    focusedContainerIndex={focusedContainerIndex}
+                    isSelectBatchesMode={isSelectBatchesMode}
+                    onChangeSelectMode={onChangeSelectMode}
+                    onSelect={setFocusedCardIndex}
+                    onSelectPool={() =>
+                      focusedContainerIndex === POOL
+                        ? setFocusedCardIndex(UNSELECTED)
+                        : setFocusedCardIndex(POOL)
+                    }
+                    onDeselect={() => setFocusedCardIndex(UNSELECTED)}
+                    selectedBatches={selectedBatches}
+                    shipmentIsArchived={shipmentIsArchived}
+                  />
+                  <BatchesArea
+                    importerId={importerId}
+                    exporterId={exporterId}
+                    isFocusedBatchesPool={focusedContainerIndex === POOL}
+                    focusedContainerIndex={focusedContainerIndex}
+                    isSelectBatchesMode={isSelectBatchesMode}
+                    onChangeSelectMode={onChangeSelectMode}
+                    selectedBatches={selectedBatches}
+                    onSelectBatch={onSelectBatch}
+                    shipmentIsArchived={shipmentIsArchived}
+                  />
+                </div>
+              </>
             );
           }}
         </QueryPlaceHolder>

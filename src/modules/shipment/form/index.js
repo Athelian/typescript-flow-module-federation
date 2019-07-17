@@ -1,14 +1,11 @@
 // @flow
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import { getByPath, isEquals, getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
-import FormattedNumber from 'components/FormattedNumber';
-import { SectionWrapper, SectionHeader } from 'components/Form';
+import { SectionWrapper } from 'components/Form';
 import {
-  ShipmentBatchesContainer,
   ShipmentTasksContainer,
   ShipmentInfoContainer,
   ShipmentTimelineContainer,
@@ -73,10 +70,6 @@ class ShipmentForm extends React.Component<Props> {
         </SectionWrapper>
 
         <SectionWrapper id="shipment_timelineSection">
-          <SectionHeader
-            icon="TIMELINE"
-            title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
-          />
           <Subscribe to={[ShipmentTasksContainer]}>
             {({ state: { hasCalledTasksApiYet } }) => (
               <TimelineSection
@@ -90,21 +83,6 @@ class ShipmentForm extends React.Component<Props> {
         </SectionWrapper>
 
         <SectionWrapper id="shipment_cargoSection">
-          <Subscribe to={[ShipmentBatchesContainer]}>
-            {({ state: { batches } }) => (
-              <SectionHeader
-                icon="CARGO"
-                title={
-                  <>
-                    <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
-                    {' ('}
-                    <FormattedNumber value={batches.length} />
-                    {')'}
-                  </>
-                }
-              />
-            )}
-          </Subscribe>
           <Subscribe to={[ShipmentInfoContainer]}>
             {({ state: shipmentInfo }) => (
               <CargoSection
