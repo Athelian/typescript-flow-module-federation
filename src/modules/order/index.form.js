@@ -19,6 +19,7 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
+import { initValues as taskInitValues } from 'modules/order/form/containers/tasks';
 import { orderExportQuery, orderTimelineQuery } from './query';
 import OrderForm from './form';
 import validator from './form/validator';
@@ -163,15 +164,13 @@ class OrderFormModule extends React.PureComponent<Props> {
       hasCalledTasksApiYet = false,
       tags = [],
       files = [],
-      todo,
+      todo = taskInitValues.todo,
       ...info
     } = order;
     orderInfoState.initDetailValues(info);
     orderItemState.initDetailValues(orderItems, hasCalledItemsApiYet || orderItems.length > 0);
     orderFilesState.initDetailValues(files);
-    if (todo) {
-      orderTasksState.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
-    }
+    orderTasksState.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
     orderTagsState.initDetailValues(tags);
     return null;
   };

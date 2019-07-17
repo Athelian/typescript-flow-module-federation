@@ -23,28 +23,17 @@ import {
 } from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
-type OptionalProps = {
-  isNew: boolean,
-  loading: boolean,
-  isClone: boolean,
-  anchor: string,
-  initDataForSlideView: Object,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   shipment: Object,
-};
-
-const defaultProps = {
-  isNew: false,
-  isClone: false,
-  anchor: '',
-  initDataForSlideView: {},
-};
+  loading: boolean,
+  isNew?: boolean,
+  isClone?: boolean,
+  isOwner?: boolean,
+  anchor?: string,
+  initDataForSlideView?: Object,
+|};
 
 class ShipmentForm extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
   componentDidMount() {
     const { anchor } = this.props;
 
@@ -65,9 +54,8 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { shipment } = this.props;
-
-    return !isEquals(shipment, nextProps.shipment);
+    const { shipment, isOwner } = this.props;
+    return !isEquals(shipment, nextProps.shipment) || nextProps.isOwner !== isOwner;
   }
 
   render() {
@@ -78,8 +66,8 @@ class ShipmentForm extends React.Component<Props> {
           <ShipmentSection
             shipment={shipment}
             isLoading={loading}
-            isNew={isNew}
-            isClone={isClone}
+            isNew={Boolean(isNew)}
+            isClone={Boolean(isClone)}
             initDataForSlideView={initDataForSlideView}
           />
         </SectionWrapper>
@@ -93,7 +81,7 @@ class ShipmentForm extends React.Component<Props> {
             {({ state: { hasCalledTasksApiYet } }) => (
               <TimelineSection
                 isTaskReadyForBinding={hasCalledTasksApiYet}
-                isNew={isNew}
+                isNew={Boolean(isNew)}
                 entityId={!isClone && shipment.id ? shipment.id : ''}
                 isLoading={loading}
               />
