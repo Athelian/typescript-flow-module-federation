@@ -55,23 +55,19 @@ const RelationMap = () => {
         </Location>
       </NavBar>
 
-      {/* $FlowFixMe override Router's div style */}
       <Content>
-        <div className={ResetContentWrapperStyle}>
-          <Router primary={false}>
-            {hasPermission(RM_ORDER_FOCUS_LIST) && (
-              <Order path="/orders" default={hasPermission(RM_ORDER_FOCUS_LIST)} />
-            )}
-            {hasPermission(RM_PRODUCT_FOCUS_LIST) && (
-              <Product
-                path="/products"
-                default={
-                  !hasPermission(RM_ORDER_FOCUS_LIST) && hasPermission(RM_PRODUCT_FOCUS_LIST)
-                }
-              />
-            )}
-          </Router>
-        </div>
+        {/* $FlowFixMe override Router's div style */}
+        <Router primary={false} className={ResetContentWrapperStyle}>
+          {hasPermission(RM_ORDER_FOCUS_LIST) && (
+            <Order path="/orders" default={hasPermission(RM_ORDER_FOCUS_LIST)} />
+          )}
+          {hasPermission(RM_PRODUCT_FOCUS_LIST) && (
+            <Product
+              path="/products"
+              default={!hasPermission(RM_ORDER_FOCUS_LIST) && hasPermission(RM_PRODUCT_FOCUS_LIST)}
+            />
+          )}
+        </Router>
       </Content>
     </Provider>
   );
