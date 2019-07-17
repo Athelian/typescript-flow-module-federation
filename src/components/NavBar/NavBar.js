@@ -1,13 +1,13 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 
 type Props = {
-  children: any,
+  children: React.Node,
 };
 
-export default class Portal extends React.Component<Props> {
-  el: any;
+export default class NavBar extends React.Component<Props> {
+  el: HTMLElement;
 
   constructor(props: Props) {
     super(props);
