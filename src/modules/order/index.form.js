@@ -163,13 +163,15 @@ class OrderFormModule extends React.PureComponent<Props> {
       hasCalledTasksApiYet = false,
       tags = [],
       files = [],
-      todo = { milestone: null, tasks: [] },
+      todo,
       ...info
     } = order;
     orderInfoState.initDetailValues(info);
     orderItemState.initDetailValues(orderItems, hasCalledItemsApiYet || orderItems.length > 0);
     orderFilesState.initDetailValues(files);
-    orderTasksState.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
+    if (todo) {
+      orderTasksState.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
+    }
     orderTagsState.initDetailValues(tags);
     return null;
   };
