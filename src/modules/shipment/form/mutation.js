@@ -33,6 +33,7 @@ import {
   itemInBatchFormFragment,
   forbiddenFragment,
   productProviderPackagingFragment,
+  documentFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -85,6 +86,11 @@ export const updateShipmentMutation: Object = gql`
   mutation shipmentUpdate($id: ID!, $input: ShipmentUpdateInput!) {
     shipmentUpdate(id: $id, input: $input) {
       ...shipmentFormFragment
+      ... on Shipment {
+        files {
+          ...documentFragment
+        }
+      }
       ...badRequestFragment
       ...forbiddenFragment
     }
@@ -122,6 +128,7 @@ export const updateShipmentMutation: Object = gql`
   ${partnerCardFragment}
   ${forbiddenFragment}
   ${productProviderPackagingFragment}
+  ${documentFragment}
 `;
 
 type DateRevisionType = {
