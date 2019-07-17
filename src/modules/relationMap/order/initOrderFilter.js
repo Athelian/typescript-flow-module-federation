@@ -1,7 +1,7 @@
 // @flow
 export const initOrderFilter = {
   page: 1,
-  perPage: 10,
+  perPage: 20,
   filter: {
     query: '',
     archived: false,
