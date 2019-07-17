@@ -111,6 +111,8 @@ class ShipmentForm extends React.Component<Props> {
                 exporterId={getByPath('exporter.id', shipmentInfo)}
                 importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
                 shipmentIsArchived={shipment.archived}
+                entityId={!isClone && shipment.id ? shipment.id : ''}
+                isLoading={loading}
               />
             )}
           </Subscribe>

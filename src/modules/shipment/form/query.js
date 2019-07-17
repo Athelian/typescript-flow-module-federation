@@ -2,35 +2,16 @@
 import gql from 'graphql-tag';
 import {
   shipmentFormQueryFragment,
-  containerFormFragment,
-  warehouseCardFragment,
-  batchFormFragment,
+  ownedByFragment,
+  forbiddenFragment,
   userAvatarFragment,
-  metricFragment,
-  sizeFragment,
-  tagFragment,
-  priceFragment,
-  orderCardFragment,
-  imageFragment,
-  partnerNameFragment,
-  shipmentCardFragment,
-  timelineDateMinimalFragment,
-  portFragment,
-  partnerCardFragment,
   customFieldsFragment,
+  partnerCardFragment,
+  tagFragment,
+  metricFragment,
   maskFragment,
   fieldValuesFragment,
   fieldDefinitionFragment,
-  ownedByFragment,
-  milestoneCardFragment,
-  projectCardFragment,
-  taskCountFragment,
-  taskWithoutParentInfoFragment,
-  taskTemplateCardFragment,
-  taskFormInTemplateFragment,
-  itemInBatchFormFragment,
-  forbiddenFragment,
-  productProviderPackagingFragment,
 } from 'graphql';
 
 export const shipmentFormQuery = gql`
@@ -42,35 +23,16 @@ export const shipmentFormQuery = gql`
   }
 
   ${shipmentFormQueryFragment}
-  ${containerFormFragment}
-  ${warehouseCardFragment}
-  ${batchFormFragment}
+  ${ownedByFragment}
   ${userAvatarFragment}
-  ${metricFragment}
-  ${sizeFragment}
-  ${tagFragment}
-  ${priceFragment}
-  ${orderCardFragment}
-  ${imageFragment}
-  ${partnerNameFragment}
-  ${shipmentCardFragment}
-  ${timelineDateMinimalFragment}
-  ${portFragment}
   ${customFieldsFragment}
+  ${partnerCardFragment}
+  ${tagFragment}
+  ${metricFragment}
   ${maskFragment}
   ${fieldValuesFragment}
-  ${fieldDefinitionFragment}
-  ${ownedByFragment}
-  ${milestoneCardFragment}
-  ${projectCardFragment}
-  ${taskCountFragment}
-  ${taskWithoutParentInfoFragment}
-  ${taskTemplateCardFragment}
-  ${taskFormInTemplateFragment}
-  ${itemInBatchFormFragment}
-  ${partnerCardFragment}
   ${forbiddenFragment}
-  ${productProviderPackagingFragment}
+  ${fieldDefinitionFragment}
 `;
 
 export default shipmentFormQuery;

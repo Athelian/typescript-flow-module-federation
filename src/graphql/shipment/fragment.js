@@ -43,14 +43,8 @@ export const shipmentFormQueryFragment = gql`
     tags {
       ...tagFragment
     }
-    containers {
-      ...containerFormFragment
-    }
     totalVolume {
       ...metricFragment
-    }
-    batches {
-      ...batchFormFragment
     }
   }
 `;
