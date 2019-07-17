@@ -6,6 +6,7 @@ import {
   metricFragment,
   sizeFragment,
   taskCountFragment,
+  tagFragment,
   productProviderPackagingFragment,
   productProviderCardFragment,
 } from 'graphql';
@@ -48,6 +49,7 @@ export const productProvidersListQuery = gql`
   ${imageFragment}
   ${metricFragment}
   ${sizeFragment}
+  ${tagFragment}
   ${taskCountFragment}
 `;
 
