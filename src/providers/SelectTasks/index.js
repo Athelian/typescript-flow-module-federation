@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { useQuery } from '@apollo/react-hooks';
 import { ArrayValue } from 'react-values';
 import { trackingError } from 'utils/trackingError';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import TaskGridView from 'modules/task/list/TaskGridView';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
@@ -88,51 +88,48 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
   return (
     <ArrayValue>
       {({ value: selected, push, filter: arrayValueFilter }) => (
-        <Layout
-          navBar={
-            <SlideViewNavBar>
-              <EntityIcon icon="TASK" color="TASK" />
-              <SortInput
-                sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
-                ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-                fields={fields}
-                onChange={({ field: { value }, ascending }) =>
-                  onChange({
-                    ...filtersAndSort,
-                    sort: {
-                      field: value,
-                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                    },
-                  })
-                }
-              />
-              <SearchInput
-                value={filtersAndSort.filter.query}
-                name="search"
-                onClear={() =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: '' },
-                  })
-                }
-                onChange={newQuery =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: newQuery },
-                  })
-                }
-              />
-              <CancelButton onClick={onCancel} />
-              <SaveButton
-                data-testid="btnSaveSelectTasks"
-                disabled={selected.length === 0}
-                onClick={() => {
-                  onSelect(selected);
-                }}
-              />
-            </SlideViewNavBar>
-          }
-        >
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="TASK" color="TASK" />
+            <SortInput
+              sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
+              ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+              fields={fields}
+              onChange={({ field: { value }, ascending }) =>
+                onChange({
+                  ...filtersAndSort,
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
+            />
+            <SearchInput
+              value={filtersAndSort.filter.query}
+              name="search"
+              onClear={() =>
+                onChange({
+                  ...filtersAndSort,
+                  filter: { ...filtersAndSort.filter, query: '' },
+                })
+              }
+              onChange={newQuery =>
+                onChange({
+                  ...filtersAndSort,
+                  filter: { ...filtersAndSort.filter, query: newQuery },
+                })
+              }
+            />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              data-testid="btnSaveSelectTasks"
+              disabled={selected.length === 0}
+              onClick={() => {
+                onSelect(selected);
+              }}
+            />
+          </SlideViewNavBar>
           <TaskGridView
             items={tasks}
             loader={null}
@@ -199,7 +196,7 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
             }}
           />
           {isLoading && tasks.length > 0 && <LoadingIcon />}
-        </Layout>
+        </SlideViewLayout>
       )}
     </ArrayValue>
   );

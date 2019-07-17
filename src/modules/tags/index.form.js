@@ -7,12 +7,11 @@ import { Mutation } from 'react-apollo';
 import { decodeId, encodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { QueryForm } from 'components/common';
-import { Layout } from 'components/Layout';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import Portal from 'components/Portal';
+import { EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
-import { UIConsumer } from 'modules/ui';
 import { FormContainer, resetFormState } from 'modules/form';
 import TagForm from './form';
 import { TagContainer, EntityTypeContainer } from './form/containers';
@@ -114,126 +113,118 @@ export default class TagFormModule extends React.PureComponent<Props> {
 
     return (
       <Provider>
-        <UIConsumer>
-          {uiState => (
-            <Mutation
-              mutation={isNewOrClone ? createTagMutation : updateTagMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(saveTag, { loading: isLoading, error: apiError }) => (
-                <Layout
-                  {...uiState}
-                  navBar={
-                    <NavBar>
-                      <EntityIcon icon="TAG" color="TAG" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="tag_tagSection"
-                          label={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
-                          icon="TAG"
-                        />
-                      </JumpToSection>
-                      <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
-                        {(tagContainer, entityTypeContainer, form) => (
-                          <>
-                            {(isNewOrClone ||
-                              tagContainer.isDirty() ||
-                              entityTypeContainer.isDirty()) && (
-                              <>
-                                {this.isNewOrClone() ? (
-                                  <CancelButton onClick={() => this.onCancel()} />
-                                ) : (
-                                  <ResetButton
-                                    onClick={() => {
-                                      this.onReset({
-                                        tagContainer,
-                                        entityTypeContainer,
-                                        form,
-                                      });
-                                    }}
-                                  />
-                                )}
-                                <SaveButton
-                                  data-testid="saveButton"
-                                  disabled={
-                                    !form.isReady(
-                                      { ...tagContainer.state, ...entityTypeContainer.state },
-                                      validator
-                                    )
-                                  }
-                                  isLoading={isLoading}
-                                  onClick={() =>
-                                    this.onSave(
-                                      {
-                                        ...tagContainer.originalValues,
-                                        ...entityTypeContainer.originalValues,
-                                      },
-                                      { ...tagContainer.state, ...entityTypeContainer.state },
-                                      saveTag,
-                                      () => {
-                                        tagContainer.onSuccess();
-                                        entityTypeContainer.onSuccess();
-                                        form.onReset();
-                                      },
-                                      form.onErrors
-                                    )
-                                  }
-                                />
-                              </>
-                            )}
-
-                            {tagId &&
-                              !tagContainer.isDirty() &&
-                              !entityTypeContainer.isDirty() &&
-                              !isNewOrClone && (
-                                <ExportButton
-                                  type="Tag"
-                                  exportQuery={tagExportQuery}
-                                  variables={{ id: decodeId(tagId) }}
-                                />
-                              )}
-                          </>
-                        )}
-                      </Subscribe>
-                    </NavBar>
-                  }
-                >
-                  {apiError && <p>Error: Please try again.</p>}
-                  {!tagId ? (
-                    <TagForm tag={{}} isNew />
-                  ) : (
-                    <QueryForm
-                      query={tagFormQuery}
-                      entityId={tagId}
-                      entityType="tag"
-                      render={tag => (
-                        <Subscribe to={[TagContainer, EntityTypeContainer]}>
-                          {(tagContainer, entityTypeContainer) => (
-                            <TagForm
-                              isNew={isNewOrClone}
-                              tag={tag}
-                              onFormReady={() => {
-                                const {
-                                  name = null,
-                                  description = null,
-                                  color = '#cccccc',
-                                  entityTypes = [],
-                                } = tag;
-                                tagContainer.initDetailValues({ name, description, color });
-                                entityTypeContainer.initDetailValues(entityTypes);
+        <Mutation
+          mutation={isNewOrClone ? createTagMutation : updateTagMutation}
+          onCompleted={this.onMutationCompleted}
+          {...mutationKey}
+        >
+          {(saveTag, { loading: isLoading, error: apiError }) => (
+            <>
+              <Portal>
+                <EntityIcon icon="TAG" color="TAG" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="tag_tagSection"
+                    label={<FormattedMessage id="modules.Tags.tag" defaultMessage="TAG" />}
+                    icon="TAG"
+                  />
+                </JumpToSection>
+                <Subscribe to={[TagContainer, EntityTypeContainer, FormContainer]}>
+                  {(tagContainer, entityTypeContainer, form) => (
+                    <>
+                      {(isNewOrClone ||
+                        tagContainer.isDirty() ||
+                        entityTypeContainer.isDirty()) && (
+                        <>
+                          {this.isNewOrClone() ? (
+                            <CancelButton onClick={() => this.onCancel()} />
+                          ) : (
+                            <ResetButton
+                              onClick={() => {
+                                this.onReset({
+                                  tagContainer,
+                                  entityTypeContainer,
+                                  form,
+                                });
                               }}
                             />
                           )}
-                        </Subscribe>
+                          <SaveButton
+                            data-testid="saveButton"
+                            disabled={
+                              !form.isReady(
+                                { ...tagContainer.state, ...entityTypeContainer.state },
+                                validator
+                              )
+                            }
+                            isLoading={isLoading}
+                            onClick={() =>
+                              this.onSave(
+                                {
+                                  ...tagContainer.originalValues,
+                                  ...entityTypeContainer.originalValues,
+                                },
+                                { ...tagContainer.state, ...entityTypeContainer.state },
+                                saveTag,
+                                () => {
+                                  tagContainer.onSuccess();
+                                  entityTypeContainer.onSuccess();
+                                  form.onReset();
+                                },
+                                form.onErrors
+                              )
+                            }
+                          />
+                        </>
                       )}
-                    />
+
+                      {tagId &&
+                        !tagContainer.isDirty() &&
+                        !entityTypeContainer.isDirty() &&
+                        !isNewOrClone && (
+                          <ExportButton
+                            type="Tag"
+                            exportQuery={tagExportQuery}
+                            variables={{ id: decodeId(tagId) }}
+                          />
+                        )}
+                    </>
                   )}
-                </Layout>
+                </Subscribe>
+              </Portal>
+              {apiError && <p>Error: Please try again.</p>}
+              {!tagId ? (
+                <TagForm tag={{}} isNew />
+              ) : (
+                <QueryForm
+                  query={tagFormQuery}
+                  entityId={tagId}
+                  entityType="tag"
+                  render={tag => (
+                    <Subscribe to={[TagContainer, EntityTypeContainer]}>
+                      {(tagContainer, entityTypeContainer) => (
+                        <TagForm
+                          isNew={isNewOrClone}
+                          tag={tag}
+                          onFormReady={() => {
+                            const {
+                              name = null,
+                              description = null,
+                              color = '#cccccc',
+                              entityTypes = [],
+                            } = tag;
+                            tagContainer.initDetailValues({ name, description, color });
+                            entityTypeContainer.initDetailValues(entityTypes);
+                          }}
+                        />
+                      )}
+                    </Subscribe>
+                  )}
+                />
               )}
-            </Mutation>
+            </>
           )}
-        </UIConsumer>
+        </Mutation>
       </Provider>
     );
   }

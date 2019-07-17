@@ -8,13 +8,12 @@ import { prepareCustomFieldsData } from 'utils/customFields';
 import { showToastError } from 'utils/errors';
 import { findChangeData } from 'utils/data';
 import { QueryForm } from 'components/common';
-import { Layout } from 'components/Layout';
-import { UIConsumer } from 'modules/ui';
+import Portal from 'components/Portal';
 import { FormContainer, resetFormState } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import { EntityIcon } from 'components/NavBar';
 import { decodeId, encodeId } from 'utils/id';
 import WarehouseForm from './form';
 import WarehouseContainer from './form/containers';
@@ -127,105 +126,97 @@ class WarehouseFormModule extends React.PureComponent<Props> {
 
     return (
       <Provider>
-        <UIConsumer>
-          {uiState => (
-            <Mutation
-              mutation={isNewOrClone ? createWarehouseMutation : updateWarehouseMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(saveWarehouse, { loading: isLoading, error: apiError }) => (
-                <Layout
-                  {...uiState}
-                  navBar={
-                    <NavBar>
-                      <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="warehouse_warehouseSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.WareHouses.warehouse"
-                              defaultMessage="WAREHOUSE"
-                            />
+        <Mutation
+          mutation={isNewOrClone ? createWarehouseMutation : updateWarehouseMutation}
+          onCompleted={this.onMutationCompleted}
+          {...mutationKey}
+        >
+          {(saveWarehouse, { loading: isLoading, error: apiError }) => (
+            <>
+              <Portal>
+                <EntityIcon icon="WAREHOUSE" color="WAREHOUSE" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="warehouse_warehouseSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.WareHouses.warehouse"
+                        defaultMessage="WAREHOUSE"
+                      />
+                    }
+                    icon="WAREHOUSE"
+                  />
+                </JumpToSection>
+                <Subscribe to={[WarehouseContainer, FormContainer]}>
+                  {(warehouseContainer, form) =>
+                    (isNewOrClone || warehouseContainer.isDirty()) && (
+                      <>
+                        {this.isNewOrClone() ? (
+                          <CancelButton onClick={() => this.onCancel()} />
+                        ) : (
+                          <ResetButton
+                            onClick={() => {
+                              this.onReset(warehouseContainer, form);
+                            }}
+                          />
+                        )}
+                        <SaveButton
+                          data-testid="saveButton"
+                          disabled={!form.isReady(warehouseContainer.state, validator)}
+                          isLoading={isLoading}
+                          onClick={() =>
+                            this.onSave(
+                              isNewOrClone
+                                ? warehouseContainer.state
+                                : findChangeData(
+                                    warehouseContainer.originalValues,
+                                    warehouseContainer.state
+                                  ),
+                              saveWarehouse,
+                              () => {
+                                warehouseContainer.onSuccess();
+                                form.onReset();
+                              },
+                              form.onErrors
+                            )
                           }
-                          icon="WAREHOUSE"
                         />
-                      </JumpToSection>
-                      <Subscribe to={[WarehouseContainer, FormContainer]}>
-                        {(warehouseContainer, form) =>
-                          (isNewOrClone || warehouseContainer.isDirty()) && (
-                            <>
-                              {this.isNewOrClone() ? (
-                                <CancelButton onClick={() => this.onCancel()} />
-                              ) : (
-                                <ResetButton
-                                  onClick={() => {
-                                    this.onReset(warehouseContainer, form);
-                                  }}
-                                />
-                              )}
-                              <SaveButton
-                                data-testid="saveButton"
-                                disabled={!form.isReady(warehouseContainer.state, validator)}
-                                isLoading={isLoading}
-                                onClick={() =>
-                                  this.onSave(
-                                    isNewOrClone
-                                      ? warehouseContainer.state
-                                      : findChangeData(
-                                          warehouseContainer.originalValues,
-                                          warehouseContainer.state
-                                        ),
-                                    saveWarehouse,
-                                    () => {
-                                      warehouseContainer.onSuccess();
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
-                              />
-                            </>
-                          )
-                        }
-                      </Subscribe>
-                    </NavBar>
+                      </>
+                    )
                   }
-                >
-                  {apiError && <p>Error: Please try again.</p>}
-                  {!warehouseId ? (
-                    <WarehouseForm warehouse={{}} isNew />
-                  ) : (
-                    <QueryForm
-                      query={warehouseFormQuery}
-                      entityId={warehouseId}
-                      entityType="warehouse"
-                      render={originalWarehouse => {
-                        const warehouse = this.isClone()
-                          ? { name: `[cloned] ${originalWarehouse.name}` }
-                          : originalWarehouse;
-                        return (
-                          <Subscribe to={[WarehouseContainer]}>
-                            {({ initDetailValues }) => (
-                              <WarehouseForm
-                                isNew={isNewOrClone}
-                                warehouse={warehouse}
-                                onFormReady={() => {
-                                  initDetailValues(warehouse);
-                                }}
-                              />
-                            )}
-                          </Subscribe>
-                        );
-                      }}
-                    />
-                  )}
-                </Layout>
+                </Subscribe>
+              </Portal>
+              {apiError && <p>Error: Please try again.</p>}
+              {!warehouseId ? (
+                <WarehouseForm warehouse={{}} isNew />
+              ) : (
+                <QueryForm
+                  query={warehouseFormQuery}
+                  entityId={warehouseId}
+                  entityType="warehouse"
+                  render={originalWarehouse => {
+                    const warehouse = this.isClone()
+                      ? { name: `[cloned] ${originalWarehouse.name}` }
+                      : originalWarehouse;
+                    return (
+                      <Subscribe to={[WarehouseContainer]}>
+                        {({ initDetailValues }) => (
+                          <WarehouseForm
+                            isNew={isNewOrClone}
+                            warehouse={warehouse}
+                            onFormReady={() => {
+                              initDetailValues(warehouse);
+                            }}
+                          />
+                        )}
+                      </Subscribe>
+                    );
+                  }}
+                />
               )}
-            </Mutation>
+            </>
           )}
-        </UIConsumer>
+        </Mutation>
       </Provider>
     );
   }

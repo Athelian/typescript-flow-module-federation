@@ -1,17 +1,15 @@
 // @flow
 import * as React from 'react';
-import UserNavbar from 'modules/userNavbar';
 import { NavBarWrapperStyle, NavBarStyle } from './style';
 
 type Props = {
-  children?: React.Node,
+  children: React.Node,
 };
 
-const NavBar = ({ children }: Props) => (
+const SlideViewNavBar = ({ children }: Props) => (
   <div className={NavBarWrapperStyle}>
     <div className={NavBarStyle}>{children}</div>
-    <UserNavbar />
   </div>
 );
 
-export default NavBar;
+export default SlideViewNavBar;

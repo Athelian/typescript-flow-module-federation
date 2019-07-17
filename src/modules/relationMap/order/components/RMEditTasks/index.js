@@ -8,7 +8,7 @@ import { Subscribe } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
 import ActionDispatch from 'modules/relationMap/order/provider';
 import { selectors } from 'modules/relationMap/order/store';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import useFilter from 'hooks/useFilter';
 import { FilterToolBar } from 'components/common';
@@ -109,43 +109,40 @@ const RMEditTasks = (props: Props) => {
       {(saveTasks, { loading: isLoading, error: mutationError }) => (
         <Subscribe to={[RMEditTasksContainer, FormContainer]}>
           {(rmEditTasksContainer, formContainer) => (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="TASK"
-                    sortFields={sortFields}
-                    filtersAndSort={filterAndSort}
-                    onChange={onChangeFilter}
-                  />
-                  {rmEditTasksContainer.isDirty() && (
-                    <>
-                      <ResetButton
-                        onClick={() => {
-                          rmEditTasksContainer.initDetailValues([]);
-                          formContainer.onReset();
-                        }}
-                      />
-                      <SaveButton
-                        isLoading={isLoading}
-                        onClick={() =>
-                          onSave(
-                            rmEditTasksContainer.originalValues,
-                            rmEditTasksContainer.state,
-                            saveTasks,
-                            () => {
-                              rmEditTasksContainer.onSuccess();
-                              formContainer.onReset();
-                            },
-                            formContainer.onErrors
-                          )
-                        }
-                      />
-                    </>
-                  )}
-                </SlideViewNavBar>
-              }
-            >
+            <SlideViewLayout>
+              <SlideViewNavBar>
+                <FilterToolBar
+                  icon="TASK"
+                  sortFields={sortFields}
+                  filtersAndSort={filterAndSort}
+                  onChange={onChangeFilter}
+                />
+                {rmEditTasksContainer.isDirty() && (
+                  <>
+                    <ResetButton
+                      onClick={() => {
+                        rmEditTasksContainer.initDetailValues([]);
+                        formContainer.onReset();
+                      }}
+                    />
+                    <SaveButton
+                      isLoading={isLoading}
+                      onClick={() =>
+                        onSave(
+                          rmEditTasksContainer.originalValues,
+                          rmEditTasksContainer.state,
+                          saveTasks,
+                          () => {
+                            rmEditTasksContainer.onSuccess();
+                            formContainer.onReset();
+                          },
+                          formContainer.onErrors
+                        )
+                      }
+                    />
+                  </>
+                )}
+              </SlideViewNavBar>
               {mutationError && <p>Error: Please try again.</p>}
               <TaskListInSlide
                 tasks={rmEditTasksContainer.selectTasks(tasks)}
@@ -160,7 +157,7 @@ const RMEditTasks = (props: Props) => {
                   })
                 }
               />
-            </Layout>
+            </SlideViewLayout>
           )}
         </Subscribe>
       )}

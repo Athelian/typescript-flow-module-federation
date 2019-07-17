@@ -12,7 +12,7 @@ import { removeTypename } from 'utils/data';
 import LoadingIcon from 'components/LoadingIcon';
 import GridView from 'components/GridView';
 import IncrementInput from 'components/IncrementInput';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { ItemCard } from 'components/Cards';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -93,48 +93,45 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
   return (
     <ArrayValue>
       {({ value: selected, push, splice, filter: arrayValueFilter }) => (
-        <Layout
-          navBar={
-            <SlideViewNavBar>
-              <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
-              <SortInput
-                sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
-                ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-                fields={fields}
-                onChange={({ field: { value }, ascending }) =>
-                  onChange({
-                    ...filtersAndSort,
-                    sort: {
-                      field: value,
-                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                    },
-                  })
-                }
-              />
-              <SearchInput
-                value={filtersAndSort.filter.query}
-                name="search"
-                onClear={() =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: '' },
-                  })
-                }
-                onChange={newQuery =>
-                  onChange({
-                    ...filtersAndSort,
-                    filter: { ...filtersAndSort.filter, query: newQuery },
-                  })
-                }
-              />
-              <CancelButton onClick={onCancel} />
-              <SaveButton
-                disabled={selected.length === 0}
-                onClick={() => onSelect(removeTypename(selected))}
-              />
-            </SlideViewNavBar>
-          }
-        >
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
+            <SortInput
+              sort={fields.find(item => item.value === filtersAndSort.sort.field) || fields[0]}
+              ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+              fields={fields}
+              onChange={({ field: { value }, ascending }) =>
+                onChange({
+                  ...filtersAndSort,
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
+            />
+            <SearchInput
+              value={filtersAndSort.filter.query}
+              name="search"
+              onClear={() =>
+                onChange({
+                  ...filtersAndSort,
+                  filter: { ...filtersAndSort.filter, query: '' },
+                })
+              }
+              onChange={newQuery =>
+                onChange({
+                  ...filtersAndSort,
+                  filter: { ...filtersAndSort.filter, query: newQuery },
+                })
+              }
+            />
+            <CancelButton onClick={onCancel} />
+            <SaveButton
+              disabled={selected.length === 0}
+              onClick={() => onSelect(removeTypename(selected))}
+            />
+          </SlideViewNavBar>
           <GridView
             onLoadMore={() => {
               setIsLoading(true);
@@ -226,7 +223,7 @@ function SelectOrderItems({ intl, cacheKey, onCancel, onSelect, filter }: Props)
             })}
           </GridView>
           {isLoading && orderItems.length > 0 && <LoadingIcon />}
-        </Layout>
+        </SlideViewLayout>
       )}
     </ArrayValue>
   );

@@ -14,7 +14,7 @@ import {
   maskEditCreateMutation,
 } from 'modules/tableTemplate/form/mutation';
 import { FormContainer, resetFormState } from 'modules/form';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 
@@ -105,66 +105,63 @@ class TemplateFormWrapper extends React.Component<Props> {
               {...mutationKey}
             >
               {(saveTemplate, { loading: isLoading, error: apiError }) => (
-                <Layout
-                  navBar={
-                    <SlideViewNavBar>
-                      <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="tableTemplate_templateSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Templates.template"
-                              defaultMessage="TEMPLATE"
-                            />
-                          }
-                          icon="TEMPLATE"
-                        />
-                        <SectionTabs
-                          link="tableTemplate_editFieldsSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.Templates.relationTable"
-                              defaultMessage="RELATION TABLE"
-                            />
-                          }
-                          icon="EDIT_TABLE"
-                        />
-                      </JumpToSection>
-                      {isNew && <CancelButton onClick={() => onCancel()} />}
+                <SlideViewLayout>
+                  <SlideViewNavBar>
+                    <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                    <JumpToSection>
+                      <SectionTabs
+                        link="tableTemplate_templateSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Templates.template"
+                            defaultMessage="TEMPLATE"
+                          />
+                        }
+                        icon="TEMPLATE"
+                      />
+                      <SectionTabs
+                        link="tableTemplate_editFieldsSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.Templates.relationTable"
+                            defaultMessage="RELATION TABLE"
+                          />
+                        }
+                        icon="EDIT_TABLE"
+                      />
+                    </JumpToSection>
+                    {isNew && <CancelButton onClick={() => onCancel()} />}
 
-                      {!isNew && formState.isDirty() && (
-                        <ResetButton onClick={() => this.onReset(formState)} />
-                      )}
+                    {!isNew && formState.isDirty() && (
+                      <ResetButton onClick={() => this.onReset(formState)} />
+                    )}
 
-                      {(isNew || formState.isDirty()) && (
-                        <SaveButton
-                          disabled={!formContainer.isReady(formState.state, validator)}
-                          isLoading={isLoading}
-                          data-testid="saveButtonOnTableTemplate"
-                          onClick={() =>
-                            this.onSave(
-                              formState.state,
-                              saveTemplate,
-                              () => {
-                                formState.onSuccess();
-                                formContainer.onReset();
-                              },
-                              formContainer.onErrors
-                            )
-                          }
-                        />
-                      )}
-                    </SlideViewNavBar>
-                  }
-                >
+                    {(isNew || formState.isDirty()) && (
+                      <SaveButton
+                        disabled={!formContainer.isReady(formState.state, validator)}
+                        isLoading={isLoading}
+                        data-testid="saveButtonOnTableTemplate"
+                        onClick={() =>
+                          this.onSave(
+                            formState.state,
+                            saveTemplate,
+                            () => {
+                              formState.onSuccess();
+                              formContainer.onReset();
+                            },
+                            formContainer.onErrors
+                          )
+                        }
+                      />
+                    )}
+                  </SlideViewNavBar>
                   {apiError && <p>Error: Please try again.</p>}
                   <TemplateForm
                     initDetailValues={formState.initDetailValues}
                     template={template}
                     isNew={isNew}
                   />
-                </Layout>
+                </SlideViewLayout>
               )}
             </Mutation>
           )}

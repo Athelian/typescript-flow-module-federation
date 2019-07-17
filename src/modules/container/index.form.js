@@ -6,11 +6,10 @@ import { Mutation } from 'react-apollo';
 import { showToastError } from 'utils/errors';
 import { getByPath } from 'utils/fp';
 import { decodeId } from 'utils/id';
-import { UIConsumer } from 'modules/ui';
-import { Layout } from 'components/Layout';
 import { SaveButton, ResetButton, ExportButton } from 'components/Buttons';
 import { FormContainer, resetFormState } from 'modules/form';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import Portal from 'components/Portal';
+import { EntityIcon } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
@@ -147,155 +146,138 @@ class ContainerFormModule extends React.Component<Props> {
     const mutationKey = { key: decodeId(containerId) };
 
     return (
-      <UIConsumer>
-        {uiState => (
-          <Provider inject={[formContainer]}>
-            <Mutation
-              mutation={updateContainerMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(saveContainer, { loading, error }) => (
-                <Layout
-                  {...uiState}
-                  navBar={
-                    <NavBar>
-                      <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="container_containerSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.container"
-                              defaultMessage="CONTAINER"
-                            />
-                          }
-                          icon="CONTAINER"
-                        />
-                        <SectionTabs
-                          link="container_shipmentSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.shipment"
-                              defaultMessage="SHIPMENT"
-                            />
-                          }
-                          icon="SHIPMENT"
-                        />
-                        <SectionTabs
-                          link="container_batchesSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.batches"
-                              defaultMessage="BATCHES"
-                            />
-                          }
-                          icon="BATCH"
-                        />
-                        <SectionTabs
-                          link="container_ordersSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.container.orders"
-                              defaultMessage="ORDERS"
-                            />
-                          }
-                          icon="ORDER"
-                        />
-                      </JumpToSection>
-                      <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-                        {(containerInfoContainer, containerBatchesContainer) => (
-                          <>
-                            {(containerInfoContainer.isDirty() ||
-                              containerBatchesContainer.isDirty()) && (
-                              <>
-                                <ResetButton
-                                  onClick={() =>
-                                    this.onReset(
-                                      { containerInfoContainer, containerBatchesContainer },
-                                      formContainer
-                                    )
-                                  }
-                                />
-                                <SaveButton
-                                  disabled={
-                                    !formContainer.isReady(
-                                      {
-                                        ...containerInfoContainer.state,
-                                        ...containerBatchesContainer.state,
-                                      },
-                                      validator
-                                    )
-                                  }
-                                  isLoading={loading}
-                                  onClick={() =>
-                                    this.onSave(
-                                      {
-                                        ...containerInfoContainer.originalValues,
-                                        ...containerBatchesContainer.originalValues,
-                                      },
-                                      containerBatchesContainer.existingBatches,
-                                      {
-                                        ...containerInfoContainer.state,
-                                        ...containerBatchesContainer.state,
-                                      },
-                                      saveContainer,
-                                      updateContainer => {
-                                        this.initAllValues(
-                                          { containerInfoContainer, containerBatchesContainer },
-                                          updateContainer
-                                        );
-                                        formContainer.onReset();
-                                      },
-                                      formContainer.onErrors
-                                    )
-                                  }
-                                />
-                              </>
-                            )}
-
-                            {containerId &&
-                              !containerInfoContainer.isDirty() &&
-                              !containerBatchesContainer.isDirty() && (
-                                <ExportButton
-                                  type="Container"
-                                  exportQuery={containerExportQuery}
-                                  variables={{ id: decodeId(containerId) }}
-                                />
-                              )}
-                          </>
-                        )}
-                      </Subscribe>
-                    </NavBar>
-                  }
-                >
-                  {error && <p>Error: Please try again.</p>}
-                  <QueryForm
-                    query={containerFormQuery}
-                    entityId={containerId}
-                    entityType="container"
-                    render={container => {
-                      return (
+      <Provider inject={[formContainer]}>
+        <Mutation
+          mutation={updateContainerMutation}
+          onCompleted={this.onMutationCompleted}
+          {...mutationKey}
+        >
+          {(saveContainer, { loading, error }) => (
+            <>
+              <Portal>
+                <EntityIcon icon="CONTAINER" color="CONTAINER" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="container_containerSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.container.container"
+                        defaultMessage="CONTAINER"
+                      />
+                    }
+                    icon="CONTAINER"
+                  />
+                  <SectionTabs
+                    link="container_shipmentSection"
+                    label={
+                      <FormattedMessage id="modules.container.shipment" defaultMessage="SHIPMENT" />
+                    }
+                    icon="SHIPMENT"
+                  />
+                  <SectionTabs
+                    link="container_batchesSection"
+                    label={
+                      <FormattedMessage id="modules.container.batches" defaultMessage="BATCHES" />
+                    }
+                    icon="BATCH"
+                  />
+                  <SectionTabs
+                    link="container_ordersSection"
+                    label={
+                      <FormattedMessage id="modules.container.orders" defaultMessage="ORDERS" />
+                    }
+                    icon="ORDER"
+                  />
+                </JumpToSection>
+                <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
+                  {(containerInfoContainer, containerBatchesContainer) => (
+                    <>
+                      {(containerInfoContainer.isDirty() ||
+                        containerBatchesContainer.isDirty()) && (
                         <>
-                          <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
-                            {(containerInfoContainer, containerBatchesContainer) =>
-                              this.onFormReady(
+                          <ResetButton
+                            onClick={() =>
+                              this.onReset(
                                 { containerInfoContainer, containerBatchesContainer },
-                                container
+                                formContainer
                               )
                             }
-                          </Subscribe>
-                          <ContainerForm container={container} />
+                          />
+                          <SaveButton
+                            disabled={
+                              !formContainer.isReady(
+                                {
+                                  ...containerInfoContainer.state,
+                                  ...containerBatchesContainer.state,
+                                },
+                                validator
+                              )
+                            }
+                            isLoading={loading}
+                            onClick={() =>
+                              this.onSave(
+                                {
+                                  ...containerInfoContainer.originalValues,
+                                  ...containerBatchesContainer.originalValues,
+                                },
+                                containerBatchesContainer.existingBatches,
+                                {
+                                  ...containerInfoContainer.state,
+                                  ...containerBatchesContainer.state,
+                                },
+                                saveContainer,
+                                updateContainer => {
+                                  this.initAllValues(
+                                    { containerInfoContainer, containerBatchesContainer },
+                                    updateContainer
+                                  );
+                                  formContainer.onReset();
+                                },
+                                formContainer.onErrors
+                              )
+                            }
+                          />
                         </>
-                      );
-                    }}
-                  />
-                </Layout>
-              )}
-            </Mutation>
-          </Provider>
-        )}
-      </UIConsumer>
+                      )}
+
+                      {containerId &&
+                        !containerInfoContainer.isDirty() &&
+                        !containerBatchesContainer.isDirty() && (
+                          <ExportButton
+                            type="Container"
+                            exportQuery={containerExportQuery}
+                            variables={{ id: decodeId(containerId) }}
+                          />
+                        )}
+                    </>
+                  )}
+                </Subscribe>
+              </Portal>
+              {error && <p>Error: Please try again.</p>}
+              <QueryForm
+                query={containerFormQuery}
+                entityId={containerId}
+                entityType="container"
+                render={container => {
+                  return (
+                    <>
+                      <Subscribe to={[ContainerInfoContainer, ContainerBatchesContainer]}>
+                        {(containerInfoContainer, containerBatchesContainer) =>
+                          this.onFormReady(
+                            { containerInfoContainer, containerBatchesContainer },
+                            container
+                          )
+                        }
+                      </Subscribe>
+                      <ContainerForm container={container} />
+                    </>
+                  );
+                }}
+              />
+            </>
+          )}
+        </Mutation>
+      </Provider>
     );
   }
 }

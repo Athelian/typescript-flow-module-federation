@@ -8,14 +8,13 @@ import { showToastError } from 'utils/errors';
 import { decodeId } from 'utils/id';
 import { removeTypename } from 'utils/data';
 import { getByPath } from 'utils/fp';
-import { Layout } from 'components/Layout';
-import NavBar, { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
+import { SlideViewLayout } from 'components/Layout';
+import { NavBar, SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { QueryForm } from 'components/common';
 import { ResetButton, SaveButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
-import { UIConsumer } from 'modules/ui';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import ItemForm from './form';
@@ -132,240 +131,222 @@ class OrderItemFormModule extends React.Component<Props> {
     const { orderItemId, isSlideView } = this.props;
     // TODO: header
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
+    const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
 
     let mutationKey = {};
     if (orderItemId) {
       mutationKey = { key: decodeId(orderItemId) };
     }
     return (
-      <UIConsumer>
-        {uiState => (
-          <Provider inject={[formContainer]}>
-            <Mutation
-              mutation={updateOrderItemMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(updateOrderItem, { loading, error }) => (
-                <Layout
-                  {...(isSlideView ? {} : uiState)}
-                  navBar={
-                    <CurrentNavBar>
-                      <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="orderItem_itemSection"
-                          label={<FormattedMessage id="modules.item.item" defaultMessage="ITEM" />}
-                          icon="ORDER_ITEM"
-                        />
-                        <SectionTabs
-                          link="orderItem_batchesSection"
-                          label={
-                            <FormattedMessage id="modules.item.batches" defaultMessage="BATCHES" />
-                          }
-                          icon="BATCH"
-                        />
-                        <SectionTabs
-                          link="orderItem_documentsSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.item.documents"
-                              defaultMessage="DOCUMENTS"
-                            />
-                          }
-                          icon="DOCUMENT"
-                        />
-                        <SectionTabs
-                          link="orderItem_taskSection"
-                          label={
-                            <FormattedMessage id="modules.item.tasks" defaultMessage="TASKS" />
-                          }
-                          icon="TASK"
-                        />
-                        <SectionTabs
-                          link="orderItem_shipmentsSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.item.shipments"
-                              defaultMessage="shipments"
-                            />
-                          }
-                          icon="SHIPMENT"
-                        />
-                      </JumpToSection>
-                      <BooleanValue>
-                        {({ value: isOpen, set: toggleLogs }) => (
-                          <>
-                            <LogsButton onClick={() => toggleLogs(true)} />
-                            <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
-                              <Layout
-                                navBar={
-                                  <SlideViewNavBar>
-                                    <EntityIcon icon="LOGS" color="LOGS" />
-                                  </SlideViewNavBar>
-                                }
-                              >
-                                {orderItemId && isOpen ? (
-                                  <Timeline
-                                    query={orderItemTimelineQuery}
-                                    queryField="orderItem"
-                                    variables={{
-                                      id: decodeId(orderItemId),
-                                    }}
-                                    entity={{
-                                      orderItemId: decodeId(orderItemId),
-                                    }}
-                                  />
-                                ) : null}
-                              </Layout>
-                            </SlideView>
-                          </>
-                        )}
-                      </BooleanValue>
+      <Provider inject={[formContainer]}>
+        <Mutation
+          mutation={updateOrderItemMutation}
+          onCompleted={this.onMutationCompleted}
+          {...mutationKey}
+        >
+          {(updateOrderItem, { loading, error }) => (
+            <CurrentLayout>
+              <CurrentNavBar>
+                <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="orderItem_itemSection"
+                    label={<FormattedMessage id="modules.item.item" defaultMessage="ITEM" />}
+                    icon="ORDER_ITEM"
+                  />
+                  <SectionTabs
+                    link="orderItem_batchesSection"
+                    label={<FormattedMessage id="modules.item.batches" defaultMessage="BATCHES" />}
+                    icon="BATCH"
+                  />
+                  <SectionTabs
+                    link="orderItem_documentsSection"
+                    label={
+                      <FormattedMessage id="modules.item.documents" defaultMessage="DOCUMENTS" />
+                    }
+                    icon="DOCUMENT"
+                  />
+                  <SectionTabs
+                    link="orderItem_taskSection"
+                    label={<FormattedMessage id="modules.item.tasks" defaultMessage="TASKS" />}
+                    icon="TASK"
+                  />
+                  <SectionTabs
+                    link="orderItem_shipmentsSection"
+                    label={
+                      <FormattedMessage id="modules.item.shipments" defaultMessage="shipments" />
+                    }
+                    icon="SHIPMENT"
+                  />
+                </JumpToSection>
+                <BooleanValue>
+                  {({ value: isOpen, set: toggleLogs }) => (
+                    <>
+                      <LogsButton onClick={() => toggleLogs(true)} />
+                      <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
+                        <SlideViewLayout>
+                          {orderItemId && isOpen && (
+                            <>
+                              <SlideViewNavBar>
+                                <EntityIcon icon="LOGS" color="LOGS" />
+                              </SlideViewNavBar>
+                              <Timeline
+                                query={orderItemTimelineQuery}
+                                queryField="orderItem"
+                                variables={{
+                                  id: decodeId(orderItemId),
+                                }}
+                                entity={{
+                                  orderItemId: decodeId(orderItemId),
+                                }}
+                              />
+                            </>
+                          )}
+                        </SlideViewLayout>
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
 
-                      <Subscribe
-                        to={[
-                          OrderItemInfoContainer,
-                          OrderItemBatchesContainer,
-                          OrderItemFilesContainer,
-                          OrderItemTasksContainer,
-                          OrderItemShipmentsContainer,
-                          FormContainer,
-                        ]}
-                      >
-                        {(
-                          orderItemInfoContainer,
-                          orderItemBatchesContainer,
-                          orderItemFilesContainer,
-                          orderItemTasksContainer,
-                          orderItemShipmentsContainer,
-                          form
-                        ) => (
-                          <>
-                            {(orderItemInfoContainer.isDirty() ||
-                              orderItemBatchesContainer.isDirty() ||
-                              orderItemFilesContainer.isDirty() ||
-                              orderItemTasksContainer.isDirty()) && (
-                              <>
-                                <ResetButton
-                                  onClick={() => {
-                                    this.initAllValues(
-                                      {
-                                        orderItemInfoContainer,
-                                        orderItemBatchesContainer,
-                                        orderItemFilesContainer,
-                                        orderItemTasksContainer,
-                                        orderItemShipmentsContainer,
-                                      },
-                                      {
-                                        ...orderItemInfoContainer.originalValues,
-                                        ...orderItemBatchesContainer.originalValues,
-                                        ...orderItemFilesContainer.originalValues,
-                                        ...orderItemTasksContainer.originalValues,
-                                        ...orderItemShipmentsContainer.originalValues,
-                                      }
-                                    );
-                                    form.onReset();
-                                  }}
-                                />
-                                <SaveButton
-                                  disabled={
-                                    !formContainer.isReady(
-                                      {
-                                        ...orderItemInfoContainer.state,
-                                        ...orderItemBatchesContainer.state,
-                                        ...orderItemFilesContainer.state,
-                                        ...orderItemTasksContainer.state,
-                                      },
-                                      validator
-                                    )
-                                  }
-                                  isLoading={loading}
-                                  onClick={() =>
-                                    this.onSave(
-                                      {
-                                        ...orderItemInfoContainer.originalValues,
-                                        ...orderItemBatchesContainer.originalValues,
-                                        ...orderItemFilesContainer.originalValues,
-                                        ...orderItemTasksContainer.originalValues,
-                                      },
-                                      {
-                                        ...orderItemInfoContainer.state,
-                                        ...orderItemBatchesContainer.state,
-                                        ...orderItemFilesContainer.state,
-                                        ...orderItemTasksContainer.state,
-                                      },
-                                      updateOrderItem,
-                                      updateData => {
-                                        this.initAllValues(
-                                          {
-                                            orderItemInfoContainer,
-                                            orderItemBatchesContainer,
-                                            orderItemFilesContainer,
-                                            orderItemTasksContainer,
-                                            orderItemShipmentsContainer,
-                                          },
-                                          updateData
-                                        );
-                                        form.onReset();
-                                      },
-                                      form.onErrors
-                                    )
-                                  }
-                                />
-                              </>
-                            )}
-                          </>
-                        )}
-                      </Subscribe>
-                    </CurrentNavBar>
-                  }
+                <Subscribe
+                  to={[
+                    OrderItemInfoContainer,
+                    OrderItemBatchesContainer,
+                    OrderItemFilesContainer,
+                    OrderItemTasksContainer,
+                    OrderItemShipmentsContainer,
+                    FormContainer,
+                  ]}
                 >
-                  {error && <p>Error: Please try again.</p>}
-                  <QueryForm
-                    query={orderItemFormQuery}
-                    entityId={orderItemId}
-                    entityType="orderItem"
-                    render={orderItem => (
-                      <>
-                        <ItemForm orderItem={orderItem} />
-                        <Subscribe
-                          to={[
-                            OrderItemInfoContainer,
-                            OrderItemBatchesContainer,
-                            OrderItemFilesContainer,
-                            OrderItemTasksContainer,
-                            OrderItemShipmentsContainer,
-                          ]}
-                        >
-                          {(
+                  {(
+                    orderItemInfoContainer,
+                    orderItemBatchesContainer,
+                    orderItemFilesContainer,
+                    orderItemTasksContainer,
+                    orderItemShipmentsContainer,
+                    form
+                  ) => (
+                    <>
+                      {(orderItemInfoContainer.isDirty() ||
+                        orderItemBatchesContainer.isDirty() ||
+                        orderItemFilesContainer.isDirty() ||
+                        orderItemTasksContainer.isDirty()) && (
+                        <>
+                          <ResetButton
+                            onClick={() => {
+                              this.initAllValues(
+                                {
+                                  orderItemInfoContainer,
+                                  orderItemBatchesContainer,
+                                  orderItemFilesContainer,
+                                  orderItemTasksContainer,
+                                  orderItemShipmentsContainer,
+                                },
+                                {
+                                  ...orderItemInfoContainer.originalValues,
+                                  ...orderItemBatchesContainer.originalValues,
+                                  ...orderItemFilesContainer.originalValues,
+                                  ...orderItemTasksContainer.originalValues,
+                                  ...orderItemShipmentsContainer.originalValues,
+                                }
+                              );
+                              form.onReset();
+                            }}
+                          />
+                          <SaveButton
+                            disabled={
+                              !formContainer.isReady(
+                                {
+                                  ...orderItemInfoContainer.state,
+                                  ...orderItemBatchesContainer.state,
+                                  ...orderItemFilesContainer.state,
+                                  ...orderItemTasksContainer.state,
+                                },
+                                validator
+                              )
+                            }
+                            isLoading={loading}
+                            onClick={() =>
+                              this.onSave(
+                                {
+                                  ...orderItemInfoContainer.originalValues,
+                                  ...orderItemBatchesContainer.originalValues,
+                                  ...orderItemFilesContainer.originalValues,
+                                  ...orderItemTasksContainer.originalValues,
+                                },
+                                {
+                                  ...orderItemInfoContainer.state,
+                                  ...orderItemBatchesContainer.state,
+                                  ...orderItemFilesContainer.state,
+                                  ...orderItemTasksContainer.state,
+                                },
+                                updateOrderItem,
+                                updateData => {
+                                  this.initAllValues(
+                                    {
+                                      orderItemInfoContainer,
+                                      orderItemBatchesContainer,
+                                      orderItemFilesContainer,
+                                      orderItemTasksContainer,
+                                      orderItemShipmentsContainer,
+                                    },
+                                    updateData
+                                  );
+                                  form.onReset();
+                                },
+                                form.onErrors
+                              )
+                            }
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
+                </Subscribe>
+              </CurrentNavBar>
+              {error && <p>Error: Please try again.</p>}
+              <QueryForm
+                query={orderItemFormQuery}
+                entityId={orderItemId}
+                entityType="orderItem"
+                render={orderItem => (
+                  <>
+                    <ItemForm orderItem={orderItem} />
+                    <Subscribe
+                      to={[
+                        OrderItemInfoContainer,
+                        OrderItemBatchesContainer,
+                        OrderItemFilesContainer,
+                        OrderItemTasksContainer,
+                        OrderItemShipmentsContainer,
+                      ]}
+                    >
+                      {(
+                        orderItemInfoContainer,
+                        orderItemBatchesContainer,
+                        orderItemFilesContainer,
+                        orderItemTasksContainer,
+                        orderItemShipmentsContainer
+                      ) =>
+                        this.onFormReady(
+                          {
                             orderItemInfoContainer,
                             orderItemBatchesContainer,
                             orderItemFilesContainer,
+                            orderItemShipmentsContainer,
                             orderItemTasksContainer,
-                            orderItemShipmentsContainer
-                          ) =>
-                            this.onFormReady(
-                              {
-                                orderItemInfoContainer,
-                                orderItemBatchesContainer,
-                                orderItemFilesContainer,
-                                orderItemShipmentsContainer,
-                                orderItemTasksContainer,
-                              },
-                              orderItem
-                            )
-                          }
-                        </Subscribe>
-                      </>
-                    )}
-                  />
-                </Layout>
-              )}
-            </Mutation>
-          </Provider>
-        )}
-      </UIConsumer>
+                          },
+                          orderItem
+                        )
+                      }
+                    </Subscribe>
+                  </>
+                )}
+              />
+            </CurrentLayout>
+          )}
+        </Mutation>
+      </Provider>
     );
   }
 }

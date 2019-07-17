@@ -14,7 +14,7 @@ import JumpToSection from 'components/JumpToSection';
 import validator from 'modules/orderItem/form/validator';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import ItemForm from 'modules/orderItem/form';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 
@@ -49,96 +49,88 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
           orderItemShipmentsContainer
         ) => {
           return (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
-                  <JumpToSection>
-                    <SectionTabs
-                      link="orderItem_itemSection"
-                      label={
-                        <FormattedMessage id="modules.OrderItems.orderItem" defaultMessage="ITEM" />
-                      }
-                      icon="BATCH"
-                    />
-                    <SectionTabs
-                      link="orderItem_batchesSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.OrderItems.batches"
-                          defaultMessage="BATCHES"
-                        />
-                      }
-                      icon="BATCH"
-                    />
-                    <SectionTabs
-                      link="orderItem_documentsSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.OrderItems.document"
-                          defaultMessage="DOCUMENTS"
-                        />
-                      }
-                      icon="DOCUMENT"
-                    />
-                    <SectionTabs
-                      link="orderItem_taskSection"
-                      label={
-                        <FormattedMessage id="modules.OrderItems.task" defaultMessage="TASK" />
-                      }
-                      icon="TASK"
-                    />
-                    <SectionTabs
-                      link="orderItem_shipmentsSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.OrderItems.shipment"
-                          defaultMessage="SHIPMENT"
-                        />
-                      }
-                      icon="SHIPMENT"
-                    />
-                  </JumpToSection>
-                  {(orderItemInfoContainer.isDirty() ||
-                    orderItemBatchesContainer.isDirty() ||
-                    orderItemFilesContainer.isDirty() ||
-                    orderItemTasksContainer.isDirty()) && (
-                    <>
-                      <ResetButton
-                        onClick={() => {
-                          resetFormState(orderItemInfoContainer);
-                          resetFormState(orderItemBatchesContainer);
-                          resetFormState(orderItemFilesContainer);
-                          resetFormState(orderItemTasksContainer, 'todo');
-                          formContainer.onReset();
-                        }}
+            <SlideViewLayout>
+              <SlideViewNavBar>
+                <EntityIcon icon="ORDER_ITEM" color="ORDER_ITEM" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="orderItem_itemSection"
+                    label={
+                      <FormattedMessage id="modules.OrderItems.orderItem" defaultMessage="ITEM" />
+                    }
+                    icon="BATCH"
+                  />
+                  <SectionTabs
+                    link="orderItem_batchesSection"
+                    label={
+                      <FormattedMessage id="modules.OrderItems.batches" defaultMessage="BATCHES" />
+                    }
+                    icon="BATCH"
+                  />
+                  <SectionTabs
+                    link="orderItem_documentsSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.OrderItems.document"
+                        defaultMessage="DOCUMENTS"
                       />
-                      <SaveButton
-                        disabled={
-                          !formContainer.isReady(
-                            {
-                              ...orderItemInfoContainer.state,
-                              ...orderItemBatchesContainer.state,
-                              ...orderItemFilesContainer.state,
-                              ...orderItemTasksContainer.state,
-                            },
-                            validator
-                          )
-                        }
-                        onClick={() =>
-                          onSave({
+                    }
+                    icon="DOCUMENT"
+                  />
+                  <SectionTabs
+                    link="orderItem_taskSection"
+                    label={<FormattedMessage id="modules.OrderItems.task" defaultMessage="TASK" />}
+                    icon="TASK"
+                  />
+                  <SectionTabs
+                    link="orderItem_shipmentsSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.OrderItems.shipment"
+                        defaultMessage="SHIPMENT"
+                      />
+                    }
+                    icon="SHIPMENT"
+                  />
+                </JumpToSection>
+                {(orderItemInfoContainer.isDirty() ||
+                  orderItemBatchesContainer.isDirty() ||
+                  orderItemFilesContainer.isDirty() ||
+                  orderItemTasksContainer.isDirty()) && (
+                  <>
+                    <ResetButton
+                      onClick={() => {
+                        resetFormState(orderItemInfoContainer);
+                        resetFormState(orderItemBatchesContainer);
+                        resetFormState(orderItemFilesContainer);
+                        resetFormState(orderItemTasksContainer, 'todo');
+                        formContainer.onReset();
+                      }}
+                    />
+                    <SaveButton
+                      disabled={
+                        !formContainer.isReady(
+                          {
                             ...orderItemInfoContainer.state,
                             ...orderItemBatchesContainer.state,
                             ...orderItemFilesContainer.state,
                             ...orderItemTasksContainer.state,
-                          })
-                        }
-                      />
-                    </>
-                  )}
-                </SlideViewNavBar>
-              }
-            >
+                          },
+                          validator
+                        )
+                      }
+                      onClick={() =>
+                        onSave({
+                          ...orderItemInfoContainer.state,
+                          ...orderItemBatchesContainer.state,
+                          ...orderItemFilesContainer.state,
+                          ...orderItemTasksContainer.state,
+                        })
+                      }
+                    />
+                  </>
+                )}
+              </SlideViewNavBar>
               <ItemForm
                 isSlideView
                 orderItem={orderItem}
@@ -157,7 +149,7 @@ const ItemFormInSlide = ({ orderItem, onSave }: Props) => {
                   orderItemShipmentsContainer.initDetailValues({ shipments });
                 }}
               />
-            </Layout>
+            </SlideViewLayout>
           );
         }}
       </Subscribe>

@@ -8,7 +8,7 @@ import { isEquals, getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -87,27 +87,24 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
             defaultValue={selectedItems(selected, getByPathWithDefault([], 'users.nodes', data))}
           >
             {({ value: values, push, filter }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="STAFF"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <h3>
-                      {values.length}/{MAX_SELECTIONS}
-                    </h3>
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="saveButtonOnAssignUsers"
-                      disabled={isEquals(values, selected)}
-                      onClick={() => onSelect(values)}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="STAFF"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <h3>
+                    {values.length}/{MAX_SELECTIONS}
+                  </h3>
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    data-testid="saveButtonOnAssignUsers"
+                    disabled={isEquals(values, selected)}
+                    onClick={() => onSelect(values)}
+                  />
+                </SlideViewNavBar>
                 <StaffGridView
                   hasMore={hasMore}
                   isLoading={loading}
@@ -132,7 +129,7 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
                     );
                   }}
                 />
-              </Layout>
+              </SlideViewLayout>
             )}
           </ArrayValue>
         );

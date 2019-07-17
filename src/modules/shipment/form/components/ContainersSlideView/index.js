@@ -2,7 +2,7 @@
 import React from 'react';
 import { Provider, Subscribe } from 'unstated';
 import { earliest, latest } from 'utils/date';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { resetFormState } from 'modules/form';
@@ -56,23 +56,21 @@ class ContainersSlideView extends React.Component<Props> {
             const numOfApprovedAgreed = numAgreedArrivalDateApproved(containers);
             const numOfApprovedActual = numActualArrivalDateApproved(containers);
             return (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <EntityIcon icon="CONTAINER" color="CONTAINER" />
-                    {isDirty() && (
-                      <>
-                        <ResetButton
-                          onClick={() => {
-                            resetFormState(containersInSlideViewContainer, 'containers');
-                          }}
-                        />
-                        <SaveButton disabled={!isDirty()} onClick={() => onSave(containers)} />
-                      </>
-                    )}
-                  </SlideViewNavBar>
-                }
-              >
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <EntityIcon icon="CONTAINER" color="CONTAINER" />
+                  {isDirty() && (
+                    <>
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(containersInSlideViewContainer, 'containers');
+                        }}
+                      />
+                      <SaveButton disabled={!isDirty()} onClick={() => onSave(containers)} />
+                    </>
+                  )}
+                </SlideViewNavBar>
+
                 <ContainersSummaryNavbar
                   agreedArrivalDateFrom={agreedArrivalDateFrom}
                   agreedArrivalDateTo={agreedArrivalDateTo}
@@ -84,7 +82,7 @@ class ContainersSlideView extends React.Component<Props> {
                 />
 
                 <ContainerList containers={containers} setDeepFieldValue={setDeepFieldValue} />
-              </Layout>
+              </SlideViewLayout>
             );
           }}
         </Subscribe>

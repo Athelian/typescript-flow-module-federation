@@ -1,5 +1,7 @@
 // @flow
 import NavBar from './NavBar';
+import SlideViewNavBar from './SlideViewNavBar';
+import SectionNavBar from './SectionNavBar';
 import GenericNavBar from './GenericNavBar';
 import EntityIcon from './components/EntityIcon';
 import ViewToggle from './components/ViewToggle';
@@ -8,13 +10,10 @@ import SortInput from './components/SortInput';
 import SearchInput from './components/SearchInput';
 import StatusToggleTabs from './components/Tabs/StatusToggleTabs';
 import Tabs from './components/Tabs';
-import SectionNavBar from './SectionNavBar';
-import SlideViewNavBar from './SlideViewNavBar';
 import LogsButton from './components/LogsButton';
 
-export default NavBar;
-
 export {
+  NavBar,
   GenericNavBar,
   EntityIcon,
   ViewToggle,

@@ -9,7 +9,7 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, isEquals } from 'utils/fp';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
 import PartnerGridView from 'modules/partner/list/PartnerGridView';
@@ -72,23 +72,20 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
         return (
           <ObjectValue defaultValue={selected}>
             {({ value, set }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="PARTNER"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      disabled={isEquals(value, selected)}
-                      onClick={() => onSelect(value)}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="PARTNER"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    disabled={isEquals(value, selected)}
+                    onClick={() => onSelect(value)}
+                  />
+                </SlideViewNavBar>
                 <PartnerGridView
                   hasMore={hasMore}
                   isLoading={loading}
@@ -110,7 +107,7 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
                     />
                   )}
                 />
-              </Layout>
+              </SlideViewLayout>
             )}
           </ObjectValue>
         );

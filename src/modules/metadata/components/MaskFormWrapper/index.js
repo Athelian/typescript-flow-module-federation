@@ -5,7 +5,7 @@ import { Mutation, Query } from 'react-apollo';
 import { navigate } from '@reach/router';
 import { Subscribe, Provider } from 'unstated';
 import { getByPathWithDefault } from 'utils/fp';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
@@ -125,61 +125,58 @@ class MaskFormWrapper extends React.Component<Props> {
                     {(saveMask, { loading: isLoading, error: apiError }) => (
                       <>
                         {apiError && <p>Error: Please try again.</p>}
-                        <Layout
-                          navBar={
-                            <SlideViewNavBar>
-                              <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                              <JumpToSection>
-                                <SectionTabs
-                                  link="metadata_templateSection"
-                                  label={
-                                    <FormattedMessage
-                                      id="modules.metadata.template"
-                                      defaultMessage="TEMPLATE"
-                                    />
-                                  }
-                                  icon="TEMPLATE"
-                                />
-                                <SectionTabs
-                                  link="metadata_customFieldsSection"
-                                  label={
-                                    <FormattedMessage
-                                      id="modules.metadata.customFieldsSection"
-                                      defaultMessage="CUSTOM FIELDS"
-                                    />
-                                  }
-                                  icon="METADATA"
-                                />
-                              </JumpToSection>
+                        <SlideViewLayout>
+                          <SlideViewNavBar>
+                            <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                            <JumpToSection>
+                              <SectionTabs
+                                link="metadata_templateSection"
+                                label={
+                                  <FormattedMessage
+                                    id="modules.metadata.template"
+                                    defaultMessage="TEMPLATE"
+                                  />
+                                }
+                                icon="TEMPLATE"
+                              />
+                              <SectionTabs
+                                link="metadata_customFieldsSection"
+                                label={
+                                  <FormattedMessage
+                                    id="modules.metadata.customFieldsSection"
+                                    defaultMessage="CUSTOM FIELDS"
+                                  />
+                                }
+                                icon="METADATA"
+                              />
+                            </JumpToSection>
 
-                              {isNew && <CancelButton onClick={() => onCancel()} />}
+                            {isNew && <CancelButton onClick={() => onCancel()} />}
 
-                              {!isNew && maskContainer.isDirty() && (
-                                <ResetButton
-                                  onClick={() => this.onReset(maskContainer, formContainer)}
-                                />
-                              )}
+                            {!isNew && maskContainer.isDirty() && (
+                              <ResetButton
+                                onClick={() => this.onReset(maskContainer, formContainer)}
+                              />
+                            )}
 
-                              {(isNew || maskContainer.isDirty()) && (
-                                <SaveButton
-                                  disabled={!formContainer.isReady(maskContainer.state, validator)}
-                                  onClick={() => {
-                                    this.onSave(
-                                      maskContainer.state,
-                                      saveMask,
-                                      () => {
-                                        maskContainer.onSuccess();
-                                        formContainer.onReset();
-                                      },
-                                      formContainer.onErrors
-                                    );
-                                  }}
-                                  isLoading={isLoading}
-                                />
-                              )}
-                            </SlideViewNavBar>
-                          }
-                        >
+                            {(isNew || maskContainer.isDirty()) && (
+                              <SaveButton
+                                disabled={!formContainer.isReady(maskContainer.state, validator)}
+                                onClick={() => {
+                                  this.onSave(
+                                    maskContainer.state,
+                                    saveMask,
+                                    () => {
+                                      maskContainer.onSuccess();
+                                      formContainer.onReset();
+                                    },
+                                    formContainer.onErrors
+                                  );
+                                }}
+                                isLoading={isLoading}
+                              />
+                            )}
+                          </SlideViewNavBar>
                           {isNew ? (
                             <MaskForm
                               isNew
@@ -233,7 +230,7 @@ class MaskFormWrapper extends React.Component<Props> {
                               }}
                             </Query>
                           )}
-                        </Layout>
+                        </SlideViewLayout>
                       </>
                     )}
                   </Mutation>

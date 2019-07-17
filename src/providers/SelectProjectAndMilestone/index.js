@@ -9,7 +9,7 @@ import loadMore from 'utils/loadMore';
 import { getByPathWithDefault, getByPath } from 'utils/fp';
 import SlideView from 'components/SlideView';
 import GridView from 'components/GridView';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { currentSort } from 'components/common/FilterToolBar';
 import { SlideViewNavBar, EntityIcon, SortInput, SearchInput } from 'components/NavBar';
 import { Display } from 'components/Form';
@@ -88,73 +88,70 @@ function SelectProjectAndMilestone({
       }}
     >
       {({ value: { selectedProject, selectedMilestone, currentSelection }, set }) => (
-        <Layout
-          navBar={
-            <SlideViewNavBar>
-              <EntityIcon icon="PROJECT" color="PROJECT" />
-              <SortInput
-                sort={currentSort(sortFields, filterAndSort.sort)}
-                ascending={filterAndSort.sort.direction !== 'DESCENDING'}
-                fields={sortFields}
-                onChange={({ field: { value }, ascending }) =>
-                  onChangeFilter({
-                    ...filterAndSort,
-                    sort: {
-                      field: value,
-                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
+        <SlideViewLayout>
+          <SlideViewNavBar>
+            <EntityIcon icon="PROJECT" color="PROJECT" />
+            <SortInput
+              sort={currentSort(sortFields, filterAndSort.sort)}
+              ascending={filterAndSort.sort.direction !== 'DESCENDING'}
+              fields={sortFields}
+              onChange={({ field: { value }, ascending }) =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  sort: {
+                    field: value,
+                    direction: ascending ? 'ASCENDING' : 'DESCENDING',
+                  },
+                })
+              }
+            />
+            <SearchInput
+              value={filterAndSort.filter.query}
+              name="search"
+              onClear={() =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, query: '' },
+                })
+              }
+              onChange={newQuery =>
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, query: newQuery },
+                })
+              }
+            />
+            <CancelButton
+              onClick={() => {
+                set('selectedProject', project);
+                set('selectedMilestone', milestone);
+                onCancel();
+              }}
+            />
+            <SaveButton
+              data-testid="btnSaveSelectProjectAndMilestone"
+              disabled={
+                getByPathWithDefault('', 'id', selectedMilestone) ===
+                getByPathWithDefault('', 'id', milestone)
+              }
+              onClick={() => {
+                if (selectedMilestone) {
+                  onSelect({
+                    ...selectedMilestone,
+                    project: {
+                      ...selectedProject,
+                      milestones: selectedProject.milestones.map(item => ({
+                        id: item.id,
+                        __typename: 'Milestone',
+                      })),
                     },
-                  })
+                  });
+                } else {
+                  onSelect(null);
                 }
-              />
-              <SearchInput
-                value={filterAndSort.filter.query}
-                name="search"
-                onClear={() =>
-                  onChangeFilter({
-                    ...filterAndSort,
-                    filter: { ...filterAndSort.filter, query: '' },
-                  })
-                }
-                onChange={newQuery =>
-                  onChangeFilter({
-                    ...filterAndSort,
-                    filter: { ...filterAndSort.filter, query: newQuery },
-                  })
-                }
-              />
-              <CancelButton
-                onClick={() => {
-                  set('selectedProject', project);
-                  set('selectedMilestone', milestone);
-                  onCancel();
-                }}
-              />
-              <SaveButton
-                data-testid="btnSaveSelectProjectAndMilestone"
-                disabled={
-                  getByPathWithDefault('', 'id', selectedMilestone) ===
-                  getByPathWithDefault('', 'id', milestone)
-                }
-                onClick={() => {
-                  if (selectedMilestone) {
-                    onSelect({
-                      ...selectedMilestone,
-                      project: {
-                        ...selectedProject,
-                        milestones: selectedProject.milestones.map(item => ({
-                          id: item.id,
-                          __typename: 'Milestone',
-                        })),
-                      },
-                    });
-                  } else {
-                    onSelect(null);
-                  }
-                }}
-              />
-            </SlideViewNavBar>
-          }
-        >
+              }}
+            />
+          </SlideViewNavBar>
           <Query query={selectProjectQuery} variables={queryVariables} fetchPolicy="network-only">
             {({ loading, data, fetchMore, error }) => {
               if (error) {
@@ -279,7 +276,7 @@ function SelectProjectAndMilestone({
               );
             }}
           </Query>
-        </Layout>
+        </SlideViewLayout>
       )}
     </ObjectValue>
   );

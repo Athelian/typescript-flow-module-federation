@@ -7,7 +7,7 @@ import withCache from 'hoc/withCache';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -48,32 +48,29 @@ const TaskFormInSlide = ({
     <Provider inject={[formContainer]}>
       <Subscribe to={[TaskContainer]}>
         {taskContainer => (
-          <Layout
-            navBar={
-              <SlideViewNavBar>
-                <EntityIcon icon="TASK" color="TASK" />
-                <JumpToSection>
-                  <SectionTabs
-                    link="task_taskSection"
-                    label={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
-                    icon="TASK"
-                  />
-                </JumpToSection>
+          <SlideViewLayout>
+            <SlideViewNavBar>
+              <EntityIcon icon="TASK" color="TASK" />
+              <JumpToSection>
+                <SectionTabs
+                  link="task_taskSection"
+                  label={<FormattedMessage id="modules.Tasks.task" defaultMessage="TASK" />}
+                  icon="TASK"
+                />
+              </JumpToSection>
 
-                {!task.isNew && (
-                  <BooleanValue>
-                    {({ value: opened, set: slideToggle }) => (
-                      <>
-                        <LogsButton onClick={() => slideToggle(true)} />
-                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                          <Layout
-                            navBar={
+              {!task.isNew && (
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) => (
+                    <>
+                      <LogsButton onClick={() => slideToggle(true)} />
+                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                        <SlideViewLayout>
+                          {task.id && opened && (
+                            <>
                               <SlideViewNavBar>
                                 <EntityIcon icon="LOGS" color="LOGS" />
                               </SlideViewNavBar>
-                            }
-                          >
-                            {task.id && opened ? (
                               <Timeline
                                 query={taskTimelineQuery}
                                 queryField="task"
@@ -84,31 +81,30 @@ const TaskFormInSlide = ({
                                   taskId: task.id,
                                 }}
                               />
-                            ) : null}
-                          </Layout>
-                        </SlideView>
-                      </>
-                    )}
-                  </BooleanValue>
-                )}
+                            </>
+                          )}
+                        </SlideViewLayout>
+                      </SlideView>
+                    </>
+                  )}
+                </BooleanValue>
+              )}
 
-                {taskContainer.isDirty() && (
-                  <>
-                    <ResetButton
-                      onClick={() => {
-                        resetFormState(taskContainer);
-                        formContainer.onReset();
-                      }}
-                    />
-                    <SaveButton
-                      disabled={!formContainer.isReady(taskContainer.state, validator)}
-                      onClick={() => onSave(taskContainer.state)}
-                    />
-                  </>
-                )}
-              </SlideViewNavBar>
-            }
-          >
+              {taskContainer.isDirty() && (
+                <>
+                  <ResetButton
+                    onClick={() => {
+                      resetFormState(taskContainer);
+                      formContainer.onReset();
+                    }}
+                  />
+                  <SaveButton
+                    disabled={!formContainer.isReady(taskContainer.state, validator)}
+                    onClick={() => onSave(taskContainer.state)}
+                  />
+                </>
+              )}
+            </SlideViewNavBar>
             <TaskForm
               groupIds={groupIds}
               task={task}
@@ -119,7 +115,7 @@ const TaskFormInSlide = ({
               inParentEntityForm={inParentEntityForm}
               onFormReady={() => taskContainer.initDetailValues(task)}
             />
-          </Layout>
+          </SlideViewLayout>
         )}
       </Subscribe>
     </Provider>
