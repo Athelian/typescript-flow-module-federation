@@ -4,7 +4,6 @@ import {
   shipmentFormQueryFragment,
   containerFormFragment,
   warehouseCardFragment,
-  timelineDateFullFragment,
   batchFormFragment,
   userAvatarFragment,
   metricFragment,
@@ -45,7 +44,6 @@ export const shipmentFormQuery = gql`
   ${shipmentFormQueryFragment}
   ${containerFormFragment}
   ${warehouseCardFragment}
-  ${timelineDateFullFragment}
   ${batchFormFragment}
   ${userAvatarFragment}
   ${metricFragment}

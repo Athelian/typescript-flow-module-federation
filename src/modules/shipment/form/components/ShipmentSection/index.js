@@ -37,6 +37,7 @@ import {
   SHIPMENT_SET_MEMO,
   SHIPMENT_SET_PORT,
 } from 'modules/permission/constants/shipment';
+import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
@@ -61,7 +62,6 @@ import {
   Label,
   FormTooltip,
   TagsInput,
-  SectionWrapper,
   SectionHeader,
   LastModified,
   StatusToggle,
@@ -94,20 +94,21 @@ import {
   BookedStyle,
 } from './style';
 
-type Props = {
+type Props = {|
   isNew: boolean,
   isClone: boolean,
   shipment: Object,
+  isLoading: boolean,
   initDataForSlideView: Object,
-};
+|};
 
-const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Props) => {
+const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlideView }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
   return (
-    <SectionWrapper id="shipment_shipmentSection">
+    <MainSectionPlaceholder height={1766} isLoading={isLoading}>
       <SectionHeader
         icon="SHIPMENT"
         title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
@@ -948,7 +949,7 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
           );
         }}
       </Subscribe>
-    </SectionWrapper>
+    </MainSectionPlaceholder>
   );
 };
 
