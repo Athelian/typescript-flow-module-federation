@@ -6,7 +6,8 @@ import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import BatchForm from 'modules/batch/form';
 import { FormContainer, resetFormState } from 'modules/form';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
+import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { BatchInfoContainer, BatchTasksContainer } from 'modules/batch/form/containers';
@@ -50,8 +51,8 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
       <Subscribe to={[BatchInfoContainer, BatchTasksContainer]}>
         {(batchInfoContainer, batchTasksContainer) => {
           return (
-            <Layout
-              navBar={
+            <SlideViewLayout>
+              <div className={NavBarWrapperStyle}>
                 <SlideViewNavBar>
                   <EntityIcon icon="BATCH" color="BATCH" />
                   <JumpToSection>
@@ -131,18 +132,19 @@ const BatchFormInSlide = ({ batch, onSave, ...rest }: Props) => {
                     </>
                   )}
                 </SlideViewNavBar>
-              }
-            >
-              <BatchForm
-                batch={batch}
-                onFormReady={() => {
-                  const { todo, ...info } = batch;
-                  batchInfoContainer.initDetailValues(info);
-                  batchTasksContainer.initDetailValues(todo);
-                }}
-                {...rest}
-              />
-            </Layout>
+              </div>
+              <div className={ContentWrapperStyle}>
+                <BatchForm
+                  batch={batch}
+                  onFormReady={() => {
+                    const { todo, ...info } = batch;
+                    batchInfoContainer.initDetailValues(info);
+                    batchTasksContainer.initDetailValues(todo);
+                  }}
+                  {...rest}
+                />
+              </div>
+            </SlideViewLayout>
           );
         }}
       </Subscribe>

@@ -6,7 +6,7 @@ type Props = {
   children: any,
 };
 
-export default class NewNavBar extends React.Component<Props> {
+export default class Portal extends React.Component<Props> {
   el: any;
 
   constructor(props: Props) {

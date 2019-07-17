@@ -4,9 +4,8 @@ import { BooleanValue } from 'react-values';
 import { FormattedMessage } from 'react-intl';
 import { Provider } from 'unstated';
 import withCache from 'hoc/withCache';
-import { UIConsumer } from 'modules/ui';
-import { Layout } from 'components/Layout';
-import NavBar, { EntityIcon } from 'components/NavBar';
+import Portal from 'components/Portal';
+import { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -39,133 +38,113 @@ const TaskTemplateListModule = () => {
 
   return (
     <Provider>
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                <TabItem
-                  active={activeType === 'Order'}
-                  icon="ORDER"
-                  label={<FormattedMessage id="module.TaskTemplate.order" defaultMessage="ORDER" />}
-                  onClick={() => {
-                    if (activeType !== 'Order') {
-                      onChangeFilter({
-                        ...filterAndSort,
-                        filter: { ...filterAndSort.filter, entityTypes: ['Order'] },
-                      });
-                    }
-                  }}
-                />
-                <TabItem
-                  active={activeType === 'OrderItem'}
-                  icon="ORDER_ITEM"
-                  label={
-                    <FormattedMessage id="module.TaskTemplate.orderItem" defaultMessage="ITEM" />
-                  }
-                  onClick={() => {
-                    if (activeType !== 'OrderItem') {
-                      onChangeFilter({
-                        ...filterAndSort,
-                        filter: { ...filterAndSort.filter, entityTypes: ['OrderItem'] },
-                      });
-                    }
-                  }}
-                />
-                <TabItem
-                  active={activeType === 'Batch'}
-                  icon="BATCH"
-                  label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
-                  onClick={() => {
-                    if (activeType !== 'Batch') {
-                      onChangeFilter({
-                        ...filterAndSort,
-                        filter: { ...filterAndSort.filter, entityTypes: ['Batch'] },
-                      });
-                    }
-                  }}
-                />
-                <TabItem
-                  active={activeType === 'Shipment'}
-                  icon="SHIPMENT"
-                  label={
-                    <FormattedMessage id="module.TaskTemplate.shipment" defaultMessage="SHIPMENT" />
-                  }
-                  onClick={() => {
-                    if (activeType !== 'Shipment') {
-                      onChangeFilter({
-                        ...filterAndSort,
-                        filter: { ...filterAndSort.filter, entityTypes: ['Shipment'] },
-                      });
-                    }
-                  }}
-                />
-                <TabItem
-                  active={activeType === 'Product'}
-                  icon="PRODUCT"
-                  label={
-                    <FormattedMessage id="module.TaskTemplate.product" defaultMessage="PRODUCT" />
-                  }
-                  onClick={() => {
-                    if (activeType !== 'Product') {
-                      onChangeFilter({
-                        ...filterAndSort,
-                        filter: { ...filterAndSort.filter, entityTypes: ['Product'] },
-                      });
-                    }
-                  }}
-                />
-                <TabItem
-                  active={activeType === 'ProductProvider'}
-                  icon="PRODUCT_PROVIDER"
-                  label={
-                    <FormattedMessage
-                      id="module.TaskTemplate.endProduct"
-                      defaultMessage="END PRODUCT"
-                    />
-                  }
-                  onClick={() => {
-                    if (activeType !== 'ProductProvider') {
-                      onChangeFilter({
-                        ...filterAndSort,
-                        filter: { ...filterAndSort.filter, entityTypes: ['ProductProvider'] },
-                      });
-                    }
-                  }}
-                />
-
-                <BooleanValue>
-                  {({ value: isOpen, set: toggleTaskTemplateForm }) => (
-                    <>
-                      {hasPermission(TASK_TEMPLATE_CREATE) && (
-                        <NewButton onClick={() => toggleTaskTemplateForm(true)} />
-                      )}
-                      <SlideView
-                        isOpen={isOpen}
-                        onRequestClose={() => toggleTaskTemplateForm(false)}
-                      >
-                        {isOpen && (
-                          <TaskTemplateFormWrapper
-                            template={{
-                              entityType: activeType,
-                            }}
-                            isNew
-                            onCancel={() => toggleTaskTemplateForm(false)}
-                          />
-                        )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-              </NavBar>
+      <>
+        <Portal>
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <TabItem
+            active={activeType === 'Order'}
+            icon="ORDER"
+            label={<FormattedMessage id="module.TaskTemplate.order" defaultMessage="ORDER" />}
+            onClick={() => {
+              if (activeType !== 'Order') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['Order'] },
+                });
+              }
+            }}
+          />
+          <TabItem
+            active={activeType === 'OrderItem'}
+            icon="ORDER_ITEM"
+            label={<FormattedMessage id="module.TaskTemplate.orderItem" defaultMessage="ITEM" />}
+            onClick={() => {
+              if (activeType !== 'OrderItem') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['OrderItem'] },
+                });
+              }
+            }}
+          />
+          <TabItem
+            active={activeType === 'Batch'}
+            icon="BATCH"
+            label={<FormattedMessage id="module.TaskTemplate.batch" defaultMessage="BATCH" />}
+            onClick={() => {
+              if (activeType !== 'Batch') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['Batch'] },
+                });
+              }
+            }}
+          />
+          <TabItem
+            active={activeType === 'Shipment'}
+            icon="SHIPMENT"
+            label={<FormattedMessage id="module.TaskTemplate.shipment" defaultMessage="SHIPMENT" />}
+            onClick={() => {
+              if (activeType !== 'Shipment') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['Shipment'] },
+                });
+              }
+            }}
+          />
+          <TabItem
+            active={activeType === 'Product'}
+            icon="PRODUCT"
+            label={<FormattedMessage id="module.TaskTemplate.product" defaultMessage="PRODUCT" />}
+            onClick={() => {
+              if (activeType !== 'Product') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['Product'] },
+                });
+              }
+            }}
+          />
+          <TabItem
+            active={activeType === 'ProductProvider'}
+            icon="PRODUCT_PROVIDER"
+            label={
+              <FormattedMessage id="module.TaskTemplate.endProduct" defaultMessage="END PRODUCT" />
             }
-          >
-            <TaskTemplateList queryVariables={queryVariables} entityType={activeType} />
-          </Layout>
-        )}
-      </UIConsumer>
+            onClick={() => {
+              if (activeType !== 'ProductProvider') {
+                onChangeFilter({
+                  ...filterAndSort,
+                  filter: { ...filterAndSort.filter, entityTypes: ['ProductProvider'] },
+                });
+              }
+            }}
+          />
+
+          <BooleanValue>
+            {({ value: isOpen, set: toggleTaskTemplateForm }) => (
+              <>
+                {hasPermission(TASK_TEMPLATE_CREATE) && (
+                  <NewButton onClick={() => toggleTaskTemplateForm(true)} />
+                )}
+                <SlideView isOpen={isOpen} onRequestClose={() => toggleTaskTemplateForm(false)}>
+                  {isOpen && (
+                    <TaskTemplateFormWrapper
+                      template={{
+                        entityType: activeType,
+                      }}
+                      isNew
+                      onCancel={() => toggleTaskTemplateForm(false)}
+                    />
+                  )}
+                </SlideView>
+              </>
+            )}
+          </BooleanValue>
+        </Portal>
+        <TaskTemplateList queryVariables={queryVariables} entityType={activeType} />
+      </>
     </Provider>
   );
 };

@@ -2,10 +2,8 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { UIConsumer } from 'modules/ui';
-import NavBar from 'components/NavBar';
+import Portal from 'components/Portal';
 import useFilter from 'hooks/useFilter';
 import StaffList from './list';
 import messages from './messages';
@@ -51,25 +49,17 @@ const StaffModule = (props: Props) => {
     { title: intl.formatMessage(messages.fullName), value: 'fullName' },
   ];
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="STAFF"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-            </NavBar>
-          }
-        >
-          <StaffList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <>
+      <Portal>
+        <FilterToolBar
+          icon="STAFF"
+          sortFields={sortFields}
+          filtersAndSort={filterAndSort}
+          onChange={onChangeFilter}
+        />
+      </Portal>
+      <StaffList {...queryVariables} />
+    </>
   );
 };
 

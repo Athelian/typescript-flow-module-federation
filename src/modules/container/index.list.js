@@ -2,12 +2,10 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { Layout } from 'components/Layout';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ExportButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
-import { UIConsumer } from 'modules/ui';
-import NavBar from 'components/NavBar';
+import Portal from 'components/Portal';
 import ContainerList from './list';
 import { containersExportQuery } from './query';
 import messages from './messages';
@@ -53,35 +51,27 @@ function OrderModule(props: Props) {
     'filterContainer'
   );
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="CONTAINER"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-              <ExportButton
-                type="Containers"
-                exportQuery={containersExportQuery}
-                variables={{
-                  filterBy: filterAndSort.filter,
-                  sortBy: {
-                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                  },
-                }}
-              />
-            </NavBar>
-          }
-        >
-          <ContainerList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <>
+      <Portal>
+        <FilterToolBar
+          icon="CONTAINER"
+          sortFields={sortFields}
+          filtersAndSort={filterAndSort}
+          onChange={onChangeFilter}
+        />
+        <ExportButton
+          type="Containers"
+          exportQuery={containersExportQuery}
+          variables={{
+            filterBy: filterAndSort.filter,
+            sortBy: {
+              [filterAndSort.sort.field]: filterAndSort.sort.direction,
+            },
+          }}
+        />
+      </Portal>
+      <ContainerList {...queryVariables} />
+    </>
   );
 }
 

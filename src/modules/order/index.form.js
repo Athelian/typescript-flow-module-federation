@@ -6,7 +6,8 @@ import { Mutation } from 'react-apollo';
 import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
-import { Layout } from 'components/Layout';
+import { Layout, SlideViewLayout } from 'components/Layout';
+import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
 import { UIConsumer } from 'modules/ui';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
@@ -35,6 +36,7 @@ import { createOrderMutation, updateOrderMutation, prepareParsedOrderInput } fro
 
 type OptionalProps = {
   path: string,
+  orderId: string,
   isSlideView: boolean,
   redirectAfterSuccess: boolean,
   onSuccessCallback: ?Function,
@@ -43,7 +45,6 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  orderId?: string,
   intl: IntlShape,
 };
 
@@ -274,6 +275,7 @@ class OrderFormModule extends React.PureComponent<Props> {
     if (orderId && !isNewOrClone) {
       mutationKey = { key: decodeId(orderId) };
     }
+    // TODO: header
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
 
     return (
@@ -350,26 +352,29 @@ class OrderFormModule extends React.PureComponent<Props> {
                             <>
                               <LogsButton onClick={() => slideToggle(true)} />
                               <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                                <Layout
-                                  navBar={
-                                    <SlideViewNavBar>
-                                      <EntityIcon icon="LOGS" color="LOGS" />
-                                    </SlideViewNavBar>
-                                  }
-                                >
-                                  {orderId && opened ? (
-                                    <Timeline
-                                      query={orderTimelineQuery}
-                                      queryField="order"
-                                      variables={{
-                                        id: decodeId(orderId),
-                                      }}
-                                      entity={{
-                                        orderId: decodeId(orderId),
-                                      }}
-                                    />
-                                  ) : null}
-                                </Layout>
+                                <SlideViewLayout>
+                                  {orderId && opened && (
+                                    <>
+                                      <div className={NavBarWrapperStyle}>
+                                        <SlideViewNavBar>
+                                          <EntityIcon icon="LOGS" color="LOGS" />
+                                        </SlideViewNavBar>
+                                      </div>
+                                      <div className={ContentWrapperStyle}>
+                                        <Timeline
+                                          query={orderTimelineQuery}
+                                          queryField="order"
+                                          variables={{
+                                            id: decodeId(orderId),
+                                          }}
+                                          entity={{
+                                            orderId: decodeId(orderId),
+                                          }}
+                                        />
+                                      </div>
+                                    </>
+                                  )}
+                                </SlideViewLayout>
                               </SlideView>
                             </>
                           )

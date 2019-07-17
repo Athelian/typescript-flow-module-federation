@@ -9,7 +9,8 @@ import { isNullOrUndefined, getByPathWithDefault } from 'utils/fp';
 import loadMore from 'utils/loadMore';
 import { cleanUpData } from 'utils/data';
 import useFilter from 'hooks/useFilter';
-import { Layout } from 'components/Layout';
+import { SlideViewLayout } from 'components/Layout';
+import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
 import ConfirmDialog from 'components/Dialog/ConfirmDialog';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -122,8 +123,8 @@ const SelectExporter = ({
         return (
           <ObjectValue defaultValue={selected}>
             {({ value, set }) => (
-              <Layout
-                navBar={
+              <SlideViewLayout>
+                <div className={NavBarWrapperStyle}>
                   <SlideViewNavBar>
                     <FilterToolBar
                       icon="PARTNER"
@@ -165,31 +166,32 @@ const SelectExporter = ({
                       })}
                     />
                   </SlideViewNavBar>
-                }
-              >
-                <PartnerGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
-                  items={items}
-                  renderItem={item => (
-                    <PartnerCard
-                      key={item.id}
-                      data-testid="partnerCard"
-                      partner={item}
-                      onSelect={() => {
-                        if (!isRequired && (value && value.id === item.id)) {
-                          set(null);
-                        } else {
-                          set(cleanUpData(item));
-                        }
-                      }}
-                      selectable
-                      selected={value && value.id === item.id}
-                    />
-                  )}
-                />
-              </Layout>
+                </div>
+                <div className={ContentWrapperStyle}>
+                  <PartnerGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() => loadMore({ fetchMore, data }, filterAndSort, partnerPath)}
+                    items={items}
+                    renderItem={item => (
+                      <PartnerCard
+                        key={item.id}
+                        data-testid="partnerCard"
+                        partner={item}
+                        onSelect={() => {
+                          if (!isRequired && (value && value.id === item.id)) {
+                            set(null);
+                          } else {
+                            set(cleanUpData(item));
+                          }
+                        }}
+                        selectable
+                        selected={value && value.id === item.id}
+                      />
+                    )}
+                  />
+                </div>
+              </SlideViewLayout>
             )}
           </ObjectValue>
         );

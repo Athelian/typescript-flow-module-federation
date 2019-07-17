@@ -7,7 +7,7 @@ import { QueryForm } from 'components/common';
 import { showToastError } from 'utils/errors';
 
 import { EntityIcon, SlideViewNavBar } from 'components/NavBar';
-import NewNavBar from 'components/NavBar/NewNavBar';
+import Portal from 'components/Portal';
 import { SaveButton, ResetButton } from 'components/Buttons';
 import { FormContainer } from 'modules/form';
 import JumpToSection from 'components/JumpToSection';
@@ -87,7 +87,7 @@ class BatchFormModule extends React.Component<Props> {
 
   render() {
     const { batchId, isSlideView } = this.props;
-    const CurrentNavBar = isSlideView ? SlideViewNavBar : NewNavBar;
+    const CurrentNavBar = isSlideView ? SlideViewNavBar : Portal;
 
     let mutationKey = {};
     if (batchId) {

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import { DesktopWrapperStyle } from 'styles/main';
 import { LayoutWrapperStyle } from './style';
 

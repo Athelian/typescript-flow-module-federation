@@ -3,9 +3,8 @@ import React from 'react';
 import { Router, Location, navigate } from '@reach/router';
 import { Provider } from 'unstated';
 import { FormattedMessage } from 'react-intl';
-import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon, Tabs } from 'components/NavBar';
-import { Layout } from 'components/Layout';
+import { EntityIcon, Tabs } from 'components/NavBar';
+import Portal from 'components/Portal';
 import messages from 'modules/relationMap/messages';
 import { ResetContentWrapperStyle } from 'modules/relationMap/style';
 import {
@@ -35,50 +34,39 @@ const RelationMap = () => {
 
   return (
     <Provider>
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
-                <Location>
-                  {({ location }) => (
-                    <Tabs
-                      tabs={tabs}
-                      activeIndex={location.pathname.includes('products') ? 1 : 0}
-                      onChange={tabId => {
-                        if (tabs.length > 1) {
-                          if (tabId) {
-                            navigate('/relation-map/products');
-                          } else {
-                            navigate('/relation-map/orders');
-                          }
-                        }
-                      }}
-                    />
-                  )}
-                </Location>
-              </NavBar>
-            }
-          >
-            {/* $FlowFixMe override Router's div style */}
-            <Router primary={false} className={ResetContentWrapperStyle}>
-              {hasPermission(RM_ORDER_FOCUS_LIST) && (
-                <Order path="/orders" default={hasPermission(RM_ORDER_FOCUS_LIST)} />
-              )}
-              {hasPermission(RM_PRODUCT_FOCUS_LIST) && (
-                <Product
-                  path="/products"
-                  default={
-                    !hasPermission(RM_ORDER_FOCUS_LIST) && hasPermission(RM_PRODUCT_FOCUS_LIST)
+      <Portal>
+        <EntityIcon icon="RELATION_MAP" color="RELATION_MAP" />
+        <Location>
+          {({ location }) => (
+            <Tabs
+              tabs={tabs}
+              activeIndex={location.pathname.includes('products') ? 1 : 0}
+              onChange={tabId => {
+                if (tabs.length > 1) {
+                  if (tabId) {
+                    navigate('/relation-map/products');
+                  } else {
+                    navigate('/relation-map/orders');
                   }
-                />
-              )}
-            </Router>
-          </Layout>
+                }
+              }}
+            />
+          )}
+        </Location>
+      </Portal>
+      {/* TODO: header */}
+      {/* $FlowFixMe override Router's div style */}
+      <Router primary={false} className={ResetContentWrapperStyle}>
+        {hasPermission(RM_ORDER_FOCUS_LIST) && (
+          <Order path="/orders" default={hasPermission(RM_ORDER_FOCUS_LIST)} />
         )}
-      </UIConsumer>
+        {hasPermission(RM_PRODUCT_FOCUS_LIST) && (
+          <Product
+            path="/products"
+            default={!hasPermission(RM_ORDER_FOCUS_LIST) && hasPermission(RM_PRODUCT_FOCUS_LIST)}
+          />
+        )}
+      </Router>
     </Provider>
   );
 };

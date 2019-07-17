@@ -5,9 +5,8 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { TAG_CREATE } from 'modules/permission/constants/tag';
 import usePermission from 'hooks/usePermission';
-import { Layout } from 'components/Layout';
-import { UIConsumer } from 'modules/ui';
-import NavBar, { EntityIcon, SortInput } from 'components/NavBar';
+import Portal from 'components/Portal';
+import { EntityIcon, SortInput } from 'components/NavBar';
 import { ExportButton, NewButton } from 'components/Buttons';
 import { currentSort } from 'components/common/FilterToolBar';
 import useFilter from 'hooks/useFilter';
@@ -45,48 +44,40 @@ const TagListModule = (props: Props) => {
   const { hasPermission } = usePermission();
   const allowCreate = hasPermission(TAG_CREATE);
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <EntityIcon icon="TAG" color="TAG" />
-              <SortInput
-                sort={currentSort(sortFields, filterAndSort.sort)}
-                ascending={filterAndSort.sort.direction !== 'DESCENDING'}
-                fields={sortFields}
-                onChange={({ field: { value }, ascending }) =>
-                  onChangeFilter({
-                    sort: {
-                      field: value,
-                      direction: ascending ? 'ASCENDING' : 'DESCENDING',
-                    },
-                  })
-                }
-              />
-              {allowCreate && (
-                <Link to="new">
-                  <NewButton data-testid="newButton" />
-                </Link>
-              )}
-              <ExportButton
-                type="Tags"
-                exportQuery={tagsExportQuery}
-                variables={{
-                  filterBy: filterAndSort.filter,
-                  sortBy: {
-                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                  },
-                }}
-              />
-            </NavBar>
+    <>
+      <Portal>
+        <EntityIcon icon="TAG" color="TAG" />
+        <SortInput
+          sort={currentSort(sortFields, filterAndSort.sort)}
+          ascending={filterAndSort.sort.direction !== 'DESCENDING'}
+          fields={sortFields}
+          onChange={({ field: { value }, ascending }) =>
+            onChangeFilter({
+              sort: {
+                field: value,
+                direction: ascending ? 'ASCENDING' : 'DESCENDING',
+              },
+            })
           }
-        >
-          <TagsList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+        />
+        {allowCreate && (
+          <Link to="new">
+            <NewButton data-testid="newButton" />
+          </Link>
+        )}
+        <ExportButton
+          type="Tags"
+          exportQuery={tagsExportQuery}
+          variables={{
+            filterBy: filterAndSort.filter,
+            sortBy: {
+              [filterAndSort.sort.field]: filterAndSort.sort.direction,
+            },
+          }}
+        />
+      </Portal>
+      <TagsList {...queryVariables} />
+    </>
   );
 };
 

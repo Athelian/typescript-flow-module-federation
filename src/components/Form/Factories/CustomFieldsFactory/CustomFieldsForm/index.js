@@ -8,10 +8,11 @@ import { countMaskFieldDefinitions } from 'utils/customFields';
 import { TemplateCard, GrayCard } from 'components/Cards';
 import Divider from 'components/Divider';
 import FormattedNumber from 'components/FormattedNumber';
-import Layout from 'components/Layout';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
+import { SlideViewLayout } from 'components/Layout';
+import { NavBarWrapperStyle, ContentWrapperStyle } from 'components/Layout/style';
 import GridColumn from 'components/GridColumn';
 import { DefaultCustomFieldStyle } from 'components/Form/Inputs/Styles';
 import { SectionHeader, SectionWrapper, Label, DashedPlusButton, FieldItem } from 'components/Form';
@@ -71,8 +72,8 @@ class CustomFieldsForm extends React.Component<Props> {
           const mask = getByPathWithDefault(false, 'mask.id', values) ? values.mask : null;
 
           return (
-            <Layout
-              navBar={
+            <SlideViewLayout>
+              <div className={NavBarWrapperStyle}>
                 <SlideViewNavBar>
                   <EntityIcon icon="METADATA" color="METADATA" />
                   <JumpToSection>
@@ -99,115 +100,119 @@ class CustomFieldsForm extends React.Component<Props> {
                     </>
                   )}
                 </SlideViewNavBar>
-              }
-            >
-              <div className={CustomFieldsFormWrapperStyle}>
-                <SectionWrapper id="metadataSection">
-                  <SectionHeader
-                    icon="METADATA"
-                    title={
-                      <>
-                        <FormattedMessage
-                          id="module.metadata.sectionHeader"
-                          defaultMessage="CUSTOM FIELDS"
-                        />
-                        {' ('}
-                        <FormattedNumber value={countCustomFields(mask, fieldValues)} />
-                        {')'}
-                      </>
-                    }
-                  />
-                  <div className={CustomFieldsSectionWrapperStyle}>
-                    <FieldItem
-                      vertical
-                      label={
-                        <Label>
-                          <FormattedMessage id="modules.form.template" defaultMessage="TEMPLATE" />
-                        </Label>
-                      }
-                      input={
-                        editable.mask ? (
-                          <BooleanValue>
-                            {({ value: opened, set: slideToggle }) => (
-                              <>
-                                {mask ? (
-                                  <TemplateCard
-                                    template={{
-                                      id: mask.id,
-                                      title: mask.name,
-                                      description: mask.memo,
-                                      count: countMaskFieldDefinitions(mask),
-                                    }}
-                                    type="METADATA"
-                                    onClick={editable ? () => slideToggle(true) : () => {}}
-                                  />
-                                ) : (
-                                  <DashedPlusButton
-                                    width="195px"
-                                    height="140px"
-                                    onClick={() => slideToggle(true)}
-                                  />
-                                )}
-                                <SlideView
-                                  isOpen={opened}
-                                  onRequestClose={() => slideToggle(false)}
-                                >
-                                  {opened && (
-                                    <CustomFieldsTemplateSelector
-                                      entityType={entityType}
-                                      selected={mask}
-                                      onCancel={() => slideToggle(false)}
-                                      onSave={item => {
-                                        customFieldsContainer.setFieldValue('mask', item);
-                                        slideToggle(false);
-                                      }}
-                                    />
-                                  )}
-                                </SlideView>
-                              </>
-                            )}
-                          </BooleanValue>
-                        ) : (
-                          <>
-                            {mask ? (
-                              <TemplateCard
-                                template={{
-                                  id: mask.id,
-                                  title: mask.name,
-                                  description: mask.memo,
-                                  count: countMaskFieldDefinitions(mask),
-                                }}
-                                type="METADATA"
-                                readOnly
-                              />
-                            ) : (
-                              <GrayCard width="195px" height="140px" />
-                            )}
-                          </>
-                        )
+              </div>
+              <div className={ContentWrapperStyle}>
+                <div className={CustomFieldsFormWrapperStyle}>
+                  <SectionWrapper id="metadataSection">
+                    <SectionHeader
+                      icon="METADATA"
+                      title={
+                        <>
+                          <FormattedMessage
+                            id="module.metadata.sectionHeader"
+                            defaultMessage="CUSTOM FIELDS"
+                          />
+                          {' ('}
+                          <FormattedNumber value={countCustomFields(mask, fieldValues)} />
+                          {')'}
+                        </>
                       }
                     />
-
-                    <Divider />
-                    <GridColumn gap="10px">
-                      {fieldValues &&
-                        fieldValues.map(({ value, fieldDefinition }, index) =>
-                          mask == null || contains(fieldDefinition, mask.fieldDefinitions) ? (
-                            <DefaultCustomFieldStyle
-                              key={fieldDefinition.id}
-                              targetName={`fieldValues.${index}`}
-                              fieldName={fieldDefinition.name}
-                              value={value}
-                              setFieldValue={customFieldsContainer.setFieldValue}
-                              editable={editable.values}
+                    <div className={CustomFieldsSectionWrapperStyle}>
+                      <FieldItem
+                        vertical
+                        label={
+                          <Label>
+                            <FormattedMessage
+                              id="modules.form.template"
+                              defaultMessage="TEMPLATE"
                             />
-                          ) : null
-                        )}
-                    </GridColumn>
-                  </div>
-                </SectionWrapper>
+                          </Label>
+                        }
+                        input={
+                          editable.mask ? (
+                            <BooleanValue>
+                              {({ value: opened, set: slideToggle }) => (
+                                <>
+                                  {mask ? (
+                                    <TemplateCard
+                                      template={{
+                                        id: mask.id,
+                                        title: mask.name,
+                                        description: mask.memo,
+                                        count: countMaskFieldDefinitions(mask),
+                                      }}
+                                      type="METADATA"
+                                      onClick={editable ? () => slideToggle(true) : () => {}}
+                                    />
+                                  ) : (
+                                    <DashedPlusButton
+                                      width="195px"
+                                      height="140px"
+                                      onClick={() => slideToggle(true)}
+                                    />
+                                  )}
+                                  <SlideView
+                                    isOpen={opened}
+                                    onRequestClose={() => slideToggle(false)}
+                                  >
+                                    {opened && (
+                                      <CustomFieldsTemplateSelector
+                                        entityType={entityType}
+                                        selected={mask}
+                                        onCancel={() => slideToggle(false)}
+                                        onSave={item => {
+                                          customFieldsContainer.setFieldValue('mask', item);
+                                          slideToggle(false);
+                                        }}
+                                      />
+                                    )}
+                                  </SlideView>
+                                </>
+                              )}
+                            </BooleanValue>
+                          ) : (
+                            <>
+                              {mask ? (
+                                <TemplateCard
+                                  template={{
+                                    id: mask.id,
+                                    title: mask.name,
+                                    description: mask.memo,
+                                    count: countMaskFieldDefinitions(mask),
+                                  }}
+                                  type="METADATA"
+                                  readOnly
+                                />
+                              ) : (
+                                <GrayCard width="195px" height="140px" />
+                              )}
+                            </>
+                          )
+                        }
+                      />
+
+                      <Divider />
+                      <GridColumn gap="10px">
+                        {fieldValues &&
+                          fieldValues.map(({ value, fieldDefinition }, index) =>
+                            mask == null || contains(fieldDefinition, mask.fieldDefinitions) ? (
+                              <DefaultCustomFieldStyle
+                                key={fieldDefinition.id}
+                                targetName={`fieldValues.${index}`}
+                                fieldName={fieldDefinition.name}
+                                value={value}
+                                setFieldValue={customFieldsContainer.setFieldValue}
+                                editable={editable.values}
+                              />
+                            ) : null
+                          )}
+                      </GridColumn>
+                    </div>
+                  </SectionWrapper>
+                </div>
               </div>
-            </Layout>
+            </SlideViewLayout>
           );
         }}
       </Subscribe>

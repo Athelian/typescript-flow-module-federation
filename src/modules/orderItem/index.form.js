@@ -130,6 +130,7 @@ class OrderItemFormModule extends React.Component<Props> {
 
   render() {
     const { orderItemId, isSlideView } = this.props;
+    // TODO: header
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
 
     let mutationKey = {};

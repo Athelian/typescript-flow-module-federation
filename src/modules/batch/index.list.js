@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
-import NewNavBar from 'components/NavBar/NewNavBar';
+import Portal from 'components/Portal';
 import BatchList from './list';
 import { ContentWrapperStyle } from './styles';
 import messages from './messages';
@@ -49,14 +49,14 @@ const BatchListModule = (props: Props) => {
   );
   return (
     <div className={ContentWrapperStyle}>
-      <NewNavBar>
+      <Portal>
         <FilterToolBar
           icon="BATCH"
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
         />
-      </NewNavBar>
+      </Portal>
       <BatchList {...queryVariables} />
     </div>
   );
