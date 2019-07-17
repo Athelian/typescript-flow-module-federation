@@ -134,7 +134,10 @@ class ShipmentForm extends React.Component<Props> {
           </SectionWrapper>
 
           <SectionWrapper id="shipment_orderSection">
-            <AsyncOrdersSection entityId={shipment.id} isLoading={loading} />
+            <AsyncOrdersSection
+              entityId={!isClone && shipment.id ? shipment.id : ''}
+              isLoading={loading}
+            />
           </SectionWrapper>
           <Subscribe
             to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}
