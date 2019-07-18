@@ -41,7 +41,7 @@ function DocumentsSection({ intl, entityId, isLoading }: Props) {
           entityId={entityId}
           isLoading={isLoading}
           onCompleted={result => {
-            initDetailValues(getByPathWithDefault([], 'shipment.files', result));
+            initDetailValues(getByPathWithDefault([], 'shipment.files', result), true);
           }}
         >
           {() => {

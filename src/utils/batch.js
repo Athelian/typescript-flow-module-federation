@@ -31,7 +31,7 @@ export const findWeight = (batch: BatchPayload) => {
 };
 
 export const findVolume = (batch: BatchPayload) => {
-  const volume = getByPathWithDefault(null, 'volume', batch);
+  const volume = getByPathWithDefault(null, 'packageVolume', batch);
   const packageQuantity = getByPathWithDefault(0, 'packageQuantity', batch);
   return packageQuantity && volume
     ? times(packageQuantity, convertVolume(volume.value, volume.metric, 'm³'))

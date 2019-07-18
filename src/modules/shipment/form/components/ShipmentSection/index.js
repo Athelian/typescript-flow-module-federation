@@ -82,7 +82,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
-import ShipmentSummary from './ShipmentSummary';
+import ShipmentSummary from '../ShipmentSummary';
 import { renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
@@ -957,7 +957,11 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
 
               <div className={DividerStyle} />
 
-              <ShipmentSummary />
+              <ShipmentSummary
+                isLoading={isLoading}
+                isNewOrClone={isNew || isClone}
+                entityId={!isClone && shipment.id ? shipment.id : ''}
+              />
             </div>
           );
         }}
