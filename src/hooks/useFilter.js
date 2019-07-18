@@ -12,13 +12,31 @@ type State = {
 };
 
 function useFilter(state: State, cacheKey: string) {
-  const localFilter = window.localStorage.getItem(cacheKey);
-  const initialFilter = localFilter
-    ? {
-        ...state,
-        ...JSON.parse(localFilter),
-      }
-    : state;
+  const localSortAndQuery = window.localStorage.getItem(cacheKey);
+  let localArchived;
+  let localSort;
+  let localQuery;
+
+  if (localSortAndQuery) {
+    const sortAndQuery = JSON.parse(localSortAndQuery);
+    localArchived = sortAndQuery.archived;
+    localSort = sortAndQuery.sort;
+    localQuery = sortAndQuery.query;
+  }
+
+  const initialFilter = {
+    filter: {
+      ...state.filter,
+      ...(localArchived === undefined ? {} : { archived: localArchived }),
+      ...(localQuery === undefined ? {} : { query: localQuery }),
+    },
+    sort: {
+      ...state.sort,
+      ...(localSort || {}),
+    },
+    page: state.page,
+    perPage: state.perPage,
+  };
 
   const [filterAndSort, changeFilterAndSort] = useState(initialFilter);
 
@@ -31,8 +49,11 @@ function useFilter(state: State, cacheKey: string) {
 
   useEffect(() => {
     if (window.localStorage) {
-      const { filter, sort } = filterAndSort;
-      window.localStorage.setItem(cacheKey, JSON.stringify({ filter, sort }));
+      const {
+        filter: { archived, query },
+        sort,
+      } = filterAndSort;
+      window.localStorage.setItem(cacheKey, JSON.stringify({ archived, query, sort }));
     }
   }, [cacheKey, filterAndSort]);
 
