@@ -9,6 +9,7 @@ import {
   ShipmentTasksContainer,
   ShipmentInfoContainer,
   ShipmentTimelineContainer,
+  ShipmentBatchesContainer,
 } from './containers';
 import {
   ShipmentSection,
@@ -102,10 +103,14 @@ class ShipmentForm extends React.Component<Props> {
         </SectionWrapper>
 
         <SectionWrapper id="shipment_orderSection">
-          <OrdersSection
-            entityId={!isClone && shipment.id ? shipment.id : ''}
-            isLoading={loading}
-          />
+          <Subscribe to={[ShipmentBatchesContainer]}>
+            {({ state: { batches, hasCalledBatchesApiYet } }) => (
+              <OrdersSection
+                isReady={hasCalledBatchesApiYet || isNew || isClone}
+                batches={batches}
+              />
+            )}
+          </Subscribe>
         </SectionWrapper>
         <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}>
           {(

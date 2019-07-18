@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
+import type { BatchPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { navigate } from '@reach/router';
 import { encodeId } from 'utils/id';
-import { getByPathWithDefault } from 'utils/fp';
-import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
+import { getByPath } from 'utils/fp';
 import { OrderCard } from 'components/Cards';
 import { SectionNavBar } from 'components/NavBar';
 import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
@@ -15,72 +15,62 @@ import { ORDER_FORM } from 'modules/permission/constants/order';
 import { uniqueOrders } from 'modules/container/utils';
 import usePermission from 'hooks/usePermission';
 import usePartnerPermission from 'hooks/usePartnerPermission';
-import { shipmentFormOrderQuery } from './query';
 import { OrdersSectionWrapperStyle, OrdersSectionBodyStyle, EmptyMessageStyle } from './style';
 
 type Props = {|
-  entityId: string,
-  isLoading: boolean,
+  isReady: boolean,
+  batches: Array<BatchPayload>,
 |};
 
-function OrdersSection({ entityId, isLoading }: Props) {
+function OrdersSection({ isReady, batches }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   if (!hasPermission(SHIPMENT_ORDER_LIST)) return null;
 
-  return (
-    <QueryPlaceHolder
-      PlaceHolder={ListCardPlaceHolder}
-      query={shipmentFormOrderQuery}
-      entityId={entityId}
-      isLoading={isLoading}
-    >
-      {({ data }) => {
-        const orders = uniqueOrders(getByPathWithDefault([], 'shipment.batches', data));
-        return (
+  const orders = uniqueOrders(batches);
+  return !isReady ? (
+    <ListCardPlaceHolder />
+  ) : (
+    <>
+      <SectionHeader
+        icon="ORDER"
+        title={
           <>
-            <SectionHeader
-              icon="ORDER"
-              title={
-                <>
-                  <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />
-                  {' ('}
-                  <FormattedNumber value={orders.length} />
-                  {')'}
-                </>
-              }
-            />
-            <div className={OrdersSectionWrapperStyle}>
-              <SectionNavBar>
-                <div id="sortsandfilterswip" />
-              </SectionNavBar>
-              {orders.length === 0 ? (
-                <div className={EmptyMessageStyle}>
-                  <FormattedMessage
-                    id="modules.Shipments.noOrderFound"
-                    defaultMessage="No orders found"
-                  />
-                </div>
-              ) : (
-                <div className={OrdersSectionBodyStyle}>
-                  {orders.map(order => (
-                    <OrderCard
-                      order={order}
-                      key={order.id}
-                      onClick={() => {
-                        if (hasPermission(ORDER_FORM)) {
-                          navigate(`/order/${encodeId(order.id)}`);
-                        }
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <FormattedMessage id="modules.Shipments.order" defaultMessage="ORDERS" />
+            {' ('}
+            <FormattedNumber value={orders.length} />
+            {')'}
           </>
-        );
-      }}
-    </QueryPlaceHolder>
+        }
+      />
+      <div className={OrdersSectionWrapperStyle}>
+        <SectionNavBar>
+          <div id="sortsandfilterswip" />
+        </SectionNavBar>
+        {orders.length === 0 ? (
+          <div className={EmptyMessageStyle}>
+            <FormattedMessage
+              id="modules.Shipments.noOrderFound"
+              defaultMessage="No orders found"
+            />
+          </div>
+        ) : (
+          <div className={OrdersSectionBodyStyle}>
+            {orders.map(order => (
+              <OrderCard
+                order={order}
+                key={getByPath('id', order)}
+                onClick={() => {
+                  if (hasPermission(ORDER_FORM)) {
+                    navigate(`/order/${encodeId(getByPath('id', order))}`);
+                  }
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
