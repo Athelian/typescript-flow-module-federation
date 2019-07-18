@@ -87,11 +87,14 @@ const TimelineSection = ({ isNew, entityId, isLoading, isTaskReadyForBinding }: 
             const cargoReady = getByPathWithDefault({}, 'shipment.cargoReady', result);
             const voyages = getByPathWithDefault([], 'shipment.voyages', result);
             const containerGroups = getByPathWithDefault([{}], 'shipment.containerGroups', result);
-            initDetailValues({
-              cargoReady,
-              voyages,
-              containerGroups,
-            });
+            initDetailValues(
+              {
+                cargoReady,
+                voyages,
+                containerGroups,
+              },
+              true
+            );
           }}
         >
           {() => {

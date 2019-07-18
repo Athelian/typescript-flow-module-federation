@@ -74,6 +74,40 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     }
   };
 
+  waitForContainerSectionReadyThenChangePartner = (partner: PartnerPayload) => {
+    let retry;
+    if (this.state.hasCalledContainerApiYet) {
+      this.onChangePartner(partner);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledContainerApiYet) {
+          this.onChangePartner(partner);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
+  waitForContainerSectionReadyThenChangeMainExporter = (exporter: ?GroupPayload) => {
+    let retry;
+    if (this.state.hasCalledContainerApiYet) {
+      this.changeMainExporter(exporter);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledContainerApiYet) {
+          this.changeMainExporter(exporter);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
   onChangePartner = (partner: PartnerPayload) => {
     this.setState(prevState => ({
       containers: prevState.containers.map(container => ({

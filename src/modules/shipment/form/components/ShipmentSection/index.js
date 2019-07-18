@@ -554,7 +554,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     }
                   />
 
-                  {/* TODO: Check wait for other section */}
                   <FieldItem
                     vertical
                     label={
@@ -669,12 +668,16 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                             'importer',
                                                             selectedImporter
                                                           );
-                                                          batchContainer.initDetailValues([]);
-                                                          taskContainer.onChangePartner(importer);
-                                                          timelineContainer.onChangePartner(
+                                                          batchContainer.waitForBatchesSectionReadyThenInitDetailValues(
+                                                            []
+                                                          );
+                                                          taskContainer.waitForTasksSectionReadyThenChangePartner(
                                                             importer
                                                           );
-                                                          containersContainer.onChangePartner(
+                                                          timelineContainer.waitForTimelineSectionReadyThenChangePartner(
+                                                            importer
+                                                          );
+                                                          containersContainer.waitForContainerSectionReadyThenChangePartner(
                                                             importer
                                                           );
                                                         }}
@@ -717,7 +720,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     }
                   />
 
-                  {/* TODO: check for wait for other */}
                   <FieldItem
                     vertical
                     label={
@@ -810,14 +812,24 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                               )
                                             );
                                             setFieldValue('exporter', selectedExporter);
-                                            batchesContainer.changeMainExporter(selectedExporter);
-                                            containersContainer.changeMainExporter(
+                                            batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
+                                              selectedExporter
+                                            );
+                                            containersContainer.waitForContainerSectionReadyThenChangeMainExporter(
                                               selectedExporter
                                             );
                                             if (exporter) {
-                                              taskContainer.onChangePartner(exporter);
-                                              timelineContainer.onChangePartner(exporter);
-                                              containersContainer.onChangePartner(exporter);
+                                              taskContainer.waitForTasksSectionReadyThenChangePartner(
+                                                exporter
+                                              );
+
+                                              timelineContainer.waitForTimelineSectionReadyThenChangePartner(
+                                                exporter
+                                              );
+
+                                              containersContainer.waitForContainerSectionReadyThenChangePartner(
+                                                exporter
+                                              );
                                             }
                                           }}
                                         />

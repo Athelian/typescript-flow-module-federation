@@ -82,8 +82,8 @@ const CargoSection = ({
           onCompleted={result => {
             const containers = getByPathWithDefault([], 'shipment.containers', result);
             const batches = getByPathWithDefault([], 'shipment.batches', result);
-            batchesContainer.initDetailValues(batches);
-            containersContainer.initDetailValues(containers);
+            batchesContainer.initDetailValues(batches, true);
+            containersContainer.initDetailValues(containers, true);
           }}
         >
           {() => {

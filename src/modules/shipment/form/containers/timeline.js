@@ -127,6 +127,23 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     this.originalValues = { ...parsedValues };
   };
 
+  waitForTimelineSectionReadyThenChangePartner = (partner: PartnerPayload) => {
+    let retry;
+    if (this.state.hasCalledTimelineApiYet) {
+      this.onChangePartner(partner);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledTimelineApiYet) {
+          this.onChangePartner(partner);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
   onChangePartner = (partner: PartnerPayload) => {
     const { cargoReady, containerGroups, voyages } = this.state;
     this.setState({

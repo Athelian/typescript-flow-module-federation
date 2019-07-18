@@ -89,4 +89,38 @@ export default class ShipmentBatchesContainer extends Container<BatchFormState> 
       });
     }
   };
+
+  waitForBatchesSectionReadyThenInitDetailValues = (batches: Array<BatchPayload>) => {
+    let retry;
+    if (this.state.hasCalledBatchesApiYet) {
+      this.initDetailValues(batches, true);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledBatchesApiYet) {
+          this.initDetailValues(batches, true);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
+
+  waitForBatchesSectionReadyThenChangeMainExporter = (exporter: PartnerPayload) => {
+    let retry;
+    if (this.state.hasCalledBatchesApiYet) {
+      this.changeMainExporter(exporter);
+    } else {
+      const waitForApiReady = () => {
+        if (this.state.hasCalledBatchesApiYet) {
+          this.changeMainExporter(exporter);
+          cancelAnimationFrame(retry);
+        } else {
+          retry = requestAnimationFrame(waitForApiReady);
+        }
+      };
+      retry = requestAnimationFrame(waitForApiReady);
+    }
+  };
 }
