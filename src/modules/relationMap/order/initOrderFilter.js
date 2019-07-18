@@ -1,7 +1,8 @@
 // @flow
+const CARD_HEIGHT = 50;
 export const initOrderFilter = {
   page: 1,
-  perPage: 20,
+  perPage: Math.ceil(window.innerHeight / CARD_HEIGHT),
   filter: {
     query: '',
     archived: false,

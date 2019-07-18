@@ -31,7 +31,8 @@ function useFilter(state: State, cacheKey: string) {
 
   useEffect(() => {
     if (window.localStorage) {
-      window.localStorage.setItem(cacheKey, JSON.stringify(filterAndSort));
+      const { filter, sort } = filterAndSort;
+      window.localStorage.setItem(cacheKey, JSON.stringify({ filter, sort }));
     }
   }, [cacheKey, filterAndSort]);
 
