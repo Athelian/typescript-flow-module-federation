@@ -4,24 +4,17 @@ import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
-import { getByPathWithDefault } from 'utils/fp';
 import { SectionHeader } from 'components/Form';
 import FormattedNumber from 'components/FormattedNumber';
-import QueryPlaceHolder from 'components/PlaceHolder/QueryPlaceHolder';
-import ListCardPlaceHolder from 'components/PlaceHolder/ListCardPlaceHolder';
 import {
   SHIPMENT_CONTAINER_LIST,
   SHIPMENT_BATCH_LIST,
   SHIPMENT_BATCH_LIST_IN_CONTAINER,
 } from 'modules/permission/constants/shipment';
-import {
-  ShipmentBatchesContainer,
-  ShipmentContainersContainer,
-} from 'modules/shipment/form/containers';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { CargoSectionWrapperStyle } from './style';
 import ContainersArea from './ContainersArea';
 import BatchesArea from './BatchesArea';
-import { shipmentFormCargoQuery } from './query';
 
 const UNSELECTED = -2;
 const POOL = -1;
@@ -30,17 +23,9 @@ type Props = {|
   shipmentIsArchived: boolean,
   importerId: string,
   exporterId: string,
-  entityId: string,
-  isLoading: boolean,
 |};
 
-const CargoSection = ({
-  entityId,
-  isLoading,
-  shipmentIsArchived,
-  importerId,
-  exporterId,
-}: Props) => {
+const CargoSection = ({ shipmentIsArchived, importerId, exporterId }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
   const [focusedContainerIndex, setFocusedCardIndex] = React.useState(UNSELECTED);
@@ -72,66 +57,49 @@ const CargoSection = ({
   }
 
   return (
-    <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
-      {(batchesContainer, containersContainer) => (
-        <QueryPlaceHolder
-          PlaceHolder={ListCardPlaceHolder}
-          query={shipmentFormCargoQuery}
-          entityId={entityId}
-          isLoading={isLoading}
-          onCompleted={result => {
-            const containers = getByPathWithDefault([], 'shipment.containers', result);
-            const batches = getByPathWithDefault([], 'shipment.batches', result);
-            batchesContainer.initDetailValues(batches, true);
-            containersContainer.initDetailValues(containers, true);
-          }}
-        >
-          {() => {
-            return (
+    <Subscribe to={[ShipmentBatchesContainer]}>
+      {batchesContainer => (
+        <>
+          <SectionHeader
+            icon="CARGO"
+            title={
               <>
-                <SectionHeader
-                  icon="CARGO"
-                  title={
-                    <>
-                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
-                      {' ('}
-                      <FormattedNumber value={batchesContainer.state.batches.length} />
-                      {')'}
-                    </>
-                  }
-                />
-                <div className={CargoSectionWrapperStyle}>
-                  <ContainersArea
-                    isFocusedBatchesPool={focusedContainerIndex === POOL}
-                    focusedContainerIndex={focusedContainerIndex}
-                    isSelectBatchesMode={isSelectBatchesMode}
-                    onChangeSelectMode={onChangeSelectMode}
-                    onSelect={setFocusedCardIndex}
-                    onSelectPool={() =>
-                      focusedContainerIndex === POOL
-                        ? setFocusedCardIndex(UNSELECTED)
-                        : setFocusedCardIndex(POOL)
-                    }
-                    onDeselect={() => setFocusedCardIndex(UNSELECTED)}
-                    selectedBatches={selectedBatches}
-                    shipmentIsArchived={shipmentIsArchived}
-                  />
-                  <BatchesArea
-                    importerId={importerId}
-                    exporterId={exporterId}
-                    isFocusedBatchesPool={focusedContainerIndex === POOL}
-                    focusedContainerIndex={focusedContainerIndex}
-                    isSelectBatchesMode={isSelectBatchesMode}
-                    onChangeSelectMode={onChangeSelectMode}
-                    selectedBatches={selectedBatches}
-                    onSelectBatch={onSelectBatch}
-                    shipmentIsArchived={shipmentIsArchived}
-                  />
-                </div>
+                <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
+                {' ('}
+                <FormattedNumber value={batchesContainer.state.batches.length} />
+                {')'}
               </>
-            );
-          }}
-        </QueryPlaceHolder>
+            }
+          />
+          <div className={CargoSectionWrapperStyle}>
+            <ContainersArea
+              isFocusedBatchesPool={focusedContainerIndex === POOL}
+              focusedContainerIndex={focusedContainerIndex}
+              isSelectBatchesMode={isSelectBatchesMode}
+              onChangeSelectMode={onChangeSelectMode}
+              onSelect={setFocusedCardIndex}
+              onSelectPool={() =>
+                focusedContainerIndex === POOL
+                  ? setFocusedCardIndex(UNSELECTED)
+                  : setFocusedCardIndex(POOL)
+              }
+              onDeselect={() => setFocusedCardIndex(UNSELECTED)}
+              selectedBatches={selectedBatches}
+              shipmentIsArchived={shipmentIsArchived}
+            />
+            <BatchesArea
+              importerId={importerId}
+              exporterId={exporterId}
+              isFocusedBatchesPool={focusedContainerIndex === POOL}
+              focusedContainerIndex={focusedContainerIndex}
+              isSelectBatchesMode={isSelectBatchesMode}
+              onChangeSelectMode={onChangeSelectMode}
+              selectedBatches={selectedBatches}
+              onSelectBatch={onSelectBatch}
+              shipmentIsArchived={shipmentIsArchived}
+            />
+          </div>
+        </>
       )}
     </Subscribe>
   );

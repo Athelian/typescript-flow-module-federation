@@ -12,10 +12,9 @@ import {
 } from './containers';
 import {
   ShipmentSection,
-  CargoSection,
   DocumentsSection,
   OrdersSection,
-  TimelineSection,
+  TimelineAndCargoSections,
   ShipmentTasksSection,
 } from './components';
 import { ShipmentFormWrapperStyle } from './style';
@@ -69,32 +68,19 @@ class ShipmentForm extends React.Component<Props> {
           />
         </SectionWrapper>
 
-        <SectionWrapper id="shipment_timelineSection">
-          <Subscribe to={[ShipmentTasksContainer]}>
-            {({ state: { hasCalledTasksApiYet } }) => (
-              <TimelineSection
-                isTaskReadyForBinding={hasCalledTasksApiYet}
-                isNew={Boolean(isNew)}
-                entityId={!isClone && shipment.id ? shipment.id : ''}
-                isLoading={loading}
-              />
-            )}
-          </Subscribe>
-        </SectionWrapper>
-
-        <SectionWrapper id="shipment_cargoSection">
-          <Subscribe to={[ShipmentInfoContainer]}>
-            {({ state: shipmentInfo }) => (
-              <CargoSection
-                exporterId={getByPath('exporter.id', shipmentInfo)}
-                importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
-                shipmentIsArchived={shipment.archived}
-                entityId={!isClone && shipment.id ? shipment.id : ''}
-                isLoading={loading}
-              />
-            )}
-          </Subscribe>
-        </SectionWrapper>
+        <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
+          {({ state: { hasCalledTasksApiYet }, shipmentInfo }) => (
+            <TimelineAndCargoSections
+              exporterId={getByPath('exporter.id', shipmentInfo)}
+              importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
+              shipmentIsArchived={shipment.archived}
+              isTaskReadyForBinding={hasCalledTasksApiYet}
+              isNew={Boolean(isNew)}
+              entityId={!isClone && shipment.id ? shipment.id : ''}
+              isLoading={loading}
+            />
+          )}
+        </Subscribe>
 
         <SectionWrapper id="shipment_documentsSection">
           <DocumentsSection
