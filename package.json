@@ -181,6 +181,7 @@
     "@svgr/webpack": "4.3.2",
     "@testing-library/cypress": "^4.0.4",
     "@testing-library/react": "^8.0.5",
+    "@testing-library/react-hooks": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "1.10.2",
     "@typescript-eslint/parser": "1.10.2",
     "apollo-storybook-react": "^0.2.1",
