@@ -27,14 +27,24 @@ test('filterBy should be {archived: false}', () => {
   });
 });
 
-test('filterBy should be {}', () => {
-  Storage.prototype.getItem = jest.fn(() => null);
+test('filterBy should be {query: "query"}', () => {
+  const cache = JSON.stringify({
+    query: 'query',
+    sort: {
+      field: 'createdAt',
+      direction: 'DESCENDING',
+    },
+  });
+  Storage.prototype.getItem = jest.fn(() => cache);
 
   const { result } = renderHook(() => useFilter(initialFilter, 'test'));
-  expect(result.current.queryVariables.filterBy).toEqual({});
+  expect(result.current.queryVariables.filterBy).toEqual({
+    query: 'query',
+  });
 });
 
 test('call onChangeFilter', () => {
+  Storage.prototype.getItem = jest.fn(() => undefined);
   const { result } = renderHook(() => useFilter(initialFilter, 'test'));
 
   act(() => {
