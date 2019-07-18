@@ -1,15 +1,18 @@
 // @flow
+import type { ContainerPayload, GroupPayload, PartnerPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import { cleanFalsyAndTypeName } from 'utils/data';
 import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 
-type ContainersState = {
-  containers: Array<Object>,
-};
+type ContainersState = {|
+  containers: Array<ContainerPayload>,
+  hasCalledContainerApiYet: boolean,
+|};
 
 export const initValues: ContainersState = {
   containers: [],
+  hasCalledContainerApiYet: false,
 };
 
 export default class ShipmentContainersContainer extends Container<ContainersState> {
@@ -38,19 +41,22 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     this.setState(this.originalValues);
   };
 
-  initDetailValues = (containers: Array<Object>) => {
-    this.setState({ containers });
-    this.originalValues = { containers };
+  initDetailValues = (
+    containers: Array<ContainerPayload>,
+    hasCalledContainerApiYet: boolean = false
+  ) => {
+    this.setState({ containers, hasCalledContainerApiYet });
+    this.originalValues = { containers, hasCalledContainerApiYet };
   };
 
-  changeMainExporter = (exporter: Object) => {
+  changeMainExporter = (exporter: ?GroupPayload) => {
     if (exporter) {
       this.setState(prevState => {
         return {
           containers: prevState.containers.map(container => {
             const { batches, representativeBatch, ...rest } = container;
             const newBatches = batches.filter(
-              batch => getByPath('orderItem.order.exporter.id', batch) === exporter.id
+              batch => getByPath('orderItem.order.exporter.id', batch) === getByPath('id', exporter)
             );
             const newRepresentativeBatch = newBatches
               .map(batch => batch.id)
@@ -68,41 +74,45 @@ export default class ShipmentContainersContainer extends Container<ContainersSta
     }
   };
 
-  onChangePartner = (partner: Object) => {
+  onChangePartner = (partner: PartnerPayload) => {
     this.setState(prevState => ({
       containers: prevState.containers.map(container => ({
         ...container,
         warehouseArrivalActualDateAssignedTo: container.warehouseArrivalActualDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== partner.id
+          user => getByPath('group.id', user) !== getByPath('id', partner)
         ),
         warehouseArrivalAgreedDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== partner.id
+          user => getByPath('group.id', user) !== getByPath('id', partner)
         ),
         departureDateAssignedTo: container.warehouseArrivalAgreedDateAssignedTo.filter(
-          user => getByPath('group.id', user) !== partner.id
+          user => getByPath('group.id', user) !== getByPath('id', partner)
         ),
         warehouseArrivalActualDateApprovedAt:
-          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) === partner.id
+          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) ===
+          getByPath('id', partner)
             ? null
             : container.warehouseArrivalActualDateApprovedAt,
         warehouseArrivalActualDateApprovedBy:
-          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) === partner.id
+          getByPath('warehouseArrivalActualDateApprovedBy.group.id', container) ===
+          getByPath('id', partner)
             ? null
             : container.warehouseArrivalActualDateApprovedBy,
         warehouseArrivalAgreedDateApprovedAt:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) === partner.id
+          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) ===
+          getByPath('id', partner)
             ? null
             : container.warehouseArrivalAgreedDateApprovedAt,
         warehouseArrivalAgreedDateApprovedBy:
-          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) === partner.id
+          getByPath('warehouseArrivalAgreedDateApprovedBy.group.id', container) ===
+          getByPath('id', partner)
             ? null
             : container.warehouseArrivalAgreedDateApprovedBy,
         departureDateApprovedAt:
-          getByPath('departureDateApprovedBy.group.id', container) === partner.id
+          getByPath('departureDateApprovedBy.group.id', container) === getByPath('id', partner)
             ? null
             : container.departureDateApprovedAt,
         departureDateApprovedBy:
-          getByPath('departureDateApprovedBy.group.id', container) === partner.id
+          getByPath('departureDateApprovedBy.group.id', container) === getByPath('id', partner)
             ? null
             : container.departureDateApprovedBy,
       })),

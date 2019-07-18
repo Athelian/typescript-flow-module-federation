@@ -193,17 +193,29 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       containerGroups = [{}],
       files = [],
       hasCalledTasksApiYet = false,
+      hasCalledBatchesApiYet = false,
+      hasCalledTimelineApiYet = false,
+      hasCalledContainerApiYet = false,
       todo = taskInitValues.todo,
       ...info
     }: Object = shipment;
     shipmentInfoContainer.initDetailValues(info);
-    shipmentBatchesContainer.initDetailValues(batches);
-    shipmentContainersContainer.initDetailValues(containers);
-    shipmentTimelineContainer.initDetailValues({
-      cargoReady,
-      voyages,
-      containerGroups,
-    });
+    shipmentBatchesContainer.initDetailValues(
+      batches,
+      hasCalledBatchesApiYet || batches.length > 0
+    );
+    shipmentContainersContainer.initDetailValues(
+      containers,
+      hasCalledContainerApiYet || containers.length > 0
+    );
+    shipmentTimelineContainer.initDetailValues(
+      {
+        cargoReady,
+        voyages,
+        containerGroups,
+      },
+      hasCalledTimelineApiYet
+    );
     shipmentFilesContainer.initDetailValues(files);
     shipmentTasksContainer.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
     shipmentTagsContainer.initDetailValues(tags);
@@ -238,15 +250,18 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       files,
       todo,
       hasCalledTasksApiYet = false,
+      hasCalledBatchesApiYet = false,
+      hasCalledTimelineApiYet = false,
+      hasCalledContainerApiYet = false,
       ...info
     }: Object = shipment;
     shipmentInfoContainer.initDetailValues({
       ...info,
       no: `[cloned] ${no}`,
     });
-    shipmentBatchesContainer.initDetailValues([]);
-    shipmentContainersContainer.initDetailValues([]);
-    shipmentTimelineContainer.initDetailValues({});
+    shipmentBatchesContainer.initDetailValues([], hasCalledBatchesApiYet);
+    shipmentContainersContainer.initDetailValues([], hasCalledContainerApiYet);
+    shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet);
     shipmentFilesContainer.initDetailValues([]);
     shipmentTasksContainer.initDetailValues({ tasks: [] }, hasCalledTasksApiYet);
     shipmentTagsContainer.initDetailValues(tags);
@@ -554,6 +569,9 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                       {
                                         ...updateShipment,
                                         hasCalledTasksApiYet: true,
+                                        hasCalledBatchesApiYet: true,
+                                        hasCalledTimelineApiYet: true,
+                                        hasCalledContainerApiYet: true,
                                       }
                                     );
                                     formContainer.onReset();

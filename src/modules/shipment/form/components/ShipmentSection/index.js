@@ -554,6 +554,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     }
                   />
 
+                  {/* TODO: Check wait for other section */}
                   <FieldItem
                     vertical
                     label={
@@ -692,7 +693,6 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                           )}
                                         </BooleanValue>
                                       ) : (
-                                        // TODO: check again,really useful?
                                         <SelectPartner
                                           cacheKey="ShipmentSelectImporter"
                                           partnerTypes={['Importer']}
@@ -717,6 +717,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                     }
                   />
 
+                  {/* TODO: check for wait for other */}
                   <FieldItem
                     vertical
                     label={

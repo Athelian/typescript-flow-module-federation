@@ -3,7 +3,7 @@ import type {
   TimelineDatePayload,
   ContainerGroupPayload,
   VoyagePayload,
-  GroupPayload,
+  PartnerPayload,
 } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, unset, set } from 'lodash';
@@ -11,16 +11,18 @@ import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 import { removeNulls } from 'utils/data';
 import emitter from 'utils/emitter';
 
-type FormState = {
+type FormState = {|
   cargoReady: TimelineDatePayload,
   containerGroups: Array<ContainerGroupPayload>,
   voyages: Array<VoyagePayload>,
-};
+  hasCalledTimelineApiYet: boolean,
+|};
 
 export const initValues: FormState = {
   cargoReady: {},
   containerGroups: [{}],
   voyages: [{}],
+  hasCalledTimelineApiYet: false,
 };
 
 const removeOldImporterStaff = ({
@@ -30,7 +32,7 @@ const removeOldImporterStaff = ({
 }: {
   entity: TimelineDatePayload,
   field: string,
-  partner: GroupPayload,
+  partner: PartnerPayload,
 }) => {
   if (Object.keys(entity || {}).length < 1) {
     return {};
@@ -111,14 +113,21 @@ export default class ShipmentTimelineContainer extends Container<FormState> {
     });
   };
 
-  initDetailValues = (values: any) => {
-    const parsedValues = { ...initValues, ...values };
+  initDetailValues = (
+    values: {|
+      cargoReady: TimelineDatePayload,
+      containerGroups: Array<ContainerGroupPayload>,
+      voyages: Array<VoyagePayload>,
+    |},
+    hasCalledTimelineApiYet: boolean = false
+  ) => {
+    const parsedValues = { ...initValues, ...values, hasCalledTimelineApiYet };
 
     this.setState(parsedValues);
     this.originalValues = { ...parsedValues };
   };
 
-  onChangePartner = (partner: Object) => {
+  onChangePartner = (partner: PartnerPayload) => {
     const { cargoReady, containerGroups, voyages } = this.state;
     this.setState({
       ...(Object.keys(cargoReady).length > 0
