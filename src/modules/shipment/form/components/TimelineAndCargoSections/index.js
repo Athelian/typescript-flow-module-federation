@@ -39,7 +39,7 @@ const CustomPlaceHolder = () => {
   );
 };
 
-const TimelineAdnCargoSections = (props: Props) => {
+const TimelineAndCargoSections = (props: Props) => {
   const {
     entityId,
     isLoading,
@@ -100,4 +100,4 @@ const TimelineAdnCargoSections = (props: Props) => {
     </Subscribe>
   );
 };
-export default TimelineAdnCargoSections;
+export default TimelineAndCargoSections;

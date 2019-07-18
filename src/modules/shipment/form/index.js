@@ -69,12 +69,12 @@ class ShipmentForm extends React.Component<Props> {
         </SectionWrapper>
 
         <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
-          {({ state: { hasCalledTasksApiYet }, shipmentInfo }) => (
+          {(taskContainer, infoContainer) => (
             <TimelineAndCargoSections
-              exporterId={getByPath('exporter.id', shipmentInfo)}
-              importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
+              exporterId={getByPath('exporter.id', infoContainer.state)}
+              importerId={getByPathWithDefault('', 'importer.id', infoContainer.state)}
               shipmentIsArchived={shipment.archived}
-              isTaskReadyForBinding={hasCalledTasksApiYet}
+              isTaskReadyForBinding={taskContainer.state.hasCalledTasksApiYet}
               isNew={Boolean(isNew)}
               entityId={!isClone && shipment.id ? shipment.id : ''}
               isLoading={loading}
