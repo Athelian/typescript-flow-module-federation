@@ -86,7 +86,7 @@
     "lint": "eslint 'src/**/*.{js,jsx}'",
     "format": "prettier-eslint --write 'src/**/*.{js,jsx}'",
     "commit": "npx git-cz",
-    "flow-typed": "rimraf flow-typed/npm && npx flow-typed install --ignoreDeps dev bundle peer",
+    "flow-typed": "rimraf flow-typed/npm && npx flow-typed install --ignoreDeps dev bundled peer",
     "analyze": "cross-env NODE_ENV=production ANALYZE=1 node scripts/build.js",
     "apollo-fragments": "node scripts/apolloFragment.js",
     "translate:prepare": "cross-env NODE_ENV=production babel-node --no-babelrc --presets=@babel/preset-env scripts/migrate.js",
