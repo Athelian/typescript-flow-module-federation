@@ -1,4 +1,3 @@
-/* eslint-disable graphql/template-strings */
 // @flow
 import gql from 'graphql-tag';
 
