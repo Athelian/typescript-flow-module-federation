@@ -182,7 +182,11 @@ class OrderItemFormModule extends React.Component<Props> {
                 <BooleanValue>
                   {({ value: isOpen, set: toggleLogs }) => (
                     <>
-                      <LogsButton onClick={() => toggleLogs(true)} />
+                      <LogsButton
+                        entityType="orderItem"
+                        entityId={orderItemId}
+                        onClick={() => toggleLogs(true)}
+                      />
                       <SlideView isOpen={isOpen} onRequestClose={() => toggleLogs(false)}>
                         <SlideViewLayout>
                           {orderItemId && isOpen && (

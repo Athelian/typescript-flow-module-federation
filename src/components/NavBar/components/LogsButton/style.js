@@ -9,11 +9,13 @@ export const LogsButtonWrapperStyle: string = css`
   background-color: ${colors.GRAY_LIGHT};
   color: ${colors.WHITE};
   height: 30px;
+  width: 80px;
   padding: 0 10px;
   ${fontSizes.SMALL};
   letter-spacing: 2px;
   width: min-content;
   ${presets.ELLIPSIS};
+  overflow: unset;
   & > svg {
     margin-right: 5px;
   }

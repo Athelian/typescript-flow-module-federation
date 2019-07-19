@@ -334,7 +334,11 @@ class OrderFormModule extends React.PureComponent<Props> {
                   {({ value: opened, set: slideToggle }) =>
                     !isNewOrClone && (
                       <>
-                        <LogsButton onClick={() => slideToggle(true)} />
+                        <LogsButton
+                          entityType="order"
+                          entityId={orderId}
+                          onClick={() => slideToggle(true)}
+                        />
                         <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                           <SlideViewLayout>
                             {orderId && opened && (

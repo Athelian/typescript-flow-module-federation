@@ -108,7 +108,11 @@ class TaskFormModule extends React.Component<Props> {
                       <BooleanValue>
                         {({ value: opened, set: slideToggle }) => (
                           <>
-                            <LogsButton onClick={() => slideToggle(true)} />
+                            <LogsButton
+                              entityType="task"
+                              entityId={taskId}
+                              onClick={() => slideToggle(true)}
+                            />
                             <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                               <SlideViewLayout>
                                 {taskId && opened && (

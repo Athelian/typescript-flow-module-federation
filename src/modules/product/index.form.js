@@ -312,7 +312,11 @@ class ProductFormModule extends React.Component<Props> {
                 {({ value: opened, set: slideToggle }) =>
                   !isNewOrClone && (
                     <>
-                      <LogsButton onClick={() => slideToggle(true)} />
+                      <LogsButton
+                        entityType="product"
+                        entityId={productId}
+                        onClick={() => slideToggle(true)}
+                      />
                       <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                         <SlideViewLayout>
                           {productId && opened && (

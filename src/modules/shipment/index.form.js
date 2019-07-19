@@ -414,7 +414,11 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                     {({ value: opened, set: slideToggle }) =>
                       !isNewOrClone && (
                         <>
-                          <LogsButton onClick={() => slideToggle(true)} />
+                          <LogsButton
+                            entityType="shipment"
+                            entityId={shipmentId}
+                            onClick={() => slideToggle(true)}
+                          />
                           <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                             <SlideViewLayout
                               navBar={

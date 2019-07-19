@@ -63,7 +63,11 @@ const TaskFormInSlide = ({
                 <BooleanValue>
                   {({ value: opened, set: slideToggle }) => (
                     <>
-                      <LogsButton onClick={() => slideToggle(true)} />
+                      <LogsButton
+                        entityType="task"
+                        entityId={task.id}
+                        onClick={() => slideToggle(true)}
+                      />
                       <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                         <SlideViewLayout>
                           {task.id && opened && (

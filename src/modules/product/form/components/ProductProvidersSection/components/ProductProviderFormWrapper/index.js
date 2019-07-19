@@ -150,7 +150,11 @@ const ProductProviderFormWrapper = ({
                     productProvider.id &&
                     !productProvider.hideLogs && (
                       <>
-                        <LogsButton onClick={() => slideToggle(true)} />
+                        <LogsButton
+                          entityType="productProvider"
+                          entityId={productProvider.id}
+                          onClick={() => slideToggle(true)}
+                        />
                         <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                           <SlideViewLayout>
                             {opened && (

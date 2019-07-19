@@ -219,7 +219,11 @@ class ProjectFormModule extends React.PureComponent<Props> {
                   {({ value: opened, set: slideToggle }) =>
                     !isNew && (
                       <>
-                        <LogsButton onClick={() => slideToggle(true)} />
+                        <LogsButton
+                          entityType="project"
+                          entityId={projectId}
+                          onClick={() => slideToggle(true)}
+                        />
                         <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
                           <SlideViewLayout>
                             {projectId && opened && (
