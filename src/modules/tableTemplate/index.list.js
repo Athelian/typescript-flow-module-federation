@@ -7,11 +7,10 @@ import type { IntlShape } from 'react-intl';
 import { TEMPLATE_CREATE } from 'modules/permission/constants/template';
 import usePermission from 'hooks/usePermission';
 import SlideView from 'components/SlideView';
-import { UIConsumer } from 'modules/ui';
 import TemplateFormWrapper from 'modules/tableTemplate/common/TemplateFormWrapper';
-import Layout from 'components/Layout';
+import { Content } from 'components/Layout';
+import { NavBar, EntityIcon } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
-import NavBar, { EntityIcon } from 'components/NavBar';
 import TabItem from 'components/NavBar/components/Tabs/components/TabItem';
 import { NewButton } from 'components/Buttons';
 import useFilter from 'hooks/useFilter';
@@ -50,48 +49,40 @@ const TableTemplateModule = (props: Props) => {
   const canCreate = hasPermission(TEMPLATE_CREATE);
   return (
     <Provider>
-      <UIConsumer>
-        {uiState => (
-          <Layout
-            {...uiState}
-            navBar={
-              <NavBar>
-                <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                <TabItem
-                  active
-                  label={
-                    <FormattedMessage
-                      id="modules.TableTemplates.orderFocus"
-                      defaultMessage="ORDER FOCUS"
-                    />
-                  }
-                  icon="ORDER"
-                />
-                <FilterToolBar
-                  sortFields={sortFields}
-                  filtersAndSort={filtersAndSort}
-                  onChange={onChangeFilter}
-                />
-
-                <BooleanValue>
-                  {({ value: isOpen, set: toggle }) => (
-                    <>
-                      {canCreate && <NewButton onClick={() => toggle(true)} />}
-                      <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
-                        {isOpen && (
-                          <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
-                        )}
-                      </SlideView>
-                    </>
-                  )}
-                </BooleanValue>
-              </NavBar>
+      <Content>
+        <NavBar>
+          <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+          <TabItem
+            active
+            label={
+              <FormattedMessage
+                id="modules.TableTemplates.orderFocus"
+                defaultMessage="ORDER FOCUS"
+              />
             }
-          >
-            <TableTemplateList {...queryVariables} />
-          </Layout>
-        )}
-      </UIConsumer>
+            icon="ORDER"
+          />
+          <FilterToolBar
+            sortFields={sortFields}
+            filtersAndSort={filtersAndSort}
+            onChange={onChangeFilter}
+          />
+
+          <BooleanValue>
+            {({ value: isOpen, set: toggle }) => (
+              <Content>
+                {canCreate && <NewButton onClick={() => toggle(true)} />}
+                <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
+                  {isOpen && (
+                    <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
+                  )}
+                </SlideView>
+              </Content>
+            )}
+          </BooleanValue>
+        </NavBar>
+        <TableTemplateList {...queryVariables} />
+      </Content>
     </Provider>
   );
 };

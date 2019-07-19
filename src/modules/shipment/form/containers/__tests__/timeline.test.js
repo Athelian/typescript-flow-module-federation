@@ -72,13 +72,17 @@ describe('shipment timeline container', () => {
     const containerGroup = {};
     const voyage = {};
 
-    await container.initDetailValues({
-      cargoReady,
-      containerGroups: [containerGroup],
-      voyages: [voyage],
-    });
+    await container.initDetailValues(
+      {
+        cargoReady,
+        containerGroups: [containerGroup],
+        voyages: [voyage],
+      },
+      true
+    );
 
     expect(container.state).toEqual({
+      hasCalledTimelineApiYet: true,
       cargoReady,
       containerGroups: [containerGroup],
       voyages: [voyage],
@@ -95,6 +99,7 @@ describe('shipment timeline container', () => {
       },
       containerGroups: [containerGroup],
       voyages: [voyage],
+      hasCalledTimelineApiYet: true,
     });
   });
 
@@ -204,15 +209,19 @@ describe('shipment timeline container', () => {
       },
     };
 
-    await container.initDetailValues({
-      cargoReady,
-      containerGroups: [containerGroup],
-      voyages: [voyage],
-    });
+    await container.initDetailValues(
+      {
+        cargoReady,
+        containerGroups: [containerGroup],
+        voyages: [voyage],
+      },
+      true
+    );
 
     await container.onChangePartner(group);
 
     expect(container.state).toEqual({
+      hasCalledTimelineApiYet: true,
       cargoReady: {
         ...cargoReady,
         assignedTo: remainUsers,

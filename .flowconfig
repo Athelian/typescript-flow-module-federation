@@ -1,5 +1,7 @@
 [ignore]
 <PROJECT_ROOT>/node_modules/.cache
+<PROJECT_ROOT>/node_modules/map-or-similar
+<PROJECT_ROOT>/node_modules/memoizerific
 
 [untyped]
 <PROJECT_ROOT>/node_modules/react-beautiful-dnd
@@ -13,6 +15,7 @@
 [lints]
 
 [options]
+sharedmemory.hash_table_pow=21
 lazy_mode=fs
 name= Zenport web app
 module.file_ext=.js

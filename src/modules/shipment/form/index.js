@@ -1,52 +1,36 @@
 // @flow
-import React, { lazy, Suspense } from 'react';
-import { FormattedMessage } from 'react-intl';
+import * as React from 'react';
 import { Subscribe } from 'unstated';
-import LoadingIcon from 'components/LoadingIcon';
 import { getByPath, isEquals, getByPathWithDefault } from 'utils/fp';
 import scrollIntoView from 'utils/scrollIntoView';
 import AutoDateBinding from 'modules/task/common/AutoDateBinding';
-import FormattedNumber from 'components/FormattedNumber';
-import { SectionWrapper, SectionHeader } from 'components/Form';
+import { SectionWrapper } from 'components/Form';
 import {
-  ShipmentBatchesContainer,
   ShipmentTasksContainer,
   ShipmentInfoContainer,
   ShipmentTimelineContainer,
-  ShipmentFilesContainer,
+  ShipmentBatchesContainer,
 } from './containers';
-import { ShipmentSection } from './components';
+import {
+  ShipmentSection,
+  DocumentsSection,
+  OrdersSection,
+  TimelineAndCargoSections,
+  ShipmentTasksSection,
+} from './components';
 import { ShipmentFormWrapperStyle } from './style';
 
-const AsyncCargoSection = lazy(() => import('./components/CargoSection'));
-const AsyncDocumentsSection = lazy(() => import('./components/DocumentsSection'));
-const AsyncOrdersSection = lazy(() => import('./components/OrdersSection'));
-const AsyncTimelineSection = lazy(() => import('./components/TimelineSection'));
-const AsyncTaskSection = lazy(() => import('modules/task/common/TaskSection'));
-
-type OptionalProps = {
-  isNew: boolean,
-  isOwner: boolean,
-  isClone: boolean,
-  anchor: string,
-  initDataForSlideView: Object,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   shipment: Object,
-};
-
-const defaultProps = {
-  isNew: false,
-  isClone: false,
-  isOwner: true,
-  anchor: '',
-  initDataForSlideView: {},
-};
+  loading: boolean,
+  isNew?: boolean,
+  isClone?: boolean,
+  isOwner?: boolean,
+  anchor?: string,
+  initDataForSlideView?: Object,
+|};
 
 class ShipmentForm extends React.Component<Props> {
-  static defaultProps = defaultProps;
-
   componentDidMount() {
     const { anchor } = this.props;
 
@@ -67,110 +51,87 @@ class ShipmentForm extends React.Component<Props> {
   }
 
   shouldComponentUpdate(nextProps: Props) {
-    const { shipment } = this.props;
-
-    return !isEquals(shipment, nextProps.shipment);
+    const { shipment, isOwner } = this.props;
+    return !isEquals(shipment, nextProps.shipment) || nextProps.isOwner !== isOwner;
   }
 
   render() {
-    const { isNew, shipment } = this.props;
+    const { isNew, isClone, shipment, loading, initDataForSlideView } = this.props;
     return (
-      <Suspense fallback={<LoadingIcon />}>
-        <div className={ShipmentFormWrapperStyle}>
-          <ShipmentSection {...this.props} />
+      <div className={ShipmentFormWrapperStyle}>
+        <SectionWrapper id="shipment_shipmentSection">
+          <ShipmentSection
+            shipment={shipment}
+            isLoading={loading}
+            isNew={Boolean(isNew)}
+            isClone={Boolean(isClone)}
+            initDataForSlideView={initDataForSlideView}
+          />
+        </SectionWrapper>
 
-          <SectionWrapper id="shipment_timelineSection">
-            <SectionHeader
-              icon="TIMELINE"
-              title={<FormattedMessage id="modules.Shipments.timeline" defaultMessage="TIMELINE" />}
+        <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
+          {(taskContainer, infoContainer) => (
+            <TimelineAndCargoSections
+              exporterId={getByPath('exporter.id', infoContainer.state)}
+              importerId={getByPathWithDefault('', 'importer.id', infoContainer.state)}
+              shipmentIsArchived={shipment.archived}
+              isTaskReadyForBinding={taskContainer.state.hasCalledTasksApiYet}
+              isNew={Boolean(isNew)}
+              entityId={!isClone && shipment.id ? shipment.id : ''}
+              isLoading={loading}
             />
-            <AsyncTimelineSection isNew={isNew} />
-          </SectionWrapper>
+          )}
+        </Subscribe>
 
-          <SectionWrapper id="shipment_cargoSection">
-            <Subscribe to={[ShipmentBatchesContainer]}>
-              {({ state: { batches } }) => (
-                <SectionHeader
-                  icon="CARGO"
-                  title={
-                    <>
-                      <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
-                      {' ('}
-                      <FormattedNumber value={batches.length} />
-                      {')'}
-                    </>
-                  }
-                />
-              )}
-            </Subscribe>
-            <Subscribe to={[ShipmentInfoContainer]}>
-              {({ state: shipmentInfo }) => (
-                <AsyncCargoSection
-                  exporterId={getByPath('exporter.id', shipmentInfo)}
-                  importerId={getByPathWithDefault('', 'importer.id', shipmentInfo)}
-                  shipmentIsArchived={shipment.archived}
-                />
-              )}
-            </Subscribe>
-          </SectionWrapper>
-
-          <SectionWrapper id="shipment_documentsSection">
-            <Subscribe to={[ShipmentFilesContainer]}>
-              {({ state: { files } }) => (
-                <SectionHeader
-                  icon="DOCUMENT"
-                  title={
-                    <>
-                      <FormattedMessage
-                        id="modules.Shipments.documents"
-                        defaultMessage="DOCUMENTS"
-                      />
-                      {' ('}
-                      <FormattedNumber value={files.length} />
-                      {')'}
-                    </>
-                  }
-                />
-              )}
-            </Subscribe>
-            <AsyncDocumentsSection />
-          </SectionWrapper>
-          <Subscribe to={[ShipmentInfoContainer]}>
-            {({ state: info }) => (
-              <AsyncTaskSection
-                groupIds={[getByPath('importer.id', info), getByPath('exporter.id', info)].filter(
-                  Boolean
-                )}
-                entityId={shipment.id}
-                type="Shipment"
+        <SectionWrapper id="shipment_documentsSection">
+          <DocumentsSection
+            entityId={!isClone && shipment.id ? shipment.id : ''}
+            isLoading={loading}
+          />
+        </SectionWrapper>
+        <SectionWrapper id="shipment_taskSection">
+          <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer]}>
+            {({ initDetailValues }, { state: { importer, exporter } }) => (
+              <ShipmentTasksSection
+                groupIds={[getByPath('id', importer), getByPath('id', exporter)].filter(Boolean)}
+                initValues={initDetailValues}
+                isLoading={loading}
+                entityId={!isClone && shipment.id ? shipment.id : ''}
               />
             )}
           </Subscribe>
+        </SectionWrapper>
 
-          <AsyncOrdersSection />
-          <Subscribe
-            to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}
-          >
-            {(
-              {
-                state: {
-                  todo: { tasks },
-                },
-                setFieldValue,
+        <SectionWrapper id="shipment_orderSection">
+          <Subscribe to={[ShipmentBatchesContainer]}>
+            {({ state: { batches, hasCalledBatchesApiYet } }) => (
+              <OrdersSection
+                isReady={hasCalledBatchesApiYet || isNew || isClone}
+                batches={batches}
+              />
+            )}
+          </Subscribe>
+        </SectionWrapper>
+        <Subscribe to={[ShipmentTasksContainer, ShipmentInfoContainer, ShipmentTimelineContainer]}>
+          {(
+            {
+              state: {
+                todo: { tasks },
               },
-              { state: info },
-              { state: timeline }
-            ) => (
-              <AutoDateBinding
-                type="Shipment"
-                values={{ ...info, ...timeline }}
-                tasks={tasks}
-                setTaskValue={setFieldValue}
-              />
-            )}
-          </Subscribe>
-        </div>
-      </Suspense>
+              setFieldValue,
+            },
+            { state: info },
+            { state: timeline }
+          ) => (
+            <AutoDateBinding
+              type="Shipment"
+              values={{ ...info, ...timeline }}
+              tasks={tasks}
+              setTaskValue={setFieldValue}
+            />
+          )}
+        </Subscribe>
+      </div>
     );
   }
 }

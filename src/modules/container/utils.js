@@ -1,49 +1,19 @@
 // @flow
+import type { BatchPayload, OrderPayload, MetricValue, ContainerPayload } from 'generated/graphql';
 import { uniqBy } from 'lodash';
-import { isNullOrUndefined, getByPath } from 'utils/fp';
-import { convertVolume } from 'utils/metric';
 import { addDays } from 'date-fns';
+import { getByPath, getByPathWithDefault } from 'utils/fp';
+import { findVolume } from 'utils/batch';
 
-type BatchProp = {
-  orderItem: {
-    order: {
-      id: string,
-    },
-  },
-};
-
-type Metric = {
-  metric: string,
-  value: number,
-};
-
-export const uniqueOrders = (batches: Array<BatchProp>): Array<Object> =>
+export const uniqueOrders = (batches: Array<BatchPayload>): Array<OrderPayload> =>
   uniqBy(batches.map(batch => getByPath('orderItem.order', batch)).filter(Boolean), 'id');
 
-const calculateBatchTotalVolume = (batch: Object): Metric => {
-  const {
-    packageQuantity = 0,
-    packageVolume,
-  }: {
-    packageQuantity: number,
-    packageVolume: Object,
-  } = batch;
-  const volume = isNullOrUndefined(packageVolume)
-    ? 0
-    : convertVolume(packageVolume.value, packageVolume.metric, 'm³');
-
-  return {
-    metric: 'm³',
-    value: packageQuantity * volume,
-  };
-};
-
-export const calculateContainerTotalVolume = ({ batches = [] }: Object): Metric => ({
+export const calculateContainerTotalVolume = (container: ContainerPayload): MetricValue => ({
   metric: 'm³',
-  value: batches
-    .map(calculateBatchTotalVolume)
-    .map(volume => volume.value)
-    .reduce((a, b) => a + b, 0),
+  value: getByPathWithDefault([], 'batches', container).reduce(
+    (result, batch) => result + findVolume(batch),
+    0
+  ),
 });
 
 export const calculateDueDate = (freeTimeStartDate: string, freeTimeDuration: number = 0) =>

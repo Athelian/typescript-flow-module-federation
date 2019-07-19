@@ -14,7 +14,7 @@ import Timeline from 'modules/timeline/components/Timeline';
 import JumpToSection from 'components/JumpToSection';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon, LogsButton } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
@@ -94,95 +94,124 @@ const ProductProviderFormWrapper = ({
             ) || isExist;
 
           return (
-            <Layout
-              navBar={
-                <SlideViewNavBar>
-                  <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
-                  <JumpToSection>
-                    <SectionTabs
-                      link="productProvider_productProviderSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Products.provider"
-                          defaultMessage="END PRODUCT"
+            <SlideViewLayout>
+              <SlideViewNavBar>
+                <EntityIcon icon="PRODUCT_PROVIDER" color="PRODUCT_PROVIDER" />
+                <JumpToSection>
+                  <SectionTabs
+                    link="productProvider_productProviderSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.Products.provider"
+                        defaultMessage="END PRODUCT"
+                      />
+                    }
+                    icon="PRODUCT_PROVIDER"
+                  />
+                  <SectionTabs
+                    link="productProvider_specificationsSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.Products.specifications"
+                        defaultMessage="SPECIFICATIONS"
+                      />
+                    }
+                    icon="SPECIFICATIONS"
+                  />
+                  <SectionTabs
+                    link="productProvider_packagingSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.Products.packaging"
+                        defaultMessage="PACKAGING"
+                      />
+                    }
+                    icon="PACKAGING"
+                  />
+                  <SectionTabs
+                    link="productProvider_documentsSection"
+                    label={
+                      <FormattedMessage
+                        id="modules.Products.documents"
+                        defaultMessage="DOCUMENTS"
+                      />
+                    }
+                    icon="DOCUMENT"
+                  />
+                  <SectionTabs
+                    link="productProvider_taskSection"
+                    label={<FormattedMessage id="modules.Products.tasks" defaultMessage="TASKS" />}
+                    icon="TASK"
+                  />
+                </JumpToSection>
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) =>
+                    !isNew &&
+                    productProvider.id &&
+                    !productProvider.hideLogs && (
+                      <>
+                        <LogsButton
+                          entityType="productProvider"
+                          entityId={productProvider.id}
+                          onClick={() => slideToggle(true)}
                         />
-                      }
-                      icon="PRODUCT_PROVIDER"
-                    />
-                    <SectionTabs
-                      link="productProvider_specificationsSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Products.specifications"
-                          defaultMessage="SPECIFICATIONS"
-                        />
-                      }
-                      icon="SPECIFICATIONS"
-                    />
-                    <SectionTabs
-                      link="productProvider_packagingSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Products.packaging"
-                          defaultMessage="PACKAGING"
-                        />
-                      }
-                      icon="PACKAGING"
-                    />
-                    <SectionTabs
-                      link="productProvider_documentsSection"
-                      label={
-                        <FormattedMessage
-                          id="modules.Products.documents"
-                          defaultMessage="DOCUMENTS"
-                        />
-                      }
-                      icon="DOCUMENT"
-                    />
-                    <SectionTabs
-                      link="productProvider_taskSection"
-                      label={
-                        <FormattedMessage id="modules.Products.tasks" defaultMessage="TASKS" />
-                      }
-                      icon="TASK"
-                    />
-                  </JumpToSection>
-                  <BooleanValue>
-                    {({ value: opened, set: slideToggle }) =>
-                      !isNew &&
-                      productProvider.id &&
-                      !productProvider.hideLogs && (
-                        <>
-                          <LogsButton onClick={() => slideToggle(true)} />
-                          <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                            <Layout
-                              navBar={
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          <SlideViewLayout>
+                            {opened && (
+                              <>
                                 <SlideViewNavBar>
                                   <EntityIcon icon="LOGS" color="LOGS" />
                                 </SlideViewNavBar>
-                              }
-                            >
-                              {opened && (
-                                <Timeline
-                                  query={productProviderTimelineQuery}
-                                  queryField="productProvider"
-                                  variables={{
-                                    id: productProvider.id,
-                                  }}
-                                  entity={{
-                                    productProviderId: productProvider.id,
-                                  }}
-                                />
-                              )}
-                            </Layout>
-                          </SlideView>
-                        </>
-                      )
-                    }
-                  </BooleanValue>
-                  {isNew && (
+
+                                <Content>
+                                  <Timeline
+                                    query={productProviderTimelineQuery}
+                                    queryField="productProvider"
+                                    variables={{
+                                      id: productProvider.id,
+                                    }}
+                                    entity={{
+                                      productProviderId: productProvider.id,
+                                    }}
+                                  />
+                                </Content>
+                              </>
+                            )}
+                          </SlideViewLayout>
+                        </SlideView>
+                      </>
+                    )
+                  }
+                </BooleanValue>
+                {isNew && (
+                  <>
+                    <CancelButton onClick={() => onCancel()} />
+                    <SaveButton
+                      data-testid="saveProviderButton"
+                      disabled={disableSaveButton}
+                      onClick={() =>
+                        onSave({
+                          ...productProviderInfoContainer.state,
+                          ...productProviderTasksContainer.state,
+                          ...productProviderPackagesContainer.state,
+                        })
+                      }
+                    />
+                  </>
+                )}
+                {!isNew &&
+                  (productProviderInfoContainer.isDirty() ||
+                    productProviderPackagesContainer.isDirty() ||
+                    productProviderTasksContainer.isDirty()) && (
                     <>
-                      <CancelButton onClick={() => onCancel()} />
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(productProviderInfoContainer);
+                          resetFormState(productProviderPackagesContainer);
+                          resetFormState(productProviderTasksContainer, 'todo');
+                          formContainer.onReset();
+                        }}
+                      />
                       <SaveButton
                         data-testid="saveProviderButton"
                         disabled={disableSaveButton}
@@ -196,48 +225,23 @@ const ProductProviderFormWrapper = ({
                       />
                     </>
                   )}
-                  {!isNew &&
-                    (productProviderInfoContainer.isDirty() ||
-                      productProviderPackagesContainer.isDirty() ||
-                      productProviderTasksContainer.isDirty()) && (
-                      <>
-                        <ResetButton
-                          onClick={() => {
-                            resetFormState(productProviderInfoContainer);
-                            resetFormState(productProviderPackagesContainer);
-                            resetFormState(productProviderTasksContainer, 'todo');
-                            formContainer.onReset();
-                          }}
-                        />
-                        <SaveButton
-                          data-testid="saveProviderButton"
-                          disabled={disableSaveButton}
-                          onClick={() =>
-                            onSave({
-                              ...productProviderInfoContainer.state,
-                              ...productProviderTasksContainer.state,
-                              ...productProviderPackagesContainer.state,
-                            })
-                          }
-                        />
-                      </>
-                    )}
-                </SlideViewNavBar>
-              }
-            >
-              <ProductProviderForm
-                productProvider={productProvider}
-                initDetailValues={(values: Object) => {
-                  const { todo, packages, defaultPackage, ...info } = values;
-                  productProviderInfoContainer.initDetailValues(info);
-                  productProviderTasksContainer.initDetailValues(todo);
-                  productProviderPackagesContainer.initDetailValues({ packages, defaultPackage });
-                }}
-                isExist={isExist}
-                isNew={isNew}
-                isOwner={isOwner}
-              />
-            </Layout>
+              </SlideViewNavBar>
+
+              <Content>
+                <ProductProviderForm
+                  productProvider={productProvider}
+                  initDetailValues={(values: Object) => {
+                    const { todo, packages, defaultPackage, ...info } = values;
+                    productProviderInfoContainer.initDetailValues(info);
+                    productProviderTasksContainer.initDetailValues(todo);
+                    productProviderPackagesContainer.initDetailValues({ packages, defaultPackage });
+                  }}
+                  isExist={isExist}
+                  isNew={isNew}
+                  isOwner={isOwner}
+                />
+              </Content>
+            </SlideViewLayout>
           );
         }}
       </Subscribe>

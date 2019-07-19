@@ -1,8 +1,8 @@
 // @flow
+import type { Task } from 'generated/graphql';
 import { diff } from 'deep-object-diff';
 import { is, pipe, when, either, map, reject, isNil, isEmpty, omit } from 'ramda';
 import logger from 'utils/logger';
-import { type UserAvatarType } from 'types';
 import { isEquals, getByPathWithDefault, getByPath } from './fp';
 
 export const replaceUndefined: Function = when(
@@ -317,33 +317,7 @@ export const parseDefaultIndexField = (
   return { [key]: newValuesIndex };
 };
 
-type TaskType = {
-  id: ?string,
-  name: ?string,
-  startDate: ?string,
-  startDateInterval: ?{ months?: number, weeks?: number, days?: number },
-  startDateBinding: ?string,
-  dueDate: ?string,
-  dueDateInterval: ?{ months?: number, weeks?: number, days?: number },
-  dueDateBinding: ?string,
-  assignedTo: Array<UserAvatarType>,
-  inProgressBy: ?UserAvatarType,
-  inProgressAt: ?string,
-  completedBy: ?UserAvatarType,
-  completedAt: ?string,
-  approvers: Array<UserAvatarType>,
-  approvable: ?Boolean,
-  rejectedBy: ?UserAvatarType,
-  rejectedAt: ?string,
-  approvedBy: ?UserAvatarType,
-  approvedAt: ?string,
-  memo: ?string,
-  description: ?string,
-  tags: Array<{ id: string }>,
-  taskTemplate: ?{ id: string },
-};
-
-const parseDateFieldForTask = (key: string, originalTask: ?TaskType, newTask: TaskType): Object => {
+const parseDateFieldForTask = (key: string, originalTask: ?Task, newTask: Task): Object => {
   if (newTask[`${key}Interval`] || newTask[`${key}Binding`]) {
     return {};
   }
@@ -355,8 +329,8 @@ const parseDateFieldForTask = (key: string, originalTask: ?TaskType, newTask: Ta
 
 // Used only in Task Form. For tasks inside other entities, use parseTodoField function.
 export const parseTaskField = (
-  originalTask: ?TaskType,
-  newTask: TaskType,
+  originalTask: ?Task,
+  newTask: Task,
   isInProject: boolean = false
 ): Object => {
   if (isEquals(originalTask, newTask)) return {};
@@ -475,12 +449,12 @@ export const parseTaskField = (
 // Use for Todo (Tasks) field. Make sure to send 'todo' which contains 'tasks'.
 export const parseTodoField = (
   originalTodo: ?{
-    tasks: Array<TaskType>,
+    tasks: Array<Task>,
     taskTemplate: ?{ id: string },
     milestone?: { id: string },
   },
   newTodo: {
-    tasks: Array<TaskType>,
+    tasks: Array<Task>,
     taskTemplate: ?{ id: string },
     milestone?: { id: string },
   }
@@ -493,7 +467,7 @@ export const parseTodoField = (
         'tasks',
         getByPathWithDefault([], 'tasks', originalTodo),
         newTodo.tasks,
-        (oldTask: ?Object, newTask: Object) => ({
+        (oldTask: ?Task, newTask: Task) => ({
           ...(oldTask ? { id: oldTask.id } : {}),
           ...parseTaskField(oldTask, newTask),
         })

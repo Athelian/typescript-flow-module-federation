@@ -41,6 +41,10 @@ const Login = ({ redirectUrl = '/' }: Props) => (
             mutation={loginMutation}
             onCompleted={result => {
               if (result && result.login && !result.login.violations) {
+                // clear all cache before login
+                if (window.localStorage) {
+                  window.localStorage.clear();
+                }
                 setAuthenticated(true);
               }
             }}

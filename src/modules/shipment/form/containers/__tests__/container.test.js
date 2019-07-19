@@ -71,7 +71,7 @@ describe('shipment task container', () => {
       },
     ];
 
-    await container.initDetailValues(containers);
+    await container.initDetailValues(containers, true);
 
     expect(container.originalValues.containers).toEqual(containers);
     expect(container.state.containers).toEqual(containers);

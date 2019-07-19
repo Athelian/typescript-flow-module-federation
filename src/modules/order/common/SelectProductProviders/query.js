@@ -6,55 +6,10 @@ import {
   metricFragment,
   sizeFragment,
   taskCountFragment,
+  tagFragment,
   productProviderPackagingFragment,
+  productProviderCardFragment,
 } from 'graphql';
-
-// only for order form "NEW ITEMS"
-const productProviderCardFragment = gql`
-  fragment productProviderCardFragment on ProductProvider {
-    id
-    archived
-    name
-    exporter {
-      ...partnerNameFragment
-    }
-    supplier {
-      ...partnerNameFragment
-    }
-    product {
-      ... on Product {
-        id
-        name
-        serial
-        importer {
-          ...partnerNameFragment
-        }
-        tags {
-          ... on Tag {
-            id
-            name
-            color
-            entityTypes
-          }
-        }
-        files {
-          ...imageFragment
-        }
-      }
-    }
-    defaultPackage {
-      ...productProviderPackagingFragment
-    }
-    packages {
-      ...productProviderPackagingFragment
-    }
-    todo {
-      taskCount {
-        ...taskCountFragment
-      }
-    }
-  }
-`;
 
 export const productProvidersListQuery = gql`
   query productProvidersListQuery(
@@ -66,6 +21,22 @@ export const productProvidersListQuery = gql`
     productProviders(page: $page, perPage: $perPage, filterBy: $filterBy, sortBy: $sortBy) {
       nodes {
         ...productProviderCardFragment
+        ... on ProductProvider {
+          id
+          product {
+            ... on Product {
+              id
+              tags {
+                ... on Tag {
+                  id
+                  name
+                  color
+                  entityTypes
+                }
+              }
+            }
+          }
+        }
       }
       page
       totalPage
@@ -78,5 +49,8 @@ export const productProvidersListQuery = gql`
   ${imageFragment}
   ${metricFragment}
   ${sizeFragment}
+  ${tagFragment}
   ${taskCountFragment}
 `;
+
+export default productProvidersListQuery;

@@ -4,12 +4,14 @@ import { isEquals } from 'utils/fp';
 import { cloneDeep, set } from 'lodash';
 import type { Document } from 'components/Form/DocumentsInput/type.js.flow';
 
-type FormState = {
-  files?: Array<Document>,
-};
+type FormState = {|
+  files: Array<Document>,
+  hasCalledFilesApiYet: boolean,
+|};
 
-const initValues = {
+const initValues: FormState = {
   files: [],
+  hasCalledFilesApiYet: false,
 };
 
 export default class ShipmentFilesContainer extends Container<FormState> {
@@ -28,8 +30,8 @@ export default class ShipmentFilesContainer extends Container<FormState> {
     this.setState((prevState: FormState): FormState => set(cloneDeep(prevState), path, value));
   };
 
-  initDetailValues = (files: Array<Document>) => {
-    this.setState({ files });
-    this.originalValues = { files };
+  initDetailValues = (files: Array<Document>, hasCalledFilesApiYet: boolean = false) => {
+    this.setState({ files, hasCalledFilesApiYet });
+    this.originalValues = { files, hasCalledFilesApiYet };
   };
 }

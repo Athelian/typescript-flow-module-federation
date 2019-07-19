@@ -11,6 +11,7 @@ type OptionalProps = {
   fetchPolicy: 'cache-first' | 'network-only' | 'cache-only' | 'no-cache' | 'standby',
   onCompleted: Function,
   query: DocumentNode,
+  className: string,
 };
 
 type Props = OptionalProps & {
@@ -24,6 +25,7 @@ const defaultProps = {
   onCompleted: logger.warn,
   fetchPolicy: 'network-only',
   query: {},
+  className: '',
 };
 
 export default function QueryPlaceHolder({
@@ -34,12 +36,13 @@ export default function QueryPlaceHolder({
   onCompleted,
   fetchPolicy,
   children,
+  className,
 }: Props) {
   const ref = React.createRef();
   const isReady = useOnScreen(ref, { rootMargin: '0px', threshold: 0.2 });
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={className}>
       {(() => {
         if (entityId) {
           if (!isReady || isLoading) return <PlaceHolder />;

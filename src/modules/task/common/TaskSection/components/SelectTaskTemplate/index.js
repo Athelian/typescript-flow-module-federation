@@ -7,7 +7,7 @@ import { ObjectValue } from 'react-values';
 import { getByPathWithDefault } from 'utils/fp';
 import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { ApplyButton, CancelButton } from 'components/Buttons';
@@ -70,48 +70,50 @@ const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: 
         return (
           <ObjectValue defaultValue={null}>
             {({ value, set }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="TEMPLATE"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <CancelButton onClick={onCancel} />
-                    <ApplyButton disabled={!value} onClick={() => onSelect(value)} />
-                  </SlideViewNavBar>
-                }
-              >
-                <TaskTemplateGridView
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'taskTemplates')}
-                  items={getByPathWithDefault([], 'taskTemplates.nodes', data)}
-                  renderItem={item => (
-                    <TemplateCard
-                      key={item.id}
-                      type="TASK"
-                      template={{
-                        id: item.id,
-                        title: item.name,
-                        description: item.description,
-                        count: item.tasks.length,
-                      }}
-                      onSelect={() => {
-                        if (value && item.id === value.id) {
-                          set(null);
-                        } else {
-                          set(item);
-                        }
-                      }}
-                      selectable
-                      selected={value && item.id === value.id}
-                    />
-                  )}
-                />
-              </Layout>
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="TEMPLATE"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <CancelButton onClick={onCancel} />
+                  <ApplyButton disabled={!value} onClick={() => onSelect(value)} />
+                </SlideViewNavBar>
+
+                <Content>
+                  <TaskTemplateGridView
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    onLoadMore={() =>
+                      loadMore({ fetchMore, data }, queryVariables, 'taskTemplates')
+                    }
+                    items={getByPathWithDefault([], 'taskTemplates.nodes', data)}
+                    renderItem={item => (
+                      <TemplateCard
+                        key={item.id}
+                        type="TASK"
+                        template={{
+                          id: item.id,
+                          title: item.name,
+                          description: item.description,
+                          count: item.tasks.length,
+                        }}
+                        onSelect={() => {
+                          if (value && item.id === value.id) {
+                            set(null);
+                          } else {
+                            set(item);
+                          }
+                        }}
+                        selectable
+                        selected={value && item.id === value.id}
+                      />
+                    )}
+                  />
+                </Content>
+              </SlideViewLayout>
             )}
           </ObjectValue>
         );

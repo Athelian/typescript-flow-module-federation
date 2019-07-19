@@ -9,7 +9,7 @@ import GridView from 'components/GridView';
 import useFilter from 'hooks/useFilter';
 import FilterToolBar from 'components/common/FilterToolBar';
 import IncrementInput from 'components/IncrementInput';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { Label, Display } from 'components/Form';
 import { OrderProductProviderCard } from 'components/Cards';
 import { SlideViewNavBar } from 'components/NavBar';
@@ -94,82 +94,82 @@ function SelectProductProviders({
         return (
           <ArrayValue>
             {({ value: selected, push, splice, filter }) => (
-              <Layout
-                navBar={
-                  <SlideViewNavBar>
-                    <FilterToolBar
-                      icon="PRODUCT_PROVIDER"
-                      sortFields={sortFields}
-                      filtersAndSort={filterAndSort}
-                      onChange={onChangeFilter}
-                    />
-                    <div>
-                      <Label>
-                        <FormattedMessage
-                          id="modules.Orders.orderCurrency"
-                          defaultMessage="ORDER CURRENCY"
-                        />
-                      </Label>
-                      <Display align="left">
-                        {orderCurrency || (
-                          <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
-                        )}
-                      </Display>
-                    </div>
-                    <CancelButton onClick={onCancel} />
-                    <SaveButton
-                      data-testid="btnSaveSelectProductProviders"
-                      disabled={selected.length === 0}
-                      onClick={() => onSelect(removeTypename(selected))}
-                    />
-                  </SlideViewNavBar>
-                }
-              >
-                <GridView
-                  onLoadMore={() =>
-                    loadMore({ fetchMore, data }, queryVariables, 'productProviders')
-                  }
-                  hasMore={hasMore}
-                  isLoading={loading}
-                  itemWidth="195px"
-                  isEmpty={items.length === 0}
-                  emptyMessage={
-                    <FormattedMessage
-                      id="modules.Orders.noProductProvidersFound"
-                      defaultMessage="No end products found"
-                    />
-                  }
-                >
-                  {items.map(item => {
-                    const index = selected.map(({ id }) => id).indexOf(item.id);
-                    const isSelected = index !== -1;
-                    return (
-                      <div key={item.id} className={ItemWrapperStyle}>
-                        {isSelected && (
-                          <IncrementInput
-                            value={countSelected(selected, item)}
-                            onMinus={() => splice(index, 1)}
-                            onPlus={() => push(item)}
+              <SlideViewLayout>
+                <SlideViewNavBar>
+                  <FilterToolBar
+                    icon="PRODUCT_PROVIDER"
+                    sortFields={sortFields}
+                    filtersAndSort={filterAndSort}
+                    onChange={onChangeFilter}
+                  />
+                  <div>
+                    <Label>
+                      <FormattedMessage
+                        id="modules.Orders.orderCurrency"
+                        defaultMessage="ORDER CURRENCY"
+                      />
+                    </Label>
+                    <Display align="left">
+                      {orderCurrency || (
+                        <FormattedMessage id="components.cards.na" defaultMessage="N/A" />
+                      )}
+                    </Display>
+                  </div>
+                  <CancelButton onClick={onCancel} />
+                  <SaveButton
+                    data-testid="btnSaveSelectProductProviders"
+                    disabled={selected.length === 0}
+                    onClick={() => onSelect(removeTypename(selected))}
+                  />
+                </SlideViewNavBar>
+
+                <Content>
+                  <GridView
+                    onLoadMore={() =>
+                      loadMore({ fetchMore, data }, queryVariables, 'productProviders')
+                    }
+                    hasMore={hasMore}
+                    isLoading={loading}
+                    itemWidth="195px"
+                    isEmpty={items.length === 0}
+                    emptyMessage={
+                      <FormattedMessage
+                        id="modules.Orders.noProductProvidersFound"
+                        defaultMessage="No end products found"
+                      />
+                    }
+                  >
+                    {items.map(item => {
+                      const index = selected.map(({ id }) => id).indexOf(item.id);
+                      const isSelected = index !== -1;
+                      return (
+                        <div key={item.id} className={ItemWrapperStyle}>
+                          {isSelected && (
+                            <IncrementInput
+                              value={countSelected(selected, item)}
+                              onMinus={() => splice(index, 1)}
+                              onPlus={() => push(item)}
+                            />
+                          )}
+                          <OrderProductProviderCard
+                            orderCurrency={orderCurrency}
+                            productProvider={item}
+                            selectable
+                            selected={isSelected}
+                            onSelect={() => {
+                              if (isSelected) {
+                                filter(({ id }) => id !== item.id);
+                              } else {
+                                push(item);
+                              }
+                            }}
                           />
-                        )}
-                        <OrderProductProviderCard
-                          orderCurrency={orderCurrency}
-                          productProvider={item}
-                          selectable
-                          selected={isSelected}
-                          onSelect={() => {
-                            if (isSelected) {
-                              filter(({ id }) => id !== item.id);
-                            } else {
-                              push(item);
-                            }
-                          }}
-                        />
-                      </div>
-                    );
-                  })}
-                </GridView>
-              </Layout>
+                        </div>
+                      );
+                    })}
+                  </GridView>
+                </Content>
+              </SlideViewLayout>
             )}
           </ArrayValue>
         );

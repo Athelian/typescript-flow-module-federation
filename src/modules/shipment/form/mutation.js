@@ -17,7 +17,6 @@ import {
   shipmentCardFragment,
   timelineDateMinimalFragment,
   portFragment,
-  documentFragment,
   partnerCardFragment,
   customFieldsFragment,
   maskFragment,
@@ -34,6 +33,7 @@ import {
   itemInBatchFormFragment,
   forbiddenFragment,
   productProviderPackagingFragment,
+  documentFragment,
 } from 'graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { prepareParsedBatchInput } from 'modules/batch/form/mutation';
@@ -107,7 +107,6 @@ export const updateShipmentMutation: Object = gql`
   ${shipmentCardFragment}
   ${timelineDateMinimalFragment}
   ${portFragment}
-  ${documentFragment}
   ${badRequestFragment}
   ${customFieldsFragment}
   ${maskFragment}
@@ -124,6 +123,7 @@ export const updateShipmentMutation: Object = gql`
   ${partnerCardFragment}
   ${forbiddenFragment}
   ${productProviderPackagingFragment}
+  ${documentFragment}
 `;
 
 type DateRevisionType = {

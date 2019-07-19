@@ -37,6 +37,7 @@ import {
   SHIPMENT_SET_MEMO,
   SHIPMENT_SET_PORT,
 } from 'modules/permission/constants/shipment';
+import MainSectionPlaceholder from 'components/PlaceHolder/MainSectionPlaceHolder';
 import { CloneButton } from 'components/Buttons';
 import { PartnerCard } from 'components/Cards';
 import { FormField } from 'modules/form';
@@ -61,7 +62,6 @@ import {
   Label,
   FormTooltip,
   TagsInput,
-  SectionWrapper,
   SectionHeader,
   LastModified,
   StatusToggle,
@@ -82,7 +82,7 @@ import { PARTNER_LIST } from 'modules/permission/constants/partner';
 import { TAG_LIST } from 'modules/permission/constants/tag';
 import SelectPartners from 'components/SelectPartners';
 import SelectPartner from 'components/SelectPartner';
-import ShipmentSummary from './ShipmentSummary';
+import ShipmentSummary from '../ShipmentSummary';
 import { renderExporters, renderForwarders } from './helpers';
 import {
   ShipmentSectionWrapperStyle,
@@ -94,20 +94,22 @@ import {
   BookedStyle,
 } from './style';
 
-type Props = {
+type Props = {|
   isNew: boolean,
   isClone: boolean,
   shipment: Object,
+  isLoading: boolean,
   initDataForSlideView: Object,
-};
+|};
 
-const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Props) => {
+const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlideView }: Props) => {
   const { isOwner } = usePartnerPermission();
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
+  const isNewOrClone = isNew || isClone;
   return (
-    <SectionWrapper id="shipment_shipmentSection">
+    <MainSectionPlaceholder height={1766} isLoading={isLoading}>
       <SectionHeader
         icon="SHIPMENT"
         title={<FormattedMessage id="modules.Shipments.shipment" defaultMessage="SHIPMENT" />}
@@ -190,28 +192,35 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                       />
                     )}
                   </FormField>
-                  <FormField
-                    name="blDate"
-                    initValue={values.blDate}
-                    setFieldValue={setFieldValue}
-                    values={values}
-                    validator={validator}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <DateInputFactory
-                        {...inputHandlers}
-                        onBlur={evt => {
-                          inputHandlers.onBlur(evt);
-                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                        }}
-                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
-                        name={name}
-                        isNew={isNew}
-                        originalValue={initialValues[name]}
-                        label={<FormattedMessage {...messages.blDate} />}
-                      />
+                  <Subscribe to={[ShipmentTasksContainer]}>
+                    {taskContainer => (
+                      <FormField
+                        name="blDate"
+                        initValue={values.blDate}
+                        setFieldValue={setFieldValue}
+                        values={values}
+                        validator={validator}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              if (!taskContainer.state.hasCalledTasksApiYet) {
+                                taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
+                              }
+                            }}
+                            editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BL_DATE])}
+                            name={name}
+                            isNew={isNew}
+                            originalValue={initialValues[name]}
+                            label={<FormattedMessage {...messages.blDate} />}
+                          />
+                        )}
+                      </FormField>
                     )}
-                  </FormField>
+                  </Subscribe>
                   <FormField
                     name="bookingNo"
                     initValue={values.bookingNo}
@@ -265,28 +274,35 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                       )}
                     </ToggleInput>
                   </div>
-                  <FormField
-                    name="bookingDate"
-                    initValue={values.bookingDate}
-                    setFieldValue={setFieldValue}
-                    values={values}
-                    validator={validator}
-                  >
-                    {({ name, ...inputHandlers }) => (
-                      <DateInputFactory
-                        {...inputHandlers}
-                        onBlur={evt => {
-                          inputHandlers.onBlur(evt);
-                          emitter.emit('AUTO_DATE', name, inputHandlers.value);
-                        }}
-                        editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
-                        name={name}
-                        isNew={isNew}
-                        originalValue={initialValues[name]}
-                        label={<FormattedMessage {...messages.bookingDate} />}
-                      />
+                  <Subscribe to={[ShipmentTasksContainer]}>
+                    {taskContainer => (
+                      <FormField
+                        name="bookingDate"
+                        initValue={values.bookingDate}
+                        setFieldValue={setFieldValue}
+                        values={values}
+                        validator={validator}
+                      >
+                        {({ name, ...inputHandlers }) => (
+                          <DateInputFactory
+                            {...inputHandlers}
+                            onBlur={evt => {
+                              inputHandlers.onBlur(evt);
+                              emitter.emit('AUTO_DATE', name, inputHandlers.value);
+                              if (!taskContainer.state.hasCalledTasksApiYet) {
+                                taskContainer.waitForTasksSectionReady(name, inputHandlers.value);
+                              }
+                            }}
+                            editable={hasPermission([SHIPMENT_UPDATE, SHIPMENT_SET_BOOKING_DATE])}
+                            name={name}
+                            isNew={isNew}
+                            originalValue={initialValues[name]}
+                            label={<FormattedMessage {...messages.bookingDate} />}
+                          />
+                        )}
+                      </FormField>
                     )}
-                  </FormField>
+                  </Subscribe>
                   <FormField
                     name="invoiceNo"
                     initValue={values.invoiceNo}
@@ -653,14 +669,29 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                                             'importer',
                                                             selectedImporter
                                                           );
-                                                          batchContainer.initDetailValues([]);
-                                                          taskContainer.onChangePartner(importer);
-                                                          timelineContainer.onChangePartner(
-                                                            importer
-                                                          );
-                                                          containersContainer.onChangePartner(
-                                                            importer
-                                                          );
+                                                          if (isNewOrClone) {
+                                                            batchContainer.initDetailValues([]);
+                                                            taskContainer.onChangePartner(importer);
+                                                            timelineContainer.onChangePartner(
+                                                              importer
+                                                            );
+                                                            containersContainer.onChangePartner(
+                                                              importer
+                                                            );
+                                                          } else {
+                                                            batchContainer.waitForBatchesSectionReadyThenInitDetailValues(
+                                                              []
+                                                            );
+                                                            taskContainer.waitForTasksSectionReadyThenChangePartner(
+                                                              importer
+                                                            );
+                                                            timelineContainer.waitForTimelineSectionReadyThenChangePartner(
+                                                              importer
+                                                            );
+                                                            containersContainer.waitForContainerSectionReadyThenChangePartner(
+                                                              importer
+                                                            );
+                                                          }
                                                         }}
                                                         message={
                                                           <FormattedMessage
@@ -677,7 +708,6 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                           )}
                                         </BooleanValue>
                                       ) : (
-                                        // TODO: check again,really useful?
                                         <SelectPartner
                                           cacheKey="ShipmentSelectImporter"
                                           partnerTypes={['Importer']}
@@ -794,14 +824,36 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
                                               )
                                             );
                                             setFieldValue('exporter', selectedExporter);
-                                            batchesContainer.changeMainExporter(selectedExporter);
-                                            containersContainer.changeMainExporter(
-                                              selectedExporter
-                                            );
-                                            if (exporter) {
-                                              taskContainer.onChangePartner(exporter);
-                                              timelineContainer.onChangePartner(exporter);
-                                              containersContainer.onChangePartner(exporter);
+                                            if (isNewOrClone) {
+                                              batchesContainer.changeMainExporter(selectedExporter);
+                                              containersContainer.changeMainExporter(
+                                                selectedExporter
+                                              );
+                                              if (exporter) {
+                                                taskContainer.onChangePartner(exporter);
+                                                timelineContainer.onChangePartner(exporter);
+                                                containersContainer.onChangePartner(exporter);
+                                              }
+                                            } else {
+                                              batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
+                                                selectedExporter
+                                              );
+                                              containersContainer.waitForContainerSectionReadyThenChangeMainExporter(
+                                                selectedExporter
+                                              );
+                                              if (exporter) {
+                                                taskContainer.waitForTasksSectionReadyThenChangePartner(
+                                                  exporter
+                                                );
+
+                                                timelineContainer.waitForTimelineSectionReadyThenChangePartner(
+                                                  exporter
+                                                );
+
+                                                containersContainer.waitForContainerSectionReadyThenChangePartner(
+                                                  exporter
+                                                );
+                                              }
                                             }
                                           }}
                                         />
@@ -929,12 +981,16 @@ const ShipmentSection = ({ isNew, isClone, shipment, initDataForSlideView }: Pro
 
               <div className={DividerStyle} />
 
-              <ShipmentSummary />
+              <ShipmentSummary
+                isLoading={isLoading}
+                isNewOrClone={isNew || isClone}
+                entityId={!isClone && shipment.id ? shipment.id : ''}
+              />
             </div>
           );
         }}
       </Subscribe>
-    </SectionWrapper>
+    </MainSectionPlaceholder>
   );
 };
 

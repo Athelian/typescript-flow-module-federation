@@ -1,6 +1,54 @@
 // @flow
 import gql from 'graphql-tag';
 
+export const shipmentFormQueryFragment = gql`
+  fragment shipmentFormQueryFragment on Shipment {
+    id
+    archived
+    updatedAt
+    updatedBy {
+      ...userAvatarFragment
+    }
+    memo
+    no
+    blNo
+    blDate
+    booked
+    bookingNo
+    bookingDate
+    invoiceNo
+    contractNo
+    incoterm
+    loadType
+    transportType
+    carrier
+    ownedBy {
+      ...ownedByFragment
+    }
+    customFields {
+      ...customFieldsFragment
+    }
+    forwarders {
+      ...partnerCardFragment
+    }
+    importer {
+      ...partnerCardFragment
+    }
+    exporter {
+      ...partnerCardFragment
+    }
+    inCharges {
+      ...userAvatarFragment
+    }
+    tags {
+      ...tagFragment
+    }
+    totalVolume {
+      ...metricFragment
+    }
+  }
+`;
+
 export const shipmentFormFragment = gql`
   fragment shipmentFormFragment on Shipment {
     id

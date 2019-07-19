@@ -1,21 +1,30 @@
 // @flow
+import type { Todo } from 'generated/graphql';
 import { Container } from 'unstated';
 import { cloneDeep, set } from 'lodash';
-import { isEquals, getByPath } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 import emitter from 'utils/emitter';
 
-type FormState = {
-  todo: {
-    milestone: Object,
-    tasks: Array<Object>,
-    taskTemplate?: ?Object,
-  },
+type FormState = {|
+  todo: Todo,
   hasCalledTasksApiYet: boolean,
-};
+|};
 
-const initValues: FormState = {
+export const initValues: FormState = {
   todo: {
-    milestone: null,
+    completedCount: 0,
+    inProgressCount: 0,
+    remainingCount: 0,
+    taskCount: {
+      count: 0,
+      remain: 0,
+      inProgress: 0,
+      completed: 0,
+      rejected: 0,
+      approved: 0,
+      skipped: 0,
+      delayed: 0,
+    },
     tasks: [],
   },
   hasCalledTasksApiYet: false,
@@ -41,7 +50,7 @@ export default class OrderTasksContainer extends Container<FormState> {
     const {
       todo: { milestone },
     } = this.state;
-    const nonTemplateTasks = this.state.todo.tasks.filter(task => !task.taskTemplate);
+    const nonTemplateTasks = this.state.todo.tasks.filter(task => !getByPath('taskTemplate', task));
     const templateTasks = template.tasks.map(task => ({ ...task, milestone }));
     const newTaskList = [...nonTemplateTasks, ...templateTasks];
 
@@ -68,7 +77,7 @@ export default class OrderTasksContainer extends Container<FormState> {
     }
   };
 
-  initDetailValues = (todo: { tasks: Array<Object> }, hasCalledTasksApiYet: boolean = false) => {
+  initDetailValues = (todo: Todo, hasCalledTasksApiYet: boolean = false) => {
     const parsedValues: Object = { ...initValues, todo, hasCalledTasksApiYet };
     this.setState(parsedValues);
     if (hasCalledTasksApiYet) {
@@ -104,44 +113,44 @@ export default class OrderTasksContainer extends Container<FormState> {
         ...todo,
         tasks: todo.tasks.map(task => ({
           ...task,
-          assignedTo: task.assignedTo.filter(
+          assignedTo: getByPathWithDefault([], 'assignedTo', task).filter(
             user => getByPath('group.id', user) !== getByPath('id', prevExporter)
           ),
-          approvers: task.approvers.filter(
+          approvers: getByPathWithDefault([], 'approvers', task).filter(
             user => getByPath('group.id', user) !== getByPath('id', prevExporter)
           ),
           inProgressAt:
             getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.inProgressAt,
+              : getByPath('inProgressAt', task),
           inProgressBy:
             getByPath('inProgressBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.inProgressBy,
+              : getByPath('inProgressBy', task),
           completedAt:
             getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.completedAt,
+              : getByPath('completedAt', task),
           completedBy:
             getByPath('completedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.completedBy,
+              : getByPath('completedBy', task),
           rejectedAt:
             getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.rejectedAt,
+              : getByPath('rejectedAt', task),
           rejectedBy:
             getByPath('rejectedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.rejectedBy,
+              : getByPath('rejectedBy', task),
           approvedAt:
             getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.approvedAt,
+              : getByPath('approvedAt', task),
           approvedBy:
             getByPath('approvedBy.group.id', task) === getByPath('id', prevExporter)
               ? null
-              : task.approvedBy,
+              : getByPath('approvedBy', task),
         })),
       },
     });

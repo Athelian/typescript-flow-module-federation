@@ -7,13 +7,12 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { QueryForm } from 'components/common';
 import { getByPath } from 'utils/fp';
-import { UIConsumer } from 'modules/ui';
 import { showToastError } from 'utils/errors';
 import { UserConsumer } from 'modules/user';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
+import { NavBar, EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
-import NavBar, { EntityIcon, LogsButton, SlideViewNavBar } from 'components/NavBar';
 import JumpToSection from 'components/JumpToSection';
 import SlideView from 'components/SlideView';
 import SectionTabs from 'components/NavBar/components/Tabs/SectionTabs';
@@ -39,17 +38,15 @@ import { productTimelineQuery, productExportQuery } from './query';
 
 type OptionalProps = {
   path: string,
-  isSlideView: boolean,
+  productId: string,
 };
 type Props = OptionalProps & {
   intl: IntlShape,
-  productId?: string,
 };
 
 const defaultProps = {
   path: '',
   productId: '',
-  isSlideView: false,
 };
 
 type CreateProductResponse = {|
@@ -262,7 +259,7 @@ class ProductFormModule extends React.Component<Props> {
   };
 
   render() {
-    const { productId, isSlideView } = this.props;
+    const { productId } = this.props;
     const isNewOrClone = this.isNewOrClone();
     let mutationKey = {};
     if (productId && !isNewOrClone) {
@@ -270,267 +267,209 @@ class ProductFormModule extends React.Component<Props> {
     }
 
     return (
-      <UIConsumer>
-        {uiState => (
-          <Mutation
-            mutation={isNewOrClone ? createProductMutation : updateProductMutation}
-            onCompleted={this.onMutationCompleted}
-            {...mutationKey}
-          >
-            {(saveProduct, { loading: isLoading, error: apiError }) => (
-              <Layout
-                {...(isSlideView ? {} : uiState)}
-                navBar={
-                  <NavBar>
-                    <EntityIcon icon="PRODUCT" color="PRODUCT" />
-                    <JumpToSection>
-                      <SectionTabs
-                        link="product_productSection"
-                        label={
-                          <FormattedMessage
-                            id="modules.Products.product"
-                            defaultMessage="PRODUCT"
-                          />
-                        }
-                        icon="PRODUCT"
-                      />
-                      <SectionTabs
-                        link="product_taskSection"
-                        label={
-                          <FormattedMessage id="modules.Products.task" defaultMessage="TASKS" />
-                        }
-                        icon="TASK"
-                      />
-                      <SectionTabs
-                        link="product_productProvidersSection"
-                        label={
-                          <FormattedMessage
-                            id="modules.Products.providers"
-                            defaultMessage="END PRODUCTS"
-                          />
-                        }
-                        icon="PRODUCT_PROVIDER"
-                      />
+      <Mutation
+        mutation={isNewOrClone ? createProductMutation : updateProductMutation}
+        onCompleted={this.onMutationCompleted}
+        {...mutationKey}
+      >
+        {(saveProduct, { loading: isLoading, error: apiError }) => (
+          <>
+            <NavBar>
+              <EntityIcon icon="PRODUCT" color="PRODUCT" />
+              <JumpToSection>
+                <SectionTabs
+                  link="product_productSection"
+                  label={
+                    <FormattedMessage id="modules.Products.product" defaultMessage="PRODUCT" />
+                  }
+                  icon="PRODUCT"
+                />
+                <SectionTabs
+                  link="product_taskSection"
+                  label={<FormattedMessage id="modules.Products.task" defaultMessage="TASKS" />}
+                  icon="TASK"
+                />
+                <SectionTabs
+                  link="product_productProvidersSection"
+                  label={
+                    <FormattedMessage
+                      id="modules.Products.providers"
+                      defaultMessage="END PRODUCTS"
+                    />
+                  }
+                  icon="PRODUCT_PROVIDER"
+                />
 
-                      <SectionTabs
-                        link="product_relatedSection"
-                        label={
-                          <FormattedMessage
-                            id="modules.Products.related"
-                            defaultMessage="RELATED"
-                          />
-                        }
-                        icon="RELATED"
+                <SectionTabs
+                  link="product_relatedSection"
+                  label={
+                    <FormattedMessage id="modules.Products.related" defaultMessage="RELATED" />
+                  }
+                  icon="RELATED"
+                />
+              </JumpToSection>
+              <BooleanValue>
+                {({ value: opened, set: slideToggle }) =>
+                  !isNewOrClone && (
+                    <>
+                      <LogsButton
+                        entityType="product"
+                        entityId={productId}
+                        onClick={() => slideToggle(true)}
                       />
-                    </JumpToSection>
-                    <BooleanValue>
-                      {({ value: opened, set: slideToggle }) =>
-                        !isNewOrClone && (
-                          <>
-                            <LogsButton onClick={() => slideToggle(true)} />
-                            <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                              <Layout
-                                navBar={
-                                  <SlideViewNavBar>
-                                    <EntityIcon icon="LOGS" color="LOGS" />
-                                  </SlideViewNavBar>
-                                }
-                              >
-                                {productId && opened ? (
-                                  <Timeline
-                                    query={productTimelineQuery}
-                                    queryField="product"
-                                    variables={{
-                                      id: decodeId(productId),
-                                    }}
-                                    entity={{
-                                      productId: decodeId(productId),
-                                    }}
-                                  />
-                                ) : null}
-                              </Layout>
-                            </SlideView>
-                          </>
-                        )
-                      }
-                    </BooleanValue>
-
-                    <Subscribe
-                      to={[
-                        ProductInfoContainer,
-                        ProductProvidersContainer,
-                        ProductTagsContainer,
-                        ProductFilesContainer,
-                        ProductTasksContainer,
-                        FormContainer,
-                      ]}
-                    >
-                      {(
-                        productInfoState,
-                        productProvidersState,
-                        productTagsState,
-                        productFilesState,
-                        productTasksState,
-                        form
-                      ) => (
-                        <>
-                          {(isNewOrClone ||
-                            productInfoState.isDirty() ||
-                            productProvidersState.isDirty() ||
-                            productTagsState.isDirty() ||
-                            productTasksState.isDirty() ||
-                            productFilesState.isDirty()) && (
+                      <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                        <SlideViewLayout>
+                          {productId && opened && (
                             <>
-                              {this.isNewOrClone() ? (
-                                <CancelButton onClick={() => this.onCancel()} />
-                              ) : (
-                                <ResetButton
-                                  onClick={() => {
-                                    this.onReset({
-                                      productInfoState,
-                                      productProvidersState,
-                                      productTagsState,
-                                      productFilesState,
-                                      productTasksState,
-                                      form,
-                                    });
+                              <SlideViewNavBar>
+                                <EntityIcon icon="LOGS" color="LOGS" />
+                              </SlideViewNavBar>
+
+                              <Content>
+                                <Timeline
+                                  query={productTimelineQuery}
+                                  queryField="product"
+                                  variables={{
+                                    id: decodeId(productId),
+                                  }}
+                                  entity={{
+                                    productId: decodeId(productId),
                                   }}
                                 />
-                              )}
-
-                              <SaveButton
-                                data-testid="saveButton"
-                                disabled={
-                                  !form.isReady(
-                                    {
-                                      ...productInfoState.state,
-                                      ...productProvidersState.state,
-                                      ...productTagsState.state,
-                                      ...productFilesState.state,
-                                      ...productTasksState.state,
-                                    },
-                                    validator
-                                  )
-                                }
-                                isLoading={isLoading}
-                                onClick={() =>
-                                  this.onSave(
-                                    {
-                                      ...productInfoState.originalValues,
-                                      ...productProvidersState.originalValues,
-                                      ...productTagsState.originalValues,
-                                      ...productFilesState.originalValues,
-                                      ...productTasksState.originalValues,
-                                    },
-                                    {
-                                      ...productInfoState.state,
-                                      ...productProvidersState.state,
-                                      ...productTagsState.state,
-                                      ...productFilesState.state,
-                                      ...productTasksState.state,
-                                    },
-                                    saveProduct,
-                                    updateProduct => {
-                                      this.initAllValues(
-                                        {
-                                          productInfoState,
-                                          productTagsState,
-                                          productFilesState,
-                                          productTasksState,
-                                          productProvidersState,
-                                        },
-                                        updateProduct
-                                      );
-                                      form.onReset();
-                                    },
-                                    form.onErrors
-                                  )
-                                }
-                              />
+                              </Content>
                             </>
                           )}
-
-                          {productId &&
-                            !productInfoState.isDirty() &&
-                            !productProvidersState.isDirty() &&
-                            !productTagsState.isDirty() &&
-                            !productTasksState.isDirty() &&
-                            !productFilesState.isDirty() &&
-                            !isNewOrClone && (
-                              <ExportButton
-                                type="Product"
-                                exportQuery={productExportQuery}
-                                variables={{ id: decodeId(productId) }}
-                              />
-                            )}
-                        </>
-                      )}
-                    </Subscribe>
-                  </NavBar>
+                        </SlideViewLayout>
+                      </SlideView>
+                    </>
+                  )
                 }
+              </BooleanValue>
+
+              <Subscribe
+                to={[
+                  ProductInfoContainer,
+                  ProductProvidersContainer,
+                  ProductTagsContainer,
+                  ProductFilesContainer,
+                  ProductTasksContainer,
+                  FormContainer,
+                ]}
               >
-                {apiError && <p>Error: Please try again.</p>}
-                {!productId ? (
-                  <UserConsumer>
-                    {({ user }) => {
-                      const { group } = user;
-                      const { types = [] } = group;
-                      const isImporter = types.includes('Importer');
-                      return (
-                        <>
-                          <ProductForm product={{}} isNewOrClone />
-                          <Subscribe
-                            to={[
-                              ProductInfoContainer,
-                              ProductProvidersContainer,
-                              ProductTagsContainer,
-                              ProductFilesContainer,
-                              ProductTasksContainer,
-                            ]}
-                          >
-                            {(
-                              productInfoState,
-                              productProvidersState,
-                              productTagsState,
-                              productFilesState,
-                              productTasksState
-                            ) =>
-                              this.onFormReady(
-                                {
-                                  productInfoState,
-                                  productProvidersState,
-                                  productTagsState,
-                                  productFilesState,
-                                  productTasksState,
-                                },
-                                {
-                                  id: uuid(),
-                                  importer: isImporter ? group : {},
-                                  tags: [],
-                                  todo: {
-                                    tasks: [],
-                                  },
-                                  files: [],
-                                }
-                              )
-                            }
-                          </Subscribe>
-                        </>
-                      );
-                    }}
-                  </UserConsumer>
-                ) : (
-                  <QueryForm
-                    query={productFormQuery}
-                    entityId={productId}
-                    entityType="product"
-                    render={(product, isOwner) => (
+                {(
+                  productInfoState,
+                  productProvidersState,
+                  productTagsState,
+                  productFilesState,
+                  productTasksState,
+                  form
+                ) => (
+                  <>
+                    {(isNewOrClone ||
+                      productInfoState.isDirty() ||
+                      productProvidersState.isDirty() ||
+                      productTagsState.isDirty() ||
+                      productTasksState.isDirty() ||
+                      productFilesState.isDirty()) && (
                       <>
-                        <ProductForm
-                          isOwner={isOwner}
-                          isNewOrClone={isNewOrClone}
-                          product={product}
+                        {this.isNewOrClone() ? (
+                          <CancelButton onClick={() => this.onCancel()} />
+                        ) : (
+                          <ResetButton
+                            onClick={() => {
+                              this.onReset({
+                                productInfoState,
+                                productProvidersState,
+                                productTagsState,
+                                productFilesState,
+                                productTasksState,
+                                form,
+                              });
+                            }}
+                          />
+                        )}
+
+                        <SaveButton
+                          data-testid="saveButton"
+                          disabled={
+                            !form.isReady(
+                              {
+                                ...productInfoState.state,
+                                ...productProvidersState.state,
+                                ...productTagsState.state,
+                                ...productFilesState.state,
+                                ...productTasksState.state,
+                              },
+                              validator
+                            )
+                          }
+                          isLoading={isLoading}
+                          onClick={() =>
+                            this.onSave(
+                              {
+                                ...productInfoState.originalValues,
+                                ...productProvidersState.originalValues,
+                                ...productTagsState.originalValues,
+                                ...productFilesState.originalValues,
+                                ...productTasksState.originalValues,
+                              },
+                              {
+                                ...productInfoState.state,
+                                ...productProvidersState.state,
+                                ...productTagsState.state,
+                                ...productFilesState.state,
+                                ...productTasksState.state,
+                              },
+                              saveProduct,
+                              updateProduct => {
+                                this.initAllValues(
+                                  {
+                                    productInfoState,
+                                    productTagsState,
+                                    productFilesState,
+                                    productTasksState,
+                                    productProvidersState,
+                                  },
+                                  updateProduct
+                                );
+                                form.onReset();
+                              },
+                              form.onErrors
+                            )
+                          }
                         />
+                      </>
+                    )}
+
+                    {productId &&
+                      !productInfoState.isDirty() &&
+                      !productProvidersState.isDirty() &&
+                      !productTagsState.isDirty() &&
+                      !productTasksState.isDirty() &&
+                      !productFilesState.isDirty() &&
+                      !isNewOrClone && (
+                        <ExportButton
+                          type="Product"
+                          exportQuery={productExportQuery}
+                          variables={{ id: decodeId(productId) }}
+                        />
+                      )}
+                  </>
+                )}
+              </Subscribe>
+            </NavBar>
+
+            <Content>
+              {apiError && <p>Error: Please try again.</p>}
+              {!productId ? (
+                <UserConsumer>
+                  {({ user }) => {
+                    const { group } = user;
+                    const { types = [] } = group;
+                    const isImporter = types.includes('Importer');
+                    return (
+                      <>
+                        <ProductForm product={{}} isNewOrClone />
                         <Subscribe
                           to={[
                             ProductInfoContainer,
@@ -555,19 +494,70 @@ class ProductFormModule extends React.Component<Props> {
                                 productFilesState,
                                 productTasksState,
                               },
-                              product
+                              {
+                                id: uuid(),
+                                importer: isImporter ? group : {},
+                                tags: [],
+                                todo: {
+                                  tasks: [],
+                                },
+                                files: [],
+                              }
                             )
                           }
                         </Subscribe>
                       </>
-                    )}
-                  />
-                )}
-              </Layout>
-            )}
-          </Mutation>
+                    );
+                  }}
+                </UserConsumer>
+              ) : (
+                <QueryForm
+                  query={productFormQuery}
+                  entityId={productId}
+                  entityType="product"
+                  render={(product, isOwner) => (
+                    <>
+                      <ProductForm
+                        isOwner={isOwner}
+                        isNewOrClone={isNewOrClone}
+                        product={product}
+                      />
+                      <Subscribe
+                        to={[
+                          ProductInfoContainer,
+                          ProductProvidersContainer,
+                          ProductTagsContainer,
+                          ProductFilesContainer,
+                          ProductTasksContainer,
+                        ]}
+                      >
+                        {(
+                          productInfoState,
+                          productProvidersState,
+                          productTagsState,
+                          productFilesState,
+                          productTasksState
+                        ) =>
+                          this.onFormReady(
+                            {
+                              productInfoState,
+                              productProvidersState,
+                              productTagsState,
+                              productFilesState,
+                              productTasksState,
+                            },
+                            product
+                          )
+                        }
+                      </Subscribe>
+                    </>
+                  )}
+                />
+              )}
+            </Content>
+          </>
         )}
-      </UIConsumer>
+      </Mutation>
     );
   }
 }

@@ -1,12 +1,17 @@
 // @flow
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Subscribe } from 'unstated';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
+import { SectionHeader } from 'components/Form';
+import FormattedNumber from 'components/FormattedNumber';
 import {
   SHIPMENT_CONTAINER_LIST,
   SHIPMENT_BATCH_LIST,
   SHIPMENT_BATCH_LIST_IN_CONTAINER,
 } from 'modules/permission/constants/shipment';
+import { ShipmentBatchesContainer } from 'modules/shipment/form/containers';
 import { CargoSectionWrapperStyle } from './style';
 import ContainersArea from './ContainersArea';
 import BatchesArea from './BatchesArea';
@@ -14,14 +19,11 @@ import BatchesArea from './BatchesArea';
 const UNSELECTED = -2;
 const POOL = -1;
 
-type OptionalProps = {
-  exporterId: string,
-};
-
-type Props = OptionalProps & {
+type Props = {|
   shipmentIsArchived: boolean,
   importerId: string,
-};
+  exporterId: string,
+|};
 
 const CargoSection = ({ shipmentIsArchived, importerId, exporterId }: Props) => {
   const { isOwner } = usePartnerPermission();
@@ -55,34 +57,51 @@ const CargoSection = ({ shipmentIsArchived, importerId, exporterId }: Props) => 
   }
 
   return (
-    <div className={CargoSectionWrapperStyle}>
-      <ContainersArea
-        isFocusedBatchesPool={focusedContainerIndex === POOL}
-        focusedContainerIndex={focusedContainerIndex}
-        isSelectBatchesMode={isSelectBatchesMode}
-        onChangeSelectMode={onChangeSelectMode}
-        onSelect={setFocusedCardIndex}
-        onSelectPool={() =>
-          focusedContainerIndex === POOL
-            ? setFocusedCardIndex(UNSELECTED)
-            : setFocusedCardIndex(POOL)
-        }
-        onDeselect={() => setFocusedCardIndex(UNSELECTED)}
-        selectedBatches={selectedBatches}
-        shipmentIsArchived={shipmentIsArchived}
-      />
-      <BatchesArea
-        importerId={importerId}
-        exporterId={exporterId}
-        isFocusedBatchesPool={focusedContainerIndex === POOL}
-        focusedContainerIndex={focusedContainerIndex}
-        isSelectBatchesMode={isSelectBatchesMode}
-        onChangeSelectMode={onChangeSelectMode}
-        selectedBatches={selectedBatches}
-        onSelectBatch={onSelectBatch}
-        shipmentIsArchived={shipmentIsArchived}
-      />
-    </div>
+    <Subscribe to={[ShipmentBatchesContainer]}>
+      {batchesContainer => (
+        <>
+          <SectionHeader
+            icon="CARGO"
+            title={
+              <>
+                <FormattedMessage id="modules.Shipments.cargo" defaultMessage="CARGO " />
+                {' ('}
+                <FormattedNumber value={batchesContainer.state.batches.length} />
+                {')'}
+              </>
+            }
+          />
+          <div className={CargoSectionWrapperStyle}>
+            <ContainersArea
+              isFocusedBatchesPool={focusedContainerIndex === POOL}
+              focusedContainerIndex={focusedContainerIndex}
+              isSelectBatchesMode={isSelectBatchesMode}
+              onChangeSelectMode={onChangeSelectMode}
+              onSelect={setFocusedCardIndex}
+              onSelectPool={() =>
+                focusedContainerIndex === POOL
+                  ? setFocusedCardIndex(UNSELECTED)
+                  : setFocusedCardIndex(POOL)
+              }
+              onDeselect={() => setFocusedCardIndex(UNSELECTED)}
+              selectedBatches={selectedBatches}
+              shipmentIsArchived={shipmentIsArchived}
+            />
+            <BatchesArea
+              importerId={importerId}
+              exporterId={exporterId}
+              isFocusedBatchesPool={focusedContainerIndex === POOL}
+              focusedContainerIndex={focusedContainerIndex}
+              isSelectBatchesMode={isSelectBatchesMode}
+              onChangeSelectMode={onChangeSelectMode}
+              selectedBatches={selectedBatches}
+              onSelectBatch={onSelectBatch}
+              shipmentIsArchived={shipmentIsArchived}
+            />
+          </div>
+        </>
+      )}
+    </Subscribe>
   );
 };
 

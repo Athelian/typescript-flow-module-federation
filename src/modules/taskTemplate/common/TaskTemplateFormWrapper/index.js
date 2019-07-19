@@ -16,7 +16,7 @@ import {
   prepareParsedTaskTemplate,
 } from 'modules/taskTemplate/form/mutation';
 import { FormContainer, resetFormState } from 'modules/form';
-import Layout from 'components/Layout';
+import { Content, SlideViewLayout } from 'components/Layout';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import { SaveButton, CancelButton, ResetButton } from 'components/Buttons';
 import { removeTypename } from 'utils/data';
@@ -126,68 +126,66 @@ class TaskTemplateFormWrapper extends React.Component<Props> {
               {...mutationKey}
             >
               {(saveTaskTemplate, { loading: isLoading, error: apiError }) => (
-                <Layout
-                  navBar={
-                    <SlideViewNavBar>
-                      <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
-                      <JumpToSection>
-                        <SectionTabs
-                          link="taskTemplate_templateSection"
-                          label={
-                            <FormattedMessage
-                              id="modules.TaskTemplates.template"
-                              defaultMessage="TEMPLATE"
-                            />
-                          }
-                          icon="TEMPLATE"
-                        />
-                        <SectionTabs
-                          link="taskTemplate_taskSection"
-                          label={
-                            <FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />
-                          }
-                          icon="TASK"
-                        />
-                      </JumpToSection>
-                      {isNew && <CancelButton onClick={() => onCancel()} />}
+                <SlideViewLayout>
+                  <SlideViewNavBar>
+                    <EntityIcon icon="TEMPLATE" color="TEMPLATE" invert />
+                    <JumpToSection>
+                      <SectionTabs
+                        link="taskTemplate_templateSection"
+                        label={
+                          <FormattedMessage
+                            id="modules.TaskTemplates.template"
+                            defaultMessage="TEMPLATE"
+                          />
+                        }
+                        icon="TEMPLATE"
+                      />
+                      <SectionTabs
+                        link="taskTemplate_taskSection"
+                        label={<FormattedMessage id="modules.Tasks.tasks" defaultMessage="TASKS" />}
+                        icon="TASK"
+                      />
+                    </JumpToSection>
+                    {isNew && <CancelButton onClick={() => onCancel()} />}
 
-                      {!isNew && taskTemplateContainer.isDirty() && (
-                        <ResetButton
-                          onClick={() => {
-                            resetFormState(taskTemplateContainer);
-                            formContainer.onReset();
-                          }}
-                        />
-                      )}
-                      {(isNew || taskTemplateContainer.isDirty()) && (
-                        <SaveButton
-                          disabled={!formContainer.isReady(taskTemplateContainer.state, validator)}
-                          isLoading={isLoading}
-                          data-testid="saveButtonOnTaskTemplate"
-                          onClick={() =>
-                            this.onSave(
-                              taskTemplateContainer.originalValues,
-                              taskTemplateContainer.state,
-                              saveTaskTemplate,
-                              () => {
-                                taskTemplateContainer.onSuccess();
-                                formContainer.onReset();
-                              },
-                              formContainer.onErrors
-                            )
-                          }
-                        />
-                      )}
-                    </SlideViewNavBar>
-                  }
-                >
-                  {apiError && <p>Error: Please try again.</p>}
-                  <TaskTemplateForm
-                    initDetailValues={taskTemplateContainer.initDetailValues}
-                    template={template}
-                    isNew={isNew}
-                  />
-                </Layout>
+                    {!isNew && taskTemplateContainer.isDirty() && (
+                      <ResetButton
+                        onClick={() => {
+                          resetFormState(taskTemplateContainer);
+                          formContainer.onReset();
+                        }}
+                      />
+                    )}
+                    {(isNew || taskTemplateContainer.isDirty()) && (
+                      <SaveButton
+                        disabled={!formContainer.isReady(taskTemplateContainer.state, validator)}
+                        isLoading={isLoading}
+                        data-testid="saveButtonOnTaskTemplate"
+                        onClick={() =>
+                          this.onSave(
+                            taskTemplateContainer.originalValues,
+                            taskTemplateContainer.state,
+                            saveTaskTemplate,
+                            () => {
+                              taskTemplateContainer.onSuccess();
+                              formContainer.onReset();
+                            },
+                            formContainer.onErrors
+                          )
+                        }
+                      />
+                    )}
+                  </SlideViewNavBar>
+
+                  <Content>
+                    {apiError && <p>Error: Please try again.</p>}
+                    <TaskTemplateForm
+                      initDetailValues={taskTemplateContainer.initDetailValues}
+                      template={template}
+                      isNew={isNew}
+                    />
+                  </Content>
+                </SlideViewLayout>
               )}
             </Mutation>
           )}

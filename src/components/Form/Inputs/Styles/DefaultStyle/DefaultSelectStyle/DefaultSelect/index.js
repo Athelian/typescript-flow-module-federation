@@ -81,7 +81,7 @@ function DefaultSelect({
           <Icon icon="CLEAR" />
         </button>
       )}
-      {align === 'right' && !hideDropdownArrow && (
+      {align === 'right' && !hideDropdownArrow && !selectedItem && (
         <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
           <Icon icon="CHEVRON_DOWN" />
         </button>
@@ -106,7 +106,7 @@ function DefaultSelect({
           <Icon icon="CLEAR" />
         </button>
       )}
-      {align === 'left' && !hideDropdownArrow && (
+      {align === 'left' && !hideDropdownArrow && !selectedItem && (
         <button type="button" onClick={toggle} className={ArrowDownStyle(isOpen)}>
           <Icon icon="CHEVRON_DOWN" />
         </button>

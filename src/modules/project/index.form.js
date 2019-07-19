@@ -8,15 +8,14 @@ import { BooleanValue } from 'react-values';
 import { navigate } from '@reach/router';
 import { showToastError } from 'utils/errors';
 import type { ProjectPayload, Project, Tag, Milestone } from 'generated/graphql';
-import Layout from 'components/Layout';
-import { UIConsumer } from 'modules/ui';
+import { Content, SlideViewLayout } from 'components/Layout';
 import logger from 'utils/logger';
 import { getByPath } from 'utils/fp';
 import { FormContainer } from 'modules/form';
 import Timeline from 'modules/timeline/components/Timeline';
 import QueryForm from 'components/common/QueryForm';
 import { SaveButton, CancelButton, ResetButton, ExportButton } from 'components/Buttons';
-import NavBar, { EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
+import { NavBar, EntityIcon, SlideViewNavBar, LogsButton } from 'components/NavBar';
 import SlideView from 'components/SlideView';
 import { decodeId, encodeId, uuid } from 'utils/id';
 import { removeTypename } from 'utils/data';
@@ -38,6 +37,7 @@ import {
 
 type OptionalProps = {
   path: string,
+  projectId: string,
   isSlideView: boolean,
   redirectAfterSuccess: boolean,
   onSuccessCallback: ?Function,
@@ -46,7 +46,6 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
-  projectId?: string,
   intl: IntlShape,
 };
 
@@ -203,217 +202,212 @@ class ProjectFormModule extends React.PureComponent<Props> {
       mutationKey = { key: decodeId(projectId) };
     }
     const CurrentNavBar = isSlideView ? SlideViewNavBar : NavBar;
+    const CurrentLayout = isSlideView ? SlideViewLayout : React.Fragment;
 
     return (
-      <UIConsumer>
-        {uiState => (
-          <Provider inject={[formContainer]}>
-            <Mutation
-              mutation={isNew ? createProjectMutation : updateProjectMutation}
-              onCompleted={this.onMutationCompleted}
-              {...mutationKey}
-            >
-              {(saveProject, { loading: isLoading, error: apiError }) => (
-                <Layout
-                  {...(isSlideView ? {} : uiState)}
-                  navBar={
-                    <CurrentNavBar>
-                      <EntityIcon icon="PROJECT" color="PROJECT" />
-                      <BooleanValue>
-                        {({ value: opened, set: slideToggle }) =>
-                          !isNew && (
-                            <>
-                              <LogsButton onClick={() => slideToggle(true)} />
-                              <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
-                                <Layout
-                                  navBar={
-                                    <SlideViewNavBar>
-                                      <EntityIcon icon="LOGS" color="LOGS" />
-                                    </SlideViewNavBar>
-                                  }
-                                >
-                                  {projectId && opened ? (
-                                    <Timeline
-                                      query={projectTimelineQuery}
-                                      queryField="project"
-                                      variables={{
-                                        id: decodeId(projectId),
-                                      }}
-                                      entity={{
-                                        projectId: decodeId(projectId),
-                                      }}
-                                    />
-                                  ) : null}
-                                </Layout>
-                              </SlideView>
-                            </>
-                          )
-                        }
-                      </BooleanValue>
-                      <Subscribe
-                        to={[
-                          ProjectInfoContainer,
-                          ProjectTagsContainer,
-                          ProjectMilestonesContainer,
-                          FormContainer,
-                        ]}
-                      >
-                        {(projectInfoState, projectTagsState, projectMilestonesState, form) => {
-                          const isDirty =
-                            projectInfoState.isDirty() ||
-                            projectTagsState.isDirty() ||
-                            projectMilestonesState.isDirty();
+      <Provider inject={[formContainer]}>
+        <Mutation
+          mutation={isNew ? createProjectMutation : updateProjectMutation}
+          onCompleted={this.onMutationCompleted}
+          {...mutationKey}
+        >
+          {(saveProject, { loading: isLoading, error: apiError }) => (
+            <CurrentLayout>
+              <CurrentNavBar>
+                <EntityIcon icon="PROJECT" color="PROJECT" />
+                <BooleanValue>
+                  {({ value: opened, set: slideToggle }) =>
+                    !isNew && (
+                      <>
+                        <LogsButton
+                          entityType="project"
+                          entityId={projectId}
+                          onClick={() => slideToggle(true)}
+                        />
+                        <SlideView isOpen={opened} onRequestClose={() => slideToggle(false)}>
+                          <SlideViewLayout>
+                            {projectId && opened && (
+                              <>
+                                <SlideViewNavBar>
+                                  <EntityIcon icon="LOGS" color="LOGS" />
+                                </SlideViewNavBar>
 
-                          return (
-                            <>
-                              {isNew ? (
-                                <CancelButton
-                                  onClick={() => (onCancel ? onCancel() : this.onCancel())}
-                                />
-                              ) : (
-                                <>
-                                  {isDirty && (
-                                    <ResetButton
-                                      onClick={() => {
-                                        this.initAllValues(
-                                          {
-                                            projectInfoState,
-                                            projectTagsState,
-                                            projectMilestonesState,
-                                          },
-                                          {
-                                            ...projectInfoState.originalValues,
-                                            ...projectTagsState.originalValues,
-                                            ...projectMilestonesState.originalValues,
-                                          }
-                                        );
-                                        form.onReset();
-                                      }}
-                                    />
-                                  )}
-                                </>
-                              )}
-
-                              {(isNew || isDirty) && (
-                                <SaveButton
-                                  disabled={
-                                    !form.isReady(
-                                      {
-                                        ...projectInfoState.state,
-                                        ...projectTagsState.state,
-                                        ...projectMilestonesState.state,
-                                      },
-                                      validator
-                                    )
-                                  }
-                                  isLoading={isLoading}
-                                  onClick={() => {
-                                    this.onSave(
-                                      {
-                                        ...projectInfoState.originalValues,
-                                        ...projectTagsState.originalValues,
-                                        ...projectMilestonesState.originalValues,
-                                        originalTasks: projectMilestonesState.originalTasks,
-                                      },
-                                      {
-                                        ...projectInfoState.state,
-                                        ...projectTagsState.state,
-                                        ...projectMilestonesState.state,
-                                      },
-                                      saveProject,
-                                      updateProject => {
-                                        this.initAllValues(
-                                          {
-                                            projectInfoState,
-                                            projectTagsState,
-                                            projectMilestonesState,
-                                          },
-                                          updateProject
-                                        );
-                                        form.onReset();
-                                      },
-                                      form.onErrors
-                                    );
-                                    this.onDeleteTask(projectMilestonesState.deleteTasks);
-                                  }}
-                                />
-                              )}
-                              {projectId && !isDirty && !isNew && (
-                                <ExportButton
-                                  type="Project"
-                                  exportQuery={projectExportQuery}
-                                  variables={{ id: decodeId(projectId) }}
-                                />
-                              )}
-                            </>
-                          );
-                        }}
-                      </Subscribe>
-                    </CurrentNavBar>
+                                <Content>
+                                  <Timeline
+                                    query={projectTimelineQuery}
+                                    queryField="project"
+                                    variables={{
+                                      id: decodeId(projectId),
+                                    }}
+                                    entity={{
+                                      projectId: decodeId(projectId),
+                                    }}
+                                  />
+                                </Content>
+                              </>
+                            )}
+                          </SlideViewLayout>
+                        </SlideView>
+                      </>
+                    )
                   }
+                </BooleanValue>
+                <Subscribe
+                  to={[
+                    ProjectInfoContainer,
+                    ProjectTagsContainer,
+                    ProjectMilestonesContainer,
+                    FormContainer,
+                  ]}
                 >
-                  {apiError && <p>Error: Please try again.</p>}
-                  {this.isNew() || !projectId ? (
-                    <>
-                      <ProjectForm isNew />
-                      <Subscribe
-                        to={[
-                          ProjectInfoContainer,
-                          ProjectTagsContainer,
-                          ProjectMilestonesContainer,
-                        ]}
-                      >
-                        {(projectInfoState, projectTagsState, projectMilestonesState) =>
-                          this.onFormReady(
-                            {
-                              projectInfoState,
-                              projectTagsState,
-                              projectMilestonesState,
-                            },
-                            {
-                              id: uuid(),
-                            }
-                          )
-                        }
-                      </Subscribe>
-                    </>
-                  ) : (
-                    <QueryForm
-                      query={projectFormQuery}
-                      entityId={projectId}
-                      entityType="project"
-                      onCompleted={logger.warn}
-                      render={(project, isOwner) => (
-                        <>
-                          <ProjectForm project={project} isOwner={isOwner} />
-                          <Subscribe
-                            to={[
-                              ProjectInfoContainer,
-                              ProjectTagsContainer,
-                              ProjectMilestonesContainer,
-                            ]}
-                          >
-                            {(projectInfoState, projectTagsState, projectMilestonesState) =>
-                              this.onFormReady(
+                  {(projectInfoState, projectTagsState, projectMilestonesState, form) => {
+                    const isDirty =
+                      projectInfoState.isDirty() ||
+                      projectTagsState.isDirty() ||
+                      projectMilestonesState.isDirty();
+
+                    return (
+                      <>
+                        {isNew ? (
+                          <CancelButton onClick={() => (onCancel ? onCancel() : this.onCancel())} />
+                        ) : (
+                          <>
+                            {isDirty && (
+                              <ResetButton
+                                onClick={() => {
+                                  this.initAllValues(
+                                    {
+                                      projectInfoState,
+                                      projectTagsState,
+                                      projectMilestonesState,
+                                    },
+                                    {
+                                      ...projectInfoState.originalValues,
+                                      ...projectTagsState.originalValues,
+                                      ...projectMilestonesState.originalValues,
+                                    }
+                                  );
+                                  form.onReset();
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+
+                        {(isNew || isDirty) && (
+                          <SaveButton
+                            disabled={
+                              !form.isReady(
                                 {
-                                  projectInfoState,
-                                  projectTagsState,
-                                  projectMilestonesState,
+                                  ...projectInfoState.state,
+                                  ...projectTagsState.state,
+                                  ...projectMilestonesState.state,
                                 },
-                                project
+                                validator
                               )
                             }
-                          </Subscribe>
-                        </>
-                      )}
-                    />
-                  )}
-                </Layout>
-              )}
-            </Mutation>
-          </Provider>
-        )}
-      </UIConsumer>
+                            isLoading={isLoading}
+                            onClick={() => {
+                              this.onSave(
+                                {
+                                  ...projectInfoState.originalValues,
+                                  ...projectTagsState.originalValues,
+                                  ...projectMilestonesState.originalValues,
+                                  originalTasks: projectMilestonesState.originalTasks,
+                                },
+                                {
+                                  ...projectInfoState.state,
+                                  ...projectTagsState.state,
+                                  ...projectMilestonesState.state,
+                                },
+                                saveProject,
+                                updateProject => {
+                                  this.initAllValues(
+                                    {
+                                      projectInfoState,
+                                      projectTagsState,
+                                      projectMilestonesState,
+                                    },
+                                    updateProject
+                                  );
+                                  form.onReset();
+                                },
+                                form.onErrors
+                              );
+                              this.onDeleteTask(projectMilestonesState.deleteTasks);
+                            }}
+                          />
+                        )}
+                        {projectId && !isDirty && !isNew && (
+                          <ExportButton
+                            type="Project"
+                            exportQuery={projectExportQuery}
+                            variables={{ id: decodeId(projectId) }}
+                          />
+                        )}
+                      </>
+                    );
+                  }}
+                </Subscribe>
+              </CurrentNavBar>
+              <Content>
+                {apiError && <p>Error: Please try again.</p>}
+                {this.isNew() || !projectId ? (
+                  <>
+                    <ProjectForm isNew />
+                    <Subscribe
+                      to={[ProjectInfoContainer, ProjectTagsContainer, ProjectMilestonesContainer]}
+                    >
+                      {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                        this.onFormReady(
+                          {
+                            projectInfoState,
+                            projectTagsState,
+                            projectMilestonesState,
+                          },
+                          {
+                            id: uuid(),
+                          }
+                        )
+                      }
+                    </Subscribe>
+                  </>
+                ) : (
+                  <QueryForm
+                    query={projectFormQuery}
+                    entityId={projectId}
+                    entityType="project"
+                    onCompleted={logger.warn}
+                    render={(project, isOwner) => (
+                      <>
+                        <ProjectForm project={project} isOwner={isOwner} />
+                        <Subscribe
+                          to={[
+                            ProjectInfoContainer,
+                            ProjectTagsContainer,
+                            ProjectMilestonesContainer,
+                          ]}
+                        >
+                          {(projectInfoState, projectTagsState, projectMilestonesState) =>
+                            this.onFormReady(
+                              {
+                                projectInfoState,
+                                projectTagsState,
+                                projectMilestonesState,
+                              },
+                              project
+                            )
+                          }
+                        </Subscribe>
+                      </>
+                    )}
+                  />
+                )}
+              </Content>
+            </CurrentLayout>
+          )}
+        </Mutation>
+      </Provider>
     );
   }
 }

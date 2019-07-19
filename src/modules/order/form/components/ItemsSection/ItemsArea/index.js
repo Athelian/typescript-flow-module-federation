@@ -164,7 +164,8 @@ function ItemsArea({
                 todo,
               };
 
-              const { name: productProviderName, unitPrice, product } = productProvider;
+              // TODO: check the data for move a batch to new order
+              const { name: productProviderName, unitPrice, product = {} } = productProvider;
               const compiledProductProvider = {
                 name: productProviderName,
                 unitPrice,

@@ -3,12 +3,11 @@ import React from 'react';
 import { Link } from '@reach/router';
 import { injectIntl } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import Layout from 'components/Layout';
-import NavBar from 'components/NavBar';
+import { Content } from 'components/Layout';
+import { NavBar } from 'components/NavBar';
 import { NewButton, ExportButton } from 'components/Buttons';
 import { PROJECT_CREATE } from 'modules/permission/constants/project';
 import FilterToolBar from 'components/common/FilterToolBar';
-import { UIConsumer } from 'modules/ui';
 import usePermission from 'hooks/usePermission';
 import useFilter from 'hooks/useFilter';
 import ProjectList from './list';
@@ -51,40 +50,32 @@ const ProjectListModule = (props: Props) => {
   );
 
   return (
-    <UIConsumer>
-      {uiState => (
-        <Layout
-          {...uiState}
-          navBar={
-            <NavBar>
-              <FilterToolBar
-                icon="PROJECT"
-                sortFields={sortFields}
-                filtersAndSort={filterAndSort}
-                onChange={onChangeFilter}
-              />
-              {hasPermission(PROJECT_CREATE) && (
-                <Link to="new">
-                  <NewButton />
-                </Link>
-              )}
-              <ExportButton
-                type="Projects"
-                exportQuery={projectsExportQuery}
-                variables={{
-                  filterBy: filterAndSort.filter,
-                  sortBy: {
-                    [filterAndSort.sort.field]: filterAndSort.sort.direction,
-                  },
-                }}
-              />
-            </NavBar>
-          }
-        >
-          <ProjectList {...queryVariables} />
-        </Layout>
-      )}
-    </UIConsumer>
+    <Content>
+      <NavBar>
+        <FilterToolBar
+          icon="PROJECT"
+          sortFields={sortFields}
+          filtersAndSort={filterAndSort}
+          onChange={onChangeFilter}
+        />
+        {hasPermission(PROJECT_CREATE) && (
+          <Link to="new">
+            <NewButton />
+          </Link>
+        )}
+        <ExportButton
+          type="Projects"
+          exportQuery={projectsExportQuery}
+          variables={{
+            filterBy: filterAndSort.filter,
+            sortBy: {
+              [filterAndSort.sort.field]: filterAndSort.sort.direction,
+            },
+          }}
+        />
+      </NavBar>
+      <ProjectList {...queryVariables} />
+    </Content>
   );
 };
 

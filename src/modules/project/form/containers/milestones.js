@@ -7,7 +7,7 @@ import { camelCase } from 'lodash/fp';
 import type { User, Milestone, Task } from 'generated/graphql';
 import { isEquals, getByPathWithDefault } from 'utils/fp';
 import { uuid } from 'utils/id';
-import { calculateTasks, setToSkipTask, setToComplete } from './helpers';
+import { calculateTasks, setToSkipTask, setToComplete } from 'utils/task';
 
 type FormState = {
   milestones: Array<Milestone>,
