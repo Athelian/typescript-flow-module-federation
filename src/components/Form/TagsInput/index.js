@@ -165,6 +165,16 @@ export default class TagsInput extends React.Component<Props, State> {
                 <div className={WrapperStyle(focused, !!disabled, !!editable)}>
                   <div className={SelectionWrapperStyle}>
                     <div className={InputStyle(isHover)}>
+                      {editable.set && (
+                        <button
+                          {...getToggleButtonProps()}
+                          type="button"
+                          className={ExpandButtonStyle}
+                          disabled={disabled}
+                        >
+                          <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
+                        </button>
+                      )}
                       {values &&
                         (values || [])
                           .filter(item => !isForbidden(item))
@@ -213,15 +223,6 @@ export default class TagsInput extends React.Component<Props, State> {
                               ...(id ? { id } : {}),
                             })}
                           />
-
-                          <button
-                            {...getToggleButtonProps()}
-                            type="button"
-                            className={ExpandButtonStyle}
-                            disabled={disabled}
-                          >
-                            <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
-                          </button>
                         </>
                       )}
                     </div>

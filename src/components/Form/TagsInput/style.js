@@ -29,9 +29,6 @@ export const SelectionWrapperStyle: string = css`
   flex-wrap: wrap;
   align-items: center;
   width: 100%;
-  & > *:not(:last-child) {
-    margin: 6px 10px 6px 0;
-  }
   grid-gap: 10px;
 `;
 
@@ -42,12 +39,10 @@ export const RemoveStyle: string = css`
 `;
 
 export const ExpandButtonStyle: string = css`
-  ${presets.BUTTON};
   ${fontSizes.MEDIUM};
   color: ${colors.GRAY};
   cursor: pointer;
   display: inline-block;
-  width: 40px;
   &:hover:not([disabled]) {
     color: ${colors.TEAL_DARK};
   }
