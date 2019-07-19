@@ -107,6 +107,7 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
   const { isImporter, isForwarder, isExporter } = useUser();
   const { hasPermission } = usePermission(isOwner);
   const { id: shipmentId, updatedAt, updatedBy, archived } = shipment;
+  const isNewOrClone = isNew || isClone;
   return (
     <MainSectionPlaceholder height={1766} isLoading={isLoading}>
       <SectionHeader
@@ -668,18 +669,29 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                                             'importer',
                                                             selectedImporter
                                                           );
-                                                          batchContainer.waitForBatchesSectionReadyThenInitDetailValues(
-                                                            []
-                                                          );
-                                                          taskContainer.waitForTasksSectionReadyThenChangePartner(
-                                                            importer
-                                                          );
-                                                          timelineContainer.waitForTimelineSectionReadyThenChangePartner(
-                                                            importer
-                                                          );
-                                                          containersContainer.waitForContainerSectionReadyThenChangePartner(
-                                                            importer
-                                                          );
+                                                          if (isNewOrClone) {
+                                                            batchContainer.initDetailValues([]);
+                                                            taskContainer.onChangePartner(importer);
+                                                            timelineContainer.onChangePartner(
+                                                              importer
+                                                            );
+                                                            containersContainer.onChangePartner(
+                                                              importer
+                                                            );
+                                                          } else {
+                                                            batchContainer.waitForBatchesSectionReadyThenInitDetailValues(
+                                                              []
+                                                            );
+                                                            taskContainer.waitForTasksSectionReadyThenChangePartner(
+                                                              importer
+                                                            );
+                                                            timelineContainer.waitForTimelineSectionReadyThenChangePartner(
+                                                              importer
+                                                            );
+                                                            containersContainer.waitForContainerSectionReadyThenChangePartner(
+                                                              importer
+                                                            );
+                                                          }
                                                         }}
                                                         message={
                                                           <FormattedMessage
@@ -812,24 +824,36 @@ const ShipmentSection = ({ isNew, isLoading, isClone, shipment, initDataForSlide
                                               )
                                             );
                                             setFieldValue('exporter', selectedExporter);
-                                            batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
-                                              selectedExporter
-                                            );
-                                            containersContainer.waitForContainerSectionReadyThenChangeMainExporter(
-                                              selectedExporter
-                                            );
-                                            if (exporter) {
-                                              taskContainer.waitForTasksSectionReadyThenChangePartner(
-                                                exporter
+                                            if (isNewOrClone) {
+                                              batchesContainer.changeMainExporter(selectedExporter);
+                                              containersContainer.changeMainExporter(
+                                                selectedExporter
                                               );
+                                              if (exporter) {
+                                                taskContainer.onChangePartner(exporter);
+                                                timelineContainer.onChangePartner(exporter);
+                                                containersContainer.onChangePartner(exporter);
+                                              }
+                                            } else {
+                                              batchesContainer.waitForBatchesSectionReadyThenChangeMainExporter(
+                                                selectedExporter
+                                              );
+                                              containersContainer.waitForContainerSectionReadyThenChangeMainExporter(
+                                                selectedExporter
+                                              );
+                                              if (exporter) {
+                                                taskContainer.waitForTasksSectionReadyThenChangePartner(
+                                                  exporter
+                                                );
 
-                                              timelineContainer.waitForTimelineSectionReadyThenChangePartner(
-                                                exporter
-                                              );
+                                                timelineContainer.waitForTimelineSectionReadyThenChangePartner(
+                                                  exporter
+                                                );
 
-                                              containersContainer.waitForContainerSectionReadyThenChangePartner(
-                                                exporter
-                                              );
+                                                containersContainer.waitForContainerSectionReadyThenChangePartner(
+                                                  exporter
+                                                );
+                                              }
                                             }
                                           }}
                                         />
