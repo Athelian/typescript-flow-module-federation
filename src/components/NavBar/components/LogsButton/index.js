@@ -29,7 +29,11 @@ const LogsButton = ({ onClick, entityType, entityId }: Props) => {
     },
   });
   const [timelineRead] = useMutation(timelineReadByEntity, {
-    variables: { id: decodeId(entityId) },
+    variables: {
+      entity: {
+        [`${entityType}Id`]: decodeId(entityId),
+      },
+    },
     refetchQueries: [
       {
         query: unreadTimelineByEntity(entityType),

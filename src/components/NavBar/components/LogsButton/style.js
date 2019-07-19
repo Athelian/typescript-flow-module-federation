@@ -30,6 +30,8 @@ export const BadgeStyle: string = css`
   border-radius: 8px;
   background-color: ${colors.RED};
   color: #fff;
+  line-height: 12px;
+  letter-spacing: 0px;
   ${fontSizes.SMALL};
   min-width: 16px;
   height: 16px;
