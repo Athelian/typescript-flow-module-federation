@@ -26,7 +26,7 @@ import {
   forbiddenFragment,
   productProviderPackagingFragment,
 } from 'graphql';
-import type { ProjectCreateInput } from 'generated/graphql';
+import type { Task, ProjectCreateInput } from 'generated/graphql';
 import {
   parseArrayOfChildrenField,
   parseGenericField,
@@ -62,7 +62,7 @@ export const deleteTaskMutation = gql`
   ${forbiddenFragment}
 `;
 
-export const prepareParsedTaskInput = (originalValues: ?Object, values: Object) => ({
+export const prepareParsedTaskInput = (originalValues: ?Task, values: Task) => ({
   ...(!values ? {} : { id: values.id }),
   ...parseTaskField(originalValues, values, true),
 });
