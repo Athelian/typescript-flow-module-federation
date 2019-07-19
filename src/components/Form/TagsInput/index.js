@@ -9,17 +9,15 @@ import HoverWrapper from 'components/common/HoverWrapper';
 import Tag from 'components/Tag';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
+import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
 import { isForbidden } from 'utils/data';
 import {
   WrapperStyle,
   SelectionWrapperStyle,
-  ListWrapperStyle,
   InputStyle,
   RemoveStyle,
   ExpandButtonStyle,
   ArrowDownStyle,
-  ItemStyle,
-  SelectedWrapperStyle,
 } from './style';
 
 type OptionalProps = {
@@ -33,7 +31,7 @@ type Props = OptionalProps & {
   tagType: TagsQueryType,
   name: string,
   id?: string,
-  values: ?Array<TagType>,
+  values: Array<TagType>,
   disabled?: boolean,
   type?: string,
   placeholder?: string,
@@ -166,90 +164,82 @@ export default class TagsInput extends React.Component<Props, State> {
               }) => (
                 <div className={WrapperStyle(focused, !!disabled, !!editable)}>
                   <div className={SelectionWrapperStyle}>
-                    {values &&
-                      (values || [])
-                        .filter(item => !isForbidden(item))
-                        .map(tag => (
-                          <Tag
-                            key={tag.id}
-                            tag={tag}
-                            suffix={
-                              editable.remove && (
-                                <button
-                                  type="button"
-                                  className={RemoveStyle}
-                                  onClick={() => {
-                                    this.handleRemove(tag);
-                                  }}
-                                >
-                                  <Icon icon="CLEAR" />
-                                </button>
-                              )
-                            }
-                          />
-                        ))}
-                    {editable.set && (
-                      <div className={InputStyle(isHover)}>
-                        <input
-                          type="text"
-                          {...getInputProps({
-                            spellCheck: false,
-                            disabled,
-                            onKeyDown: e => {
-                              switch (e.key) {
-                                case 'Backspace':
-                                  if (!inputValue && values && values.length > 0 && !e.repeat) {
-                                    this.handleRemove(values[values.length - 1]);
-                                  }
-                                  break;
-                                default:
+                    <div className={InputStyle(isHover)}>
+                      {values &&
+                        (values || [])
+                          .filter(item => !isForbidden(item))
+                          .map(tag => (
+                            <Tag
+                              key={tag.id}
+                              tag={tag}
+                              suffix={
+                                editable.remove && (
+                                  <button
+                                    type="button"
+                                    className={RemoveStyle}
+                                    onClick={() => {
+                                      this.handleRemove(tag);
+                                    }}
+                                  >
+                                    <Icon icon="CLEAR" />
+                                  </button>
+                                )
                               }
-                            },
-                            onFocus: this.handleInputFocus,
-                            onBlur: () => {
-                              this.handleInputBlur();
-                              reset();
-                              clearSelection();
-                            },
-                            ...(id ? { id } : {}),
-                          })}
-                        />
+                            />
+                          ))}
+                      {editable.set && (
+                        <>
+                          <input
+                            type="text"
+                            {...getInputProps({
+                              spellCheck: false,
+                              disabled,
+                              onKeyDown: e => {
+                                switch (e.key) {
+                                  case 'Backspace':
+                                    if (!inputValue && values && values.length > 0 && !e.repeat) {
+                                      this.handleRemove(values[values.length - 1]);
+                                    }
+                                    break;
+                                  default:
+                                }
+                              },
+                              onFocus: this.handleInputFocus,
+                              onBlur: () => {
+                                this.handleInputBlur();
+                                reset();
+                                clearSelection();
+                              },
+                              ...(id ? { id } : {}),
+                            })}
+                          />
 
-                        <button
-                          {...getToggleButtonProps()}
-                          type="button"
-                          className={ExpandButtonStyle}
-                          disabled={disabled}
-                        >
-                          <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
-                        </button>
-                        {isOpen && (
-                          <TagListProvider tagType={tagType}>
-                            {({ data: tags }) => (
-                              <div className={ListWrapperStyle}>
-                                {this.computeFilteredTags(tags, inputValue).map((tag, index) => {
-                                  const isActive = highlightedIndex === index;
-                                  const isSelected =
-                                    values && values.map(t => t.id).includes(tag.id);
-
-                                  return (
-                                    <div
-                                      key={tag.id}
-                                      className={ItemStyle(isActive)}
-                                      {...getItemProps({ item: tag })}
-                                    >
-                                      <div className={SelectedWrapperStyle(isActive)}>
-                                        {isSelected && <Icon icon="CONFIRM" />}
-                                      </div>
-                                      <Tag tag={tag} />
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </TagListProvider>
+                          <button
+                            {...getToggleButtonProps()}
+                            type="button"
+                            className={ExpandButtonStyle}
+                            disabled={disabled}
+                          >
+                            <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                    {isOpen && (
+                      <TagListProvider tagType={tagType}>
+                        {({ data: tags }) => (
+                          <TagSelectOptions
+                            getItemProps={getItemProps}
+                            items={tags}
+                            selectedItems={values}
+                            highlightedIndex={highlightedIndex}
+                            itemToString={item => (item ? item.description || item.name : '')}
+                            itemToValue={item => (item ? item.description : '')}
+                            width="400px"
+                            align="left"
+                          />
                         )}
-                      </div>
+                      </TagListProvider>
                     )}
                   </div>
                 </div>

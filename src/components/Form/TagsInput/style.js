@@ -46,6 +46,7 @@ export const ExpandButtonStyle: string = css`
   ${fontSizes.MEDIUM};
   color: ${colors.GRAY};
   cursor: pointer;
+  display: inline-block;
   width: 40px;
   &:hover:not([disabled]) {
     color: ${colors.TEAL_DARK};
@@ -64,11 +65,14 @@ export const ArrowDownStyle = (isOpen: boolean): string => css`
 `;
 
 export const InputStyle = (isHover: boolean): string => css`
-  ${layout.HORIZONTAL};
   position: relative;
   ${borderRadiuses.MAIN};
   ${isHover && shadows.DROPDOWN};
   ${transitions.MAIN};
+  width: 400px;
+  white-space: nowrap;
+  overflow-x: auto;
+  ${scrollbars.SMALL};
   input {
     flex: 1;
     color: ${colors.BLACK};
