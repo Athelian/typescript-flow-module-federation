@@ -21,6 +21,7 @@ import {
 } from './style';
 
 type OptionalProps = {
+  width: string,
   editable: {
     set: boolean,
     remove: boolean,
@@ -137,7 +138,7 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { editable, tagType, disabled, values, name, id } = this.props;
+    const { editable, width, tagType, disabled, values, name, id } = this.props;
     const { focused } = this.state;
 
     return (
@@ -164,7 +165,7 @@ export default class TagsInput extends React.Component<Props, State> {
               }) => (
                 <div className={WrapperStyle(focused, !!disabled, !!editable)}>
                   <div className={SelectionWrapperStyle}>
-                    <div className={InputStyle(isHover)}>
+                    <div className={InputStyle(isHover, width)}>
                       {editable.set && (
                         <button
                           {...getToggleButtonProps()}
@@ -236,7 +237,7 @@ export default class TagsInput extends React.Component<Props, State> {
                             highlightedIndex={highlightedIndex}
                             itemToString={item => (item ? item.description || item.name : '')}
                             itemToValue={item => (item ? item.description : '')}
-                            width="400px"
+                            width={width}
                             align="left"
                           />
                         )}

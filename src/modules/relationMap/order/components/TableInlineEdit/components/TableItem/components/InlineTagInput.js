@@ -35,6 +35,7 @@ export default function InlineTagInput({ name, tagType, values, id, editable }: 
           value,
         });
       }}
+      width="200px"
     />
   );
 }

@@ -59,12 +59,12 @@ export const ArrowDownStyle = (isOpen: boolean): string => css`
   transform: rotate(${isOpen ? '180' : '0'}deg);
 `;
 
-export const InputStyle = (isHover: boolean): string => css`
+export const InputStyle = (isHover: boolean, width: ?string = '400px'): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
   ${isHover && shadows.DROPDOWN};
   ${transitions.MAIN};
-  width: 400px;
+  width: ${width};
   white-space: nowrap;
   overflow-x: auto;
   ${scrollbars.SMALL};
