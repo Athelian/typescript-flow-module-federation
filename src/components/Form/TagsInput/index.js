@@ -11,14 +11,7 @@ import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
 import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
 import { isForbidden } from 'utils/data';
-import {
-  WrapperStyle,
-  SelectionWrapperStyle,
-  InputStyle,
-  RemoveStyle,
-  ExpandButtonStyle,
-  ArrowDownStyle,
-} from './style';
+import { WrapperStyle, SelectionWrapperStyle, InputStyle, RemoveStyle } from './style';
 
 type OptionalProps = {
   width: string,
@@ -155,7 +148,6 @@ export default class TagsInput extends React.Component<Props, State> {
             >
               {({
                 getInputProps,
-                getToggleButtonProps,
                 getItemProps,
                 isOpen,
                 inputValue,
@@ -166,16 +158,6 @@ export default class TagsInput extends React.Component<Props, State> {
                 <div className={WrapperStyle(focused, !!disabled, !!editable)}>
                   <div className={SelectionWrapperStyle}>
                     <div className={InputStyle(isHover, width)}>
-                      {editable.set && (
-                        <button
-                          {...getToggleButtonProps()}
-                          type="button"
-                          className={ExpandButtonStyle}
-                          disabled={disabled}
-                        >
-                          <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
-                        </button>
-                      )}
                       {values &&
                         (values || [])
                           .filter(item => !isForbidden(item))

@@ -38,27 +38,6 @@ export const RemoveStyle: string = css`
   ${fontSizes.MEDIUM};
 `;
 
-export const ExpandButtonStyle: string = css`
-  ${fontSizes.MEDIUM};
-  color: ${colors.GRAY};
-  cursor: pointer;
-  display: inline-block;
-  &:hover:not([disabled]) {
-    color: ${colors.TEAL_DARK};
-  }
-  &:focus:not([disabled]) {
-    color: ${colors.TEAL};
-  }
-  &[disabled] {
-    cursor: default;
-  }
-`;
-
-export const ArrowDownStyle = (isOpen: boolean): string => css`
-  ${transitions.EXPAND};
-  transform: rotate(${isOpen ? '180' : '0'}deg);
-`;
-
 export const InputStyle = (isHover: boolean, width: ?string = '400px'): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
