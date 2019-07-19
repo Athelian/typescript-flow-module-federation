@@ -162,7 +162,8 @@ const ShipmentBatchCard = ({
   } = batch;
 
   if (!productProvider) return null;
-  const { name: productProviderName, product } = productProvider;
+  // TODO: check the data for move a batch to new shipment
+  const { name: productProviderName, product = {} } = productProvider;
 
   const latestQuantity = getBatchLatestQuantity({ quantity, batchQuantityRevisions });
 

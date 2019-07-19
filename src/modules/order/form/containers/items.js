@@ -1,15 +1,16 @@
 // @flow
+import type { OrderItemPayload, ShipmentPayload, ContainerPayload } from 'generated/graphql';
 import { Container } from 'unstated';
 import { set, cloneDeep } from 'lodash';
 import update from 'immutability-helper';
-import { isEquals } from 'utils/fp';
+import { isEquals, getByPath, getByPathWithDefault } from 'utils/fp';
 
-type FormState = {
-  orderItems: Array<Object>,
+type FormState = {|
+  orderItems: Array<OrderItemPayload>,
   hasCalledItemsApiYet: boolean,
-};
+|};
 
-const initValues: FormState = {
+export const initValues: FormState = {
   orderItems: [],
   hasCalledItemsApiYet: false,
 };
@@ -96,11 +97,39 @@ export default class OrderItemsContainer extends Container<FormState> {
       orderItems: orderItems.map(orderItem => ({
         ...orderItem,
         price: {
-          ...orderItem.price,
+          ...getByPath('price', orderItem),
           ...(isReset ? { amount: 0 } : {}),
           currency,
         },
       })),
     });
   }
+
+  getShipments = (): Array<ShipmentPayload> => {
+    const shipments = [];
+    const { orderItems } = this.state;
+    orderItems.forEach(orderItem => {
+      const batches = getByPathWithDefault([], 'batches', orderItem);
+      batches.forEach(batch => {
+        if (batch.shipment && !shipments.includes(batch.shipment)) {
+          shipments.push(batch.shipment);
+        }
+      });
+    });
+    return shipments;
+  };
+
+  getContainers = (): Array<ContainerPayload> => {
+    const containers = [];
+    const { orderItems } = this.state;
+    orderItems.forEach(orderItem => {
+      const batches = getByPathWithDefault([], 'batches', orderItem);
+      batches.forEach(batch => {
+        if (batch.container && !containers.includes(batch.container)) {
+          containers.push(batch.container);
+        }
+      });
+    });
+    return containers;
+  };
 }

@@ -13,7 +13,7 @@ import DocumentsSection from './components/DocumentsSection';
 import ShipmentsSection from './components/ShipmentsSection';
 import ContainersSection from './components/ContainersSection';
 import OrderTasksSection from './components/OrderTasksSection';
-import { OrderInfoContainer, OrderTasksContainer } from './containers';
+import { OrderInfoContainer, OrderTasksContainer, OrderItemsContainer } from './containers';
 import { OrderFormWrapperStyle } from './style';
 
 type OptionalProps = {
@@ -82,17 +82,27 @@ export default class OrderForm extends React.Component<Props> {
           </Subscribe>
         </SectionWrapper>
 
-        {!isNew && (
-          <SectionWrapper id="order_shipmentsSection">
-            <ShipmentsSection entityId={order.id} isLoading={loading} />
-          </SectionWrapper>
-        )}
+        <SectionWrapper id="order_shipmentsSection">
+          <Subscribe to={[OrderItemsContainer]}>
+            {({ state: { hasCalledItemsApiYet }, getShipments }) => (
+              <ShipmentsSection
+                isReady={hasCalledItemsApiYet || isNew || isClone}
+                shipments={getShipments()}
+              />
+            )}
+          </Subscribe>
+        </SectionWrapper>
 
-        {!isNew && (
-          <SectionWrapper id="order_containersSection">
-            <ContainersSection entityId={order.id} isLoading={loading} />
-          </SectionWrapper>
-        )}
+        <SectionWrapper id="order_containersSection">
+          <Subscribe to={[OrderItemsContainer]}>
+            {({ state: { hasCalledItemsApiYet }, getContainers }) => (
+              <ContainersSection
+                isReady={hasCalledItemsApiYet || isNew || isClone}
+                containers={getContainers()}
+              />
+            )}
+          </Subscribe>
+        </SectionWrapper>
 
         <Subscribe to={[OrderTasksContainer, OrderInfoContainer]}>
           {(
