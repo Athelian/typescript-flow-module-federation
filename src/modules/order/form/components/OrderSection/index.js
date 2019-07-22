@@ -322,7 +322,6 @@ const OrderSection = ({ isNew, isClone, order, isLoading }: Props) => {
                                             changeCurrency(value);
                                           }
                                         }}
-                                        hideClearButton
                                       />
                                     )}
                                   </FormField>

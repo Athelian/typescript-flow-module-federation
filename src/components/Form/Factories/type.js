@@ -1,37 +1,35 @@
 // @flow
-import * as React from 'react';
-
-export type LabelProps = {
+export type LabelProps = {|
   required?: boolean,
   labelAlign?: 'left' | 'right' | 'center',
-  labelWidth?: string,
-  labelHeight?: string,
-};
+  labelWidth: string,
+  labelHeight: string,
+|};
 
-export type TooltipProps = {
-  hideTooltip?: boolean,
+export type TooltipProps = {|
+  hideTooltip: boolean,
   isNew?: boolean,
   errorMessage?: string,
-  warningMessage?: React.Node,
-  infoMessage?: React.Node,
+  warningMessage?: React$Node,
+  infoMessage?: React$Node,
   originalValue?: any,
-};
+|};
 
-export type InputWrapperProps = {
+export type InputWrapperProps = {|
   isFocused?: boolean,
   disabled?: boolean,
   forceHoverStyle?: boolean,
-  inputWidth?: string,
-  inputHeight?: string,
-};
+  inputWidth: string,
+  inputHeight: string,
+|};
 
-export type InputProps = {
+export type InputProps = {|
   value?: any,
   name?: string,
-  placeholder?: React.Node,
+  placeholder?: React$Node,
   onChange?: ?Function,
   onBlur?: ?Function,
   onFocus?: ?Function,
   inputAlign?: 'left' | 'right' | 'center',
   readOnly?: boolean,
-};
+|};

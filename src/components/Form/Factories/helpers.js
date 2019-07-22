@@ -1,4 +1,5 @@
 // @flow
+import matchSorter from 'match-sorter';
 
 export const parseEnumValue = (enumValue: ?string | ?{ name: string }) => {
   if (enumValue && enumValue.name) return enumValue.name;
@@ -17,3 +18,10 @@ export const convertValueToFormFieldFormat = (value: mixed): { target: { value: 
     value,
   },
 });
+
+export function filterItems<T>(query: string, items: Array<T>): Array<T> {
+  if (!query) return items;
+  return matchSorter(items, query, {
+    keys: ['name', 'description'],
+  });
+}

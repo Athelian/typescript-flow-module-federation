@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
-import matchSorter from 'match-sorter';
 import Icon from 'components/Icon';
 import { SearchSelectInput, DefaultSearchSelect, DefaultOptions } from 'components/Form';
+import { filterItems } from 'components/Form/Factories/helpers';
 import usePrevious from 'hooks/usePrevious';
 import { useEnumInput } from 'modules/form/hooks';
 
@@ -16,13 +16,6 @@ type OptionalProps = {
 type Props = OptionalProps & {
   data: Array<Object>,
   onChange: Function,
-};
-
-const filterItems = (query: string, items: Array<any>) => {
-  if (!query) return items;
-  return matchSorter(items, query, {
-    keys: ['name', 'description'],
-  });
 };
 
 const defaultProps = {
