@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
-import type { Batch } from 'generated/graphql';
+import type { BatchPayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
 import { intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
-import useSortAndFilter from 'hooks/useSortAndFilter';
+import useFilter from 'hooks/useFilter';
 import messages from 'modules/batch/messages';
 import FilterToolBar from 'components/common/FilterToolBar';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -56,6 +56,7 @@ import SelectOrderItems from 'providers/SelectOrderItems';
 import { getBatchesInPool, getBatchesByContainerId } from 'modules/shipment/helpers';
 import SelectShipmentBatches from 'components/SelectShipmentBatches';
 import { HIDE, NAVIGABLE } from 'modules/batch/constants';
+import sortBy from './helper';
 import {
   BatchesWrapperStyle,
   BatchesNavbarWrapperStyle,
@@ -71,17 +72,14 @@ import {
   BatchesFooterWrapperStyle,
 } from './style';
 
-type OptionalProps = {
+type Props = {
   exporterId: string,
-};
-
-type Props = OptionalProps & {
   intl: IntlShape,
   isFocusedBatchesPool: boolean,
   isSelectBatchesMode: boolean,
   onChangeSelectMode: Function,
   focusedContainerIndex: number,
-  selectedBatches: Array<Object>,
+  selectedBatches: Array<BatchPayload>,
   onSelectBatch: Function,
   shipmentIsArchived: boolean,
   importerId: string,
@@ -128,7 +126,8 @@ function BatchesArea({
     { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
-  const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const { filterAndSort, onChangeFilter } = useFilter(getInitFilter(), 'cargoSectionFilter');
+
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -147,12 +146,12 @@ function BatchesArea({
           ? getByPath(`${focusedContainerIndex}.id`, containers)
           : null;
         const currentBatches = isFocusedBatchesPool
-          ? getBatchesInPool(batches)
-          : getBatchesByContainerId(batches, containerId);
+          ? sortBy(getBatchesInPool(batches), filterAndSort.sort)
+          : sortBy(getBatchesByContainerId(batches, containerId), filterAndSort.sort);
 
         const selectedBatchIds = intersection(
-          currentBatches.map(item => item.id),
-          selectedBatches.map(item => item.id)
+          currentBatches.map(item => getByPath('id', item)),
+          selectedBatches.map(item => getByPath('id', item))
         );
 
         if (selectedBatches.length !== 0 && selectedBatchIds.length === 0) {
@@ -614,7 +613,7 @@ function BatchesArea({
                                   ...(exporterId ? { exporterId } : {}),
                                 }}
                                 onSelect={selectedOrderItems => {
-                                  const createdBatches: Array<Batch> = selectedOrderItems.map(
+                                  const createdBatches: Array<BatchPayload> = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
                                       no: `batch no ${batches.length + index + 1}`,

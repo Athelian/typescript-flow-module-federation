@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 export const batchFormFragment = gql`
   fragment batchFormFragment on Batch {
     id
+    sort
     archived
     autoCalculatePackageQuantity
     autoCalculatePackageVolume

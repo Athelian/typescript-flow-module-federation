@@ -1,7 +1,9 @@
 // @flow
 import * as React from 'react';
+import type { BatchPayload } from 'generated/graphql';
 import { FormattedMessage } from 'react-intl';
 import { Subscribe } from 'unstated';
+import { getByPath } from 'utils/fp';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { SectionHeader } from 'components/Form';
@@ -33,9 +35,11 @@ const CargoSection = ({ shipmentIsArchived, importerId, exporterId }: Props) => 
   const [selectedBatches, setSelectedBatches] = React.useState([]);
 
   const onSelectBatch = React.useCallback(
-    (batch: Object) => {
-      if (selectedBatches.map(({ id }) => id).includes(batch.id)) {
-        setSelectedBatches(selectedBatches.filter(item => item.id !== batch.id));
+    (batch: BatchPayload) => {
+      if (selectedBatches.map(item => getByPath('id', item)).includes(getByPath('id', batch))) {
+        setSelectedBatches(
+          selectedBatches.filter(item => getByPath('id', item) !== getByPath('id', batch))
+        );
       } else {
         setSelectedBatches([...selectedBatches, batch]);
       }
