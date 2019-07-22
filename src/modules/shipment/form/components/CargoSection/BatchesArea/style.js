@@ -34,6 +34,7 @@ export const BatchesNavbarWrapperStyle: string = css`
   background: ${colors.WHITE};
   ${shadows.HEADER};
   position: relative;
+  z-index: 3;
 `;
 
 export const BatchesBodyWrapperStyle: string = css`
