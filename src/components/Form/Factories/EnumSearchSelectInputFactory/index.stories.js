@@ -138,4 +138,70 @@ storiesOf('Form/Inputs/Enum Search Select Input', module)
         </ObjectValue>
       )}
     </ObjectValue>
+  ))
+  .add('Load port - optional field with value', () => (
+    <ObjectValue
+      defaultValue={{
+        editable: true,
+        isNew: false,
+        initialValues: {
+          inputTwo: 'JPHTM',
+        },
+        values: {
+          inputTwo: 'JPHTM',
+        },
+        touchedFields: {
+          inputTwo: false,
+        },
+        focusedField: null,
+      }}
+    >
+      {({
+        value: { editable, isNew, initialValues, values, touchedFields, focusedField },
+        set,
+      }) => (
+        <ObjectValue
+          value={{
+            name: 'inputTwo',
+            value: values.inputTwo,
+            isTouched: touchedFields.inputTwo,
+            isFocused: focusedField === 'inputTwo',
+            onChange: newValue => {
+              set('values', { ...values, inputTwo: newValue.target.value });
+            },
+            onFocus: () => {
+              if (!touchedFields.inputTwo) {
+                set('touchedFields', { ...touchedFields, inputTwo: true });
+              }
+              set('focusedField', 'inputTwo');
+            },
+            onBlur: () => set('focusedField', null),
+            errorMessage: null,
+          }}
+        >
+          {({ value: { name, ...inputHandlers } }) => {
+            return (
+              <>
+                <EnumSearchSelectInputFactory
+                  name={name}
+                  {...inputHandlers}
+                  isNew={isNew}
+                  originalValue={initialValues[name]}
+                  label="Port"
+                  editable={editable}
+                  placeholder="Please input a value"
+                  enumType="Seaport"
+                />
+                <ToggleInput toggled={editable} onToggle={() => set('editable', !editable)}>
+                  <Label>editable</Label>
+                </ToggleInput>
+                <ToggleInput toggled={isNew} onToggle={() => set('isNew', !isNew)}>
+                  <Label>IS NEW</Label>
+                </ToggleInput>
+              </>
+            );
+          }}
+        </ObjectValue>
+      )}
+    </ObjectValue>
   ));
