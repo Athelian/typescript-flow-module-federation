@@ -10,7 +10,7 @@ import logger from 'utils/logger';
 import { NotificationsDropdown, UserMenuDropdown } from './components';
 import { notificationSeeAllMutation } from './mutation';
 import { countNotificationQuery } from './query';
-import subscription from './subscription';
+import { subscribeNewNotification } from './subscription';
 import {
   SettingsWrapperStyle,
   NotificationsWrapperStyle,
@@ -25,12 +25,14 @@ type Props = {};
 type State = {
   isNotificationOpen: boolean,
   isUserMenuOpen: boolean,
+  unSeen: number,
 };
 
 class UserNavBar extends React.Component<Props, State> {
   state = {
     isNotificationOpen: false,
     isUserMenuOpen: false,
+    unSeen: 0,
   };
 
   notificationRef: { current: HTMLButtonElement | null } = React.createRef();
@@ -62,14 +64,20 @@ class UserNavBar extends React.Component<Props, State> {
   };
 
   render() {
-    const { isNotificationOpen, isUserMenuOpen } = this.state;
+    const { isNotificationOpen, isUserMenuOpen, unSeen } = this.state;
 
     return (
       <div className={SettingsWrapperStyle}>
-        <Query query={countNotificationQuery} fetchPolicy="network-only">
-          {({ data, client, refetch }) => {
-            const unSeen = getByPathWithDefault(0, 'viewer.notificationUnseen', data);
-
+        <Query
+          query={countNotificationQuery}
+          fetchPolicy="network-only"
+          onCompleted={result => {
+            this.setState({
+              unSeen: getByPathWithDefault(0, 'viewer.notificationUnseen', result),
+            });
+          }}
+        >
+          {({ client, refetch }) => {
             return (
               <>
                 <div className={NotificationsWrapperStyle}>
@@ -87,7 +95,15 @@ class UserNavBar extends React.Component<Props, State> {
                     type="button"
                     ref={this.notificationRef}
                   >
-                    <Subscription subscription={subscription}>
+                    <Subscription
+                      subscription={subscribeNewNotification}
+                      onSubscriptionData={onSubscriptionData => {
+                        logger.warn('onSubscriptionData', onSubscriptionData);
+                        this.setState(prevState => ({
+                          unSeen: prevState.unSeen + 1,
+                        }));
+                      }}
+                    >
                       {({ data: subscriptionData, loading, error }) => {
                         if (loading) return null;
 

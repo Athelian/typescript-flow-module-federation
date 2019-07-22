@@ -1,12 +1,17 @@
 // @flow
 import gql from 'graphql-tag';
 
-const notificationNewSubScription = gql`
+export const subscribeNewNotification = gql`
   subscription notificationNew {
     notificationNew {
       id
+      type
+      body
+      read
+      seen
+      createdAt
     }
   }
 `;
 
-export default notificationNewSubScription;
+export default subscribeNewNotification;
