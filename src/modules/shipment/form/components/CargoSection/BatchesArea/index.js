@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { BatchPayload } from 'generated/graphql';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { IntlShape } from 'react-intl';
-import { intersection } from 'lodash';
+import { maxBy, intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
@@ -536,13 +536,17 @@ function BatchesArea({
                                 }}
                                 selectedBatches={batches}
                                 onSelect={selected => {
-                                  const newSelectBatches = selected.map(selectedBatch => ({
-                                    ...selectedBatch,
-                                    ...(isFocusedContainer
-                                      ? { container: containers[focusedContainerIndex] }
-                                      : {}),
-                                    packageQuantity: calculatePackageQuantity(selectedBatch),
-                                  }));
+                                  const maxSort = maxBy(batches, 'sort').sort + 1;
+                                  const newSelectBatches = selected.map(
+                                    (selectedBatch, counter) => ({
+                                      sort: maxSort + counter,
+                                      ...selectedBatch,
+                                      ...(isFocusedContainer
+                                        ? { container: containers[focusedContainerIndex] }
+                                        : {}),
+                                      packageQuantity: calculatePackageQuantity(selectedBatch),
+                                    })
+                                  );
                                   if (isFocusedContainer) {
                                     setDeepFieldValue(
                                       `containers.${focusedContainerIndex}.batches`,
@@ -619,9 +623,11 @@ function BatchesArea({
                                   ...(exporterId ? { exporterId } : {}),
                                 }}
                                 onSelect={selectedOrderItems => {
+                                  const maxSort = maxBy(batches, 'sort').sort + 1;
                                   const createdBatches: Array<BatchPayload> = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
+                                      sort: maxSort + index,
                                       no: `batch no ${batches.length + index + 1}`,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }
