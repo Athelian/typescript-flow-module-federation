@@ -13,7 +13,6 @@ import {
 export const WrapperStyle = (focused: boolean, disabled: boolean, editable: boolean): string => css`
   ${layout.HORIZONTAL};
   ${transitions.MAIN};
-  background: ${colors.WHITE};
   min-height: 30px;
   ${disabled && `background: ${colors.GRAY_SUPER_LIGHT}`};
   ${!editable &&
@@ -37,7 +36,7 @@ export const RemoveStyle: string = css`
   ${fontSizes.MEDIUM};
 `;
 
-export const InputStyle = (width: ?string = '400px'): string => css`
+export const InputStyle = (width: string): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
   ${transitions.MAIN};
@@ -55,7 +54,7 @@ export const InputStyle = (width: ?string = '400px'): string => css`
     font-weight: bold;
     padding: 5px 0 5px 0;
     background-color: transparent;
-    min-width: 80px;
+    width: 80px;
     &:focus {
       outline: none;
     }

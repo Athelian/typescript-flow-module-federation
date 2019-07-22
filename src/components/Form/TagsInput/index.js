@@ -43,6 +43,7 @@ const defaultProps = {
     set: false,
     remove: false,
   },
+  width: '400px',
 };
 
 export default class TagsInput extends React.Component<Props, State> {
@@ -162,7 +163,7 @@ export default class TagsInput extends React.Component<Props, State> {
             reset,
           }) => (
             <div className={WrapperStyle(focused, !!disabled, !!editable)}>
-              <DefaultStyle isFocused={focused}>
+              <DefaultStyle isFocused={focused} width={width}>
                 <div className={SelectionWrapperStyle}>
                   <div
                     role="presentation"
