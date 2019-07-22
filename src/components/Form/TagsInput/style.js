@@ -55,7 +55,7 @@ export const InputStyle = (width: ?string = '400px'): string => css`
     font-weight: bold;
     padding: 5px 0 5px 0;
     background-color: transparent;
-    width: 80px;
+    min-width: 80px;
     &:focus {
       outline: none;
     }

@@ -48,6 +48,8 @@ const defaultProps = {
 export default class TagsInput extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
+  inputRef = React.createRef<HTMLInputElement>();
+
   state = {
     focused: false,
   };
@@ -122,6 +124,10 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   handleInputFocus = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.focus();
+    }
+
     this.setState({ focused: true });
   };
 
@@ -143,6 +149,7 @@ export default class TagsInput extends React.Component<Props, State> {
           onStateChange={this.handleStateChange}
           stateReducer={this.stateReducer}
           labelId={`${name}TagInputs`}
+          onOuterClick={this.handleInputBlur}
         >
           {({
             getInputProps,
@@ -156,7 +163,11 @@ export default class TagsInput extends React.Component<Props, State> {
             <div className={WrapperStyle(focused, !!disabled, !!editable)}>
               <DefaultStyle isFocused={focused}>
                 <div className={SelectionWrapperStyle}>
-                  <div className={InputStyle(width)}>
+                  <div
+                    role="presentation"
+                    className={InputStyle(width)}
+                    onClick={this.handleInputFocus}
+                  >
                     {values &&
                       (values || [])
                         .filter(item => !isForbidden(item))
@@ -169,7 +180,8 @@ export default class TagsInput extends React.Component<Props, State> {
                                 <button
                                   type="button"
                                   className={RemoveStyle}
-                                  onClick={() => {
+                                  onClick={event => {
+                                    event.stopPropagation();
                                     this.handleRemove(tag);
                                   }}
                                 >
@@ -182,6 +194,7 @@ export default class TagsInput extends React.Component<Props, State> {
                     {editable.set && (
                       <>
                         <input
+                          ref={this.inputRef}
                           type="text"
                           {...getInputProps({
                             spellCheck: false,
