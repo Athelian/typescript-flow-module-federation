@@ -9,7 +9,6 @@ import useFilter from 'hooks/useFilter';
 import loadMore from 'utils/loadMore';
 import { usersQuery } from 'graphql/staff/query';
 import { Content, SlideViewLayout } from 'components/Layout';
-import LoadingIcon from 'components/LoadingIcon';
 import { SlideViewNavBar } from 'components/NavBar';
 import FilterToolBar from 'components/common/FilterToolBar';
 import { SaveButton, CancelButton } from 'components/Buttons';
@@ -37,17 +36,6 @@ const defaultProps = {
 };
 
 const MAX_SELECTIONS = 5;
-
-const selectedItems = (
-  selected: Array<{ id: string, firstName: string, lastName: string }>,
-  items: Array<Object>
-) => {
-  if (selected) {
-    const itemIds = selected.length ? selected.map(item => item.id) : [];
-    return items.filter(item => itemIds.includes(item.id));
-  }
-  return [];
-};
 
 const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }: Props) => {
   const sortFields = [
@@ -77,63 +65,63 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
           return error.message;
         }
 
-        if (loading) return <LoadingIcon />;
-
+        const items = getByPathWithDefault([], 'users.nodes', data);
         const nextPage = getByPathWithDefault(1, 'users.page', data) + 1;
         const totalPage = getByPathWithDefault(1, 'users.totalPage', data);
         const hasMore = nextPage <= totalPage;
-        return (
-          <ArrayValue
-            defaultValue={selectedItems(selected, getByPathWithDefault([], 'users.nodes', data))}
-          >
-            {({ value: values, push, filter }) => (
-              <SlideViewLayout>
-                <SlideViewNavBar>
-                  <FilterToolBar
-                    icon="STAFF"
-                    sortFields={sortFields}
-                    filtersAndSort={filterAndSort}
-                    onChange={onChangeFilter}
-                  />
-                  <h3>
-                    {values.length}/{MAX_SELECTIONS}
-                  </h3>
-                  <CancelButton onClick={onCancel} />
-                  <SaveButton
-                    data-testid="saveButtonOnAssignUsers"
-                    disabled={isEquals(values, selected)}
-                    onClick={() => onSelect(values)}
-                  />
-                </SlideViewNavBar>
 
-                <Content>
-                  <StaffGridView
-                    hasMore={hasMore}
-                    isLoading={loading}
-                    onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'users')}
-                    items={getByPathWithDefault([], 'users.nodes', data)}
-                    renderItem={item => {
-                      const isSelected = values.map(({ id }) => id).includes(item.id);
-                      return (
-                        <StaffCard
-                          staff={item}
-                          onSelect={() => {
-                            if (isSelected) {
-                              filter(({ id }) => id !== item.id);
-                            } else if (values.length < MAX_SELECTIONS) {
-                              push(item);
-                            }
-                          }}
-                          selectable
-                          selected={isSelected}
-                          key={item.id}
-                        />
-                      );
-                    }}
-                  />
-                </Content>
-              </SlideViewLayout>
-            )}
+        return (
+          <ArrayValue defaultValue={selected}>
+            {({ value: values, push, filter }) => {
+              return (
+                <SlideViewLayout>
+                  <SlideViewNavBar>
+                    <FilterToolBar
+                      icon="STAFF"
+                      sortFields={sortFields}
+                      filtersAndSort={filterAndSort}
+                      onChange={onChangeFilter}
+                    />
+                    <h3>
+                      {values.length}/{MAX_SELECTIONS}
+                    </h3>
+                    <CancelButton onClick={onCancel} />
+                    <SaveButton
+                      data-testid="saveButtonOnAssignUsers"
+                      disabled={isEquals(values, selected)}
+                      onClick={() => onSelect(values)}
+                    />
+                  </SlideViewNavBar>
+
+                  <Content>
+                    <StaffGridView
+                      hasMore={hasMore}
+                      isLoading={loading}
+                      onLoadMore={() => loadMore({ fetchMore, data }, queryVariables, 'users')}
+                      items={items}
+                      renderItem={item => {
+                        const isSelected = values.some(({ id }) => id === item.id);
+                        return (
+                          <StaffCard
+                            key={item.id}
+                            staff={item}
+                            onSelect={() => {
+                              if (isSelected) {
+                                filter(({ id }) => id !== item.id);
+                              } else if (values.length < MAX_SELECTIONS) {
+                                push(item);
+                              }
+                            }}
+                            selectable
+                            selected={isSelected}
+                          />
+                        );
+                      }}
+                    />
+                  </Content>
+                </SlideViewLayout>
+              );
+            }}
           </ArrayValue>
         );
       }}
