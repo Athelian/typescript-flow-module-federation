@@ -9,6 +9,7 @@ import { ProductProviderCard } from 'components/Cards';
 import { BooleanValue } from 'react-values';
 import { NewButton } from 'components/Buttons';
 import SlideView from 'components/SlideView';
+import Icon from 'components/Icon';
 import { injectUid } from 'utils/id';
 import generateEndProduct from 'utils/product';
 import { ProductProvidersContainer } from 'modules/product/form/containers';
@@ -82,6 +83,7 @@ function ProductProvidersSection({ isOwner, productIsArchived }: Props) {
             <div className={ProductProviderSectionBodyStyle}>
               {productProviders.length === 0 ? (
                 <div className={EmptyMessageStyle}>
+                  <Icon icon="WARNING" />
                   <FormattedMessage
                     id="modules.Products.noProviderFound"
                     defaultMessage="Please create at least one end product"
