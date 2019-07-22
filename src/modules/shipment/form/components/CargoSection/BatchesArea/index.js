@@ -1,11 +1,15 @@
 // @flow
 import * as React from 'react';
 import type { Batch } from 'generated/graphql';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import type { IntlShape } from 'react-intl';
 import { intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
 import { getByPath } from 'utils/fp';
+import useSortAndFilter from 'hooks/useSortAndFilter';
+import messages from 'modules/batch/messages';
+import FilterToolBar from 'components/common/FilterToolBar';
 import usePartnerPermission from 'hooks/usePartnerPermission';
 import usePermission from 'hooks/usePermission';
 import { PRODUCT_FORM } from 'modules/permission/constants/product';
@@ -72,6 +76,7 @@ type OptionalProps = {
 };
 
 type Props = OptionalProps & {
+  intl: IntlShape,
   isFocusedBatchesPool: boolean,
   isSelectBatchesMode: boolean,
   onChangeSelectMode: Function,
@@ -80,6 +85,21 @@ type Props = OptionalProps & {
   onSelectBatch: Function,
   shipmentIsArchived: boolean,
   importerId: string,
+};
+
+const getInitFilter = () => {
+  const state = {
+    filter: {
+      query: '',
+    },
+    sort: {
+      field: 'sort',
+      direction: 'DESCENDING',
+    },
+    perPage: 10,
+    page: 1,
+  };
+  return state;
 };
 
 function BatchesArea({
@@ -92,9 +112,23 @@ function BatchesArea({
   shipmentIsArchived,
   exporterId,
   importerId,
+  intl,
 }: Props) {
   const { isOwner } = usePartnerPermission();
   const { hasPermission } = usePermission(isOwner);
+  const sortFields = [
+    { title: intl.formatMessage(messages.sort), value: 'sort' },
+    { title: intl.formatMessage(messages.updatedAt), value: 'updatedAt' },
+    { title: intl.formatMessage(messages.createdAt), value: 'createdAt' },
+    { title: intl.formatMessage(messages.batchNo), value: 'no' },
+    { title: intl.formatMessage(messages.poNo), value: 'poNo' },
+    { title: intl.formatMessage(messages.productName), value: 'productName' },
+    { title: intl.formatMessage(messages.productSerial), value: 'productSerial' },
+    { title: intl.formatMessage(messages.deliveredAt), value: 'deliveredAt' },
+    { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
+    { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
+  ];
+  const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -161,7 +195,13 @@ function BatchesArea({
 
         return (
           <div className={BatchesWrapperStyle}>
-            <div className={BatchesNavbarWrapperStyle} />
+            <div className={BatchesNavbarWrapperStyle}>
+              <FilterToolBar
+                sortFields={sortFields}
+                filtersAndSort={filterAndSort}
+                onChange={onChangeFilter}
+              />
+            </div>
             <div className={BatchesBodyWrapperStyle}>
               {currentBatches.length === 0 ? (
                 <div className={EmptyMessageStyle}>
@@ -617,4 +657,4 @@ function BatchesArea({
   );
 }
 
-export default React.memo<Props>(BatchesArea);
+export default injectIntl(React.memo<Props>(BatchesArea));

@@ -21,6 +21,11 @@ export const BatchesWrapperStyle: string = css`
 
 export const BatchesNavbarWrapperStyle: string = css`
   ${borderRadiuses.MAIN};
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 150px auto;
+  align-items: center;
+  padding-left: 10px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-top-left-radius: 0;
