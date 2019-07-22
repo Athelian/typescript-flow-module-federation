@@ -154,6 +154,7 @@ export default class TagsInput extends React.Component<Props, State> {
           {({
             getInputProps,
             getItemProps,
+            openMenu,
             isOpen,
             inputValue,
             highlightedIndex,
@@ -166,7 +167,10 @@ export default class TagsInput extends React.Component<Props, State> {
                   <div
                     role="presentation"
                     className={InputStyle(width)}
-                    onClick={this.handleInputFocus}
+                    onClick={() => {
+                      this.handleInputFocus();
+                      openMenu();
+                    }}
                   >
                     {values &&
                       (values || [])
@@ -209,7 +213,10 @@ export default class TagsInput extends React.Component<Props, State> {
                                 default:
                               }
                             },
-                            onFocus: this.handleInputFocus,
+                            onFocus: () => {
+                              this.handleInputFocus();
+                              openMenu();
+                            },
                             onBlur: () => {
                               this.handleInputBlur();
                               reset();
