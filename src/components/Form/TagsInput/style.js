@@ -40,19 +40,20 @@ export const RemoveStyle: string = css`
 export const InputStyle = (width: ?string = '400px'): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
-
   ${transitions.MAIN};
   width: ${width};
   white-space: nowrap;
   overflow-x: auto;
   ${scrollbars.SMALL};
+  & > div {
+    margin-right: 4px;
+  }
   input {
-    flex: 1;
     color: ${colors.BLACK};
     ${fontSizes.MAIN};
     border: none;
     font-weight: bold;
-    padding: 5px 0 5px 8px;
+    padding: 5px 0 5px 0;
     background-color: transparent;
     width: 80px;
     &:focus {
