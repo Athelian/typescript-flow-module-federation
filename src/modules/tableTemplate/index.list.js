@@ -70,14 +70,14 @@ const TableTemplateModule = (props: Props) => {
 
           <BooleanValue>
             {({ value: isOpen, set: toggle }) => (
-              <Content>
+              <>
                 {canCreate && <NewButton onClick={() => toggle(true)} />}
                 <SlideView isOpen={isOpen} onRequestClose={() => toggle(false)}>
                   {isOpen && (
                     <TemplateFormWrapper template={{}} isNew onCancel={() => toggle(false)} />
                   )}
                 </SlideView>
-              </Content>
+              </>
             )}
           </BooleanValue>
         </NavBar>
