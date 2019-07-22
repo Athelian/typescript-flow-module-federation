@@ -282,6 +282,9 @@ export const itemInBatchFormFragment = gql`
         exporter {
           ...partnerCardFragment
         }
+        supplier {
+          ...partnerCardFragment
+        }
         defaultPackage {
           ...productProviderPackagingFragment
         }

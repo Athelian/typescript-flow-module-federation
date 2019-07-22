@@ -146,8 +146,14 @@ function BatchesArea({
           ? getByPath(`${focusedContainerIndex}.id`, containers)
           : null;
         const currentBatches = isFocusedBatchesPool
-          ? sortBy(getBatchesInPool(batches), filterAndSort.sort)
-          : sortBy(getBatchesByContainerId(batches, containerId), filterAndSort.sort);
+          ? sortBy(getBatchesInPool(batches), {
+              ...filterAndSort.sort,
+              ...filterAndSort.filter,
+            })
+          : sortBy(getBatchesByContainerId(batches, containerId), {
+              ...filterAndSort.sort,
+              ...filterAndSort.filter,
+            });
 
         const selectedBatchIds = intersection(
           currentBatches.map(item => getByPath('id', item)),

@@ -1,5 +1,6 @@
 // @flow
 import type { BatchPayload } from 'generated/graphql';
+import Fuse from 'fuse.js';
 import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';
 import { getByPathWithDefault } from 'utils/fp';
@@ -28,8 +29,36 @@ function compareByName(firstString: string, secondString: string) {
 
 function sortBy(
   batches: Array<BatchPayload>,
-  { field, direction }: { field: SortField | string, direction: SortDirection | string }
+  {
+    query,
+    field,
+    direction,
+  }: { query: string, field: SortField | string, direction: SortDirection | string }
 ) {
+  const options = {
+    caseSensitive: true,
+    threshold: 0.3,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 2,
+    keys: [
+      'no',
+      'orderItem.order.poNo',
+      'shipment.no',
+      'tags.name',
+      'orderItem.productProvider.product.name',
+      'orderItem.productProvider.product.serial',
+      'orderItem.productProvider.exporter.name',
+      'orderItem.productProvider.supplier.name',
+    ],
+  };
+  const fuse = new Fuse(batches, options);
+  let filterBatches: Array<BatchPayload> = [...batches];
+  if (query.length) {
+    filterBatches = fuse.search(query);
+  }
+
   let compareBy;
   switch (field) {
     case 'createdAt':
@@ -123,7 +152,7 @@ function sortBy(
     }
   }
 
-  const result = sort(compareBy, batches);
+  const result = sort(compareBy, filterBatches);
 
   return result;
 }
