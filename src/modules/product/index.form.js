@@ -285,11 +285,6 @@ class ProductFormModule extends React.Component<Props> {
                   icon="PRODUCT"
                 />
                 <SectionTabs
-                  link="product_taskSection"
-                  label={<FormattedMessage id="modules.Products.task" defaultMessage="TASKS" />}
-                  icon="TASK"
-                />
-                <SectionTabs
                   link="product_productProvidersSection"
                   label={
                     <FormattedMessage
@@ -299,7 +294,11 @@ class ProductFormModule extends React.Component<Props> {
                   }
                   icon="PRODUCT_PROVIDER"
                 />
-
+                <SectionTabs
+                  link="product_taskSection"
+                  label={<FormattedMessage id="modules.Products.task" defaultMessage="TASKS" />}
+                  icon="TASK"
+                />
                 <SectionTabs
                   link="product_relatedSection"
                   label={

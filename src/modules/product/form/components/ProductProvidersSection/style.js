@@ -85,7 +85,7 @@ export const BatchStyle: string = css`
 export const EmptyMessageStyle: string = css`
   ${fontSizes.MAIN};
   font-weight: bold;
-  color: ${colors.BLACK};
+  color: ${colors.RED};
   text-align: center;
   padding: 100px;
 `;
