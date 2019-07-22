@@ -7,7 +7,6 @@ import {
   transitions,
   fontSizes,
   scrollbars,
-  shadows,
   borderRadiuses,
 } from 'styles/common';
 
@@ -38,10 +37,10 @@ export const RemoveStyle: string = css`
   ${fontSizes.MEDIUM};
 `;
 
-export const InputStyle = (isHover: boolean, width: ?string = '400px'): string => css`
+export const InputStyle = (width: ?string = '400px'): string => css`
   position: relative;
   ${borderRadiuses.MAIN};
-  ${isHover && shadows.DROPDOWN};
+
   ${transitions.MAIN};
   width: ${width};
   white-space: nowrap;

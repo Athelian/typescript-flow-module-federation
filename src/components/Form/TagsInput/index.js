@@ -5,8 +5,8 @@ import matchSorter from 'match-sorter';
 import TagListProvider from 'providers/TagListProvider';
 import type { TagsQueryType } from 'providers/TagListProvider/type.js.flow';
 import Icon from 'components/Icon';
-import HoverWrapper from 'components/common/HoverWrapper';
 import Tag from 'components/Tag';
+import { DefaultStyle } from 'components/Form';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
 import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
@@ -135,103 +135,101 @@ export default class TagsInput extends React.Component<Props, State> {
     const { focused } = this.state;
 
     return (
-      <HoverWrapper>
-        {isHover => (
-          <div className={HoverStyle}>
-            <Downshift
-              itemToString={i => (i ? i.id : '')}
-              selectedItem={null}
-              onChange={this.handleDownshiftChange}
-              onStateChange={this.handleStateChange}
-              stateReducer={this.stateReducer}
-              labelId={`${name}TagInputs`}
-            >
-              {({
-                getInputProps,
-                getItemProps,
-                isOpen,
-                inputValue,
-                highlightedIndex,
-                clearSelection,
-                reset,
-              }) => (
-                <div className={WrapperStyle(focused, !!disabled, !!editable)}>
-                  <div className={SelectionWrapperStyle}>
-                    <div className={InputStyle(isHover, width)}>
-                      {values &&
-                        (values || [])
-                          .filter(item => !isForbidden(item))
-                          .map(tag => (
-                            <Tag
-                              key={tag.id}
-                              tag={tag}
-                              suffix={
-                                editable.remove && (
-                                  <button
-                                    type="button"
-                                    className={RemoveStyle}
-                                    onClick={() => {
-                                      this.handleRemove(tag);
-                                    }}
-                                  >
-                                    <Icon icon="CLEAR" />
-                                  </button>
-                                )
+      <div className={HoverStyle}>
+        <Downshift
+          itemToString={i => (i ? i.id : '')}
+          selectedItem={null}
+          onChange={this.handleDownshiftChange}
+          onStateChange={this.handleStateChange}
+          stateReducer={this.stateReducer}
+          labelId={`${name}TagInputs`}
+        >
+          {({
+            getInputProps,
+            getItemProps,
+            isOpen,
+            inputValue,
+            highlightedIndex,
+            clearSelection,
+            reset,
+          }) => (
+            <div className={WrapperStyle(focused, !!disabled, !!editable)}>
+              <DefaultStyle isFocused={focused}>
+                <div className={SelectionWrapperStyle}>
+                  <div className={InputStyle(width)}>
+                    {values &&
+                      (values || [])
+                        .filter(item => !isForbidden(item))
+                        .map(tag => (
+                          <Tag
+                            key={tag.id}
+                            tag={tag}
+                            suffix={
+                              editable.remove && (
+                                <button
+                                  type="button"
+                                  className={RemoveStyle}
+                                  onClick={() => {
+                                    this.handleRemove(tag);
+                                  }}
+                                >
+                                  <Icon icon="CLEAR" />
+                                </button>
+                              )
+                            }
+                          />
+                        ))}
+                    {editable.set && (
+                      <>
+                        <input
+                          type="text"
+                          {...getInputProps({
+                            spellCheck: false,
+                            disabled,
+                            onKeyDown: e => {
+                              switch (e.key) {
+                                case 'Backspace':
+                                  if (!inputValue && values && values.length > 0 && !e.repeat) {
+                                    this.handleRemove(values[values.length - 1]);
+                                  }
+                                  break;
+                                default:
                               }
-                            />
-                          ))}
-                      {editable.set && (
-                        <>
-                          <input
-                            type="text"
-                            {...getInputProps({
-                              spellCheck: false,
-                              disabled,
-                              onKeyDown: e => {
-                                switch (e.key) {
-                                  case 'Backspace':
-                                    if (!inputValue && values && values.length > 0 && !e.repeat) {
-                                      this.handleRemove(values[values.length - 1]);
-                                    }
-                                    break;
-                                  default:
-                                }
-                              },
-                              onFocus: this.handleInputFocus,
-                              onBlur: () => {
-                                this.handleInputBlur();
-                                reset();
-                                clearSelection();
-                              },
-                              ...(id ? { id } : {}),
-                            })}
-                          />
-                        </>
-                      )}
-                    </div>
-                    {isOpen && (
-                      <TagListProvider tagType={tagType}>
-                        {({ data: tags }) => (
-                          <TagSelectOptions
-                            getItemProps={getItemProps}
-                            items={tags}
-                            selectedItems={values}
-                            highlightedIndex={highlightedIndex}
-                            itemToString={item => (item ? item.description || item.name : '')}
-                            itemToValue={item => (item ? item.description : '')}
-                            width={width}
-                            align="left"
-                          />
-                        )}
-                      </TagListProvider>
+                            },
+                            onFocus: this.handleInputFocus,
+                            onBlur: () => {
+                              this.handleInputBlur();
+                              reset();
+                              clearSelection();
+                            },
+                            ...(id ? { id } : {}),
+                          })}
+                        />
+                      </>
                     )}
                   </div>
+                  {isOpen && (
+                    <TagListProvider tagType={tagType}>
+                      {({ data: tags }) => (
+                        <TagSelectOptions
+                          getItemProps={getItemProps}
+                          items={tags}
+                          selectedItems={values}
+                          highlightedIndex={highlightedIndex}
+                          itemToString={item => (item ? item.description || item.name : '')}
+                          itemToValue={item => (item ? item.description : '')}
+                          width={width}
+                          align="left"
+                        />
+                      )}
+                    </TagListProvider>
+                  )}
                 </div>
-              )}
-            </Downshift>
-          </div>
-        )}
-      </HoverWrapper>
+              </DefaultStyle>
+            </div>
+          )}
+        </Downshift>
+      </div>
     );
   }
 }
