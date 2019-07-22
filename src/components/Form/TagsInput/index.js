@@ -226,7 +226,7 @@ export default class TagsInput extends React.Component<Props, State> {
                       {({ data: tags }) => (
                         <TagSelectOptions
                           getItemProps={getItemProps}
-                          items={tags}
+                          items={this.computeFilteredTags(tags, inputValue)}
                           selectedItems={values}
                           highlightedIndex={highlightedIndex}
                           itemToString={item => (item ? item.description || item.name : '')}
