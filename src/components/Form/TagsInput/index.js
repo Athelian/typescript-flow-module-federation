@@ -5,24 +5,16 @@ import matchSorter from 'match-sorter';
 import TagListProvider from 'providers/TagListProvider';
 import type { TagsQueryType } from 'providers/TagListProvider/type.js.flow';
 import Icon from 'components/Icon';
-import HoverWrapper from 'components/common/HoverWrapper';
 import Tag from 'components/Tag';
+import { DefaultStyle } from 'components/Form';
 import type { Tag as TagType } from 'components/Tag/type.js.flow';
 import { HoverStyle } from 'components/common/HoverWrapper/style';
+import TagSelectOptions from 'components/Form/Inputs/Styles/TagSelectOptions';
 import { isForbidden } from 'utils/data';
-import {
-  WrapperStyle,
-  SelectionWrapperStyle,
-  ListWrapperStyle,
-  InputStyle,
-  RemoveStyle,
-  ExpandButtonStyle,
-  ArrowDownStyle,
-  ItemStyle,
-  SelectedWrapperStyle,
-} from './style';
+import { WrapperStyle, SelectionWrapperStyle, InputStyle, RemoveStyle } from './style';
 
 type OptionalProps = {
+  width: string,
   editable: {
     set: boolean,
     remove: boolean,
@@ -33,7 +25,7 @@ type Props = OptionalProps & {
   tagType: TagsQueryType,
   name: string,
   id?: string,
-  values: ?Array<TagType>,
+  values: Array<TagType>,
   disabled?: boolean,
   type?: string,
   placeholder?: string,
@@ -51,10 +43,13 @@ const defaultProps = {
     set: false,
     remove: false,
   },
+  width: '400px',
 };
 
 export default class TagsInput extends React.Component<Props, State> {
   static defaultProps = defaultProps;
+
+  inputRef = React.createRef<HTMLInputElement>();
 
   state = {
     focused: false,
@@ -130,6 +125,10 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   handleInputFocus = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.focus();
+    }
+
     this.setState({ focused: true });
   };
 
@@ -139,33 +138,41 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { editable, tagType, disabled, values, name, id } = this.props;
+    const { editable, width, tagType, disabled, values, name, id } = this.props;
     const { focused } = this.state;
 
     return (
-      <HoverWrapper>
-        {isHover => (
-          <div className={HoverStyle}>
-            <Downshift
-              itemToString={i => (i ? i.id : '')}
-              selectedItem={null}
-              onChange={this.handleDownshiftChange}
-              onStateChange={this.handleStateChange}
-              stateReducer={this.stateReducer}
-              labelId={`${name}TagInputs`}
-            >
-              {({
-                getInputProps,
-                getToggleButtonProps,
-                getItemProps,
-                isOpen,
-                inputValue,
-                highlightedIndex,
-                clearSelection,
-                reset,
-              }) => (
-                <div className={WrapperStyle(focused, !!disabled, !!editable)}>
-                  <div className={SelectionWrapperStyle}>
+      <div className={HoverStyle}>
+        <Downshift
+          itemToString={i => (i ? i.id : '')}
+          selectedItem={null}
+          onChange={this.handleDownshiftChange}
+          onStateChange={this.handleStateChange}
+          stateReducer={this.stateReducer}
+          labelId={`${name}TagInputs`}
+          onOuterClick={this.handleInputBlur}
+        >
+          {({
+            getInputProps,
+            getItemProps,
+            openMenu,
+            isOpen,
+            inputValue,
+            highlightedIndex,
+            clearSelection,
+            reset,
+          }) => (
+            <div className={WrapperStyle(focused, !!disabled, !!editable)}>
+              <DefaultStyle isFocused={focused} width={width}>
+                <div className={SelectionWrapperStyle}>
+                  <div
+                    role="presentation"
+                    className={InputStyle(width)}
+                    onClick={() => {
+                      this.handleInputFocus();
+                      openMenu();
+                    }}
+                  >
                     {values &&
                       (values || [])
                         .filter(item => !isForbidden(item))
@@ -178,7 +185,8 @@ export default class TagsInput extends React.Component<Props, State> {
                                 <button
                                   type="button"
                                   className={RemoveStyle}
-                                  onClick={() => {
+                                  onClick={event => {
+                                    event.stopPropagation();
                                     this.handleRemove(tag);
                                   }}
                                 >
@@ -189,8 +197,9 @@ export default class TagsInput extends React.Component<Props, State> {
                           />
                         ))}
                     {editable.set && (
-                      <div className={InputStyle(isHover)}>
+                      <>
                         <input
+                          ref={this.inputRef}
                           type="text"
                           {...getInputProps({
                             spellCheck: false,
@@ -205,7 +214,10 @@ export default class TagsInput extends React.Component<Props, State> {
                                 default:
                               }
                             },
-                            onFocus: this.handleInputFocus,
+                            onFocus: () => {
+                              this.handleInputFocus();
+                              openMenu();
+                            },
                             onBlur: () => {
                               this.handleInputBlur();
                               reset();
@@ -214,50 +226,31 @@ export default class TagsInput extends React.Component<Props, State> {
                             ...(id ? { id } : {}),
                           })}
                         />
-
-                        <button
-                          {...getToggleButtonProps()}
-                          type="button"
-                          className={ExpandButtonStyle}
-                          disabled={disabled}
-                        >
-                          <Icon icon="CHEVRON_DOWN" className={ArrowDownStyle(isOpen)} />
-                        </button>
-                        {isOpen && (
-                          <TagListProvider tagType={tagType}>
-                            {({ data: tags }) => (
-                              <div className={ListWrapperStyle}>
-                                {this.computeFilteredTags(tags, inputValue).map((tag, index) => {
-                                  const isActive = highlightedIndex === index;
-                                  const isSelected =
-                                    values && values.map(t => t.id).includes(tag.id);
-
-                                  return (
-                                    <div
-                                      key={tag.id}
-                                      className={ItemStyle(isActive)}
-                                      {...getItemProps({ item: tag })}
-                                    >
-                                      <div className={SelectedWrapperStyle(isActive)}>
-                                        {isSelected && <Icon icon="CONFIRM" />}
-                                      </div>
-                                      <Tag tag={tag} />
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </TagListProvider>
-                        )}
-                      </div>
+                      </>
                     )}
                   </div>
+                  {isOpen && (
+                    <TagListProvider tagType={tagType}>
+                      {({ data: tags }) => (
+                        <TagSelectOptions
+                          getItemProps={getItemProps}
+                          items={this.computeFilteredTags(tags, inputValue)}
+                          selectedItems={values}
+                          highlightedIndex={highlightedIndex}
+                          itemToString={item => (item ? item.description || item.name : '')}
+                          itemToValue={item => (item ? item.description : '')}
+                          width={width}
+                          align="left"
+                        />
+                      )}
+                    </TagListProvider>
+                  )}
                 </div>
-              )}
-            </Downshift>
-          </div>
-        )}
-      </HoverWrapper>
+              </DefaultStyle>
+            </div>
+          )}
+        </Downshift>
+      </div>
     );
   }
 }
