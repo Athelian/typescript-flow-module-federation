@@ -196,6 +196,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       hasCalledBatchesApiYet = false,
       hasCalledTimelineApiYet = false,
       hasCalledContainerApiYet = false,
+      hasCalledFilesApiYet = false,
       todo = taskInitValues.todo,
       ...info
     }: Object = shipment;
@@ -216,7 +217,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       },
       hasCalledTimelineApiYet
     );
-    shipmentFilesContainer.initDetailValues(files);
+    shipmentFilesContainer.initDetailValues(files, hasCalledFilesApiYet);
     shipmentTasksContainer.initDetailValues(todo, hasCalledTasksApiYet || todo.tasks.length > 0);
     shipmentTagsContainer.initDetailValues(tags);
     shipmentTransportTypeContainer.initDetailValues(transportType);
@@ -253,6 +254,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
       hasCalledBatchesApiYet = false,
       hasCalledTimelineApiYet = false,
       hasCalledContainerApiYet = false,
+      hasCalledFilesApiYet = false,
       ...info
     }: Object = shipment;
     shipmentInfoContainer.initDetailValues({
@@ -262,7 +264,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
     shipmentBatchesContainer.initDetailValues([], hasCalledBatchesApiYet);
     shipmentContainersContainer.initDetailValues([], hasCalledContainerApiYet);
     shipmentTimelineContainer.initDetailValues({}, hasCalledTimelineApiYet);
-    shipmentFilesContainer.initDetailValues([]);
+    shipmentFilesContainer.initDetailValues([], hasCalledFilesApiYet);
     shipmentTasksContainer.initDetailValues({ tasks: [] }, hasCalledTasksApiYet);
     shipmentTagsContainer.initDetailValues(tags);
     shipmentTransportTypeContainer.initDetailValues(transportType);
@@ -576,6 +578,7 @@ class ShipmentFormModule extends React.PureComponent<Props> {
                                         hasCalledBatchesApiYet: true,
                                         hasCalledTimelineApiYet: true,
                                         hasCalledContainerApiYet: true,
+                                        hasCalledFilesApiYet: true,
                                       }
                                     );
                                     formContainer.onReset();
