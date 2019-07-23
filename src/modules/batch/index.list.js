@@ -56,7 +56,6 @@ const BatchListModule = (props: Props) => {
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
           canArchive
-          canSort
           canSearch
         />
       </NavBar>

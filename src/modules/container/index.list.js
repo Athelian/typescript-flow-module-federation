@@ -60,7 +60,6 @@ function OrderModule(props: Props) {
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
           canArchive
-          canSort
           canSearch
         />
         <ExportButton

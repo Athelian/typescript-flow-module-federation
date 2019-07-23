@@ -7,7 +7,6 @@ type OptionalProps = {
   icon?: string,
   renderIcon: Function,
   canArchive: boolean,
-  canSort: boolean,
   canSearch: boolean,
 };
 
@@ -27,7 +26,6 @@ type Props = OptionalProps & {
 
 const defaultProps = {
   canArchive: false,
-  canSort: false,
   canSearch: false,
   renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
@@ -51,7 +49,6 @@ export default function FilterToolBar({
   filtersAndSort,
   onChange,
   canArchive,
-  canSort,
   canSearch,
 }: Props) {
   return (
@@ -69,22 +66,21 @@ export default function FilterToolBar({
         />
       )}
 
-      {canSort && (
-        <SortInput
-          sort={currentSort(sortFields, filtersAndSort.sort)}
-          ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-          fields={sortFields}
-          onChange={({ field: { value }, ascending }) =>
-            onChange({
-              ...filtersAndSort,
-              sort: {
-                field: value,
-                direction: ascending ? 'ASCENDING' : 'DESCENDING',
-              },
-            })
-          }
-        />
-      )}
+      <SortInput
+        sort={currentSort(sortFields, filtersAndSort.sort)}
+        ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+        fields={sortFields}
+        sortable={filtersAndSort.sort.field !== 'default'}
+        onChange={({ field: { value }, ascending }) =>
+          onChange({
+            ...filtersAndSort,
+            sort: {
+              field: value,
+              direction: ascending ? 'ASCENDING' : 'DESCENDING',
+            },
+          })
+        }
+      />
 
       {canSearch && (
         <SearchInput

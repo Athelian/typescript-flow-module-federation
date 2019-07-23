@@ -77,7 +77,6 @@ const SelectTaskTemplate = ({ intl, cacheKey, entityType, onCancel, onSelect }: 
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
-                    canSort
                     canSearch
                   />
                   <CancelButton onClick={onCancel} />
