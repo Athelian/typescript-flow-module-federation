@@ -225,6 +225,7 @@
   "components.BatchItem.expiredAt": "消費期限",
   "components.BatchItem.producedAt": "製造日",
   "components.BatchItem.updatedAt": "最終更新",
+  "components.BatchItem.sort": "Date Added",
   "components.BatchItem.createdAt": "作成日",
   "components.BatchItem.adjustmentType": "変更理由",
   "components.BatchItem.exporter": "輸出者",
