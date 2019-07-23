@@ -7,6 +7,7 @@ type OptionalProps = {
   renderIcon: Function,
   searchable: boolean,
   sortable: boolean,
+  showArchivedTab: boolean,
 };
 
 type Props = OptionalProps & {
@@ -26,6 +27,7 @@ type Props = OptionalProps & {
 const defaultProps = {
   searchable: true,
   sortable: true,
+  showArchivedTab: true,
   renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
 
@@ -49,15 +51,19 @@ export default function FilterToolBar({
   onChange,
   searchable,
   sortable,
+  showArchivedTab,
 }: Props) {
   return (
     <>
       {renderIcon(icon)}
-      {Object.prototype.hasOwnProperty.call(filtersAndSort.filter, 'archived') && (
+      {showArchivedTab && Object.prototype.hasOwnProperty.call(filtersAndSort.filter, 'archived') && (
         <StatusToggleTabs
           activeIndex={filtersAndSort.filter.archived ? 1 : 0}
           onChange={index =>
-            onChange({ ...filtersAndSort, filter: { ...filtersAndSort.filter, archived: !!index } })
+            onChange({
+              ...filtersAndSort,
+              filter: { ...filtersAndSort.filter, archived: !!index },
+            })
           }
         />
       )}

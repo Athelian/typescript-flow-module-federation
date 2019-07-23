@@ -447,10 +447,10 @@ function ItemsArea({
                         setFieldTouched('orderItems');
                         slideToggle(false);
                       }}
+                      onCancel={() => slideToggle(false)}
                       importerId={getByPathWithDefault('', 'importer.id', order)}
                       exporterId={getByPathWithDefault('', 'exporter.id', order)}
                       orderCurrency={currency}
-                      onCancel={() => slideToggle(false)}
                     />
                   )}
                 </SlideView>

@@ -25,6 +25,7 @@ type OptionalProps = {
   importerId: string,
   exporterId: string,
   orderCurrency: string,
+  cacheKey: string,
 };
 
 type Props = OptionalProps & {
@@ -37,6 +38,7 @@ const defaultProps = {
   importerId: '',
   exporterId: '',
   orderCurrency: '',
+  cacheKey: 'SelectProductProviders',
 };
 
 const countSelected = (selected: Array<OrderItem> = [], value: OrderItem) =>
@@ -49,6 +51,7 @@ function SelectProductProviders({
   importerId,
   exporterId,
   orderCurrency,
+  cacheKey,
 }: Props) {
   const sortFields = [
     { title: intl.formatMessage(messages.updatedAtSort), value: 'updatedAt' },
@@ -61,7 +64,7 @@ function SelectProductProviders({
     { title: intl.formatMessage(messages.supplier), value: 'supplierName' },
   ];
 
-  const endProductsDefaultQueryVariables = {
+  const defaultQueryVariables = {
     perPage: 10,
     page: 1,
     filter: {
@@ -74,8 +77,8 @@ function SelectProductProviders({
   };
 
   const { filterAndSort, queryVariables, onChangeFilter } = useFilter(
-    endProductsDefaultQueryVariables,
-    'orderFormEndProductSelector'
+    defaultQueryVariables,
+    cacheKey
   );
 
   return (
@@ -101,6 +104,7 @@ function SelectProductProviders({
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
+                    showArchivedTab={false}
                   />
                   <div>
                     <Label>
