@@ -139,12 +139,14 @@ function EnumSearchSelectInputFactory(props: Props): React$Node {
           },
           onBlur: () => {
             if (onBlur && onChange) {
-              if (required) {
-                onChange(convertValueToFormFieldFormat(itemToValue(selectedItem) || originalValue));
-              } else {
-                onChange(convertValueToFormFieldFormat(itemToValue(selectedItem)));
-              }
               setTimeout(() => {
+                if (required) {
+                  onChange(
+                    convertValueToFormFieldFormat(itemToValue(selectedItem) || originalValue)
+                  );
+                } else {
+                  onChange(convertValueToFormFieldFormat(itemToValue(selectedItem)));
+                }
                 onBlur();
               }, 0);
             }
