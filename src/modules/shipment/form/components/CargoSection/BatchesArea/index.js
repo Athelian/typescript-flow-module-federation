@@ -133,6 +133,7 @@ function BatchesArea({
   });
   const lastBatchIds = React.useRef([]);
   const lastBatchInputIds = React.useRef([]);
+  const lastFocusedContainerIndex = React.useRef(focusedContainerIndex);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -161,8 +162,12 @@ function BatchesArea({
             ...filterAndSort.sort,
             ...filterAndSort.filter,
           }) ||
-          (batchesSelector.length > 0 && lastBatchIds.current && lastBatchIds.current.length === 0)
+          (batchesSelector.length > 0 &&
+            lastBatchIds.current &&
+            lastBatchIds.current.length === 0) ||
+          lastFocusedContainerIndex.current !== focusedContainerIndex
         ) {
+          lastFocusedContainerIndex.current = focusedContainerIndex;
           lastFilterAndSort.current = {
             ...filterAndSort.sort,
             ...filterAndSort.filter,
