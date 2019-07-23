@@ -8,7 +8,6 @@ export const tagsQuery = gql`
         ... on Tag {
           id
           name
-          description
           color
         }
       }
