@@ -280,8 +280,11 @@ const BatchSection = ({ batch, itemConfig }: Props) => {
                       name="tags"
                       tagType="Batch"
                       values={values.tags}
-                      onChange={(field, value) => {
-                        setFieldValue(field, value);
+                      onChange={value => {
+                        setFieldValue('tags', value);
+                      }}
+                      onClickRemove={value => {
+                        setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
                       }}
                       editable={{
                         set:

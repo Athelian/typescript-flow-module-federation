@@ -344,8 +344,11 @@ const ProductSection = ({ isNew, isOwner, product }: Props) => {
                               name="tags"
                               tagType="Product"
                               values={tags}
-                              onChange={(field, value) => {
-                                changeTags(field, value);
+                              onChange={value => {
+                                changeTags('tags', value);
+                              }}
+                              onClickRemove={value => {
+                                changeTags('tags', tags.filter(({ id }) => id !== value.id));
                               }}
                               editable={{
                                 set:

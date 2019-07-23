@@ -6,13 +6,12 @@ import { TagsWrapperStyle } from './style';
 import messages from '../messages';
 
 type Props = {
+  tagType: string,
   values: any,
   onChange: Function,
-  tagType: string,
+  onClickRemove: Function,
 };
-export default function Tags({ values, onChange, tagType }: Props) {
-  const isFocused = false;
-
+export default function Tags({ values, onChange, onClickRemove, tagType }: Props) {
   return (
     <div className={TagsWrapperStyle}>
       <FieldItem
@@ -28,11 +27,11 @@ export default function Tags({ values, onChange, tagType }: Props) {
               set: true,
               remove: true,
             }}
-            isFocused={isFocused}
             tagType={tagType}
             name={tagType}
             values={values}
             onChange={onChange}
+            onClickRemove={onClickRemove}
           />
         }
       />

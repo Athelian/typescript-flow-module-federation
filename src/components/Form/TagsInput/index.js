@@ -30,6 +30,7 @@ type Props = OptionalProps & {
   type?: string,
   placeholder?: string,
   onChange?: Function,
+  onClickRemove: Function,
   onBlur?: Function,
   onFocus?: Function,
 };
@@ -56,10 +57,10 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   handleChange = (tags: Array<TagType>) => {
-    const { name, onChange } = this.props;
+    const { onChange } = this.props;
 
     if (onChange) {
-      onChange(name, tags);
+      onChange(tags);
     }
   };
 
@@ -138,7 +139,7 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { editable, width, tagType, disabled, values, name, id } = this.props;
+    const { editable, width, tagType, disabled, values, name, id, onClickRemove } = this.props;
     const { focused } = this.state;
 
     return (
@@ -187,7 +188,7 @@ export default class TagsInput extends React.Component<Props, State> {
                                   className={RemoveStyle}
                                   onClick={event => {
                                     event.stopPropagation();
-                                    this.handleRemove(tag);
+                                    onClickRemove(tag);
                                   }}
                                 >
                                   <Icon icon="CLEAR" />
