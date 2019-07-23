@@ -200,14 +200,6 @@ function BatchesArea({
         if (isFocusedContainer) {
           const container = containers[focusedContainerIndex];
           representativeBatchId = getByPath(`representativeBatch.id`, container);
-
-          // FIXME: Try to fix the representativeBatch without set state on rendering UI
-          if (currentBatches.length > 0 && !representativeBatchId) {
-            setDeepFieldValue(
-              `containers.${focusedContainerIndex}.representativeBatch`,
-              currentBatches[0]
-            );
-          }
         }
 
         const allowMoveBatches =
