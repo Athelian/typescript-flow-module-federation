@@ -57,6 +57,8 @@ const StaffModule = (props: Props) => {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canSort
+          canSearch
         />
       </NavBar>
       <StaffList {...queryVariables} />

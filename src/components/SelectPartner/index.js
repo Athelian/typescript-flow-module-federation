@@ -79,6 +79,8 @@ const SelectPartner = ({ intl, cacheKey, partnerTypes, selected, onCancel, onSel
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
+                    canSort
+                    canSearch
                   />
                   <CancelButton onClick={onCancel} />
                   <SaveButton

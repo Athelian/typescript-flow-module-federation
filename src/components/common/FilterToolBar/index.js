@@ -1,12 +1,14 @@
 // @flow
 import * as React from 'react';
 import { EntityIcon, SortInput, SearchInput, StatusToggleTabs } from 'components/NavBar';
+import { getByPath } from 'utils/fp';
 
 type OptionalProps = {
   icon?: string,
   renderIcon: Function,
-  searchable: boolean,
-  sortable: boolean,
+  canArchive: boolean,
+  canSort: boolean,
+  canSearch: boolean,
 };
 
 type Props = OptionalProps & {
@@ -24,8 +26,9 @@ type Props = OptionalProps & {
 };
 
 const defaultProps = {
-  searchable: true,
-  sortable: true,
+  canArchive: false,
+  canSort: false,
+  canSearch: false,
   renderIcon: icon => (icon ? <EntityIcon icon={icon} color={icon} /> : null),
 };
 
@@ -47,37 +50,43 @@ export default function FilterToolBar({
   sortFields,
   filtersAndSort,
   onChange,
-  searchable,
-  sortable,
+  canArchive,
+  canSort,
+  canSearch,
 }: Props) {
   return (
     <>
       {renderIcon(icon)}
-      {Object.prototype.hasOwnProperty.call(filtersAndSort.filter, 'archived') && (
+      {canArchive && (
         <StatusToggleTabs
-          activeIndex={filtersAndSort.filter.archived ? 1 : 0}
+          activeIndex={getByPath('filter.archived', filtersAndSort) ? 1 : 0}
           onChange={index =>
-            onChange({ ...filtersAndSort, filter: { ...filtersAndSort.filter, archived: !!index } })
+            onChange({
+              ...filtersAndSort,
+              filter: { ...filtersAndSort.filter, archived: !!index },
+            })
           }
         />
       )}
-      <SortInput
-        sort={currentSort(sortFields, filtersAndSort.sort)}
-        ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
-        sortable={sortable}
-        fields={sortFields}
-        onChange={({ field: { value }, ascending }) =>
-          onChange({
-            ...filtersAndSort,
-            sort: {
-              field: value,
-              direction: ascending ? 'ASCENDING' : 'DESCENDING',
-            },
-          })
-        }
-      />
 
-      {searchable && (
+      {canSort && (
+        <SortInput
+          sort={currentSort(sortFields, filtersAndSort.sort)}
+          ascending={filtersAndSort.sort.direction !== 'DESCENDING'}
+          fields={sortFields}
+          onChange={({ field: { value }, ascending }) =>
+            onChange({
+              ...filtersAndSort,
+              sort: {
+                field: value,
+                direction: ascending ? 'ASCENDING' : 'DESCENDING',
+              },
+            })
+          }
+        />
+      )}
+
+      {canSearch && (
         <SearchInput
           value={filtersAndSort.filter.query}
           name="search"
