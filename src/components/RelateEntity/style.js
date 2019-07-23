@@ -1,18 +1,18 @@
 // @flow
 import { css } from 'react-emotion';
-import { layout, colors, borderRadiuses, shadows, presets } from 'styles/common';
+import { layout, colors, fontSizes, borderRadiuses, presets } from 'styles/common';
 
 export const WrapperStyle: string = css`
   ${layout.GRID_HORIZONTAL};
-  grid-template-columns: 35px auto;
+  grid-template-columns: 25px 145px;
   grid-gap: 5px;
   width: fit-content;
 `;
 
-export const IconColorStyle = (entity: string) => css`
-  background-color: ${colors[entity]};
-  width: 35px;
-  height: 35px;
+export const IconColorStyle = (entity: string, isNotAvailable: boolean) => css`
+  background-color: ${isNotAvailable ? colors.GRAY_VERY_LIGHT : colors[entity]};
+  width: 25px;
+  height: 25px;
   color: #fff;
   display: flex;
   border-top-right-radius: 5px;
@@ -21,12 +21,11 @@ export const IconColorStyle = (entity: string) => css`
 `;
 
 export const TextStyle = css`
-  ${shadows.WATERFALL};
   ${borderRadiuses.MAIN};
   ${presets.ELLIPSIS};
-  line-height: 35px;
+  ${fontSizes.MAIN};
+  line-height: 25px;
   padding-left: 4px;
-  background-color: #fff;
   color: #000;
 `;
 
