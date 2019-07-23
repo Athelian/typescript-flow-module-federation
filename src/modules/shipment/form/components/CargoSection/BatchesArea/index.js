@@ -6,7 +6,7 @@ import type { IntlShape } from 'react-intl';
 import { maxBy, intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { getByPath, isEquals } from 'utils/fp';
+import { getByPath, getByPathWithDefault, isEquals } from 'utils/fp';
 import useSortAndFilter from 'hooks/useSortAndFilter';
 import messages from 'modules/batch/messages';
 import FilterToolBar from 'components/common/FilterToolBar';
@@ -235,6 +235,8 @@ function BatchesArea({
           <div className={BatchesWrapperStyle}>
             <div className={BatchesNavbarWrapperStyle}>
               <FilterToolBar
+                canSort
+                canSearch
                 sortFields={sortFields}
                 filtersAndSort={filterAndSort}
                 onChange={onChangeFilter}
@@ -573,7 +575,12 @@ function BatchesArea({
                                 }}
                                 selectedBatches={batches}
                                 onSelect={selected => {
-                                  const maxSort = maxBy(batches, 'sort').sort + 1;
+                                  const maxSort =
+                                    getByPathWithDefault(
+                                      0,
+                                      'shipmentSort',
+                                      maxBy(batches, 'shipmentSort')
+                                    ) + 1;
                                   const newSelectBatches = selected.map(
                                     (selectedBatch, counter) => ({
                                       shipmentSort: maxSort + counter,
@@ -660,7 +667,12 @@ function BatchesArea({
                                   ...(exporterId ? { exporterId } : {}),
                                 }}
                                 onSelect={selectedOrderItems => {
-                                  const maxSort = maxBy(batches, 'sort').sort + 1;
+                                  const maxSort =
+                                    getByPathWithDefault(
+                                      0,
+                                      'shipmentSort',
+                                      maxBy(batches, 'shipmentSort')
+                                    ) + 1;
                                   const createdBatches: Array<BatchPayload> = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
