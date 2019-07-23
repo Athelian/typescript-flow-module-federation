@@ -57,6 +57,8 @@ const ProjectListModule = (props: Props) => {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canSort
+          canSearch
         />
         {hasPermission(PROJECT_CREATE) && (
           <Link to="new">

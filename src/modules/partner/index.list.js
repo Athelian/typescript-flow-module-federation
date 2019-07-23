@@ -60,6 +60,8 @@ const PartnerModule = (props: Props) => {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canSort
+          canSearch
         />
       </NavBar>
       <PartnerList {...queryVariables} />

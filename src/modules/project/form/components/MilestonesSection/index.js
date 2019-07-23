@@ -72,8 +72,7 @@ function MilestonesSection({ intl }: Props) {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
-          sortable={filterAndSort.sort.field !== 'default'}
-          searchable={false}
+          canSort={filterAndSort.sort.field !== 'default'}
         />
       </div>
 

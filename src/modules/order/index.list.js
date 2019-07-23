@@ -58,6 +58,9 @@ function OrderModule(props: Props) {
           sortFields={sortFields}
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
+          canArchive
+          canSort
+          canSearch
         />
         {hasPermission(ORDER_CREATE) && (
           <Link to="new">

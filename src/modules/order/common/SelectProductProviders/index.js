@@ -104,7 +104,8 @@ function SelectProductProviders({
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
-                    showArchivedTab={false}
+                    canSort
+                    canSearch
                   />
                   <div>
                     <Label>
