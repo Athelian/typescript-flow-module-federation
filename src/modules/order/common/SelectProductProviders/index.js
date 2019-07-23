@@ -104,7 +104,6 @@ function SelectProductProviders({
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
-                    canSort
                     canSearch
                   />
                   <div>

@@ -66,7 +66,6 @@ const TableTemplateModule = (props: Props) => {
             sortFields={sortFields}
             filtersAndSort={filtersAndSort}
             onChange={onChangeFilter}
-            canSort
             canSearch
           />
 

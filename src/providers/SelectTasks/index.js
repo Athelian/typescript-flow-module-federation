@@ -75,7 +75,6 @@ function SelectTasks({ intl, cacheKey, onCancel, onSelect, filter }: Props) {
                     sortFields={sortFields}
                     filtersAndSort={filterAndSort}
                     onChange={onChangeFilter}
-                    canSort
                     canSearch
                   />
                   <CancelButton onClick={onCancel} />

@@ -81,7 +81,6 @@ const AssignUsers = ({ intl, cacheKey, selected, onCancel, onSelect, filterBy }:
                       sortFields={sortFields}
                       filtersAndSort={filterAndSort}
                       onChange={onChangeFilter}
-                      canSort
                       canSearch
                     />
                     <h3>

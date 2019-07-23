@@ -107,7 +107,6 @@ const ShipmentListModule = (props: Props) => {
           filtersAndSort={filterAndSort}
           onChange={onChangeFilter}
           canArchive
-          canSort
           canSearch
         />
         {hasPermission(SHIPMENT_CREATE) && (

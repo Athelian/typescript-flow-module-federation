@@ -17,6 +17,7 @@ type Sort = {
 
 type OptionalProps = {
   borderRound: boolean,
+  sortable: boolean,
 };
 
 type Props = OptionalProps & {
@@ -32,6 +33,7 @@ type Props = OptionalProps & {
 class SortInput extends React.Component<Props> {
   static defaultProps = {
     borderRound: true,
+    sortable: true,
   };
 
   onFieldChange = (field: Sort) => {
@@ -46,7 +48,7 @@ class SortInput extends React.Component<Props> {
   };
 
   render() {
-    const { sort, ascending, fields, borderRound } = this.props;
+    const { sort, ascending, fields, borderRound, sortable } = this.props;
     const itemToString = item => (item ? item.title : '');
     const itemToValue = item => (item ? item.value : '');
 
@@ -63,15 +65,17 @@ class SortInput extends React.Component<Props> {
             <input
               readOnly
               spellCheck={false}
-              className={InputStyle}
+              className={InputStyle(sortable)}
               onClick={toggle}
               {...getInputProps({
                 value: itemToString(selectedItem),
               })}
             />
-            <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
-              <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
-            </button>
+            {sortable && (
+              <button type="button" className={ButtonStyle} onClick={this.onAscClick}>
+                <Icon icon={ascending ? 'SORT_ASC' : 'SORT_DESC'} />
+              </button>
+            )}
           </div>
         )}
         renderOptions={({ highlightedIndex, selectedItem, getItemProps }) => (
