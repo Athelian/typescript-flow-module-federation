@@ -91,6 +91,7 @@ function EnumSearchSelectInputFactory(props: Props): React$Node {
     editable,
     blackout,
   } = props;
+  const lastValidEnum = React.useRef(value);
   return (
     <EnumProvider enumType={enumType}>
       {({ loading, error, data }) => {
@@ -134,19 +135,19 @@ function EnumSearchSelectInputFactory(props: Props): React$Node {
           name,
           onChange: newValue => {
             if (onChange) {
-              onChange(convertValueToFormFieldFormat(itemToValue(newValue)));
+              const selectedValue = itemToValue(newValue);
+              if (selectedValue) {
+                lastValidEnum.current = selectedValue;
+              } else if (!required) {
+                lastValidEnum.current = '';
+              }
+              onChange(convertValueToFormFieldFormat(selectedValue));
             }
           },
           onBlur: () => {
             if (onBlur && onChange) {
               setTimeout(() => {
-                if (required) {
-                  onChange(
-                    convertValueToFormFieldFormat(itemToValue(selectedItem) || originalValue)
-                  );
-                } else {
-                  onChange(convertValueToFormFieldFormat(itemToValue(selectedItem)));
-                }
+                onChange(convertValueToFormFieldFormat(lastValidEnum.current));
                 onBlur();
               }, 0);
             }
