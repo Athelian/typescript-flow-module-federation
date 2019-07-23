@@ -9,6 +9,7 @@ import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
 import { getProductImage } from 'components/Cards/utils';
+import RelateEntity from 'components/RelateEntity';
 import withForbiddenCard from 'hoc/withForbiddenCard';
 import { FieldItem, Label, Display } from 'components/Form';
 import TaskRing from 'components/TaskRing';
@@ -27,11 +28,8 @@ import {
   BatchNoWrapperStyle,
   DividerStyle,
   OrderWrapperStyle,
-  OrderIconStyle,
   ShipmentWrapperStyle,
-  ShipmentIconStyle,
   ContainerWrapperStyle,
-  ContainerIconStyle,
   TagsAndTaskWrapperStyle,
   BatchTagsWrapperStyle,
   ImporterWrapperStyle,
@@ -211,45 +209,43 @@ const BatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={OrderWrapperStyle}>
             <Link
-              className={OrderIconStyle}
               to={`/order/${encodeId(order.id)}`}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
-              <Icon icon="ORDER" />
+              <RelateEntity entity="ORDER" value={order && order.poNo} />
             </Link>
-            <Display align="left">{order.poNo}</Display>
           </div>
 
           <div className={ShipmentWrapperStyle}>
             <Link
-              className={ShipmentIconStyle(!!shipment)}
               to={shipment && shipment.id ? `/shipment/${encodeId(shipment.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
-              <Icon icon="SHIPMENT" />
+              <RelateEntity
+                blackout={isForbidden(shipment)}
+                entity="SHIPMENT"
+                value={shipment && shipment.no}
+              />
             </Link>
-            <Display blackout={isForbidden(shipment)} align="left">
-              {shipment && shipment.no}
-            </Display>
           </div>
 
           <div className={ContainerWrapperStyle}>
             <Link
-              className={ContainerIconStyle(!!container)}
               to={container && container.id ? `/container/${encodeId(container.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
-              <Icon icon="CONTAINER" />
+              <RelateEntity
+                blackout={isForbidden(container)}
+                entity="CONTAINER"
+                value={container && container.no}
+              />
             </Link>
-            <Display blackout={isForbidden(container)} align="left">
-              {container && container.no}
-            </Display>
           </div>
           <div className={TagsAndTaskWrapperStyle}>
             <div className={BatchTagsWrapperStyle}>
@@ -267,7 +263,7 @@ BatchCard.defaultProps = defaultProps;
 
 export default withForbiddenCard(BatchCard, 'batch', {
   width: '195px',
-  height: '406px',
+  height: '420px',
   entityIcon: 'BATCH',
   entityColor: 'BATCH',
 });

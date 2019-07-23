@@ -10,6 +10,7 @@ import Tag from 'components/Tag';
 import PartnerPermissionsWrapper from 'components/PartnerPermissionsWrapper';
 import FormattedNumber from 'components/FormattedNumber';
 import FormattedDate from 'components/FormattedDate';
+import RelateEntity from 'components/RelateEntity';
 import { Label, Display } from 'components/Form';
 import { getProductImage } from 'components/Cards/utils';
 import withForbiddenCard from 'hoc/withForbiddenCard';
@@ -217,21 +218,21 @@ const ContainerCard = ({ container, onClick, ...rest }: Props) => {
 
           <div className={IconInputStyle}>
             {isNullOrUndefined(shipment) ? (
-              <div className={WarehouseIconStyle(false)} role="presentation">
-                <Icon icon="SHIPMENT" />
-              </div>
+              <RelateEntity entity="SHIPMENT" value="" />
             ) : (
               <>
                 <Link
-                  className={WarehouseIconStyle(true)}
                   to={`/shipment/${encodeId(shipment.id)}`}
                   onClick={evt => {
                     evt.stopPropagation();
                   }}
                 >
-                  <Icon icon="SHIPMENT" />
+                  <RelateEntity
+                    blackout={isForbidden(shipment)}
+                    entity="SHIPMENT"
+                    value={shipment && shipment.no}
+                  />
                 </Link>
-                <Display align="left">{shipment.no}</Display>
               </>
             )}
           </div>

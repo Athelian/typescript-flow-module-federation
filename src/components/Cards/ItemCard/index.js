@@ -15,6 +15,7 @@ import { Label, Display, FieldItem, NumberInputFactory, TextInputFactory } from 
 import { getProductImage } from 'components/Cards/utils';
 import { getItemQuantityChartData } from 'utils/item';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import RelateEntity from 'components/RelateEntity';
 import BaseCard from '../BaseCard';
 import {
   OrderItemCardWrapperStyle,
@@ -36,7 +37,6 @@ import {
   ChartWrapperStyle,
   TotalPriceWrapperStyle,
   OrderWrapperStyle,
-  OrderIconStyle,
   ImporterWrapperStyle,
   TagsAndTaskWrapperStyle,
   ItemTagsWrapperStyle,
@@ -404,21 +404,16 @@ const ItemCard = ({
               <div className={OrderWrapperStyle}>
                 {mergedNavigable.order ? (
                   <Link
-                    className={OrderIconStyle}
                     to={`/order/${encodeId(orderId)}`}
                     onClick={evt => {
                       evt.stopPropagation();
                     }}
                   >
-                    <Icon icon="ORDER" />
+                    <RelateEntity entity="ORDER" value={poNo} />
                   </Link>
                 ) : (
-                  <div className={OrderIconStyle}>
-                    <Icon icon="ORDER" />
-                  </div>
+                  <RelateEntity entity="ORDER" value={poNo} />
                 )}
-
-                <Display align="left">{poNo}</Display>
               </div>
               <div className={ImporterWrapperStyle}>
                 <Icon icon="IMPORTER" />
