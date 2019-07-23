@@ -6,8 +6,8 @@ import type { IntlShape } from 'react-intl';
 import { maxBy, intersection } from 'lodash';
 import { Subscribe } from 'unstated';
 import { BooleanValue } from 'react-values';
-import { getByPath } from 'utils/fp';
-import useFilter from 'hooks/useFilter';
+import { getByPath, isEquals } from 'utils/fp';
+import useSortAndFilter from 'hooks/useSortAndFilter';
 import messages from 'modules/batch/messages';
 import FilterToolBar from 'components/common/FilterToolBar';
 import usePartnerPermission from 'hooks/usePartnerPermission';
@@ -92,7 +92,7 @@ const getInitFilter = () => {
     },
     sort: {
       field: 'sort',
-      direction: 'DESCENDING',
+      direction: 'ASCENDING',
     },
     perPage: 10,
     page: 1,
@@ -126,8 +126,13 @@ function BatchesArea({
     { title: intl.formatMessage(messages.expiredAt), value: 'expiredAt' },
     { title: intl.formatMessage(messages.producedAt), value: 'producedAt' },
   ];
-  const { filterAndSort, onChangeFilter } = useFilter(getInitFilter(), 'cargoSectionFilter');
-
+  const { filterAndSort, onChangeFilter } = useSortAndFilter(getInitFilter());
+  const lastFilterAndSort = React.useRef({
+    ...filterAndSort.sort,
+    ...filterAndSort.filter,
+  });
+  const lastBatchIds = React.useRef([]);
+  const lastBatchInputIds = React.useRef([]);
   return (
     <Subscribe to={[ShipmentBatchesContainer, ShipmentContainersContainer]}>
       {(
@@ -145,15 +150,43 @@ function BatchesArea({
         const containerId = isFocusedContainer
           ? getByPath(`${focusedContainerIndex}.id`, containers)
           : null;
-        const currentBatches = isFocusedBatchesPool
-          ? sortBy(getBatchesInPool(batches), {
-              ...filterAndSort.sort,
-              ...filterAndSort.filter,
-            })
-          : sortBy(getBatchesByContainerId(batches, containerId), {
-              ...filterAndSort.sort,
-              ...filterAndSort.filter,
-            });
+        const batchesSelector = isFocusedBatchesPool
+          ? getBatchesInPool(batches)
+          : getBatchesByContainerId(batches, containerId);
+
+        const currentBatches = [];
+
+        if (
+          !isEquals(lastFilterAndSort.current, {
+            ...filterAndSort.sort,
+            ...filterAndSort.filter,
+          }) ||
+          (batchesSelector.length > 0 && lastBatchIds.current && lastBatchIds.current.length === 0)
+        ) {
+          lastFilterAndSort.current = {
+            ...filterAndSort.sort,
+            ...filterAndSort.filter,
+          };
+          const filterBatches = sortBy(batchesSelector, {
+            ...filterAndSort.sort,
+            ...filterAndSort.filter,
+          });
+          lastBatchIds.current = filterBatches.map(item => getByPath('id', item));
+          lastBatchInputIds.current = batchesSelector.map(item => getByPath('id', item));
+          currentBatches.push(...filterBatches);
+        } else {
+          lastBatchIds.current.forEach(batchId => {
+            const findBatch = batchesSelector.find(item => getByPath('id', item) === batchId);
+            if (findBatch) {
+              currentBatches.push(findBatch);
+            }
+          });
+          batchesSelector.forEach(batch => {
+            if (!lastBatchInputIds.current.includes(getByPath('id', batch))) {
+              currentBatches.push(batch);
+            }
+          });
+        }
 
         const selectedBatchIds = intersection(
           currentBatches.map(item => getByPath('id', item)),
@@ -291,7 +324,7 @@ function BatchesArea({
                           hasPermission([SHIPMENT_UPDATE, SHIPMENT_ADD_BATCH]);
 
                       return (
-                        <React.Fragment key={batch.id}>
+                        <React.Fragment key={getByPath('id', batch)}>
                           {isSelectBatchesMode ? (
                             <ShipmentBatchCard
                               batch={batch}
@@ -299,10 +332,10 @@ function BatchesArea({
                                 isFocusedBatchesPool ||
                                 (!isFocusedBatchesPool && !isFocusedContainer)
                                   ? null
-                                  : batch.id === representativeBatchId
+                                  : getByPath('id', batch) === representativeBatchId
                               }
                               selectable
-                              selected={selectedBatchIds.includes(batch.id)}
+                              selected={selectedBatchIds.includes(getByPath('id', batch))}
                               onSelect={() => (allowMoveBatches ? onSelectBatch(batch) : () => {})}
                               viewable={{
                                 price: hasPermission(ORDER_ITEMS_GET_PRICE),
@@ -327,13 +360,15 @@ function BatchesArea({
                                           setFieldArrayValue(indexOfAllBatches, value);
                                           if (batch.container) {
                                             const indexOfContainer = containers.findIndex(
-                                              container => container.id === batch.container.id
+                                              container =>
+                                                container.id === getByPath('container.id', batch)
                                             );
                                             if (indexOfContainer >= 0) {
                                               const indexOfBatch = containers[
                                                 indexOfContainer
                                               ].batches.findIndex(
-                                                containersBatch => containersBatch.id === batch.id
+                                                containersBatch =>
+                                                  containersBatch.id === getByPath('id', batch)
                                               );
                                               if (indexOfBatch >= 0) {
                                                 setDeepFieldValue(
@@ -386,20 +421,22 @@ function BatchesArea({
                                       isFocusedBatchesPool ||
                                       (!isFocusedBatchesPool && !isFocusedContainer)
                                         ? null
-                                        : batch.id === representativeBatchId
+                                        : getByPath('id', batch) === representativeBatchId
                                     }
                                     saveOnBlur={updatedBatch => {
                                       const indexOfAllBatches = batches.indexOf(batch);
                                       setFieldArrayValue(indexOfAllBatches, updatedBatch);
                                       if (batch.container) {
                                         const indexOfContainer = containers.findIndex(
-                                          container => container.id === batch.container.id
+                                          container =>
+                                            container.id === getByPath('container.id', batch)
                                         );
                                         if (indexOfContainer >= 0) {
                                           const indexOfBatch = containers[
                                             indexOfContainer
                                           ].batches.findIndex(
-                                            containersBatch => containersBatch.id === batch.id
+                                            containersBatch =>
+                                              containersBatch.id === getByPath('id', batch)
                                           );
                                           if (indexOfBatch >= 0) {
                                             setDeepFieldValue(

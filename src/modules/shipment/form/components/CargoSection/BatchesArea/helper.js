@@ -1,5 +1,6 @@
 // @flow
 import type { BatchPayload } from 'generated/graphql';
+import isDeepEqual from 'lodash.isequal';
 import Fuse from 'fuse.js';
 import memoize from 'memoize-one';
 import { comparator, sort } from 'ramda';
@@ -157,4 +158,4 @@ function sortBy(
   return result;
 }
 
-export default memoize(sortBy);
+export default memoize(sortBy, isDeepEqual);
