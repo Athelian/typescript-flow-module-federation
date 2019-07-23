@@ -142,12 +142,12 @@ function sortBy(
       compareBy = comparator((firstItem, secondItem) =>
         direction === 'DESCENDING'
           ? !compareByNumber(
-              getByPathWithDefault(0, 'sort', firstItem),
-              getByPathWithDefault(0, 'sort', secondItem)
+              getByPathWithDefault(0, 'shipmentSort', firstItem),
+              getByPathWithDefault(0, 'shipmentSort', secondItem)
             )
           : compareByNumber(
-              getByPathWithDefault(0, 'sort', firstItem),
-              getByPathWithDefault(0, 'sort', secondItem)
+              getByPathWithDefault(0, 'shipmentSort', firstItem),
+              getByPathWithDefault(0, 'shipmentSort', secondItem)
             )
       );
     }

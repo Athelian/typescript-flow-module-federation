@@ -576,7 +576,7 @@ function BatchesArea({
                                   const maxSort = maxBy(batches, 'sort').sort + 1;
                                   const newSelectBatches = selected.map(
                                     (selectedBatch, counter) => ({
-                                      sort: maxSort + counter,
+                                      shipmentSort: maxSort + counter,
                                       ...selectedBatch,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }
@@ -664,7 +664,7 @@ function BatchesArea({
                                   const createdBatches: Array<BatchPayload> = selectedOrderItems.map(
                                     (orderItem, index) => ({
                                       ...generateBatchByOrderItem(orderItem),
-                                      sort: maxSort + index,
+                                      shipmentSort: maxSort + index,
                                       no: `batch no ${batches.length + index + 1}`,
                                       ...(isFocusedContainer
                                         ? { container: containers[focusedContainerIndex] }
