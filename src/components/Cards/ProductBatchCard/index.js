@@ -10,8 +10,9 @@ import FormattedNumber from 'components/FormattedNumber';
 import { getLatestDate } from 'utils/shipment';
 import { getByPathWithDefault } from 'utils/fp';
 import withForbiddenCard from 'hoc/withForbiddenCard';
+import RelateEntity from 'components/RelateEntity';
 import TaskRing from 'components/TaskRing';
-import { FieldItem, Label, Display, Blackout } from 'components/Form';
+import { FieldItem, Label, Display } from 'components/Form';
 import BaseCard from '../BaseCard';
 import {
   ProductBatchCardWrapperStyle,
@@ -19,11 +20,8 @@ import {
   BatchNoWrapperStyle,
   DividerStyle,
   OrderWrapperStyle,
-  OrderIconStyle,
   ShipmentWrapperStyle,
-  ShipmentIconStyle,
   ContainerWrapperStyle,
-  ContainerIconStyle,
   WarehouseArrivalWrapperStyle,
   WarehouseArrivalIconStyle,
   ApprovalIconStyle,
@@ -74,52 +72,42 @@ const ProductBatchCard = ({ batch, onClick, ...rest }: Props) => {
 
           <div className={OrderWrapperStyle}>
             {order ? (
-              <>
-                <Link
-                  className={OrderIconStyle}
-                  to={`/order/${encodeId(order.id)}`}
-                  onClick={evt => {
-                    evt.stopPropagation();
-                  }}
-                >
-                  <Icon icon="ORDER" />
-                </Link>
-                <Display align="left">{order.poNo}</Display>
-              </>
+              <Link
+                to={`/order/${encodeId(order.id)}`}
+                onClick={evt => {
+                  evt.stopPropagation();
+                }}
+              >
+                <RelateEntity entity="ORDER" value={order.poNo} />
+              </Link>
             ) : (
-              <>
-                <div className={OrderIconStyle}>
-                  <Icon icon="ORDER" />
-                </div>
-                <Blackout height="20px" />
-              </>
+              <RelateEntity blackout entity="ORDER" value="" />
             )}
           </div>
 
           <div className={ShipmentWrapperStyle}>
             <Link
-              className={ShipmentIconStyle(!!shipment)}
               to={shipment ? `/shipment/${encodeId(shipment.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
-              <Icon icon="SHIPMENT" />
+              <RelateEntity entity="SHIPMENT" value={shipment && shipment.no} />
             </Link>
-            <Display align="left">{shipment && shipment.no}</Display>
           </div>
 
           <div className={ContainerWrapperStyle}>
             <Link
-              className={ContainerIconStyle(!!container)}
               to={container ? `/container/${encodeId(container.id)}` : '.'}
               onClick={evt => {
                 evt.stopPropagation();
               }}
             >
-              <Icon icon="CONTAINER" />
+              <RelateEntity
+                entity="CONTAINER"
+                value={getByPathWithDefault(null, 'no', container)}
+              />
             </Link>
-            <Display align="left">{getByPathWithDefault(null, 'no', container)}</Display>
           </div>
 
           {hasContainers ? (

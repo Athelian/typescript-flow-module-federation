@@ -9,6 +9,7 @@ import Icon from 'components/Icon';
 import UserAvatar from 'components/UserAvatar';
 import Tag from 'components/Tag';
 import FormattedNumber from 'components/FormattedNumber';
+import RelateEntity from 'components/RelateEntity';
 import { getByPathWithDefault } from 'utils/fp';
 import {
   FieldItem,
@@ -42,9 +43,7 @@ import {
   TotalPriceWrapperStyle,
   VolumeWrapperStyle,
   OrderWrapperStyle,
-  OrderIconStyle,
   ContainerWrapperStyle,
-  ContainerIconStyle,
   OrderInChargeWrapperStyle,
   InChargeWrapperStyle,
   TagsAndTaskWrapperStyle,
@@ -435,39 +434,37 @@ const ShipmentBatchCard = ({
           <div className={OrderWrapperStyle}>
             {mergedNavigable.order ? (
               <Link
-                className={OrderIconStyle}
                 to={`/order/${encodeId(order.id)}`}
                 onClick={evt => {
                   evt.stopPropagation();
                 }}
               >
-                <Icon icon="ORDER" />
+                <RelateEntity entity="ORDER" value={order.poNo} />
               </Link>
             ) : (
-              <div className={OrderIconStyle}>
-                <Icon icon="ORDER" />
-              </div>
+              <RelateEntity entity="ORDER" value={order.poNo} />
             )}
-            <Display align="left">{order.poNo}</Display>
           </div>
 
           <div className={ContainerWrapperStyle}>
             {mergedNavigable.container && container ? (
               <Link
-                className={ContainerIconStyle(true)}
                 to={`/container/${encodeId(container.id)}`}
                 onClick={evt => {
                   evt.stopPropagation();
                 }}
               >
-                <Icon icon="CONTAINER" />
+                <RelateEntity
+                  entity="CONTAINER"
+                  value={getByPathWithDefault(null, 'no', container)}
+                />
               </Link>
             ) : (
-              <div className={ContainerIconStyle(!!container)}>
-                <Icon icon="CONTAINER" />
-              </div>
+              <RelateEntity
+                entity="CONTAINER"
+                value={getByPathWithDefault(null, 'no', container)}
+              />
             )}
-            <Display align="left">{getByPathWithDefault(null, 'no', container)}</Display>
           </div>
 
           <div className={OrderInChargeWrapperStyle}>
