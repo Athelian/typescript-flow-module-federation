@@ -1005,8 +1005,11 @@ const TaskInfoSection = ({
                           name="tags"
                           tagType="Task"
                           values={values.tags}
-                          onChange={(field, value) => {
-                            setFieldValue(field, value);
+                          onChange={value => {
+                            setFieldValue('tags', value);
+                          }}
+                          onClickRemove={value => {
+                            setFieldValue('tags', values.tags.filter(({ id }) => id !== value.id));
                           }}
                           editable={{
                             set: hasPermission(TAG_LIST) && editable.tags,

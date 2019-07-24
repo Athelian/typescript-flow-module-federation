@@ -30,6 +30,7 @@ type Props = OptionalProps & {
   type?: string,
   placeholder?: string,
   onChange?: Function,
+  onClickRemove: Function,
   onBlur?: Function,
   onFocus?: Function,
 };
@@ -49,17 +50,26 @@ const defaultProps = {
 export default class TagsInput extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
+  inputWrapperRef = React.createRef<HTMLDivElement>();
+
   inputRef = React.createRef<HTMLInputElement>();
 
   state = {
     focused: false,
   };
 
+  componentDidUpdate() {
+    const { focused } = this.state;
+    if (focused && this.inputWrapperRef.current) {
+      this.inputWrapperRef.current.scrollLeft = this.inputWrapperRef.current.scrollWidth;
+    }
+  }
+
   handleChange = (tags: Array<TagType>) => {
-    const { name, onChange } = this.props;
+    const { onChange } = this.props;
 
     if (onChange) {
-      onChange(name, tags);
+      onChange(tags);
     }
   };
 
@@ -132,13 +142,19 @@ export default class TagsInput extends React.Component<Props, State> {
     this.setState({ focused: true });
   };
 
+  removeInputFocus = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.blur();
+    }
+  };
+
   handleInputBlur = () => {
     this.setState({ focused: false });
     this.handleBlur();
   };
 
   render() {
-    const { editable, width, tagType, disabled, values, name, id } = this.props;
+    const { editable, width, tagType, disabled, values, name, id, onClickRemove } = this.props;
     const { focused } = this.state;
 
     return (
@@ -166,6 +182,7 @@ export default class TagsInput extends React.Component<Props, State> {
               <DefaultStyle isFocused={focused} width={width}>
                 <div className={SelectionWrapperStyle}>
                   <div
+                    ref={this.inputWrapperRef}
                     role="presentation"
                     className={InputStyle(width)}
                     onClick={() => {
@@ -187,7 +204,7 @@ export default class TagsInput extends React.Component<Props, State> {
                                   className={RemoveStyle}
                                   onClick={event => {
                                     event.stopPropagation();
-                                    this.handleRemove(tag);
+                                    onClickRemove(tag);
                                   }}
                                 >
                                   <Icon icon="CLEAR" />

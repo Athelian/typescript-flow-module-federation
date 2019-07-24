@@ -3,7 +3,7 @@ import useTextInput from './useTextInput';
 import useNumberInput from './useNumberInput';
 import useDateInput from './useDateInput';
 import useInChargeInput from './useInChargeInput';
-import useTagInput from './useTagInput';
+import useTagsInput from './useTagsInput';
 import useMetricInput from './useMetricInput';
 import useTimeLineInput from './useTimeLineInput';
 import useDateTimeApprovalInput from './useDateTimeApprovalInput';
@@ -14,7 +14,7 @@ export {
   useNumberInput,
   useDateInput,
   useInChargeInput,
-  useTagInput,
+  useTagsInput,
   useMetricInput,
   useTimeLineInput,
   useDateTimeApprovalInput,
