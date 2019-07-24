@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, fontSizesWithHeights, presets, borderRadiuses, layout } from 'styles/common';
+import { colors, fontSizesWithHeights, presets, layout } from 'styles/common';
 
 export const PartnerCardStyle = (size: 'full' | 'half' | 'quarter'): string => css`
   display: grid;
@@ -77,12 +77,13 @@ export const PartnerTypesWrapperStyle = (size: 'full' | 'half' | 'quarter'): str
 `;
 
 export const PartnerTypeStyle = (isActive: boolean) => css`
-  ${borderRadiuses.MAIN};
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${isActive ? colors.TEAL : colors.GRAY_VERY_LIGHT};
+  background-color: ${isActive ? colors.PARTNER : colors.GRAY_VERY_LIGHT};
   color: ${colors.WHITE};
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
   width: 20px;
   height: 20px;
   flex-shrink: 0;

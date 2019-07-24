@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'react-emotion';
-import { colors, borderRadiuses, layout, fontSizes } from 'styles/common';
+import { colors, layout, fontSizes } from 'styles/common';
 
 export const TagCardWrapperStyle: string = css`
   ${layout.GRID_VERTICAL};
@@ -44,12 +44,13 @@ export const TagTypesWrapperStyle: string = css`
 `;
 
 export const TagTypeStyle = (color: string) => css`
-  ${borderRadiuses.MAIN};
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${colors[color]};
   color: ${colors.WHITE};
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
   width: 20px;
   height: 20px;
   flex-shrink: 0;
