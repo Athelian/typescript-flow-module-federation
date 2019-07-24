@@ -59,7 +59,8 @@ export default class TagsInput extends React.Component<Props, State> {
   };
 
   componentDidUpdate() {
-    if (this.inputWrapperRef.current) {
+    const { focused } = this.state;
+    if (focused && this.inputWrapperRef.current) {
       this.inputWrapperRef.current.scrollLeft = this.inputWrapperRef.current.scrollWidth;
     }
   }
@@ -203,7 +204,6 @@ export default class TagsInput extends React.Component<Props, State> {
                                   className={RemoveStyle}
                                   onClick={event => {
                                     event.stopPropagation();
-                                    this.handleInputFocus();
                                     onClickRemove(tag);
                                   }}
                                 >
