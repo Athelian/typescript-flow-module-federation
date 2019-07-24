@@ -489,13 +489,11 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
                   <EntityIcon icon="EDIT_TABLE" color="RELATION_MAP" />
                   {!isEqual(entities, editData) && (
                     <>
-                      (
                       <ResetButton
                         onClick={() => {
                           setEditData(entities);
                         }}
                       />
-                      )
                       <SaveButton
                         isLoading={loading}
                         onClick={async () => {
