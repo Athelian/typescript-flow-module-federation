@@ -14,7 +14,8 @@ steps:
       if [ -e node_modules.tar.gz ]; then
         tar -xzf node_modules.tar.gz
       fi
-- name: 'gcr.io/cloud-builders/yarn'
+- name: 'node:10.15.3'
+  entrypoint: yarn
   args: ['install']
 - name: 'gcr.io/cloud-builders/gsutil'
   entrypoint: 'bash'
@@ -23,7 +24,8 @@ steps:
     - |
       tar -czf node_modules.tar.gz node_modules
       gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-develop_node_modules.tar.gz
-- name: 'gcr.io/cloud-builders/yarn'
+- name: 'node:10.15.3'
+  entrypoint: yarn
   args: ['build:stg']
   env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
 - name: 'gcr.io/zenport-183806/firebase'
@@ -54,7 +56,8 @@ steps:
         if [ -e node_modules.tar.gz ]; then
           tar -xzf node_modules.tar.gz
         fi
-  - name: 'gcr.io/cloud-builders/yarn'
+  - name: 'node:10.15.3'
+    entrypoint: yarn
     args: ['install']
   - name: 'gcr.io/cloud-builders/gsutil'
     entrypoint: 'bash'
@@ -63,7 +66,8 @@ steps:
       - |
         tar -czf node_modules.tar.gz node_modules
         gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-hotfixes_node_modules.tar.gz
-  - name: 'gcr.io/cloud-builders/yarn'
+  - name: 'node:10.15.3'
+    entrypoint: yarn
     args: ['build:stg']
     env:
       - 'ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA'
@@ -96,7 +100,8 @@ steps:
         if [ -e node_modules.tar.gz ]; then
           tar -xzf node_modules.tar.gz
         fi
-  - name: 'gcr.io/cloud-builders/yarn'
+  - name: 'node:10.15.3'
+    entrypoint: yarn
     args: ['install']
   - name: 'gcr.io/cloud-builders/gsutil'
     entrypoint: 'bash'
@@ -105,7 +110,8 @@ steps:
       - |
         tar -czf node_modules.tar.gz node_modules
         gsutil cp node_modules.tar.gz gs://zenport-gcb-bridge/cache/web-app-master_node_modules.tar.gz
-  - name: 'gcr.io/cloud-builders/yarn'
+  - name: 'node:10.15.3'
+    entrypoint: yarn
     args: ['build:prod']
     env: ['ZENPORT_FIREBASE_DEPLOY_REVISION=$SHORT_SHA']
   - name: 'gcr.io/zenport-183806/firebase'
