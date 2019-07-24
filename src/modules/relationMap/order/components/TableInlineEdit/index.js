@@ -10,25 +10,13 @@ import TableInlineEdit from './index.table';
 import { orderShipmentTableQuery } from './query';
 import normalize from './normalize';
 
-type Props = {
-  onCancel: Function,
-  entities: {
-    orders: Object,
-    orderItems: Object,
-    batches: Object,
-    shipments: Object,
-    exporters: Object,
-  },
-};
-
 function getEntityByType(data: Object, entity: string) {
   return getByPathWithDefault([], 'orderShipmentTable', data).filter(
     ({ __typename: type }) => type === entity
   );
 }
 
-const TableView = (props: Props) => {
-  const { onCancel } = props;
+const TableView = () => {
   const [isReady, setIsReady] = React.useState(false);
   const { state } = React.useContext(ActionDispatch);
   const uiSelectors = selectors(state);
@@ -105,7 +93,6 @@ const TableView = (props: Props) => {
               orderItemIds,
               orderIds,
             }}
-            onCancel={onCancel}
           />
         );
       }}

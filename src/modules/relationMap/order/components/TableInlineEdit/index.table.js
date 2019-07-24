@@ -18,7 +18,7 @@ import SlideView from 'components/SlideView';
 import { SlideViewNavBar, EntityIcon } from 'components/NavBar';
 import {
   SaveButton,
-  CancelButton,
+  ResetButton,
   SelectTemplateButton,
   ExportGenericButton,
 } from 'components/Buttons';
@@ -49,8 +49,7 @@ import { keyMap, handlers } from './keyMap';
 import { Table } from './components';
 import { findColumnsForCustomFields, findColumns, totalColumn } from './tableRenders';
 
-type Props = {
-  onCancel: () => void,
+type Props = {|
   allId: {
     orderIds: Array<string>,
     orderItemIds: Array<string>,
@@ -76,7 +75,7 @@ type Props = {
     containers: Object,
   },
   intl: IntlShape,
-};
+|};
 
 const isModifyPort = (field: string) => {
   const ports = [
@@ -88,7 +87,7 @@ const isModifyPort = (field: string) => {
   return ports.some(port => field.includes(port));
 };
 
-const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSource }: Props) => {
+const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Props) => {
   const initShowAll = window.localStorage.getItem('filterRMEditViewShowAll');
   const initTemplateColumn = window.localStorage.getItem('rmTemplateFilterColumns');
   const [errors, setErrors] = useState({});
@@ -488,7 +487,13 @@ const TableInlineEdit = ({ allId, targetIds, onCancel, intl, entities, ...dataSo
               <SlideViewLayout>
                 <SlideViewNavBar>
                   <EntityIcon icon="EDIT_TABLE" color="RELATION_MAP" />
-                  <CancelButton onClick={onCancel} />
+                  {!isEqual(entities, editData) && (
+                    <ResetButton
+                      onClick={() => {
+                        setEditData(entities);
+                      }}
+                    />
+                  )}
                   <SaveButton
                     isLoading={loading}
                     onClick={async () => {
