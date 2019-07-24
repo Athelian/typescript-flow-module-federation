@@ -50,11 +50,19 @@ const defaultProps = {
 export default class TagsInput extends React.Component<Props, State> {
   static defaultProps = defaultProps;
 
+  inputWrapperRef = React.createRef<HTMLDivElement>();
+
   inputRef = React.createRef<HTMLInputElement>();
 
   state = {
     focused: false,
   };
+
+  componentDidUpdate() {
+    if (this.inputWrapperRef.current) {
+      this.inputWrapperRef.current.scrollLeft = this.inputWrapperRef.current.scrollWidth;
+    }
+  }
 
   handleChange = (tags: Array<TagType>) => {
     const { onChange } = this.props;
@@ -173,6 +181,7 @@ export default class TagsInput extends React.Component<Props, State> {
               <DefaultStyle isFocused={focused} width={width}>
                 <div className={SelectionWrapperStyle}>
                   <div
+                    ref={this.inputWrapperRef}
                     role="presentation"
                     className={InputStyle(width)}
                     onClick={() => {
