@@ -488,80 +488,91 @@ const TableInlineEdit = ({ allId, targetIds, intl, entities, ...dataSource }: Pr
                 <SlideViewNavBar>
                   <EntityIcon icon="EDIT_TABLE" color="RELATION_MAP" />
                   {!isEqual(entities, editData) && (
-                    <ResetButton
-                      onClick={() => {
-                        setEditData(entities);
-                      }}
-                    />
+                    <>
+                      (
+                      <ResetButton
+                        onClick={() => {
+                          setEditData(entities);
+                        }}
+                      />
+                      )
+                      <SaveButton
+                        isLoading={loading}
+                        onClick={async () => {
+                          const changedData = diff(entities, editData);
+                          setLoading(true);
+                          try {
+                            const result: {
+                              data: ?{
+                                entitiesUpdateMany: {
+                                  orders: {
+                                    violations?: Array<{ message: string }>,
+                                  },
+                                  shipments: {
+                                    violations?: Array<{ message: string }>,
+                                  },
+                                  batches: {
+                                    violations?: Array<{ message: string }>,
+                                  },
+                                },
+                              },
+                              errors?: Array<Object>,
+                            } = await client.mutate({
+                              mutation: entitiesUpdateManyMutation,
+                              variables: parseChangedData({
+                                changedData,
+                                editData,
+                                mappingObjects,
+                              }),
+                            });
+                            setLoading(false);
+                            logger.warn({ result });
+                            if (result && result.data && result.data.entitiesUpdateMany) {
+                              if (
+                                result.data.entitiesUpdateMany.orders.violations &&
+                                result.data.entitiesUpdateMany.orders.violations.length
+                              ) {
+                                const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
+                                  item => !!item
+                                );
+                                if (errorMessages.length)
+                                  setErrorMessage(errorMessages[0][0].message);
+                              }
+                              if (
+                                result.data.entitiesUpdateMany.shipments.violations &&
+                                result.data.entitiesUpdateMany.shipments.violations.length
+                              ) {
+                                const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
+                                  item => !!item
+                                );
+                                if (errorMessages.length)
+                                  setErrorMessage(errorMessages[0][0].message);
+                              }
+                              if (
+                                result.data.entitiesUpdateMany.batches.violations &&
+                                result.data.entitiesUpdateMany.batches.violations.length
+                              ) {
+                                const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
+                                  item => !!item
+                                );
+                                if (errorMessages.length)
+                                  setErrorMessage(errorMessages[0][0].message);
+                              }
+                              setIsChangeData(true);
+                            } else if (result.errors) {
+                              trackingError(result.errors);
+                              toast.error('There was an error. Please try again later');
+                            }
+                          } catch (error) {
+                            toast.error('There was an error. Please try again later');
+                            setLoading(false);
+                            trackingError(error);
+                          }
+                        }}
+                        disabled={isEqual(entities, editData) || Object.keys(errors).length > 0}
+                      />
+                    </>
                   )}
-                  <SaveButton
-                    isLoading={loading}
-                    onClick={async () => {
-                      const changedData = diff(entities, editData);
-                      setLoading(true);
-                      try {
-                        const result: {
-                          data: ?{
-                            entitiesUpdateMany: {
-                              orders: {
-                                violations?: Array<{ message: string }>,
-                              },
-                              shipments: {
-                                violations?: Array<{ message: string }>,
-                              },
-                              batches: {
-                                violations?: Array<{ message: string }>,
-                              },
-                            },
-                          },
-                          errors?: Array<Object>,
-                        } = await client.mutate({
-                          mutation: entitiesUpdateManyMutation,
-                          variables: parseChangedData({ changedData, editData, mappingObjects }),
-                        });
-                        setLoading(false);
-                        logger.warn({ result });
-                        if (result && result.data && result.data.entitiesUpdateMany) {
-                          if (
-                            result.data.entitiesUpdateMany.orders.violations &&
-                            result.data.entitiesUpdateMany.orders.violations.length
-                          ) {
-                            const errorMessages = result.data.entitiesUpdateMany.orders.violations.filter(
-                              item => !!item
-                            );
-                            if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                          }
-                          if (
-                            result.data.entitiesUpdateMany.shipments.violations &&
-                            result.data.entitiesUpdateMany.shipments.violations.length
-                          ) {
-                            const errorMessages = result.data.entitiesUpdateMany.shipments.violations.filter(
-                              item => !!item
-                            );
-                            if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                          }
-                          if (
-                            result.data.entitiesUpdateMany.batches.violations &&
-                            result.data.entitiesUpdateMany.batches.violations.length
-                          ) {
-                            const errorMessages = result.data.entitiesUpdateMany.batches.violations.filter(
-                              item => !!item
-                            );
-                            if (errorMessages.length) setErrorMessage(errorMessages[0][0].message);
-                          }
-                          setIsChangeData(true);
-                        } else if (result.errors) {
-                          trackingError(result.errors);
-                          toast.error('There was an error. Please try again later');
-                        }
-                      } catch (error) {
-                        toast.error('There was an error. Please try again later');
-                        setLoading(false);
-                        trackingError(error);
-                      }
-                    }}
-                    disabled={isEqual(entities, editData) || Object.keys(errors).length > 0}
-                  />
                   <ExportGenericButton
                     columns={() => getExportColumns(intl, allColumns)}
                     rows={() =>
